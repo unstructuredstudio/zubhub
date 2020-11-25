@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
+import { Link, withRouter } from 'react-router-dom';
 import EditProfile from './profile_components/EditProfile';
 import * as AuthActions from '../../../store/actions/authActions';
 
@@ -53,6 +54,7 @@ class Profile extends Component{
                              setReadOnly={value=>this.setReadOnly(value)} {...this.props} />
                             }
 
+                            <button><Link to="/projects/create">Create Project</Link></button>
                             <img src={profile.avatar} alt="profile"/>
                             
                             <div>Username: {profile.username}</div>

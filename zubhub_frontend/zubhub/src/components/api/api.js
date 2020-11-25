@@ -145,6 +145,15 @@ edit_user_profile=(profile)=>{
          .then(res=>res.json())
 }
 
+/************************** create project **************************/
+create_project=({token, title, description, video, materials_used})=>{
+  let url = "projects/create/";
+  let method = "POST";
+  let body = JSON.stringify({ title, description, video, materials_used })
+  return this.request({url, method, token, body})
+         .then(res=>res.json())
+}
+
 }
 
 

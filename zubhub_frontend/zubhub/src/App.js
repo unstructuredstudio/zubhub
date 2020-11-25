@@ -15,6 +15,7 @@ import PasswordReset from './components/pages/user_auth/PasswordReset';
 import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConfirm';
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 import Profile from './components/pages/profile/Profile';
+import CreateProject from './components/pages/projects/projects_components/CreateProject';
 // import Artists from './components/pages/artists/Artists';
 // import Artist from './components/pages/artists/Artist';
 // import Upcoming from './components/pages/upcoming/Upcoming';
@@ -92,6 +93,13 @@ return(
         render={props=>(
         <PageWrapper>
           <Profile {...Object.assign({}, props, apiProps)}/>
+        </PageWrapper>
+        )}/>
+
+    <Route path="/projects/create"
+        render={props=>(
+        <PageWrapper>
+          <CreateProject {...Object.assign({}, props, apiProps)}/>
         </PageWrapper>
         )}/>
 
