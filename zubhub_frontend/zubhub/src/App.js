@@ -15,7 +15,9 @@ import PasswordReset from './components/pages/user_auth/PasswordReset';
 import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConfirm';
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 import Profile from './components/pages/profile/Profile';
+import Projects from './components/pages/projects/Projects';
 import CreateProject from './components/pages/projects/projects_components/CreateProject';
+import ProjectDetails from './components/pages/projects/projects_components/ProjectDetails';
 // import Artists from './components/pages/artists/Artists';
 // import Artist from './components/pages/artists/Artist';
 // import Upcoming from './components/pages/upcoming/Upcoming';
@@ -38,7 +40,6 @@ class App extends Component {
 
 
 render(){
-  let apiProps = this.props;
 return(
     <Router>
       <Switch>
@@ -48,62 +49,70 @@ return(
         exact={true}
         path="/"
         render={props=>(
-          console.log(props),
           <PageWrapper >
-            <Home {...Object.assign({}, props, apiProps)}/>
+            <Projects {...props} {...this.props}/>
           </PageWrapper>
         )}/>
 
       <Route path="/signup"
         render={props=>(
           <PageWrapper>
-            <Signup {...Object.assign({}, props, apiProps)}/>
+            <Signup {...props} {...this.props}/>
           </PageWrapper>
         )}/>
 
       <Route path="/login"
         render={props=>(
         <PageWrapper>
-          <Login {...Object.assign({}, props, apiProps)}/>
+          <Login {...props} {...this.props}/>
         </PageWrapper>
       )}/>
 
     <Route path="/password-reset"
         render={props=>(
         <PageWrapper>
-          <PasswordReset {...Object.assign({}, props, apiProps)}/>
+          <PasswordReset {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/password-reset-confirm"
         render={props=>(
         <PageWrapper>
-          <PasswordResetConfirm {...Object.assign({}, props, apiProps)}/>
+          <PasswordResetConfirm {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/email-confirm"
         render={props=>(
         <PageWrapper>
-          <EmailConfirm {...Object.assign({}, props, apiProps)}/>
+          <EmailConfirm {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/profile"
         render={props=>(
         <PageWrapper>
-          <Profile {...Object.assign({}, props, apiProps)}/>
+          <Profile {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/projects/create"
         render={props=>(
         <PageWrapper>
-          <CreateProject {...Object.assign({}, props, apiProps)}/>
+          <CreateProject {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
+    <Route path="/projects/:id"
+        render={props=>(
+        <PageWrapper>
+          <ProjectDetails {...props} {...this.props}/>
+        </PageWrapper>
+        )}/>
+
+
       </Switch>
+
     </Router>
   );
 }

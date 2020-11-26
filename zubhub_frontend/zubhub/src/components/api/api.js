@@ -4,14 +4,13 @@ class API {
   }
 
   request=({url = '/', method = 'GET', token, body})=>{
-            if(method === 'GET'){
+            if(method === 'GET' && !token){
               return fetch(this.domain + url, {
                 method,
                 xsrfCookieName: 'csrftoken',
                 xsrfHeaderName: 'X-CSRFToken',
                 withCredentials:'true',
                 headers: new Headers({
-                  'Authorization':`Token ${token}`,
                   'Content-Type': 'application/json'
                 })
               })
@@ -151,6 +150,21 @@ create_project=({token, title, description, video, materials_used})=>{
   let method = "POST";
   let body = JSON.stringify({ title, description, video, materials_used })
   return this.request({url, method, token, body})
+         .then(res=>res.json())
+}
+
+/************************** get projects **************************/
+get_projects=()=>{
+  let url = "projects/";
+  return this.request({url})
+         .then(res=>res.json())
+}
+
+/************************** get projects **************************/
+get_project=(id)=>{
+  console.log(id);
+  let url = `projects/${id}`;
+  return this.request({url})
          .then(res=>res.json())
 }
 
