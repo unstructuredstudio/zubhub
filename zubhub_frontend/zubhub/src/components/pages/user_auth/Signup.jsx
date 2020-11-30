@@ -12,11 +12,33 @@ class Signup extends Component{
   constructor(props){
     super(props);
     this.state = {
+      locations: [],
       error:null
     }
   }
 
+  componentDidMount(){
+    this.props.api.get_locations()
+    .then(res=>{
+      if(Array.isArray(res) && res.length > 0 && res[0].name){
+        console.log(res);
+        return this.setState({locations: res})
+      }
+      else {
+        res = Object.keys(res).map(key=>res[key]).join("\n");
+        throw new Error(res)
+      }
+    })
+    .catch(error=>this.setState({error:error.message}))
+  }
+
   signup=(e)=>{
+    console.log(this.props.values);
+    if(this.props.values.location.length < 1){
+      console.log("i was called",this.props.values.location.length);
+      this.props.validateField("location")
+    }
+    else {
     this.props.api.signup(this.props.values)
     .then(res=>{
       if(!res.key){
@@ -29,11 +51,11 @@ class Signup extends Component{
     .then(res=>this.props.set_auth_user({...this.props.auth, ...res}))
     .then(val=>this.props.history.push("/"))
     .catch(error=>this.setState({error:error.message}))
-  };
+    }};
 
   render(){
 
-    let {error}=this.state;
+    let {error, locations}=this.state;
     return(
       <div>
         <ToastContainer/>
@@ -91,51 +113,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['email']}</span> }
                               </p>
                             </div>
-                            <div className="um-field um-field-first_name um-field-text um-field-type_text">
-                              <div className="um-field-label">
-                                <label htmlFor="first_name">First Name</label>
-                                <div className="um-clear"></div>
-                              </div>
-                              <div className="um-field-area">
-                                <input autoComplete="off" className="um-form-field valid "
-                                   type="text" name="first_name" id="first_name"  placeholder="First Name"
-                                   onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
-                              </div>
-                              <p className="help-block text-danger">
-                              {(this.props.touched['first_name'] && this.props.errors['first_name']) &&
-                              <span className="text-danger">{this.props.errors['first_name']}</span> }
-                              </p>
-                            </div>
-                            <div className="um-field um-field-user_email um-field-text um-field-type_text">
-                              <div className="um-field-label">
-                                <label htmlFor="last_name">Last Name</label>
-                                <div className="um-clear"></div>
-                              </div>
-                              <div className="um-field-area">
-                                <input autoComplete="off" className="um-form-field valid "
-                                   type="text" name="last_name" id="last_name"  placeholder="Last Name"
-                                   onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
-                              </div>
-                              <p className="help-block text-danger">
-                              {(this.props.touched['last_name'] && this.props.errors['last_name']) &&
-                              <span className="text-danger">{this.props.errors['last_name']}</span> }
-                              </p>
-                            </div>
-                            <div className="um-field um-field-user_email um-field-text um-field-type_text">
-                              <div className="um-field-label">
-                                <label htmlFor="phone">Phone Number</label>
-                                <div className="um-clear"></div>
-                              </div>
-                              <div className="um-field-area">
-                                <input autoComplete="off" className="um-form-field valid "
-                                   type="phone" name="phone" id="phone"  placeholder="Phone Number"
-                                   onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
-                              </div>
-                              <p className="help-block text-danger">
-                              {(this.props.touched['phone'] && this.props.errors['phone']) &&
-                              <span className="text-danger">{this.props.errors['phone']}</span> }
-                              </p>
-                            </div>
+                            
                             <div className="um-field um-field-user_email um-field-text um-field-type_text">
                               <div className="um-field-label">
                                 <label htmlFor="dateOfBirth">Date Of Birth</label>
@@ -151,21 +129,29 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['dateOfBirth']}</span> }
                               </p>
                             </div>
+
                             <div className="um-field um-field-user_email um-field-text um-field-type_text">
                               <div className="um-field-label">
-                                <label htmlFor="location">Location</label>
+                                <label htmlFor="user_location">Location</label>
                                 <div className="um-clear"></div>
                               </div>
                               <div className="um-field-area">
-                                <input autoComplete="off" className="um-form-field valid "
-                                   type="text" name="location" id="location"  placeholder="Location"
-                                   onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
+                                <select className="um-form-field valid " id="user_location" name="user_location"
+                                onChange={this.props.handleChange} onBlur={this.props.handleBlur} defaultValue="">
+                                <option value="">------</option>
+                                {locations.map(location=>
+                                                     <option key={location.name} value={location.name}>
+                                                       {location.name}
+                                                     </option>
+                                                     )}
+                                </select>
                               </div>
                               <p className="help-block text-danger">
                               {(this.props.touched['location'] && this.props.errors['location']) &&
                               <span className="text-danger">{this.props.errors['location']}</span> }
                               </p>
                             </div>
+
                             <div className="um-field um-field-user_password um-field-password um-field-type_password">
                               <div className="um-field-label">
                                 <label htmlFor="password2">Password</label>
@@ -181,6 +167,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['password2']}</span> }
                               </p>
                             </div>
+
                             <div className="um-field um-field-user_password um-field-password um-field-type_password" >
                               <div className="um-field-label">
                                 <label htmlFor="password1">Confirm Password</label>
@@ -196,6 +183,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['password1']}</span> }
                               </p>
                             </div>
+                            
                           </div>
                         </div>
                         <div className="um-col-alt">
@@ -242,11 +230,13 @@ export default connect(
   )(withFormik({
   mapPropsToValue: ()=>({
     email:'',
+    user_location:'',
     password1:'',
     password2:'',
   }),
   validationSchema: Yup.object().shape({
     email:Yup.string().email("invalid email").required("invalid email"),
+    user_location:Yup.string().min(1,"your location is too short").required("please input your location"),
     password1:Yup.string().min(8,"your password is too short").required("input your password"),
     password2: Yup.string().oneOf([Yup.ref('password1'), null], 'Passwords must match').required("input a confirmation password")
   }),

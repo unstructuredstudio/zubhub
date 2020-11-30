@@ -4,57 +4,56 @@ class API {
   }
 
   request=({url = '/', method = 'GET', token, body})=>{
-            if(method === 'GET'){
-              return fetch(this.domain + url, {
-                method,
-                xsrfCookieName: 'csrftoken',
-                xsrfHeaderName: 'X-CSRFToken',
-                withCredentials:'true',
-                headers: new Headers({
-                  'Authorization':`Token ${token}`,
-                  'Content-Type': 'application/json'
-                })
-              })
-            }
-            else if(token && body){
+    if(method === 'GET' && !token){
+      return fetch(this.domain + url, {
+        method,
+        xsrfCookieName: 'csrftoken',
+        xsrfHeaderName: 'X-CSRFToken',
+        withCredentials:'true',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      })
+    }
+    else if(token && body){
 
-              return fetch(this.domain + url, {
-                    method,
-                    xsrfCookieName: 'csrftoken',
-                    xsrfHeaderName: 'X-CSRFToken',
-                    withCredentials:'true',
-                    headers: new Headers({
-                      'Authorization':`Token ${token}`,
-                      'Content-Type': 'application/json'
-                    }),
-                    body
-                })
-              }
-            else if(token){
-              return fetch(this.domain + url, {
-                method,
-                xsrfCookieName: 'csrftoken',
-                xsrfHeaderName: 'X-CSRFToken',
-                withCredentials:'true',
-                headers: new Headers({
-                  'Authorization':`Token ${token}`,
-                  'Content-Type': 'application/json'
-                })
-            })
-            }
-            else if(body){
-              return fetch(this.domain + url, {
-                method,
-                xsrfCookieName: 'csrftoken',
-                xsrfHeaderName: 'X-CSRFToken',
-                withCredentials:'true',
-                headers: new Headers({
-                  'Content-Type': 'application/json'
-                }),
-                body,
-            })
-            }
-            }
+      return fetch(this.domain + url, {
+            method,
+            xsrfCookieName: 'csrftoken',
+            xsrfHeaderName: 'X-CSRFToken',
+            withCredentials:'true',
+            headers: new Headers({
+              'Authorization':`Token ${token}`,
+              'Content-Type': 'application/json'
+            }),
+            body
+        })
+      }
+    else if(token){
+      return fetch(this.domain + url, {
+        method,
+        xsrfCookieName: 'csrftoken',
+        xsrfHeaderName: 'X-CSRFToken',
+        withCredentials:'true',
+        headers: new Headers({
+          'Authorization':`Token ${token}`,
+          'Content-Type': 'application/json'
+        })
+    })
+    }
+    else if(body){
+      return fetch(this.domain + url, {
+        method,
+        xsrfCookieName: 'csrftoken',
+        xsrfHeaderName: 'X-CSRFToken',
+        withCredentials:'true',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        }),
+        body,
+    })
+    }
+    }
 
 
   /**********************login with email and password******************************/
@@ -78,12 +77,10 @@ class API {
     /****************************************************/
 
 /**********************signup******************************/
-    signup=({username, email, first_name, last_name,
-            phone, dateOfBirth, location, password1, password2})=>{
+    signup=({username, email, dateOfBirth, user_location, password1, password2})=>{
       let url = 'rest-auth/registration/';
       let method = 'POST';
-      let body = JSON.stringify({username, email, first_name, phone, 
-                dateOfBirth, location, last_name, password1, password2});
+      let body = JSON.stringify({username, email, dateOfBirth, location: user_location, password1, password2});
 
       return this.request({url, method, body })
              .then(res=>res.json())
@@ -127,10 +124,17 @@ password_reset_confirm=({new_password1, new_password2, uid, token})=>{
 
 /************************** get authenticated user's details **************************/
 getAuthUser=(token)=>{
-  console.log(token);
   let url = "creators/authUser/";
   return this.request({url, token})
-         .then(res=>{console.log(res.clone().json());return res.json()})
+         .then(res=> res.json())
+}
+/**********************************************************************/
+
+/************************** get all locations **************************/
+get_locations=()=>{
+  let url = "creators/locations/";
+  return this.request({url})
+         .then(res=> res.json())
 }
 
 }
