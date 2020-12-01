@@ -28,13 +28,7 @@ import Profile from './components/pages/profile/Profile';
 // import Cart from './components/pages/cart/Cart';
 
 class App extends Component {
-  constructor(props){
-    super(props);
-
-  }
-
-
-
+  
 
 render(){
   let apiProps = this.props;
@@ -47,7 +41,6 @@ return(
         exact={true}
         path="/"
         render={props=>(
-          console.log(props),
           <PageWrapper >
             <Home {...Object.assign({}, props, apiProps)}/>
           </PageWrapper>
@@ -88,7 +81,14 @@ return(
         </PageWrapper>
         )}/>
 
-    <Route path="/profile"
+    <Route path="/profile/:username"
+        render={props=>(
+        <PageWrapper>
+          <Profile {...Object.assign({}, props, apiProps)}/>
+        </PageWrapper>
+        )}/>
+
+<Route path="/profile"
         render={props=>(
         <PageWrapper>
           <Profile {...Object.assign({}, props, apiProps)}/>

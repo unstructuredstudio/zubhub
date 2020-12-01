@@ -15,16 +15,21 @@ class Profile extends Component{
   }
 
   componentDidMount(){
-    if(this.props.auth.token){
-        this.props.api.get_auth_user(this.props.auth.token)
+        let username = this.props.match.params.username;
+
+        if(!username){
+          username = this.props.auth.username;
+        }
+        else if(this.props.auth.username === username) this.props.history.push("/profile");
+        
+        this.props.api.get_user_profile({username, token:this.props.auth.token})
         .then(res=>{
           if(!res.username){
             throw new Error("an error occured while getting user profile, please try again later")
           }
-          this.setState({profile: res, loading: false})
+          return this.setState({profile: res, loading: false})
         })
         .catch(error=>{toast.warning(error.message); this.setState({loading: false})})
-        }
   }
 
  setReadOnly=value=>this.setState({readOnly: value})
@@ -36,8 +41,6 @@ class Profile extends Component{
 
   render(){
       let {profile, loading, readOnly} = this.state;
-      
-      if(this.props.auth.token){
 
           if(loading){
             return <div>
@@ -46,11 +49,13 @@ class Profile extends Component{
             }
             else if(Object.keys(profile).length > 0) {
                          return <>
-                            {
+                            {this.props.auth.username === profile.username ?
                              readOnly ? <button onClick={(e, value = false)=>this.setReadOnly(value)}>Edit</button>
                              :
                              <EditProfile profile={profile} setProfile={value=>this.setProfile(value)} 
                              setReadOnly={value=>this.setReadOnly(value)} {...this.props} />
+                             :
+                             null
                             }
 
                             <img src={profile.avatar} alt="profile"/>
@@ -58,17 +63,11 @@ class Profile extends Component{
                             <div>Username: {profile.username}</div>
                         
                     
-                            <div>Email: {profile.email}</div>
-                        
-                            <div>First Name: {profile.first_name}</div>
-                        
-                            <div>Last Name: {profile.last_name}</div>
-                            
-                            <div>Phone: {profile.phone}</div>
+                            <div>{this.props.auth.username === profile.username ? `Email: ${profile.email}` : null}</div>
                     
-                            <div>Date Of Birth: {profile.dateOfBirth}</div>
+                            <div>{this.props.auth.username === profile.username ? `Date Of Birth: ${profile.dateOfBirth}` : null}</div>
                     
-                            <div>Location: {profile.location}</div>
+                            <div>{this.props.auth.username === profile.username ? `Location: ${profile.location}` : null}</div>
                     
                             <div>Bio: {profile.bio}</div>
                             </>
@@ -76,9 +75,6 @@ class Profile extends Component{
                     return <div>
                             Couldn't fetch profile, try again later
                             </div>
-                }
-            } else {
-                    return <div>You are not logged in. Click on sign in to get started</div>
                 }
     }
 }

@@ -4,14 +4,14 @@ class API {
   }
 
   request=({url = '/', method = 'GET', token, body})=>{
-            if(method === 'GET'){
+
+            if(method === 'GET' && !token){
               return fetch(this.domain + url, {
                 method,
                 xsrfCookieName: 'csrftoken',
                 xsrfHeaderName: 'X-CSRFToken',
                 withCredentials:'true',
                 headers: new Headers({
-                  'Authorization':`Token ${token}`,
                   'Content-Type': 'application/json'
                 })
               })
@@ -56,7 +56,6 @@ class API {
             }
             }
 
-
   /**********************login with email and password******************************/
     login=({username, password})=>{
       let url = 'rest-auth/login/';
@@ -78,12 +77,10 @@ class API {
     /****************************************************/
 
 /**********************signup******************************/
-    signup=({username, email, first_name, last_name,
-            phone, dateOfBirth, location, password1, password2})=>{
+    signup=({username, email, dateOfBirth, user_location, password1, password2})=>{
       let url = 'rest-auth/registration/';
       let method = 'POST';
-      let body = JSON.stringify({username, email, first_name, phone, 
-                dateOfBirth, location, last_name, password1, password2});
+      let body = JSON.stringify({username, email, dateOfBirth, location: user_location, password1, password2});
 
       return this.request({url, method, body })
              .then(res=>res.json())
@@ -132,6 +129,21 @@ get_auth_user=(token)=>{
   return this.request({url, token})
          .then(res=>res.json())
 }
+/********************************************************************/
+
+
+/************************** get user profile **************************/
+get_user_profile=({username, token})=>{
+
+  let url = `creators/${username}/`;
+  if(token){
+  return this.request({url, token})
+         .then(res=>res.json())
+  } else {
+    return this.request({url})
+           .then(res=>res.json())
+  }
+}
 
 /************************** edit user profile **************************/
 edit_user_profile=(profile)=>{
@@ -143,6 +155,65 @@ edit_user_profile=(profile)=>{
   let body = JSON.stringify({ username })
   return this.request({url, method, token, body})
          .then(res=>res.json())
+}
+/********************************************************************/
+
+/************************** get all locations **************************/
+get_locations=()=>{
+  let url = "creators/locations/";
+  return this.request({url})
+         .then(res=> res.json())
+}
+/********************************************************************/
+
+/************************** create project **************************/
+create_project=({token, title, description, video, materials_used})=>{
+  let url = "projects/create/";
+  let method = "POST";
+  let body = JSON.stringify({ title, description, video, materials_used })
+  return this.request({url, method, token, body})
+         .then(res=>res.json())
+}
+
+/************************** get projects **************************/
+get_projects=(page)=>{
+  let url = page ? `projects/?${page}` : `projects/`;
+  return this.request({url})
+         .then(res=>res.json())
+}
+
+/************************** get project **************************/
+get_project=({id, token})=>{
+  let url = `projects/${id}`;
+  if(token){
+  return this.request({url, token})
+         .then(res=>res.json())
+  }
+  else {
+    return this.request({url})
+           .then(res=>res.json())
+  }
+}
+
+/************************** like project **************************/
+toggle_like=({id, token})=>{
+  let url = `projects/${id}/toggle_like/`;
+  
+  return this.request({url, token})
+         .then(res=>res.json())
+  
+  
+}
+
+/************************** add comment **************************/
+add_comment=({id, text, token})=>{
+  let url = `projects/${id}/add_comment/`;
+  let method = "POST";
+  let body = JSON.stringify({text})
+
+  return this.request({url, method, body, token})
+         .then(res=>res.json())
+  
 }
 
 }
