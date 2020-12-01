@@ -31,13 +31,6 @@ import ProjectDetails from './components/pages/projects/projects_components/Proj
 // import Cart from './components/pages/cart/Cart';
 
 class App extends Component {
-  constructor(props){
-    super(props);
-
-  }
-
-
-
 
 render(){
 return(

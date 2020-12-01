@@ -1,18 +1,19 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from .models import Location
 from datetime import date
-
 import re
-
 from rest_auth.registration.serializers import RegisterSerializer
 
 Creator = get_user_model()
 
+
 class CreatorSerializer(serializers.ModelSerializer):
+    location = serializers.SlugRelatedField(slug_field='name', queryset = Location.objects.all())
     class Meta:
         model = Creator
-        fields = ('username','email','first_name','last_name','avatar','phone','dateOfBirth','location','bio',)
+        fields = ('username','email','avatar','dateOfBirth','location','bio',)
 
 
 class CustomRegisterSerializer(RegisterSerializer):

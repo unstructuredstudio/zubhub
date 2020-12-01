@@ -154,18 +154,44 @@ create_project=({token, title, description, video, materials_used})=>{
 }
 
 /************************** get projects **************************/
-get_projects=()=>{
-  let url = "projects/";
+get_projects=(page)=>{
+  let url = page ? `projects/?${page}` : `projects/`;
   return this.request({url})
          .then(res=>res.json())
 }
 
-/************************** get projects **************************/
-get_project=(id)=>{
-  console.log(id);
+/************************** get project **************************/
+get_project=({id, token})=>{
   let url = `projects/${id}`;
-  return this.request({url})
+  if(token){
+  return this.request({url, token})
          .then(res=>res.json())
+  }
+  else {
+    return this.request({url})
+           .then(res=>res.json())
+  }
+}
+
+/************************** like project **************************/
+toggle_like=({id, token})=>{
+  let url = `projects/${id}/toggle_like/`;
+  
+  return this.request({url, token})
+         .then(res=>res.json())
+  
+  
+}
+
+/************************** add comment **************************/
+add_comment=({id, text, token})=>{
+  let url = `projects/${id}/add_comment/`;
+  let method = "POST";
+  let body = JSON.stringify({text})
+
+  return this.request({url, method, body, token})
+         .then(res=>res.json())
+  
 }
 
 }
