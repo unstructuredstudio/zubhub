@@ -25,7 +25,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     creator = CreatorSerializer(read_only=True)
     likes = serializers.SlugRelatedField(
-        many=True, slug_field='username', queryset=Creator.objects.all())
+        many=True, slug_field='username', read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:

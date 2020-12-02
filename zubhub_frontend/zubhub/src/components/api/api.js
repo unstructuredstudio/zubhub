@@ -4,6 +4,7 @@ class API {
   }
 
   request=({url = '/', method = 'GET', token, body})=>{
+
             if(method === 'GET' && !token){
               return fetch(this.domain + url, {
                 method,
@@ -55,7 +56,6 @@ class API {
             }
             }
 
-
   /**********************login with email and password******************************/
     login=({username, password})=>{
       let url = 'rest-auth/login/';
@@ -77,12 +77,10 @@ class API {
     /****************************************************/
 
 /**********************signup******************************/
-    signup=({username, email, first_name, last_name,
-            phone, dateOfBirth, location, password1, password2})=>{
+    signup=({username, email, dateOfBirth, user_location, password1, password2})=>{
       let url = 'rest-auth/registration/';
       let method = 'POST';
-      let body = JSON.stringify({username, email, first_name, phone, 
-                dateOfBirth, location, last_name, password1, password2});
+      let body = JSON.stringify({username, email, dateOfBirth, location: user_location, password1, password2});
 
       return this.request({url, method, body })
              .then(res=>res.json())
@@ -131,6 +129,42 @@ get_auth_user=(token)=>{
   return this.request({url, token})
          .then(res=>res.json())
 }
+/********************************************************************/
+
+
+/************************** get user profile **************************/
+get_user_profile=({username, token})=>{
+
+  let url = `creators/${username}/`;
+  if(token){
+  return this.request({url, token})
+         .then(res=>res.json())
+  } else {
+    return this.request({url})
+           .then(res=>res.json())
+  }
+}
+
+/*************************** get user projects *********************************/
+get_user_projects=({username, page, limit})=>{
+   let url;
+   if(limit && page){
+     url = `creators/${username}/projects/?limit=${limit}&&${page}`;
+   }
+   else if(limit){
+     url = `creators/${username}/projects/?limit=${limit}`;
+   }
+   else if(page){
+     url = `creators/${username}/projects/?${page}`;
+   }
+   else {
+     url = `creators/${username}/projects/`;
+   }
+
+   return this.request({url})
+          .then(res=>res.json())
+}
+/*********************************************************************/
 
 /************************** edit user profile **************************/
 edit_user_profile=(profile)=>{
@@ -143,6 +177,15 @@ edit_user_profile=(profile)=>{
   return this.request({url, method, token, body})
          .then(res=>res.json())
 }
+/********************************************************************/
+
+/************************** get all locations **************************/
+get_locations=()=>{
+  let url = "creators/locations/";
+  return this.request({url})
+         .then(res=> res.json())
+}
+/********************************************************************/
 
 /************************** create project **************************/
 create_project=({token, title, description, video, materials_used})=>{

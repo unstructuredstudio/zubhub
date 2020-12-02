@@ -20,7 +20,7 @@ class ProjectCreateAPIView(CreateAPIView):
 
 
 class ProjectListAPIView(ListAPIView):
-    queryset = Project.objects.filter(published=True)
+    queryset = Project.objects.filter(published=True).order_by("-created_on")
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
     pagination_class = ProjectNumberPagination

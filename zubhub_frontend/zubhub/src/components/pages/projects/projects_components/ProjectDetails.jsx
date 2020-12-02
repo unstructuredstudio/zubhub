@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {connect} from 'react-redux';
 
@@ -75,6 +76,7 @@ class ProjectDetails extends Component {
                 <h1>{project.title}</h1>
                 <span>Views: {project.views_count}</span>&nbsp;
                 <span><button onClick={(e, id = project.id)=>this.toggle_like(id)}>Likes: {project.likes.length}</button></span>&nbsp;
+                <Link to={`/profile/${project.creator.username}`}><span>Creator: {project.creator.username}</span></Link>&nbsp;
                   <p>{project.description}</p>
                   <ul>
                       {

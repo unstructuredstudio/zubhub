@@ -15,6 +15,7 @@ import PasswordReset from './components/pages/user_auth/PasswordReset';
 import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConfirm';
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 import Profile from './components/pages/profile/Profile';
+import UserProjects from './components/pages/profile/profile_components/UserProjects';
 import Projects from './components/pages/projects/Projects';
 import CreateProject from './components/pages/projects/projects_components/CreateProject';
 import ProjectDetails from './components/pages/projects/projects_components/ProjectDetails';
@@ -82,7 +83,28 @@ return(
         </PageWrapper>
         )}/>
 
-    <Route path="/profile"
+    <Route path="/profile/:username/projects"
+        render={props=>(
+        <PageWrapper>
+          <UserProjects {...props} {...this.props}/>
+        </PageWrapper>
+        )}/>
+
+    <Route path="/profile/:username"
+        render={props=>(
+        <PageWrapper>
+          <Profile {...props} {...this.props}/>
+        </PageWrapper>
+        )}/>
+
+    <Route path="/profile/:username"
+        render={props=>(
+        <PageWrapper>
+          <Profile {...props} {...this.props}/>
+        </PageWrapper>
+        )}/>
+
+<Route path="/profile"
         render={props=>(
         <PageWrapper>
           <Profile {...props} {...this.props}/>

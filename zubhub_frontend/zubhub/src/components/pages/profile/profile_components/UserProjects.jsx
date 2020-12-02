@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { toast } from 'react-toastify';
 
-class Projects extends Component {
+class UserProjects extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -19,7 +19,8 @@ class Projects extends Component {
     }
 
     fetchPage=page=>{
-      this.props.api.get_projects(page)
+        let username = this.props.match.params.username;
+      this.props.api.get_user_projects({page, username})
       .then(res=>{
           if(Array.isArray(res.results)){
               return this.setState({projects: res.results,prevPage:res.previous, nextPage: res.next, loading: false})
@@ -73,6 +74,7 @@ class Projects extends Component {
         else if(projects.length > 0){
             return (
                 <>
+                <h1>{this.props.match.params.username}'s Projects</h1>
                {this.projects(projects)}
                <hr/>
                <div>
@@ -83,7 +85,7 @@ class Projects extends Component {
             )
         }
         else {
-            return (<div>An error occured while fetching videos, please try again later</div>)
+            return (<div>An error occured while fetching projects, please try again later</div>)
         }
     }
 }
@@ -96,4 +98,4 @@ const mapStateToProps = state =>{
 
 export default connect(
 mapStateToProps
-)(Projects);
+)(UserProjects);

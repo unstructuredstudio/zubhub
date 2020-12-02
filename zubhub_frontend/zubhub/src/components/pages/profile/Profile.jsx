@@ -10,23 +10,72 @@ class Profile extends Component{
     super(props);
     this.state={
         profile: {},
+        projects: [],
         readOnly: true,
         loading: true
     }
   }
 
   componentDidMount(){
-    if(this.props.auth.token){
-        this.props.api.get_auth_user(this.props.auth.token)
+        let username = this.props.match.params.username;
+
+        if(!username){
+          username = this.props.auth.username;
+        }
+        else if(this.props.auth.username === username) this.props.history.replace("/profile");
+        
+        this.props.api.get_user_profile({username, token:this.props.auth.token})
         .then(res=>{
           if(!res.username){
             throw new Error("an error occured while getting user profile, please try again later")
           }
-          this.setState({profile: res, loading: false})
+          this.setState({profile: res})
+          return this.props.api.get_user_projects({username:res.username, limit:3})
+        })
+        .then(res=>{
+          if(Array.isArray(res.results)){
+            return this.setState({projects: res.results, loading: false})
+        }
+        else {
+          res = Object.keys(res).map(key=>res[key]).join("\n");
+          throw new Error(res);
+        }
         })
         .catch(error=>{toast.warning(error.message); this.setState({loading: false})})
-        }
   }
+
+  toggle_like=(id)=>{
+    if(!this.props.auth.token) this.props.history.push("/login");
+    this.props.api.toggle_like({id, token: this.props.auth.token})
+    .then(res=>{
+      if(res.id){
+        let {projects} = this.state;
+        projects = projects.map(project=>project.id === res.id ? {...project, likes_count: res.likes.length} : project);
+        return this.setState({projects});
+      }
+      else {
+       res = Object.keys(res).map(key=>res[key]).join("\n");
+       throw new Error(res);
+      }
+    })
+    .catch(error=>{this.setState({loading: false}); toast.warning(error.message)})
+ }
+
+  projects=(projects)=>projects.map(project=>
+    <div key={project.id}>
+    <Link to={`projects/${project.id}`}>
+      <iframe title="video" width="200" height="150"
+      src={project.video}>
+      </iframe>
+        <h1>{project.title}</h1>
+        <p>{project.description}</p>
+        </Link>
+        <span><button onClick={(e, id = project.id)=>this.toggle_like(id)}>Likes: {project.likes_count}</button></span>&nbsp;
+        <span>Views: {project.views_count}</span>&nbsp;
+        <span>Comments: {project.comments_count}</span>&nbsp;
+        <span>Creator: {project.creator.username}</span>&nbsp;
+     </div>
+     )
 
  setReadOnly=value=>this.setState({readOnly: value})
 
@@ -36,9 +85,7 @@ class Profile extends Component{
                 }
 
   render(){
-      let {profile, loading, readOnly} = this.state;
-      
-      if(this.props.auth.token){
+      let {profile, projects, loading, readOnly} = this.state;
 
           if(loading){
             return <div>
@@ -47,40 +94,42 @@ class Profile extends Component{
             }
             else if(Object.keys(profile).length > 0) {
                          return <>
-                            {
+                            {this.props.auth.username === profile.username ?
                              readOnly ? <button onClick={(e, value = false)=>this.setReadOnly(value)}>Edit</button>
                              :
                              <EditProfile profile={profile} setProfile={value=>this.setProfile(value)} 
                              setReadOnly={value=>this.setReadOnly(value)} {...this.props} />
+                             :
+                             null
                             }
-
-                            <button><Link to="/projects/create">Create Project</Link></button>
+                            
+                            {
+                              this.props.auth.username === profile.username ?
+                              <button><Link to="/projects/create">Create Project</Link></button>
+                              :
+                              null
+                            }
+                            
                             <img src={profile.avatar} alt="profile"/>
                             
                             <div>Username: {profile.username}</div>
                         
                     
-                            <div>Email: {profile.email}</div>
-                        
-                            <div>First Name: {profile.first_name}</div>
-                        
-                            <div>Last Name: {profile.last_name}</div>
-                            
-                            <div>Phone: {profile.phone}</div>
+                            <div>{this.props.auth.username === profile.username ? `Email: ${profile.email}` : null}</div>
                     
-                            <div>Date Of Birth: {profile.dateOfBirth}</div>
+                            <div>{this.props.auth.username === profile.username ? `Date Of Birth: ${profile.dateOfBirth}` : null}</div>
                     
-                            <div>Location: {profile.location}</div>
+                            <div>{this.props.auth.username === profile.username ? `Location: ${profile.location}` : null}</div>
                     
                             <div>Bio: {profile.bio}</div>
+                          <h2>Latest projects of {profile.username}</h2>
+                            {this.projects(projects)}
+                          <Link to={`/profile/${profile.username}/projects`}>View all projects of {profile.username}</Link>
                             </>
                 } else {
                     return <div>
                             Couldn't fetch profile, try again later
                             </div>
-                }
-            } else {
-                    return <div>You are not logged in. Click on sign in to get started</div>
                 }
     }
 }
