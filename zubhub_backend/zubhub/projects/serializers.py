@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Comment
+from .models import Project, Comment, Image
 from django.contrib.auth import get_user_model
 from creators.serializers import CreatorSerializer
 
@@ -22,11 +22,22 @@ class CommentSerializer(serializers.ModelSerializer):
         ]
 
 
+class ImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Image
+        fields = [
+            "image_url",
+            "public_id"
+        ]
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     creator = CreatorSerializer(read_only=True)
     likes = serializers.SlugRelatedField(
         many=True, slug_field='username', read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
+    images = ImageSerializer(many=True)
 
     class Meta:
         model = Project
@@ -35,12 +46,20 @@ class ProjectSerializer(serializers.ModelSerializer):
             "creator",
             "title",
             "description",
+            "images",
             "video",
             "materials_used",
             "likes",
             "views_count",
             "comments"
         ]
+
+    def create(self, validated_data):
+        images_data = validated_data.pop('images')
+        project = Project.objects.create(**validated_data)
+        for image in images_data:
+            Image.objects.create(project=project, **image)
+        return project
 
 
 class ProjectListSerializer(serializers.ModelSerializer):

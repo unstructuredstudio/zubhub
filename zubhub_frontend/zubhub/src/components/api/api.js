@@ -188,10 +188,10 @@ get_locations=()=>{
 /********************************************************************/
 
 /************************** create project **************************/
-create_project=({token, title, description, video, materials_used})=>{
+create_project=({token, title, description, video, images, materials_used})=>{
   let url = "projects/create/";
   let method = "POST";
-  let body = JSON.stringify({ title, description, video, materials_used })
+  let body = JSON.stringify({ title, description, images, video, materials_used })
   return this.request({url, method, token, body})
          .then(res=>res.json())
 }
