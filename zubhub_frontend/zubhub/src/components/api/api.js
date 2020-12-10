@@ -166,6 +166,27 @@ get_user_projects=({username, page, limit})=>{
 }
 /*********************************************************************/
 
+/********************** get followers *******************************/
+get_followers=({ page, username })=>{
+  let url = page ? `creators/${username}/followers/?${page}`: `creators/${username}/followers/`;
+
+  return this.request({url})
+         .then(res=>res.json())
+
+}
+/*****************************************************************/
+
+/********************** get saved *******************************/
+get_saved=({ page, token })=>{
+  let url = page ? `projects/saved/?${page}` : `projects/saved/`;
+
+  return this.request({url, token})
+         .then(res=>res.json())
+
+}
+/*****************************************************************/
+
+
 /************************** edit user profile **************************/
 edit_user_profile=(profile)=>{
   let {username} = profile;
@@ -178,6 +199,17 @@ edit_user_profile=(profile)=>{
          .then(res=>res.json())
 }
 /********************************************************************/
+
+/************************** follow creator **************************/
+toggle_follow=({id, token})=>{
+  let url = `creators/${id}/toggle_follow/`;
+  
+  return this.request({url, token})
+         .then(res=>res.json())
+  
+  
+}
+/******************************************************************/
 
 /************************** get all locations **************************/
 get_locations=()=>{
@@ -225,6 +257,18 @@ toggle_like=({id, token})=>{
   
   
 }
+/******************************************************************/
+
+/************************** save project for future viewing **************************/
+toggle_save=({id, token})=>{
+  let url = `projects/${id}/toggle_save/`;
+  
+  return this.request({url, token})
+         .then(res=>res.json())
+  
+  
+}
+/******************************************************************/
 
 /************************** add comment **************************/
 add_comment=({id, text, token})=>{

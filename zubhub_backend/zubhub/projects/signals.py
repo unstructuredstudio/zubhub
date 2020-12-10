@@ -1,9 +1,10 @@
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.dispatch import receiver
 import cloudinary
-from .models import Image
+from .models import Project, Image
 
 
-@receiver(pre_delete, sender=Image)
-def image_deleted(sender, instance, **kwargs):
-    cloudinary.uploader.destroy(instance.public_id)
+@receiver(post_save, sender=Project)
+def project_saved(sender, instance, **kwargs):
+    instance.creator.projects_count = instance.creator.projects.count()
+    instance.creator.save()

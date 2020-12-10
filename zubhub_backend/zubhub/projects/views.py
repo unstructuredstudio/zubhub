@@ -4,10 +4,11 @@ from django.contrib.auth.models import AnonymousUser
 from django.db.models import F
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from .models import Project
 from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
 from .pagination import ProjectNumberPagination
+from creators.permissions import IsOwner
 
 
 class ProjectCreateAPIView(CreateAPIView):
@@ -51,6 +52,15 @@ class ProjectDetailsAPIView(RetrieveAPIView):
         return obj
 
 
+class SavedProjectsAPIView(ListAPIView):
+    serializer_class = ProjectListSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    pagination_class = ProjectNumberPagination
+
+    def get_queryset(self):
+        return self.request.user.saved_for_future.all().order_by("-created_on")
+
+
 class ToggleLikeAPIView(RetrieveAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -67,6 +77,27 @@ class ToggleLikeAPIView(RetrieveAPIView):
             obj.save()
         else:
             obj.likes.add(self.request.user)
+            obj.save()
+
+        return obj
+
+
+class ToggleSaveAPIView(RetrieveAPIView):
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return Project.objects.filter(published=True)
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(self.get_queryset(), pk=pk)
+
+        if self.request.user in obj.saved_by.all():
+            obj.saved_by.remove(self.request.user)
+            obj.save()
+        else:
+            obj.saved_by.add(self.request.user)
             obj.save()
 
         return obj

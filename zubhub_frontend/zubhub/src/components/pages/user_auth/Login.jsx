@@ -28,9 +28,13 @@ class Login extends Component {
         return this.props.set_auth_user({ token: res.key });
       })
       .then((val) => this.props.api.get_auth_user(this.props.auth.token))
-      .then((res) =>
-        this.props.set_auth_user({ ...this.props.auth, username: res.username })
-      )
+      .then((res) => {
+        this.props.set_auth_user({
+          ...this.props.auth,
+          username: res.username,
+          id: res.id,
+        });
+      })
       .then((val) => this.props.history.push("/profile"))
       .catch((error) => this.setState({ error: error.message }));
   };

@@ -50,9 +50,31 @@ class Projects extends Component {
         if (res.id) {
           let { projects } = this.state;
           projects = projects.map((project) =>
-            project.id === res.id
-              ? { ...project, likes_count: res.likes.length }
-              : project
+            project.id === res.id ? res : project
+          );
+          return this.setState({ projects });
+        } else {
+          res = Object.keys(res)
+            .map((key) => res[key])
+            .join("\n");
+          throw new Error(res);
+        }
+      })
+      .catch((error) => {
+        this.setState({ loading: false });
+        toast.warning(error.message);
+      });
+  };
+
+  toggle_save = (id) => {
+    if (!this.props.auth.token) this.props.history.push("/login");
+    this.props.api
+      .toggle_save({ id, token: this.props.auth.token })
+      .then((res) => {
+        if (res.id) {
+          let { projects } = this.state;
+          projects = projects.map((project) =>
+            project.id === res.id ? res : project
           );
           return this.setState({ projects });
         } else {
@@ -83,7 +105,16 @@ class Projects extends Component {
         </Link>
         <span>
           <button onClick={(e, id = project.id) => this.toggle_like(id)}>
-            Likes: {project.likes_count}
+            {project.likes.includes(this.props.auth.id) ? "Unlike:" : "Like:"}{" "}
+            {project.likes.length}
+          </button>
+        </span>
+        <span>
+          <button onClick={(e, id = project.id) => this.toggle_save(id)}>
+            {project.saved_by.includes(this.props.auth.id)
+              ? "Unsave:"
+              : "Save:"}{" "}
+            {project.saved_by.length}
           </button>
         </span>
         &nbsp;
