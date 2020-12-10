@@ -1,306 +1,772 @@
-import React,{Component} from 'react';
-import {withFormik} from 'formik';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { Component } from "react";
+import { withFormik } from "formik";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import * as Yup from "yup";
+import { connect } from "react-redux";
+import "react-toastify/dist/ReactToastify.css";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { withStyles, fade } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+// import DialogContentText from "@material-ui/core/DialogContentText";
+import Chip from "@material-ui/core/Chip";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import ImageIcon from "@material-ui/icons/Image";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
 
-import * as Yup from 'yup';
-import {connect} from 'react-redux';
+const styles = (theme) => ({
+  root: {
+    paddingTop: "2em",
+    paddingBottom: "2em",
+    flex: "1 0 auto",
+  },
+  cardStyle: {
+    border: 0,
+    borderRadius: 15,
+    boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .12)",
+    color: "white",
+    padding: "0 30px",
+  },
+  customLabelStyle: {
+    "&.MuiFormLabel-root.Mui-focused": {
+      color: "#00B8C4",
+    },
+  },
 
+  customInputStyle: {
+    borderRadius: 15,
+    "&.MuiOutlinedInput-notchedOutline": {
+      border: "1px solid #00B8C4",
+      boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+    },
+    "&.MuiOutlinedInput-root": {
+      "&:hover fieldset": {
+        border: "1px solid #00B8C4",
+        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+      },
+      "&.Mui-focused fieldset": {
+        border: "1px solid #00B8C4",
+        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+      },
+    },
+  },
+  primaryButton: {
+    width: "100%",
+    backgroundColor: "#00B8C4",
+    borderRadius: 15,
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#03848C",
+    },
+  },
+  secondaryButton: {
+    width: "100%",
+    borderRadius: 15,
+    borderColor: "#00B8C4",
+    color: "#00B8C4",
+    "&:hover": {
+      color: "#03848C",
+      borderColor: "#03848C",
+    },
+  },
+  imageUploadButton: {
+    display: "flex",
+    justifyContent: "flex-start",
+  },
+  uploadProgressLabelStyle: {
+    color: "white",
+  },
+  uploadProgressStyle: {
+    color: "#00B8C4",
+  },
+  customChipStyle: {
+    border: "1px solid #00B8C4",
+    color: "#00B8C4",
+    margin: "0.5em",
+  },
+  materialsUsedViewStyle: {
+    padding: "0.5em",
+  },
+  center: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textDecorationNone: {
+    textDecoration: "none",
+  },
+  displayNone: { display: "none" },
+  largeLabel: {
+    fontSize: "1.3rem",
+  },
+  errorBox: {
+    width: "100%",
+    padding: "1em",
+    borderRadius: 6,
+    borderWidth: "1px",
+    borderColor: "#a94442",
+    backgroundColor: "#ffcdd2",
+  },
+  error: {
+    color: "#a94442",
+  },
+});
 
-class CreateProject extends Component{
-  constructor(props){
+class CreateProject extends Component {
+  constructor(props) {
     super(props);
     this.state = {
-      error:null,
+      error: null,
+      materialsUsedModalOpen: false,
+      materials_used: [],
       image_upload: {
         upload_dialog: false,
         images_to_upload: 0,
         successful_uploads: 0,
-        upload_info:{},
+        upload_info: {},
         upload_percent: 0,
-        uploaded_images_url:[]
-      }
-
-    }
+        uploaded_images_url: [],
+      },
+    };
   }
 
-
-  upload=(image)=>{
+  upload = (image) => {
     let url = `https://api.cloudinary.com/v1_1/raymondndibe/upload`;
     let xhr = new XMLHttpRequest();
     let fd = new FormData();
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
     // Update progress (can be used to show progress indicator)
-    xhr.upload.addEventListener("progress", e=> {
+    xhr.upload.addEventListener("progress", (e) => {
       let progress = Math.round((e.loaded * 100.0) / e.total);
-      let {image_upload} = this.state;
+      let { image_upload } = this.state;
       image_upload.upload_info[image.name] = progress;
 
       let total = 0;
-        Object.keys(image_upload.upload_info).forEach(each=>{
-          total = total + image_upload.upload_info[each];
-        })
+      Object.keys(image_upload.upload_info).forEach((each) => {
+        total = total + image_upload.upload_info[each];
+      });
 
-      total =  total/ Object.keys(image_upload.upload_info).length;
+      total = total / Object.keys(image_upload.upload_info).length;
       image_upload.upload_percent = total;
 
-      this.setState({image_upload})
-      document.querySelector('#progress_bar').style.width = progress + "%";
+      this.setState({ image_upload });
     });
-  
-    xhr.onreadystatechange = e => {
+
+    xhr.onreadystatechange = (e) => {
       if (xhr.readyState === 4 && xhr.status === 200) {
         // File uploaded successfully
         let response = JSON.parse(xhr.responseText);
-        let {secure_url, public_id} = response
-        let {image_upload} = this.state;
+        let { secure_url, public_id } = response;
+        let { image_upload } = this.state;
 
-        image_upload.uploaded_images_url.push({image_url: secure_url, public_id});
+        image_upload.uploaded_images_url.push({
+          image_url: secure_url,
+          public_id,
+        });
         image_upload.successful_uploads = image_upload.successful_uploads + 1;
 
-        this.setState({image_upload},()=>{
-          if(this.state.image_upload.images_to_upload === this.state.image_upload.successful_uploads){
-            let {image_upload} = this.state;
+        this.setState({ image_upload }, () => {
+          if (
+            this.state.image_upload.images_to_upload ===
+            this.state.image_upload.successful_uploads
+          ) {
+            let { image_upload } = this.state;
             image_upload.upload_dialog = false;
-            this.setState({image_upload});
-            this.props.api.create_project({...this.props.values, token: this.props.auth.token, 
-                                          images: this.state.image_upload.uploaded_images_url})
-            .then(res=>{
-              if(!res.title){
-                res = Object.keys(res).map(key=>res[key]).join("\n");
-                throw new Error(res);
-              }
-              toast.success("Your project was created successfully!!")
-              return this.props.history.push("/")
-            })
-            .catch(error=>this.setState({error:error.message}))
+            console.log(this.props.values.materials_used);
+            this.setState({ image_upload });
+            this.props.api
+              .create_project({
+                ...this.props.values,
+                token: this.props.auth.token,
+                images: this.state.image_upload.uploaded_images_url,
+              })
+              .then((res) => {
+                if (!res.title) {
+                  res = Object.keys(res)
+                    .map((key) => res[key])
+                    .join("\n");
+                  throw new Error(res);
+                }
+                toast.success("Your project was created successfully!!");
+                return this.props.history.push("/");
+              })
+              .catch((error) => this.setState({ error: error.message }));
           }
         });
       }
     };
-  
-    fd.append('upload_preset', 'zubhub_projects_images');
-    fd.append('file', image);
-    xhr.send(fd);
-  }
 
-  create_project=(e)=>{
+    fd.append("upload_preset", "zubhub_projects_images");
+    fd.append("file", image);
+    xhr.send(fd);
+  };
+
+  create_project = (e) => {
     let image_field = this.imageFieldValidation();
 
-    if(image_field.is_empty === true){
-      this.props.setErrors({project_images:"please upload an image"});
-    }
-    else if(image_field.too_many_images === true){
-      this.props.setErrors({project_images:"too many images uploaded"});
-    }
-    else if(image_field.image_size_too_large === true){
-      this.props.setErrors({project_images:"one or more of your image is greater than 3mb"});
-    }
-    else {
+    if (image_field.is_empty === true) {
+      this.props.setErrors({ project_images: "please upload an image" });
+    } else if (image_field.too_many_images === true) {
+      this.props.setErrors({ project_images: "too many images uploaded" });
+    } else if (image_field.image_size_too_large === true) {
+      this.props.setErrors({
+        project_images: "one or more of your image is greater than 3mb",
+      });
+    } else {
       let project_images = document.querySelector("#project_images").files;
-       document.querySelector("#progress_bar").styles.width = 0;
+      // document.querySelector("#progress_bar").styles.width = 0;
 
-      let {image_upload} = this.state;
+      let { image_upload } = this.state;
       image_upload.images_to_upload = project_images.length;
       image_upload.upload_dialog = true;
-      this.setState({image_upload});
+      this.setState({ image_upload });
 
-      for(let index = 0; index < project_images.length; index++){
+      for (let index = 0; index < project_images.length; index++) {
         this.upload(project_images[index]);
       }
     }
   };
 
-  imageFieldValidation=()=>{
+  imageFieldValidation = () => {
+    let image_upload_button = document.querySelector("#image_upload_button");
     let image_field = document.querySelector("#project_images");
 
-         if(image_field.files.length < 1){
-           this.props.setErrors({project_images:"please upload an image"});
-           return {is_empty:true}
-         }
+    if (image_field.files.length < 1) {
+      image_upload_button.setAttribute(
+        "style",
+        "border-color:#F54336; color:#F54336"
+      );
+      this.props.setErrors({ project_images: "please upload an image" });
+      return { is_empty: true };
+    } else if (image_field.files.length > 5) {
+      image_upload_button.setAttribute(
+        "style",
+        "border-color:#F54336; color:#F54336"
+      );
+      this.props.setErrors({ project_images: "too many images uploaded" });
+      return { is_empty: false, too_many_images: true };
+    } else {
+      let image_size_too_large = false;
 
-         else if(image_field.files.length > 5){
-           this.props.setErrors({project_images:"too many images uploaded"});
-          return {is_empty:false,too_many_images:true};
-         }
-      else{
-        let image_size_too_large = false;
-
-        for(let index  = 0; index < image_field.files.length; index++){
-          if((image_field.files[index].size)/1000 > 3072){
-            image_size_too_large = true;
-          }
+      for (let index = 0; index < image_field.files.length; index++) {
+        if (image_field.files[index].size / 1000 > 3072) {
+          image_size_too_large = true;
         }
-        if(image_size_too_large){
-        this.props.setErrors({project_images:"one or more of your image is greater than 3mb"});
-        return {is_empty:false,too_many_images:false,image_size_too_large:image_size_too_large}
       }
+      if (image_size_too_large) {
+        image_upload_button.setAttribute(
+          "style",
+          "border-color:#F54336; color:#F54336"
+        );
+        this.props.setErrors({
+          project_images: "one or more of your image is greater than 3mb",
+        });
+        return {
+          is_empty: false,
+          too_many_images: false,
+          image_size_too_large: image_size_too_large,
+        };
       }
-      return {is_empty:false,too_many_images:false,image_size_too_large:false}
-     }
-
-
-  render(){
-
-    let {error, image_upload}=this.state;
-    if(!this.props.auth.token){
-        return <div> You are not logged in. Click on the signin button to get started</div>
     }
-    else {
-        return(
-            <div>
-              <ToastContainer/>
-              {image_upload.upload_dialog ? 
-              <div style={{width:"100vw", height:"100vh", backgroundColor: "rgba(0,0,0,0.3)",zIndex:"100",position:"absolute", top: "-5em", display:"flex",alignItems:"center"}}>
-                <div id="progress_bar" style={{height: "1em", backgroundColor: "rgb(255,255,255)",borderRadius:"50px"}}></div></div>
-              :
-              null
-            }
-              <div className="empty-1" style={{backgroundColor:'#242424',
-                WebKitBoxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)',MozBoxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)',
-                boxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)'}}></div>
-              <div id="content" className="site-content page-content">
-              <div className="entry-header text-center">
-                <h1 className="entry-title">Create Project</h1>
-              </div>
-              <div className="page-content">
-                <div className="container">
-                  <div id="post-2018" className="post-2018 page type-page status-publish hentry">
-                    <div className="entry-content">
-                      <div className="page-content-body">
-                        <p></p>
-                        <div className="um um-register um-2010 uimob500" style={{Opacity: '1'}}>
-                          <div className="um-form">
-                            <form name="create_project" noValidate="noValidate" onSubmit={this.props.handleSubmit}>
-                              <p className="help-block text-danger">
-                                {(error!==null) &&
-                                <span className="text-danger">{error}</span> }
-                                </p>
-                              <div className="um-row _um_row_1 " style={{Margin: '0 0 30px 0'}}>
-                                <div className="um-col-1">
-      
-                                <div className="um-field um-field-user_email um-field-text um-field-type_text">
-                                    <div className="um-field-label">
-                                      <label htmlFor="title">Title</label>
-                                      <div className="um-clear"></div>
-                                    </div>
-                                    <div className="um-field-area">
-                                      <input autoComplete="off" className="um-form-field valid "
-                                         type="text" name="title" id="title"  placeholder="Project Title"
-                                         onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
-                                    </div>
-                                    <p className="help-block text-danger">
-                                    {(this.props.touched['title'] && this.props.errors['title']) &&
-                                    <span className="text-danger">{this.props.errors['title']}</span> }
-                                    </p>
-                                  </div>
-      
-                                  <div className="um-field um-field-user_email um-field-text um-field-type_text">
-                                    <div className="um-field-label">
-                                      <label htmlFor="description">Description</label>
-                                      <div className="um-clear"></div>
-                                    </div>
-                                    <div className="um-field-area">
-                                      <textarea autoComplete="off" className="um-form-field valid "name="description" 
-                                      id="description"  placeholder="Project Description"
-                                      onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
-                                    </div>
-                                    <p className="help-block text-danger">
-                                    {(this.props.touched['description'] && this.props.errors['description']) &&
-                                    <span className="text-danger">{this.props.errors['description']}</span> }
-                                    </p>
-                                  </div>
 
-                                  <div className="um-field um-field-first_name um-field-text um-field-type_text">
-                                    <div className="um-field-label">
-                                      <label htmlFor="project_images">Project Images</label>
-                                      <div className="um-clear"></div>
-                                    </div>
-                                    <div className="um-field-area">
-                                    <input type="file" accept="image/*" id="project_images" name="project_images" multiple
-                                       onChange={this.imageFieldValidation} onBlur={this.props.handleBlur} />
-                                    </div>
-                                    <p className="help-block text-danger">
-                                    {(this.props.touched['project_images'] && this.props.errors['project_images']) &&
-                                    <span className="text-danger">{this.props.errors['project_images']}</span> }
-                                    </p>
-                                  </div>
+    image_upload_button.setAttribute(
+      "style",
+      "border-color: #00B8C4; color:#00B8C4"
+    );
+    return {
+      is_empty: false,
+      too_many_images: false,
+      image_size_too_large: false,
+    };
+  };
 
-                                  <div className="um-field um-field-first_name um-field-text um-field-type_text">
-                                    <div className="um-field-label">
-                                      <label htmlFor="video">Video URL</label>
-                                      <div className="um-clear"></div>
-                                    </div>
-                                    <div className="um-field-area">
-                                      <input autoComplete="off" className="um-form-field valid "
-                                         type="text" name="video" id="video"  placeholder="Video URL"
-                                         onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
-                                    </div>
-                                    <p className="help-block text-danger">
-                                    {(this.props.touched['video'] && this.props.errors['video']) &&
-                                    <span className="text-danger">{this.props.errors['video']}</span> }
-                                    </p>
-                                  </div>
-                                  <div className="um-field um-field-user_email um-field-text um-field-type_text">
-                                    <div className="um-field-label">
-                                      <label htmlFor="materials_used">Materials Used</label>
-                                      <div className="um-clear"></div>
-                                    </div>
-                                    <div className="um-field-area">
-                                      <textarea autoComplete="off" className="um-form-field valid "
-                                        name="materials_used" id="materials_used"  placeholder="ie: wire, knife, soldering iron"
-                                         onChange={this.props.handleChange} onBlur={this.props.handleBlur} />
-                                    </div>
-                                    <p className="help-block text-danger">
-                                    {(this.props.touched['materials_used'] && this.props.errors['materials_used']) &&
-                                    <span className="text-danger">{this.props.errors['materials_used']}</span> }
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
+  addMaterialUsed = (e) => {
+    e.preventDefault();
+    let new_material = document.querySelector("#new_material");
+    let hidden_materials_field = document.querySelector("#materials_used");
+    hidden_materials_field.value = hidden_materials_field.value
+      ? `${hidden_materials_field.value},${new_material.value}`
+      : new_material.value;
+    new_material.value = "";
+    console.log(hidden_materials_field.value);
+    this.props.setFieldValue(
+      "materials_used",
+      hidden_materials_field.value,
+      true
+    );
+    this.setState({ materials_used: hidden_materials_field.value.split(",") });
+  };
 
-                              <input type="submit" value="Create Project" className="text-uppercase um-button btn btn-success btn-lg" id="um-submit-btn" onClick={this.create_project}/>
-                            
-                            </form>
-                          </div>
-                        </div>
-                        <br/>
-                        <p></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              </div>
+  removeMaterialsUsed = (e, value) => {
+    e.preventDefault();
+    let hidden_materials_field = document.querySelector("#materials_used");
+    hidden_materials_field.value = hidden_materials_field.value
+      .split(",")
+      .filter((material) => material !== value)
+      .join(",");
+
+    console.log(hidden_materials_field.value);
+    this.props.setFieldValue(
+      "materials_used",
+      hidden_materials_field.value,
+      true
+    );
+    // this.setState({ materialsUsedModalOpen: !materialsUsedModalOpen });
+    this.setState({ materials_used: hidden_materials_field.value.split(",") });
+  };
+
+  handleMaterialsUsedDialogToggle = () => {
+    let { materialsUsedModalOpen } = this.state;
+    this.setState({
+      materialsUsedModalOpen: !materialsUsedModalOpen,
+    });
+  };
+
+  render() {
+    let {
+      error,
+      image_upload,
+      materialsUsedModalOpen,
+      materials_used,
+    } = this.state;
+    let { classes } = this.props;
+    if (!this.props.auth.token) {
+      return (
+        <div>
+          {" "}
+          You are not logged in. Click on the signin button to get started
+        </div>
+      );
+    } else {
+      return (
+        <>
+          <ToastContainer />
+          {image_upload.upload_dialog ? (
+            <div
+              style={{
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: "rgba(0,0,0,0.3)",
+                zIndex: "100",
+                position: "absolute",
+                top: "-5em",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <div
+                id="progress_bar"
+                style={{
+                  height: "1em",
+                  backgroundColor: "rgb(255,255,255)",
+                  borderRadius: "50px",
+                }}
+              ></div>
             </div>
-          )
+          ) : null}
+          <Box className={classes.root}>
+            <Container maxWidth="sm">
+              <Card className={classes.cardStyle}>
+                <CardActionArea>
+                  <CardContent>
+                    <form
+                      className="project-create-form"
+                      name="create_project"
+                      noValidate="noValidate"
+                      onSubmit={this.props.handleSubmit}
+                    >
+                      <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                        color="textPrimary"
+                      >
+                        Create Project
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        Tell us about your project!
+                      </Typography>
+
+                      <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                          <Box
+                            component="p"
+                            className={error !== null && classes.errorBox}
+                          >
+                            {error !== null && (
+                              <Box component="span" className={classes.error}>
+                                {error}
+                              </Box>
+                            )}
+                          </Box>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <FormControl
+                            className={clsx(classes.margin, classes.textField)}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            margin="small"
+                            error={
+                              this.props.touched["title"] &&
+                              this.props.errors["title"]
+                            }
+                          >
+                            <InputLabel
+                              className={classes.customLabelStyle}
+                              htmlFor="title"
+                            >
+                              Title
+                            </InputLabel>
+                            <OutlinedInput
+                              className={classes.customInputStyle}
+                              id="title"
+                              name="title"
+                              type="text"
+                              placeholder="Project Title"
+                              onChange={this.props.handleChange}
+                              onBlur={this.props.handleBlur}
+                              labelWidth={90}
+                            />
+                            <FormHelperText error>
+                              {this.props.errors["title"]}
+                            </FormHelperText>
+                          </FormControl>
+
+                          {/*<Box component="p" className="help-block text-danger">
+                        {this.props.touched["materials_used"] &&
+                          this.props.errors["materials_used"] && (
+                            <Box component="span" className="text-danger">
+                              {this.props.errors["materials_used"]}
+                            </Box>
+                          )}
+                          </Box>*/}
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <FormControl
+                            className={clsx(classes.margin, classes.textField)}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            margin="small"
+                            error={
+                              this.props.touched["description"] &&
+                              this.props.errors["description"]
+                            }
+                          >
+                            <InputLabel
+                              className={classes.customLabelStyle}
+                              htmlFor="description"
+                            >
+                              Description
+                            </InputLabel>
+                            <OutlinedInput
+                              className={classes.customInputStyle}
+                              id="description"
+                              name="description"
+                              type="text"
+                              multiline
+                              rowsMax={6}
+                              onChange={this.props.handleChange}
+                              onBlur={this.props.handleBlur}
+                              labelWidth={90}
+                            />
+                            <FormHelperText error>
+                              {this.props.errors["description"]}
+                            </FormHelperText>
+                          </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={6}>
+                          <FormControl fullWidth>
+                            <label htmlFor="project_images">
+                              <Button
+                                className={clsx(
+                                  classes.secondaryButton,
+                                  classes.imageUploadButton
+                                )}
+                                variant="outlined"
+                                size="large"
+                                margin="normal"
+                                id="image_upload_button"
+                                startIcon={<ImageIcon />}
+                                onClick={() =>
+                                  document
+                                    .querySelector("#project_images")
+                                    .click()
+                                }
+                              >
+                                Images
+                              </Button>
+                            </label>
+                            <input
+                              className={classes.displayNone}
+                              type="file"
+                              accept="image/*"
+                              id="project_images"
+                              name="project_images"
+                              multiple
+                              onChange={this.imageFieldValidation}
+                              onBlur={this.props.handleBlur}
+                            />
+                            <FormHelperText error>
+                              {this.props.errors["project_images"]}
+                            </FormHelperText>
+                          </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={6}>
+                          <FormControl
+                            className={clsx(classes.margin, classes.textField)}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            margin="small"
+                            error={
+                              this.props.touched["video"] &&
+                              this.props.errors["video"]
+                            }
+                            helperText={this.props.errors["video"]}
+                          >
+                            <InputLabel
+                              className={classes.customLabelStyle}
+                              htmlFor="video"
+                            >
+                              Video URL
+                            </InputLabel>
+                            <OutlinedInput
+                              className={classes.customInputStyle}
+                              id="video"
+                              name="video"
+                              type="text"
+                              onChange={this.props.handleChange}
+                              onBlur={this.props.handleBlur}
+                              labelWidth={90}
+                            />
+                            <FormHelperText error>
+                              {this.props.errors["video"]}
+                            </FormHelperText>
+                          </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <FormControl
+                            className={clsx(classes.margin, classes.textField)}
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            margin="small"
+                          >
+                            <InputLabel
+                              className={clsx(
+                                classes.customLabelStyle,
+                                classes.largeLabel
+                              )}
+                              htmlFor="materials_used"
+                              shrink
+                            >
+                              Materials Used
+                            </InputLabel>
+                            <Box className={classes.materialsUsedViewStyle}>
+                              {materials_used.map((material, num) => (
+                                <Chip
+                                  className={classes.customChipStyle}
+                                  key={num}
+                                  label={material}
+                                  onDelete={(e, value = material) =>
+                                    this.removeMaterialsUsed(e, value)
+                                  }
+                                  color="secondary"
+                                  variant="outlined"
+                                />
+                              ))}
+                            </Box>
+                            <Button
+                              className={classes.secondaryButton}
+                              variant="outlined"
+                              size="large"
+                              margin="normal"
+                              onClick={this.handleMaterialsUsedDialogToggle}
+                            >
+                              Add New
+                            </Button>
+                            <input
+                              id="materials_used"
+                              name="materials_used"
+                              type="hidden"
+                              onChange={this.props.handleChange}
+                              onBlur={this.props.handleBlur}
+                            />
+                            <FormHelperText error>
+                              {this.props.errors["materials_used"]}
+                            </FormHelperText>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Button
+                            variant="contained"
+                            size="large"
+                            className={classes.primaryButton}
+                            onClick={this.create_project}
+                          >
+                            Create Project
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </form>
+                    <Dialog
+                      open={materialsUsedModalOpen}
+                      onClose={this.handleMaterialsUsedDialogToggle}
+                      aria-labelledby="materials used dialog"
+                    >
+                      <DialogTitle id="materials-used-dialog-title">
+                        Add New Material
+                      </DialogTitle>
+                      <DialogContent>
+                        <FormControl
+                          className={clsx(classes.margin, classes.textField)}
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          margin="normal"
+                        >
+                          <InputLabel
+                            className={classes.customLabelStyle}
+                            htmlFor="new_material"
+                          >
+                            New Material
+                          </InputLabel>
+                          <OutlinedInput
+                            className={classes.customInputStyle}
+                            id="new_material"
+                            name="new_material"
+                            type="text"
+                            labelWidth={90}
+                          />
+                        </FormControl>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          onClick={this.handleMaterialsUsedDialogToggle}
+                          color="primary"
+                        >
+                          Cancel
+                        </Button>
+                        <Button onClick={this.addMaterialUsed} color="primary">
+                          Add
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                    <Dialog
+                      PaperProps={{
+                        style: {
+                          backgroundColor: "transparent",
+                          boxShadow: "none",
+                        },
+                      }}
+                      className={classes.uploadProgressDialogStyle}
+                      open={image_upload.upload_dialog}
+                      aria-labelledby="upload progress dialog"
+                    >
+                      <Box position="relative" display="inline-flex">
+                        <CircularProgress
+                          className={classes.uploadProgressStyle}
+                          variant="determinate"
+                          size={70}
+                          thickness={6}
+                          value={image_upload.upload_percent}
+                        />
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Typography
+                            className={classes.uploadProgressLabelStyle}
+                            variant="caption"
+                            component="div"
+                          >{`${Math.round(
+                            image_upload.upload_percent
+                          )}%`}</Typography>
+                        </Box>
+                      </Box>
+                    </Dialog>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Container>
+          </Box>
+        </>
+      );
     }
   }
 }
 
-const mapStateToProps = state =>{
+CreateProject.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => {
   return {
-    auth:state.auth,
-  }
-}
+    auth: state.auth,
+  };
+};
 
-
-export default connect(
-  mapStateToProps
-  )(withFormik({
-  mapPropsToValue: ()=>({
-    title:'',
-    description:'',
-    video:'',
-    materials_used: ''
-  }),
-  validationSchema: Yup.object().shape({
-    title: Yup.string().max(100, "your project title shouldn't be more than 100 characters").required("title is required"),
-    video: Yup.string().url("you are required to submit a video url here").max(1000, "your video url shouldn't be more than 1000 characters").required("video url is required"),
-    description: Yup.string().max(10000,"your description shouldn't be more than 10,000 characters"),
-    materials_used: Yup.string().max(10000, "your materials used shouldn't be more than 10,000 characters").required("materials used is required")
-  }),
-  handleSubmit:(values,{setSubmitting}) =>{
-  }
-})(CreateProject));
+export default connect(mapStateToProps)(
+  withFormik({
+    mapPropsToValue: () => ({
+      title: "",
+      description: "",
+      video: "",
+      materials_used: "",
+    }),
+    validationSchema: Yup.object().shape({
+      title: Yup.string()
+        .max(100, "your project title shouldn't be more than 100 characters")
+        .required("title is required"),
+      video: Yup.string()
+        .url("you are required to submit a video url here")
+        .max(1000, "your video url shouldn't be more than 1000 characters")
+        .required("video url is required"),
+      description: Yup.string().max(
+        10000,
+        "your description shouldn't be more than 10,000 characters"
+      ),
+      materials_used: Yup.string()
+        .max(
+          10000,
+          "your materials used shouldn't be more than 10,000 characters"
+        )
+        .required("materials used is required"),
+    }),
+    handleSubmit: (values, { setSubmitting }) => {},
+  })(withStyles(styles)(CreateProject))
+);

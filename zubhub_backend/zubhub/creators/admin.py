@@ -4,7 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 
 Creator = get_user_model()
 
-UserAdmin.fieldsets += ('Personal Info', {'fields': ('avatar', 'phone', 'dateOfBirth', 'location', 'bio')}),
+UserAdmin.fieldsets += ('Personal Info',
+                        {'fields': ('avatar', 'phone', 'dateOfBirth', 'location', 'bio')}),
 UserAdmin.readonly_fields += ("avatar"),
 
 admin.site.register(Creator, UserAdmin)
