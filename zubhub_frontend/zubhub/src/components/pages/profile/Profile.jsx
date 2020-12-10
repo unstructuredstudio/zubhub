@@ -236,6 +236,30 @@ class Profile extends Component {
       });
   }
 
+  toggle_like = (id) => {
+    if (!this.props.auth.token) this.props.history.push("/login");
+    this.props.api
+      .toggle_like({ id, token: this.props.auth.token })
+      .then((res) => {
+        if (res.id) {
+          let { projects } = this.state;
+          projects = projects.map((project) =>
+            project.id === res.id ? res : project
+          );
+          return this.setState({ projects });
+        } else {
+          res = Object.keys(res)
+            .map((key) => res[key])
+            .join("\n");
+          throw new Error(res);
+        }
+      })
+      .catch((error) => {
+        this.setState({ loading: false });
+        toast.warning(error.message);
+      });
+  };
+
   setReadOnly = (value) => this.setState({ readOnly: value });
 
   setProfile = (value) => {

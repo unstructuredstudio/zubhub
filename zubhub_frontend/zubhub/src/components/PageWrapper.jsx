@@ -155,6 +155,7 @@ class PageWrapper extends Component {
           this.props.set_auth_user({
             ...this.props.auth,
             username: res.username,
+            id: res.id,
           });
         })
         .catch((error) => toast.warning(error.message));
@@ -166,7 +167,7 @@ class PageWrapper extends Component {
     this.props.api
       .logout(this.props.auth.token)
       .then((res) => {
-        this.props.set_auth_user({ token: null, username: null });
+        this.props.set_auth_user({ token: null, username: null, id: null });
       })
       .then((res) => {
         this.props.history.push("/");

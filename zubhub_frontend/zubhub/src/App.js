@@ -12,9 +12,12 @@ import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConf
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 import Profile from './components/pages/profile/Profile';
 import UserProjects from './components/pages/profile/profile_components/UserProjects';
+import UserFollowers from './components/pages/profile/profile_components/UserFollowers';
 import Projects from './components/pages/projects/Projects';
+import SavedProjects from './components/pages/projects/projects_components/SavedProjects';
 import CreateProject from './components/pages/projects/projects_components/CreateProject';
 import ProjectDetails from './components/pages/projects/projects_components/ProjectDetails';
+import UserSavedProjects from './components/pages/projects/projects_components/SavedProjects';
 
 class App extends Component {
 
@@ -74,6 +77,13 @@ return(
         </PageWrapper>
         )}/>
 
+    <Route path="/profile/:username/followers"
+        render={props=>(
+        <PageWrapper>
+          <UserFollowers {...props} {...this.props}/>
+        </PageWrapper>
+        )}/>
+
     <Route path="/profile/:username"
         render={props=>(
         <PageWrapper {...props}>
@@ -92,6 +102,13 @@ return(
         render={props=>(
         <PageWrapper {...props}>
           <CreateProject {...props} {...this.props}/>
+        </PageWrapper>
+        )}/>
+
+    <Route path="/projects/saved"
+        render={props=>(
+        <PageWrapper>
+          <SavedProjects {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 

@@ -25,7 +25,7 @@ class Project(models.Model):
     likes_count = models.IntegerField(blank=True, default=0)
     comments_count = models.IntegerField(blank=True, default=0)
     saved_by = models.ManyToManyField(
-        Creator, blank=True, related_name="saved_for_later")
+        Creator, blank=True, related_name="saved_for_future")
     slug = models.SlugField(unique=True)
     created_on = models.DateTimeField(auto_now=True)
     published = models.BooleanField(default=True)
