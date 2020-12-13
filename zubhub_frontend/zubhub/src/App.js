@@ -17,7 +17,6 @@ import Projects from './components/pages/projects/Projects';
 import SavedProjects from './components/pages/projects/projects_components/SavedProjects';
 import CreateProject from './components/pages/projects/projects_components/CreateProject';
 import ProjectDetails from './components/pages/projects/projects_components/ProjectDetails';
-import UserSavedProjects from './components/pages/projects/projects_components/SavedProjects';
 
 class App extends Component {
 

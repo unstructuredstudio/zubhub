@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, withRouter } from "react-router-dom";
-import EditProfile from "./profile_components/EditProfile";
+import ErrorPage from "../infos/ErrorPage";
+import LoadingPage from "../infos/LoadingPage";
+import { Link } from "react-router-dom";
 import Project from "../projects/projects_components/Project";
 import * as AuthActions from "../../../store/actions/authActions";
-import { withFormik } from "formik";
 import "react-toastify/dist/ReactToastify.css";
-import * as Yup from "yup";
 import "react-toastify/dist/ReactToastify.css";
 import clsx from "clsx";
 import PropTypes from "prop-types";
@@ -17,23 +16,15 @@ import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
 import Paper from "@material-ui/core/Paper";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-// import DialogContentText from "@material-ui/core/DialogContentText";
-import Chip from "@material-ui/core/Chip";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputLabel from "@material-ui/core/InputLabel";
-import ImageIcon from "@material-ui/icons/Image";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import { Divider } from "@material-ui/core";
 
@@ -87,7 +78,11 @@ const styles = (theme) => ({
     fontSize: "0.9rem",
     color: "#00B8C4",
   },
-  profileLowerStyle: { margin: "1em", padding: "1em" },
+  profileLowerStyle: {
+    margin: "1em",
+    padding: "1em",
+    paddingBottom: "4em",
+  },
   aboutMeBoxStyle: {
     display: "flex",
     justifyContent: "center",
@@ -153,14 +148,6 @@ const styles = (theme) => ({
       color: "#03848C",
     },
   },
-  customChipStyle: {
-    border: "1px solid #00B8C4",
-    color: "#00B8C4",
-    margin: "0.5em",
-  },
-  materialsUsedViewStyle: {
-    padding: "0.5em",
-  },
   center: {
     display: "flex",
     justifyContent: "center",
@@ -217,7 +204,7 @@ class Profile extends Component {
         this.setState({ profile: res });
         return this.props.api.get_user_projects({
           username: res.username,
-          limit: 3,
+          limit: 4,
         });
       })
       .then((res) => {
@@ -317,7 +304,7 @@ class Profile extends Component {
     let { classes } = this.props;
 
     if (loading) {
-      return <div>fetching user profile...........</div>;
+      return <LoadingPage />;
     } else if (Object.keys(profile).length > 0) {
       return (
         <>
@@ -521,7 +508,9 @@ class Profile extends Component {
         </>
       );
     } else {
-      return <div>Couldn't fetch profile, try again later</div>;
+      return (
+        <ErrorPage error="An error occured while fetching profile, please try again later" />
+      );
     }
   }
 }

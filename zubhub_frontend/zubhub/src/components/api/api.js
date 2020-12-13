@@ -124,7 +124,6 @@ password_reset_confirm=({new_password1, new_password2, uid, token})=>{
 
 /************************** get authenticated user's details **************************/
 get_auth_user=(token)=>{
-  console.log(token);
   let url = "creators/authUser/";
   return this.request({url, token})
          .then(res=>res.json())

@@ -1,9 +1,9 @@
+import uuid
+from math import floor
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.utils import timezone
-import uuid
-from math import floor
 
 
 Creator = get_user_model()

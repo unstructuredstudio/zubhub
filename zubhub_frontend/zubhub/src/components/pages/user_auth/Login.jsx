@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { withStyles, fade } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -176,7 +175,6 @@ class Login extends Component {
 
     return (
       <Box className={classes.root}>
-        <ToastContainer />
         <Box className={classes.background}></Box>
         <Container maxWidth="sm">
           <Card className={classes.cardStyle}>
@@ -227,7 +225,6 @@ class Login extends Component {
                           this.props.touched["username"] &&
                           this.props.errors["username"]
                         }
-                        helperText={this.props.errors["username"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -244,16 +241,10 @@ class Login extends Component {
                           onBlur={this.props.handleBlur}
                           labelWidth={150}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["username"]}
+                        </FormHelperText>
                       </FormControl>
-
-                      {/*<Box component="p" className="help-block text-danger">
-                        {this.props.touched["username"] &&
-                          this.props.errors["username"] && (
-                            <Box component="span" className="text-danger">
-                              {this.props.errors["username"]}
-                            </Box>
-                          )}
-                          </Box>*/}
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={6}>
@@ -267,7 +258,6 @@ class Login extends Component {
                           this.props.touched["password"] &&
                           this.props.errors["password"]
                         }
-                        helperText={this.props.errors["password"]}
                       >
                         <InputLabel htmlFor="password">Password</InputLabel>
                         <OutlinedInput
@@ -295,6 +285,9 @@ class Login extends Component {
                           }
                           labelWidth={70}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["password"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>

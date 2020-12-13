@@ -34,7 +34,7 @@ const styles = (theme) => ({
   },
   mediaBoxStyle: {
     width: "100%",
-    height: "100%",
+    height: "50%",
   },
   mediaStyle: {
     width: "100%",
@@ -178,7 +178,6 @@ class Project extends Component {
 
   render() {
     let { project, classes } = this.props;
-    console.log(project.created_on);
     return (
       <Link
         to={`/projects/${project.id}`}

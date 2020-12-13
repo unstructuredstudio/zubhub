@@ -24,7 +24,7 @@ class ProjectAdmin(admin.ModelAdmin):
     list_filter = ('created_on', "published")
     inlines = [ProjectImages, ProjectComments]
 
-    def get_readonly_fields(self, request, obj=None):
+    def get_readonly_fields(self):
         return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]
 
 

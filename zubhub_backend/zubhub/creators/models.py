@@ -1,9 +1,9 @@
+import uuid
+from math import floor
+from django.utils import timezone
+from django.utils.text import slugify
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils import timezone
-import uuid
-from django.utils.text import slugify
-from math import floor
 
 
 class Location(models.Model):

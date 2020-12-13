@@ -1,19 +1,21 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import ErrorPage from "../../infos/ErrorPage";
+import LoadingPage from "../../infos/LoadingPage";
+import clsx from "clsx";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 import Project from "../../projects/projects_components/Project";
+import { Container } from "@material-ui/core";
 
 const styles = (theme) => ({
   root: {
@@ -29,13 +31,22 @@ const styles = (theme) => ({
       width: "100%",
     },
   },
+  mainContainerStyle: {
+    maxWidth: "2000px",
+    width: "100%",
+  },
   pageHeaderStyle: {
     marginTop: "1em",
     fontWeight: "bold",
     textAlign: "center",
   },
   buttonGroupStyle: {
+    paddingLeft: "2em",
+    paddingRight: "2em",
+    display: "block",
     marginTop: "2em",
+    maxWidth: "2000px",
+    width: "100%",
   },
   primaryButtonStyle: {
     backgroundColor: "#00B8C4",
@@ -44,6 +55,12 @@ const styles = (theme) => ({
     "&:hover": {
       backgroundColor: "#03848C",
     },
+  },
+  floatRight: {
+    float: "right",
+  },
+  floatLeft: {
+    float: "left",
   },
 });
 
@@ -114,68 +131,72 @@ class UserProjects extends Component {
     let { classes } = this.props;
     let username = this.props.match.params.username;
     if (loading) {
-      return <div>Fetching projects ...</div>;
+      return <LoadingPage />;
     } else if (projects.length > 0) {
       return (
         <Box className={classes.root}>
-          <Grid container spacing={3} justify="center">
-            <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
-                {username}'s projects
-              </Typography>
-            </Grid>
-            {projects.map((project) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} align="center">
-                <Project
-                  project={project}
-                  key={project.id}
-                  updateProjects={this.updateProjects}
-                  {...this.props}
-                />
+          <Container className={classes.mainContainerStyle}>
+            <Grid container spacing={3} justify="center">
+              <Grid item xs={12}>
+                <Typography
+                  className={classes.pageHeaderStyle}
+                  variant="h3"
+                  gutterBottom
+                >
+                  {username}'s projects
+                </Typography>
               </Grid>
-            ))}
-          </Grid>
-          <ButtonGroup
-            aria-label="previous and next page buttons"
-            className={classes.buttonGroupStyle}
-          >
-            {prevPage ? (
-              <Button
-                className={classes.primaryButtonStyle}
-                size="large"
-                startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Prev
-              </Button>
-            ) : null}
-            {nextPage ? (
-              <Button
-                className={classes.primaryButtonStyle}
-                size="large"
-                endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Next
-              </Button>
-            ) : null}
-          </ButtonGroup>
+              {projects.map((project) => (
+                <Grid item xs={12} sm={6} md={4} lg={3} align="center">
+                  <Project
+                    project={project}
+                    key={project.id}
+                    updateProjects={this.updateProjects}
+                    {...this.props}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <ButtonGroup
+              aria-label="previous and next page buttons"
+              className={classes.buttonGroupStyle}
+            >
+              {prevPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatLeft
+                  )}
+                  size="large"
+                  startIcon={<NavigateBeforeIcon />}
+                  onClick={(e, page = prevPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Prev
+                </Button>
+              ) : null}
+              {nextPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatRight
+                  )}
+                  size="large"
+                  endIcon={<NavigateNextIcon />}
+                  onClick={(e, page = nextPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Next
+                </Button>
+              ) : null}
+            </ButtonGroup>
+          </Container>
         </Box>
       );
     } else {
-      return (
-        <div>
-          An error occured while fetching videos, please try again later
-        </div>
-      );
+      return <ErrorPage error="user have not created any projects yet" />;
     }
   }
 }

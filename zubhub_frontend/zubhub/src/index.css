@@ -517,11 +517,6 @@ html,
 
 /* Footer Styles */
 
-.footer-logo {
-  height: calc(10px + 7vh);
-  pointer-events: none;
-}
-
 .footer-distributed {
   background-color: #dc3545;
   box-sizing: border-box;

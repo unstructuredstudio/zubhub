@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withFormik } from "formik";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 import { connect } from "react-redux";
@@ -17,7 +17,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-// import DialogContentText from "@material-ui/core/DialogContentText";
 import Chip from "@material-ui/core/Chip";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
@@ -191,7 +190,6 @@ class CreateProject extends Component {
           ) {
             let { image_upload } = this.state;
             image_upload.upload_dialog = false;
-            console.log(this.props.values.materials_used);
             this.setState({ image_upload });
             this.props.api
               .create_project({
@@ -233,11 +231,11 @@ class CreateProject extends Component {
       });
     } else {
       let project_images = document.querySelector("#project_images").files;
-      // document.querySelector("#progress_bar").styles.width = 0;
 
       let { image_upload } = this.state;
       image_upload.images_to_upload = project_images.length;
       image_upload.upload_dialog = true;
+      image_upload.upload_percent = 0;
       this.setState({ image_upload });
 
       for (let index = 0; index < project_images.length; index++) {
@@ -257,7 +255,7 @@ class CreateProject extends Component {
       );
       this.props.setErrors({ project_images: "please upload an image" });
       return { is_empty: true };
-    } else if (image_field.files.length > 5) {
+    } else if (image_field.files.length > 10) {
       image_upload_button.setAttribute(
         "style",
         "border-color:#F54336; color:#F54336"
@@ -317,6 +315,7 @@ class CreateProject extends Component {
         materials_used: hidden_materials_field.value.split(","),
       });
     }
+    new_material.focus();
   };
 
   removeMaterialsUsed = (e, value) => {
@@ -327,13 +326,11 @@ class CreateProject extends Component {
       .filter((material) => material !== value)
       .join(",");
 
-    console.log(hidden_materials_field.value);
     this.props.setFieldValue(
       "materials_used",
       hidden_materials_field.value,
       true
     );
-    // this.setState({ materialsUsedModalOpen: !materialsUsedModalOpen });
     this.setState({ materials_used: hidden_materials_field.value.split(",") });
   };
 
@@ -362,7 +359,6 @@ class CreateProject extends Component {
     } else {
       return (
         <>
-          <ToastContainer />
           {image_upload.upload_dialog ? (
             <div
               style={{
@@ -459,15 +455,6 @@ class CreateProject extends Component {
                               {this.props.errors["title"]}
                             </FormHelperText>
                           </FormControl>
-
-                          {/*<Box component="p" className="help-block text-danger">
-                        {this.props.touched["materials_used"] &&
-                          this.props.errors["materials_used"] && (
-                            <Box component="span" className="text-danger">
-                              {this.props.errors["materials_used"]}
-                            </Box>
-                          )}
-                          </Box>*/}
                         </Grid>
 
                         <Grid item xs={12}>

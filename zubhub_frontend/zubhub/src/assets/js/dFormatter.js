@@ -1,5 +1,4 @@
 export default function dFormatter(str) {
-    console.log(str);
     let date = new Date(str);
 
     var seconds = Math.floor((new Date() - date) / 1000);

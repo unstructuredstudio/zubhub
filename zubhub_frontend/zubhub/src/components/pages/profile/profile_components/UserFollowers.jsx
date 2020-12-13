@@ -2,16 +2,18 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import ErrorPage from "../../infos/ErrorPage";
+import LoadingPage from "../../infos/LoadingPage";
+import clsx from "clsx";
 import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import Typography from "@material-ui/core/Typography";
-import clsx from "clsx";
 import PropTypes from "prop-types";
-import { withStyles, fade } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -30,10 +32,22 @@ const styles = (theme) => ({
       width: "100%",
     },
   },
+  mainContainerStyle: {
+    maxWidth: "2000px",
+    width: "100%",
+  },
   pageHeaderStyle: {
     marginTop: "1em",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  buttonGroupStyle: {
+    paddingLeft: "2em",
+    paddingRight: "2em",
+    display: "block",
+    marginTop: "2em",
+    maxWidth: "2000px",
+    width: "100%",
   },
   cardStyle: {
     display: "flex",
@@ -61,43 +75,10 @@ const styles = (theme) => ({
       boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     },
   },
-  ProfileDetailStyle: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
   userNameStyle: {
     margin: "0.5em",
     fontWeight: "bold",
     fontSize: "1.5rem",
-  },
-  emailStyle: { marginBottom: "0.5em" },
-  dividerStyle: {
-    width: "100vw",
-  },
-  moreInfoBoxStyle: {
-    height: "3em",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  moreInfoStyle: {
-    marginLeft: "0.5em",
-    marginRight: "0.5em",
-    fontWeight: "bold",
-    fontSize: "0.9rem",
-    color: "#00B8C4",
-  },
-  profileLowerStyle: { margin: "1em", padding: "1em" },
-  aboutMeBoxStyle: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "7em",
-    borderRadius: "15px",
-    backgroundColor: "#E4E4E4",
   },
   primaryButton: {
     backgroundColor: "#00B8C4",
@@ -126,14 +107,6 @@ const styles = (theme) => ({
       color: "#03848C",
     },
   },
-  customChipStyle: {
-    border: "1px solid #00B8C4",
-    color: "#00B8C4",
-    margin: "0.5em",
-  },
-  materialsUsedViewStyle: {
-    padding: "0.5em",
-  },
   center: {
     display: "flex",
     justifyContent: "center",
@@ -142,21 +115,15 @@ const styles = (theme) => ({
   textDecorationNone: {
     textDecoration: "none",
   },
-  floatRight: { float: "right" },
+  floatRight: {
+    float: "right",
+  },
+  floatLeft: {
+    float: "left",
+  },
   displayNone: { display: "none" },
   largeLabel: {
     fontSize: "1.3rem",
-  },
-  errorBox: {
-    width: "100%",
-    padding: "1em",
-    borderRadius: 6,
-    borderWidth: "1px",
-    borderColor: "#a94442",
-    backgroundColor: "#ffcdd2",
-  },
-  error: {
-    color: "#a94442",
   },
 });
 
@@ -266,59 +233,63 @@ class UserFollowers extends Component {
     let { classes } = this.props;
     let username = this.props.match.params.username;
     if (loading) {
-      return <div>Fetching followers ...</div>;
+      return <LoadingPage />;
     } else if (followers.length > 0) {
       return (
         <Box className={classes.root}>
-          <Grid container spacing={3} justify="center">
-            <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
-                {username}'s followers
-              </Typography>
+          <Container className={classes.mainContainerStyle}>
+            <Grid container spacing={3} justify="center">
+              <Grid item xs={12}>
+                <Typography
+                  className={classes.pageHeaderStyle}
+                  variant="h3"
+                  gutterBottom
+                >
+                  {username}'s followers
+                </Typography>
+              </Grid>
+              {this.followers(followers)}
             </Grid>
-            {this.followers(followers)}
-          </Grid>
-          <ButtonGroup
-            aria-label="previous and next page buttons"
-            className={classes.buttonGroupStyle}
-          >
-            {prevPage ? (
-              <Button
-                className={classes.primaryButtonStyle}
-                size="large"
-                startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Prev
-              </Button>
-            ) : null}
-            {nextPage ? (
-              <Button
-                className={classes.primaryButtonStyle}
-                size="large"
-                endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Next
-              </Button>
-            ) : null}
-          </ButtonGroup>
+            <ButtonGroup
+              aria-label="previous and next page buttons"
+              className={classes.buttonGroupStyle}
+            >
+              {prevPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatLeft
+                  )}
+                  size="large"
+                  startIcon={<NavigateBeforeIcon />}
+                  onClick={(e, page = prevPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Prev
+                </Button>
+              ) : null}
+              {nextPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatRight
+                  )}
+                  size="large"
+                  endIcon={<NavigateNextIcon />}
+                  onClick={(e, page = nextPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Next
+                </Button>
+              ) : null}
+            </ButtonGroup>
+          </Container>
         </Box>
       );
     } else {
-      return (
-        <div>
-          An error occured while fetching followers, please try again later
-        </div>
-      );
+      return <ErrorPage error="user have not followers yet" />;
     }
   }
 }

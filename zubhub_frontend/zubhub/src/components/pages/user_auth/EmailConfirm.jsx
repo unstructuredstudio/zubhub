@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
 import { withStyles, fade } from "@material-ui/core/styles";
@@ -153,7 +153,6 @@ class EmailConfirm extends Component {
 
     return (
       <Box className={classes.root}>
-        <ToastContainer />
         <Box className={classes.background}></Box>
         <Container maxWidth="sm">
           <Card className={classes.cardStyle}>
