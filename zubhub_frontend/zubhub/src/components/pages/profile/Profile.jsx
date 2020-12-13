@@ -193,7 +193,7 @@ class Profile extends Component {
     this.state = {
       profile: {},
       projects: [],
-      readOnly: true,
+      openEditProfileModal: false,
       loading: true,
     };
   }
@@ -236,17 +236,13 @@ class Profile extends Component {
       });
   }
 
-  toggle_like = (id) => {
+  toggle_follow = (id) => {
     if (!this.props.auth.token) this.props.history.push("/login");
     this.props.api
-      .toggle_like({ id, token: this.props.auth.token })
+      .toggle_follow({ id, token: this.props.auth.token })
       .then((res) => {
         if (res.id) {
-          let { projects } = this.state;
-          projects = projects.map((project) =>
-            project.id === res.id ? res : project
-          );
-          return this.setState({ projects });
+          return this.setState({ profile: res });
         } else {
           res = Object.keys(res)
             .map((key) => res[key])
@@ -260,12 +256,39 @@ class Profile extends Component {
       });
   };
 
-  setReadOnly = (value) => this.setState({ readOnly: value });
-
-  setProfile = (value) => {
-    this.setState({ profile: value });
-    this.props.set_auth_user({ ...this.props.auth, username: value.username });
+  handleToggleEditProfileModal = () => {
+    let { openEditProfileModal } = this.state;
+    openEditProfileModal = !openEditProfileModal;
+    this.setState({ openEditProfileModal });
   };
+
+  updateProfile = (e) => {
+    e.preventDefault();
+    let username = document.querySelector("#new_username");
+    this.props.api
+      .edit_user_profile({
+        token: this.props.auth.token,
+        username: username.value,
+      })
+      .then((res) => {
+        if (res.username) {
+          this.setState({ profile: res });
+          this.props.set_auth_user({
+            ...this.props.auth,
+            username: res.username,
+          });
+          this.handleToggleEditProfileModal();
+          username.value = "";
+        } else {
+          throw new Error(
+            "An error occured while updating your profile, please try again later"
+          );
+        }
+      })
+      .catch((error) => toast.warning(error.message));
+  };
+
+  setProfile = (value) => {};
 
   updateProjects = (res) => {
     res
@@ -290,35 +313,36 @@ class Profile extends Component {
   };
 
   render() {
-    let { profile, projects, loading, readOnly } = this.state;
+    let { profile, projects, loading, openEditProfileModal } = this.state;
     let { classes } = this.props;
 
     if (loading) {
       return <div>fetching user profile...........</div>;
     } else if (Object.keys(profile).length > 0) {
       return (
-        <Box className={classes.root}>
-          <Paper className={classes.profileHeaderStyle}>
-            <Container maxWidth="md">
-              {this.props.auth.username === profile.username ? (
-                <>
-                  <Link
-                    className={classes.textDecorationNone}
-                    to="/projects/create"
-                  >
-                    <Button
-                      className={clsx(
-                        classes.secondaryButton,
-                        classes.floatRight
-                      )}
-                      variant="outlined"
-                      size="medium"
-                      margin="normal"
+        <>
+          <Box className={classes.root}>
+            <Paper className={classes.profileHeaderStyle}>
+              <Container maxWidth="md">
+                {this.props.auth.username === profile.username ? (
+                  <>
+                    <Link
+                      className={classes.textDecorationNone}
+                      to="/projects/create"
                     >
-                      Create Project
-                    </Button>
-                  </Link>
-                  {readOnly ? (
+                      <Button
+                        className={clsx(
+                          classes.secondaryButton,
+                          classes.floatRight
+                        )}
+                        variant="outlined"
+                        size="medium"
+                        margin="normal"
+                      >
+                        Create Project
+                      </Button>
+                    </Link>
+
                     <Button
                       className={clsx(
                         classes.primaryButton,
@@ -327,97 +351,174 @@ class Profile extends Component {
                       variant="contained"
                       size="medium"
                       margin="normal"
-                      onClick={(e, value = false) => this.setReadOnly(value)}
+                      onClick={this.handleToggleEditProfileModal}
                     >
                       Edit
                     </Button>
-                  ) : (
-                    <EditProfile
-                      profile={profile}
-                      setProfile={(value) => this.setProfile(value)}
-                      setReadOnly={(value) => this.setReadOnly(value)}
-                      {...this.props}
-                    />
-                  )}
-                </>
-              ) : null}
+                  </>
+                ) : (
+                  <Button
+                    className={clsx(
+                      classes.secondaryButton,
+                      classes.floatRight
+                    )}
+                    variant="outlined"
+                    size="medium"
+                    margin="normal"
+                    onClick={(e, id = profile.id) => this.toggle_follow(id)}
+                  >
+                    {profile.followers.includes(this.props.auth.id)
+                      ? "Unfollow"
+                      : "Follow"}
+                  </Button>
+                )}
 
-              <Avatar
-                className={classes.avatarStyle}
-                src={profile.avatar}
-                alt={profile.username}
-              />
-              <Box className={classes.ProfileDetailStyle}>
+                <Avatar
+                  className={classes.avatarStyle}
+                  src={profile.avatar}
+                  alt={profile.username}
+                />
+                <Box className={classes.ProfileDetailStyle}>
+                  <Typography
+                    className={classes.userNameStyle}
+                    component="h1"
+                    color="textPrimary"
+                  >
+                    {profile.username}
+                  </Typography>
+                  {this.props.auth.username === profile.username ? (
+                    <Typography className={classes.emailStyle} component="h5">
+                      {profile.email}
+                    </Typography>
+                  ) : null}
+                  <Divider className={classes.dividerStyle} />
+                  <Box className={classes.moreInfoBoxStyle}>
+                    <Link
+                      className={classes.textDecorationNone}
+                      to={`/profile/${profile.username}/projects`}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        {profile.projects_count} Projects
+                      </Typography>
+                    </Link>
+                    <Link
+                      to={`/profile/${profile.username}/followers`}
+                      className={classes.textDecorationNone}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        {profile.followers.length} Followers
+                      </Typography>
+                    </Link>
+                  </Box>
+                </Box>
+              </Container>
+            </Paper>
+
+            <Container maxWidth="md">
+              <Paper className={classes.profileLowerStyle}>
                 <Typography
-                  className={classes.userNameStyle}
-                  component="h1"
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
                   color="textPrimary"
                 >
-                  {profile.username}
+                  About Me
                 </Typography>
-                {this.props.auth.username === profile.username ? (
-                  <Typography className={classes.emailStyle} component="h5">
-                    {profile.email}
-                  </Typography>
-                ) : null}
-                <Divider className={classes.dividerStyle} />
-                <Box className={classes.moreInfoBoxStyle}>
-                  <Typography className={classes.moreInfoStyle} component="h5">
-                    {profile.projects_count} Projects
-                  </Typography>
-                  <Typography className={classes.moreInfoStyle} component="h5">
-                    {profile.followers_count} Followers
-                  </Typography>
+                <Box className={classes.aboutMeBoxStyle}>
+                  {profile.bio ? profile.bio : "Nothing here"}
                 </Box>
-              </Box>
-            </Container>
-          </Paper>
+              </Paper>
 
-          <Container maxWidth="md">
-            <Paper className={classes.profileLowerStyle}>
-              <Typography
-                gutterBottom
-                component="h2"
-                variant="h6"
-                color="textPrimary"
-              >
-                About Me
-              </Typography>
-              <Box className={classes.aboutMeBoxStyle}>
-                {profile.bio ? profile.bio : "Nothing here"}
-              </Box>
-            </Paper>
-
-            <Paper className={classes.profileLowerStyle}>
-              <Typography
-                gutterBottom
-                component="h2"
-                variant="h6"
-                color="textPrimary"
-              >
-                Latest projects of {profile.username}
-                <Link
-                  className={clsx(
-                    classes.secondaryLink,
-                    classes.floatRight,
-                    classes.textDecorationNone
-                  )}
-                  to={`/profile/${profile.username}/projects`}
+              <Paper className={classes.profileLowerStyle}>
+                <Typography
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
+                  color="textPrimary"
                 >
-                  View all >>
-                </Link>
-              </Typography>
-              {projects.map((project) => (
-                <Project
-                  project={project}
-                  key={project.id}
-                  updateProjects={this.updateProjects}
-                  {...this.props}
+                  Latest projects of {profile.username}
+                  <Link
+                    className={clsx(
+                      classes.secondaryLink,
+                      classes.floatRight,
+                      classes.textDecorationNone
+                    )}
+                    to={`/profile/${profile.username}/projects`}
+                  >
+                    View all >>
+                  </Link>
+                </Typography>
+                <Container>
+                  <Grid container spacing={4} justify="center">
+                    {projects.map((project) => (
+                      <Grid item xs={12} sm={6} md={6} align="center">
+                        <Project
+                          project={project}
+                          key={project.id}
+                          updateProjects={this.updateProjects}
+                          {...this.props}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Container>
+              </Paper>
+            </Container>
+          </Box>
+          <Dialog
+            open={openEditProfileModal}
+            onClose={this.handleToggleEditProfileModal}
+            aria-labelledby="edit user profile"
+          >
+            <DialogTitle id="edit-user-profile">Edit User Profile</DialogTitle>
+            <DialogContent>
+              <FormControl
+                className={clsx(classes.margin, classes.textField)}
+                variant="outlined"
+                size="medium"
+                fullWidth
+                margin="normal"
+              >
+                <InputLabel
+                  className={classes.customLabelStyle}
+                  htmlFor="username"
+                >
+                  New Username
+                </InputLabel>
+                <OutlinedInput
+                  className={classes.customInputStyle}
+                  id="new_username"
+                  name="username"
+                  type="text"
+                  labelWidth={90}
                 />
-              ))}
-            </Paper>
-          </Container>
-        </Box>
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="outlined"
+                className={classes.secondaryButton}
+                onClick={this.handleToggleEditProfileModal}
+                color="primary"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={this.updateProfile}
+                className={classes.primaryButton}
+              >
+                Save
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       );
     } else {
       return <div>Couldn't fetch profile, try again later</div>;

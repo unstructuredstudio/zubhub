@@ -26,6 +26,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputLabel from "@material-ui/core/InputLabel";
 import ImageIcon from "@material-ui/icons/Image";
+import AddIcon from "@material-ui/icons/Add";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 
@@ -49,6 +50,7 @@ const styles = (theme) => ({
   },
 
   customInputStyle: {
+    width: "100%",
     borderRadius: 15,
     "&.MuiOutlinedInput-notchedOutline": {
       border: "1px solid #00B8C4",
@@ -299,19 +301,22 @@ class CreateProject extends Component {
 
   addMaterialUsed = (e) => {
     e.preventDefault();
-    let new_material = document.querySelector("#new_material");
-    let hidden_materials_field = document.querySelector("#materials_used");
-    hidden_materials_field.value = hidden_materials_field.value
-      ? `${hidden_materials_field.value},${new_material.value}`
-      : new_material.value;
-    new_material.value = "";
-    console.log(hidden_materials_field.value);
-    this.props.setFieldValue(
-      "materials_used",
-      hidden_materials_field.value,
-      true
-    );
-    this.setState({ materials_used: hidden_materials_field.value.split(",") });
+    let new_material = document.querySelector("#add_materials_used");
+    if (new_material.value !== "") {
+      let hidden_materials_field = document.querySelector("#materials_used");
+      hidden_materials_field.value = hidden_materials_field.value
+        ? `${hidden_materials_field.value},${new_material.value}`
+        : new_material.value;
+      new_material.value = "";
+      this.props.setFieldValue(
+        "materials_used",
+        hidden_materials_field.value,
+        true
+      );
+      this.setState({
+        materials_used: hidden_materials_field.value.split(","),
+      });
+    }
   };
 
   removeMaterialsUsed = (e, value) => {
@@ -572,7 +577,7 @@ class CreateProject extends Component {
                           </FormControl>
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={12} md={12}>
                           <FormControl
                             className={clsx(classes.margin, classes.textField)}
                             variant="outlined"
@@ -585,7 +590,7 @@ class CreateProject extends Component {
                                 classes.customLabelStyle,
                                 classes.largeLabel
                               )}
-                              htmlFor="materials_used"
+                              htmlFor="add_materials_used"
                               shrink
                             >
                               Materials Used
@@ -604,15 +609,31 @@ class CreateProject extends Component {
                                 />
                               ))}
                             </Box>
-                            <Button
-                              className={classes.secondaryButton}
-                              variant="outlined"
-                              size="large"
-                              margin="normal"
-                              onClick={this.handleMaterialsUsedDialogToggle}
-                            >
-                              Add New
-                            </Button>
+                            <Grid container spacing={1}>
+                              <Grid item xs={8} sm={8} md={8}>
+                                <OutlinedInput
+                                  className={classes.customInputStyle}
+                                  id="add_materials_used"
+                                  name="add_materials_used"
+                                  type="text"
+                                  onChange={this.props.handleChange}
+                                  onBlur={this.props.handleBlur}
+                                />
+                                <FormHelperText error>
+                                  {this.props.errors["materials_used"]}
+                                </FormHelperText>
+                              </Grid>
+                              <Grid item xs={4} sm={4} md={4}>
+                                <Button
+                                  className={classes.secondaryButton}
+                                  variant="outlined"
+                                  size="large"
+                                  onClick={this.addMaterialUsed}
+                                >
+                                  <AddIcon />
+                                </Button>
+                              </Grid>
+                            </Grid>
                             <input
                               id="materials_used"
                               name="materials_used"
@@ -620,9 +641,6 @@ class CreateProject extends Component {
                               onChange={this.props.handleChange}
                               onBlur={this.props.handleBlur}
                             />
-                            <FormHelperText error>
-                              {this.props.errors["materials_used"]}
-                            </FormHelperText>
                           </FormControl>
                         </Grid>
                         <Grid item xs={12}>

@@ -18,7 +18,7 @@ class CreatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Creator
         fields = ('id', 'username', 'email', 'avatar',
-                  'dateOfBirth', 'bio', 'followers')
+                  'dateOfBirth', 'bio', 'followers', 'projects_count')
 
 
 class LocationSerializer(serializers.ModelSerializer):

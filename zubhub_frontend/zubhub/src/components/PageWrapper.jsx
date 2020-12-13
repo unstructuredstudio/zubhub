@@ -14,65 +14,63 @@ import logo from "../assets/images/logos/logo.png";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles, fade } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Divider from "@material-ui/core/Divider";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Button from "@material-ui/core/Button";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Box from "@material-ui/core/Box";
+import Fab from "@material-ui/core/Fab";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import Zoom from "@material-ui/core/Zoom";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import * as Yup from "yup";
+import { Divider } from "@material-ui/core";
 
 const styles = (theme) => ({
-  root: {
-    flex: "1 0 auto",
-    zIndex: "100",
+  navBarStyle: {
+    backgroundColor: "#DC3545",
   },
-  cardStyle: {
-    border: 0,
-    borderRadius: 15,
-    boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .12)",
-    color: "white",
-    padding: "0 30px",
+  mainContainerStyle: {
+    maxWidth: "2000px",
   },
-  customLabelStyle: {
-    "&.MuiFormLabel-root.Mui-focused": {
-      color: "#00B8C4",
+  logoStyle: {
+    flexGrow: 1,
+    "& img": {
+      height: "2em",
     },
-  },
-
-  customInputStyle: {
-    borderRadius: 15,
-    "&.MuiOutlinedInput-notchedOutline": {
-      border: "1px solid #00B8C4",
-      boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
-    },
-    "&.MuiOutlinedInput-root": {
-      "&:hover fieldset": {
-        border: "1px solid #00B8C4",
-        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
-      },
-      "&.Mui-focused fieldset": {
-        border: "1px solid #00B8C4",
-        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+    [theme.breakpoints.down("376")]: {
+      "& img": {
+        height: "1em",
       },
     },
   },
-  primaryButton: {
-    width: "100%",
+  avatarStyle: {
+    cursor: "pointer",
+    backgroundColor: "white",
+  },
+  profileMenuStyle: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  profileStyle: { backgroundColor: "#F5F5F5" },
+  logOutStyle: {
+    borderTop: "1px solid #C4C4C4",
+  },
+  scrollTopButtonStyle: {
+    position: "fixed",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  primaryButtonStyle: {
+    marginLeft: "1em",
     backgroundColor: "#00B8C4",
     borderRadius: 15,
     color: "white",
@@ -80,33 +78,14 @@ const styles = (theme) => ({
       backgroundColor: "#03848C",
     },
   },
-  secondaryButton: {
-    width: "100%",
+  secondaryButtonStyle: {
     borderRadius: 15,
-    borderColor: "#00B8C4",
+    backgroundColor: "white",
     color: "#00B8C4",
     "&:hover": {
       color: "#03848C",
-      borderColor: "#03848C",
+      backgroundColor: "rgba(255,255,255,0.8)",
     },
-  },
-  imageUploadButton: {
-    display: "flex",
-    justifyContent: "flex-start",
-  },
-  uploadProgressLabelStyle: {
-    color: "white",
-  },
-  uploadProgressStyle: {
-    color: "#00B8C4",
-  },
-  customChipStyle: {
-    border: "1px solid #00B8C4",
-    color: "#00B8C4",
-    margin: "0.5em",
-  },
-  materialsUsedViewStyle: {
-    padding: "0.5em",
   },
   center: {
     display: "flex",
@@ -120,17 +99,6 @@ const styles = (theme) => ({
   largeLabel: {
     fontSize: "1.3rem",
   },
-  errorBox: {
-    width: "100%",
-    padding: "1em",
-    borderRadius: 6,
-    borderWidth: "1px",
-    borderColor: "#a94442",
-    backgroundColor: "#ffcdd2",
-  },
-  error: {
-    color: "#a94442",
-  },
 });
 
 class PageWrapper extends Component {
@@ -139,6 +107,7 @@ class PageWrapper extends Component {
 
     this.state = {
       username: null,
+      anchorEl: null,
     };
   }
 
@@ -180,10 +149,48 @@ class PageWrapper extends Component {
       });
   };
 
-  render() {
-    let { classes } = this.props;
+  handleScrollTopClick = (e) => {
+    const anchor = (e.target.ownerDocument || document).querySelector(
+      "#back-to-top-anchor"
+    );
+
+    if (anchor) {
+      anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  scrollTop = (props) => {
+    const { classes } = props;
+
     return (
-      <Box className={classes.root}>
+      <Zoom in={useScrollTrigger}>
+        <div
+          onClick={this.handleScrollTopClick}
+          role="presentation"
+          className={classes.scrollTopButtonStyle}
+        >
+          <Fab color="secondary" size="small" aria-label="scroll back to top">
+            <KeyboardArrowUpIcon />
+          </Fab>
+        </div>
+      </Zoom>
+    );
+  };
+
+  handleProfileMenuOpen = (e) => {
+    this.setState({ anchorEl: e.currentTarget });
+  };
+
+  handleProfileMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  render() {
+    let { anchorEl } = this.state;
+    let { classes } = this.props;
+    let profileMenuOpen = Boolean(anchorEl);
+    return (
+      <>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
@@ -193,36 +200,114 @@ class PageWrapper extends Component {
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
         />
         <ToastContainer />
-        <header className="App-header">
-          <Link to="/">
-            <img src={logo} className="App-logo" alt="logo" />
-          </Link>
-          <div className="float-right">
-            {!this.props.auth.token ? (
-              <>
-                <Link className="btn btn-success" to="/login">
-                  Sign In
+        <CssBaseline />
+        <AppBar className={classes.navBarStyle}>
+          <Container className={classes.mainContainerStyle}>
+            <Toolbar>
+              <Box className={classes.logoStyle}>
+                <Link to="/">
+                  <img src={logo} alt="logo" />
                 </Link>
-                <Link className="btn btn-primary" to="/signup">
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/profile">
-                  <img
-                    src={`https://robohash.org/${this.props.auth.username}`}
-                    className="profile_image"
-                    aria-label="creator profile"
-                  />
-                </Link>
-                <Link className="btn btn-danger" onClick={this.logout}>
-                  Logout
-                </Link>
-              </>
-            )}
-          </div>
-        </header>
+              </Box>
+              <div className="">
+                {!this.props.auth.token ? (
+                  <>
+                    <Link className={classes.textDecorationNone} to="/login">
+                      <Button
+                        variant="outlined"
+                        size="large"
+                        className={classes.secondaryButtonStyle}
+                      >
+                        Login
+                      </Button>
+                    </Link>
+                    <Link className={classes.textDecorationNone} to="/signup">
+                      <Button
+                        variant="contained"
+                        size="large"
+                        className={classes.primaryButtonStyle}
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Avatar
+                      className={classes.avatarStyle}
+                      aria-label={`${this.props.auth.username}' Avatar`}
+                      aria-controls="profile_menu"
+                      aria-haspopup="true"
+                      onClick={this.handleProfileMenuOpen}
+                      src={`https://robohash.org/${this.props.auth.username}`}
+                      alt={this.props.auth.username}
+                    />
+                    <Menu
+                      className={classes.profileMenuStyle}
+                      id="profile_menu"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={profileMenuOpen}
+                      onClose={this.handleProfileMenuClose}
+                    >
+                      <MenuItem className={classes.profileStyle}>
+                        <Link
+                          className={classes.textDecorationNone}
+                          to="/profile"
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            {this.props.auth.username}
+                          </Typography>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link
+                          className={classes.textDecorationNone}
+                          to="/projects/saved"
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            Saved Projects
+                          </Typography>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem className={classes.logOutStyle}>
+                        <Link
+                          className={classes.textDecorationNone}
+                          onClick={this.logout}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            Logout
+                          </Typography>
+                        </Link>
+                      </MenuItem>
+                    </Menu>
+                  </>
+                )}
+              </div>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        <Toolbar id="back-to-top-anchor" />
 
         {this.props.children}
 
@@ -235,8 +320,9 @@ class PageWrapper extends Component {
             className="footer-logo"
             alt="unstructured-studio-logo"
           />
+          {this.scrollTop(this.props)}
         </footer>
-      </Box>
+      </>
     );
   }
 }

@@ -40,6 +40,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         many=True, slug_field='id', read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     images = ImageSerializer(many=True)
+    created_on = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Project
@@ -54,7 +55,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             "likes",
             "saved_by",
             "views_count",
-            "comments"
+            "comments",
+            "created_on",
         ]
 
     def create(self, validated_data):
@@ -67,10 +69,12 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class ProjectListSerializer(serializers.ModelSerializer):
     creator = CreatorSerializer(read_only=True)
+    images = ImageSerializer(many=True)
     likes = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
     saved_by = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
+    created_on = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Project
@@ -80,8 +84,10 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "video",
+            "images",
             "views_count",
             "likes",
             "saved_by",
-            "comments_count"
+            "comments_count",
+            "created_on",
         ]

@@ -2,6 +2,50 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+
+import Project from "./Project";
+
+const styles = (theme) => ({
+  root: {
+    paddingBottom: "2em",
+    flex: "1 0 auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    background:
+      "linear-gradient(to bottom, rgba(191,254,255,1) 0%, rgba(191,254,255,1) 20%, rgba(255,255,255,1) 77%, rgba(255,255,255,1) 100%)",
+    "& .MuiGrid-root.MuiGrid-container": {
+      width: "100%",
+    },
+  },
+  pageHeaderStyle: {
+    marginTop: "1em",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  buttonGroupStyle: {
+    marginTop: "2em",
+  },
+  primaryButtonStyle: {
+    backgroundColor: "#00B8C4",
+    borderRadius: 15,
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#03848C",
+    },
+  },
+});
 
 class SavedProjects extends Component {
   constructor(props) {
@@ -43,84 +87,101 @@ class SavedProjects extends Component {
       });
   };
 
-  // toggle_like=(id)=>{
-  //    if(!this.props.auth.token) this.props.history.push("/login");
-  //    this.props.api.toggle_like({id, token: this.props.auth.token})
-  //    .then(res=>{
-  //      if(res.id){
-  //        let {projects} = this.state;
-  //        projects = projects.map(project=>project.id === res.id ? {...project, likes_count: res.likes.length} : project);
-  //        return this.setState({projects});
-  //      }
-  //      else {
-  //       res = Object.keys(res).map(key=>res[key]).join("\n");
-  //       throw new Error(res);
-  //      }
-  //    })
-  //    .catch(error=>{this.setState({loading: false}); toast.warning(error.message)})
-  // }
-
-  projects = (projects) =>
-    projects.map((project) => (
-      <div key={project.id}>
-        <Link to={`projects/${project.id}`}>
-          <iframe
-            title="video"
-            width="200"
-            height="150"
-            src={project.video}
-          ></iframe>
-          <h1>{project.title}</h1>
-          <p>{project.description}</p>
-        </Link>
-        {/* <span><button onClick={(e, id = project.id)=>this.toggle_like(id)}>Likes: {project.likes_count}</button></span>&nbsp;
-                <span>Views: {project.views_count}</span>&nbsp;
-                <span>Comments: {project.comments_count}</span>&nbsp;
-                <Link to={`/profile/${project.creator.username}`}><span>Creator: {project.creator.username}</span></Link>&nbsp; */}
-      </div>
-    ));
+  updateProjects = (res) => {
+    res
+      .then((res) => {
+        if (res.id) {
+          let { projects } = this.state;
+          projects = projects.map((project) =>
+            project.id === res.id ? res : project
+          );
+          return this.setState({ projects });
+        } else {
+          res = Object.keys(res)
+            .map((key) => res[key])
+            .join("\n");
+          throw new Error(res);
+        }
+      })
+      .catch((error) => {
+        this.setState({ loading: false });
+        toast.warning(error.message);
+      });
+  };
 
   render() {
     let { projects, prevPage, nextPage, loading } = this.state;
+    let { classes } = this.props;
     if (loading) {
       return <div>Fetching projects ...</div>;
     } else if (projects.length > 0) {
       return (
-        <>
-          <h1>{this.props.auth.username}'s Saved Projects</h1>
-          {this.projects(projects)}
-          <hr />
-          <div>
+        <Box className={classes.root}>
+          <Grid container spacing={3} justify="center">
+            <Grid item xs={12}>
+              <Typography
+                className={classes.pageHeaderStyle}
+                variant="h3"
+                gutterBottom
+              >
+                Your saved projects
+              </Typography>
+            </Grid>
+            {projects.map((project) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} align="center">
+                <Project
+                  project={project}
+                  key={project.id}
+                  updateProjects={this.updateProjects}
+                  {...this.props}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <ButtonGroup
+            aria-label="previous and next page buttons"
+            className={classes.buttonGroupStyle}
+          >
             {prevPage ? (
-              <button
+              <Button
+                className={classes.primaryButtonStyle}
+                size="large"
+                startIcon={<NavigateBeforeIcon />}
                 onClick={(e, page = prevPage.split("?")[1]) =>
                   this.fetchPage(page)
                 }
               >
                 Prev
-              </button>
+              </Button>
             ) : null}
             {nextPage ? (
-              <button
+              <Button
+                className={classes.primaryButtonStyle}
+                size="large"
+                endIcon={<NavigateNextIcon />}
                 onClick={(e, page = nextPage.split("?")[1]) =>
                   this.fetchPage(page)
                 }
               >
                 Next
-              </button>
+              </Button>
             ) : null}
-          </div>
-        </>
+          </ButtonGroup>
+        </Box>
       );
     } else {
       return (
         <div>
-          An error occured while fetching projects, please try again later
+          An error occured while fetching videos, please try again later
         </div>
       );
     }
   }
 }
+
+SavedProjects.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -128,4 +189,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(SavedProjects);
+export default connect(mapStateToProps)(withStyles(styles)(SavedProjects));
