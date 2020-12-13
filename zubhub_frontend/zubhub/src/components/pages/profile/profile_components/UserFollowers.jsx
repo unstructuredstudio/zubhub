@@ -229,7 +229,7 @@ class UserFollowers extends Component {
       <Grid item xs={12} sm={6} md={4} lg={3} align="center">
         <Link
           className={this.props.classes.textDecorationNone}
-          to={`/profile/${follower.username}`}
+          to={`/creators/${follower.username}`}
           key={follower.id}
         >
           <Card className={this.props.classes.cardStyle}>

@@ -247,7 +247,7 @@ class Project extends Component {
                 {project.description}
               </Typography>
               <Link
-                to={`/profile/${project.creator.username}`}
+                to={`/creators/${project.creator.username}`}
                 className={classes.textDecorationNone}
               >
                 <Box className={classes.creatorBoxStyle}>

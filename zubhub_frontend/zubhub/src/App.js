@@ -70,21 +70,21 @@ return(
         </PageWrapper>
         )}/>
 
-    <Route path="/profile/:username/projects"
+    <Route path="/creators/:username/projects"
         render={props=>(
         <PageWrapper {...props}>
           <UserProjects {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
-    <Route path="/profile/:username/followers"
+    <Route path="/creators/:username/followers"
         render={props=>(
         <PageWrapper>
           <UserFollowers {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
-    <Route path="/profile/:username"
+    <Route path="/creators/:username"
         render={props=>(
         <PageWrapper {...props}>
           <Profile {...props} {...this.props}/>
