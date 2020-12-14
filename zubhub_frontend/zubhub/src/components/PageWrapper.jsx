@@ -288,7 +288,7 @@ class PageWrapper extends Component {
                         </Link>
                       </MenuItem>
                       <MenuItem className={classes.logOutStyle}>
-                        <Link
+                        <Typography
                           className={classes.textDecorationNone}
                           onClick={this.logout}
                         >
@@ -299,7 +299,7 @@ class PageWrapper extends Component {
                           >
                             Logout
                           </Typography>
-                        </Link>
+                        </Typography>
                       </MenuItem>
                     </Menu>
                   </>
