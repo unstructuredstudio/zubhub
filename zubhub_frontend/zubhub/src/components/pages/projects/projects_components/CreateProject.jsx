@@ -559,18 +559,20 @@ class CreateProject extends Component {
                             Materials Used
                           </InputLabel>
                           <Box className={classes.materialsUsedViewStyle}>
-                            {materials_used.map((material, num) => (
-                              <Chip
-                                className={classes.customChipStyle}
-                                key={num}
-                                label={material}
-                                onDelete={(e, value = material) =>
-                                  this.removeMaterialsUsed(e, value)
-                                }
-                                color="secondary"
-                                variant="outlined"
-                              />
-                            ))}
+                            {materials_used.map((material, num) =>
+                              material !== "" ? (
+                                <Chip
+                                  className={classes.customChipStyle}
+                                  key={num}
+                                  label={material}
+                                  onDelete={(e, value = material) =>
+                                    this.removeMaterialsUsed(e, value)
+                                  }
+                                  color="secondary"
+                                  variant="outlined"
+                                />
+                              ) : null
+                            )}
                           </Box>
                           <Grid container spacing={1}>
                             <Grid item xs={8} sm={8} md={8}>
