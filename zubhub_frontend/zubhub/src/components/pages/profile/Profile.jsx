@@ -382,7 +382,7 @@ class Profile extends Component {
                   <Box className={classes.moreInfoBoxStyle}>
                     <Link
                       className={classes.textDecorationNone}
-                      to={`/profile/${profile.username}/projects`}
+                      to={`/creators/${profile.username}/projects`}
                     >
                       <Typography
                         className={classes.moreInfoStyle}
@@ -392,7 +392,7 @@ class Profile extends Component {
                       </Typography>
                     </Link>
                     <Link
-                      to={`/profile/${profile.username}/followers`}
+                      to={`/creators/${profile.username}/followers`}
                       className={classes.textDecorationNone}
                     >
                       <Typography
@@ -436,7 +436,7 @@ class Profile extends Component {
                       classes.floatRight,
                       classes.textDecorationNone
                     )}
-                    to={`/profile/${profile.username}/projects`}
+                    to={`/creators/${profile.username}/projects`}
                   >
                     View all >>
                   </Link>

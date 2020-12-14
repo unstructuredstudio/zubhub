@@ -571,7 +571,7 @@ class ProjectDetails extends Component {
                   <Grid item className={classes.creatorProfileStyle}>
                     <Link
                       className={clsx(classes.textDecorationNone)}
-                      to={`/profile/${project.creator.username}`}
+                      to={`/creators/${project.creator.username}`}
                     >
                       <Avatar
                         className={classes.creatorAvatarStyle}
@@ -751,13 +751,15 @@ class ProjectDetails extends Component {
                   <Box className="comment-meta">
                     <Link
                       className={clsx(classes.textDecorationNone)}
-                      to={`/profile/${this.props.auth.username}`}
+                      to={`/creators/${this.props.auth.username}`}
                     >
-                      <Avatar
-                        className={classes.commentAvatarStyle}
-                        src={`https://robohash.org/${this.props.auth.username}`}
-                        alt={this.props.auth.username}
-                      />
+                      {this.props.auth.token ? (
+                        <Avatar
+                          className={classes.commentAvatarStyle}
+                          src={`https://robohash.org/${this.props.auth.username}`}
+                          alt={this.props.auth.username}
+                        />
+                      ) : null}
                     </Link>
                     <Link
                       className={clsx(
@@ -765,7 +767,7 @@ class ProjectDetails extends Component {
                         "comment-meta__a",
                         "display-none"
                       )}
-                      to={`/profile/${this.props.auth.username}`}
+                      to={`/creators/${this.props.auth.username}`}
                     >
                       {this.props.auth.username}
                     </Link>
@@ -797,7 +799,7 @@ class ProjectDetails extends Component {
                         classes.textDecorationNone,
                         classes.commentMetaStyle
                       )}
-                      to={`/profile/${this.props.auth.username}`}
+                      to={`/creators/${this.props.auth.username}`}
                     >
                       <Avatar
                         className={classes.commentAvatarStyle}
