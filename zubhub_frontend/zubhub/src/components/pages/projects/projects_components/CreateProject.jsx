@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorPage from "../../infos/ErrorPage";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles, fade } from "@material-ui/core/styles";
@@ -34,6 +35,8 @@ const styles = (theme) => ({
     paddingTop: "2em",
     paddingBottom: "2em",
     flex: "1 0 auto",
+    background:
+      "linear-gradient(to bottom, rgba(191,254,255,1) 0%, rgba(191,254,255,1) 20%, rgba(255,255,255,1) 77%, rgba(255,255,255,1) 100%)",
   },
   cardStyle: {
     border: 0,
@@ -351,385 +354,357 @@ class CreateProject extends Component {
     let { classes } = this.props;
     if (!this.props.auth.token) {
       return (
-        <div>
-          {" "}
-          You are not logged in. Click on the signin button to get started
-        </div>
+        <ErrorPage error="You are not logged in. Click on the signin button to get started" />
       );
     } else {
       return (
-        <>
-          {image_upload.upload_dialog ? (
-            <div
-              style={{
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: "rgba(0,0,0,0.3)",
-                zIndex: "100",
-                position: "absolute",
-                top: "-5em",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <div
-                id="progress_bar"
-                style={{
-                  height: "1em",
-                  backgroundColor: "rgb(255,255,255)",
-                  borderRadius: "50px",
-                }}
-              ></div>
-            </div>
-          ) : null}
-          <Box className={classes.root}>
-            <Container maxWidth="sm">
-              <Card className={classes.cardStyle}>
-                <CardActionArea>
-                  <CardContent>
-                    <form
-                      className="project-create-form"
-                      name="create_project"
-                      noValidate="noValidate"
-                      onSubmit={this.props.handleSubmit}
+        <Box className={classes.root}>
+          <Container maxWidth="sm">
+            <Card className={classes.cardStyle}>
+              <CardActionArea>
+                <CardContent>
+                  <form
+                    className="project-create-form"
+                    name="create_project"
+                    noValidate="noValidate"
+                    onSubmit={this.props.handleSubmit}
+                  >
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      color="textPrimary"
                     >
-                      <Typography
-                        gutterBottom
-                        variant="h5"
-                        component="h2"
-                        color="textPrimary"
-                      >
-                        Create Project
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                      >
-                        Tell us about your project!
-                      </Typography>
+                      Create Project
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      component="p"
+                    >
+                      Tell us about your project!
+                    </Typography>
 
-                      <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                          <Box
-                            component="p"
-                            className={error !== null && classes.errorBox}
-                          >
-                            {error !== null && (
-                              <Box component="span" className={classes.error}>
-                                {error}
-                              </Box>
-                            )}
-                          </Box>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <FormControl
-                            className={clsx(classes.margin, classes.textField)}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            margin="small"
-                            error={
-                              this.props.touched["title"] &&
-                              this.props.errors["title"]
-                            }
-                          >
-                            <InputLabel
-                              className={classes.customLabelStyle}
-                              htmlFor="title"
-                            >
-                              Title
-                            </InputLabel>
-                            <OutlinedInput
-                              className={classes.customInputStyle}
-                              id="title"
-                              name="title"
-                              type="text"
-                              placeholder="Project Title"
-                              onChange={this.props.handleChange}
-                              onBlur={this.props.handleBlur}
-                              labelWidth={90}
-                            />
-                            <FormHelperText error>
-                              {this.props.errors["title"]}
-                            </FormHelperText>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <FormControl
-                            className={clsx(classes.margin, classes.textField)}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            margin="small"
-                            error={
-                              this.props.touched["description"] &&
-                              this.props.errors["description"]
-                            }
-                          >
-                            <InputLabel
-                              className={classes.customLabelStyle}
-                              htmlFor="description"
-                            >
-                              Description
-                            </InputLabel>
-                            <OutlinedInput
-                              className={classes.customInputStyle}
-                              id="description"
-                              name="description"
-                              type="text"
-                              multiline
-                              rowsMax={6}
-                              onChange={this.props.handleChange}
-                              onBlur={this.props.handleBlur}
-                              labelWidth={90}
-                            />
-                            <FormHelperText error>
-                              {this.props.errors["description"]}
-                            </FormHelperText>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} sm={6} md={6}>
-                          <FormControl fullWidth>
-                            <label htmlFor="project_images">
-                              <Button
-                                className={clsx(
-                                  classes.secondaryButton,
-                                  classes.imageUploadButton
-                                )}
-                                variant="outlined"
-                                size="large"
-                                margin="normal"
-                                id="image_upload_button"
-                                startIcon={<ImageIcon />}
-                                onClick={() =>
-                                  document
-                                    .querySelector("#project_images")
-                                    .click()
-                                }
-                              >
-                                Images
-                              </Button>
-                            </label>
-                            <input
-                              className={classes.displayNone}
-                              type="file"
-                              accept="image/*"
-                              id="project_images"
-                              name="project_images"
-                              multiple
-                              onChange={this.imageFieldValidation}
-                              onBlur={this.props.handleBlur}
-                            />
-                            <FormHelperText error>
-                              {this.props.errors["project_images"]}
-                            </FormHelperText>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} sm={6} md={6}>
-                          <FormControl
-                            className={clsx(classes.margin, classes.textField)}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            margin="small"
-                            error={
-                              this.props.touched["video"] &&
-                              this.props.errors["video"]
-                            }
-                            helperText={this.props.errors["video"]}
-                          >
-                            <InputLabel
-                              className={classes.customLabelStyle}
-                              htmlFor="video"
-                            >
-                              Video URL
-                            </InputLabel>
-                            <OutlinedInput
-                              className={classes.customInputStyle}
-                              id="video"
-                              name="video"
-                              type="text"
-                              onChange={this.props.handleChange}
-                              onBlur={this.props.handleBlur}
-                              labelWidth={90}
-                            />
-                            <FormHelperText error>
-                              {this.props.errors["video"]}
-                            </FormHelperText>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} sm={12} md={12}>
-                          <FormControl
-                            className={clsx(classes.margin, classes.textField)}
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            margin="small"
-                          >
-                            <InputLabel
-                              className={clsx(
-                                classes.customLabelStyle,
-                                classes.largeLabel
-                              )}
-                              htmlFor="add_materials_used"
-                              shrink
-                            >
-                              Materials Used
-                            </InputLabel>
-                            <Box className={classes.materialsUsedViewStyle}>
-                              {materials_used.map((material, num) => (
-                                <Chip
-                                  className={classes.customChipStyle}
-                                  key={num}
-                                  label={material}
-                                  onDelete={(e, value = material) =>
-                                    this.removeMaterialsUsed(e, value)
-                                  }
-                                  color="secondary"
-                                  variant="outlined"
-                                />
-                              ))}
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <Box
+                          component="p"
+                          className={error !== null && classes.errorBox}
+                        >
+                          {error !== null && (
+                            <Box component="span" className={classes.error}>
+                              {error}
                             </Box>
-                            <Grid container spacing={1}>
-                              <Grid item xs={8} sm={8} md={8}>
-                                <OutlinedInput
-                                  className={classes.customInputStyle}
-                                  id="add_materials_used"
-                                  name="add_materials_used"
-                                  type="text"
-                                  onChange={this.props.handleChange}
-                                  onBlur={this.props.handleBlur}
-                                />
-                                <FormHelperText error>
-                                  {this.props.errors["materials_used"]}
-                                </FormHelperText>
-                              </Grid>
-                              <Grid item xs={4} sm={4} md={4}>
-                                <Button
-                                  className={classes.secondaryButton}
-                                  variant="outlined"
-                                  size="large"
-                                  onClick={this.addMaterialUsed}
-                                >
-                                  <AddIcon />
-                                </Button>
-                              </Grid>
-                            </Grid>
-                            <input
-                              id="materials_used"
-                              name="materials_used"
-                              type="hidden"
-                              onChange={this.props.handleChange}
-                              onBlur={this.props.handleBlur}
-                            />
-                          </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Button
-                            variant="contained"
-                            size="large"
-                            className={classes.primaryButton}
-                            onClick={this.create_project}
-                          >
-                            Create Project
-                          </Button>
-                        </Grid>
+                          )}
+                        </Box>
                       </Grid>
-                    </form>
-                    <Dialog
-                      open={materialsUsedModalOpen}
-                      onClose={this.handleMaterialsUsedDialogToggle}
-                      aria-labelledby="materials used dialog"
-                    >
-                      <DialogTitle id="materials-used-dialog-title">
-                        Add New Material
-                      </DialogTitle>
-                      <DialogContent>
+
+                      <Grid item xs={12}>
                         <FormControl
                           className={clsx(classes.margin, classes.textField)}
                           variant="outlined"
                           size="small"
                           fullWidth
-                          margin="normal"
+                          margin="small"
+                          error={
+                            this.props.touched["title"] &&
+                            this.props.errors["title"]
+                          }
                         >
                           <InputLabel
                             className={classes.customLabelStyle}
-                            htmlFor="new_material"
+                            htmlFor="title"
                           >
-                            New Material
+                            Title
                           </InputLabel>
                           <OutlinedInput
                             className={classes.customInputStyle}
-                            id="new_material"
-                            name="new_material"
+                            id="title"
+                            name="title"
                             type="text"
+                            placeholder="Project Title"
+                            onChange={this.props.handleChange}
+                            onBlur={this.props.handleBlur}
                             labelWidth={90}
                           />
+                          <FormHelperText error>
+                            {this.props.errors["title"]}
+                          </FormHelperText>
                         </FormControl>
-                      </DialogContent>
-                      <DialogActions>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <FormControl
+                          className={clsx(classes.margin, classes.textField)}
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          margin="small"
+                          error={
+                            this.props.touched["description"] &&
+                            this.props.errors["description"]
+                          }
+                        >
+                          <InputLabel
+                            className={classes.customLabelStyle}
+                            htmlFor="description"
+                          >
+                            Description
+                          </InputLabel>
+                          <OutlinedInput
+                            className={classes.customInputStyle}
+                            id="description"
+                            name="description"
+                            type="text"
+                            multiline
+                            rowsMax={6}
+                            onChange={this.props.handleChange}
+                            onBlur={this.props.handleBlur}
+                            labelWidth={90}
+                          />
+                          <FormHelperText error>
+                            {this.props.errors["description"]}
+                          </FormHelperText>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6} md={6}>
+                        <FormControl fullWidth>
+                          <label htmlFor="project_images">
+                            <Button
+                              className={clsx(
+                                classes.secondaryButton,
+                                classes.imageUploadButton
+                              )}
+                              variant="outlined"
+                              size="large"
+                              margin="normal"
+                              id="image_upload_button"
+                              startIcon={<ImageIcon />}
+                              onClick={() =>
+                                document
+                                  .querySelector("#project_images")
+                                  .click()
+                              }
+                            >
+                              Images
+                            </Button>
+                          </label>
+                          <input
+                            className={classes.displayNone}
+                            type="file"
+                            accept="image/*"
+                            id="project_images"
+                            name="project_images"
+                            multiple
+                            onChange={this.imageFieldValidation}
+                            onBlur={this.props.handleBlur}
+                          />
+                          <FormHelperText error>
+                            {this.props.errors["project_images"]}
+                          </FormHelperText>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={12} sm={6} md={6}>
+                        <FormControl
+                          className={clsx(classes.margin, classes.textField)}
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          margin="small"
+                          error={
+                            this.props.touched["video"] &&
+                            this.props.errors["video"]
+                          }
+                          helperText={this.props.errors["video"]}
+                        >
+                          <InputLabel
+                            className={classes.customLabelStyle}
+                            htmlFor="video"
+                          >
+                            Video URL
+                          </InputLabel>
+                          <OutlinedInput
+                            className={classes.customInputStyle}
+                            id="video"
+                            name="video"
+                            type="text"
+                            onChange={this.props.handleChange}
+                            onBlur={this.props.handleBlur}
+                            labelWidth={90}
+                          />
+                          <FormHelperText error>
+                            {this.props.errors["video"]}
+                          </FormHelperText>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={12} sm={12} md={12}>
+                        <FormControl
+                          className={clsx(classes.margin, classes.textField)}
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          margin="small"
+                        >
+                          <InputLabel
+                            className={clsx(
+                              classes.customLabelStyle,
+                              classes.largeLabel
+                            )}
+                            htmlFor="add_materials_used"
+                            shrink
+                          >
+                            Materials Used
+                          </InputLabel>
+                          <Box className={classes.materialsUsedViewStyle}>
+                            {materials_used.map((material, num) => (
+                              <Chip
+                                className={classes.customChipStyle}
+                                key={num}
+                                label={material}
+                                onDelete={(e, value = material) =>
+                                  this.removeMaterialsUsed(e, value)
+                                }
+                                color="secondary"
+                                variant="outlined"
+                              />
+                            ))}
+                          </Box>
+                          <Grid container spacing={1}>
+                            <Grid item xs={8} sm={8} md={8}>
+                              <OutlinedInput
+                                className={classes.customInputStyle}
+                                id="add_materials_used"
+                                name="add_materials_used"
+                                type="text"
+                                onChange={this.props.handleChange}
+                                onBlur={this.props.handleBlur}
+                              />
+                              <FormHelperText error>
+                                {this.props.errors["materials_used"]}
+                              </FormHelperText>
+                            </Grid>
+                            <Grid item xs={4} sm={4} md={4}>
+                              <Button
+                                className={classes.secondaryButton}
+                                variant="outlined"
+                                size="large"
+                                onClick={this.addMaterialUsed}
+                              >
+                                <AddIcon />
+                              </Button>
+                            </Grid>
+                          </Grid>
+                          <input
+                            id="materials_used"
+                            name="materials_used"
+                            type="hidden"
+                            onChange={this.props.handleChange}
+                            onBlur={this.props.handleBlur}
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12}>
                         <Button
-                          onClick={this.handleMaterialsUsedDialogToggle}
-                          color="primary"
+                          variant="contained"
+                          size="large"
+                          className={classes.primaryButton}
+                          onClick={this.create_project}
                         >
-                          Cancel
+                          Create Project
                         </Button>
-                        <Button onClick={this.addMaterialUsed} color="primary">
-                          Add
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                    <Dialog
-                      PaperProps={{
-                        style: {
-                          backgroundColor: "transparent",
-                          boxShadow: "none",
-                        },
-                      }}
-                      className={classes.uploadProgressDialogStyle}
-                      open={image_upload.upload_dialog}
-                      aria-labelledby="upload progress dialog"
-                    >
-                      <Box position="relative" display="inline-flex">
-                        <CircularProgress
-                          className={classes.uploadProgressStyle}
-                          variant="determinate"
-                          size={70}
-                          thickness={6}
-                          value={image_upload.upload_percent}
+                      </Grid>
+                    </Grid>
+                  </form>
+                  <Dialog
+                    open={materialsUsedModalOpen}
+                    onClose={this.handleMaterialsUsedDialogToggle}
+                    aria-labelledby="materials used dialog"
+                  >
+                    <DialogTitle id="materials-used-dialog-title">
+                      Add New Material
+                    </DialogTitle>
+                    <DialogContent>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                      >
+                        <InputLabel
+                          className={classes.customLabelStyle}
+                          htmlFor="new_material"
+                        >
+                          New Material
+                        </InputLabel>
+                        <OutlinedInput
+                          className={classes.customInputStyle}
+                          id="new_material"
+                          name="new_material"
+                          type="text"
+                          labelWidth={90}
                         />
-                        <Box
-                          top={0}
-                          left={0}
-                          bottom={0}
-                          right={0}
-                          position="absolute"
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Typography
-                            className={classes.uploadProgressLabelStyle}
-                            variant="caption"
-                            component="div"
-                          >{`${Math.round(
-                            image_upload.upload_percent
-                          )}%`}</Typography>
-                        </Box>
+                      </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={this.handleMaterialsUsedDialogToggle}
+                        color="primary"
+                      >
+                        Cancel
+                      </Button>
+                      <Button onClick={this.addMaterialUsed} color="primary">
+                        Add
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  <Dialog
+                    PaperProps={{
+                      style: {
+                        backgroundColor: "transparent",
+                        boxShadow: "none",
+                      },
+                    }}
+                    className={classes.uploadProgressDialogStyle}
+                    open={image_upload.upload_dialog}
+                    aria-labelledby="upload progress dialog"
+                  >
+                    <Box position="relative" display="inline-flex">
+                      <CircularProgress
+                        className={classes.uploadProgressStyle}
+                        variant="determinate"
+                        size={70}
+                        thickness={6}
+                        value={image_upload.upload_percent}
+                      />
+                      <Box
+                        top={0}
+                        left={0}
+                        bottom={0}
+                        right={0}
+                        position="absolute"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Typography
+                          className={classes.uploadProgressLabelStyle}
+                          variant="caption"
+                          component="div"
+                        >{`${Math.round(
+                          image_upload.upload_percent
+                        )}%`}</Typography>
                       </Box>
-                    </Dialog>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Container>
-          </Box>
-        </>
+                    </Box>
+                  </Dialog>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Container>
+        </Box>
       );
     }
   }
