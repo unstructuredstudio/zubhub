@@ -28,7 +28,7 @@ import { connect } from "react-redux";
 import * as AuthActions from "../../../store/actions/authActions";
 import robots from "../../../assets/images/robots.png";
 
-const styles = {
+const styles = (theme) => ({
   root: {
     paddingTop: "2em",
     paddingBottom: "2em",
@@ -110,6 +110,13 @@ const styles = {
     width: "30%",
     marginRight: "1em",
     marginLeft: "1em",
+    [theme.breakpoints.down("510")]: {
+      width: "20%",
+    },
+    [theme.breakpoints.down("381")]: {
+      marginLeft: "0.5em",
+      marginRight: "0.5em",
+    },
   },
   textDecorationNone: {
     textDecoration: "none",
@@ -125,7 +132,7 @@ const styles = {
   error: {
     color: "#a94442",
   },
-};
+});
 
 class Login extends Component {
   constructor(props) {

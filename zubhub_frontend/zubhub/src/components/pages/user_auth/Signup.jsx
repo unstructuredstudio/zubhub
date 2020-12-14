@@ -31,7 +31,7 @@ import { connect } from "react-redux";
 import * as AuthActions from "../../../store/actions/authActions";
 import robots from "../../../assets/images/robots.png";
 
-const styles = {
+const styles = (theme) => ({
   root: {
     paddingTop: "2em",
     paddingBottom: "2em",
@@ -114,6 +114,16 @@ const styles = {
     width: "30%",
     marginRight: "1em",
     marginLeft: "1em",
+    [theme.breakpoints.down("573")]: {
+      width: "20%",
+    },
+    [theme.breakpoints.down("423")]: {
+      marginLeft: "0.5em",
+      marginRight: "0.5em",
+    },
+    [theme.breakpoints.down("378")]: {
+      width: "10%",
+    },
   },
   textDecorationNone: {
     textDecoration: "none",
@@ -129,7 +139,7 @@ const styles = {
   error: {
     color: "#a94442",
   },
-};
+});
 
 class Signup extends Component {
   constructor(props) {
