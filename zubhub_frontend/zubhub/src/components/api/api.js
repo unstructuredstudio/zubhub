@@ -1,6 +1,10 @@
 class API {
   constructor(){
-    this.domain = "http://127.0.0.1:8000/api/"
+    this.domain = `http://${proccess.env.NODE_ENV === 'production' ? `167.71.30.125:8000`:`127.0.0.1:8000`}/api/`;
+
+    const BASE_API_URI = process.env.NODE_ENV === 'production' ?
+                     'https://contraband.toolforge.org/'
+                  :  'http://127.0.0.1:8000/';
   }
 
   request=({url = '/', method = 'GET', token, body})=>{
