@@ -1,0 +1,7 @@
+media/
+migrations/
+__pycache__/
+*.pyc
+staticfiles/
+.env
+.docker/
