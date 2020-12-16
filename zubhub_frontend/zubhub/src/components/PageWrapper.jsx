@@ -65,6 +65,7 @@ const styles = (theme) => ({
     borderTop: "1px solid #C4C4C4",
   },
   scrollTopButtonStyle: {
+    zIndex: 100,
     position: "fixed",
     bottom: theme.spacing(2),
     right: theme.spacing(2),

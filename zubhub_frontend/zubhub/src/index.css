@@ -444,6 +444,12 @@ html,
   margin-bottom: 0px;
 }
 
+.slick-center img {
+  /* width: 250px !important; */
+  height: 220px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
 .comment-box {
   display: flex;
   flex-direction: column;
