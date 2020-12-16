@@ -224,23 +224,32 @@ class Profile extends Component {
   }
 
   toggle_follow = (id) => {
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_follow({ id, token: this.props.auth.token })
-      .then((res) => {
-        if (res.id) {
-          return this.setState({ profile: res });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .toggle_follow({ id, token: this.props.auth.token })
+        .then((res) => {
+          if (res.id) {
+            return this.setState({ profile: res });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   handleToggleEditProfileModal = () => {

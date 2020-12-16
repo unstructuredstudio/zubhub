@@ -210,7 +210,16 @@ class CreateProject extends Component {
                 toast.success("Your project was created successfully!!");
                 return this.props.history.push("/");
               })
-              .catch((error) => this.setState({ error: error.message }));
+              .catch((error) => {
+                if (error.message.startsWith("Unexpected")) {
+                  this.setState({
+                    error:
+                      "An error occured while performing this action. Please try again later",
+                  });
+                } else {
+                  this.setState({ error: error.message });
+                }
+              });
           }
         });
       }
@@ -222,27 +231,31 @@ class CreateProject extends Component {
   };
 
   create_project = (e) => {
-    let image_field = this.imageFieldValidation();
-
-    if (image_field.is_empty === true) {
-      this.props.setErrors({ project_images: "please upload an image" });
-    } else if (image_field.too_many_images === true) {
-      this.props.setErrors({ project_images: "too many images uploaded" });
-    } else if (image_field.image_size_too_large === true) {
-      this.props.setErrors({
-        project_images: "one or more of your image is greater than 3mb",
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
     } else {
-      let project_images = document.querySelector("#project_images").files;
+      let image_field = this.imageFieldValidation();
 
-      let { image_upload } = this.state;
-      image_upload.images_to_upload = project_images.length;
-      image_upload.upload_dialog = true;
-      image_upload.upload_percent = 0;
-      this.setState({ image_upload });
+      if (image_field.is_empty === true) {
+        this.props.setErrors({ project_images: "please upload an image" });
+      } else if (image_field.too_many_images === true) {
+        this.props.setErrors({ project_images: "too many images uploaded" });
+      } else if (image_field.image_size_too_large === true) {
+        this.props.setErrors({
+          project_images: "one or more of your image is greater than 3mb",
+        });
+      } else {
+        let project_images = document.querySelector("#project_images").files;
 
-      for (let index = 0; index < project_images.length; index++) {
-        this.upload(project_images[index]);
+        let { image_upload } = this.state;
+        image_upload.images_to_upload = project_images.length;
+        image_upload.upload_dialog = true;
+        image_upload.upload_percent = 0;
+        this.setState({ image_upload });
+
+        for (let index = 0; index < project_images.length; index++) {
+          this.upload(project_images[index]);
+        }
       }
     }
   };

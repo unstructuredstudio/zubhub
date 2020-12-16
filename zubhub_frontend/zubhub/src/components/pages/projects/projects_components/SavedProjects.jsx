@@ -80,28 +80,37 @@ class SavedProjects extends Component {
   }
 
   fetchPage = (page) => {
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .get_saved({ page, token: this.props.auth.token })
-      .then((res) => {
-        if (Array.isArray(res.results)) {
-          return this.setState({
-            projects: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
-            loading: false,
-          });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .get_saved({ page, token: this.props.auth.token })
+        .then((res) => {
+          if (Array.isArray(res.results)) {
+            return this.setState({
+              projects: res.results,
+              prevPage: res.previous,
+              nextPage: res.next,
+              loading: false,
+            });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   updateProjects = (res) => {

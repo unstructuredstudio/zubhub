@@ -392,72 +392,99 @@ class ProjectDetails extends Component {
 
   toggle_like = (e, id) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_like({ id, token: this.props.auth.token })
-      .then((res) => {
-        if (res.id) {
-          return this.setState({ project: res });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .toggle_like({ id, token: this.props.auth.token })
+        .then((res) => {
+          if (res.id) {
+            return this.setState({ project: res });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   toggle_follow = (id) => {
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_follow({ id, token: this.props.auth.token })
-      .then((res) => {
-        if (res.id) {
-          let { project } = this.state;
-          if (project.creator.id === res.id) {
-            project.creator = res;
-          }
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .toggle_follow({ id, token: this.props.auth.token })
+        .then((res) => {
+          if (res.id) {
+            let { project } = this.state;
+            if (project.creator.id === res.id) {
+              project.creator = res;
+            }
 
-          return this.setState({ project });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+            return this.setState({ project });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   toggle_save = (e, id) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_save({
-        id,
-        token: this.props.auth.token,
-      })
-      .then((res) => {
-        if (res.id) {
-          return this.setState({ project: res });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .toggle_save({
+          id,
+          token: this.props.auth.token,
+        })
+        .then((res) => {
+          if (res.id) {
+            return this.setState({ project: res });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   handleOpenEnlargedImageDialog = (e) => {
@@ -484,30 +511,39 @@ class ProjectDetails extends Component {
 
   add_comment = (e) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    let textarea = document.querySelector("#comment");
-    let comment_text = textarea.value;
-    this.props.api
-      .add_comment({
-        id: this.state.project.id,
-        token: this.props.auth.token,
-        text: comment_text,
-      })
-      .then((res) => {
-        if (res.id) {
-          textarea.value = "";
-          return this.setState({ project: res });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      let textarea = document.querySelector("#comment");
+      let comment_text = textarea.value;
+      this.props.api
+        .add_comment({
+          id: this.state.project.id,
+          token: this.props.auth.token,
+          text: comment_text,
+        })
+        .then((res) => {
+          if (res.id) {
+            textarea.value = "";
+            return this.setState({ project: res });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   constructCommentBox = () => {

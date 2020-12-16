@@ -193,7 +193,16 @@ class Signup extends Component {
           })
         )
         .then((val) => this.props.history.push("/profile"))
-        .catch((error) => this.setState({ error: error.message }));
+        .catch((error) => {
+          if (error.message.startsWith("Unexpected")) {
+            this.setState({
+              error:
+                "An error occured while performing this action. Please try again later",
+            });
+          } else {
+            this.setState({ error: error.message });
+          }
+        });
     }
   };
 

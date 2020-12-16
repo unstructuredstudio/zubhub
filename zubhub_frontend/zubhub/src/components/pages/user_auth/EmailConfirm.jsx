@@ -144,7 +144,16 @@ class EmailConfirm extends Component {
           this.props.history.push("/");
         }, 4000);
       })
-      .catch((error) => this.setState({ error: error.message }));
+      .catch((error) => {
+        if (error.message.startsWith("Unexpected")) {
+          this.setState({
+            error:
+              "An error occured while performing this action. Please try again later",
+          });
+        } else {
+          this.setState({ error: error.message });
+        }
+      });
   };
 
   render() {
