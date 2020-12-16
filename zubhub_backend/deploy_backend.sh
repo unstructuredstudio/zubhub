@@ -2,8 +2,7 @@
 
 mv zubhub_backend/.env zubhub/zubhub_backend/.env
 rm -rf zubhub_backend
-mkdir zubhub_backend
-cp -r zubhub/zubhub_backend/* zubhub_backend/
+cp -r zubhub/zubhub_backend/ zubhub_backend/
 rm -rf zubhub/ zubhub_backend/.env.example
 cd zubhub_backend
 docker-compose down

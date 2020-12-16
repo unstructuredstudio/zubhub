@@ -49,7 +49,7 @@ to clone the repo. In our case, our repository url is https://github.com/unstruc
 1. after you must have cloned the github repository, run the following command to copy the deploy_backend.sh file
 
 ```commandline
-cp zubhub/zubhub_frontend/zubhub/deploy_backend.sh ./
+cp zubhub/zubhub_backend/deploy_backend.sh ./
 ```
 
 **Note** You need to be in the directory named zubhub-backend. This is the directory you land on when you ssh to the droplet using `ssh zubhub-backend@<droplet ip address>`
