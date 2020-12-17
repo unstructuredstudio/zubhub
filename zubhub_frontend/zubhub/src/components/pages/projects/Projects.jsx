@@ -33,6 +33,9 @@ const styles = (theme) => ({
   mainContainerStyle: {
     maxWidth: "2000px",
   },
+  projectGridStyle: {
+    marginBottom: "2em",
+  },
   buttonGroupStyle: {
     paddingLeft: "2em",
     paddingRight: "2em",
@@ -127,9 +130,17 @@ class Projects extends Component {
       return (
         <Box className={classes.root}>
           <Container class={classes.mainContainerStyle}>
-            <Grid container spacing={3} justify="center">
+            <Grid container>
               {projects.map((project) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} align="center">
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  align="center"
+                  className={classes.projectGridStyle}
+                >
                   <Project
                     project={project}
                     key={project.id}

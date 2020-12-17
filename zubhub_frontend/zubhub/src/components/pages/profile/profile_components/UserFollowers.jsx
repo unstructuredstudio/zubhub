@@ -35,6 +35,9 @@ const styles = (theme) => ({
     fontWeight: "bold",
     textAlign: "center",
   },
+  followersGridStyle: {
+    marginBottom: "2em",
+  },
   cardStyle: {
     display: "flex",
     flexDirection: "column",
@@ -226,7 +229,15 @@ class UserFollowers extends Component {
 
   followers = (followers) =>
     followers.map((follower) => (
-      <Grid item xs={12} sm={6} md={4} lg={3} align="center">
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={4}
+        lg={3}
+        className={this.props.classes.followersGridStyle}
+        align="center"
+      >
         <Link
           className={this.props.classes.textDecorationNone}
           to={`/creators/${follower.username}`}
@@ -270,7 +281,7 @@ class UserFollowers extends Component {
     } else if (followers.length > 0) {
       return (
         <Box className={classes.root}>
-          <Grid container spacing={3} justify="center">
+          <Grid container>
             <Grid item xs={12}>
               <Typography
                 className={classes.pageHeaderStyle}

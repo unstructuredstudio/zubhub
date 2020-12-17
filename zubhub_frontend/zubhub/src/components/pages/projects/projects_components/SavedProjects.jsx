@@ -34,6 +34,9 @@ const styles = (theme) => ({
     fontWeight: "bold",
     textAlign: "center",
   },
+  projectGridStyle: {
+    marginBottom: "2em",
+  },
   buttonGroupStyle: {
     marginTop: "2em",
   },
@@ -117,7 +120,7 @@ class SavedProjects extends Component {
     } else if (projects.length > 0) {
       return (
         <Box className={classes.root}>
-          <Grid container spacing={3} justify="center">
+          <Grid container>
             <Grid item xs={12}>
               <Typography
                 className={classes.pageHeaderStyle}
@@ -128,7 +131,15 @@ class SavedProjects extends Component {
               </Typography>
             </Grid>
             {projects.map((project) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} align="center">
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                align="center"
+                className={classes.projectGridStyle}
+              >
                 <Project
                   project={project}
                   key={project.id}

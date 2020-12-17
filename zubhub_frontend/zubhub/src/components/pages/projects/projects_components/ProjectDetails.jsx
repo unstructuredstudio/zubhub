@@ -122,13 +122,14 @@ const styles = (theme) => ({
     top: "0",
     right: "-4.5em",
     height: "100%",
+    width: "3.5em",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     [theme.breakpoints.down("1080")]: {
       position: "static",
-      height: "3em",
+      height: "3.5em",
       width: "100%",
       flexDirection: "row",
       justifyContent: "flex-start",
@@ -158,6 +159,11 @@ const styles = (theme) => ({
       fill: "#03848C",
     },
   },
+  sliderBoxStyle: {
+    [theme.breakpoints.down("1080")]: {
+      width: "90%",
+    },
+  },
   sliderStyle: {
     maxWidth: "100%",
     padding: "1em",
@@ -166,7 +172,7 @@ const styles = (theme) => ({
   carouselImageStyle: {
     borderRadius: "15px",
     objectFit: "cover",
-    width: "200px",
+    width: "180px",
     height: "200px",
   },
   enlargedImageDialogStyle: {
@@ -294,6 +300,7 @@ const sliderSettings = (images_num) => ({
   infinite: true,
   centerPadding: "60px",
   dots: false,
+  autoplay: true,
   speed: 500,
   slidesToShow: 4,
   slidesToScroll: 4,
@@ -346,7 +353,6 @@ function NextArrow(props) {
         ...style,
         display: "block",
         background: "#767474",
-        right: "0",
         borderRadius: "50%",
         zIndex: "10",
       }}
@@ -364,7 +370,6 @@ function PrevArrow(props) {
         ...style,
         display: "block",
         background: "#767474",
-        left: "0",
         borderRadius: "50%",
         zIndex: "10",
       }}
@@ -620,7 +625,7 @@ class ProjectDetails extends Component {
                 </Grid>
               </Container>
               <Container className={classes.detailStyle}>
-                <Grid container>
+                <Grid container justify="center">
                   <Grid
                     item
                     xs={12}
@@ -692,23 +697,25 @@ class ProjectDetails extends Component {
                     </Box>
                   </Grid>
                   {project.images.length > 0 ? (
-                    <Grid item xs={12} sm={12} md={12}>
-                      <Slider
-                        className={classes.sliderStyle}
-                        {...sliderSettings(project.images.length)}
-                      >
-                        {project.images.map((image) => (
-                          <div>
-                            <img
-                              key={image.public_id}
-                              className={classes.carouselImageStyle}
-                              src={image.image_url}
-                              alt={image.public_id}
-                              onClick={this.handleOpenEnlargedImageDialog}
-                            />
-                          </div>
-                        ))}
-                      </Slider>
+                    <Grid item xs={12} sm={12} md={12} align="center">
+                      <Box className={classes.sliderBoxStyle}>
+                        <Slider
+                          className={classes.sliderStyle}
+                          {...sliderSettings(project.images.length)}
+                        >
+                          {project.images.map((image) => (
+                            <div>
+                              <img
+                                key={image.public_id}
+                                className={classes.carouselImageStyle}
+                                src={image.image_url}
+                                alt={image.public_id}
+                                onClick={this.handleOpenEnlargedImageDialog}
+                              />
+                            </div>
+                          ))}
+                        </Slider>
+                      </Box>
                     </Grid>
                   ) : null}
                   <Grid item xs={12} sm={12} md={12}>
