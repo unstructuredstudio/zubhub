@@ -1,0 +1,4 @@
+media/
+migrations/
+__pycache__/
+.gitignore

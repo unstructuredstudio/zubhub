@@ -1,0 +1,12 @@
+{% load account %}
+{% user_display user as user_display %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+{% trans "Hello from " %}{% default_display_name %}!
+{% blocktrans %}
+You're receiving this e-mail because user {{ user_display }} has given yours as an e-mail address to connect their account.
+{% endblocktrans %}
+{% trans "To confirm this is correct, go to " %} {% default_frontend_protocol %}://{% default_frontend_domain %}/email-confirm?user={{ user_display }}&&key={{key}}
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!
