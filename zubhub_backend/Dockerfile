@@ -26,5 +26,17 @@ RUN pip install --upgrade pip wheel \
   && pip install -r /zubhub_backend/requirements.txt
 
 # copy project
-
 COPY . /zubhub_backend/
+
+
+COPY /start /start
+RUN sed -i 's/\r$//g' /start
+RUN chmod +x /start
+
+COPY /start-celeryworker /start-celeryworker
+RUN sed -i 's/\r$//g' /start-celeryworker
+RUN chmod +x /start-celeryworker
+
+COPY /start-flower /start-flower
+RUN sed -i 's/\r$//g' /start-flower
+RUN chmod +x /start-flower
