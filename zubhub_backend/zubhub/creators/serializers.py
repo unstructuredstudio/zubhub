@@ -10,7 +10,6 @@ from rest_auth.registration.serializers import RegisterSerializer
 
 Creator = get_user_model()
 
-
 class CreatorSerializer(serializers.ModelSerializer):
 
     class Meta:

@@ -7,7 +7,6 @@ from django.contrib.auth import get_user_model
 from .permissions import IsOwner
 from .models import Location
 
-
 Creator = get_user_model()
 
 
@@ -23,14 +22,14 @@ class UserProfileAPIView(RetrieveAPIView):
     lookup_field = "username"
     permission_classes = [AllowAny]
 
-
+    
 class EditCreatorAPIView(UpdateAPIView):
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
-    def patch(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    def patch(self,request,*args,**kwargs):
+        return self.update(request,*args,**kwargs)
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())

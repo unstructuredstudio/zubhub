@@ -15,6 +15,7 @@ import PasswordReset from './components/pages/user_auth/PasswordReset';
 import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConfirm';
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 import Profile from './components/pages/profile/Profile';
+import CreateProject from './components/pages/projects/projects_components/CreateProject';
 
 // import Artists from './components/pages/artists/Artists';
 // import Artist from './components/pages/artists/Artist';
@@ -29,7 +30,6 @@ import Profile from './components/pages/profile/Profile';
 // import Cart from './components/pages/cart/Cart';
 
 class App extends Component {
-  
 
 render(){
   let apiProps = this.props;
@@ -82,19 +82,20 @@ return(
         </PageWrapper>
         )}/>
 
-    <Route path="/profile/:username"
+    <Route path="/profile"
         render={props=>(
         <PageWrapper>
           <Profile {...Object.assign({}, props, apiProps)}/>
         </PageWrapper>
         )}/>
 
-<Route path="/profile"
+    <Route path="/projects/create"
         render={props=>(
         <PageWrapper>
-          <Profile {...Object.assign({}, props, apiProps)}/>
+          <CreateProject {...Object.assign({}, props, apiProps)}/>
         </PageWrapper>
         )}/>
+
       </Switch>
     </Router>
   );

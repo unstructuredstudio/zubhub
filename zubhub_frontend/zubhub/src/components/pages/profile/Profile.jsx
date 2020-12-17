@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
+import { Link, withRouter } from 'react-router-dom';
 import EditProfile from './profile_components/EditProfile';
 import * as AuthActions from '../../../store/actions/authActions';
 
@@ -41,6 +42,8 @@ class Profile extends Component{
 
   render(){
       let {profile, loading, readOnly} = this.state;
+      
+      if(this.props.auth.token){
 
           if(loading){
             return <div>
@@ -54,6 +57,8 @@ class Profile extends Component{
                              :
                              <EditProfile profile={profile} setProfile={value=>this.setProfile(value)} 
                              setReadOnly={value=>this.setReadOnly(value)} {...this.props} />
+
+                            <button><Link to="/projects/create">Create Project</Link></button>
                              :
                              null
                             }
@@ -63,6 +68,7 @@ class Profile extends Component{
                             <div>Username: {profile.username}</div>
                         
                     
+
                             <div>{this.props.auth.username === profile.username ? `Email: ${profile.email}` : null}</div>
                     
                             <div>{this.props.auth.username === profile.username ? `Date Of Birth: ${profile.dateOfBirth}` : null}</div>
@@ -76,6 +82,10 @@ class Profile extends Component{
                             Couldn't fetch profile, try again later
                             </div>
                 }
+            } else {
+                    return <div>You are not logged in. Click on sign in to get started</div>
+                }
+
     }
 }
 

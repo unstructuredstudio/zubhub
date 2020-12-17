@@ -7,8 +7,7 @@ import { withAPI } from './api';
 
 import { ToastContainer, toast } from 'react-toastify';
 
-import * as AuthActions from '../store/actions/authActions'
-
+import * as AuthActions from '../store/actions/authActions';
 
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
@@ -63,8 +62,7 @@ return (
             </>
             :
             <>
-            <Link to={`/profile/${this.props.auth.username}`}>
-              <img src={`https://robohash.org/${this.props.auth.username}`} className="profile_image" aria-label="creator profile"/></Link>
+            <Link to="/profile"><img src={`https://robohash.org/${this.props.auth.username}`} className="profile_image" aria-label="creator profile"/></Link>
             <Link className="btn btn-danger" onClick={this.logout}>Logout</Link>
             </>
           }

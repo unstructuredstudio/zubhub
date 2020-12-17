@@ -9,4 +9,3 @@ urlpatterns = [
     path('locations/', LocationListAPIView.as_view(), name='location_list'),
     path('<str:username>/', UserProfileAPIView.as_view(), name='user_profile')
 ]
-

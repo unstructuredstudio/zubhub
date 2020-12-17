@@ -73,7 +73,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'APIS.apps.ApisConfig',
-    'creators.apps.CreatorsConfig'
+    'creators.apps.CreatorsConfig',
+    'projects.apps.ProjectsConfig'
 ]
 
 
