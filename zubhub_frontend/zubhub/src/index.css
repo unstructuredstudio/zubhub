@@ -306,7 +306,7 @@ html,
     flex-direction: column;
     flex-wrap: wrap;
   }
-
+  
   .video-item {
     width: unset;
     height: unset;

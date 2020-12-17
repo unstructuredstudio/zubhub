@@ -4,14 +4,13 @@ from django.contrib.auth import get_user_model
 from .models import Location
 from datetime import date
 import re
+
 from rest_auth.registration.serializers import RegisterSerializer
 
 Creator = get_user_model()
 
-
 class CreatorSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    # location = serializers.SlugRelatedField(slug_field="name", read_only=True)
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
 
