@@ -10,9 +10,8 @@ import * as AuthActions from "../store/actions/authActions";
 import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
 import logo from "../assets/images/logos/logo.png";
 
-import clsx from "clsx";
 import PropTypes from "prop-types";
-import { withStyles, fade } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import AppBar from "@material-ui/core/AppBar";
@@ -291,7 +290,7 @@ class PageWrapper extends Component {
                         </Link>
                       </MenuItem>
                       <MenuItem className={classes.logOutStyle}>
-                        <Link
+                        <Typography
                           className={classes.textDecorationNone}
                           onClick={this.logout}
                         >
@@ -302,7 +301,7 @@ class PageWrapper extends Component {
                           >
                             Logout
                           </Typography>
-                        </Link>
+                        </Typography>
                       </MenuItem>
                     </Menu>
                   </>
