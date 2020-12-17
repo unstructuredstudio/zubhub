@@ -38,8 +38,7 @@ class EditCreatorAPIView(UpdateAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
-
 class LocationListAPIView(ListAPIView):
-    queryset = Location.objects.all()
+    queryset =  Location.objects.all()
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]

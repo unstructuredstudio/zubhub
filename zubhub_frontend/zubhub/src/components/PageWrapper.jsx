@@ -9,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import * as AuthActions from '../store/actions/authActions'
 
+
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
 
@@ -35,7 +36,6 @@ class PageWrapper extends Component {
     .catch(error=>toast.warning(error.message))
     }
   }
-
 
   logout=(e)=>{
     // e.preventDefault();

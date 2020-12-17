@@ -158,6 +158,7 @@ edit_user_profile=(profile)=>{
 }
 /********************************************************************/
 
+
 /************************** get all locations **************************/
 get_locations=()=>{
   let url = "creators/locations/";
@@ -215,6 +216,7 @@ add_comment=({id, text, token})=>{
          .then(res=>res.json())
   
 }
+
 
 }
 

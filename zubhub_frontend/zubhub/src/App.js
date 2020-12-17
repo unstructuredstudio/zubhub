@@ -15,6 +15,7 @@ import PasswordReset from './components/pages/user_auth/PasswordReset';
 import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConfirm';
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 import Profile from './components/pages/profile/Profile';
+
 // import Artists from './components/pages/artists/Artists';
 // import Artist from './components/pages/artists/Artist';
 // import Upcoming from './components/pages/upcoming/Upcoming';
@@ -94,7 +95,6 @@ return(
           <Profile {...Object.assign({}, props, apiProps)}/>
         </PageWrapper>
         )}/>
-
       </Switch>
     </Router>
   );

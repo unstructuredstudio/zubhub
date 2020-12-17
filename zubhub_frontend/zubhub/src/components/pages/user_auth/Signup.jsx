@@ -113,6 +113,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['email']}</span> }
                               </p>
                             </div>
+
                             <div className="um-field um-field-user_email um-field-text um-field-type_text">
                               <div className="um-field-label">
                                 <label htmlFor="dateOfBirth">Date Of Birth</label>
@@ -128,6 +129,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['dateOfBirth']}</span> }
                               </p>
                             </div>
+
                             <div className="um-field um-field-user_email um-field-text um-field-type_text">
                               <div className="um-field-label">
                                 <label htmlFor="user_location">Location</label>
@@ -165,6 +167,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['password2']}</span> }
                               </p>
                             </div>
+
                             <div className="um-field um-field-user_password um-field-password um-field-type_password" >
                               <div className="um-field-label">
                                 <label htmlFor="password1">Confirm Password</label>
