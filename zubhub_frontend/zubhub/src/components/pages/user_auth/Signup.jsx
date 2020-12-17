@@ -296,7 +296,6 @@ class Signup extends Component {
                         >
                           Username
                         </InputLabel>
-
                         <ClickAwayListener
                           onClickAway={this.handleTooltipClose}
                         >
@@ -635,8 +634,6 @@ export default connect(
         .oneOf([Yup.ref("password1"), null], "Passwords must match")
         .required("input a confirmation password"),
     }),
-    handleSubmit: (values, { setSubmitting }) => {
-      //console.log("you've submitted the form. this are the submitted values: ",JSON.stringify(values));
-    },
+    handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(Signup))
 );

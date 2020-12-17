@@ -47,6 +47,9 @@ const styles = (theme) => ({
     marginTop: "2em",
     maxWidth: "2000px",
     width: "100%",
+    projectGridStyle: {
+      marginBottom: "2em",
+    },
   },
   primaryButtonStyle: {
     backgroundColor: "#00B8C4",

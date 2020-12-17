@@ -35,6 +35,7 @@ const styles = (theme) => ({
     maxWidth: "2000px",
     width: "100%",
   },
+
   pageHeaderStyle: {
     marginTop: "1em",
     fontWeight: "bold",
@@ -47,6 +48,9 @@ const styles = (theme) => ({
     marginTop: "2em",
     maxWidth: "2000px",
     width: "100%",
+  },
+  projectGridStyle: {
+    marginBottom: "2em",
   },
   primaryButtonStyle: {
     backgroundColor: "#00B8C4",
@@ -135,64 +139,64 @@ class UserProjects extends Component {
     } else if (projects.length > 0) {
       return (
         <Box className={classes.root}>
-          <Container className={classes.mainContainerStyle}>
-            <Grid container spacing={3} justify="center">
-              <Grid item xs={12}>
-                <Typography
-                  className={classes.pageHeaderStyle}
-                  variant="h3"
-                  gutterBottom
-                >
-                  {username}'s projects
-                </Typography>
-              </Grid>
-              {projects.map((project) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} align="center">
-                  <Project
-                    project={project}
-                    key={project.id}
-                    updateProjects={this.updateProjects}
-                    {...this.props}
-                  />
-                </Grid>
-              ))}
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography
+                className={classes.pageHeaderStyle}
+                variant="h3"
+                gutterBottom
+              >
+                {username}'s projects
+              </Typography>
             </Grid>
-            <ButtonGroup
-              aria-label="previous and next page buttons"
-              className={classes.buttonGroupStyle}
-            >
-              {prevPage ? (
-                <Button
-                  className={clsx(
-                    classes.primaryButtonStyle,
-                    classes.floatLeft
-                  )}
-                  size="large"
-                  startIcon={<NavigateBeforeIcon />}
-                  onClick={(e, page = prevPage.split("?")[1]) =>
-                    this.fetchPage(page)
-                  }
-                >
-                  Prev
-                </Button>
-              ) : null}
-              {nextPage ? (
-                <Button
-                  className={clsx(
-                    classes.primaryButtonStyle,
-                    classes.floatRight
-                  )}
-                  size="large"
-                  endIcon={<NavigateNextIcon />}
-                  onClick={(e, page = nextPage.split("?")[1]) =>
-                    this.fetchPage(page)
-                  }
-                >
-                  Next
-                </Button>
-              ) : null}
-            </ButtonGroup>
-          </Container>
+            {projects.map((project) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                className={classes.projectGridStyle}
+                align="center"
+              >
+                <Project
+                  project={project}
+                  key={project.id}
+                  updateProjects={this.updateProjects}
+                  {...this.props}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          <ButtonGroup
+            aria-label="previous and next page buttons"
+            className={classes.buttonGroupStyle}
+          >
+            {prevPage ? (
+              <Button
+                className={classes.primaryButtonStyle}
+                size="large"
+                startIcon={<NavigateBeforeIcon />}
+                onClick={(e, page = prevPage.split("?")[1]) =>
+                  this.fetchPage(page)
+                }
+              >
+                Prev
+              </Button>
+            ) : null}
+            {nextPage ? (
+              <Button
+                className={classes.primaryButtonStyle}
+                size="large"
+                endIcon={<NavigateNextIcon />}
+                onClick={(e, page = nextPage.split("?")[1]) =>
+                  this.fetchPage(page)
+                }
+              >
+                Next
+              </Button>
+            ) : null}
+          </ButtonGroup>
         </Box>
       );
     } else {

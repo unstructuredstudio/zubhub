@@ -25,21 +25,37 @@ const styles = (theme) => ({
     maxWidth: 345,
     height: "100%",
     paddingTop: 0,
-    paddingBottom: "0 !important",
+    paddingBottom: "0!important",
     marginTop: "1em",
-    marginBottom: "0",
+    marginBottom: "1em",
+    marginLeft: "1em",
+    marginRight: "1em",
     borderRadius: "15px",
     textAlign: "left",
     backgroundColor: "#ffffff",
+    flex: "1 0 auto",
+    display: "flex",
+    background:
+      "linear-gradient(to bottom, rgba(191,254,255,1) 0%, rgba(191,254,255,1) 20%, rgba(255,255,255,1) 77%, rgba(255,255,255,1) 100%)",
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "center",
   },
   mediaBoxStyle: {
     width: "100%",
-    height: "50%",
+    height: "100%",
+    position: "relative",
   },
   mediaStyle: {
     width: "100%",
     height: "100%",
     borderStyle: "none",
+  },
+  mediaImageStyle: {
+    objectFit: "cover",
+    width: "100%",
+    height: "13em",
+    position: "absolute",
   },
   fabButtonStyle: {
     color: "#00B8C4",
@@ -199,7 +215,7 @@ class Project extends Component {
               ></iframe>
             ) : (
               <img
-                className={classes.mediaStyle}
+                className={classes.mediaImageStyle}
                 src={project.images[0].image_url}
                 alt={project.title}
               />

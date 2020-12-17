@@ -396,8 +396,6 @@ export default connect(
         .min(8, "your password is too short")
         .required("input your password"),
     }),
-    handleSubmit: (values, { setSubmitting }) => {
-      //console.log("you've submitted the form. this are the submitted values: ",JSON.stringify(values));
-    },
+    handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(Login))
 );

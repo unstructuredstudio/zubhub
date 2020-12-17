@@ -10,8 +10,9 @@ import * as AuthActions from "../store/actions/authActions";
 import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
 import logo from "../assets/images/logos/logo.png";
 
+import clsx from "clsx";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, fade } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import AppBar from "@material-ui/core/AppBar";
@@ -54,6 +55,7 @@ const styles = (theme) => ({
       height: "2em",
     },
   },
+
   avatarStyle: {
     cursor: "pointer",
     backgroundColor: "white",
@@ -67,6 +69,7 @@ const styles = (theme) => ({
     borderTop: "1px solid #C4C4C4",
   },
   scrollTopButtonStyle: {
+    zIndex: 100,
     position: "fixed",
     bottom: theme.spacing(2),
     right: theme.spacing(2),
@@ -288,7 +291,7 @@ class PageWrapper extends Component {
                         </Link>
                       </MenuItem>
                       <MenuItem className={classes.logOutStyle}>
-                        <Typography
+                        <Link
                           className={classes.textDecorationNone}
                           onClick={this.logout}
                         >
@@ -299,7 +302,7 @@ class PageWrapper extends Component {
                           >
                             Logout
                           </Typography>
-                        </Typography>
+                        </Link>
                       </MenuItem>
                     </Menu>
                   </>

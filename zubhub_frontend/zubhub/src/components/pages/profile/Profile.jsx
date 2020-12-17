@@ -104,6 +104,9 @@ const styles = (theme) => ({
     },
   },
 
+  projectGridStyle: {
+    marginBottom: "2em",
+  },
   customInputStyle: {
     borderRadius: 15,
     "&.MuiOutlinedInput-notchedOutline": {
@@ -451,9 +454,16 @@ class Profile extends Component {
                   </Link>
                 </Typography>
                 <Container>
-                  <Grid container spacing={4} justify="center">
+                  <Grid container>
                     {projects.map((project) => (
-                      <Grid item xs={12} sm={6} md={6} align="center">
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={6}
+                        className={classes.projectGridStyle}
+                        align="center"
+                      >
                         <Project
                           project={project}
                           key={project.id}

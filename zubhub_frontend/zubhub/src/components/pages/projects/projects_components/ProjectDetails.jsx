@@ -10,7 +10,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, fade } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Fab from "@material-ui/core/Fab";
@@ -69,18 +69,71 @@ const styles = (theme) => ({
     backgroundColor: "#ffffff",
     marginRight: "0.5em",
   },
-  actionBoxStyle: {
-    display: "flex",
-    alignItems: "center",
+  headerStyle: {
+    maxWidth: "1000px",
+  },
+  detailStyle: {
+    maxWidth: "1000px",
+  },
+  videoWrapperStyle: {
+    backgroundColor: "black",
     marginBottom: "1em",
-    [theme.breakpoints.down("500")]: {
-      width: "100%",
-      justifyContent: "flex-end",
+    height: "100%",
+    paddingBottom: "56.25%",
+    [theme.breakpoints.down("1080")]: {
+      height: 0,
+    },
+    [theme.breakpoints.down("959")]: {
+      paddingBottom: "56.25%",
     },
   },
-  fabButtonStyle: {
+  iframeStyle: {
+    position: "absolute",
+    borderStyle: "none",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    [theme.breakpoints.down("959")]: {
+      width: "100%",
+      height: "100%",
+    },
+    zIndex: 1,
+  },
+  actionBoxStyle: {
+    backgroundColor: "white",
+    borderRadius: "15px",
+    position: "absolute",
+    top: "0",
+    right: "-4.5em",
+    height: "100%",
+    width: "3.5em",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    [theme.breakpoints.down("1080")]: {
+      position: "static",
+      height: "3.5em",
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "flex-start",
+    },
+  },
+  actionBoxButtonStyle: {
+    margin: "0.5em",
+    display: "flex",
+    flexDirection: "column",
+    "& span": { display: "flex", flexDirection: "column" },
+    [theme.breakpoints.down("1080")]: {
+      flexDirection: "row",
+      marginBottom: "1em",
+      "& span": {
+        flexDirection: "row",
+      },
+    },
+    textAlign: "center",
     color: "#00B8C4",
-    marginLeft: "1em",
     "& MuiFab-root:hover": {
       color: "#03848C",
     },
@@ -91,32 +144,21 @@ const styles = (theme) => ({
       fill: "#03848C",
     },
   },
-  detailStyle: {
-    maxWidth: "2000px",
-  },
-  videoWrapperStyle: {
-    position: "relative",
-    marginBottom: "1em",
-    paddingBottom: "28.25%",
-    [theme.breakpoints.down("959")]: {
-      paddingBottom: "56.25%",
-    },
-  },
-  iframeStyle: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "95%",
-    height: "95%",
-    [theme.breakpoints.down("959")]: {
-      width: "100%",
-      height: "100%",
+  sliderBoxStyle: {
+    [theme.breakpoints.down("1080")]: {
+      width: "90%",
     },
   },
   sliderStyle: {
-    backgroundColor: "#000000",
+    maxWidth: "100%",
     padding: "1em",
     marginBottom: "1em",
+  },
+  carouselImageStyle: {
+    borderRadius: "15px",
+    objectFit: "cover",
+    width: "180px",
+    height: "200px",
   },
   enlargedImageDialogStyle: {
     display: "flex",
@@ -129,15 +171,19 @@ const styles = (theme) => ({
     height: "auto",
   },
   descriptionHeadingStyle: {
+    marginTop: "1em",
     fontWeight: "bold",
   },
   descriptionBodyStyle: {
     fontSize: "1.5rem",
     marginBottom: "0.7em",
   },
-  fiberManualRecordIconStyle: {
-    fontSize: "0.5em",
-    marginLeft: "0.5em",
+  materialsUsedStyle: {
+    display: "inline-block",
+    padding: "0.2em 0.5em",
+    color: "#00B8C4",
+    borderRadius: "15px",
+    border: "1px solid #00B8C4",
     marginRight: "0.5em",
   },
   commentSectionStyle: {
@@ -217,6 +263,9 @@ const styles = (theme) => ({
   largeLabel: {
     fontSize: "1.3rem",
   },
+  positionRelative: { position: "relative" },
+  positionAbsolute: { position: "absolute" },
+  marginBottom1em: { marginBottom: "1em" },
   errorBox: {
     width: "100%",
     padding: "1em",
@@ -230,87 +279,55 @@ const styles = (theme) => ({
   },
 });
 
-const sliderSettings = {
-  dots: false,
+const sliderSettings = (images_num) => ({
+  className: "center",
+  centerMode: true,
   infinite: true,
+  centerPadding: "60px",
+  dots: false,
+  autoplay: true,
   speed: 500,
-  slidesToShow: 3,
-  slidesToScroll: 3,
+  slidesToShow: 4,
+  slidesToScroll: 4,
   focusOnSelect: true,
   swipeToSlide: true,
   nextArrow: <NextArrow />,
   prevArrow: <PrevArrow />,
   responsive: [
     {
-      breakpoint: 2001,
-      settings: {
-        slidesToShow: 6,
-        slidesToScroll: 6,
-        infinite: true,
-      },
-    },
-    {
       breakpoint: 1900,
       settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
+        slidesToShow: 4 > images_num ? images_num : 4,
+        slidesToScroll: 4 > images_num ? images_num : 4,
         infinite: true,
       },
     },
     {
-      breakpoint: 1600,
+      breakpoint: 980,
       settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
+        slidesToShow: 3 > images_num ? images_num : 3,
+        slidesToScroll: 3 > images_num ? images_num : 3,
         infinite: true,
       },
     },
     {
-      breakpoint: 1200,
+      breakpoint: 770,
       settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        infinite: true,
-        dots: false,
-      },
-    },
-    {
-      breakpoint: 959,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 4,
-        infinite: true,
-        dots: false,
-      },
-    },
-    {
-      breakpoint: 799,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        infinite: true,
-        dots: false,
-      },
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 2,
-        initialSlide: 2,
+        slidesToShow: 2 > images_num ? images_num : 2,
+        slidesToScroll: 2 > images_num ? images_num : 2,
         infinite: true,
       },
     },
     {
-      breakpoint: 430,
+      breakpoint: 550,
       settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
+        slidesToShow: 1 > images_num ? images_num : 1,
+        slidesToScroll: 1 > images_num ? images_num : 1,
         infinite: true,
       },
     },
   ],
-};
+});
 
 function NextArrow(props) {
   const { className, style, onClick } = props;
@@ -321,7 +338,6 @@ function NextArrow(props) {
         ...style,
         display: "block",
         background: "#767474",
-        right: "0",
         borderRadius: "50%",
         zIndex: "10",
       }}
@@ -339,7 +355,6 @@ function PrevArrow(props) {
         ...style,
         display: "block",
         background: "#767474",
-        left: "0",
         borderRadius: "50%",
         zIndex: "10",
       }}
@@ -495,18 +510,14 @@ class ProjectDetails extends Component {
 
   buildMaterialsUsedComponent = () => {
     let arr = this.state.project.materials_used.split(",");
-    return arr.map((material, index) =>
-      index === arr.length - 1 ? (
-        <Typography component="span">{material}</Typography>
-      ) : (
-        <>
-          <Typography component="span">{material}</Typography>
-          <FiberManualRecordIcon
-            className={this.props.classes.fiberManualRecordIconStyle}
-          />
-        </>
-      )
-    );
+    return arr.map((material, index) => (
+      <Typography
+        component="span"
+        className={this.props.classes.materialsUsedStyle}
+      >
+        {material}
+      </Typography>
+    ));
   };
 
   add_comment = (e) => {
@@ -595,7 +606,7 @@ class ProjectDetails extends Component {
         <>
           <Box className={classes.root}>
             <Paper className={classes.projectDetailHeaderStyle}>
-              <Container maxWidth="md">
+              <Container className={classes.headerStyle}>
                 <Typography
                   className={classes.titleStyle}
                   variant="h3"
@@ -632,110 +643,100 @@ class ProjectDetails extends Component {
                       </Button>
                     ) : null}
                   </Grid>
-                  <Grid item className={classes.actionBoxStyle}>
-                    <Typography
-                      color="textSecondary"
-                      variant="caption"
-                      component="span"
-                    >
-                      <VisibilityIcon /> {project.views_count}
-                    </Typography>
-                    <Fab
-                      className={clsx(
-                        classes.fabButtonStyle,
-                        classes.likeButtonStyle
-                      )}
-                      size="small"
-                      aria-label="like button"
-                      variant="extended"
-                      onClick={(e, id = project.id) => this.toggle_like(e, id)}
-                    >
-                      {project.likes.includes(this.props.auth.id) ? (
-                        <ClapIcon arial-label="unlike" />
-                      ) : (
-                        <ClapBorderIcon arial-label="like" />
-                      )}
-                      {nFormatter(project.likes.length)}
-                    </Fab>
-                    <Fab
-                      className={classes.fabButtonStyle}
-                      size="small"
-                      aria-label="save button"
-                      onClick={(e, id = project.id) => this.toggle_save(e, id)}
-                    >
-                      {project.saved_by.includes(this.props.auth.id) ? (
-                        <BookmarkIcon aria-label="unsave" />
-                      ) : (
-                        <BookmarkBorderIcon aria-label="save" />
-                      )}
-                    </Fab>
-                  </Grid>
                 </Grid>
               </Container>
               <Container className={classes.detailStyle}>
-                <Grid container>
+                <Grid container justify="center">
                   <Grid
                     item
                     xs={12}
                     sm={12}
-                    md={6}
-                    className={classes.videoWrapperStyle}
+                    md={12}
+                    className={clsx(
+                      classes.positionRelative,
+                      classes.marginBottom1em
+                    )}
                   >
-                    <iframe
-                      title="video"
-                      className={classes.iframeStyle}
-                      src={project.video}
-                    ></iframe>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      className={clsx(
+                        classes.videoWrapperStyle,
+                        classes.positionRelative
+                      )}
+                    >
+                      {project.video ? (
+                        <iframe
+                          title={project.title}
+                          className={classes.iframeStyle}
+                          src={project.video}
+                        ></iframe>
+                      ) : (
+                        <img
+                          className={classes.iframeStyle}
+                          src={project.images[0].image_url}
+                          alt={project.title}
+                        />
+                      )}
+                    </Grid>
+                    <Box className={classes.actionBoxStyle}>
+                      <Button
+                        className={classes.actionBoxButtonStyle}
+                        size="small"
+                        aria-label="like button"
+                        variant="extended"
+                        onClick={(e, id = project.id) =>
+                          this.toggle_like(e, id)
+                        }
+                      >
+                        {project.likes.includes(this.props.auth.id) ? (
+                          <ClapIcon arial-label="unlike" />
+                        ) : (
+                          <ClapBorderIcon arial-label="like" />
+                        )}
+                        <Typography>
+                          {nFormatter(project.likes.length)}
+                        </Typography>
+                      </Button>
+                      <Button
+                        className={classes.actionBoxButtonStyle}
+                        size="small"
+                        aria-label="save button"
+                        onClick={(e, id = project.id) =>
+                          this.toggle_save(e, id)
+                        }
+                      >
+                        {project.saved_by.includes(this.props.auth.id) ? (
+                          <BookmarkIcon aria-label="unsave" />
+                        ) : (
+                          <BookmarkBorderIcon aria-label="save" />
+                        )}
+                      </Button>
+                      <Typography
+                        color="textSecondary"
+                        variant="caption"
+                        component="span"
+                        className={classes.actionBoxButtonStyle}
+                      >
+                        <VisibilityIcon />
+                        <Typography>{project.views_count}</Typography>
+                      </Typography>
+                    </Box>
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={6}
-                    className={classes.descriptionStyle}
-                  >
-                    {project.images.length > 0 ? (
-                      <Grid item>
+                  {project.images.length > 0 ? (
+                    <Grid item xs={12} sm={12} md={12} align="center">
+                      <Box className={classes.sliderBoxStyle}>
                         <Slider
                           className={classes.sliderStyle}
-                          {...sliderSettings}
+                          {...sliderSettings(project.images.length)}
                         >
                           {project.images.map((image) => (
                             <div>
                               <img
                                 key={image.public_id}
-                                style={{
-                                  width: "200px",
-                                  height: "200px",
-                                }}
-                                src={image.image_url}
-                                alt={image.public_id}
-                                onClick={this.handleOpenEnlargedImageDialog}
-                              />
-                            </div>
-                          ))}
-                          {project.images.map((image) => (
-                            <div>
-                              <img
-                                key={image.public_id}
-                                style={{
-                                  width: "200px",
-                                  height: "200px",
-                                }}
-                                src={image.image_url}
-                                alt={image.public_id}
-                                onClick={this.handleOpenEnlargedImageDialog}
-                              />
-                            </div>
-                          ))}
-                          {project.images.map((image) => (
-                            <div>
-                              <img
-                                key={image.public_id}
-                                style={{
-                                  width: "200px",
-                                  height: "200px",
-                                }}
+                                className={classes.carouselImageStyle}
                                 src={image.image_url}
                                 alt={image.public_id}
                                 onClick={this.handleOpenEnlargedImageDialog}
@@ -743,36 +744,36 @@ class ProjectDetails extends Component {
                             </div>
                           ))}
                         </Slider>
-                      </Grid>
-                    ) : null}
-                    <Grid item>
-                      <Typography
-                        variant="h5"
-                        className={classes.descriptionHeadingStyle}
-                      >
-                        Description
-                      </Typography>
-                      <Typography
-                        className={classes.descriptionBodyStyle}
-                        color="textSecondary"
-                      >
-                        {project.description}
-                      </Typography>
+                      </Box>
                     </Grid>
-                    <Grid item>
-                      <Typography
-                        variant="h5"
-                        className={classes.descriptionHeadingStyle}
-                      >
-                        Materials used
-                      </Typography>
-                      <Typography
-                        className={classes.descriptionBodyStyle}
-                        color="textSecondary"
-                      >
-                        {this.buildMaterialsUsedComponent()}
-                      </Typography>
-                    </Grid>
+                  ) : null}
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography
+                      variant="h5"
+                      className={classes.descriptionHeadingStyle}
+                    >
+                      Description
+                    </Typography>
+                    <Typography
+                      className={classes.descriptionBodyStyle}
+                      color="textSecondary"
+                    >
+                      {project.description}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography
+                      variant="h5"
+                      className={classes.descriptionHeadingStyle}
+                    >
+                      Materials used
+                    </Typography>
+                    <Typography
+                      className={classes.descriptionBodyStyle}
+                      color="textSecondary"
+                    >
+                      {this.buildMaterialsUsedComponent()}
+                    </Typography>
                   </Grid>
                 </Grid>
               </Container>
