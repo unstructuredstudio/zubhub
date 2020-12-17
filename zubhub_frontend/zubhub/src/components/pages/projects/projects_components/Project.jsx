@@ -25,7 +25,7 @@ const styles = (theme) => ({
     maxWidth: 345,
     height: "100%",
     paddingTop: 0,
-    paddingBottom: 0,
+    paddingBottom: "0!important",
     marginTop: "1em",
     marginBottom: "1em",
     marginLeft: "1em",
