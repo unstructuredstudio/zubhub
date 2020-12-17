@@ -1,133 +1,352 @@
-import React,{Component} from 'react';
-import { Redirect } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import {withFormik} from 'formik';
-import * as Yup from 'yup';
+import React, { Component } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { withFormik } from "formik";
+import * as Yup from "yup";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { withStyles, fade } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
+import robots from "../../../assets/images/robots.png";
 
-class PasswordResetConfirm extends Component{
+const styles = {
+  root: {
+    paddingTop: "2em",
+    paddingBottom: "2em",
+    flex: "1 0 auto",
+  },
+  background: {
+    position: "absolute",
+    backgroundImage: `url(${robots})`,
+    filter: "blur(5px)",
+    webkitFilter: "blur(8px)",
+    top: -20,
+    height: "100%",
+    width: "100%",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    zIndex: -1,
+  },
+  cardStyle: {
+    border: 0,
+    borderRadius: 15,
+    boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .12)",
+    color: "white",
+    padding: "0 30px",
+  },
+  customLabelStyle: {
+    "&.MuiFormLabel-root.Mui-focused": {
+      color: "#00B8C4",
+    },
+  },
 
-  constructor(props){
+  customInputStyle: {
+    borderRadius: 15,
+    "&.MuiOutlinedInput-notchedOutline": {
+      border: "1px solid #00B8C4",
+      boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+    },
+    "&.MuiOutlinedInput-root": {
+      "&:hover fieldset": {
+        border: "1px solid #00B8C4",
+        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+      },
+      "&.Mui-focused fieldset": {
+        border: "1px solid #00B8C4",
+        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+      },
+    },
+  },
+  primaryButton: {
+    width: "100%",
+    backgroundColor: "#00B8C4",
+    borderRadius: 15,
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#03848C",
+    },
+  },
+  secondaryButton: {
+    width: "100%",
+    borderRadius: 15,
+    borderColor: "#00B8C4",
+    color: "#00B8C4",
+    "&:hover": {
+      color: "#03848C",
+      borderColor: "#03848C",
+    },
+  },
+  secondaryLink: {
+    color: "#00B8C4",
+    "&:hover": {
+      color: "#03848C",
+    },
+  },
+  center: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  divider: {
+    width: "30%",
+    marginRight: "1em",
+    marginLeft: "1em",
+  },
+  textDecorationNone: {
+    textDecoration: "none",
+  },
+  errorBox: {
+    width: "100%",
+    padding: "1em",
+    borderRadius: 6,
+    borderWidth: "1px",
+    borderColor: "#a94442",
+    backgroundColor: "#ffcdd2",
+  },
+  error: {
+    color: "#a94442",
+  },
+};
+
+class PasswordResetConfirm extends Component {
+  constructor(props) {
     super(props);
     this.state = {
-      error:null
-    }
+      error: null,
+      showPassword1: false,
+      showPassword2: false,
+    };
   }
 
-  getUidAndToken=(queryString)=>{
+  getUidAndToken = (queryString) => {
     let uid = queryString.split("&&");
     let token = uid[1].split("=")[1];
     uid = uid[0].split("=")[1];
-    return {uid, token};
-  }
+    return { uid, token };
+  };
 
-  resetPassword=(e)=>{
+  resetPassword = (e) => {
     e.preventDefault();
-    let {uid, token} = this.getUidAndToken(this.props.location.search);
-    this.props.api.password_reset_confirm({...this.props.values, uid, token})
-    .then(res=>{
-          console.log(res);
-          toast.success("Congratulations! your password reset was successful! you will now be redirected to login");
-          setTimeout(()=>{this.props.history.push("/login")},4000)
-    })
-    .catch(error=>this.setState({error:error.message}))
+    let { uid, token } = this.getUidAndToken(this.props.location.search);
+    this.props.api
+      .password_reset_confirm({ ...this.props.values, uid, token })
+      .then((res) => {
+        console.log(res);
+        toast.success(
+          "Congratulations! your password reset was successful! you will now be redirected to login"
+        );
+        setTimeout(() => {
+          this.props.history.push("/login");
+        }, 4000);
+      })
+      .catch((error) => this.setState({ error: error.message }));
+  };
+
+  handleClickShowPassword = (field) => {
+    if (field === 1) {
+      let { showPassword1 } = this.state;
+      this.setState({ showPassword1: !showPassword1 });
+    } else if (field === 2) {
+      let { showPassword2 } = this.state;
+      this.setState({ showPassword2: !showPassword2 });
+    }
+  };
+
+  handleMouseDownPassword = (e) => {
+    e.preventDefault();
+  };
+
+  render() {
+    let { error, showPassword1, showPassword2 } = this.state;
+    let { classes } = this.props;
+
+    return (
+      <Box className={classes.root}>
+        <ToastContainer />
+        <Box className={classes.background}></Box>
+        <Container maxWidth="sm">
+          <Card className={classes.cardStyle}>
+            <CardActionArea>
+              <CardContent>
+                <form
+                  className="auth-form"
+                  name="password_reset_confirm"
+                  noValidate="noValidate"
+                  onSubmit={this.props.handleSubmit}
+                >
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    color="textPrimary"
+                  >
+                    Password Reset Confirmation
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <Box
+                        component="p"
+                        className={error !== null && classes.errorBox}
+                      >
+                        {error !== null && (
+                          <Box component="span" className={classes.error}>
+                            {error}
+                          </Box>
+                        )}
+                      </Box>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                        error={
+                          this.props.touched["new_password1"] &&
+                          this.props.errors["new_password1"]
+                        }
+                        helperText={this.props.errors["new_password1"]}
+                      >
+                        <InputLabel
+                          className={classes.customLabelStyle}
+                          htmlFor="new_password1"
+                        >
+                          New Password
+                        </InputLabel>
+                        <OutlinedInput
+                          className={classes.customInputStyle}
+                          id="new_password1"
+                          name="new_password1"
+                          type={showPassword1 ? "text" : "password"}
+                          onChange={this.props.handleChange}
+                          onBlur={this.props.handleBlur}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={(e, field = 1) =>
+                                  this.handleClickShowPassword(field)
+                                }
+                                onMouseDown={this.handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {showPassword1 ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                          labelWidth={70}
+                        />
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={6}>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                        error={
+                          this.props.touched["new_password2"] &&
+                          this.props.errors["new_password2"]
+                        }
+                        helperText={this.props.errors["new_password2"]}
+                      >
+                        <InputLabel
+                          className={classes.customLabelStyle}
+                          htmlFor="new_password2"
+                        >
+                          Confirm Password
+                        </InputLabel>
+                        <OutlinedInput
+                          className={classes.customInputStyle}
+                          id="new_password2"
+                          name="new_password2"
+                          type={showPassword2 ? "text" : "password"}
+                          onChange={this.props.handleChange}
+                          onBlur={this.props.handleBlur}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={(e, field = 2) =>
+                                  this.handleClickShowPassword(field)
+                                }
+                                onMouseDown={this.handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {showPassword2 ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                          labelWidth={150}
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        className={classes.primaryButton}
+                        onClick={this.resetPassword}
+                      >
+                        Reset Password
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </form>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Container>
+      </Box>
+    );
   }
-
-  render(){
-    let {error}=this.state;
-
-    return(
-
-      <div>
-        <ToastContainer/>
-        <div className="empty-1" style={{backgroundColor:'#242424',
-          WebKitBoxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)',MozBoxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)',
-          boxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)'}}></div>
-        <div id="content" className="site-content page-content">
-        <div className="entry-header text-center">
-          <h1 className="entry-title">Password Reset Confirmation</h1>
-        </div>
-        <div className="page-content">
-          <div className="container">
-            <div id="post-2018" className="post-2018 page type-page status-publish hentry">
-              <div className="entry-content">
-                <div className="page-content-body">
-                  <p></p>
-                  <div className="um um-register um-2010 uimob500" style={{Opacity: '1'}}>
-                    <div className="um-form">
-                      <form name="password_reset" noValidate="noValidate" onSubmit={this.props.handleSubmit}>
-                        <p className="help-block text-danger">
-                          {error!==null &&
-                          <span className="text-danger">{error}</span> }
-                          </p>
-                        <div className="um-row _um_row_1 " style={{Margin: '0 0 30px 0'}}>
-                          <div className="um-col-1">
-                            <div className="um-field um-field-user_login um-field-text um-field-type_text">
-                              <div className="um-field-label">
-                                <label htmlFor="new_password1">New Password</label>
-                                <div className="um-clear"></div>
-                              </div>
-                              <div className="um-field-area">
-                                <input autoComplete="off" className="um-form-field valid " type="password" name="new_password1" id="new_password1"  placeholder="New Password" onChange={this.props.handleChange}
-                                            onBlur={this.props.handleBlur}/>
-                              </div>
-                              <p className="help-block text-danger">
-                              {(this.props.touched['new_password1'] && this.props.errors['new_password1']) &&
-                              <span className="text-danger">{this.props.errors['new_password1']}</span> }
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="um-row _um_row_1 " style={{Margin: '0 0 30px 0'}}>
-                          <div className="um-col-1">
-                            <div className="um-field um-field-user_login um-field-text um-field-type_text">
-                              <div className="um-field-label">
-                                <label htmlFor="new_password2">New Password Confirmation</label>
-                                <div className="um-clear"></div>
-                              </div>
-                              <div className="um-field-area">
-                                <input autoComplete="off" className="um-form-field valid " type="password" name="new_password2" id="new_password2"  placeholder="New Password Confirmation" onChange={this.props.handleChange}
-                                            onBlur={this.props.handleBlur}/>
-                              </div>
-                              <p className="help-block text-danger">
-                              {(this.props.touched['new_password2'] && this.props.errors['new_password2']) &&
-                              <span className="text-danger">{this.props.errors['new_password2']}</span> }
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="um-col-alt">
-                          <div className="um-left um-half">
-                            <input type="submit" value="Reset Password" className="text-uppercase um-button btn btn-success btn-lg" onClick={this.resetPassword}/>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                  <br/>
-                  <p></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-      </div>
-    )
-  }
-
 }
 
+PasswordResetConfirm.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
-  export default withFormik({
-  mapPropsToValue: ()=>({
-    new_password1:'',
-    new_password2:''
+export default withFormik({
+  mapPropsToValue: () => ({
+    new_password1: "",
+    new_password2: "",
   }),
   validationSchema: Yup.object().shape({
-    new_password1:Yup.string().min(8,"your password is too short").required("input your password"),
-    new_password2: Yup.string().oneOf([Yup.ref('new_password1'), null], 'Passwords must match').required("input a confirmation password")
+    new_password1: Yup.string()
+      .min(8, "your password is too short")
+      .required("input your password"),
+    new_password2: Yup.string()
+      .oneOf([Yup.ref("new_password1"), null], "Passwords must match")
+      .required("input a confirmation password"),
   }),
-  handleSubmit:(values,{setSubmitting}) =>{
-  }
-})(PasswordResetConfirm);
+  handleSubmit: (values, { setSubmitting }) => {},
+})(withStyles(styles)(PasswordResetConfirm));

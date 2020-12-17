@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
+from django.utils import timezone
 import uuid
 from math import floor
 
@@ -13,7 +14,7 @@ class Project(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     creator = models.ForeignKey(
         Creator, on_delete=models.CASCADE, related_name="projects")
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=1000)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=10000)
@@ -26,29 +27,26 @@ class Project(models.Model):
     comments_count = models.IntegerField(blank=True, default=0)
     saved_by = models.ManyToManyField(
         Creator, blank=True, related_name="saved_for_future")
-    slug = models.SlugField(unique=True)
-    created_on = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(unique=True, max_length=1000)
+    created_on = models.DateTimeField(default=timezone.now)
     published = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        self.likes_count = self.likes.count()
-        self.comments_count = self.comments.count()
-        
         if(self.video.find("youtube.com") != -1):
             self.video = "embed/".join(self.video.split("watch?v="))
-            
+        if self.id:
+            self.likes_count = self.likes.count()
+            self.comments_count = self.comments.count()
         if self.slug:
             pass
         else:
             uid = str(uuid.uuid4())
             uid = uid[0: floor(len(uid)/6)]
-
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
-      
 
 class Image(models.Model):
     project = models.ForeignKey(
@@ -72,3 +70,8 @@ class Comment(models.Model):
     creator = models.ForeignKey(
         Creator, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=10000)
+    created_on = models.DateTimeField(default=timezone.now)
+
+    def save(self, *args, **kwargs):
+        self.project.save()
+        super().save(*args, **kwargs)

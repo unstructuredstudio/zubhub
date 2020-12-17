@@ -11,14 +11,13 @@ Creator = get_user_model()
 
 class CreatorSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    location = serializers.SlugRelatedField(slug_field="name", read_only=True)
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
 
     class Meta:
         model = Creator
         fields = ('id', 'username', 'email', 'avatar',
-                  'dateOfBirth', 'location', 'bio', 'followers')
+                  'dateOfBirth', 'bio', 'followers', 'projects_count')
 
 
 class LocationSerializer(serializers.ModelSerializer):

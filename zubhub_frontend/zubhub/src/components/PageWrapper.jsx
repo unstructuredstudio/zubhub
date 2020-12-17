@@ -6,11 +6,101 @@ import { withAPI } from "./api";
 // import { AuthUserContext } from '../components/session';
 
 import { ToastContainer, toast } from "react-toastify";
-
+import "react-toastify/dist/ReactToastify.css";
 import * as AuthActions from "../store/actions/authActions";
-
 import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
 import logo from "../assets/images/logos/logo.png";
+
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { withStyles, fade } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from "@material-ui/core/Container";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Box from "@material-ui/core/Box";
+import Fab from "@material-ui/core/Fab";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import Zoom from "@material-ui/core/Zoom";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+
+import * as Yup from "yup";
+import { Divider } from "@material-ui/core";
+
+const styles = (theme) => ({
+  navBarStyle: {
+    backgroundColor: "#DC3545",
+  },
+  mainContainerStyle: {
+    maxWidth: "2000px",
+  },
+  logoStyle: {
+    flexGrow: 1,
+    "& img": {
+      height: "2em",
+    },
+    [theme.breakpoints.down("376")]: {
+      "& img": {
+        height: "1em",
+      },
+    },
+  },
+  avatarStyle: {
+    cursor: "pointer",
+    backgroundColor: "white",
+  },
+  profileMenuStyle: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  profileStyle: { backgroundColor: "#F5F5F5" },
+  logOutStyle: {
+    borderTop: "1px solid #C4C4C4",
+  },
+  scrollTopButtonStyle: {
+    zIndex: 100,
+    position: "fixed",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  primaryButtonStyle: {
+    marginLeft: "1em",
+    backgroundColor: "#00B8C4",
+    borderRadius: 15,
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#03848C",
+    },
+  },
+  secondaryButtonStyle: {
+    borderRadius: 15,
+    backgroundColor: "white",
+    color: "#00B8C4",
+    "&:hover": {
+      color: "#03848C",
+      backgroundColor: "rgba(255,255,255,0.8)",
+    },
+  },
+  center: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textDecorationNone: {
+    textDecoration: "none",
+  },
+  displayNone: { display: "none" },
+  largeLabel: {
+    fontSize: "1.3rem",
+  },
+});
 
 class PageWrapper extends Component {
   constructor(props) {
@@ -18,6 +108,7 @@ class PageWrapper extends Component {
 
     this.state = {
       username: null,
+      anchorEl: null,
     };
   }
 
@@ -42,57 +133,186 @@ class PageWrapper extends Component {
   }
 
   logout = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     this.props.api
       .logout(this.props.auth.token)
       .then((res) => {
         this.props.set_auth_user({ token: null, username: null, id: null });
       })
+      .then((res) => {
+        this.props.history.push("/");
+      })
       .catch((error) => {
+        console.log(error);
         toast.warning(
           "An error occured while signing you out. please try again"
         );
       });
   };
 
-  render() {
+  handleScrollTopClick = (e) => {
+    const anchor = (e.target.ownerDocument || document).querySelector(
+      "#back-to-top-anchor"
+    );
+
+    if (anchor) {
+      anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  scrollTop = (props) => {
+    const { classes } = props;
+
     return (
-      <div>
+      <Zoom in={useScrollTrigger}>
+        <div
+          onClick={this.handleScrollTopClick}
+          role="presentation"
+          className={classes.scrollTopButtonStyle}
+        >
+          <Fab color="secondary" size="small" aria-label="scroll back to top">
+            <KeyboardArrowUpIcon />
+          </Fab>
+        </div>
+      </Zoom>
+    );
+  };
+
+  handleProfileMenuOpen = (e) => {
+    this.setState({ anchorEl: e.currentTarget });
+  };
+
+  handleProfileMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  render() {
+    let { anchorEl } = this.state;
+    let { classes } = this.props;
+    let profileMenuOpen = Boolean(anchorEl);
+    return (
+      <>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
         <ToastContainer />
-        <header className="App-header">
-          <Link to="/">
-            <img src={logo} className="App-logo" alt="logo" />
-          </Link>
-          <div className="float-right">
-            {!this.props.auth.token ? (
-              <>
-                <Link className="btn btn-success" to="/login">
-                  Sign In
+        <CssBaseline />
+        <AppBar className={classes.navBarStyle}>
+          <Container className={classes.mainContainerStyle}>
+            <Toolbar>
+              <Box className={classes.logoStyle}>
+                <Link to="/">
+                  <img src={logo} alt="logo" />
                 </Link>
-                <Link className="btn btn-primary" to="/signup">
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/profile">
-                  <img
-                    src={`https://robohash.org/${this.props.auth.username}`}
-                    className="profile_image"
-                    aria-label="creator profile"
-                  />
-                </Link>
-                <Link className="btn btn-danger" onClick={this.logout}>
-                  Logout
-                </Link>
-              </>
-            )}
-          </div>
-        </header>
+              </Box>
+              <div className="">
+                {!this.props.auth.token ? (
+                  <>
+                    <Link className={classes.textDecorationNone} to="/login">
+                      <Button
+                        variant="outlined"
+                        size="large"
+                        className={classes.secondaryButtonStyle}
+                      >
+                        Login
+                      </Button>
+                    </Link>
+                    <Link className={classes.textDecorationNone} to="/signup">
+                      <Button
+                        variant="contained"
+                        size="large"
+                        className={classes.primaryButtonStyle}
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Avatar
+                      className={classes.avatarStyle}
+                      aria-label={`${this.props.auth.username}' Avatar`}
+                      aria-controls="profile_menu"
+                      aria-haspopup="true"
+                      onClick={this.handleProfileMenuOpen}
+                      src={`https://robohash.org/${this.props.auth.username}`}
+                      alt={this.props.auth.username}
+                    />
+                    <Menu
+                      className={classes.profileMenuStyle}
+                      id="profile_menu"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={profileMenuOpen}
+                      onClose={this.handleProfileMenuClose}
+                    >
+                      <MenuItem className={classes.profileStyle}>
+                        <Link
+                          className={classes.textDecorationNone}
+                          to="/profile"
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            {this.props.auth.username}
+                          </Typography>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem>
+                        <Link
+                          className={classes.textDecorationNone}
+                          to="/projects/saved"
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            Saved Projects
+                          </Typography>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem className={classes.logOutStyle}>
+                        <Link
+                          className={classes.textDecorationNone}
+                          onClick={this.logout}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            Logout
+                          </Typography>
+                        </Link>
+                      </MenuItem>
+                    </Menu>
+                  </>
+                )}
+              </div>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        <Toolbar id="back-to-top-anchor" />
 
         {this.props.children}
 
-        <footer className="footer-distributed">
+        <footer className="footer-distributed" style={{ flexShrink: 0 }}>
           <div className="footer-right"></div>
 
           <div className="footer-left"></div>
@@ -101,11 +321,16 @@ class PageWrapper extends Component {
             className="footer-logo"
             alt="unstructured-studio-logo"
           />
+          {this.scrollTop(this.props)}
         </footer>
-      </div>
+      </>
     );
   }
 }
+
+PageWrapper.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -124,4 +349,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withAPI(PageWrapper));
+)(withAPI(withStyles(styles)(PageWrapper)));

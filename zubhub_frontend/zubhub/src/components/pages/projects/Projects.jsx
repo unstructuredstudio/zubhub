@@ -2,6 +2,63 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+
+import Project from "./projects_components/Project";
+import { Container } from "@material-ui/core";
+
+const styles = (theme) => ({
+  root: {
+    paddingBottom: "2em",
+    flex: "1 0 auto",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    background:
+      "linear-gradient(to bottom, rgba(191,254,255,1) 0%, rgba(191,254,255,1) 20%, rgba(255,255,255,1) 77%, rgba(255,255,255,1) 100%)",
+    "& .MuiGrid-root.MuiGrid-container": {
+      width: "100%",
+    },
+  },
+  mainContainerStyle: {
+    maxWidth: "2000px",
+  },
+  projectGridStyle: {
+    marginBottom: "2em",
+  },
+  buttonGroupStyle: {
+    paddingLeft: "2em",
+    paddingRight: "2em",
+    display: "block",
+    marginTop: "2em",
+    maxWidth: "2000px",
+    width: "100%",
+  },
+  primaryButtonStyle: {
+    backgroundColor: "#00B8C4",
+    borderRadius: 15,
+    color: "white",
+    "&:hover": {
+      backgroundColor: "#03848C",
+    },
+  },
+  floatRight: {
+    float: "right",
+  },
+  floatLeft: {
+    float: "left",
+  },
+});
 
 class Projects extends Component {
   constructor(props) {
@@ -42,10 +99,8 @@ class Projects extends Component {
       });
   };
 
-  toggle_like = (id) => {
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_like({ id, token: this.props.auth.token })
+  updateProjects = (res) => {
+    res
       .then((res) => {
         if (res.id) {
           let { projects } = this.state;
@@ -65,98 +120,73 @@ class Projects extends Component {
         toast.warning(error.message);
       });
   };
-
-  toggle_save = (id) => {
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_save({ id, token: this.props.auth.token })
-      .then((res) => {
-        if (res.id) {
-          let { projects } = this.state;
-          projects = projects.map((project) =>
-            project.id === res.id ? res : project
-          );
-          return this.setState({ projects });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
-  };
-
-  projects = (projects) =>
-    projects.map((project) => (
-      <div key={project.id}>
-        <Link to={`projects/${project.id}`}>
-          <iframe
-            title="video"
-            width="200"
-            height="150"
-            src={project.video}
-          ></iframe>
-          <h1>{project.title}</h1>
-          <p>{project.description}</p>
-        </Link>
-        <span>
-          <button onClick={(e, id = project.id) => this.toggle_like(id)}>
-            {project.likes.includes(this.props.auth.id) ? "Unlike:" : "Like:"}{" "}
-            {project.likes.length}
-          </button>
-        </span>
-        <span>
-          <button onClick={(e, id = project.id) => this.toggle_save(id)}>
-            {project.saved_by.includes(this.props.auth.id)
-              ? "Unsave:"
-              : "Save:"}{" "}
-            {project.saved_by.length}
-          </button>
-        </span>
-        &nbsp;
-        <span>Views: {project.views_count}</span>&nbsp;
-        <span>Comments: {project.comments_count}</span>&nbsp;
-        <Link to={`/profile/${project.creator.username}`}>
-          <span>Creator: {project.creator.username}</span>
-        </Link>
-        &nbsp;
-      </div>
-    ));
 
   render() {
     let { projects, prevPage, nextPage, loading } = this.state;
+    let { classes } = this.props;
     if (loading) {
       return <div>Fetching projects ...</div>;
     } else if (projects.length > 0) {
       return (
-        <>
-          {this.projects(projects)}
-          <hr />
-          <div>
-            {prevPage ? (
-              <button
-                onClick={(e, page = prevPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Prev
-              </button>
-            ) : null}
-            {nextPage ? (
-              <button
-                onClick={(e, page = nextPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Next
-              </button>
-            ) : null}
-          </div>
-        </>
+        <Box className={classes.root}>
+          <Container class={classes.mainContainerStyle}>
+            <Grid container>
+              {projects.map((project) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  align="center"
+                  className={classes.projectGridStyle}
+                >
+                  <Project
+                    project={project}
+                    key={project.id}
+                    updateProjects={this.updateProjects}
+                    {...this.props}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <ButtonGroup
+              aria-label="previous and next page buttons"
+              className={classes.buttonGroupStyle}
+            >
+              {prevPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatLeft
+                  )}
+                  size="large"
+                  startIcon={<NavigateBeforeIcon />}
+                  onClick={(e, page = prevPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Prev
+                </Button>
+              ) : null}
+              {nextPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatRight
+                  )}
+                  size="large"
+                  endIcon={<NavigateNextIcon />}
+                  onClick={(e, page = nextPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Next
+                </Button>
+              ) : null}
+            </ButtonGroup>
+          </Container>
+        </Box>
       );
     } else {
       return (
@@ -168,10 +198,14 @@ class Projects extends Component {
   }
 }
 
+Projects.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
   };
 };
 
-export default connect(mapStateToProps)(Projects);
+export default connect(mapStateToProps)(withStyles(styles)(Projects));

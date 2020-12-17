@@ -30,77 +30,77 @@ return(
         exact={true}
         path="/"
         render={props=>(
-          <PageWrapper >
+          <PageWrapper {...props}>
             <Projects {...props} {...this.props}/>
           </PageWrapper>
         )}/>
 
       <Route path="/signup"
         render={props=>(
-          <PageWrapper>
+          <PageWrapper {...props}>
             <Signup {...props} {...this.props}/>
           </PageWrapper>
         )}/>
 
       <Route path="/login"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <Login {...props} {...this.props}/>
         </PageWrapper>
       )}/>
 
     <Route path="/password-reset"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <PasswordReset {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/password-reset-confirm"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <PasswordResetConfirm {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/email-confirm"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <EmailConfirm {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
-    <Route path="/profile/:username/projects"
+    <Route path="/creators/:username/projects"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <UserProjects {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
-    <Route path="/profile/:username/followers"
+    <Route path="/creators/:username/followers"
         render={props=>(
         <PageWrapper>
           <UserFollowers {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
-    <Route path="/profile/:username"
+    <Route path="/creators/:username"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <Profile {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/profile"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <Profile {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/projects/create"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <CreateProject {...props} {...this.props}/>
         </PageWrapper>
         )}/>
@@ -114,7 +114,7 @@ return(
 
     <Route path="/projects/:id"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props}>
           <ProjectDetails {...props} {...this.props}/>
         </PageWrapper>
         )}/>
