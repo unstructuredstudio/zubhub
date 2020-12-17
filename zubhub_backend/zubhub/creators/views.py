@@ -27,21 +27,19 @@ class UserProfileAPIView(RetrieveAPIView):
     lookup_field = "username"
     permission_classes = [AllowAny]
 
-
 class EditCreatorAPIView(UpdateAPIView):
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
-    def patch(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    def patch(self,request,*args,**kwargs):
+        return self.update(request,*args,**kwargs)
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.get(pk=self.request.user.pk)
         self.check_object_permissions(self.request, obj)
         return obj
-
 
 class UserProjectsAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
@@ -55,7 +53,6 @@ class UserProjectsAPIView(ListAPIView):
             return Creator.objects.get(username=username).projects.all().order_by("-created_on")[:int(limit)]
         else:
             return Creator.objects.get(username=username).projects.all().order_by("-created_on")
-
 
 class UserFollowersAPIView(ListAPIView):
     serializer_class = CreatorSerializer

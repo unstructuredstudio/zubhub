@@ -144,6 +144,7 @@ class CreateProject extends Component{
   render(){
 
     let {error, image_upload}=this.state;
+
     if(!this.props.auth.token){
         return <div> You are not logged in. Click on the signin button to get started</div>
     }
@@ -157,6 +158,7 @@ class CreateProject extends Component{
               :
               null
             }
+
               <div className="empty-1" style={{backgroundColor:'#242424',
                 WebKitBoxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)',MozBoxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)',
                 boxShadow:'0px 5px 5px 0px rgba(0,0,0,0.46)'}}></div>

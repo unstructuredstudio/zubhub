@@ -15,7 +15,7 @@ class Project(models.Model):
         Creator, on_delete=models.CASCADE, related_name="projects")
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=10000, blank=True, null=True)
-    video = models.URLField(max_length=1000)
+    video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=10000)
     views = models.ManyToManyField(
         Creator, blank=True, related_name="projects_viewed")
@@ -33,17 +33,22 @@ class Project(models.Model):
     def save(self, *args, **kwargs):
         self.likes_count = self.likes.count()
         self.comments_count = self.comments.count()
+        
+        if(self.video.find("youtube.com") != -1):
+            self.video = "embed/".join(self.video.split("watch?v="))
+            
         if self.slug:
             pass
         else:
             uid = str(uuid.uuid4())
             uid = uid[0: floor(len(uid)/6)]
+
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
-
+      
 
 class Image(models.Model):
     project = models.ForeignKey(
@@ -67,4 +72,3 @@ class Comment(models.Model):
     creator = models.ForeignKey(
         Creator, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=10000)
-    created_on = models.DateTimeField(auto_now=True)
