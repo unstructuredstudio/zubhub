@@ -15,7 +15,7 @@ class Project(models.Model):
         Creator, on_delete=models.CASCADE, related_name="creators")
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=10000, blank=True, null=True)
-    video = models.URLField(max_length=1000)
+    video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=10000)
     slug = models.SlugField(unique=True)
     created_on = models.DateTimeField(auto_now=True)
