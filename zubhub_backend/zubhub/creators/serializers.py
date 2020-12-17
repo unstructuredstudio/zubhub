@@ -10,10 +10,14 @@ from rest_auth.registration.serializers import RegisterSerializer
 
 Creator = get_user_model()
 
+
 class CreatorSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Creator
-        fields = ('username','email',)
+        fields = ('username', 'email', 'avatar',
+                  'dateOfBirth', 'location', 'bio',)
+
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,7 +27,8 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class CustomRegisterSerializer(RegisterSerializer):
     dateOfBirth = serializers.DateField()
-    location = serializers.SlugRelatedField(slug_field='name', queryset = Location.objects.all())
+    location = serializers.SlugRelatedField(
+        slug_field='name', queryset=Location.objects.all())
 
     # def validate_phone(self, phone):
     #     if re.search(r'^\+\d{9,15}$', phone) == None:
@@ -36,7 +41,8 @@ class CustomRegisterSerializer(RegisterSerializer):
 
     def validate_dateOfBirth(self, dateOfBirth):
         if((date.today() - dateOfBirth).days < 0):
-            raise serializers.ValidationError(_("Date of Birth must be less than today's date"))
+            raise serializers.ValidationError(
+                _("Date of Birth must be less than today's date"))
         return dateOfBirth
 
     def validate_location(self, location):
@@ -48,5 +54,5 @@ class CustomRegisterSerializer(RegisterSerializer):
         data_dict = super().get_cleaned_data()
         data_dict['dateOfBirth'] = self.validated_data.get('dateOfBirth', '')
         data_dict['location'] = self.validated_data.get('location', '')
-        
+
         return data_dict

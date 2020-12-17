@@ -7,8 +7,8 @@ import { withAPI } from './api';
 
 import { ToastContainer, toast } from 'react-toastify';
 
-import * as AuthActions from '../store/actions/authActions';
-// import * as userActions from '../store/actions/userActions';
+import * as AuthActions from '../store/actions/authActions'
+
 
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
@@ -16,11 +16,32 @@ import logo from '../assets/images/logos/logo.png';
 
 class PageWrapper extends Component {
 
+  constructor(props){
+    super(props);
+
+    this.state = {
+      username: null
+    }
+  }
+
+  componentDidMount(){
+    if(this.props.auth.token){
+    this.props.api.get_auth_user(this.props.auth.token)
+    .then(res=>{
+      if(!res.username){
+        throw new Error("an error occured while getting user profile, please try again later")
+      }
+      this.props.set_auth_user({...this.props.auth, username: res.username})
+    })
+    .catch(error=>toast.warning(error.message))
+    }
+  }
+
   logout=(e)=>{
     // e.preventDefault();
     this.props.api.logout(this.props.auth.token)
     .then(res=>{
-      this.props.set_auth_user({token:null, username: null, email: null})})
+      this.props.set_auth_user({token:null, username: null})})
     .catch(error=>{
       toast.warning("An error occured while signing you out. please try again")
     })
@@ -30,7 +51,6 @@ class PageWrapper extends Component {
 
 render(){
 return (
-
   <div>
     <ToastContainer/>
     <header className="App-header">
@@ -43,7 +63,8 @@ return (
             </>
             :
             <>
-            <img src={`https://robohash.org/${this.props.auth.username}`} className="profile_image" aria-label="creator profile"/>
+            <Link to={`/profile/${this.props.auth.username}`}>
+              <img src={`https://robohash.org/${this.props.auth.username}`} className="profile_image" aria-label="creator profile"/></Link>
             <Link className="btn btn-danger" onClick={this.logout}>Logout</Link>
             </>
           }

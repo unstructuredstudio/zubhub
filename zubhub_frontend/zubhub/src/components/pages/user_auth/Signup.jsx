@@ -47,9 +47,9 @@ class Signup extends Component{
       }
       return this.props.set_auth_user({token:res.key})
     })
-    .then(val=>this.props.api.getAuthUser(this.props.auth.token))
-    .then(res=>this.props.set_auth_user({...this.props.auth, ...res}))
-    .then(val=>this.props.history.push("/"))
+    .then(val=>this.props.api.get_auth_user(this.props.auth.token))
+    .then(res=>this.props.set_auth_user({...this.props.auth, username: res.username}))
+    .then(val=>this.props.history.push("/profile"))
     .catch(error=>this.setState({error:error.message}))
     }};
 
@@ -113,7 +113,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['email']}</span> }
                               </p>
                             </div>
-                            
+
                             <div className="um-field um-field-user_email um-field-text um-field-type_text">
                               <div className="um-field-label">
                                 <label htmlFor="dateOfBirth">Date Of Birth</label>
@@ -183,7 +183,7 @@ class Signup extends Component{
                               <span className="text-danger">{this.props.errors['password1']}</span> }
                               </p>
                             </div>
-                            
+
                           </div>
                         </div>
                         <div className="um-col-alt">

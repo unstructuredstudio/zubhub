@@ -1,4 +1,4 @@
-const defaultState = {token:null, username: null, email: null}
+const defaultState = {token:null, username: null}
   
   
   const auth = (state=defaultState, action)=>{

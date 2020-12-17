@@ -14,6 +14,8 @@ import Login from './components/pages/user_auth/Login';
 import PasswordReset from './components/pages/user_auth/PasswordReset';
 import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConfirm';
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
+import Profile from './components/pages/profile/Profile';
+
 // import Artists from './components/pages/artists/Artists';
 // import Artist from './components/pages/artists/Artist';
 // import Upcoming from './components/pages/upcoming/Upcoming';
@@ -26,16 +28,8 @@ import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 // import NewsDetails from './components/pages/news/NewsDetails';
 // import Cart from './components/pages/cart/Cart';
 
-// import Profile from './components/pages/admin/Profile';
-
 class App extends Component {
-  constructor(props){
-    super(props);
-
-  }
-
-
-
+  
 
 render(){
   let apiProps = this.props;
@@ -48,7 +42,6 @@ return(
         exact={true}
         path="/"
         render={props=>(
-          console.log(props),
           <PageWrapper >
             <Home {...Object.assign({}, props, apiProps)}/>
           </PageWrapper>
@@ -89,6 +82,19 @@ return(
         </PageWrapper>
         )}/>
 
+    <Route path="/profile/:username"
+        render={props=>(
+        <PageWrapper>
+          <Profile {...Object.assign({}, props, apiProps)}/>
+        </PageWrapper>
+        )}/>
+
+<Route path="/profile"
+        render={props=>(
+        <PageWrapper>
+          <Profile {...Object.assign({}, props, apiProps)}/>
+        </PageWrapper>
+        )}/>
       </Switch>
     </Router>
   );
