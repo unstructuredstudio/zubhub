@@ -646,11 +646,19 @@ class ProjectDetails extends Component {
                         classes.positionRelative
                       )}
                     >
-                      <iframe
-                        title="video"
-                        className={classes.iframeStyle}
-                        src={project.video}
-                      ></iframe>
+                      {project.video ? (
+                        <iframe
+                          title={project.title}
+                          className={classes.iframeStyle}
+                          src={project.video}
+                        ></iframe>
+                      ) : (
+                        <img
+                          className={classes.iframeStyle}
+                          src={project.images[0].image_url}
+                          alt={project.title}
+                        />
+                      )}
                     </Grid>
                     <Box className={classes.actionBoxStyle}>
                       <Button

@@ -44,11 +44,18 @@ const styles = (theme) => ({
   mediaBoxStyle: {
     width: "100%",
     height: "100%",
+    position: "relative",
   },
   mediaStyle: {
     width: "100%",
     height: "100%",
     borderStyle: "none",
+  },
+  mediaImageStyle: {
+    objectFit: "cover",
+    width: "100%",
+    height: "13em",
+    position: "absolute",
   },
   fabButtonStyle: {
     color: "#00B8C4",
@@ -203,7 +210,7 @@ class Project extends Component {
               ></iframe>
             ) : (
               <img
-                className={classes.mediaStyle}
+                className={classes.mediaImageStyle}
                 src={project.images[0].image_url}
                 alt={project.title}
               />
