@@ -40,7 +40,7 @@ class PageWrapper extends Component {
     // e.preventDefault();
     this.props.api.logout(this.props.auth.token)
     .then(res=>{
-      this.props.set_auth_user({token:null})})
+      this.props.set_auth_user({token:null, username: null})})
     .catch(error=>{
       toast.warning("An error occured while signing you out. please try again")
     })

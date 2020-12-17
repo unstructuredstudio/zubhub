@@ -16,6 +16,7 @@ import PasswordResetConfirm from './components/pages/user_auth/PasswordResetConf
 import EmailConfirm from './components/pages/user_auth/EmailConfirm';
 import Profile from './components/pages/profile/Profile';
 import CreateProject from './components/pages/projects/projects_components/CreateProject';
+
 // import Artists from './components/pages/artists/Artists';
 // import Artist from './components/pages/artists/Artist';
 // import Upcoming from './components/pages/upcoming/Upcoming';
@@ -29,13 +30,6 @@ import CreateProject from './components/pages/projects/projects_components/Creat
 // import Cart from './components/pages/cart/Cart';
 
 class App extends Component {
-  constructor(props){
-    super(props);
-
-  }
-
-
-
 
 render(){
   let apiProps = this.props;
@@ -48,7 +42,6 @@ return(
         exact={true}
         path="/"
         render={props=>(
-          console.log(props),
           <PageWrapper >
             <Home {...Object.assign({}, props, apiProps)}/>
           </PageWrapper>
