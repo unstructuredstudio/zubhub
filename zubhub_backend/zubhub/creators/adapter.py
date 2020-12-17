@@ -1,4 +1,6 @@
 from allauth.account.adapter import DefaultAccountAdapter
+from .models import Location
+
 
 class CustomAccountAdapter(DefaultAccountAdapter):
 

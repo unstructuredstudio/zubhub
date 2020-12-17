@@ -146,6 +146,48 @@ get_user_profile=({username, token})=>{
   }
 }
 
+/*************************** get user projects *********************************/
+get_user_projects=({username, page, limit})=>{
+   let url;
+   if(limit && page){
+     url = `creators/${username}/projects/?limit=${limit}&&${page}`;
+   }
+   else if(limit){
+     url = `creators/${username}/projects/?limit=${limit}`;
+   }
+   else if(page){
+     url = `creators/${username}/projects/?${page}`;
+   }
+   else {
+     url = `creators/${username}/projects/`;
+   }
+
+   return this.request({url})
+          .then(res=>res.json())
+}
+/*********************************************************************/
+
+/********************** get followers *******************************/
+get_followers=({ page, username })=>{
+  let url = page ? `creators/${username}/followers/?${page}`: `creators/${username}/followers/`;
+
+  return this.request({url})
+         .then(res=>res.json())
+
+}
+/*****************************************************************/
+
+/********************** get saved *******************************/
+get_saved=({ page, token })=>{
+  let url = page ? `projects/saved/?${page}` : `projects/saved/`;
+
+  return this.request({url, token})
+         .then(res=>res.json())
+
+}
+/*****************************************************************/
+
+
 /************************** edit user profile **************************/
 edit_user_profile=(profile)=>{
   let {username} = profile;
@@ -159,6 +201,16 @@ edit_user_profile=(profile)=>{
 }
 /********************************************************************/
 
+/************************** follow creator **************************/
+toggle_follow=({id, token})=>{
+  let url = `creators/${id}/toggle_follow/`;
+  
+  return this.request({url, token})
+         .then(res=>res.json())
+  
+  
+}
+/******************************************************************/
 
 /************************** get all locations **************************/
 get_locations=()=>{
@@ -169,10 +221,10 @@ get_locations=()=>{
 /********************************************************************/
 
 /************************** create project **************************/
-create_project=({token, title, description, video, materials_used})=>{
+create_project=({token, title, description, video, images, materials_used})=>{
   let url = "projects/create/";
   let method = "POST";
-  let body = JSON.stringify({ title, description, video, materials_used })
+  let body = JSON.stringify({ title, description, images, video, materials_used })
   return this.request({url, method, token, body})
          .then(res=>res.json())
 }
@@ -206,6 +258,18 @@ toggle_like=({id, token})=>{
   
   
 }
+/******************************************************************/
+
+/************************** save project for future viewing **************************/
+toggle_save=({id, token})=>{
+  let url = `projects/${id}/toggle_save/`;
+  
+  return this.request({url, token})
+         .then(res=>res.json())
+  
+  
+}
+/******************************************************************/
 
 /************************** add comment **************************/
 add_comment=({id, text, token})=>{
@@ -217,7 +281,6 @@ add_comment=({id, text, token})=>{
          .then(res=>res.json())
   
 }
-
 
 }
 

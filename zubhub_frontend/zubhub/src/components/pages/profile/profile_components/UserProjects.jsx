@@ -1,0 +1,101 @@
+import React,{Component} from 'react';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import { toast } from 'react-toastify';
+
+class UserProjects extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            projects: [],
+            prevPage: null,
+            nextPage: null,
+            loading: true
+        }
+    }
+
+    componentDidMount(){
+        this.fetchPage()  
+    }
+
+    fetchPage=page=>{
+        let username = this.props.match.params.username;
+      this.props.api.get_user_projects({page, username})
+      .then(res=>{
+          if(Array.isArray(res.results)){
+              return this.setState({projects: res.results,prevPage:res.previous, nextPage: res.next, loading: false})
+          }
+          else {
+            res = Object.keys(res).map(key=>res[key]).join("\n");
+            throw new Error(res);
+          }
+      })
+      .catch(error=>{this.setState({loading: false}); toast.warning(error.message)})
+    }
+
+    toggle_like=(id)=>{
+       if(!this.props.auth.token) this.props.history.push("/login");
+       this.props.api.toggle_like({id, token: this.props.auth.token})
+       .then(res=>{
+         if(res.id){
+           let {projects} = this.state;
+           projects = projects.map(project=>project.id === res.id ? {...project, likes_count: res.likes.length} : project);
+           return this.setState({projects});
+         }
+         else {
+          res = Object.keys(res).map(key=>res[key]).join("\n");
+          throw new Error(res);
+         }
+       })
+       .catch(error=>{this.setState({loading: false}); toast.warning(error.message)})
+    }
+
+    projects=(projects)=>projects.map(project=>
+            <div key={project.id}>
+            <Link to={`projects/${project.id}`}>
+              <iframe title="video" width="200" height="150"
+              src={project.video}>
+              </iframe>
+                <h1>{project.title}</h1>
+                <p>{project.description}</p>
+                </Link>
+                <span><button onClick={(e, id = project.id)=>this.toggle_like(id)}>Likes: {project.likes_count}</button></span>&nbsp;
+                <span>Views: {project.views_count}</span>&nbsp;
+                <span>Comments: {project.comments_count}</span>&nbsp;
+                <Link to={`/profile/${project.creator.username}`}><span>Creator: {project.creator.username}</span></Link>&nbsp;
+             </div>
+             )
+
+    render(){
+        let {projects,prevPage, nextPage, loading} = this.state;
+        if(loading){
+            return (<div>Fetching projects ...</div>)
+        }
+        else if(projects.length > 0){
+            return (
+                <>
+                <h1>{this.props.match.params.username}'s Projects</h1>
+               {this.projects(projects)}
+               <hr/>
+               <div>
+                 {prevPage ? <button onClick={(e,page = prevPage.split("?")[1])=>this.fetchPage(page)}>Prev</button>: null}
+                 {nextPage ? <button onClick={(e,page = nextPage.split("?")[1])=>this.fetchPage(page)}>Next</button> : null}
+               </div>
+               </>
+            )
+        }
+        else {
+            return (<div>An error occured while fetching projects, please try again later</div>)
+        }
+    }
+}
+
+const mapStateToProps = state =>{
+    return {
+      auth:state.auth,
+    }
+  }
+
+export default connect(
+mapStateToProps
+)(UserProjects);

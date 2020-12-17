@@ -56,7 +56,6 @@ body {
   box-shadow: none;
 }
 
-
 .sub-title {
   line-height: 2em;
 }
@@ -129,6 +128,7 @@ body {
   height: 385px;
   margin: calc(10px + 3vh);
   background-color: #fc0;
+  border: 10px solid #fc0;
   box-shadow: 10px 10px #cda500;
 }
 
@@ -297,6 +297,7 @@ body {
     flex-direction: column;
     flex-wrap: wrap;
   }
+  
   .video-item {
     width: unset;
     height: unset;

@@ -12,24 +12,63 @@ class Project(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     creator = models.ForeignKey(
-        Creator, on_delete=models.CASCADE, related_name="creators")
+        Creator, on_delete=models.CASCADE, related_name="projects")
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=10000)
+    views = models.ManyToManyField(
+        Creator, blank=True, related_name="projects_viewed")
+    views_count = models.IntegerField(blank=True, default=0)
+    likes = models.ManyToManyField(
+        Creator, blank=True, related_name="projects_liked")
+    likes_count = models.IntegerField(blank=True, default=0)
+    comments_count = models.IntegerField(blank=True, default=0)
+    saved_by = models.ManyToManyField(
+        Creator, blank=True, related_name="saved_for_future")
     slug = models.SlugField(unique=True)
     created_on = models.DateTimeField(auto_now=True)
+    published = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
+        self.likes_count = self.likes.count()
+        self.comments_count = self.comments.count()
+        
         if(self.video.find("youtube.com") != -1):
             self.video = "embed/".join(self.video.split("watch?v="))
+            
         if self.slug:
             pass
         else:
             uid = str(uuid.uuid4())
-            uid = uid[0: floor(len(uid)/2)]
+            uid = uid[0: floor(len(uid)/6)]
+
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
+      
+
+class Image(models.Model):
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, null=True, related_name="images", blank=True)
+    image_url = models.URLField(max_length=1000)
+    public_id = models.CharField(max_length=1000, null=True, blank=True)
+
+    def __str__(self):
+        try:
+            image = self.image_url
+        except AttributeError:
+            image = ''
+        return "Photo <%s:%s>" % (self.public_id, image)
+
+
+class Comment(models.Model):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="comments")
+    creator = models.ForeignKey(
+        Creator, on_delete=models.CASCADE, related_name="comments")
+    text = models.CharField(max_length=10000)
