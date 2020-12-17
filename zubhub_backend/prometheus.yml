@@ -1,0 +1,16 @@
+scrape_configs:
+
+- job_name: cadvisor
+  scrape_interval: 5s
+  static_configs:
+    - targets:
+      - cadvisor:8080
+
+- job_name: flower
+  scrape_interval: 5s
+  static_configs:
+    - targets:
+      - nginx:5555
+  basic_auth:
+    username: admin
+    password: admin

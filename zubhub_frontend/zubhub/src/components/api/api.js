@@ -1,6 +1,8 @@
 class API {
   constructor(){
-    this.domain = `http://${process.env.REACT_APP_NODE_ENV === 'development' ? `127.0.0.1:8000`:`167.71.30.125:8000`}/api/`;
+    this.domain = process.env.REACT_APP_NODE_ENV === 'production' ? 
+      (process.env.REACT_APP_BACKEND_PRODUCTION_URL )
+      : (process.env.REACT_APP_BACKEND_DEVELOPMENT_URL) + "/api/";
   }
 
   request=({url = '/', method = 'GET', token, body})=>{
