@@ -1,7 +1,7 @@
 class API {
   constructor(){
     this.domain = process.env.REACT_APP_NODE_ENV === 'production' ? 
-      (process.env.REACT_APP_BACKEND_PRODUCTION_URL )
+      (process.env.REACT_APP_BACKEND_PRODUCTION_URL ) + "/api/"
       : (process.env.REACT_APP_BACKEND_DEVELOPMENT_URL) + "/api/";
   }
 
