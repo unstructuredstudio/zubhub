@@ -1,3 +1,27 @@
 # https://www.robotstxt.org/robotstxt.html
-User-agent: *
-Disallow:
+# User-agent: *
+# Disallow:
+
+User-agent: Desktop
+Disallow: /
+
+User-agent: Mobile
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: aolbuild
+Disallow: /
+
+User-agent: teoma
+Disallow: /
