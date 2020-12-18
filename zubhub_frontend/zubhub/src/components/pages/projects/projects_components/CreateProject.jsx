@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { withFormik } from "formik";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorPage from "../../infos/ErrorPage";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles, fade } from "@material-ui/core/styles";
@@ -17,7 +18,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-// import DialogContentText from "@material-ui/core/DialogContentText";
 import Chip from "@material-ui/core/Chip";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
@@ -193,7 +193,6 @@ class CreateProject extends Component {
           ) {
             let { image_upload } = this.state;
             image_upload.upload_dialog = false;
-            console.log(this.props.values.materials_used);
             this.setState({ image_upload });
             this.props.api
               .create_project({
@@ -211,7 +210,16 @@ class CreateProject extends Component {
                 toast.success("Your project was created successfully!!");
                 return this.props.history.push("/");
               })
-              .catch((error) => this.setState({ error: error.message }));
+              .catch((error) => {
+                if (error.message.startsWith("Unexpected")) {
+                  this.setState({
+                    error:
+                      "An error occured while performing this action. Please try again later",
+                  });
+                } else {
+                  this.setState({ error: error.message });
+                }
+              });
           }
         });
       }
@@ -223,27 +231,31 @@ class CreateProject extends Component {
   };
 
   create_project = (e) => {
-    let image_field = this.imageFieldValidation();
-
-    if (image_field.is_empty === true) {
-      this.props.setErrors({ project_images: "please upload an image" });
-    } else if (image_field.too_many_images === true) {
-      this.props.setErrors({ project_images: "too many images uploaded" });
-    } else if (image_field.image_size_too_large === true) {
-      this.props.setErrors({
-        project_images: "one or more of your image is greater than 3mb",
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
     } else {
-      let project_images = document.querySelector("#project_images").files;
-      // document.querySelector("#progress_bar").styles.width = 0;
+      let image_field = this.imageFieldValidation();
 
-      let { image_upload } = this.state;
-      image_upload.images_to_upload = project_images.length;
-      image_upload.upload_dialog = true;
-      this.setState({ image_upload });
+      if (image_field.is_empty === true) {
+        this.props.setErrors({ project_images: "please upload an image" });
+      } else if (image_field.too_many_images === true) {
+        this.props.setErrors({ project_images: "too many images uploaded" });
+      } else if (image_field.image_size_too_large === true) {
+        this.props.setErrors({
+          project_images: "one or more of your image is greater than 3mb",
+        });
+      } else {
+        let project_images = document.querySelector("#project_images").files;
 
-      for (let index = 0; index < project_images.length; index++) {
-        this.upload(project_images[index]);
+        let { image_upload } = this.state;
+        image_upload.images_to_upload = project_images.length;
+        image_upload.upload_dialog = true;
+        image_upload.upload_percent = 0;
+        this.setState({ image_upload });
+
+        for (let index = 0; index < project_images.length; index++) {
+          this.upload(project_images[index]);
+        }
       }
     }
   };
@@ -259,7 +271,7 @@ class CreateProject extends Component {
       );
       this.props.setErrors({ project_images: "please upload an image" });
       return { is_empty: true };
-    } else if (image_field.files.length > 5) {
+    } else if (image_field.files.length > 10) {
       image_upload_button.setAttribute(
         "style",
         "border-color:#F54336; color:#F54336"
@@ -319,6 +331,7 @@ class CreateProject extends Component {
         materials_used: hidden_materials_field.value.split(","),
       });
     }
+    new_material.focus();
   };
 
   removeMaterialsUsed = (e, value) => {
@@ -329,13 +342,11 @@ class CreateProject extends Component {
       .filter((material) => material !== value)
       .join(",");
 
-    console.log(hidden_materials_field.value);
     this.props.setFieldValue(
       "materials_used",
       hidden_materials_field.value,
       true
     );
-    // this.setState({ materialsUsedModalOpen: !materialsUsedModalOpen });
     this.setState({ materials_used: hidden_materials_field.value.split(",") });
   };
 
@@ -356,10 +367,7 @@ class CreateProject extends Component {
     let { classes } = this.props;
     if (!this.props.auth.token) {
       return (
-        <div>
-          {" "}
-          You are not logged in. Click on the signin button to get started
-        </div>
+        <ErrorPage error="You are not logged in. Click on the signin button to get started" />
       );
     } else {
       return (
@@ -436,15 +444,6 @@ class CreateProject extends Component {
                             {this.props.errors["title"]}
                           </FormHelperText>
                         </FormControl>
-
-                        {/*<Box component="p" className="help-block text-danger">
-                        {this.props.touched["materials_used"] &&
-                          this.props.errors["materials_used"] && (
-                            <Box component="span" className="text-danger">
-                              {this.props.errors["materials_used"]}
-                            </Box>
-                          )}
-                          </Box>*/}
                       </Grid>
 
                       <Grid item xs={12}>
@@ -573,18 +572,20 @@ class CreateProject extends Component {
                             Materials Used
                           </InputLabel>
                           <Box className={classes.materialsUsedViewStyle}>
-                            {materials_used.map((material, num) => (
-                              <Chip
-                                className={classes.customChipStyle}
-                                key={num}
-                                label={material}
-                                onDelete={(e, value = material) =>
-                                  this.removeMaterialsUsed(e, value)
-                                }
-                                color="secondary"
-                                variant="outlined"
-                              />
-                            ))}
+                            {materials_used.map((material, num) =>
+                              material !== "" ? (
+                                <Chip
+                                  className={classes.customChipStyle}
+                                  key={num}
+                                  label={material}
+                                  onDelete={(e, value = material) =>
+                                    this.removeMaterialsUsed(e, value)
+                                  }
+                                  color="secondary"
+                                  variant="outlined"
+                                />
+                              ) : null
+                            )}
                           </Box>
                           <Grid container spacing={1}>
                             <Grid item xs={8} sm={8} md={8}>

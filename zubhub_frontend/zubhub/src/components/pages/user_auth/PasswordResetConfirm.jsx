@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { withFormik } from "formik";
 import * as Yup from "yup";
@@ -148,7 +148,6 @@ class PasswordResetConfirm extends Component {
     this.props.api
       .password_reset_confirm({ ...this.props.values, uid, token })
       .then((res) => {
-        console.log(res);
         toast.success(
           "Congratulations! your password reset was successful! you will now be redirected to login"
         );
@@ -156,7 +155,16 @@ class PasswordResetConfirm extends Component {
           this.props.history.push("/login");
         }, 4000);
       })
-      .catch((error) => this.setState({ error: error.message }));
+      .catch((error) => {
+        if (error.message.startsWith("Unexpected")) {
+          this.setState({
+            error:
+              "An error occured while performing this action. Please try again later",
+          });
+        } else {
+          this.setState({ error: error.message });
+        }
+      });
   };
 
   handleClickShowPassword = (field) => {
@@ -179,7 +187,6 @@ class PasswordResetConfirm extends Component {
 
     return (
       <Box className={classes.root}>
-        <ToastContainer />
         <Box className={classes.background}></Box>
         <Container maxWidth="sm">
           <Card className={classes.cardStyle}>
@@ -224,7 +231,6 @@ class PasswordResetConfirm extends Component {
                           this.props.touched["new_password1"] &&
                           this.props.errors["new_password1"]
                         }
-                        helperText={this.props.errors["new_password1"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -259,6 +265,9 @@ class PasswordResetConfirm extends Component {
                           }
                           labelWidth={70}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["new_password"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -273,7 +282,6 @@ class PasswordResetConfirm extends Component {
                           this.props.touched["new_password2"] &&
                           this.props.errors["new_password2"]
                         }
-                        helperText={this.props.errors["new_password2"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -308,6 +316,9 @@ class PasswordResetConfirm extends Component {
                           }
                           labelWidth={150}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["new_password2"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>

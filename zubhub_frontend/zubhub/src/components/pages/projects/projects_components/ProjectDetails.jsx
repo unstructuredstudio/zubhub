@@ -3,49 +3,32 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
+import ErrorPage from "../../infos/ErrorPage";
+import LoadingPage from "../../infos/LoadingPage";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { withStyles, fade } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import Fab from "@material-ui/core/Fab";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import ClapIcon, { ClapBorderIcon } from "../../../../assets/js/icons/ClapIcon";
 import CommentIcon from "../../../../assets/js/icons/CommentIcon";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import nFormatter from "../../../../assets/js/nFormatter";
 import dFormatter from "../../../../assets/js/dFormatter";
 import Typography from "@material-ui/core/Typography";
 import "react-toastify/dist/ReactToastify.css";
-import { withFormik } from "formik";
 import "react-toastify/dist/ReactToastify.css";
-import * as Yup from "yup";
 import "react-toastify/dist/ReactToastify.css";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Chip from "@material-ui/core/Chip";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import ImageIcon from "@material-ui/icons/Image";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import { Divider } from "@material-ui/core";
 
 const styles = (theme) => ({
   root: {
@@ -422,72 +405,99 @@ class ProjectDetails extends Component {
 
   toggle_like = (e, id) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_like({ id, token: this.props.auth.token })
-      .then((res) => {
-        if (res.id) {
-          return this.setState({ project: res });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .toggle_like({ id, token: this.props.auth.token })
+        .then((res) => {
+          if (res.id) {
+            return this.setState({ project: res });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   toggle_follow = (id) => {
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_follow({ id, token: this.props.auth.token })
-      .then((res) => {
-        if (res.id) {
-          let { project } = this.state;
-          if (project.creator.id === res.id) {
-            project.creator = res;
-          }
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .toggle_follow({ id, token: this.props.auth.token })
+        .then((res) => {
+          if (res.id) {
+            let { project } = this.state;
+            if (project.creator.id === res.id) {
+              project.creator = res;
+            }
 
-          return this.setState({ project });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+            return this.setState({ project });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   toggle_save = (e, id) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .toggle_save({
-        id,
-        token: this.props.auth.token,
-      })
-      .then((res) => {
-        if (res.id) {
-          return this.setState({ project: res });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .toggle_save({
+          id,
+          token: this.props.auth.token,
+        })
+        .then((res) => {
+          if (res.id) {
+            return this.setState({ project: res });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   handleOpenEnlargedImageDialog = (e) => {
@@ -510,30 +520,39 @@ class ProjectDetails extends Component {
 
   add_comment = (e) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    let textarea = document.querySelector("#comment");
-    let comment_text = textarea.value;
-    this.props.api
-      .add_comment({
-        id: this.state.project.id,
-        token: this.props.auth.token,
-        text: comment_text,
-      })
-      .then((res) => {
-        if (res.id) {
-          textarea.value = "";
-          return this.setState({ project: res });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      let textarea = document.querySelector("#comment");
+      let comment_text = textarea.value;
+      this.props.api
+        .add_comment({
+          id: this.state.project.id,
+          token: this.props.auth.token,
+          text: comment_text,
+        })
+        .then((res) => {
+          if (res.id) {
+            textarea.value = "";
+            return this.setState({ project: res });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   constructCommentBox = () => {
@@ -579,7 +598,7 @@ class ProjectDetails extends Component {
     } = this.state;
     let { classes } = this.props;
     if (loading) {
-      return <div>Getting project details</div>;
+      return <LoadingPage />;
     } else if (Object.keys(project).length > 0) {
       return (
         <>
@@ -864,9 +883,7 @@ class ProjectDetails extends Component {
       );
     } else {
       return (
-        <div>
-          An error occured while loading project details, please try again later
-        </div>
+        <ErrorPage error="An error occured while fetching project details, please try again later" />
       );
     }
   }

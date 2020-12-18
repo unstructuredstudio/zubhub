@@ -1,19 +1,21 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import ErrorPage from "../../infos/ErrorPage";
+import LoadingPage from "../../infos/LoadingPage";
+import clsx from "clsx";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 import Project from "./Project";
+import { Container } from "@material-ui/core";
 
 const styles = (theme) => ({
   root: {
@@ -29,6 +31,10 @@ const styles = (theme) => ({
       width: "100%",
     },
   },
+  mainContainerStyle: {
+    maxWidth: "2000px",
+    width: "100%",
+  },
   pageHeaderStyle: {
     marginTop: "1em",
     fontWeight: "bold",
@@ -38,7 +44,12 @@ const styles = (theme) => ({
     marginBottom: "2em",
   },
   buttonGroupStyle: {
+    paddingLeft: "2em",
+    paddingRight: "2em",
+    display: "block",
     marginTop: "2em",
+    maxWidth: "2000px",
+    width: "100%",
   },
   primaryButtonStyle: {
     backgroundColor: "#00B8C4",
@@ -47,6 +58,12 @@ const styles = (theme) => ({
     "&:hover": {
       backgroundColor: "#03848C",
     },
+  },
+  floatRight: {
+    float: "right",
+  },
+  floatLeft: {
+    float: "left",
   },
 });
 
@@ -66,28 +83,37 @@ class SavedProjects extends Component {
   }
 
   fetchPage = (page) => {
-    if (!this.props.auth.token) this.props.history.push("/login");
-    this.props.api
-      .get_saved({ page, token: this.props.auth.token })
-      .then((res) => {
-        if (Array.isArray(res.results)) {
-          return this.setState({
-            projects: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
-            loading: false,
-          });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        this.setState({ loading: false });
-        toast.warning(error.message);
-      });
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      this.props.api
+        .get_saved({ page, token: this.props.auth.token })
+        .then((res) => {
+          if (Array.isArray(res.results)) {
+            return this.setState({
+              projects: res.results,
+              prevPage: res.previous,
+              nextPage: res.next,
+              loading: false,
+            });
+          } else {
+            res = Object.keys(res)
+              .map((key) => res[key])
+              .join("\n");
+            throw new Error(res);
+          }
+        })
+        .catch((error) => {
+          this.setState({ loading: false });
+          if (error.message.startsWith("Unexpected")) {
+            toast.warning(
+              "An error occured while performing this action. Please try again later"
+            );
+          } else {
+            toast.warning(error.message);
+          }
+        });
+    }
   };
 
   updateProjects = (res) => {
@@ -116,76 +142,80 @@ class SavedProjects extends Component {
     let { projects, prevPage, nextPage, loading } = this.state;
     let { classes } = this.props;
     if (loading) {
-      return <div>Fetching projects ...</div>;
+      return <LoadingPage />;
     } else if (projects.length > 0) {
       return (
         <Box className={classes.root}>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
-                Your saved projects
-              </Typography>
-            </Grid>
-            {projects.map((project) => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                align="center"
-                className={classes.projectGridStyle}
-              >
-                <Project
-                  project={project}
-                  key={project.id}
-                  updateProjects={this.updateProjects}
-                  {...this.props}
-                />
+          <Container className={classes.mainContainerStyle}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography
+                  className={classes.pageHeaderStyle}
+                  variant="h3"
+                  gutterBottom
+                >
+                  Your saved projects
+                </Typography>
               </Grid>
-            ))}
-          </Grid>
-          <ButtonGroup
-            aria-label="previous and next page buttons"
-            className={classes.buttonGroupStyle}
-          >
-            {prevPage ? (
-              <Button
-                className={classes.primaryButtonStyle}
-                size="large"
-                startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Prev
-              </Button>
-            ) : null}
-            {nextPage ? (
-              <Button
-                className={classes.primaryButtonStyle}
-                size="large"
-                endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split("?")[1]) =>
-                  this.fetchPage(page)
-                }
-              >
-                Next
-              </Button>
-            ) : null}
-          </ButtonGroup>
+              {projects.map((project) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  align="center"
+                  className={classes.projectGridStyle}
+                >
+                  <Project
+                    project={project}
+                    key={project.id}
+                    updateProjects={this.updateProjects}
+                    {...this.props}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            <ButtonGroup
+              aria-label="previous and next page buttons"
+              className={classes.buttonGroupStyle}
+            >
+              {prevPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatLeft
+                  )}
+                  size="large"
+                  startIcon={<NavigateBeforeIcon />}
+                  onClick={(e, page = prevPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Prev
+                </Button>
+              ) : null}
+              {nextPage ? (
+                <Button
+                  className={clsx(
+                    classes.primaryButtonStyle,
+                    classes.floatRight
+                  )}
+                  size="large"
+                  endIcon={<NavigateNextIcon />}
+                  onClick={(e, page = nextPage.split("?")[1]) =>
+                    this.fetchPage(page)
+                  }
+                >
+                  Next
+                </Button>
+              ) : null}
+            </ButtonGroup>
+          </Container>
         </Box>
       );
     } else {
-      return (
-        <div>
-          An error occured while fetching videos, please try again later
-        </div>
-      );
+      return <ErrorPage error="user have no saved projects" />;
     }
   }
 }

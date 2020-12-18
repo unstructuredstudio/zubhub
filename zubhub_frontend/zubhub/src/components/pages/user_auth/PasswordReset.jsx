@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { withFormik } from "formik";
 import * as Yup from "yup";
@@ -110,7 +110,16 @@ class PasswordReset extends Component {
           this.props.history.push("/");
         }, 4000);
       })
-      .catch((error) => this.setState({ error: error.message }));
+      .catch((error) => {
+        if (error.message.startsWith("Unexpected")) {
+          this.setState({
+            error:
+              "An error occured while performing this action. Please try again later",
+          });
+        } else {
+          this.setState({ error: error.message });
+        }
+      });
   };
 
   render() {
@@ -119,7 +128,6 @@ class PasswordReset extends Component {
 
     return (
       <Box className={classes.root}>
-        <ToastContainer />
         <Box className={classes.background}></Box>
         <Container maxWidth="sm">
           <Card className={classes.cardStyle}>
@@ -173,7 +181,6 @@ class PasswordReset extends Component {
                           this.props.touched["email"] &&
                           this.props.errors["email"]
                         }
-                        helperText={this.props.errors["email"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -190,6 +197,9 @@ class PasswordReset extends Component {
                           onBlur={this.props.handleBlur}
                           labelWidth={70}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["email"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>

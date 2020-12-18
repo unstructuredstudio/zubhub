@@ -10,24 +10,32 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import cloudinary
 import socket
 import os
+import cloudinary
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default='production')
 
+DEFAULT_DISPLAY_NAME = os.environ.get("DEFAULT_DISPLAY_NAME", default="ZubHub")
 DEFAULT_FRONTEND_DOMAIN = os.environ.get(
     "DEFAULT_FRONTEND_DOMAIN", default="localhost:3000")
-DEFAULT_DISPLAY_NAME = os.environ.get("DEFAULT_DISPLAY_NAME", default="ZubHub")
+DEFAULT_BACKEND_DOMAIN = os.environ.get(
+    "DEFAULT_BACKEND_DOMAIN", default="localhost:8000")
+FRONTEND_HOST = DEFAULT_FRONTEND_DOMAIN.split(":")[0]
+BACKEND_HOST = DEFAULT_BACKEND_DOMAIN.split(":")[0]
 DEFAULT_FRONTEND_PROTOCOL = os.environ.get(
     "DEFAULT_FRONTEND_PROTOCOL", default="http")
+DEFAULT_BACKEND_PROTOCOL = os.environ.get(
+    "DEFAULT_BACKEND_PROTOCOL", default="http")
+DEBUG = int(os.environ.get("DEBUG", default=0))
+
 
 if ENVIRONMENT == 'production':
     SECURE_BROWSER_XSS_FILTER = True
     X_FRAME_OPTIONS = 'DENY'
-    SECURE_SSL_REDIRECT = True
+    # SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
@@ -35,22 +43,21 @@ if ENVIRONMENT == 'production':
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+    # Quick-start development settings - unsuitable for production
+    # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+    # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, BACKEND_HOST]
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://localhost:8000',
+    DEFAULT_FRONTEND_PROTOCOL+"://"+DEFAULT_FRONTEND_DOMAIN,
+    DEFAULT_BACKEND_PROTOCOL+"://"+DEFAULT_BACKEND_DOMAIN,
 )
 
 # Application definition

@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from .models import Project, Comment, Image
 from django.contrib.auth import get_user_model
 from creators.serializers import CreatorSerializer
+from .models import Project, Comment, Image
+
 
 Creator = get_user_model()
 

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import ErrorPage from "../infos/ErrorPage";
+import LoadingPage from "../infos/LoadingPage";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -11,8 +12,6 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-
 import Project from "./projects_components/Project";
 import { Container } from "@material-ui/core";
 
@@ -32,6 +31,10 @@ const styles = (theme) => ({
   },
   mainContainerStyle: {
     maxWidth: "2000px",
+    width: "100%",
+  },
+  projectGridStyle: {
+    marginBottom: "2em",
   },
   projectGridStyle: {
     marginBottom: "2em",
@@ -125,7 +128,7 @@ class Projects extends Component {
     let { projects, prevPage, nextPage, loading } = this.state;
     let { classes } = this.props;
     if (loading) {
-      return <div>Fetching projects ...</div>;
+      return <LoadingPage />;
     } else if (projects.length > 0) {
       return (
         <Box className={classes.root}>
@@ -190,9 +193,7 @@ class Projects extends Component {
       );
     } else {
       return (
-        <div>
-          An error occured while fetching videos, please try again later
-        </div>
+        <ErrorPage error="An error occured while fetching Projects, please try again later" />
       );
     }
   }

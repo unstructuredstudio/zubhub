@@ -1,6 +1,8 @@
 class API {
   constructor(){
-    this.domain = "http://127.0.0.1:8000/api/"
+    this.domain = process.env.REACT_APP_NODE_ENV === 'production' ? 
+      (process.env.REACT_APP_BACKEND_PRODUCTION_URL ) + "/api/"
+      : (process.env.REACT_APP_BACKEND_DEVELOPMENT_URL) + "/api/";
   }
 
   request=({url = '/', method = 'GET', token, body})=>{
@@ -124,7 +126,6 @@ password_reset_confirm=({new_password1, new_password2, uid, token})=>{
 
 /************************** get authenticated user's details **************************/
 get_auth_user=(token)=>{
-  console.log(token);
   let url = "creators/authUser/";
   return this.request({url, token})
          .then(res=>res.json())

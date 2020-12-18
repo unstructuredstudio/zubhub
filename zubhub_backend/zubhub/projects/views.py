@@ -1,14 +1,13 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
-from django.db.models import F
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from creators.permissions import IsOwner
 from .models import Project
 from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
 from .pagination import ProjectNumberPagination
-from creators.permissions import IsOwner
 
 
 class ProjectCreateAPIView(CreateAPIView):

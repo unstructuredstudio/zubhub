@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { withAPI } from "./api";
-// import { AuthUserContext } from '../components/session';
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,9 +10,8 @@ import * as AuthActions from "../store/actions/authActions";
 import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
 import logo from "../assets/images/logos/logo.png";
 
-import clsx from "clsx";
 import PropTypes from "prop-types";
-import { withStyles, fade } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import AppBar from "@material-ui/core/AppBar";
@@ -28,11 +26,6 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-
-import * as Yup from "yup";
-import { Divider } from "@material-ui/core";
 
 const styles = (theme) => ({
   navBarStyle: {
@@ -52,6 +45,16 @@ const styles = (theme) => ({
       },
     },
   },
+  footerLogoStyle: {
+    height: "5em",
+    [theme.breakpoints.down("376")]: {
+      height: "3em",
+    },
+    [theme.breakpoints.down("230")]: {
+      height: "2em",
+    },
+  },
+
   avatarStyle: {
     cursor: "pointer",
     backgroundColor: "white",
@@ -143,7 +146,6 @@ class PageWrapper extends Component {
         this.props.history.push("/");
       })
       .catch((error) => {
-        console.log(error);
         toast.warning(
           "An error occured while signing you out. please try again"
         );
@@ -288,7 +290,7 @@ class PageWrapper extends Component {
                         </Link>
                       </MenuItem>
                       <MenuItem className={classes.logOutStyle}>
-                        <Link
+                        <Typography
                           className={classes.textDecorationNone}
                           onClick={this.logout}
                         >
@@ -299,7 +301,7 @@ class PageWrapper extends Component {
                           >
                             Logout
                           </Typography>
-                        </Link>
+                        </Typography>
                       </MenuItem>
                     </Menu>
                   </>
@@ -318,7 +320,7 @@ class PageWrapper extends Component {
           <div className="footer-left"></div>
           <img
             src={unstructuredLogo}
-            className="footer-logo"
+            className={classes.footerLogoStyle}
             alt="unstructured-studio-logo"
           />
           {this.scrollTop(this.props)}

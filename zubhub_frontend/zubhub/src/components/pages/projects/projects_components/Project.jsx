@@ -174,27 +174,32 @@ const styles = (theme) => ({
 class Project extends Component {
   toggle_like = (e, id) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    let toggle_like_promise = this.props.api.toggle_like({
-      id,
-      token: this.props.auth.token,
-    });
-    this.props.updateProjects(toggle_like_promise);
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      let toggle_like_promise = this.props.api.toggle_like({
+        id,
+        token: this.props.auth.token,
+      });
+      this.props.updateProjects(toggle_like_promise);
+    }
   };
 
   toggle_save = (e, id) => {
     e.preventDefault();
-    if (!this.props.auth.token) this.props.history.push("/login");
-    let toggle_save_promise = this.props.api.toggle_save({
-      id,
-      token: this.props.auth.token,
-    });
-    this.props.updateProjects(toggle_save_promise);
+    if (!this.props.auth.token) {
+      this.props.history.push("/login");
+    } else {
+      let toggle_save_promise = this.props.api.toggle_save({
+        id,
+        token: this.props.auth.token,
+      });
+      this.props.updateProjects(toggle_save_promise);
+    }
   };
 
   render() {
     let { project, classes } = this.props;
-    console.log(project.created_on);
     return (
       <Link
         to={`/projects/${project.id}`}

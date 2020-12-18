@@ -1,9 +1,9 @@
+from datetime import date
+
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Location
-from datetime import date
-import re
 from rest_auth.registration.serializers import RegisterSerializer
 
 Creator = get_user_model()
@@ -11,7 +11,6 @@ Creator = get_user_model()
 
 class CreatorSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    # location = serializers.SlugRelatedField(slug_field="name", read_only=True)
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
 

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { withStyles, fade } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -29,7 +28,7 @@ import { connect } from "react-redux";
 import * as AuthActions from "../../../store/actions/authActions";
 import robots from "../../../assets/images/robots.png";
 
-const styles = {
+const styles = (theme) => ({
   root: {
     paddingTop: "2em",
     paddingBottom: "2em",
@@ -111,6 +110,13 @@ const styles = {
     width: "30%",
     marginRight: "1em",
     marginLeft: "1em",
+    [theme.breakpoints.down("510")]: {
+      width: "20%",
+    },
+    [theme.breakpoints.down("381")]: {
+      marginLeft: "0.5em",
+      marginRight: "0.5em",
+    },
   },
   textDecorationNone: {
     textDecoration: "none",
@@ -126,7 +132,7 @@ const styles = {
   error: {
     color: "#a94442",
   },
-};
+});
 
 class Login extends Component {
   constructor(props) {
@@ -158,7 +164,16 @@ class Login extends Component {
         });
       })
       .then((val) => this.props.history.push("/profile"))
-      .catch((error) => this.setState({ error: error.message }));
+      .catch((error) => {
+        if (error.message.startsWith("Unexpected")) {
+          this.setState({
+            error:
+              "An error occured while performing this action. Please try again later",
+          });
+        } else {
+          this.setState({ error: error.message });
+        }
+      });
   };
 
   handleClickShowPassword = () => {
@@ -176,7 +191,6 @@ class Login extends Component {
 
     return (
       <Box className={classes.root}>
-        <ToastContainer />
         <Box className={classes.background}></Box>
         <Container maxWidth="sm">
           <Card className={classes.cardStyle}>
@@ -227,7 +241,6 @@ class Login extends Component {
                           this.props.touched["username"] &&
                           this.props.errors["username"]
                         }
-                        helperText={this.props.errors["username"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -244,16 +257,10 @@ class Login extends Component {
                           onBlur={this.props.handleBlur}
                           labelWidth={150}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["username"]}
+                        </FormHelperText>
                       </FormControl>
-
-                      {/*<Box component="p" className="help-block text-danger">
-                        {this.props.touched["username"] &&
-                          this.props.errors["username"] && (
-                            <Box component="span" className="text-danger">
-                              {this.props.errors["username"]}
-                            </Box>
-                          )}
-                          </Box>*/}
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={6}>
@@ -267,7 +274,6 @@ class Login extends Component {
                           this.props.touched["password"] &&
                           this.props.errors["password"]
                         }
-                        helperText={this.props.errors["password"]}
                       >
                         <InputLabel htmlFor="password">Password</InputLabel>
                         <OutlinedInput
@@ -295,6 +301,9 @@ class Login extends Component {
                           }
                           labelWidth={70}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["password"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>
@@ -387,8 +396,6 @@ export default connect(
         .min(8, "your password is too short")
         .required("input your password"),
     }),
-    handleSubmit: (values, { setSubmitting }) => {
-      //console.log("you've submitted the form. this are the submitted values: ",JSON.stringify(values));
-    },
+    handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(Login))
 );

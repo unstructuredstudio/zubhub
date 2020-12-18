@@ -450,15 +450,6 @@ html,
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-/* @media only screen and (max-width: 1030px) {
-  .slick-arrow.slick-prev {
-    left: -2em !important;
-  }
-  .slick-arrow.slick-next {
-    right: -2em !important;
-  }
-} */
-
 .comment-box {
   display: flex;
   flex-direction: column;
@@ -536,7 +527,6 @@ html,
   height: calc(10px + 7vh);
   pointer-events: none;
 }
-
 .footer-distributed {
   background-color: #dc3545;
   box-sizing: border-box;

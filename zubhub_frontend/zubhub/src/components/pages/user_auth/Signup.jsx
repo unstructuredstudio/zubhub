@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { withFormik } from "formik";
-import { Link, withRouter } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import clsx from "clsx";
 import PropTypes from "prop-types";
@@ -20,6 +19,8 @@ import Typography from "@material-ui/core/Typography";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+import Tooltip from "@material-ui/core/Tooltip";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
@@ -30,7 +31,7 @@ import { connect } from "react-redux";
 import * as AuthActions from "../../../store/actions/authActions";
 import robots from "../../../assets/images/robots.png";
 
-const styles = {
+const styles = (theme) => ({
   root: {
     paddingTop: "2em",
     paddingBottom: "2em",
@@ -113,6 +114,16 @@ const styles = {
     width: "30%",
     marginRight: "1em",
     marginLeft: "1em",
+    [theme.breakpoints.down("573")]: {
+      width: "20%",
+    },
+    [theme.breakpoints.down("423")]: {
+      marginLeft: "0.5em",
+      marginRight: "0.5em",
+    },
+    [theme.breakpoints.down("378")]: {
+      width: "10%",
+    },
   },
   textDecorationNone: {
     textDecoration: "none",
@@ -128,7 +139,7 @@ const styles = {
   error: {
     color: "#a94442",
   },
-};
+});
 
 class Signup extends Component {
   constructor(props) {
@@ -138,6 +149,7 @@ class Signup extends Component {
       error: null,
       showPassword1: false,
       showPassword2: false,
+      toolTipOpen: false,
     };
   }
 
@@ -146,7 +158,6 @@ class Signup extends Component {
       .get_locations()
       .then((res) => {
         if (Array.isArray(res) && res.length > 0 && res[0].name) {
-          console.log(res);
           return this.setState({ locations: res });
         } else {
           res = Object.keys(res)
@@ -159,9 +170,7 @@ class Signup extends Component {
   }
 
   signup = (e) => {
-    console.log(this.props.values);
     if (this.props.values.location.length < 1) {
-      console.log("i was called", this.props.values.location.length);
       this.props.validateField("location");
     } else {
       this.props.api
@@ -184,7 +193,16 @@ class Signup extends Component {
           })
         )
         .then((val) => this.props.history.push("/profile"))
-        .catch((error) => this.setState({ error: error.message }));
+        .catch((error) => {
+          if (error.message.startsWith("Unexpected")) {
+            this.setState({
+              error:
+                "An error occured while performing this action. Please try again later",
+            });
+          } else {
+            this.setState({ error: error.message });
+          }
+        });
     }
   };
 
@@ -202,12 +220,25 @@ class Signup extends Component {
     e.preventDefault();
   };
 
+  handleTooltipClose = () => {
+    this.setState({ toolTipOpen: false });
+  };
+
+  handleTooltipOpen = () => {
+    this.setState({ toolTipOpen: true });
+  };
+
   render() {
-    let { error, locations, showPassword1, showPassword2 } = this.state;
+    let {
+      error,
+      locations,
+      showPassword1,
+      showPassword2,
+      toolTipOpen,
+    } = this.state;
     let { classes } = this.props;
     return (
       <Box className={classes.root}>
-        <ToastContainer />
         <Box className={classes.background}></Box>
         <Container maxWidth="sm">
           <Card className={classes.cardStyle}>
@@ -258,7 +289,6 @@ class Signup extends Component {
                           this.props.touched["username"] &&
                           this.props.errors["username"]
                         }
-                        helperText={this.props.errors["username"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -266,25 +296,39 @@ class Signup extends Component {
                         >
                           Username
                         </InputLabel>
-                        <OutlinedInput
-                          className={classes.customInputStyle}
-                          id="username"
-                          name="username"
-                          type="text"
-                          onChange={this.props.handleChange}
-                          onBlur={this.props.handleBlur}
-                          labelWidth={90}
-                        />
-                      </FormControl>
+                        <ClickAwayListener
+                          onClickAway={this.handleTooltipClose}
+                        >
+                          <Tooltip
+                            title="Do not use your real name here!"
+                            placement="top-start"
+                            arrow
+                            onClose={this.handleTooltipClose}
+                            PopperProps={{
+                              disablePortal: true,
+                            }}
+                            open={toolTipOpen}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                          >
+                            <OutlinedInput
+                              className={classes.customInputStyle}
+                              id="username"
+                              name="username"
+                              type="text"
+                              onClick={this.handleTooltipOpen}
+                              onChange={this.props.handleChange}
+                              onBlur={this.props.handleBlur}
+                              labelWidth={90}
+                            />
+                          </Tooltip>
+                        </ClickAwayListener>
 
-                      {/*<Box component="p" className="help-block text-danger">
-                        {this.props.touched["username"] &&
-                          this.props.errors["username"] && (
-                            <Box component="span" className="text-danger">
-                              {this.props.errors["username"]}
-                            </Box>
-                          )}
-                          </Box>*/}
+                        <FormHelperText error>
+                          {this.props.errors["username"]}
+                        </FormHelperText>
+                      </FormControl>
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={6}>
@@ -301,7 +345,6 @@ class Signup extends Component {
                           this.props.touched["email"] &&
                           this.props.errors["email"]
                         }
-                        helperText={this.props.errors["email"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -318,6 +361,9 @@ class Signup extends Component {
                           onBlur={this.props.handleBlur}
                           labelWidth={70}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["email"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -332,7 +378,6 @@ class Signup extends Component {
                           this.props.touched["dateOfBirth"] &&
                           this.props.errors["dateOfBirth"]
                         }
-                        helperText={this.props.errors["dateOfBirth"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -351,6 +396,9 @@ class Signup extends Component {
                           onBlur={this.props.handleBlur}
                           labelWidth={90}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["dateOfBirth"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -365,7 +413,6 @@ class Signup extends Component {
                           this.props.touched["user_location"] &&
                           this.props.errors["user_location"]
                         }
-                        helperText={this.props.errors["user_location"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -376,6 +423,7 @@ class Signup extends Component {
                         <Select
                           labelId="user_location"
                           id="user_location"
+                          name="user_location"
                           className={classes.customInputStyle}
                           defaultValue=""
                           onChange={this.props.handleChange}
@@ -391,6 +439,9 @@ class Signup extends Component {
                             </MenuItem>
                           ))}
                         </Select>
+                        <FormHelperText error>
+                          {this.props.errors["user_location"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -405,7 +456,6 @@ class Signup extends Component {
                           this.props.touched["password1"] &&
                           this.props.errors["password1"]
                         }
-                        helperText={this.props.errors["password1"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -440,6 +490,9 @@ class Signup extends Component {
                           }
                           labelWidth={70}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["password1"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -454,7 +507,6 @@ class Signup extends Component {
                           this.props.touched["password2"] &&
                           this.props.errors["password2"]
                         }
-                        helperText={this.props.errors["password2"]}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -489,6 +541,9 @@ class Signup extends Component {
                           }
                           labelWidth={70}
                         />
+                        <FormHelperText error>
+                          {this.props.errors["password2"]}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>
@@ -579,8 +634,6 @@ export default connect(
         .oneOf([Yup.ref("password1"), null], "Passwords must match")
         .required("input a confirmation password"),
     }),
-    handleSubmit: (values, { setSubmitting }) => {
-      //console.log("you've submitted the form. this are the submitted values: ",JSON.stringify(values));
-    },
+    handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(Signup))
 );
