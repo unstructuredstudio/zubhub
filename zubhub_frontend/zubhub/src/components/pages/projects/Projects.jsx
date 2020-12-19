@@ -36,9 +36,6 @@ const styles = (theme) => ({
   projectGridStyle: {
     marginBottom: "2em",
   },
-  projectGridStyle: {
-    marginBottom: "2em",
-  },
   buttonGroupStyle: {
     paddingLeft: "2em",
     paddingRight: "2em",
