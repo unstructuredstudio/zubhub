@@ -32,8 +32,6 @@ import AddIcon from "@material-ui/icons/Add";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 
-console.log(DO);
-
 const styles = (theme) => ({
   root: {
     paddingTop: "2em",
@@ -195,7 +193,6 @@ class CreateProject extends Component {
         } else {
           let secure_url = data.Location;
           let public_id = data.Key;
-          console.log(secure_url, public_id);
           let { image_upload } = this.state;
 
           image_upload.uploaded_images_url.push({

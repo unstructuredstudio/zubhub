@@ -7,8 +7,6 @@ export const doConfig = {
   };
 
 
-console.log(process.env.REACT_APP_DOSPACE_ACCESS_KEY_ID, process.env.REACT_APP_DOSPACE_ACCESS_SECRET_KEY)
-
 const spacesEndpoint = new AWS.Endpoint('sfo2.digitaloceanspaces.com');
 const s3 = new AWS.S3({
       endpoint: spacesEndpoint,
