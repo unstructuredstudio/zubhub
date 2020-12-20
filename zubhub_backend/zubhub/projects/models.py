@@ -35,6 +35,7 @@ class Project(models.Model):
     def save(self, *args, **kwargs):
         if(self.video.find("youtube.com") != -1):
             self.video = "embed/".join(self.video.split("watch?v="))
+
         if self.id:
             self.likes_count = self.likes.count()
             self.comments_count = self.comments.count()
