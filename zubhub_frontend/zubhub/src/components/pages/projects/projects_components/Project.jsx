@@ -35,15 +35,29 @@ const styles = (theme) => ({
     backgroundColor: "#ffffff",
     flex: "1 0 auto",
     display: "flex",
+    flexDirection: "column",
+    background: "rgba(255,204,0,1)",
     background:
-      "linear-gradient(to bottom, rgba(191,254,255,1) 0%, rgba(191,254,255,1) 20%, rgba(255,255,255,1) 77%, rgba(255,255,255,1) 100%)",
+      "-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))",
+    background:
+      "-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    filter:
+      "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "center",
   },
   mediaBoxStyle: {
     width: "100%",
-    height: "100%",
+    height: "13em",
     position: "relative",
   },
   mediaStyle: {
@@ -57,20 +71,30 @@ const styles = (theme) => ({
     height: "13em",
     position: "absolute",
   },
+  actionAreaStyle: {
+    flexGrow: 100,
+  },
+  contentStyle: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
   fabButtonStyle: {
-    color: "#00B8C4",
+    color: "#ffcc00",
+    backgroundColor: "#dc3545",
     position: "absolute",
     marginLeft: "1em",
     right: "1em",
     top: "-1.8em",
-    "& MuiFab-root:hover": {
-      color: "#03848C",
+    "&:hover": {
+      backgroundColor: "#b52836",
+      backgroundSize: "100%",
     },
     "& svg": {
-      fill: "#00B8C4",
+      fill: "#ffcc00",
     },
     "& svg:hover": {
-      fill: "#03848C",
+      fill: "#ffcc00",
     },
   },
   likeButtonStyle: {
@@ -78,12 +102,14 @@ const styles = (theme) => ({
     top: "-1.6em",
   },
   titleStyle: {
-    fontSize: "1.2rem",
+    fontWeight: 900,
+    fontSize: "1.3rem",
   },
   descriptionStyle: {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    flexGrow: 1,
   },
   creatorBoxStyle: {
     marginTop: "0.5em",
@@ -221,8 +247,10 @@ class Project extends Component {
               />
             )}
           </CardMedia>
-          <CardActionArea>
-            <CardContent className={classes.positionRelative}>
+          <CardActionArea className={classes.actionAreaStyle}>
+            <CardContent
+              className={clsx(classes.contentStyle, classes.positionRelative)}
+            >
               <Fab
                 className={classes.fabButtonStyle}
                 size="small"
