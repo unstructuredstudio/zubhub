@@ -130,6 +130,7 @@ get_auth_user=(token)=>{
   return this.request({url, token})
          .then(res=>res.json())
 }
+
 /********************************************************************/
 
 
@@ -281,7 +282,6 @@ add_comment=({id, text, token})=>{
          .then(res=>res.json())
   
 }
-
 }
 
 
