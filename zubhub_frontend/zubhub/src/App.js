@@ -117,8 +117,6 @@ return(
           <ProjectDetails {...props} {...this.props}/>
         </PageWrapper>
         )}/>
-
-
       </Switch>
 
     </Router>

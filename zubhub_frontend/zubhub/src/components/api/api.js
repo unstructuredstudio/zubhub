@@ -281,7 +281,6 @@ add_comment=({id, text, token})=>{
          .then(res=>res.json())
   
 }
-
 }
 
 
