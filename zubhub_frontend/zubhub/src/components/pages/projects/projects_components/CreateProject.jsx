@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 import ErrorPage from "../../infos/ErrorPage";
 import clsx from "clsx";
 import PropTypes from "prop-types";
+import DO, { doConfig } from "../../../../assets/js/DO";
+import { nanoid } from "nanoid";
 import { withStyles, fade } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -35,8 +37,21 @@ const styles = (theme) => ({
     paddingTop: "2em",
     paddingBottom: "2em",
     flex: "1 0 auto",
+    background: "rgba(255,204,0,1)",
     background:
-      "linear-gradient(to bottom, rgba(191,254,255,1) 0%, rgba(191,254,255,1) 20%, rgba(255,255,255,1) 77%, rgba(255,255,255,1) 100%)",
+      "-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))",
+    background:
+      "-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    filter:
+      "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
   },
   cardStyle: {
     border: 0,
@@ -150,84 +165,93 @@ class CreateProject extends Component {
   }
 
   upload = (image) => {
-    let url = `https://api.cloudinary.com/v1_1/raymondndibe/upload`;
-    let xhr = new XMLHttpRequest();
-    let fd = new FormData();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-    // Update progress (can be used to show progress indicator)
-    xhr.upload.addEventListener("progress", (e) => {
-      let progress = Math.round((e.loaded * 100.0) / e.total);
-      let { image_upload } = this.state;
-      image_upload.upload_info[image.name] = progress;
-
-      let total = 0;
-      Object.keys(image_upload.upload_info).forEach((each) => {
-        total = total + image_upload.upload_info[each];
-      });
-
-      total = total / Object.keys(image_upload.upload_info).length;
-      image_upload.upload_percent = total;
-
-      this.setState({ image_upload });
-    });
-
-    xhr.onreadystatechange = (e) => {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        // File uploaded successfully
-        let response = JSON.parse(xhr.responseText);
-        let { secure_url, public_id } = response;
-        let { image_upload } = this.state;
-
-        image_upload.uploaded_images_url.push({
-          image_url: secure_url,
-          public_id,
-        });
-        image_upload.successful_uploads = image_upload.successful_uploads + 1;
-
-        this.setState({ image_upload }, () => {
-          if (
-            this.state.image_upload.images_to_upload ===
-            this.state.image_upload.successful_uploads
-          ) {
-            let { image_upload } = this.state;
-            image_upload.upload_dialog = false;
-            this.setState({ image_upload });
-            this.props.api
-              .create_project({
-                ...this.props.values,
-                token: this.props.auth.token,
-                images: this.state.image_upload.uploaded_images_url,
-              })
-              .then((res) => {
-                if (!res.title) {
-                  res = Object.keys(res)
-                    .map((key) => res[key])
-                    .join("\n");
-                  throw new Error(res);
-                }
-                toast.success("Your project was created successfully!!");
-                return this.props.history.push("/");
-              })
-              .catch((error) => {
-                if (error.message.startsWith("Unexpected")) {
-                  this.setState({
-                    error:
-                      "An error occured while performing this action. Please try again later",
-                  });
-                } else {
-                  this.setState({ error: error.message });
-                }
-              });
-          }
-        });
-      }
+    const params = {
+      Bucket: `${doConfig.bucketName}`,
+      Key: `${doConfig.project_images}/${nanoid()}`,
+      Body: image,
+      ContentType: image.type,
+      ACL: "public-read",
     };
 
-    fd.append("upload_preset", "zubhub_projects_images");
-    fd.append("file", image);
-    xhr.send(fd);
+    DO.upload(params)
+      .on("httpUploadProgress", (e) => {
+        let progress = Math.round((e.loaded * 100.0) / e.total);
+        let { image_upload } = this.state;
+        image_upload.upload_info[image.name] = progress;
+
+        let total = 0;
+        Object.keys(image_upload.upload_info).forEach((each) => {
+          total = total + image_upload.upload_info[each];
+        });
+
+        total = total / Object.keys(image_upload.upload_info).length;
+        image_upload.upload_percent = total;
+
+        this.setState({ image_upload });
+      })
+      .send((err, data) => {
+        if (err) {
+          let { image_upload } = this.state;
+          image_upload.upload_dialog = false;
+
+          if (err.message.startsWith("Unexpected")) {
+            this.setState({
+              error:
+                "An error occured while performing this action. Please try again later",
+              image_upload,
+            });
+          } else {
+            this.setState({ error: err.message, image_upload });
+          }
+        } else {
+          let secure_url = data.Location;
+          let public_id = data.Key;
+          let { image_upload } = this.state;
+
+          image_upload.uploaded_images_url.push({
+            image_url: secure_url,
+            public_id,
+          });
+          image_upload.successful_uploads = image_upload.successful_uploads + 1;
+
+          this.setState({ image_upload }, () => {
+            if (
+              this.state.image_upload.images_to_upload ===
+              this.state.image_upload.successful_uploads
+            ) {
+              let { image_upload } = this.state;
+              image_upload.upload_dialog = false;
+              this.setState({ image_upload });
+              this.props.api
+                .create_project({
+                  ...this.props.values,
+                  token: this.props.auth.token,
+                  images: this.state.image_upload.uploaded_images_url,
+                })
+                .then((res) => {
+                  if (!res.title) {
+                    res = Object.keys(res)
+                      .map((key) => res[key])
+                      .join("\n");
+                    throw new Error(res);
+                  }
+                  toast.success("Your project was created successfully!!");
+                  return this.props.history.push("/");
+                })
+                .catch((error) => {
+                  if (error.message.startsWith("Unexpected")) {
+                    this.setState({
+                      error:
+                        "An error occured while performing this action. Please try again later",
+                    });
+                  } else {
+                    this.setState({ error: error.message });
+                  }
+                });
+            }
+          });
+        }
+      });
   };
 
   create_project = (e) => {

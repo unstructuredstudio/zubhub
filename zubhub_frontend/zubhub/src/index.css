@@ -13,11 +13,12 @@ code {
 } */
 
 /* App component style */
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;800&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"); */
 
 body {
   background-color: #ececec;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #282828;
   height: 100%;
   margin: 0;
@@ -444,10 +445,20 @@ html,
   margin-bottom: 0px;
 }
 
+.slick-slider {
+  padding-top: 2em;
+}
+
 .slick-center img {
-  /* width: 250px !important; */
+  position: relative;
   height: 220px !important;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.slick-slider .slick-list {
+  padding: 2em 40px !important;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .comment-box {
@@ -455,7 +466,7 @@ html,
   flex-direction: column;
   padding: 1em;
   background-color: white;
-  max-width: 700px;
+  max-width: 1000px;
   width: 100%;
   border-radius: 15px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
@@ -479,7 +490,7 @@ html,
   flex-direction: row;
   padding: 1em;
   background-color: white;
-  max-width: 650px;
+  max-width: 1000px;
   width: 100%;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -493,7 +504,9 @@ html,
 }
 
 .comment-text {
-  padding-top: 1em;
+  padding-top: 0.2em;
+  font-size: 1.5rem;
+  font-family: "Raleway";
 }
 
 .comment-box.comment {

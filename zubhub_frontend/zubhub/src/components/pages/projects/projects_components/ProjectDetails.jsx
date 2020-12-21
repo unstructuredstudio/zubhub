@@ -36,8 +36,23 @@ const styles = (theme) => ({
   },
   projectDetailHeaderStyle: {
     paddingTop: "1.5em",
+    boxShadow:
+      "0px 2px 1px -1px rgba(0,0,0,0), 0px 1px 1px 0px rgba(0,0,0,0), 0px 1px 3px 0px rgba(0,0,0,0)",
+    background: "rgba(255,204,0,1)",
     background:
-      "linear-gradient(to bottom, rgba(191,254,255,1) 0%, rgba(191,254,255,1) 20%, rgba(255,255,255,1) 77%, rgba(255,255,255,1) 100%)",
+      "-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))",
+    background:
+      "-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    background:
+      "linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+    filter:
+      "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
   },
   titleStyle: {
     fontWeight: "bold",
@@ -99,17 +114,21 @@ const styles = (theme) => ({
     zIndex: 1,
   },
   actionBoxStyle: {
-    backgroundColor: "white",
+    backgroundColor: "#00B8C4",
+    "&:hover": {
+      backgroundColor: "#03848C",
+    },
     borderRadius: "15px",
     position: "absolute",
     top: "0",
     right: "-4.5em",
-    height: "100%",
     width: "3.5em",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    boxShadow:
+      "0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)",
     [theme.breakpoints.down("1080")]: {
       position: "static",
       height: "3.5em",
@@ -121,6 +140,8 @@ const styles = (theme) => ({
   actionBoxButtonStyle: {
     margin: "0.5em",
     display: "flex",
+    maxWidth: "100%",
+    minWidth: 0,
     flexDirection: "column",
     "& span": { display: "flex", flexDirection: "column" },
     [theme.breakpoints.down("1080")]: {
@@ -131,26 +152,21 @@ const styles = (theme) => ({
       },
     },
     textAlign: "center",
-    color: "#00B8C4",
+    color: "white",
     "& MuiFab-root:hover": {
-      color: "#03848C",
+      color: "#F2F2F2",
     },
     "& svg": {
-      fill: "#00B8C4",
+      fill: "white",
     },
     "& svg:hover": {
-      fill: "#03848C",
+      fill: "#F2F2F2",
     },
   },
   sliderBoxStyle: {
     [theme.breakpoints.down("1080")]: {
       width: "90%",
     },
-  },
-  sliderStyle: {
-    maxWidth: "100%",
-    padding: "1em",
-    marginBottom: "1em",
   },
   carouselImageStyle: {
     borderRadius: "15px",
@@ -171,6 +187,7 @@ const styles = (theme) => ({
   descriptionHeadingStyle: {
     marginTop: "1em",
     fontWeight: "bold",
+    fontSize: "2.2rem",
   },
   descriptionBodyStyle: {
     fontSize: "1.5rem",
@@ -178,18 +195,23 @@ const styles = (theme) => ({
   },
   materialsUsedStyle: {
     display: "inline-block",
+    fontSize: "1.5rem",
     padding: "0.2em 0.5em",
     color: "#00B8C4",
     borderRadius: "15px",
     border: "1px solid #00B8C4",
     marginRight: "0.5em",
+    marginBottom: "0.5em",
   },
   commentSectionStyle: {
-    maxWidth: "700px",
+    maxWidth: "1000px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     marginTop: "2.5em",
+    marginBottom: "2.5em",
+    borderRadius: "15px",
+    backgroundColor: "#E4E4E4",
   },
   commentAvatarStyle: {
     backgroundColor: "#c4c4c4",
@@ -200,8 +222,9 @@ const styles = (theme) => ({
     flexDirection: "column",
     padding: "1em",
     backgroundColor: "white",
-    maxWidth: "700px",
+    maxWidth: "1000px",
     width: "100%",
+    fontSize: "1.5rem",
     borderRadius: "15px",
     boxShadow: "0 1px 4px rgba(0,0,0,.06)",
     border: "1px solid rgba(0,0,0,.1)",
@@ -278,7 +301,7 @@ const styles = (theme) => ({
 });
 
 const sliderSettings = (images_num) => ({
-  className: "center",
+  className: "center slider",
   centerMode: true,
   infinite: true,
   centerPadding: "60px",
@@ -334,10 +357,20 @@ function NextArrow(props) {
       className={className}
       style={{
         ...style,
-        display: "block",
+        display: "flex",
+        height: "200px",
+        width: "30px",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "0 15px 15px 0",
         background: "#767474",
-        borderRadius: "50%",
         zIndex: "10",
+        boxShadow:
+          "0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)",
+        backgroundColor: "#00B8C4",
+        "&:hover": {
+          backgroundColor: "#03848C",
+        },
       }}
       onClick={onClick}
     />
@@ -351,10 +384,20 @@ function PrevArrow(props) {
       className={className}
       style={{
         ...style,
-        display: "block",
+        display: "flex",
+        height: "200px",
+        width: "30px",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "15px 0 0 15px",
         background: "#767474",
-        borderRadius: "50%",
         zIndex: "10",
+        boxShadow:
+          "0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)",
+        backgroundColor: "#00B8C4",
+        "&:hover": {
+          backgroundColor: "#03848C",
+        },
       }}
       onClick={onClick}
     />
@@ -399,8 +442,16 @@ class ProjectDetails extends Component {
   }
 
   componentWillUnmount() {
-    this.commentText.removeEventListener("focus", this.handleCommentTextFocus);
-    document.removeEventListener("click", this.handleDocumentClick);
+    try {
+      this.commentText.removeEventListener(
+        "focus",
+        this.handleCommentTextFocus
+      );
+    } catch {}
+
+    try {
+      document.removeEventListener("click", this.handleDocumentClick);
+    } catch {}
   }
 
   toggle_like = (e, id) => {
@@ -726,10 +777,7 @@ class ProjectDetails extends Component {
                   {project.images.length > 0 ? (
                     <Grid item xs={12} sm={12} md={12} align="center">
                       <Box className={classes.sliderBoxStyle}>
-                        <Slider
-                          className={classes.sliderStyle}
-                          {...sliderSettings(project.images.length)}
-                        >
+                        <Slider {...sliderSettings(project.images.length)}>
                           {project.images.map((image) => (
                             <div>
                               <img
