@@ -22,3 +22,4 @@ yarn-error.log*
 
 debug.log
 .env
+.ssl-data
