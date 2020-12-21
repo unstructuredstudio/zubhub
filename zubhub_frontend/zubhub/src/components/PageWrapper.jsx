@@ -194,14 +194,6 @@ class PageWrapper extends Component {
     let profileMenuOpen = Boolean(anchorEl);
     return (
       <>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        />
         <ToastContainer />
         <CssBaseline />
         <AppBar className={classes.navBarStyle}>
