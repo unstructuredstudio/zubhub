@@ -13,6 +13,6 @@ RUN npm run build
 FROM nginx:stable-alpine
 COPY --from=build /zubhub_frontend/build /usr/share/nginx/html
 # new
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 8080
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
