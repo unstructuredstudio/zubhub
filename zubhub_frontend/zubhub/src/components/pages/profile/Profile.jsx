@@ -426,22 +426,24 @@ class Profile extends Component {
                       horizontal: "right",
                     }}
                     badgeContent={
-                      <Tooltip
-                        title="Share your profile with friends!"
-                        placement="right-start"
-                        arrow
-                      >
-                        <Fab
-                          className={clsx(
-                            classes.secondaryButton,
-                            classes.profileShareButtonStyle
-                          )}
-                          aria-label="share profile url"
-                          onClick={this.copyProfileUrl}
+                      this.props.auth.id === profile.id ? (
+                        <Tooltip
+                          title="Share your profile with friends!"
+                          placement="right-start"
+                          arrow
                         >
-                          <ShareIcon />
-                        </Fab>
-                      </Tooltip>
+                          <Fab
+                            className={clsx(
+                              classes.secondaryButton,
+                              classes.profileShareButtonStyle
+                            )}
+                            aria-label="share profile url"
+                            onClick={this.copyProfileUrl}
+                          >
+                            <ShareIcon />
+                          </Fab>
+                        </Tooltip>
+                      ) : null
                     }
                   >
                     <Avatar
