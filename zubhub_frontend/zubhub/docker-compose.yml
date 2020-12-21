@@ -8,4 +8,39 @@ services:
       dockerfile: Dockerfile
     restart: on-failure
     ports:
+      - "8080:8080"
+
+  reverse_proxy:
+    image: nginx:mainline-alpine
+    container_name: reverse_proxy
+    restart: on-failure
+    ports:
       - "80:80"
+    volumes:
+      - ./nginx/reverse_proxy:/etc/nginx/conf.d
+      - web-root:/var/www/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - zubhub_frontend
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - reverse_proxy
+    command: certonly --webroot --webroot-path=/var/www/html --email hello@unstrucuted.studio --agree-tos --no-eff-email --staging -d zubhub.unstructured.studio  -d www.zubhub.unstructured.studio
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/zubhub-frontend/zubhub_frontend/build/
+      o: bind
