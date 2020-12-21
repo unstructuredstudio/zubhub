@@ -181,7 +181,16 @@ class Signup extends Component {
           throw new Error(res);
         }
       })
-      .catch((error) => this.setState({ error: error.message }));
+      .catch((error) => {
+        if (error.message.startsWith("Unexpected")) {
+          this.setState({
+            error:
+              "An error occured while performing this action. Please try again later",
+          });
+        } else {
+          this.setState({ error: error.message });
+        }
+      });
   }
 
   signup = (e) => {
@@ -338,7 +347,6 @@ class Signup extends Component {
                             />
                           </Tooltip>
                         </ClickAwayListener>
-
                         <FormHelperText error>
                           {this.props.errors["username"]}
                         </FormHelperText>

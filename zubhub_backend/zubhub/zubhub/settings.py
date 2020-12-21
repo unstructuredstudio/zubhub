@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import socket
 import os
-import cloudinary
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,13 +22,21 @@ DEFAULT_FRONTEND_DOMAIN = os.environ.get(
     "DEFAULT_FRONTEND_DOMAIN", default="localhost:3000")
 DEFAULT_BACKEND_DOMAIN = os.environ.get(
     "DEFAULT_BACKEND_DOMAIN", default="localhost:8000")
-FRONTEND_HOST = DEFAULT_FRONTEND_DOMAIN.split(":")[0]
-BACKEND_HOST = DEFAULT_BACKEND_DOMAIN.split(":")[0]
 DEFAULT_FRONTEND_PROTOCOL = os.environ.get(
-    "DEFAULT_FRONTEND_PROTOCOL", default="http")
+    "DEFAULT_FRONTEND_PROTOCOL", default="https")
 DEFAULT_BACKEND_PROTOCOL = os.environ.get(
-    "DEFAULT_BACKEND_PROTOCOL", default="http")
+    "DEFAULT_BACKEND_PROTOCOL", default="https")
 DEBUG = int(os.environ.get("DEBUG", default=0))
+
+if DEFAULT_FRONTEND_DOMAIN.startswith("localhost"):
+    FRONTEND_HOST = DEFAULT_FRONTEND_DOMAIN.split(":")[0]
+else:
+    FRONTEND_HOST = DEFAULT_FRONTEND_DOMAIN
+
+if DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
+    BACKEND_HOST = DEFAULT_BACKEND_DOMAIN.split(":")[0]
+else:
+    BACKEND_HOST = DEFAULT_BACKEND_DOMAIN
 
 
 if ENVIRONMENT == 'production':
@@ -40,8 +47,8 @@ if ENVIRONMENT == 'production':
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    # SESSION_COOKIE_SECURE = True
+    # CSRF_COOKIE_SECURE = True
 
     # Quick-start development settings - unsuitable for production
     # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -51,13 +58,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, BACKEND_HOST]
+ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
+                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST]
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
     DEFAULT_FRONTEND_PROTOCOL+"://"+DEFAULT_FRONTEND_DOMAIN,
     DEFAULT_BACKEND_PROTOCOL+"://"+DEFAULT_BACKEND_DOMAIN,
+    DEFAULT_FRONTEND_PROTOCOL+"://www."+DEFAULT_FRONTEND_DOMAIN,
+    DEFAULT_BACKEND_PROTOCOL+"://www."+DEFAULT_BACKEND_DOMAIN,
 )
 
 # Application definition
@@ -81,7 +91,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'djcelery_email',
     'django_celery_results',
-    'cloudinary',
     'crispy_forms',
     'debug_toolbar',
     'mptt',
@@ -91,11 +100,12 @@ INSTALLED_APPS = [
 ]
 
 
-cloudinary.config(
-    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key=os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret=os.environ.get('CLOUDINARY_API_SECRET')
-)
+# digitalocean spaces
+DOSPACE_ACCESS_KEY_ID = os.environ.get("DOSPACE_ACCESS_KEY_ID")
+DOSPACE_ACCESS_SECRET_KEY = os.environ.get("DOSPACE_ACCESS_SECRET_KEY")
+DOSPACE_REGION = os.environ.get("DOSPACE_REGION")
+DOSPACE_ENDPOINT_URL = os.environ.get("DOSPACE_ENDPOINT_URL")
+DOSPACE_BUCKETNAME = os.environ.get("DOSPACE_BUCKETNAME")
 
 
 REST_FRAMEWORK = {
@@ -236,8 +246,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # django-debug-toolbar
-hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS = [ip[:-1] + '1' for ip in ips]
+if ENVIRONMENT != 'production':
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[:-1] + '1' for ip in ips]
 
 ################################################################################
 # How to setup Celery with Django
@@ -253,7 +264,7 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 CELERY_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = 'admin@zubhub.com'
+DEFAULT_FROM_EMAIL = 'hello@unstrucuted.studio'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
