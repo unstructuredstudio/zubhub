@@ -42,5 +42,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/zubhub-frontend/zubhub_frontend/build/
+      device: /home/zubhub-frontend/zubhub_frontend/zubhub/build/
       o: bind
