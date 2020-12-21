@@ -1,0 +1,7 @@
+# This file will be overwritten by resty-auto-ssl.
+# Place any customizations in /etc/resty-auto-ssl/letsencrypt/conf.d/*.sh
+
+CONFIG_D="/etc/resty-auto-ssl/letsencrypt/conf.d"
+LOCKFILE="/etc/resty-auto-ssl/letsencrypt/locks/lock"
+WELLKNOWN="/etc/resty-auto-ssl/letsencrypt/.acme-challenges"
+CA="https://acme-v02.api.letsencrypt.org/directory"
