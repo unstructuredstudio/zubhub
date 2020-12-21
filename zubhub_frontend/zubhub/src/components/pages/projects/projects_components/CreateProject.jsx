@@ -104,8 +104,14 @@ const styles = (theme) => ({
     },
   },
   imageUploadButton: {
-    display: "flex",
-    justifyContent: "flex-start",
+    "& MuiButton-label": {
+      width: "100%",
+      display: "flex",
+      justifyContent: "flex-end",
+      "& imageCountStyle": {
+        flexGrow: 1,
+      },
+    },
   },
   uploadProgressLabelStyle: {
     color: "white",
@@ -287,6 +293,9 @@ class CreateProject extends Component {
   imageFieldValidation = () => {
     let image_upload_button = document.querySelector("#image_upload_button");
     let image_field = document.querySelector("#project_images");
+    let imageCount = document.querySelector(".imageCountStyle");
+    imageCount.innerText = image_field.files.length;
+    imageCount.style.fontSize = "0.8rem";
 
     if (image_field.files.length < 1) {
       image_upload_button.setAttribute(
@@ -518,6 +527,9 @@ class CreateProject extends Component {
                               margin="normal"
                               id="image_upload_button"
                               startIcon={<ImageIcon />}
+                              endIcon={
+                                <span className="imageCountStyle"></span>
+                              }
                               onClick={() =>
                                 document
                                   .querySelector("#project_images")
@@ -773,12 +785,10 @@ export default connect(mapStateToProps)(
         .required("title is required"),
       video: Yup.string()
         .url("you are required to submit a video url here")
-        .max(1000, "your video url shouldn't be more than 1000 characters")
-        .required("video url is required"),
-      description: Yup.string().max(
-        10000,
-        "your description shouldn't be more than 10,000 characters"
-      ),
+        .max(1000, "your video url shouldn't be more than 1000 characters"),
+      description: Yup.string()
+        .max(10000, "your description shouldn't be more than 10,000 characters")
+        .required("description is required"),
       materials_used: Yup.string()
         .max(
           10000,
