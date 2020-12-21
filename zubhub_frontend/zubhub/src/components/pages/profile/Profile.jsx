@@ -12,6 +12,9 @@ import "react-toastify/dist/ReactToastify.css";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles, fade } from "@material-ui/core/styles";
+import ShareIcon from "@material-ui/icons/Share";
+import Tooltip from "@material-ui/core/Tooltip";
+import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -22,6 +25,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
 import Typography from "@material-ui/core/Typography";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -49,6 +53,14 @@ const styles = (theme) => ({
       "linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
+  },
+  avatarBoxStyle: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+  },
+  profileShareButtonStyle: {
+    borderRadius: "50% !important",
   },
   avatarStyle: {
     width: "100%",
@@ -278,6 +290,24 @@ class Profile extends Component {
     this.setState({ openEditProfileModal });
   };
 
+  copyProfileUrl = (e) => {
+    let tempInput = document.createElement("textarea");
+    tempInput.value = `${document.location.origin}/creators/${this.state.profile.username}`;
+    tempInput.style.top = "0";
+    tempInput.style.top = "0";
+    tempInput.style.position = "fixed";
+    let rootElem = document.querySelector("#root");
+    rootElem.appendChild(tempInput);
+    tempInput.focus();
+    tempInput.select();
+    if (document.execCommand("copy")) {
+      toast.success(
+        "your profile url has been successfully copied to your clipboard!"
+      );
+      rootElem.removeChild(tempInput);
+    }
+  };
+
   updateProfile = (e) => {
     e.preventDefault();
     let username = document.querySelector("#new_username");
@@ -388,12 +418,39 @@ class Profile extends Component {
                       : "Follow"}
                   </Button>
                 )}
-
-                <Avatar
-                  className={classes.avatarStyle}
-                  src={profile.avatar}
-                  alt={profile.username}
-                />
+                <Box className={classes.avatarBoxStyle}>
+                  <Badge
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    badgeContent={
+                      <Tooltip
+                        title="Share your profile with friends!"
+                        placement="right-start"
+                        arrow
+                      >
+                        <Fab
+                          className={clsx(
+                            classes.secondaryButton,
+                            classes.profileShareButtonStyle
+                          )}
+                          aria-label="share profile url"
+                          onClick={this.copyProfileUrl}
+                        >
+                          <ShareIcon />
+                        </Fab>
+                      </Tooltip>
+                    }
+                  >
+                    <Avatar
+                      className={classes.avatarStyle}
+                      src={profile.avatar}
+                      alt={profile.username}
+                    />
+                  </Badge>
+                </Box>
                 <Box className={classes.ProfileDetailStyle}>
                   <Typography
                     className={classes.userNameStyle}
@@ -448,7 +505,9 @@ class Profile extends Component {
                   About Me
                 </Typography>
                 <Box className={classes.aboutMeBoxStyle}>
-                  {profile.bio ? profile.bio : "Nothing here"}
+                  {profile.bio
+                    ? profile.bio
+                    : "You will be able to change this next month 😀!"}
                 </Box>
               </Paper>
 
