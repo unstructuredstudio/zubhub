@@ -82,7 +82,7 @@ const styles = (theme) => ({
     alignItems: "center",
   },
   userNameStyle: {
-    fontWeight: "bold",
+    fontWeight: 900,
     fontSize: "2rem",
   },
   emailStyle: { marginBottom: "0.5em" },
@@ -109,7 +109,7 @@ const styles = (theme) => ({
     paddingBottom: "4em",
   },
   titleStyle: {
-    fontWeight: 700,
+    fontWeight: 900,
     fontSize: "1.5rem",
   },
   aboutMeBoxStyle: {
@@ -218,13 +218,16 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    this.get_user_profile();
+  }
+
+  get_user_profile = () => {
     let username = this.props.match.params.username;
 
     if (!username) {
       username = this.props.auth.username;
     } else if (this.props.auth.username === username)
-      this.props.history.replace("/profile");
-
+      this.props.history.push("/profile");
     this.props.api
       .get_user_profile({ username, token: this.props.auth.token })
       .then((res) => {
@@ -253,7 +256,7 @@ class Profile extends Component {
         toast.warning(error.message);
         this.setState({ loading: false });
       });
-  }
+  };
 
   toggle_follow = (id) => {
     if (!this.props.auth.token) {
@@ -511,46 +514,48 @@ class Profile extends Component {
                 </Box>
               </Paper>
 
-              <Paper className={classes.profileLowerStyle}>
-                <Typography
-                  gutterBottom
-                  component="h2"
-                  variant="h6"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
-                  Latest projects of {profile.username}
-                  <Link
-                    className={clsx(
-                      classes.secondaryLink,
-                      classes.floatRight,
-                      classes.textDecorationNone
-                    )}
-                    to={`/creators/${profile.username}/projects`}
+              {profile.projects_count > 0 ? (
+                <Paper className={classes.profileLowerStyle}>
+                  <Typography
+                    gutterBottom
+                    component="h2"
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.titleStyle}
                   >
-                    View all >>
-                  </Link>
-                </Typography>
-                <Grid container>
-                  {projects.map((project) => (
-                    <Grid
-                      item
-                      xs={12}
-                      sm={6}
-                      md={6}
-                      className={classes.projectGridStyle}
-                      align="center"
+                    Latest projects of {profile.username}
+                    <Link
+                      className={clsx(
+                        classes.secondaryLink,
+                        classes.floatRight,
+                        classes.textDecorationNone
+                      )}
+                      to={`/creators/${profile.username}/projects`}
                     >
-                      <Project
-                        project={project}
-                        key={project.id}
-                        updateProjects={this.updateProjects}
-                        {...this.props}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Paper>
+                      View all >>
+                    </Link>
+                  </Typography>
+                  <Grid container>
+                    {projects.map((project) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={6}
+                        className={classes.projectGridStyle}
+                        align="center"
+                      >
+                        <Project
+                          project={project}
+                          key={project.id}
+                          updateProjects={this.updateProjects}
+                          {...this.props}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Paper>
+              ) : null}
             </Container>
           </Box>
           <Dialog
