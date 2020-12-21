@@ -110,7 +110,6 @@ return(
           <SavedProjects {...props} {...this.props}/>
         </PageWrapper>
         )}/>
-
     <Route path="/projects/:id"
         render={props=>(
         <PageWrapper {...props}>
