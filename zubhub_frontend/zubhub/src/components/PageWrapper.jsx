@@ -326,11 +326,13 @@ class PageWrapper extends Component {
           <div className="footer-right"></div>
 
           <div className="footer-left"></div>
-          <img
-            src={unstructuredLogo}
-            className={classes.footerLogoStyle}
-            alt="unstructured-studio-logo"
-          />
+          <a href="https://unstructured.studio">
+            <img
+              src={unstructuredLogo}
+              className={classes.footerLogoStyle}
+              alt="unstructured-studio-logo"
+            />
+          </a>
           {this.scrollTop(this.props)}
         </footer>
       </>
