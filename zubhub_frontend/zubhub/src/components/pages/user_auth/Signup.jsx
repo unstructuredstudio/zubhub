@@ -72,6 +72,9 @@ const styles = (theme) => ({
     color: "white",
     padding: "0 30px",
   },
+  titleStyle: {
+    fontWeight: 900,
+  },
   customLabelStyle: {
     "&.MuiFormLabel-root.Mui-focused": {
       color: "#00B8C4",
@@ -278,6 +281,7 @@ class Signup extends Component {
                     variant="h5"
                     component="h2"
                     color="textPrimary"
+                    className={classes.titleStyle}
                   >
                     Welcome to Zubhub
                   </Typography>
