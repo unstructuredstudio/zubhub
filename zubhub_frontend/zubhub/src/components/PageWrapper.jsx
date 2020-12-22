@@ -270,9 +270,9 @@ class PageWrapper extends Component {
                       onClose={this.handleProfileMenuClose}
                     >
                       <MenuItem className={classes.profileStyle}>
-                        <Link
+                        <a
                           className={classes.textDecorationNone}
-                          to="/profile"
+                          href="/profile"
                         >
                           <Typography
                             variant="subtitle2"
@@ -281,7 +281,7 @@ class PageWrapper extends Component {
                           >
                             {this.props.auth.username}
                           </Typography>
-                        </Link>
+                        </a>
                       </MenuItem>
                       <MenuItem>
                         <Link
@@ -326,11 +326,13 @@ class PageWrapper extends Component {
           <div className="footer-right"></div>
 
           <div className="footer-left"></div>
-          <img
-            src={unstructuredLogo}
-            className={classes.footerLogoStyle}
-            alt="unstructured-studio-logo"
-          />
+          <a href="https://unstructured.studio">
+            <img
+              src={unstructuredLogo}
+              className={classes.footerLogoStyle}
+              alt="unstructured-studio-logo"
+            />
+          </a>
           {this.scrollTop(this.props)}
         </footer>
       </>
