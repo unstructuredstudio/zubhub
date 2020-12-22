@@ -270,9 +270,9 @@ class PageWrapper extends Component {
                       onClose={this.handleProfileMenuClose}
                     >
                       <MenuItem className={classes.profileStyle}>
-                        <Link
+                        <a
                           className={classes.textDecorationNone}
-                          to="/profile"
+                          href="/profile"
                         >
                           <Typography
                             variant="subtitle2"
@@ -281,7 +281,7 @@ class PageWrapper extends Component {
                           >
                             {this.props.auth.username}
                           </Typography>
-                        </Link>
+                        </a>
                       </MenuItem>
                       <MenuItem>
                         <Link
