@@ -39,6 +39,7 @@ class Project(models.Model):
         if self.id:
             self.likes_count = self.likes.count()
             self.comments_count = self.comments.count()
+
         if self.slug:
             pass
         else:
