@@ -60,6 +60,9 @@ const styles = (theme) => ({
     color: "white",
     padding: "0 30px",
   },
+  titleStyle: {
+    fontWeight: 900,
+  },
   customLabelStyle: {
     "&.MuiFormLabel-root.Mui-focused": {
       color: "#00B8C4",
@@ -416,6 +419,7 @@ class CreateProject extends Component {
                     onSubmit={this.props.handleSubmit}
                   >
                     <Typography
+                      className={classes.titleStyle}
                       gutterBottom
                       variant="h5"
                       component="h2"

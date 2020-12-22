@@ -55,7 +55,7 @@ const styles = (theme) => ({
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
   },
   titleStyle: {
-    fontWeight: "bold",
+    fontWeight: 900,
     textAlign: "center",
   },
   metaInfoStyle: {
@@ -186,7 +186,7 @@ const styles = (theme) => ({
   },
   descriptionHeadingStyle: {
     marginTop: "1em",
-    fontWeight: "bold",
+    fontWeight: 900,
     fontSize: "2.2rem",
   },
   descriptionBodyStyle: {
