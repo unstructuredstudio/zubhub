@@ -66,6 +66,9 @@ const styles = {
     color: "white",
     padding: "0 30px",
   },
+  titleStyle: {
+    fontWeight: 900,
+  },
   customLabelStyle: {
     "&.MuiFormLabel-root.Mui-focused": {
       color: "#00B8C4",
@@ -217,6 +220,7 @@ class PasswordResetConfirm extends Component {
                     variant="h5"
                     component="h2"
                     color="textPrimary"
+                    className={classes.titleStyle}
                   >
                     Password Reset Confirmation
                   </Typography>
@@ -280,7 +284,8 @@ class PasswordResetConfirm extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["new_password"]}
+                          {this.props.touched["new_password"] &&
+                            this.props.errors["new_password"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -331,7 +336,8 @@ class PasswordResetConfirm extends Component {
                           labelWidth={150}
                         />
                         <FormHelperText error>
-                          {this.props.errors["new_password2"]}
+                          {this.props.touched["new_password2"] &&
+                            this.props.errors["new_password2"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>

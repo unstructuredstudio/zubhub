@@ -69,6 +69,9 @@ const styles = (theme) => ({
     color: "white",
     padding: "0 30px",
   },
+  titleStyle: {
+    fontWeight: 900,
+  },
   customLabelStyle: {
     "&.MuiFormLabel-root.Mui-focused": {
       color: "#00B8C4",
@@ -221,6 +224,7 @@ class Login extends Component {
                     variant="h5"
                     component="h2"
                     color="textPrimary"
+                    className={classes.titleStyle}
                   >
                     Welcome to Zubhub
                   </Typography>
@@ -272,7 +276,8 @@ class Login extends Component {
                           labelWidth={150}
                         />
                         <FormHelperText error>
-                          {this.props.errors["username"]}
+                          {this.props.touched["username"] &&
+                            this.props.errors["username"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -316,7 +321,8 @@ class Login extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["password"]}
+                          {this.props.touched["password"] &&
+                            this.props.errors["password"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>

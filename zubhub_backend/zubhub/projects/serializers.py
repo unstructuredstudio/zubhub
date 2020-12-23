@@ -1,3 +1,4 @@
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from creators.serializers import CreatorSerializer
@@ -40,8 +41,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     saved_by = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
-    images = ImageSerializer(many=True)
+    images = ImageSerializer(many=True, required=False)
     created_on = serializers.DateTimeField(read_only=True)
+    views_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Project
@@ -59,6 +61,18 @@ class ProjectSerializer(serializers.ModelSerializer):
             "comments",
             "created_on",
         ]
+
+    def validate_video(self, video):
+        if(video == "" and len(self.initial_data.get("images")) == 0):
+            raise serializers.ValidationError(
+                _("you must provide either image(s) or video url"))
+        return video
+
+    def validate_images(self, images):
+        if(len(images) == 0 and len(self.initial_data["video"]) == 0):
+            raise serializers.ValidationError(
+                _("you must provide either image(s) or video url"))
+        return images
 
     def create(self, validated_data):
         images_data = validated_data.pop('images')

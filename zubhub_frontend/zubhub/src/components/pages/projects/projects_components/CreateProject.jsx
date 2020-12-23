@@ -60,6 +60,9 @@ const styles = (theme) => ({
     color: "white",
     padding: "0 30px",
   },
+  titleStyle: {
+    fontWeight: 900,
+  },
   customLabelStyle: {
     "&.MuiFormLabel-root.Mui-focused": {
       color: "#00B8C4",
@@ -104,8 +107,14 @@ const styles = (theme) => ({
     },
   },
   imageUploadButton: {
-    display: "flex",
-    justifyContent: "flex-start",
+    "& MuiButton-label": {
+      width: "100%",
+      display: "flex",
+      justifyContent: "flex-end",
+      "& imageCountStyle": {
+        flexGrow: 1,
+      },
+    },
   },
   uploadProgressLabelStyle: {
     color: "white",
@@ -219,55 +228,66 @@ class CreateProject extends Component {
               this.state.image_upload.images_to_upload ===
               this.state.image_upload.successful_uploads
             ) {
-              let { image_upload } = this.state;
-              image_upload.upload_dialog = false;
-              this.setState({ image_upload });
-              this.props.api
-                .create_project({
-                  ...this.props.values,
-                  token: this.props.auth.token,
-                  images: this.state.image_upload.uploaded_images_url,
-                })
-                .then((res) => {
-                  if (!res.title) {
-                    res = Object.keys(res)
-                      .map((key) => res[key])
-                      .join("\n");
-                    throw new Error(res);
-                  }
-                  toast.success("Your project was created successfully!!");
-                  return this.props.history.push("/");
-                })
-                .catch((error) => {
-                  if (error.message.startsWith("Unexpected")) {
-                    this.setState({
-                      error:
-                        "An error occured while performing this action. Please try again later",
-                    });
-                  } else {
-                    this.setState({ error: error.message });
-                  }
-                });
+              this.upload_project();
             }
           });
         }
       });
   };
 
-  create_project = (e) => {
+  upload_project = () => {
+    let { image_upload } = this.state;
+    image_upload.upload_dialog = false;
+    this.setState({ image_upload });
+    this.props.api
+      .create_project({
+        ...this.props.values,
+        token: this.props.auth.token,
+        images: this.state.image_upload.uploaded_images_url,
+      })
+      .then((res) => {
+        if (!res.title) {
+          res = Object.keys(res)
+            .map((key) => res[key])
+            .join("\n");
+          throw new Error(res);
+        }
+        toast.success("Your project was created successfully!!");
+        return this.props.history.push("/profile");
+      })
+      .catch((error) => {
+        if (error.message.startsWith("Unexpected")) {
+          this.setState({
+            error:
+              "An error occured while performing this action. Please try again later",
+          });
+        } else {
+          this.setState({ error: error.message });
+        }
+      });
+  };
+
+  init_project = (e) => {
     if (!this.props.auth.token) {
       this.props.history.push("/login");
     } else {
-      let image_field = this.imageFieldValidation();
+      let media_fields = this.mediaFieldsValidation();
 
-      if (image_field.is_empty === true) {
-        this.props.setErrors({ project_images: "please upload an image" });
-      } else if (image_field.too_many_images === true) {
+      if (media_fields.image_is_empty && media_fields.video_is_empty) {
+        this.props.setErrors({
+          project_images: "you must provide either image(s) or video url",
+        });
+        this.props.setErrors({
+          video: "you must provide either image(s) or video url",
+        });
+      } else if (media_fields.too_many_images === true) {
         this.props.setErrors({ project_images: "too many images uploaded" });
-      } else if (image_field.image_size_too_large === true) {
+      } else if (media_fields.image_size_too_large === true) {
         this.props.setErrors({
           project_images: "one or more of your image is greater than 3mb",
         });
+      } else if (media_fields.image_is_empty) {
+        this.upload_project();
       } else {
         let project_images = document.querySelector("#project_images").files;
 
@@ -284,29 +304,43 @@ class CreateProject extends Component {
     }
   };
 
-  imageFieldValidation = () => {
+  mediaFieldsValidation = () => {
     let image_upload_button = document.querySelector("#image_upload_button");
-    let image_field = document.querySelector("#project_images");
+    let media_fields = document.querySelector("#project_images");
+    let video = document.querySelector("#video");
+    let imageCount = document.querySelector(".imageCountStyle");
+    imageCount.innerText = media_fields.files.length;
+    imageCount.style.fontSize = "0.8rem";
 
-    if (image_field.files.length < 1) {
-      image_upload_button.setAttribute(
-        "style",
-        "border-color:#F54336; color:#F54336"
-      );
-      this.props.setErrors({ project_images: "please upload an image" });
-      return { is_empty: true };
-    } else if (image_field.files.length > 10) {
+    let result = {};
+
+    if (media_fields.files.length < 1) {
+      result["image_is_empty"] = true;
+      if (video.value === "") {
+        image_upload_button.setAttribute(
+          "style",
+          "border-color:#F54336; color:#F54336"
+        );
+        this.props.setErrors({
+          project_images: "you must provide either image(s) or video url",
+        });
+        this.props.setErrors({
+          video: "you must provide either image(s) or video url",
+        });
+        result["video_is_empty"] = true;
+      }
+    } else if (media_fields.files.length > 10) {
       image_upload_button.setAttribute(
         "style",
         "border-color:#F54336; color:#F54336"
       );
       this.props.setErrors({ project_images: "too many images uploaded" });
-      return { is_empty: false, too_many_images: true };
+      result["too_many_images"] = true;
     } else {
       let image_size_too_large = false;
 
-      for (let index = 0; index < image_field.files.length; index++) {
-        if (image_field.files[index].size / 1000 > 3072) {
+      for (let index = 0; index < media_fields.files.length; index++) {
+        if (media_fields.files[index].size / 1000 > 3072) {
           image_size_too_large = true;
         }
       }
@@ -318,23 +352,31 @@ class CreateProject extends Component {
         this.props.setErrors({
           project_images: "one or more of your image is greater than 3mb",
         });
-        return {
-          is_empty: false,
-          too_many_images: false,
-          image_size_too_large: image_size_too_large,
-        };
+        result["image_size_too_large"] = image_size_too_large;
       }
+
+      return result;
     }
 
     image_upload_button.setAttribute(
       "style",
       "border-color: #00B8C4; color:#00B8C4"
     );
-    return {
-      is_empty: false,
-      too_many_images: false,
-      image_size_too_large: false,
-    };
+    return result;
+  };
+
+  handleImageButtonClick = () => {
+    document.querySelector("#project_images").click();
+    this.props.setFieldTouched("project_images");
+  };
+
+  handleAddMaterialFieldChange = (e) => {
+    this.props.validateField("materials_used");
+    let value = e.currentTarget.value;
+    if (value.includes(",")) {
+      e.currentTarget.value = value.split(",")[0];
+      this.addMaterialUsed(e);
+    }
   };
 
   addMaterialUsed = (e) => {
@@ -374,20 +416,8 @@ class CreateProject extends Component {
     this.setState({ materials_used: hidden_materials_field.value.split(",") });
   };
 
-  handleMaterialsUsedDialogToggle = () => {
-    let { materialsUsedModalOpen } = this.state;
-    this.setState({
-      materialsUsedModalOpen: !materialsUsedModalOpen,
-    });
-  };
-
   render() {
-    let {
-      error,
-      image_upload,
-      materialsUsedModalOpen,
-      materials_used,
-    } = this.state;
+    let { error, image_upload, materials_used } = this.state;
     let { classes } = this.props;
     if (!this.props.auth.token) {
       return (
@@ -407,6 +437,7 @@ class CreateProject extends Component {
                     onSubmit={this.props.handleSubmit}
                   >
                     <Typography
+                      className={classes.titleStyle}
                       gutterBottom
                       variant="h5"
                       component="h2"
@@ -465,7 +496,8 @@ class CreateProject extends Component {
                             labelWidth={90}
                           />
                           <FormHelperText error>
-                            {this.props.errors["title"]}
+                            {this.props.touched["title"] &&
+                              this.props.errors["title"]}
                           </FormHelperText>
                         </FormControl>
                       </Grid>
@@ -500,13 +532,20 @@ class CreateProject extends Component {
                             labelWidth={90}
                           />
                           <FormHelperText error>
-                            {this.props.errors["description"]}
+                            {this.props.touched["description"] &&
+                              this.props.errors["description"]}
                           </FormHelperText>
                         </FormControl>
                       </Grid>
 
                       <Grid item xs={12} sm={6} md={6}>
-                        <FormControl fullWidth>
+                        <FormControl
+                          fullWidth
+                          error={
+                            this.props.touched["project_images"] &&
+                            this.props.errors["project_images"]
+                          }
+                        >
                           <label htmlFor="project_images">
                             <Button
                               className={clsx(
@@ -518,23 +557,23 @@ class CreateProject extends Component {
                               margin="normal"
                               id="image_upload_button"
                               startIcon={<ImageIcon />}
-                              onClick={() =>
-                                document
-                                  .querySelector("#project_images")
-                                  .click()
+                              endIcon={
+                                <span className="imageCountStyle"></span>
                               }
+                              onClick={this.handleImageButtonClick}
                             >
                               Images
                             </Button>
                           </label>
                           <input
                             className={classes.displayNone}
+                            aria-hidden="true"
                             type="file"
                             accept="image/*"
                             id="project_images"
                             name="project_images"
                             multiple
-                            onChange={this.imageFieldValidation}
+                            onChange={this.mediaFieldsValidation}
                             onBlur={this.props.handleBlur}
                           />
                           <FormHelperText error>
@@ -554,7 +593,6 @@ class CreateProject extends Component {
                             this.props.touched["video"] &&
                             this.props.errors["video"]
                           }
-                          helperText={this.props.errors["video"]}
                         >
                           <InputLabel
                             className={classes.customLabelStyle}
@@ -572,7 +610,8 @@ class CreateProject extends Component {
                             labelWidth={90}
                           />
                           <FormHelperText error>
-                            {this.props.errors["video"]}
+                            {this.props.touched["video"] &&
+                              this.props.errors["video"]}
                           </FormHelperText>
                         </FormControl>
                       </Grid>
@@ -584,6 +623,10 @@ class CreateProject extends Component {
                           size="small"
                           fullWidth
                           margin="small"
+                          error={
+                            this.props.touched["materials_used"] &&
+                            this.props.errors["materials_used"]
+                          }
                         >
                           <InputLabel
                             className={clsx(
@@ -618,11 +661,18 @@ class CreateProject extends Component {
                                 id="add_materials_used"
                                 name="add_materials_used"
                                 type="text"
-                                onChange={this.props.handleChange}
-                                onBlur={this.props.handleBlur}
+                                placeholder="Add a material and click the + button"
+                                onClick={() =>
+                                  this.props.setFieldTouched("materials_used")
+                                }
+                                onChange={this.handleAddMaterialFieldChange}
+                                onBlur={() =>
+                                  this.props.validateField("materials_used")
+                                }
                               />
                               <FormHelperText error>
-                                {this.props.errors["materials_used"]}
+                                {this.props.touched["materials_used"] &&
+                                  this.props.errors["materials_used"]}
                               </FormHelperText>
                             </Grid>
                             <Grid item xs={4} sm={4} md={4}>
@@ -639,7 +689,7 @@ class CreateProject extends Component {
                           <input
                             id="materials_used"
                             name="materials_used"
-                            type="hidden"
+                            className={classes.displayNone}
                             onChange={this.props.handleChange}
                             onBlur={this.props.handleBlur}
                           />
@@ -650,56 +700,13 @@ class CreateProject extends Component {
                           variant="contained"
                           size="large"
                           className={classes.primaryButton}
-                          onClick={this.create_project}
+                          onClick={this.init_project}
                         >
                           Create Project
                         </Button>
                       </Grid>
                     </Grid>
                   </form>
-                  <Dialog
-                    open={materialsUsedModalOpen}
-                    onClose={this.handleMaterialsUsedDialogToggle}
-                    aria-labelledby="materials used dialog"
-                  >
-                    <DialogTitle id="materials-used-dialog-title">
-                      Add New Material
-                    </DialogTitle>
-                    <DialogContent>
-                      <FormControl
-                        className={clsx(classes.margin, classes.textField)}
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        margin="normal"
-                      >
-                        <InputLabel
-                          className={classes.customLabelStyle}
-                          htmlFor="new_material"
-                        >
-                          New Material
-                        </InputLabel>
-                        <OutlinedInput
-                          className={classes.customInputStyle}
-                          id="new_material"
-                          name="new_material"
-                          type="text"
-                          labelWidth={90}
-                        />
-                      </FormControl>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button
-                        onClick={this.handleMaterialsUsedDialogToggle}
-                        color="primary"
-                      >
-                        Cancel
-                      </Button>
-                      <Button onClick={this.addMaterialUsed} color="primary">
-                        Add
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
                   <Dialog
                     PaperProps={{
                       style: {
@@ -771,14 +778,12 @@ export default connect(mapStateToProps)(
       title: Yup.string()
         .max(100, "your project title shouldn't be more than 100 characters")
         .required("title is required"),
+      description: Yup.string()
+        .max(10000, "your description shouldn't be more than 10,000 characters")
+        .required("description is required"),
       video: Yup.string()
         .url("you are required to submit a video url here")
-        .max(1000, "your video url shouldn't be more than 1000 characters")
-        .required("video url is required"),
-      description: Yup.string().max(
-        10000,
-        "your description shouldn't be more than 10,000 characters"
-      ),
+        .max(1000, "your video url shouldn't be more than 1000 characters"),
       materials_used: Yup.string()
         .max(
           10000,

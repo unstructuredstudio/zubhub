@@ -39,7 +39,7 @@ const styles = (theme) => ({
     "& img": {
       height: "2em",
     },
-    [theme.breakpoints.down("376")]: {
+    [theme.breakpoints.down("402")]: {
       "& img": {
         height: "1em",
       },
@@ -54,10 +54,14 @@ const styles = (theme) => ({
       height: "2em",
     },
   },
-
+  navActionStyle: {
+    display: "flex",
+    alignItems: "center",
+  },
   avatarStyle: {
     cursor: "pointer",
     backgroundColor: "white",
+    marginLeft: "1em",
   },
   profileMenuStyle: {
     paddingTop: 0,
@@ -204,7 +208,7 @@ class PageWrapper extends Component {
                   <img src={logo} alt="logo" />
                 </Link>
               </Box>
-              <div className="">
+              <div className={classes.navActionStyle}>
                 {!this.props.auth.token ? (
                   <>
                     <Link className={classes.textDecorationNone} to="/login">
@@ -228,6 +232,18 @@ class PageWrapper extends Component {
                   </>
                 ) : (
                   <>
+                    <Link
+                      className={classes.textDecorationNone}
+                      to="/projects/create"
+                    >
+                      <Button
+                        variant="contained"
+                        className={classes.primaryButtonStyle}
+                        size="small"
+                      >
+                        Create Project
+                      </Button>
+                    </Link>
                     <Avatar
                       className={classes.avatarStyle}
                       aria-label={`${this.props.auth.username}' Avatar`}
@@ -254,9 +270,9 @@ class PageWrapper extends Component {
                       onClose={this.handleProfileMenuClose}
                     >
                       <MenuItem className={classes.profileStyle}>
-                        <Link
+                        <a
                           className={classes.textDecorationNone}
-                          to="/profile"
+                          href="/profile"
                         >
                           <Typography
                             variant="subtitle2"
@@ -265,7 +281,7 @@ class PageWrapper extends Component {
                           >
                             {this.props.auth.username}
                           </Typography>
-                        </Link>
+                        </a>
                       </MenuItem>
                       <MenuItem>
                         <Link
@@ -310,11 +326,13 @@ class PageWrapper extends Component {
           <div className="footer-right"></div>
 
           <div className="footer-left"></div>
-          <img
-            src={unstructuredLogo}
-            className={classes.footerLogoStyle}
-            alt="unstructured-studio-logo"
-          />
+          <a href="https://unstructured.studio">
+            <img
+              src={unstructuredLogo}
+              className={classes.footerLogoStyle}
+              alt="unstructured-studio-logo"
+            />
+          </a>
           {this.scrollTop(this.props)}
         </footer>
       </>

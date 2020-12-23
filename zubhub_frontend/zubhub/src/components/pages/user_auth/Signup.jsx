@@ -72,6 +72,9 @@ const styles = (theme) => ({
     color: "white",
     padding: "0 30px",
   },
+  titleStyle: {
+    fontWeight: 900,
+  },
   customLabelStyle: {
     "&.MuiFormLabel-root.Mui-focused": {
       color: "#00B8C4",
@@ -278,6 +281,7 @@ class Signup extends Component {
                     variant="h5"
                     component="h2"
                     color="textPrimary"
+                    className={classes.titleStyle}
                   >
                     Welcome to Zubhub
                   </Typography>
@@ -348,7 +352,8 @@ class Signup extends Component {
                           </Tooltip>
                         </ClickAwayListener>
                         <FormHelperText error>
-                          {this.props.errors["username"]}
+                          {this.props.touched["username"] &&
+                            this.props.errors["username"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -384,7 +389,8 @@ class Signup extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["email"]}
+                          {this.props.touched["email"] &&
+                            this.props.errors["email"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -419,7 +425,8 @@ class Signup extends Component {
                           labelWidth={90}
                         />
                         <FormHelperText error>
-                          {this.props.errors["dateOfBirth"]}
+                          {this.props.touched["dateOfBirth"] &&
+                            this.props.errors["dateOfBirth"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -462,7 +469,8 @@ class Signup extends Component {
                           ))}
                         </Select>
                         <FormHelperText error>
-                          {this.props.errors["user_location"]}
+                          {this.props.touched["user_location"] &&
+                            this.props.errors["user_location"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -513,7 +521,8 @@ class Signup extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["password1"]}
+                          {this.props.touched["password1"] &&
+                            this.props.errors["password1"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -564,7 +573,8 @@ class Signup extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["password2"]}
+                          {this.props.touched["password2"] &&
+                            this.props.errors["password2"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -646,6 +656,9 @@ export default connect(
     }),
     validationSchema: Yup.object().shape({
       email: Yup.string().email("invalid email").required("invalid email"),
+      dateOfBirth: Yup.date()
+        .max(new Date(), "your date of birth can't be greater than today")
+        .required("please input your date of birth"),
       user_location: Yup.string()
         .min(1, "your location is too short")
         .required("please input your location"),

@@ -1,3 +1,4 @@
+
 # dependencies
 node_modules/
 /.pnp
@@ -22,3 +23,4 @@ yarn-error.log*
 
 debug.log
 .env
+.ssl-data

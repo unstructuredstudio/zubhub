@@ -12,6 +12,9 @@ import "react-toastify/dist/ReactToastify.css";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { withStyles, fade } from "@material-ui/core/styles";
+import ShareIcon from "@material-ui/icons/Share";
+import Tooltip from "@material-ui/core/Tooltip";
+import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -22,6 +25,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
 import Typography from "@material-ui/core/Typography";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -50,6 +54,14 @@ const styles = (theme) => ({
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
   },
+  avatarBoxStyle: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+  },
+  profileShareButtonStyle: {
+    borderRadius: "50% !important",
+  },
   avatarStyle: {
     width: "100%",
     height: "100%",
@@ -70,7 +82,7 @@ const styles = (theme) => ({
     alignItems: "center",
   },
   userNameStyle: {
-    fontWeight: "bold",
+    fontWeight: 900,
     fontSize: "2rem",
   },
   emailStyle: { marginBottom: "0.5em" },
@@ -97,7 +109,7 @@ const styles = (theme) => ({
     paddingBottom: "4em",
   },
   titleStyle: {
-    fontWeight: 700,
+    fontWeight: 900,
     fontSize: "1.5rem",
   },
   aboutMeBoxStyle: {
@@ -206,13 +218,16 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    this.get_user_profile();
+  }
+
+  get_user_profile = () => {
     let username = this.props.match.params.username;
 
     if (!username) {
       username = this.props.auth.username;
     } else if (this.props.auth.username === username)
-      this.props.history.replace("/profile");
-
+      this.props.history.push("/profile");
     this.props.api
       .get_user_profile({ username, token: this.props.auth.token })
       .then((res) => {
@@ -241,7 +256,7 @@ class Profile extends Component {
         toast.warning(error.message);
         this.setState({ loading: false });
       });
-  }
+  };
 
   toggle_follow = (id) => {
     if (!this.props.auth.token) {
@@ -276,6 +291,24 @@ class Profile extends Component {
     let { openEditProfileModal } = this.state;
     openEditProfileModal = !openEditProfileModal;
     this.setState({ openEditProfileModal });
+  };
+
+  copyProfileUrl = (e) => {
+    let tempInput = document.createElement("textarea");
+    tempInput.value = `${document.location.origin}/creators/${this.state.profile.username}`;
+    tempInput.style.top = "0";
+    tempInput.style.top = "0";
+    tempInput.style.position = "fixed";
+    let rootElem = document.querySelector("#root");
+    rootElem.appendChild(tempInput);
+    tempInput.focus();
+    tempInput.select();
+    if (document.execCommand("copy")) {
+      toast.success(
+        "your profile url has been successfully copied to your clipboard!"
+      );
+      rootElem.removeChild(tempInput);
+    }
   };
 
   updateProfile = (e) => {
@@ -341,37 +374,15 @@ class Profile extends Component {
             <Paper className={classes.profileHeaderStyle}>
               <Container maxWidth="md">
                 {this.props.auth.username === profile.username ? (
-                  <>
-                    <Link
-                      className={classes.textDecorationNone}
-                      to="/projects/create"
-                    >
-                      <Button
-                        className={clsx(
-                          classes.secondaryButton,
-                          classes.floatRight
-                        )}
-                        variant="outlined"
-                        size="medium"
-                        margin="normal"
-                      >
-                        Create Project
-                      </Button>
-                    </Link>
-
-                    <Button
-                      className={clsx(
-                        classes.primaryButton,
-                        classes.floatRight
-                      )}
-                      variant="contained"
-                      size="medium"
-                      margin="normal"
-                      onClick={this.handleToggleEditProfileModal}
-                    >
-                      Edit
-                    </Button>
-                  </>
+                  <Button
+                    className={clsx(classes.primaryButton, classes.floatRight)}
+                    variant="contained"
+                    size="medium"
+                    margin="normal"
+                    onClick={this.handleToggleEditProfileModal}
+                  >
+                    Edit
+                  </Button>
                 ) : (
                   <Button
                     className={clsx(
@@ -388,12 +399,41 @@ class Profile extends Component {
                       : "Follow"}
                   </Button>
                 )}
-
-                <Avatar
-                  className={classes.avatarStyle}
-                  src={profile.avatar}
-                  alt={profile.username}
-                />
+                <Box className={classes.avatarBoxStyle}>
+                  <Badge
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    badgeContent={
+                      this.props.auth.id === profile.id ? (
+                        <Tooltip
+                          title="Share your profile with friends!"
+                          placement="right-start"
+                          arrow
+                        >
+                          <Fab
+                            className={clsx(
+                              classes.secondaryButton,
+                              classes.profileShareButtonStyle
+                            )}
+                            aria-label="share profile url"
+                            onClick={this.copyProfileUrl}
+                          >
+                            <ShareIcon />
+                          </Fab>
+                        </Tooltip>
+                      ) : null
+                    }
+                  >
+                    <Avatar
+                      className={classes.avatarStyle}
+                      src={profile.avatar}
+                      alt={profile.username}
+                    />
+                  </Badge>
+                </Box>
                 <Box className={classes.ProfileDetailStyle}>
                   <Typography
                     className={classes.userNameStyle}
@@ -448,50 +488,54 @@ class Profile extends Component {
                   About Me
                 </Typography>
                 <Box className={classes.aboutMeBoxStyle}>
-                  {profile.bio ? profile.bio : "Nothing here"}
+                  {profile.bio
+                    ? profile.bio
+                    : "You will be able to change this next month 😀!"}
                 </Box>
               </Paper>
 
-              <Paper className={classes.profileLowerStyle}>
-                <Typography
-                  gutterBottom
-                  component="h2"
-                  variant="h6"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
-                  Latest projects of {profile.username}
-                  <Link
-                    className={clsx(
-                      classes.secondaryLink,
-                      classes.floatRight,
-                      classes.textDecorationNone
-                    )}
-                    to={`/creators/${profile.username}/projects`}
+              {profile.projects_count > 0 ? (
+                <Paper className={classes.profileLowerStyle}>
+                  <Typography
+                    gutterBottom
+                    component="h2"
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.titleStyle}
                   >
-                    View all >>
-                  </Link>
-                </Typography>
-                <Grid container>
-                  {projects.map((project) => (
-                    <Grid
-                      item
-                      xs={12}
-                      sm={6}
-                      md={6}
-                      className={classes.projectGridStyle}
-                      align="center"
+                    Latest projects of {profile.username}
+                    <Link
+                      className={clsx(
+                        classes.secondaryLink,
+                        classes.floatRight,
+                        classes.textDecorationNone
+                      )}
+                      to={`/creators/${profile.username}/projects`}
                     >
-                      <Project
-                        project={project}
-                        key={project.id}
-                        updateProjects={this.updateProjects}
-                        {...this.props}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </Paper>
+                      View all >>
+                    </Link>
+                  </Typography>
+                  <Grid container>
+                    {projects.map((project) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={6}
+                        className={classes.projectGridStyle}
+                        align="center"
+                      >
+                        <Project
+                          project={project}
+                          key={project.id}
+                          updateProjects={this.updateProjects}
+                          {...this.props}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Paper>
+              ) : null}
             </Container>
           </Box>
           <Dialog

@@ -18,7 +18,7 @@ class Project(models.Model):
     title = models.CharField(max_length=1000)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
-    materials_used = models.CharField(max_length=10000)
+    materials_used = models.CharField(max_length=5000)
     views = models.ManyToManyField(
         Creator, blank=True, related_name="projects_viewed")
     views_count = models.IntegerField(blank=True, default=0)
@@ -33,12 +33,33 @@ class Project(models.Model):
     published = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
-        if(self.video.find("youtube.com") != -1):
-            self.video = "embed/".join(self.video.split("watch?v="))
+        if isinstance(self.video, str):
+            if self.video.find("m.youtube.com") != -1:
+                self.video = "youtube.com/embed/".join(
+                    self.video.split("m.youtube.com/watch?v="))
+
+            elif self.video.find("youtube.com") != -1:
+                self.video = "embed/".join(self.video.split("watch?v="))
+
+            elif self.video.find("youtu.be") != -1:
+                self.video = "youtube.com/embed".join(
+                    self.video.split("youtu.be"))
+
+            elif self.video.find("m.youtube.com") != -1:
+                self.video = "youtube.com/embed/".join(
+                    self.video.split("m.youtube.com/watch?v="))
+
+            elif self.video.find("https://vimeo.com") != -1:
+                self.video = "player.vimeo.com/video".join(
+                    self.video.split("vimeo.com"))
+
+            elif self.video.find("drive.google.com") != -1 and self.video.find("view") != -1:
+                self.video = self.video.split("view")[0] + "preview"
 
         if self.id:
             self.likes_count = self.likes.count()
             self.comments_count = self.comments.count()
+
         if self.slug:
             pass
         else:

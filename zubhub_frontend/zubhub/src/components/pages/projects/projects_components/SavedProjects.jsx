@@ -50,7 +50,7 @@ const styles = (theme) => ({
   },
   pageHeaderStyle: {
     marginTop: "1em",
-    fontWeight: "bold",
+    fontWeight: 900,
     textAlign: "center",
   },
   projectGridStyle: {
