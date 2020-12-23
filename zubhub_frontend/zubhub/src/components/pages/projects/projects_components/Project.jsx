@@ -239,13 +239,13 @@ class Project extends Component {
                 title={project.title}
                 src={project.video}
               ></iframe>
-            ) : (
+            ) : project.images.length > 0 ? (
               <img
                 className={classes.mediaImageStyle}
                 src={project.images[0].image_url}
                 alt={project.title}
               />
-            )}
+            ) : null}
           </CardMedia>
           <CardActionArea className={classes.actionAreaStyle}>
             <CardContent

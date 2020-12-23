@@ -374,37 +374,15 @@ class Profile extends Component {
             <Paper className={classes.profileHeaderStyle}>
               <Container maxWidth="md">
                 {this.props.auth.username === profile.username ? (
-                  <>
-                    <Link
-                      className={classes.textDecorationNone}
-                      to="/projects/create"
-                    >
-                      <Button
-                        className={clsx(
-                          classes.secondaryButton,
-                          classes.floatRight
-                        )}
-                        variant="outlined"
-                        size="medium"
-                        margin="normal"
-                      >
-                        Create Project
-                      </Button>
-                    </Link>
-
-                    <Button
-                      className={clsx(
-                        classes.primaryButton,
-                        classes.floatRight
-                      )}
-                      variant="contained"
-                      size="medium"
-                      margin="normal"
-                      onClick={this.handleToggleEditProfileModal}
-                    >
-                      Edit
-                    </Button>
-                  </>
+                  <Button
+                    className={clsx(classes.primaryButton, classes.floatRight)}
+                    variant="contained"
+                    size="medium"
+                    margin="normal"
+                    onClick={this.handleToggleEditProfileModal}
+                  >
+                    Edit
+                  </Button>
                 ) : (
                   <Button
                     className={clsx(
