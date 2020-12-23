@@ -722,13 +722,13 @@ class ProjectDetails extends Component {
                           className={classes.iframeStyle}
                           src={project.video}
                         ></iframe>
-                      ) : (
+                      ) : project.images.length > 0 ? (
                         <img
                           className={classes.iframeStyle}
                           src={project.images[0].image_url}
                           alt={project.title}
                         />
-                      )}
+                      ) : null}
                     </Grid>
                     <Box className={classes.actionBoxStyle}>
                       <Button
