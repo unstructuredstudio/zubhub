@@ -308,21 +308,13 @@ const sliderSettings = (images_num) => ({
   dots: false,
   autoplay: true,
   speed: 500,
-  slidesToShow: 4,
-  slidesToScroll: 4,
+  slidesToShow: 4 > images_num ? images_num : 4,
+  slidesToScroll: 4 > images_num ? images_num : 4,
   focusOnSelect: true,
   swipeToSlide: true,
   nextArrow: <NextArrow />,
   prevArrow: <PrevArrow />,
   responsive: [
-    {
-      breakpoint: 1900,
-      settings: {
-        slidesToShow: 4 > images_num ? images_num : 4,
-        slidesToScroll: 4 > images_num ? images_num : 4,
-        infinite: true,
-      },
-    },
     {
       breakpoint: 980,
       settings: {
@@ -722,13 +714,13 @@ class ProjectDetails extends Component {
                           className={classes.iframeStyle}
                           src={project.video}
                         ></iframe>
-                      ) : (
+                      ) : project.images.length > 0 ? (
                         <img
                           className={classes.iframeStyle}
                           src={project.images[0].image_url}
                           alt={project.title}
                         />
-                      )}
+                      ) : null}
                     </Grid>
                     <Box className={classes.actionBoxStyle}>
                       <Button

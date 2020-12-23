@@ -18,7 +18,7 @@ class Project(models.Model):
     title = models.CharField(max_length=1000)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
-    materials_used = models.CharField(max_length=10000)
+    materials_used = models.CharField(max_length=5000)
     views = models.ManyToManyField(
         Creator, blank=True, related_name="projects_viewed")
     views_count = models.IntegerField(blank=True, default=0)
@@ -59,6 +59,7 @@ class Project(models.Model):
         if self.id:
             self.likes_count = self.likes.count()
             self.comments_count = self.comments.count()
+
         if self.slug:
             pass
         else:
