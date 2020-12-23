@@ -216,7 +216,8 @@ class PasswordReset extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["email"]}
+                          {this.props.touched["email"] &&
+                            this.props.errors["email"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
