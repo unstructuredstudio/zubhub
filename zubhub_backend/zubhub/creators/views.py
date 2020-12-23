@@ -12,6 +12,7 @@ from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
 
+
 Creator = get_user_model()
 
 
