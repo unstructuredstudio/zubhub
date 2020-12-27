@@ -244,6 +244,7 @@ class CreateProject extends Component {
         ...this.props.values,
         token: this.props.auth.token,
         images: this.state.image_upload.uploaded_images_url,
+        video: this.props.values.video ? this.props.values.video : "",
       })
       .then((res) => {
         if (!res.title) {
