@@ -13,19 +13,14 @@ services:
       - "8080:80"
 
   reverse-proxy:
-    image: valian/docker-nginx-auto-ssl:1.0.0
+    image: nginx:stable-alpine
     container_name: reverse-proxy
     restart: on-failure
     ports:
       - 80:80
       - 443:443
     volumes:
-      - ./.ssl-data:/etc/resty-auto-ssl
-    environment:
-      ALLOWED_DOMAINS: "(zubhub|www.zubhub).unstructured.studio"
-      SITES: "zubhub.unstructured.studio=zubhub_frontend:80;www.zubhub.unstructured.studio=zubhub_frontend:80"
-      FORCE_HTTPS: "true"
+      - ./.zero-ssl:/etc/ssl
+      - ./reverse-proxy:/etc/nginx
     depends_on:
       - zubhub_frontend
-volumes:
-  .ssl-data:
