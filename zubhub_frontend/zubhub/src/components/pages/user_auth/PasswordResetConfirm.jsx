@@ -284,7 +284,8 @@ class PasswordResetConfirm extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["new_password"]}
+                          {this.props.touched["new_password"] &&
+                            this.props.errors["new_password"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -335,7 +336,8 @@ class PasswordResetConfirm extends Component {
                           labelWidth={150}
                         />
                         <FormHelperText error>
-                          {this.props.errors["new_password2"]}
+                          {this.props.touched["new_password2"] &&
+                            this.props.errors["new_password2"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>

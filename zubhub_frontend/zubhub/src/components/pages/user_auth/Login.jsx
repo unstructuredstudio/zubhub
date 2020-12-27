@@ -276,7 +276,8 @@ class Login extends Component {
                           labelWidth={150}
                         />
                         <FormHelperText error>
-                          {this.props.errors["username"]}
+                          {this.props.touched["username"] &&
+                            this.props.errors["username"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -320,7 +321,8 @@ class Login extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.errors["password"]}
+                          {this.props.touched["password"] &&
+                            this.props.errors["password"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>

@@ -2,4 +2,3 @@ media/
 migrations/
 __pycache__/
 .gitignore
-.ssl-data
