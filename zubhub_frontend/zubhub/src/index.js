@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+
+import {PersistGate} from 'redux-persist/integration/react';
+import {Provider} from 'react-redux';
+
 import { ThemeProvider } from '@material-ui/styles';
 import {theme} from './assets/js/muiTheme';
+
+import API, {APIContext} from './api';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import {Provider} from 'react-redux';
+import './assets/css/index.css';
 import configureStore from './store/configureStore';
-import {PersistGate} from 'redux-persist/integration/react';
-import API, {APIContext} from './components/api';
+import reportWebVitals from './reportWebVitals';
 
 let {store, persistor} = configureStore();
 

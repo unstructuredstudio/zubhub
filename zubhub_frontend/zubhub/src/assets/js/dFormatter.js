@@ -1,4 +1,4 @@
-export default function dFormatter(str) {
+const dFormatter=(str)=>{
     let date = new Date(str);
 
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -32,3 +32,5 @@ export default function dFormatter(str) {
     let result = Math.round(interval);
     return result +  (result > 1 ? " seconds" : " second") + " ago";
   }
+
+export default dFormatter;
