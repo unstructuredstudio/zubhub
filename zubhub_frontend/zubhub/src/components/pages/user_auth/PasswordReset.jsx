@@ -123,7 +123,7 @@ class PasswordReset extends Component {
     this.props.api
       .send_password_reset_link(this.props.values.email)
       .then((res) => {
-        toast.success("We just sent a password reset link to your email!");
+        toast.success("passwordReset.others.toast_success");
         setTimeout(() => {
           this.props.history.push("/");
         }, 4000);
@@ -131,8 +131,7 @@ class PasswordReset extends Component {
       .catch((error) => {
         if (error.message.startsWith("Unexpected")) {
           this.setState({
-            error:
-              "An error occured while performing this action. Please try again later",
+            error: this.props.t("passwordReset.others.errors.unexpected"),
           });
         } else {
           this.setState({ error: error.message });
@@ -142,7 +141,7 @@ class PasswordReset extends Component {
 
   render() {
     let { error } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
 
     return (
       <Box className={classes.root}>
@@ -163,14 +162,14 @@ class PasswordReset extends Component {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    Password Reset
+                    {t("passwordReset.welcome.primary")}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    Input your email so we can send you a password reset link
+                    {t("passwordReset.welcome.secondary")}
                   </Typography>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
@@ -204,7 +203,7 @@ class PasswordReset extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="email"
                         >
-                          Email
+                          {t("passwordReset.inputs.email.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -217,7 +216,10 @@ class PasswordReset extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["email"] &&
-                            this.props.errors["email"]}
+                            this.props.errors["email"] &&
+                            t(
+                              `passwordReset.inputs.email.errors.${this.props.errors["email"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -228,7 +230,7 @@ class PasswordReset extends Component {
                         className={classes.primaryButton}
                         onClick={this.sendPasswordResetLink}
                       >
-                        Send Reset Link
+                        {t("passwordReset.submit")}
                       </Button>
                     </Grid>
                   </Grid>
@@ -251,7 +253,7 @@ export default withFormik({
     email: "",
   }),
   validationSchema: Yup.object().shape({
-    email: Yup.string().email("invalid email").required("email required"),
+    email: Yup.string().email("invalid").required("required"),
   }),
   handleSubmit: (values, { setSubmitting }) => {},
 })(withStyles(styles)(PasswordReset));

@@ -10,6 +10,8 @@ import * as AuthActions from "../store/actions/authActions";
 import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
 import logo from "../assets/images/logos/logo.png";
 
+import languageMap from "../assets/js/languageMap.json";
+
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -26,6 +28,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select";
 
 const styles = (theme) => ({
   navBarStyle: {
@@ -71,6 +74,10 @@ const styles = (theme) => ({
   logOutStyle: {
     borderTop: "1px solid #C4C4C4",
   },
+  languageSelectStyle: {
+    maxWidth: "5em",
+    display: "block",
+  },
   scrollTopButtonStyle: {
     zIndex: 100,
     position: "fixed",
@@ -112,7 +119,6 @@ const styles = (theme) => ({
 class PageWrapper extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       username: null,
       anchorEl: null,
@@ -138,6 +144,10 @@ class PageWrapper extends Component {
         .catch((error) => toast.warning(error.message));
     }
   }
+
+  handleChangeLanguage = (e) => {
+    this.props.i18n.changeLanguage(e.target.value);
+  };
 
   logout = (e) => {
     e.preventDefault();
@@ -194,7 +204,7 @@ class PageWrapper extends Component {
 
   render() {
     let { anchorEl } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     let profileMenuOpen = Boolean(anchorEl);
     return (
       <>
@@ -217,7 +227,7 @@ class PageWrapper extends Component {
                         size="large"
                         className={classes.secondaryButtonStyle}
                       >
-                        Login
+                        {t("pageWrapper.navbar.login")}
                       </Button>
                     </Link>
                     <Link className={classes.textDecorationNone} to="/signup">
@@ -226,7 +236,7 @@ class PageWrapper extends Component {
                         size="large"
                         className={classes.primaryButtonStyle}
                       >
-                        Sign Up
+                        {t("pageWrapper.navbar.signup")}
                       </Button>
                     </Link>
                   </>
@@ -241,7 +251,7 @@ class PageWrapper extends Component {
                         className={classes.primaryButtonStyle}
                         size="small"
                       >
-                        Create Project
+                        {t("pageWrapper.navbar.create_project")}
                       </Button>
                     </Link>
                     <Avatar
@@ -293,7 +303,7 @@ class PageWrapper extends Component {
                             color="textPrimary"
                             component="span"
                           >
-                            Saved Projects
+                            {t("pageWrapper.navbar.saved_projects")}
                           </Typography>
                         </Link>
                       </MenuItem>
@@ -307,7 +317,7 @@ class PageWrapper extends Component {
                             color="textPrimary"
                             component="span"
                           >
-                            Logout
+                            {t("pageWrapper.navbar.logout")}
                           </Typography>
                         </Typography>
                       </MenuItem>
@@ -333,6 +343,18 @@ class PageWrapper extends Component {
               alt="unstructured-studio-logo"
             />
           </a>
+          <Select
+            id="languages"
+            className={classes.languageSelectStyle}
+            value={this.props.i18n.language}
+            onChange={this.handleChangeLanguage}
+          >
+            {Object.keys(languageMap).map((ln, index) => (
+              <MenuItem key={index} value={ln}>
+                {languageMap[ln]}
+              </MenuItem>
+            ))}
+          </Select>
           {this.scrollTop(this.props)}
         </footer>
       </>
@@ -361,4 +383,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withAPI(withStyles(styles)(PageWrapper)));
+)(withStyles(styles)(PageWrapper));

@@ -187,8 +187,7 @@ class Signup extends Component {
       .catch((error) => {
         if (error.message.startsWith("Unexpected")) {
           this.setState({
-            error:
-              "An error occured while performing this action. Please try again later",
+            error: this.props.t("signup.others.errors.unexpected"),
           });
         } else {
           this.setState({ error: error.message });
@@ -223,8 +222,7 @@ class Signup extends Component {
         .catch((error) => {
           if (error.message.startsWith("Unexpected")) {
             this.setState({
-              error:
-                "An error occured while performing this action. Please try again later",
+              error: this.props.t("signup.others.errors.unexpected"),
             });
           } else {
             this.setState({ error: error.message });
@@ -263,7 +261,7 @@ class Signup extends Component {
       showPassword2,
       toolTipOpen,
     } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     return (
       <Box className={classes.root}>
         <Container maxWidth="sm">
@@ -283,14 +281,14 @@ class Signup extends Component {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    Welcome to Zubhub
+                    {t("signup.welcome.primary")}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    Create an account to submit a project
+                    {t("signup.welcome.secondary")}
                   </Typography>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
@@ -321,13 +319,13 @@ class Signup extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="username"
                         >
-                          Username
+                          {t("signup.inputs.username.label")}
                         </InputLabel>
                         <ClickAwayListener
                           onClickAway={this.handleTooltipClose}
                         >
                           <Tooltip
-                            title="Do not use your real name here!"
+                            title={t("signup.tooltips.no_real_name")}
                             placement="top-start"
                             arrow
                             onClose={this.handleTooltipClose}
@@ -353,7 +351,10 @@ class Signup extends Component {
                         </ClickAwayListener>
                         <FormHelperText error>
                           {this.props.touched["username"] &&
-                            this.props.errors["username"]}
+                            this.props.errors["username"] &&
+                            t(
+                              `signup.inputs.username.errors.${this.props.errors["username"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -377,7 +378,7 @@ class Signup extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="email"
                         >
-                          Email
+                          {t("signup.inputs.email.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -390,7 +391,10 @@ class Signup extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["email"] &&
-                            this.props.errors["email"]}
+                            this.props.errors["email"] &&
+                            t(
+                              `signup.inputs.email.errors.${this.props.errors["email"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -412,7 +416,7 @@ class Signup extends Component {
                           htmlFor="dateOfBirth"
                           shrink
                         >
-                          Date Of Birth
+                          {t("signup.inputs.date_of_birth.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -426,7 +430,10 @@ class Signup extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["dateOfBirth"] &&
-                            this.props.errors["dateOfBirth"]}
+                            this.props.errors["dateOfBirth"] &&
+                            t(
+                              `signup.inputs.date_of_birth.errors.${this.props.errors["dateOfBirth"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -447,7 +454,7 @@ class Signup extends Component {
                           className={classes.customLabelStyle}
                           id="user_location"
                         >
-                          Location
+                          {t("signup.inputs.location.label")}
                         </InputLabel>
                         <Select
                           labelId="user_location"
@@ -470,7 +477,10 @@ class Signup extends Component {
                         </Select>
                         <FormHelperText error>
                           {this.props.touched["user_location"] &&
-                            this.props.errors["user_location"]}
+                            this.props.errors["user_location"] &&
+                            t(
+                              `signup.inputs.location.errors.${this.props.errors["user_location"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -491,7 +501,7 @@ class Signup extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="password1"
                         >
-                          Password
+                          {t("signup.inputs.password1.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -522,7 +532,10 @@ class Signup extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["password1"] &&
-                            this.props.errors["password1"]}
+                            this.props.errors["password1"] &&
+                            t(
+                              `signup.inputs.password1.errors.${this.props.errors["password1"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -543,7 +556,7 @@ class Signup extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="password2"
                         >
-                          Confirm Password
+                          {t("signup.inputs.password2.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -574,7 +587,10 @@ class Signup extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["password2"] &&
-                            this.props.errors["password2"]}
+                            this.props.errors["password2"] &&
+                            t(
+                              `signup.inputs.password2.errors.${this.props.errors["password2"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -585,7 +601,7 @@ class Signup extends Component {
                         className={classes.primaryButton}
                         onClick={this.signup}
                       >
-                        Signup
+                        {t("signup.submit")}
                       </Button>
                     </Grid>
                   </Grid>
@@ -599,7 +615,7 @@ class Signup extends Component {
                         color="textSecondary"
                         component="p"
                       >
-                        Already a Member ?
+                        {t("signup.others.already_a_member")}
                       </Typography>
                       <Divider className={classes.divider} />
                     </Box>
@@ -611,7 +627,7 @@ class Signup extends Component {
                         size="large"
                         className={classes.secondaryButton}
                       >
-                        Login
+                        {t("signup.others.login")}
                       </Button>
                     </Link>
                   </Grid>
@@ -649,25 +665,21 @@ export default connect(
 )(
   withFormik({
     mapPropsToValue: () => ({
+      username: "",
       email: "",
       user_location: "",
       password1: "",
       password2: "",
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email("invalid email").required("invalid email"),
-      dateOfBirth: Yup.date()
-        .max(new Date(), "your date of birth can't be greater than today")
-        .required("please input your date of birth"),
-      user_location: Yup.string()
-        .min(1, "your location is too short")
-        .required("please input your location"),
-      password1: Yup.string()
-        .min(8, "your password is too short")
-        .required("input your password"),
+      username: Yup.string().required("required"),
+      email: Yup.string().email("invalid_email").required("required"),
+      dateOfBirth: Yup.date().max(new Date(), "max").required("required"),
+      user_location: Yup.string().min(1, "min").required("required"),
+      password1: Yup.string().min(8, "min").required("required"),
       password2: Yup.string()
-        .oneOf([Yup.ref("password1"), null], "Passwords must match")
-        .required("input a confirmation password"),
+        .oneOf([Yup.ref("password1"), null], "no_match")
+        .required("required"),
     }),
     handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(Signup))

@@ -120,7 +120,7 @@ class SavedProjects extends Component {
           this.setState({ loading: false });
           if (error.message.startsWith("Unexpected")) {
             toast.warning(
-              "An error occured while performing this action. Please try again later"
+              this.props.t("savedProjects.others.errors.unexpected")
             );
           } else {
             toast.warning(error.message);
@@ -153,7 +153,7 @@ class SavedProjects extends Component {
 
   render() {
     let { projects, prevPage, nextPage, loading } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     if (loading) {
       return <LoadingPage />;
     } else if (projects.length > 0) {
@@ -167,7 +167,7 @@ class SavedProjects extends Component {
                   variant="h3"
                   gutterBottom
                 >
-                  Your saved projects
+                  {t("savedProjects.title")}
                 </Typography>
               </Grid>
               {projects.map((project) => (
@@ -190,7 +190,7 @@ class SavedProjects extends Component {
               ))}
             </Grid>
             <ButtonGroup
-              aria-label="previous and next page buttons"
+              aria-label={t("savedProjects.aria_labels.prev_nxt_buttons")}
               className={classes.buttonGroupStyle}
             >
               {prevPage ? (
@@ -205,7 +205,7 @@ class SavedProjects extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Prev
+                  {t("savedProjects.prev")}
                 </Button>
               ) : null}
               {nextPage ? (
@@ -220,7 +220,7 @@ class SavedProjects extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Next
+                  {t("savedProjects.next")}
                 </Button>
               ) : null}
             </ButtonGroup>
@@ -228,7 +228,9 @@ class SavedProjects extends Component {
         </Box>
       );
     } else {
-      return <ErrorPage error="user have no saved projects" />;
+      return (
+        <ErrorPage error={t("savedProjects.others.errors.no_saved_projects")} />
+      );
     }
   }
 }

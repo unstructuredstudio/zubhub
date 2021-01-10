@@ -233,7 +233,7 @@ class Profile extends Component {
       .then((res) => {
         if (!res.username) {
           throw new Error(
-            "an error occured while fetching user profile, please try again later"
+            this.props.t("profile.others.errors.profile_fetch_error")
           );
         }
         this.setState({ profile: res });
@@ -277,9 +277,7 @@ class Profile extends Component {
         .catch((error) => {
           this.setState({ loading: false });
           if (error.message.startsWith("Unexpected")) {
-            toast.warning(
-              "An error occured while performing this action. Please try again later"
-            );
+            toast.warning(this.props.t("profile.others.errors.unexpected"));
           } else {
             toast.warning(error.message);
           }
@@ -304,9 +302,7 @@ class Profile extends Component {
     tempInput.focus();
     tempInput.select();
     if (document.execCommand("copy")) {
-      toast.success(
-        "your profile url has been successfully copied to your clipboard!"
-      );
+      toast.success(this.props.t("profile.others.toast_success"));
       rootElem.removeChild(tempInput);
     }
   };
@@ -330,7 +326,7 @@ class Profile extends Component {
           username.value = "";
         } else {
           throw new Error(
-            "An error occured while updating your profile, please try again later"
+            this.props.t("profile.others.errors.profile_update_error")
           );
         }
       })
@@ -363,7 +359,7 @@ class Profile extends Component {
 
   render() {
     let { profile, projects, loading, openEditProfileModal } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
 
     if (loading) {
       return <LoadingPage />;
@@ -381,7 +377,7 @@ class Profile extends Component {
                     margin="normal"
                     onClick={this.handleToggleEditProfileModal}
                   >
-                    Edit
+                    {t("profile.edit.label")}
                   </Button>
                 ) : (
                   <Button
@@ -395,8 +391,8 @@ class Profile extends Component {
                     onClick={(e, id = profile.id) => this.toggle_follow(id)}
                   >
                     {profile.followers.includes(this.props.auth.id)
-                      ? "Unfollow"
-                      : "Follow"}
+                      ? t("profile.unfollow")
+                      : t("profile.follow")}
                   </Button>
                 )}
                 <Box className={classes.avatarBoxStyle}>
@@ -409,7 +405,7 @@ class Profile extends Component {
                     badgeContent={
                       this.props.auth.id === profile.id ? (
                         <Tooltip
-                          title="Share your profile with friends!"
+                          title={t("profile.tooltips.share_profile")}
                           placement="right-start"
                           arrow
                         >
@@ -418,7 +414,7 @@ class Profile extends Component {
                               classes.secondaryButton,
                               classes.profileShareButtonStyle
                             )}
-                            aria-label="share profile url"
+                            aria-label={t("profile.aria_labels.share_profile")}
                             onClick={this.copyProfileUrl}
                           >
                             <ShareIcon />
@@ -457,7 +453,7 @@ class Profile extends Component {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.projects_count} Projects
+                        {profile.projects_count} {t("profile.projects_count")}
                       </Typography>
                     </Link>
                     <Link
@@ -468,7 +464,8 @@ class Profile extends Component {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.followers.length} Followers
+                        {profile.followers.length}{" "}
+                        {t("profile.followers_count")}
                       </Typography>
                     </Link>
                   </Box>
@@ -485,12 +482,10 @@ class Profile extends Component {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  About Me
+                  {t("profile.about.label")}
                 </Typography>
                 <Box className={classes.aboutMeBoxStyle}>
-                  {profile.bio
-                    ? profile.bio
-                    : "You will be able to change this next month 😀!"}
+                  {profile.bio ? profile.bio : t("profile.about.placeholder")}
                 </Box>
               </Paper>
 
@@ -503,7 +498,7 @@ class Profile extends Component {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    Latest projects of {profile.username}
+                    {t("profile.projects.label")} {profile.username}
                     <Link
                       className={clsx(
                         classes.secondaryLink,
@@ -512,7 +507,7 @@ class Profile extends Component {
                       )}
                       to={`/creators/${profile.username}/projects`}
                     >
-                      View all >>
+                      {t("profile.projects.view_all")}
                     </Link>
                   </Typography>
                   <Grid container>
@@ -541,9 +536,11 @@ class Profile extends Component {
           <Dialog
             open={openEditProfileModal}
             onClose={this.handleToggleEditProfileModal}
-            aria-labelledby="edit user profile"
+            aria-labelledby={t("profile.aria_labels.edit_profile")}
           >
-            <DialogTitle id="edit-user-profile">Edit User Profile</DialogTitle>
+            <DialogTitle id="edit-user-profile">
+              {t("profile.edit.dialog.primary")}
+            </DialogTitle>
             <DialogContent>
               <FormControl
                 className={clsx(classes.margin, classes.textField)}
@@ -556,7 +553,7 @@ class Profile extends Component {
                   className={classes.customLabelStyle}
                   htmlFor="username"
                 >
-                  New Username
+                  {t("profile.edit.dialog.username")}
                 </InputLabel>
                 <OutlinedInput
                   className={classes.customInputStyle}
@@ -574,14 +571,14 @@ class Profile extends Component {
                 onClick={this.handleToggleEditProfileModal}
                 color="primary"
               >
-                Cancel
+                {t("profile.edit.dialog.cancel")}
               </Button>
               <Button
                 variant="contained"
                 onClick={this.updateProfile}
                 className={classes.primaryButton}
               >
-                Save
+                {t("profile.edit.dialog.save")}
               </Button>
             </DialogActions>
           </Dialog>
@@ -589,7 +586,7 @@ class Profile extends Component {
       );
     } else {
       return (
-        <ErrorPage error="An error occured while fetching profile, please try again later" />
+        <ErrorPage error={t("profile.others.errors.profile_fetch_error")} />
       );
     }
   }

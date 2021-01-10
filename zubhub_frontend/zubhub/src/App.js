@@ -1,9 +1,12 @@
 import React,{Component} from 'react';
 
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
-import PageWrapper from './components/PageWrapper';
+
+import { withTranslation } from 'react-i18next';
 
 import {withAPI} from './components/api';
+
+import PageWrapper from './components/PageWrapper';
 
 import Signup from './components/pages/user_auth/Signup';
 import Login from './components/pages/user_auth/Login';
@@ -29,90 +32,90 @@ return(
         exact={true}
         path="/"
         render={props=>(
-          <PageWrapper {...props}>
+          <PageWrapper {...props} {...this.props}>
             <Projects {...props} {...this.props}/>
           </PageWrapper>
         )}/>
 
       <Route path="/signup"
         render={props=>(
-          <PageWrapper {...props}>
+          <PageWrapper {...props} {...this.props}>
             <Signup {...props} {...this.props}/>
           </PageWrapper>
         )}/>
 
       <Route path="/login"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <Login {...props} {...this.props}/>
         </PageWrapper>
       )}/>
 
     <Route path="/password-reset"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <PasswordReset {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/password-reset-confirm"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <PasswordResetConfirm {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/email-confirm"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <EmailConfirm {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/creators/:username/projects"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <UserProjects {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/creators/:username/followers"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props} {...this.props}>
           <UserFollowers {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/creators/:username"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <Profile {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/profile"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <Profile {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/projects/create"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <CreateProject {...props} {...this.props}/>
         </PageWrapper>
         )}/>
 
     <Route path="/projects/saved"
         render={props=>(
-        <PageWrapper>
+        <PageWrapper {...props} {...this.props}>
           <SavedProjects {...props} {...this.props}/>
         </PageWrapper>
         )}/>
     <Route path="/projects/:id"
         render={props=>(
-        <PageWrapper {...props}>
+        <PageWrapper {...props} {...this.props}>
           <ProjectDetails {...props} {...this.props}/>
         </PageWrapper>
         )}/>
@@ -123,4 +126,4 @@ return(
 }
 }
 
-export default withAPI(App)
+export default withTranslation()(withAPI(App));

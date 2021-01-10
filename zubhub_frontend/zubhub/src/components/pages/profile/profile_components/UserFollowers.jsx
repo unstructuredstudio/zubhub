@@ -207,7 +207,7 @@ class UserFollowers extends Component {
           this.setState({ loading: false });
           if (error.message.startsWith("Unexpected")) {
             toast.warning(
-              "An error occured while performing this action. Please try again later"
+              this.props.t("userFollowers.others.errors.unexpected")
             );
           } else {
             toast.warning(error.message);
@@ -245,8 +245,8 @@ class UserFollowers extends Component {
                 onClick={(e, id = follower.id) => this.toggle_follow(e, id)}
               >
                 {follower.followers.includes(this.props.auth.id)
-                  ? "Unfollow"
-                  : "Follow"}
+                  ? this.props.t("userFollowers.follower.unfollow")
+                  : this.props.t("userFollowers.follower.follow")}
               </Button>
             ) : null}
             <Typography
@@ -263,7 +263,7 @@ class UserFollowers extends Component {
 
   render() {
     let { followers, prevPage, nextPage, loading } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     let username = this.props.match.params.username;
     if (loading) {
       return <LoadingPage />;
@@ -278,13 +278,13 @@ class UserFollowers extends Component {
                   variant="h3"
                   gutterBottom
                 >
-                  {username}'s followers
+                  {username}'s {t("userFollowers.title")}
                 </Typography>
               </Grid>
               {this.followers(followers)}
             </Grid>
             <ButtonGroup
-              aria-label="previous and next page buttons"
+              aria-label={t("userFollowers.aria_labels.prev_nxt_buttons")}
               className={classes.buttonGroupStyle}
             >
               {prevPage ? (
@@ -299,7 +299,7 @@ class UserFollowers extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Prev
+                  {t("userFollowers.prev")}
                 </Button>
               ) : null}
               {nextPage ? (
@@ -314,7 +314,7 @@ class UserFollowers extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Next
+                  {t("userFollowers.next")}
                 </Button>
               ) : null}
             </ButtonGroup>
@@ -322,7 +322,7 @@ class UserFollowers extends Component {
         </Box>
       );
     } else {
-      return <ErrorPage error="user have not followers yet" />;
+      return <ErrorPage error={t("userFollower.others.errors.no_followers")} />;
     }
   }
 }

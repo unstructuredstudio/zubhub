@@ -225,7 +225,7 @@ class Project extends Component {
   };
 
   render() {
-    let { project, classes } = this.props;
+    let { project, classes, t } = this.props;
     return (
       <Link
         to={`/projects/${project.id}`}
@@ -341,7 +341,9 @@ class Project extends Component {
                   variant="caption"
                   component="span"
                 >
-                  {dFormatter(project.created_on)}
+                  {`${dFormatter(project.created_on).value} ${t(
+                    `project.${dFormatter(project.created_on).key}`
+                  )} ${t("project.ago")}`}
                 </Typography>
               </Box>
             </CardContent>

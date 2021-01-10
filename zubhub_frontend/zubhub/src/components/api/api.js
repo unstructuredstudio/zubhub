@@ -1,3 +1,5 @@
+import i18next from 'i18next';
+
 class API {
   constructor(){
     this.domain = process.env.REACT_APP_NODE_ENV === 'production' ? 
@@ -14,7 +16,8 @@ class API {
                 xsrfHeaderName: 'X-CSRFToken',
                 withCredentials:'true',
                 headers: new Headers({
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Accept-Language': `${i18next.language},en;q=0.5`
                 })
               })
             }
@@ -27,7 +30,8 @@ class API {
                     withCredentials:'true',
                     headers: new Headers({
                       'Authorization':`Token ${token}`,
-                      'Content-Type': 'application/json'
+                      'Content-Type': 'application/json',
+                      'Accept-Language': `${i18next.language},en;q=0.5`
                     }),
                     body
                 })
@@ -40,7 +44,8 @@ class API {
                 withCredentials:'true',
                 headers: new Headers({
                   'Authorization':`Token ${token}`,
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Accept-Language': `${i18next.language},en;q=0.5`
                 })
             })
             }
@@ -51,7 +56,8 @@ class API {
                 xsrfHeaderName: 'X-CSRFToken',
                 withCredentials:'true',
                 headers: new Headers({
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Accept-Language': `${i18next.language},en;q=0.5`
                 }),
                 body,
             })

@@ -185,8 +185,7 @@ class Login extends Component {
       .catch((error) => {
         if (error.message.startsWith("Unexpected")) {
           this.setState({
-            error:
-              "An error occured while performing this action. Please try again later",
+            error: this.props.t("login.others.errors.unexpected"),
           });
         } else {
           this.setState({ error: error.message });
@@ -205,7 +204,7 @@ class Login extends Component {
 
   render() {
     let { error, showPassword } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
 
     return (
       <Box className={classes.root}>
@@ -226,14 +225,14 @@ class Login extends Component {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    Welcome to Zubhub
+                    {t("login.welcome.primary")}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    Login to get started!
+                    {t("login.welcome.secondary")}
                   </Typography>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
@@ -264,7 +263,7 @@ class Login extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="username"
                         >
-                          Username Or Email
+                          {t("login.inputs.username.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -277,7 +276,10 @@ class Login extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["username"] &&
-                            this.props.errors["username"]}
+                            this.props.errors["username"] &&
+                            t(
+                              `login.inputs.username.errors.${this.props.errors["username"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -294,7 +296,9 @@ class Login extends Component {
                           this.props.errors["password"]
                         }
                       >
-                        <InputLabel htmlFor="password">Password</InputLabel>
+                        <InputLabel htmlFor="password">
+                          {t("login.inputs.password.label")}
+                        </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
                           id="password"
@@ -322,7 +326,10 @@ class Login extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["password"] &&
-                            this.props.errors["password"]}
+                            this.props.errors["password"] &&
+                            t(
+                              `login.inputs.password.errors.${this.props.errors["password"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -333,7 +340,7 @@ class Login extends Component {
                         className={classes.primaryButton}
                         onClick={this.login}
                       >
-                        Login
+                        {t("login.submit")}
                       </Button>
                     </Grid>
                   </Grid>
@@ -347,7 +354,7 @@ class Login extends Component {
                         color="textSecondary"
                         component="p"
                       >
-                        Not a Member ?
+                        {t("login.others.not_a_member")}
                       </Typography>
                       <Divider className={classes.divider} />
                     </Box>
@@ -359,7 +366,7 @@ class Login extends Component {
                         size="large"
                         className={classes.secondaryButton}
                       >
-                        Signup
+                        {t("login.others.signup")}
                       </Button>
                     </Link>
                   </Grid>
@@ -369,7 +376,7 @@ class Login extends Component {
                         to="/password-reset"
                         className={classes.secondaryLink}
                       >
-                        Forgot Password?
+                        {t("login.others.forgot_password")}
                       </Link>
                     </Box>
                   </Grid>
@@ -407,14 +414,12 @@ export default connect(
 )(
   withFormik({
     mapPropsToValue: () => ({
-      email: "",
+      username: "",
       password: "",
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email("invalid email").required("invalid email"),
-      password: Yup.string()
-        .min(8, "your password is too short")
-        .required("input your password"),
+      username: Yup.string().required("required"),
+      password: Yup.string().min(8, "min").required("required"),
     }),
     handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(Login))

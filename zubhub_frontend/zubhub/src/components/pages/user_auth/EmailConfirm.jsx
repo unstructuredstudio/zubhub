@@ -157,7 +157,7 @@ class EmailConfirm extends Component {
     this.props.api
       .send_email_confirmation(this.state.key)
       .then((res) => {
-        toast.success("Congratulations!, your email has been confirmed!");
+        toast.success(this.props.t("emailConfirm.others.toast_success"));
         setTimeout(() => {
           this.props.history.push("/");
         }, 4000);
@@ -165,8 +165,7 @@ class EmailConfirm extends Component {
       .catch((error) => {
         if (error.message.startsWith("Unexpected")) {
           this.setState({
-            error:
-              "An error occured while performing this action. Please try again later",
+            error: this.props.t("emailConfirm.others.errors.unexpected"),
           });
         } else {
           this.setState({ error: error.message });
@@ -176,7 +175,7 @@ class EmailConfirm extends Component {
 
   render() {
     let { error, username } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
 
     return (
       <Box className={classes.root}>
@@ -197,15 +196,17 @@ class EmailConfirm extends Component {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    Email Confirmation
+                    {t("emailConfirm.welcome.primary")}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    Please Confirm that you are {username} and that the email
-                    belongs to you:
+                    {t("emailConfirm.welcome.secondary").replace(
+                      "<>",
+                      username
+                    )}
                   </Typography>
 
                   <Grid container spacing={3}>
@@ -228,7 +229,7 @@ class EmailConfirm extends Component {
                         className={classes.primaryButton}
                         onClick={this.confirmEmail}
                       >
-                        Confirm
+                        {t("emailConfirm.submit")}
                       </Button>
                     </Grid>
                   </Grid>

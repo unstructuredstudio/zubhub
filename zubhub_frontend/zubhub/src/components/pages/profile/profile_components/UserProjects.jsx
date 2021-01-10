@@ -145,7 +145,7 @@ class UserProjects extends Component {
 
   render() {
     let { projects, prevPage, nextPage, loading } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     let username = this.props.match.params.username;
     if (loading) {
       return <LoadingPage />;
@@ -160,7 +160,7 @@ class UserProjects extends Component {
                   variant="h3"
                   gutterBottom
                 >
-                  {username}'s projects
+                  {username}'s {t("userProjects.title")}
                 </Typography>
               </Grid>
               {projects.map((project) => (
@@ -183,7 +183,7 @@ class UserProjects extends Component {
               ))}
             </Grid>
             <ButtonGroup
-              aria-label="previous and next page buttons"
+              aria-label={t("userProjects.aria_labels.prev_nxt_buttons")}
               className={classes.buttonGroupStyle}
             >
               {prevPage ? (
@@ -198,7 +198,7 @@ class UserProjects extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Prev
+                  {t("userProjects.prev")}
                 </Button>
               ) : null}
               {nextPage ? (
@@ -213,7 +213,7 @@ class UserProjects extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Next
+                  {t("userProjects.next")}
                 </Button>
               ) : null}
             </ButtonGroup>
@@ -221,7 +221,9 @@ class UserProjects extends Component {
         </Box>
       );
     } else {
-      return <ErrorPage error="user have not created any projects yet" />;
+      return (
+        <ErrorPage error={t("userProjects.others.errors.no_user_projects")} />
+      );
     }
   }
 }

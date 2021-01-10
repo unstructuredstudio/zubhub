@@ -467,7 +467,7 @@ class ProjectDetails extends Component {
           this.setState({ loading: false });
           if (error.message.startsWith("Unexpected")) {
             toast.warning(
-              "An error occured while performing this action. Please try again later"
+              this.props.t("projectDetails.others.errors.unexpected")
             );
           } else {
             toast.warning(error.message);
@@ -501,7 +501,7 @@ class ProjectDetails extends Component {
           this.setState({ loading: false });
           if (error.message.startsWith("Unexpected")) {
             toast.warning(
-              "An error occured while performing this action. Please try again later"
+              this.props.t("projectDetails.others.errors.unexpected")
             );
           } else {
             toast.warning(error.message);
@@ -534,7 +534,7 @@ class ProjectDetails extends Component {
           this.setState({ loading: false });
           if (error.message.startsWith("Unexpected")) {
             toast.warning(
-              "An error occured while performing this action. Please try again later"
+              this.props.t("projectDetails.others.errors.unexpected")
             );
           } else {
             toast.warning(error.message);
@@ -589,7 +589,7 @@ class ProjectDetails extends Component {
           this.setState({ loading: false });
           if (error.message.startsWith("Unexpected")) {
             toast.warning(
-              "An error occured while performing this action. Please try again later"
+              this.props.t("projectDetails.others.errors.unexpected")
             );
           } else {
             toast.warning(error.message);
@@ -639,7 +639,7 @@ class ProjectDetails extends Component {
       enlargedImageUrl,
       openEnlargedImageDialog,
     } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     if (loading) {
       return <LoadingPage />;
     } else if (Object.keys(project).length > 0) {
@@ -679,8 +679,8 @@ class ProjectDetails extends Component {
                         }
                       >
                         {project.creator.followers.includes(this.props.auth.id)
-                          ? "Unfollow"
-                          : "Follow"}
+                          ? t("projectDetails.project.creator.unfollow")
+                          : t("projectDetails.project.creator.follow")}
                       </Button>
                     ) : null}
                   </Grid>
@@ -726,16 +726,26 @@ class ProjectDetails extends Component {
                       <Button
                         className={classes.actionBoxButtonStyle}
                         size="small"
-                        aria-label="like button"
+                        aria-label={t(
+                          "projectDetails.aria_labels.like_button.label"
+                        )}
                         variant="extended"
                         onClick={(e, id = project.id) =>
                           this.toggle_like(e, id)
                         }
                       >
                         {project.likes.includes(this.props.auth.id) ? (
-                          <ClapIcon arial-label="unlike" />
+                          <ClapIcon
+                            arial-label={t(
+                              "projectDetails.aria_labels.like_button.unlilke"
+                            )}
+                          />
                         ) : (
-                          <ClapBorderIcon arial-label="like" />
+                          <ClapBorderIcon
+                            arial-label={t(
+                              "projectDetails.aria_labels.like_button.like"
+                            )}
+                          />
                         )}
                         <Typography>
                           {nFormatter(project.likes.length)}
@@ -744,15 +754,25 @@ class ProjectDetails extends Component {
                       <Button
                         className={classes.actionBoxButtonStyle}
                         size="small"
-                        aria-label="save button"
+                        aria-label={t(
+                          "projectDetails.aria_labels.save_button.label"
+                        )}
                         onClick={(e, id = project.id) =>
                           this.toggle_save(e, id)
                         }
                       >
                         {project.saved_by.includes(this.props.auth.id) ? (
-                          <BookmarkIcon aria-label="unsave" />
+                          <BookmarkIcon
+                            aria-label={t(
+                              "projectDetails.aria_labels.save_button.unsave"
+                            )}
+                          />
                         ) : (
-                          <BookmarkBorderIcon aria-label="save" />
+                          <BookmarkBorderIcon
+                            aria-label={t(
+                              "projectDetails.aria_labels.save_button.save"
+                            )}
+                          />
                         )}
                       </Button>
                       <Typography
@@ -790,7 +810,7 @@ class ProjectDetails extends Component {
                       variant="h5"
                       className={classes.descriptionHeadingStyle}
                     >
-                      Description
+                      {t("projectDetails.project.description")}
                     </Typography>
                     <Typography
                       className={classes.descriptionBodyStyle}
@@ -804,7 +824,7 @@ class ProjectDetails extends Component {
                       variant="h5"
                       className={classes.descriptionHeadingStyle}
                     >
-                      Materials used
+                      {t("projectDetails.project.materials")}
                     </Typography>
                     <Typography
                       className={classes.descriptionBodyStyle}
@@ -820,7 +840,8 @@ class ProjectDetails extends Component {
                   variant="h5"
                   className={classes.descriptionHeadingStyle}
                 >
-                  <CommentIcon /> {nFormatter(project.comments.length)} Comments
+                  <CommentIcon /> {nFormatter(project.comments.length)}{" "}
+                  {t("projectDetails.project.comments.label")}
                 </Typography>
                 <Box className="comment-box comment-collapsed">
                   <Box className="comment-meta">
@@ -852,7 +873,9 @@ class ProjectDetails extends Component {
                       className="comment-text"
                       name="comment"
                       id="comment"
-                      placeholder="write a comment ..."
+                      placeholder={`${t(
+                        "projectDetails.project.comments.write"
+                      )} ...`}
                     ></textarea>
                     <Button
                       onClick={this.add_comment}
@@ -863,7 +886,7 @@ class ProjectDetails extends Component {
                       )}
                       variant="contained"
                     >
-                      Comment
+                      {t("projectDetails.project.comments.action")}
                     </Button>
                   </form>
                 </Box>
@@ -911,7 +934,7 @@ class ProjectDetails extends Component {
                 openEnlargedImageDialog: !openEnlargedImageDialog,
               })
             }
-            aria-labelledby="enlarged image dialog"
+            aria-labelledby={t("projectDetails.aria_labels.image_dialog")}
           >
             <img
               className={classes.enlargedImageStyle}
@@ -922,9 +945,7 @@ class ProjectDetails extends Component {
         </>
       );
     } else {
-      return (
-        <ErrorPage error="An error occured while fetching project details, please try again later" />
-      );
+      return <ErrorPage error={t("pageDetails.others.errors.unexpected")} />;
     }
   }
 }

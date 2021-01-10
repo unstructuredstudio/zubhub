@@ -136,7 +136,7 @@ class Projects extends Component {
 
   render() {
     let { projects, prevPage, nextPage, loading } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     if (loading) {
       return <LoadingPage />;
     } else if (projects.length > 0) {
@@ -179,7 +179,7 @@ class Projects extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Prev
+                  {t("projects.prev")}
                 </Button>
               ) : null}
               {nextPage ? (
@@ -194,7 +194,7 @@ class Projects extends Component {
                     this.fetchPage(page)
                   }
                 >
-                  Next
+                  {t("projects.next")}
                 </Button>
               ) : null}
             </ButtonGroup>
@@ -202,9 +202,7 @@ class Projects extends Component {
         </Box>
       );
     } else {
-      return (
-        <ErrorPage error="An error occured while fetching Projects, please try again later" />
-      );
+      return <ErrorPage error={t("projects.others.errors.unexpected")} />;
     }
   }
 }

@@ -1,0 +1,328 @@
+{
+  "pageWrapper":{
+    "navbar":{
+      "login":"Login",
+      "signup":"Sign Up",
+      "create_project":"Create Project",
+      "saved_projects":"Saved Projects",
+      "logout":"Logout"
+    }
+  },
+
+
+
+  "signup":{
+      "welcome":{
+        "primary":"Welcome to Zubhub",
+      "secondary":"Create an account to submit a project"
+      },
+      "inputs":{
+        "username":{
+          "label":"Username",
+          "errors":{
+            "required":"this field is required"
+          }
+        },
+        "email":{
+          "label":"Email",
+          "errors":{
+            "invalid_email":"invalid email",
+            "required":"this field is required"
+          }
+        },
+        "date_of_birth":{
+          "label":"Date Of Birth",
+          "errors":{
+            "max":"your date of birth can't be greater than today",
+            "required":"this field is required"
+          }
+        },
+        "location":{
+          "label":"Location",
+          "errors":{
+            "min":"your location is too short",
+            "required":"this field is required"
+          }
+        },
+        "password1":{
+          "label":"Password",
+          "errors":{
+            "min":"your password is too short",
+            "required":"this field is required"
+          }
+        },
+        "password2":{
+          "label":"Confirm Password",
+          "errors":{
+            "no_match":"Passwords must match",
+            "required":"this field is required"
+          }
+        }
+      },
+      "submit":"Signup",
+      "others":{
+       "already_a_member":"Already a Member ?",
+       "login":"Login",
+       "errors":{
+         "unexpected":"An error occured while performing this action. Please try again later"
+       }
+      },
+      "tooltips":{
+        "no_real_name":"Do not use your real name here!"
+      }
+   },
+
+
+   "login":{
+    "welcome":{
+     "primary":"Welcome to Zubhub",
+     "secondary":"Login to get started!"
+    },
+     "inputs":{
+       "username":{
+         "label":"Username Or Email",
+         "errors":{
+           "required":"this field is required"
+         }
+       },
+       "password":{
+         "label":"Password",
+         "errors":{
+           "min":"your password is too short",
+           "required":"this field is required"
+         }
+       }
+     },
+     "submit":"Login",
+     "others":{
+       "not_a_member":"Not a Member ?",
+       "signup":"Sign Up",
+       "forgot_password":"Forgot Password?",
+       "errors":{
+        "unexpected":"An error occured while performing this action. Please try again later"
+      }
+     }
+    },
+
+
+
+    "passwordReset":{
+      "welcome":{
+        "primary":"Password Reset",
+        "secondary":"Input your email so we can send you a password reset link"
+      },
+        "inputs":{
+          "email":{
+            "label":"Email",
+            "errors":{
+              "invalid":"invalid email",
+              "required":"this field is required"
+            }
+          }
+        },
+        "submit":"Send Reset Link",
+        "others":{
+          "toast_success":"We just sent a password reset link to your email!",
+          "errors":{
+            "unexpected":"An error occured while performing this action. Please try again later"
+          }
+        }
+      },
+
+
+      "passwordResetConfirm":{
+        "welcome":{
+          "primary":"Password Reset Confirmation"
+        },
+        "inputs":{
+          "new_password1":{
+           "label":"New Password",
+           "errors":{
+             "min":"your password is too short",
+             "required":"this field is required"
+           }
+          },
+          "new_password2":{
+            "label":"Confirm Password",
+            "errors":{
+              "no_match":"Passwords must match",
+              "required":"this field is required"
+            }
+          }
+        },
+        "submit":"Reset Password",
+          "others":{
+            "toast_success":"Congratulations! your password reset was successful! you will now be redirected to login",
+            "errors":{
+              "unexpected":"An error occured while performing this action. Please try again later"
+            }
+          }
+      },
+
+
+
+      "emailConfirm":{
+        "welcome":{
+          "primary":"Email Confirmation",
+          "secondary":" Please Confirm that you are <> and that the email belongs to you:"
+        },
+        "submit":"Confirm",
+        "others":{
+          "toast_success":"Congratulations!, your email has been confirmed!",
+          "errors":{
+          "unexpected":"An error occured while performing this action. Please try again later"}
+        }
+      },
+
+
+      "projects":{
+        "prev":"Prev",
+        "next":"Next",
+        "others":{
+          "errors":{
+            "unexpected":"An error occured while fetching Projects, please try again later"
+          }
+        }
+      },
+
+
+      "project":{
+        "years":"years",
+        "year":"year",
+        "months":"months",
+        "month":"month",
+        "days":"days",
+        "day":"day",
+        "hours":"hours",
+        "hour":"hour",
+        "minutes":"minutes",
+        "minute":"minute",
+        "seconds":"seconds",
+        "second":"second",
+        "ago":"ago"
+      },
+
+      "savedProjects":{
+        "title":"Your saved projects",
+        "prev":"Prev",
+        "next":"Next",
+        "aria_labels":{
+          "prev_nxt_buttons":"previous and next page buttons"
+        },
+        "others":{
+          "errors":{
+            "no_saved_projects":"user have no saved projects",
+            "unexpected":"An error occured while performing this action. Please try again later"
+          }
+        }
+      },
+
+
+      "projectDetails":{
+        "project":{
+          "creator":{
+            "follow":"Follow",
+            "unfollow":"Unfollow"
+          },
+          "description":"Description",
+          "materials":"Materials used",
+          "comments":{
+            "label":"Comments",
+            "write":"write a comment",
+            "action":"Comment"
+          }
+        },
+        "aria_labels":{
+          "like_button":{
+            "label":"like button",
+            "like":"like",
+            "unlike":"unlike"
+          },
+          "save_button":{
+            "label":"save button",
+            "save":"save",
+            "unsave":"unsave"
+          },
+          "image_dialog":"enlarged image dialog"
+        },
+        "others":{
+          "errors":{
+            "unexpected":"An error occured while performing this action. Please try again later"
+          }
+        }
+      },
+
+
+
+      "profile":{
+        "edit":{
+          "label":"Edit",
+          "dialog":{
+            "primary":"Edit User Profile",
+            "username":"New Username",
+            "cancel":"Cancel",
+            "save":"Save"
+          }
+        },
+        "follow":"Follow",
+        "unfollow":"Unfollow",
+        "projects_count":"Projects",
+        "followers_count":"Followers",
+        "about":{
+          "label":"About Me",
+          "placeholder":"You will be able to change this next month 😀!"
+         },
+         "projects":{
+           "label":"Latest projects of",
+           "view_all":"View all >>"
+         },
+        "tooltips":{
+          "share_profile":"Share your profile with friends!"
+        },
+        "aria_labels":{
+          "share_profile":"share profile url",
+          "edit_profile":"edit user profile"
+        },
+        "others":{
+          "toast_success":"your profile url has been successfully copied to your clipboard!",
+          "errors":{
+            "profile_fetch_error":"An error occured while fetching profile, please try again later",
+            "profile_update_error":"An error occured while updating your profile, please try again later",
+            "unexpected":"an error occured while fetching user profile, please try again later"
+          }
+        }
+      },
+
+      "userProjects":{
+        "title":"projects",
+        "prev":"Prev",
+        "next":"Next",
+        "aria_labels":{
+          "prev_nxt_buttons":"previous and next page buttons"
+        },
+        "others":{
+          "errors":{
+            "no_user_projects":"user have not created any projects yet"
+          }
+        }
+      },
+
+      "userFollowers":{
+        "title":"followers",
+        "follower":{
+          "follow":"Follow",
+          "unfollow":"Unfollow"
+        },
+        "prev":"Prev",
+        "next":"Next",
+        "aria_labels":{
+          "prev_nxt_buttons":"previous and next page buttons"
+        },
+        "others":{
+          "errors":{
+            "no_followers":"user have no followers yet",
+            "unexpected":"An error occured while performing this action. Please try again later"
+          }
+        }
+      }      
+  }

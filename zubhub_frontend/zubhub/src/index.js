@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { ThemeProvider } from '@material-ui/styles';
@@ -9,6 +9,8 @@ import {Provider} from 'react-redux';
 import configureStore from './store/configureStore';
 import {PersistGate} from 'redux-persist/integration/react';
 import API, {APIContext} from './components/api';
+import './i18n';
+import LoadingPage from './components/pages/infos/LoadingPage';
 
 let {store, persistor} = configureStore();
 
@@ -18,7 +20,9 @@ ReactDOM.render(
   <PersistGate loading={null} persistor={persistor}>
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+    <Suspense fallback={null}>
       <App />
+    </Suspense>
     </ThemeProvider>
   </React.StrictMode>
   </PersistGate>

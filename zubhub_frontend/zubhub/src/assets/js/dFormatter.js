@@ -7,28 +7,28 @@ export default function dFormatter(str) {
   
     if (interval > 1) {
       let result = Math.round(interval);
-      return result +  (result > 1 ? " years" : " year") + " ago";
+      return {value:result, key:(result > 1 ? "years" : "year")};
     }
     interval = seconds / 2592000;
     if (interval > 1) {
         let result = Math.round(interval);
-        return result +  (result > 1 ? " months" : " month") + " ago";
+        return {value:result, key:(result > 1 ? "months" : "month")};
     }
     interval = seconds / 86400;
     if (interval > 1) {
         let result = Math.round(interval);
-        return result +  (result > 1 ? " days" : " day") + " ago";
+        return {value:result, key:(result > 1 ? "days" : "day")};
     }
     interval = seconds / 3600;
     if (interval > 1) {
         let result = Math.round(interval);
-        return result +  (result > 1 ? " hours" : " hour") + " ago";
+        return {value:result, key:(result > 1 ? "hours" : "hour")};
     }
     interval = seconds / 60;
     if (interval > 1) {
         let result = Math.round(interval);
-        return result +  (result > 1 ? " minutes" : " minute") + " ago";
+        return {value:result, key:(result > 1 ? "minutes" : "minute")};
     }
     let result = Math.round(interval);
-    return result +  (result > 1 ? " seconds" : " second") + " ago";
+    return {value:result, key:(result > 1 ? "seconds" : "second")};
   }

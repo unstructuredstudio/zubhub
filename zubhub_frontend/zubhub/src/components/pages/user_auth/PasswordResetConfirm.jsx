@@ -167,7 +167,7 @@ class PasswordResetConfirm extends Component {
       .password_reset_confirm({ ...this.props.values, uid, token })
       .then((res) => {
         toast.success(
-          "Congratulations! your password reset was successful! you will now be redirected to login"
+          this.props.t("passwordResetConfirm.others.toast_success")
         );
         setTimeout(() => {
           this.props.history.push("/login");
@@ -176,8 +176,9 @@ class PasswordResetConfirm extends Component {
       .catch((error) => {
         if (error.message.startsWith("Unexpected")) {
           this.setState({
-            error:
-              "An error occured while performing this action. Please try again later",
+            error: this.props.t(
+              "passwordResetConfirm.others.errors.unexpected"
+            ),
           });
         } else {
           this.setState({ error: error.message });
@@ -201,7 +202,7 @@ class PasswordResetConfirm extends Component {
 
   render() {
     let { error, showPassword1, showPassword2 } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
 
     return (
       <Box className={classes.root}>
@@ -222,7 +223,7 @@ class PasswordResetConfirm extends Component {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    Password Reset Confirmation
+                    {t("passwordResetConfirm.welcome.primary")}
                   </Typography>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
@@ -254,7 +255,7 @@ class PasswordResetConfirm extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="new_password1"
                         >
-                          New Password
+                          {t("passwordResetConfirm.inputs.new_password1.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -284,8 +285,11 @@ class PasswordResetConfirm extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.touched["new_password"] &&
-                            this.props.errors["new_password"]}
+                          {this.props.touched["new_password1"] &&
+                            this.props.errors["new_password1"] &&
+                            t(
+                              `passwordResetConfirm.inputs.new_password1.errors.${this.props.errors["new_password1"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -306,7 +310,7 @@ class PasswordResetConfirm extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="new_password2"
                         >
-                          Confirm Password
+                          {t("passwordResetConfirm.inputs.new_password2.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -337,7 +341,10 @@ class PasswordResetConfirm extends Component {
                         />
                         <FormHelperText error>
                           {this.props.touched["new_password2"] &&
-                            this.props.errors["new_password2"]}
+                            this.props.errors["new_password2"] &&
+                            t(
+                              `passwordResetConfirm.inputs.new_password2.errors.${this.props.errors["new_password2"]}`
+                            )}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -348,7 +355,7 @@ class PasswordResetConfirm extends Component {
                         className={classes.primaryButton}
                         onClick={this.resetPassword}
                       >
-                        Reset Password
+                        {t("passwordResetConfirm.submit")}
                       </Button>
                     </Grid>
                   </Grid>
@@ -372,12 +379,10 @@ export default withFormik({
     new_password2: "",
   }),
   validationSchema: Yup.object().shape({
-    new_password1: Yup.string()
-      .min(8, "your password is too short")
-      .required("input your password"),
+    new_password1: Yup.string().min(8, "min").required("required"),
     new_password2: Yup.string()
-      .oneOf([Yup.ref("new_password1"), null], "Passwords must match")
-      .required("input a confirmation password"),
+      .oneOf([Yup.ref("new_password1"), null], "no_match")
+      .required("required"),
   }),
   handleSubmit: (values, { setSubmitting }) => {},
 })(withStyles(styles)(PasswordResetConfirm));
