@@ -53,8 +53,8 @@ class Project(models.Model):
                 self.video = "player.vimeo.com/video".join(
                     self.video.split("vimeo.com"))
 
-            elif self.video.find("drive.google.com") != -1 and self.video.find("view") != -1:
-                self.video = self.video.split("view")[0] + "preview"
+            elif self.video.find("drive.google.com") != -1 and self.video.find("/view") != -1:
+                self.video = self.video.split("/view")[0] + "/preview"
 
         if self.id:
             self.likes_count = self.likes.count()
