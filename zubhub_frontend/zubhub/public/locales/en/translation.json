@@ -202,6 +202,61 @@
         "ago":"ago"
       },
 
+      "createProject":{
+        "welcome":{
+          "primary":"Create Project",
+          "secondary":"Tell us about your project!"
+        },
+        "inputs":{
+          "title":{
+            "label":"Title",
+            "errors":{
+              "max":"your project title shouldn't be more than 100 characters",
+              "required":"this field is required"
+            }
+          },
+          "description":{
+            "label":"Description",
+            "errors":{
+              "max":"your description shouldn't be more than 10,000 characters",
+              "required":"this field is required"
+            }
+          },
+          "project_images":{
+            "label":"Images",
+            "errors":{
+              "image_or_video":"you must provide either image(s) or video url",
+              "image_size_too_large":"one or more of your image is greater than 3mb",
+              "too_many_images":"too many images uploaded"
+            }
+          },
+          "video":{
+            "label":"Video URL",
+            "helper_text":"YouTube, Vimeo, Google Drive links are supported",
+            "errors":{
+             "should_be_video_url":"you are required to submit a video url here",
+             "max":"you are required to submit a video url here",
+             "image_or_video":"you must provide either image(s) or video url"
+            }
+          },
+          "materials_used":{
+            "label":"Materials Used",
+            "errors":{
+             "max":"you are required to submit a video url here",
+             "required":"this field is required"
+            }
+          }
+        },
+        "submit":"Create Project",
+        "others":{
+          "toast_success":"Your project was created successfully!!",
+          "errors":{
+            "not_logged_in":"You are not logged in. Click on the signin button to get started",
+            "unexpected":"An error occured while performing this action. Please try again later"
+          }
+        }
+      },
+
       "savedProjects":{
         "title":"Your saved projects",
         "prev":"Prev",

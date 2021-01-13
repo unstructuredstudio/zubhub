@@ -205,8 +205,7 @@ class CreateProject extends Component {
 
           if (err.message.startsWith("Unexpected")) {
             this.setState({
-              error:
-                "An error occured while performing this action. Please try again later",
+              error: this.props.t("createProject.others.errors.unexpected"),
               image_upload,
             });
           } else {
@@ -253,14 +252,13 @@ class CreateProject extends Component {
             .join("\n");
           throw new Error(res);
         }
-        toast.success("Your project was created successfully!!");
+        toast.success(this.props.t("createProject.others.toast_success"));
         return this.props.history.push("/profile");
       })
       .catch((error) => {
         if (error.message.startsWith("Unexpected")) {
           this.setState({
-            error:
-              "An error occured while performing this action. Please try again later",
+            error: this.props.t("createProject.others.errors.unexpected"),
           });
         } else {
           this.setState({ error: error.message });
@@ -276,16 +274,18 @@ class CreateProject extends Component {
 
       if (media_fields.image_is_empty && media_fields.video_is_empty) {
         this.props.setErrors({
-          project_images: "you must provide either image(s) or video url",
+          project_images: "image_or_video",
         });
         this.props.setErrors({
-          video: "you must provide either image(s) or video url",
+          video: "image_or_video",
         });
       } else if (media_fields.too_many_images === true) {
-        this.props.setErrors({ project_images: "too many images uploaded" });
+        this.props.setErrors({
+          project_images: "too_many_images",
+        });
       } else if (media_fields.image_size_too_large === true) {
         this.props.setErrors({
-          project_images: "one or more of your image is greater than 3mb",
+          project_images: "large_file",
         });
       } else if (media_fields.image_is_empty) {
         this.upload_project();
@@ -323,10 +323,10 @@ class CreateProject extends Component {
           "border-color:#F54336; color:#F54336"
         );
         this.props.setErrors({
-          project_images: "you must provide either image(s) or video url",
+          project_images: "image_or_video",
         });
         this.props.setErrors({
-          video: "you must provide either image(s) or video url",
+          video: "image_or_video",
         });
         result["video_is_empty"] = true;
       }
@@ -335,7 +335,9 @@ class CreateProject extends Component {
         "style",
         "border-color:#F54336; color:#F54336"
       );
-      this.props.setErrors({ project_images: "too many images uploaded" });
+      this.props.setErrors({
+        project_images: "too_many_images",
+      });
       result["too_many_images"] = true;
     } else {
       let image_size_too_large = false;
@@ -351,7 +353,7 @@ class CreateProject extends Component {
           "border-color:#F54336; color:#F54336"
         );
         this.props.setErrors({
-          project_images: "one or more of your image is greater than 3mb",
+          project_images: "image_size_too_large",
         });
         result["image_size_too_large"] = image_size_too_large;
       }
@@ -419,10 +421,10 @@ class CreateProject extends Component {
 
   render() {
     let { error, image_upload, materials_used } = this.state;
-    let { classes } = this.props;
+    let { classes, t } = this.props;
     if (!this.props.auth.token) {
       return (
-        <ErrorPage error="You are not logged in. Click on the signin button to get started" />
+        <ErrorPage error={t("createProject.others.errors.not_logged_in")} />
       );
     } else {
       return (
@@ -444,14 +446,14 @@ class CreateProject extends Component {
                       component="h2"
                       color="textPrimary"
                     >
-                      Create Project
+                      {t("createProject.welcome.primary")}
                     </Typography>
                     <Typography
                       variant="body2"
                       color="textSecondary"
                       component="p"
                     >
-                      Tell us about your project!
+                      {t("createProject.welcome.secondary")}
                     </Typography>
 
                     <Grid container spacing={3}>
@@ -484,7 +486,7 @@ class CreateProject extends Component {
                             className={classes.customLabelStyle}
                             htmlFor="title"
                           >
-                            Title
+                            {t("createProject.inputs.title.label")}
                           </InputLabel>
                           <OutlinedInput
                             className={classes.customInputStyle}
@@ -498,7 +500,10 @@ class CreateProject extends Component {
                           />
                           <FormHelperText error>
                             {this.props.touched["title"] &&
-                              this.props.errors["title"]}
+                              this.props.errors["title"] &&
+                              t(
+                                `createProject.inputs.title.errors.${this.props.errors["title"]}`
+                              )}
                           </FormHelperText>
                         </FormControl>
                       </Grid>
@@ -519,7 +524,7 @@ class CreateProject extends Component {
                             className={classes.customLabelStyle}
                             htmlFor="description"
                           >
-                            Description
+                            {t("createProject.inputs.description.label")}
                           </InputLabel>
                           <OutlinedInput
                             className={classes.customInputStyle}
@@ -534,7 +539,10 @@ class CreateProject extends Component {
                           />
                           <FormHelperText error>
                             {this.props.touched["description"] &&
-                              this.props.errors["description"]}
+                              this.props.errors["description"] &&
+                              t(
+                                `createProject.inputs.description.errors.${this.props.errors["description"]}`
+                              )}
                           </FormHelperText>
                         </FormControl>
                       </Grid>
@@ -563,7 +571,7 @@ class CreateProject extends Component {
                               }
                               onClick={this.handleImageButtonClick}
                             >
-                              Images
+                              {t("createProject.inputs.project_images.label")}
                             </Button>
                           </label>
                           <input
@@ -578,7 +586,10 @@ class CreateProject extends Component {
                             onBlur={this.props.handleBlur}
                           />
                           <FormHelperText error>
-                            {this.props.errors["project_images"]}
+                            {this.props.errors["project_images"] &&
+                              t(
+                                `createProject.inputs.project_images.errors.${this.props.errors["project_images"]}`
+                              )}
                           </FormHelperText>
                         </FormControl>
                       </Grid>
@@ -599,7 +610,7 @@ class CreateProject extends Component {
                             className={classes.customLabelStyle}
                             htmlFor="video"
                           >
-                            Video URL
+                            {t("createProject.inputs.video.label")}
                           </InputLabel>
                           <OutlinedInput
                             className={classes.customInputStyle}
@@ -616,11 +627,14 @@ class CreateProject extends Component {
                               variant="caption"
                               component="span"
                             >
-                              YouTube, Vimeo, Google Drive links are supported
+                              {t("createProject.inputs.video.helper_text")}
                             </Typography>
                             <br />
                             {this.props.touched["video"] &&
-                              this.props.errors["video"]}
+                              this.props.errors["video"] &&
+                              t(
+                                `createProject.inputs.video.errors.${this.props.errors["video"]}`
+                              )}
                           </FormHelperText>
                         </FormControl>
                       </Grid>
@@ -645,7 +659,7 @@ class CreateProject extends Component {
                             htmlFor="add_materials_used"
                             shrink
                           >
-                            Materials Used
+                            {t("createProject.inputs.materials_used.label")}
                           </InputLabel>
                           <Box className={classes.materialsUsedViewStyle}>
                             {materials_used.map((material, num) =>
@@ -681,7 +695,10 @@ class CreateProject extends Component {
                               />
                               <FormHelperText error>
                                 {this.props.touched["materials_used"] &&
-                                  this.props.errors["materials_used"]}
+                                  this.props.errors["materials_used"] &&
+                                  t(
+                                    `createProject.inputs.materials_used.errors.${this.props.errors["materials_used"]}`
+                                  )}
                               </FormHelperText>
                             </Grid>
                             <Grid item xs={4} sm={4} md={4}>
@@ -711,7 +728,7 @@ class CreateProject extends Component {
                           className={classes.primaryButton}
                           onClick={this.init_project}
                         >
-                          Create Project
+                          {t("createProject.submit")}
                         </Button>
                       </Grid>
                     </Grid>
@@ -784,21 +801,10 @@ export default connect(mapStateToProps)(
       materials_used: "",
     }),
     validationSchema: Yup.object().shape({
-      title: Yup.string()
-        .max(100, "your project title shouldn't be more than 100 characters")
-        .required("title is required"),
-      description: Yup.string()
-        .max(10000, "your description shouldn't be more than 10,000 characters")
-        .required("description is required"),
-      video: Yup.string()
-        .url("you are required to submit a video url here")
-        .max(1000, "your video url shouldn't be more than 1000 characters"),
-      materials_used: Yup.string()
-        .max(
-          10000,
-          "your materials used shouldn't be more than 10,000 characters"
-        )
-        .required("materials used is required"),
+      title: Yup.string().max(100, "max").required("required"),
+      description: Yup.string().max(10000, "max").required("required"),
+      video: Yup.string().url("should_be_video_url").max(1000, "max"),
+      materials_used: Yup.string().max(10000, "max").required("required"),
     }),
     handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(CreateProject))
