@@ -60,9 +60,9 @@ class API {
 
   /**********************login with email and password******************************/
     login=({username, password})=>{
-      let url = 'rest-auth/login/';
-      let method = 'POST';
-      let body = JSON.stringify({username, password});
+      const url = 'rest-auth/login/';
+      const method = 'POST';
+      const body = JSON.stringify({username, password});
 
       return this.request({url, method, body })
              .then(res=>res.json())
@@ -71,8 +71,8 @@ class API {
 
   /**********************logout******************************/
   logout=(token)=>{
-    let url = "rest-auth/logout/";
-    let method = "POST";
+    const url = "rest-auth/logout/";
+    const method = "POST";
     return this.request({url, method, token})
            .then(res=>res.json())
     }
@@ -80,9 +80,9 @@ class API {
 
 /**********************signup******************************/
     signup=({username, email, dateOfBirth, user_location, password1, password2})=>{
-      let url = 'rest-auth/registration/';
-      let method = 'POST';
-      let body = JSON.stringify({username, email, dateOfBirth, location: user_location, password1, password2});
+      const url = 'rest-auth/registration/';
+      const method = 'POST';
+      const body = JSON.stringify({username, email, dateOfBirth, location: user_location, password1, password2});
 
       return this.request({url, method, body })
              .then(res=>res.json())
@@ -92,9 +92,9 @@ class API {
 
 /*****************send email confirmation ******************/
 send_email_confirmation=(key)=>{
-  let url = 'rest-auth/registration/verify-email/';
-  let method = 'POST';
-  let body = JSON.stringify({key})
+  const url = 'rest-auth/registration/verify-email/';
+  const method = 'POST';
+  const body = JSON.stringify({key})
 
   return this.request({url, method, body})
          .then(res=>res.json())
@@ -104,9 +104,9 @@ send_email_confirmation=(key)=>{
 
 /********************send password reset link********************************/
 send_password_reset_link=(email)=>{
-  let url = 'rest-auth/password/reset/';
-  let method = 'POST';
-  let body = JSON.stringify({email});
+  const url = 'rest-auth/password/reset/';
+  const method = 'POST';
+  const body = JSON.stringify({email});
 
   return this.request({url, method, body})
          .then(res=>res.json())
@@ -115,9 +115,9 @@ send_password_reset_link=(email)=>{
 
 /********************password reset confirmation********************************/
 password_reset_confirm=({new_password1, new_password2, uid, token})=>{
-  let url = 'rest-auth/password/reset/confirm/';
-  let method = 'POST';
-  let body = JSON.stringify({new_password1, new_password2, uid, token});
+  const url = 'rest-auth/password/reset/confirm/';
+  const method = 'POST';
+  const body = JSON.stringify({new_password1, new_password2, uid, token});
 
   return this.request({url, method, body})
          .then(res=>res.json())
@@ -126,7 +126,7 @@ password_reset_confirm=({new_password1, new_password2, uid, token})=>{
 
 /************************** get authenticated user's details **************************/
 get_auth_user=(token)=>{
-  let url = "creators/authUser/";
+  const url = "creators/authUser/";
   return this.request({url, token})
          .then(res=>res.json())
 }
@@ -137,7 +137,7 @@ get_auth_user=(token)=>{
 /************************** get user profile **************************/
 get_user_profile=({username, token})=>{
 
-  let url = `creators/${username}/`;
+  const url = `creators/${username}/`;
   if(token){
   return this.request({url, token})
          .then(res=>res.json())
@@ -170,7 +170,7 @@ get_user_projects=({username, page, limit})=>{
 
 /********************** get followers *******************************/
 get_followers=({ page, username })=>{
-  let url = page ? `creators/${username}/followers/?${page}`: `creators/${username}/followers/`;
+  const url = page ? `creators/${username}/followers/?${page}`: `creators/${username}/followers/`;
 
   return this.request({url})
          .then(res=>res.json())
@@ -180,7 +180,7 @@ get_followers=({ page, username })=>{
 
 /********************** get saved *******************************/
 get_saved=({ page, token })=>{
-  let url = page ? `projects/saved/?${page}` : `projects/saved/`;
+  const url = page ? `projects/saved/?${page}` : `projects/saved/`;
 
   return this.request({url, token})
          .then(res=>res.json())
@@ -191,12 +191,12 @@ get_saved=({ page, token })=>{
 
 /************************** edit user profile **************************/
 edit_user_profile=(profile)=>{
-  let {username} = profile;
+  const {username} = profile;
 
-  let url = "creators/edit_creator/";
-  let method = "PUT";
-  let token = profile.token;
-  let body = JSON.stringify({ username })
+  const url = "creators/edit_creator/";
+  const method = "PUT";
+  const token = profile.token;
+  const body = JSON.stringify({ username })
   return this.request({url, method, token, body})
          .then(res=>res.json())
 }
@@ -204,7 +204,7 @@ edit_user_profile=(profile)=>{
 
 /************************** follow creator **************************/
 toggle_follow=({id, token})=>{
-  let url = `creators/${id}/toggle_follow/`;
+  const url = `creators/${id}/toggle_follow/`;
   
   return this.request({url, token})
          .then(res=>res.json())
@@ -215,7 +215,7 @@ toggle_follow=({id, token})=>{
 
 /************************** get all locations **************************/
 get_locations=()=>{
-  let url = "creators/locations/";
+  const url = "creators/locations/";
   return this.request({url})
          .then(res=> res.json())
 }
@@ -223,23 +223,23 @@ get_locations=()=>{
 
 /************************** create project **************************/
 create_project=({token, title, description, video, images, materials_used})=>{
-  let url = "projects/create/";
-  let method = "POST";
-  let body = JSON.stringify({ title, description, images, video, materials_used })
+  const url = "projects/create/";
+  const method = "POST";
+  const body = JSON.stringify({ title, description, images, video, materials_used })
   return this.request({url, method, token, body})
          .then(res=>res.json())
 }
 
 /************************** get projects **************************/
 get_projects=(page)=>{
-  let url = page ? `projects/?${page}` : `projects/`;
+  const url = page ? `projects/?${page}` : `projects/`;
   return this.request({url})
          .then(res=>res.json())
 }
 
 /************************** get project **************************/
 get_project=({id, token})=>{
-  let url = `projects/${id}`;
+  const url = `projects/${id}`;
   if(token){
   return this.request({url, token})
          .then(res=>res.json())
@@ -252,7 +252,7 @@ get_project=({id, token})=>{
 
 /************************** like project **************************/
 toggle_like=({id, token})=>{
-  let url = `projects/${id}/toggle_like/`;
+  const url = `projects/${id}/toggle_like/`;
   
   return this.request({url, token})
          .then(res=>res.json())
@@ -263,7 +263,7 @@ toggle_like=({id, token})=>{
 
 /************************** save project for future viewing **************************/
 toggle_save=({id, token})=>{
-  let url = `projects/${id}/toggle_save/`;
+  const url = `projects/${id}/toggle_save/`;
   
   return this.request({url, token})
          .then(res=>res.json())
@@ -274,9 +274,9 @@ toggle_save=({id, token})=>{
 
 /************************** add comment **************************/
 add_comment=({id, text, token})=>{
-  let url = `projects/${id}/add_comment/`;
-  let method = "POST";
-  let body = JSON.stringify({text})
+  const url = `projects/${id}/add_comment/`;
+  const method = "POST";
+  const body = JSON.stringify({text})
 
   return this.request({url, method, body, token})
          .then(res=>res.json())

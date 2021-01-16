@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 
-import { toast } from "react-toastify";
-
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -23,9 +21,10 @@ import {
   Container,
   Paper,
   Dialog,
-  Button,
 } from "@material-ui/core";
 
+import * as UserActions from "../../store/actions/userActions";
+import * as ProjectActions from "../../store/actions/projectActions";
 import CustomButton from "../../components/button/Button";
 import ErrorPage from "../error/ErrorPage";
 import LoadingPage from "../loading/LoadingPage";
@@ -36,14 +35,124 @@ import styles, {
   sliderSettings,
 } from "../../assets/js/styles/views/project_details/projectDetailsStyles";
 import commonStyles from "../../assets/js/styles";
+import Project from "../../components/project/Project";
 
-let commentText;
-let commentBox;
-let commentAuthorName;
-let commentPublishButton;
+const useStyles = makeStyles(styles);
+
+const constructCommentBox = (refs) => {
+  refs.commentText.current.addEventListener("focus", (e) =>
+    handleCommentTextFocus(refs)
+  );
+
+  document.addEventListener("click", (e) => handleDocumentClick(e, refs));
+};
+
+const handleCommentTextFocus = (refs) => {
+  refs.commentBox.current.classList.remove("comment-collapsed");
+  refs.commentBox.current.classList.add("comment");
+  refs.commentAuthorName.current.classList.remove("display-none");
+  refs.commentPublishButton.current.classList.remove("display-none");
+};
+
+const handleDocumentClick = (e, refs) => {
+  try {
+    if (
+      ![
+        refs.commentBox.current,
+        refs.commentPublishButton.current,
+        refs.commentText.current,
+      ].includes(e.target)
+    ) {
+      refs.commentBox.current.classList.remove("comment");
+      refs.commentBox.current.classList.add("comment-collapsed");
+      refs.commentAuthorName.current.classList.add("display-none");
+      refs.commentPublishButton.current.classList.add("display-none");
+    }
+  } catch {}
+};
+
+const handleOpenEnlargedImageDialog = (e, state) => {
+  const image_url = e.currentTarget.getAttribute("src");
+  const openEnlargedImageDialog = !state.openEnlargedImageDialog;
+  return { enlargedImageUrl: image_url, openEnlargedImageDialog };
+};
+
+const add_comment = (e, props, refs, state) => {
+  e.preventDefault();
+  if (!props.auth.token) {
+    props.history.push("/login");
+  } else {
+    const textarea = refs.commentText.current;
+    const comment_text = textarea.value;
+    textarea.value = "";
+    return props.add_comment({
+      id: state.project.id,
+      token: props.auth.token,
+      text: comment_text,
+    });
+  }
+};
+
+const toggle_save = (e, props, id) => {
+  e.preventDefault();
+  if (!props.auth.token) {
+    props.history.push("/login");
+  } else {
+    return props.toggle_save({
+      id,
+      token: props.auth.token,
+    });
+  }
+};
+
+const toggle_like = (e, props, id) => {
+  e.preventDefault();
+  if (!props.auth.token) {
+    return props.history.push("/login");
+  } else {
+    return props.toggle_like({ id, token: props.auth.token });
+  }
+};
+
+const toggle_follow = (e, props, id, state) => {
+  e.preventDefault();
+  if (!props.auth.token) {
+    props.history.push("/login");
+  } else {
+    return props
+      .toggle_follow({ id, token: props.auth.token })
+      .then(({ profile }) => {
+        const { project } = state;
+        if (project.creator.id === profile.id) {
+          project.creator = profile;
+        }
+
+        return { project };
+      });
+  }
+};
+
+const buildMaterialsUsedComponent = (classes, state) => {
+  const arr = state.project.materials_used.split(",");
+  return arr.map((material, index) => (
+    <Typography
+      key={index}
+      component="span"
+      className={classes.materialsUsedStyle}
+    >
+      {material}
+    </Typography>
+  ));
+};
 
 function ProjectDetails(props) {
-  const classes = makeStyles(styles)();
+  const refs = {
+    commentText: React.useRef(null),
+    commentBox: React.useRef(null),
+    commentAuthorName: React.useRef(null),
+    commentPublishButton: React.useRef(null),
+  };
+  const classes = useStyles();
   const commonClasses = makeStyles(commonStyles)();
 
   const [state, setState] = React.useState({
@@ -54,225 +163,44 @@ function ProjectDetails(props) {
   });
 
   React.useEffect(() => {
-    props.api
-      .get_project({
+    const commentTextEl = refs.commentText.current;
+    handleSetState(
+      props.get_project({
         id: props.match.params.id,
         token: props.auth.token,
       })
-      .then((res) => {
-        if (res.title) {
-          return setState({ ...state, project: res, loading: false });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        toast.warning(error.message);
-      });
+    );
 
     return () => {
       try {
-        commentText.removeEventListener("focus", handleCommentTextFocus);
+        commentTextEl.removeEventListener("focus", () =>
+          handleCommentTextFocus(refs)
+        );
       } catch {}
 
       try {
-        document.removeEventListener("click", handleDocumentClick);
+        document.removeEventListener("click", (e) =>
+          handleDocumentClick(e, refs)
+        );
       } catch {}
     };
   }, []);
 
   React.useEffect(() => {
     try {
-      constructCommentBox();
+      constructCommentBox(refs);
     } catch {}
   }, [state.project]);
 
-  const toggle_like = (e, id) => {
-    e.preventDefault();
-    if (!props.auth.token) {
-      props.history.push("/login");
-    } else {
-      props.api
-        .toggle_like({ id, token: props.auth.token })
-        .then((res) => {
-          if (res.id) {
-            return setState({ ...state, project: res });
-          } else {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
-          }
-        })
-        .catch((error) => {
-          setState({ ...state, loading: false });
-          if (error.message.startsWith("Unexpected")) {
-            toast.warning(
-              "An error occured while performing this action. Please try again later"
-            );
-          } else {
-            toast.warning(error.message);
-          }
-        });
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
+      });
     }
   };
 
-  const toggle_follow = (id) => {
-    if (!props.auth.token) {
-      props.history.push("/login");
-    } else {
-      props.api
-        .toggle_follow({ id, token: props.auth.token })
-        .then((res) => {
-          if (res.id) {
-            let { project } = state;
-            if (project.creator.id === res.id) {
-              project.creator = res;
-            }
-
-            return setState({ ...state, project });
-          } else {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
-          }
-        })
-        .catch((error) => {
-          setState({ ...state, loading: false });
-          if (error.message.startsWith("Unexpected")) {
-            toast.warning(
-              "An error occured while performing this action. Please try again later"
-            );
-          } else {
-            toast.warning(error.message);
-          }
-        });
-    }
-  };
-
-  const toggle_save = (e, id) => {
-    e.preventDefault();
-    if (!props.auth.token) {
-      props.history.push("/login");
-    } else {
-      props.api
-        .toggle_save({
-          id,
-          token: props.auth.token,
-        })
-        .then((res) => {
-          if (res.id) {
-            return setState({ project: res });
-          } else {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
-          }
-        })
-        .catch((error) => {
-          setState({ loading: false });
-          if (error.message.startsWith("Unexpected")) {
-            toast.warning(
-              "An error occured while performing this action. Please try again later"
-            );
-          } else {
-            toast.warning(error.message);
-          }
-        });
-    }
-  };
-
-  const handleOpenEnlargedImageDialog = (e) => {
-    let image_url = e.currentTarget.getAttribute("src");
-    let openEnlargedImageDialog = !state.openEnlargedImageDialog;
-    setState({
-      ...state,
-      enlargedImageUrl: image_url,
-      openEnlargedImageDialog,
-    });
-  };
-
-  const buildMaterialsUsedComponent = () => {
-    let arr = state.project.materials_used.split(",");
-    return arr.map((material, index) => (
-      <Typography component="span" className={classes.materialsUsedStyle}>
-        {material}
-      </Typography>
-    ));
-  };
-
-  const add_comment = (e) => {
-    e.preventDefault();
-    if (!props.auth.token) {
-      props.history.push("/login");
-    } else {
-      let textarea = document.querySelector("#comment");
-      let comment_text = textarea.value;
-      props.api
-        .add_comment({
-          id: state.project.id,
-          token: props.auth.token,
-          text: comment_text,
-        })
-        .then((res) => {
-          if (res.id) {
-            textarea.value = "";
-            return setState({ ...state, project: res });
-          } else {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
-          }
-        })
-        .catch((error) => {
-          setState({ ...state, loading: false });
-          if (error.message.startsWith("Unexpected")) {
-            toast.warning(
-              "An error occured while performing this action. Please try again later"
-            );
-          } else {
-            toast.warning(error.message);
-          }
-        });
-    }
-  };
-
-  const constructCommentBox = () => {
-    commentBox = document.querySelector(".comment-box");
-    commentText = document.querySelector(".comment-text");
-    commentAuthorName = document.querySelector(".comment-box .comment-meta__a");
-    commentPublishButton = document.querySelector(".comment-publish-button");
-    commentText.addEventListener("focus", handleCommentTextFocus);
-
-    document.addEventListener("click", handleDocumentClick);
-  };
-
-  const handleCommentTextFocus = () => {
-    commentBox.classList.remove("comment-collapsed");
-    commentBox.classList.add("comment");
-    commentAuthorName.classList.remove("display-none");
-    commentPublishButton.classList.remove("display-none");
-  };
-
-  const handleDocumentClick = (e) => {
-    try {
-      if (![commentBox, commentPublishButton, commentText].includes(e.target)) {
-        commentBox.classList.remove("comment");
-        commentBox.classList.add("comment-collapsed");
-        commentAuthorName.classList.add("display-none");
-        commentPublishButton.classList.add("display-none");
-      }
-    } catch {}
-  };
-
-  let { project, loading, enlargedImageUrl, openEnlargedImageDialog } = state;
+  const { project, loading, enlargedImageUrl, openEnlargedImageDialog } = state;
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
@@ -307,8 +235,10 @@ function ProjectDetails(props) {
                     <CustomButton
                       className={commonClasses.marginLeft1em}
                       variant="contained"
-                      onClick={(e, id = project.creator.id) =>
-                        toggle_follow(id)
+                      onClick={(e) =>
+                        handleSetState(
+                          toggle_follow(e, props, project.creator.id, state)
+                        )
                       }
                       primaryButtonStyle
                     >
@@ -362,7 +292,9 @@ function ProjectDetails(props) {
                       size="small"
                       aria-label="like button"
                       variant="extended"
-                      onClick={(e, id = project.id) => toggle_like(e, id)}
+                      onClick={(e) =>
+                        handleSetState(toggle_like(e, props, project.id))
+                      }
                     >
                       {project.likes.includes(props.auth.id) ? (
                         <ClapIcon arial-label="unlike" />
@@ -377,7 +309,9 @@ function ProjectDetails(props) {
                       className={classes.actionBoxButtonStyle}
                       size="small"
                       aria-label="save button"
-                      onClick={(e, id = project.id) => toggle_save(e, id)}
+                      onClick={(e) =>
+                        handleSetState(toggle_save(e, props, project.id))
+                      }
                     >
                       {project.saved_by.includes(props.auth.id) ? (
                         <BookmarkIcon aria-label="unsave" />
@@ -407,7 +341,11 @@ function ProjectDetails(props) {
                               className={classes.carouselImageStyle}
                               src={image.image_url}
                               alt={image.public_id}
-                              onClick={handleOpenEnlargedImageDialog}
+                              onClick={(e) =>
+                                handleSetState(
+                                  handleOpenEnlargedImageDialog(e, state)
+                                )
+                              }
                             />
                           </div>
                         ))}
@@ -440,7 +378,7 @@ function ProjectDetails(props) {
                     className={classes.descriptionBodyStyle}
                     color="textSecondary"
                   >
-                    {buildMaterialsUsedComponent()}
+                    {buildMaterialsUsedComponent(classes, state)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -452,7 +390,10 @@ function ProjectDetails(props) {
               >
                 <CommentIcon /> {nFormatter(project.comments.length)} Comments
               </Typography>
-              <Box className="comment-box comment-collapsed">
+              <Box
+                className="comment-box comment-collapsed"
+                ref={refs.commentBox}
+              >
                 <Box className="comment-meta">
                   <Link
                     className={clsx(classes.textDecorationNone)}
@@ -467,6 +408,7 @@ function ProjectDetails(props) {
                     ) : null}
                   </Link>
                   <Link
+                    ref={refs.commentAuthorName}
                     className={clsx(
                       classes.textDecorationNone,
                       "comment-meta__a",
@@ -479,13 +421,17 @@ function ProjectDetails(props) {
                 </Box>
                 <form className="comment-form">
                   <textarea
+                    ref={refs.commentText}
                     className="comment-text"
                     name="comment"
                     id="comment"
                     placeholder="write a comment ..."
                   ></textarea>
                   <CustomButton
-                    onClick={add_comment}
+                    ref={refs.commentPublishButton}
+                    onClick={(e) =>
+                      handleSetState(add_comment(e, props, refs, state))
+                    }
                     className={clsx("comment-publish-button", "display-none")}
                     variant="contained"
                     primaryButtonStyle
@@ -558,7 +504,11 @@ function ProjectDetails(props) {
 
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
+  get_project: PropTypes.func.isRequired,
+  toggle_follow: PropTypes.func.isRequired,
+  toggle_like: PropTypes.func.isRequired,
+  toggle_save: PropTypes.func.isRequired,
+  add_comment: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -567,4 +517,24 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ProjectDetails);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    get_project: (values) => {
+      return dispatch(ProjectActions.get_project(values));
+    },
+    toggle_follow: (values) => {
+      return dispatch(UserActions.toggle_follow(values));
+    },
+    toggle_like: (values) => {
+      return dispatch(ProjectActions.toggle_like(values));
+    },
+    toggle_save: (values) => {
+      return dispatch(ProjectActions.toggle_save(values));
+    },
+    add_comment: (values) => {
+      return dispatch(ProjectActions.add_comment(values));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetails);

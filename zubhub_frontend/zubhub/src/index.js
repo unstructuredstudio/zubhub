@@ -7,7 +7,6 @@ import {Provider} from 'react-redux';
 import { ThemeProvider } from '@material-ui/styles';
 import {theme} from './assets/js/muiTheme';
 
-import API, {APIContext} from './api';
 import App from './App';
 import './assets/css/index.css';
 import configureStore from './store/configureStore';
@@ -16,7 +15,6 @@ import reportWebVitals from './reportWebVitals';
 let {store, persistor} = configureStore();
 
 ReactDOM.render(
-  <APIContext.Provider value={new API()}>
   <Provider store={store}>
   <PersistGate loading={null} persistor={persistor}>
   <React.StrictMode>
@@ -25,8 +23,7 @@ ReactDOM.render(
     </ThemeProvider>
   </React.StrictMode>
   </PersistGate>
-  </Provider>
-  </APIContext.Provider>,
+  </Provider>,
   document.getElementById('root')
 );
 

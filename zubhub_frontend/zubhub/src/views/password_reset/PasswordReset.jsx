@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 
-import { toast } from "react-toastify";
+import { connect } from "react-redux";
 
 import { withFormik } from "formik";
 import * as Yup from "yup";
@@ -21,39 +21,34 @@ import {
   FormHelperText,
   FormControl,
 } from "@material-ui/core";
+
+import * as AuthActions from "../../store/actions/authActions";
 import CustomButton from "../../components/button/Button";
 import styles from "../../assets/js/styles/views/password_reset/passwordResetStyles";
 
+const useStyles = makeStyles(styles);
+
+const sendPasswordResetLink = (e, props) => {
+  e.preventDefault();
+  return props.send_password_reset_link(props);
+};
+
 function PasswordReset(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
     error: null,
   });
 
-  const sendPasswordResetLink = (e) => {
-    e.preventDefault();
-    props.api
-      .send_password_reset_link(props.values.email)
-      .then((res) => {
-        toast.success("We just sent a password reset link to your email!");
-        setTimeout(() => {
-          props.history.push("/");
-        }, 4000);
-      })
-      .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
-          setState({
-            error:
-              "An error occured while performing this action. Please try again later",
-          });
-        } else {
-          setState({ ...state, error: error.message });
-        }
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
+    }
   };
 
-  let { error } = state;
+  const { error } = state;
 
   return (
     <Box className={classes.root}>
@@ -65,7 +60,9 @@ function PasswordReset(props) {
                 className="auth-form"
                 name="password_reset"
                 noValidate="noValidate"
-                onSubmit={sendPasswordResetLink}
+                onSubmit={(e) =>
+                  handleSetState(sendPasswordResetLink(e, props))
+                }
               >
                 <Typography
                   gutterBottom
@@ -143,14 +140,34 @@ function PasswordReset(props) {
 }
 
 PasswordReset.propTypes = {
-  api: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  send_password_reset_link: PropTypes.func.isRequired,
 };
 
-export default withFormik({
-  mapPropsToValue: () => ({
-    email: "",
-  }),
-  validationSchema: Yup.object().shape({
-    email: Yup.string().email("invalid email").required("email required"),
-  }),
-})(PasswordReset);
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    send_password_reset_link: (props) => {
+      return dispatch(AuthActions.send_password_reset_link(props));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  withFormik({
+    mapPropsToValue: () => ({
+      email: "",
+    }),
+    validationSchema: Yup.object().shape({
+      email: Yup.string().email("invalid email").required("email required"),
+    }),
+  })(PasswordReset)
+);

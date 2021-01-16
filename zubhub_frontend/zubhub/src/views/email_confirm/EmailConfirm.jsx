@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { toast } from "react-toastify";
+import { connect } from "react-redux";
+
 import "react-toastify/dist/ReactToastify.css";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,54 +16,45 @@ import {
   Typography,
 } from "@material-ui/core";
 
+import * as AuthActions from "../../store/actions/authActions";
 import CustomButton from "../../components/button/Button";
 import styles from "../../assets/js/styles/views/email_confirm/emailConfirmStyles";
 
+const useStyles = makeStyles(styles);
+
+const getUsernameAndKey = (queryString) => {
+  let username = queryString.split("&&");
+  const key = username[1].split("=")[1];
+  username = username[0].split("=")[1];
+  return { username, key };
+};
+
+const confirmEmail = (e, props, state) => {
+  e.preventDefault();
+  return props.send_email_confirmation(props, state.key);
+};
+
 function EmailConfirm(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
+
+  let { username, key } = getUsernameAndKey(props.location.search);
 
   const [state, setState] = React.useState({
     error: null,
-    username: null,
-    key: null,
+    username: username ?? null,
+    key: key ?? null,
   });
 
-  React.useEffect(() => {
-    let { username, key } = getUsernameAndKey(props.location.search);
-    setState({ ...state, username, key });
-  }, []);
-
-  const getUsernameAndKey = (queryString) => {
-    let username = queryString.split("&&");
-    let key = username[1].split("=")[1];
-    username = username[0].split("=")[1];
-    return { username, key };
-  };
-
-  const confirmEmail = (e) => {
-    e.preventDefault();
-    props.api
-      .send_email_confirmation(state.key)
-      .then((res) => {
-        toast.success("Congratulations!, your email has been confirmed!");
-        setTimeout(() => {
-          props.history.push("/");
-        }, 4000);
-      })
-      .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
-          setState({
-            ...state,
-            error:
-              "An error occured while performing this action. Please try again later",
-          });
-        } else {
-          setState({ ...state, error: error.message });
-        }
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
+    }
   };
 
-  let { error, username } = state;
+  const { error } = state;
+  username = state.username;
 
   return (
     <Box className={classes.root}>
@@ -74,7 +66,7 @@ function EmailConfirm(props) {
                 className="auth-form"
                 name="email_confirm"
                 noValidate="noValidate"
-                onSubmit={confirmEmail}
+                onSubmit={(e) => handleSetState(confirmEmail(e, props, state))}
               >
                 <Typography
                   gutterBottom
@@ -125,7 +117,22 @@ function EmailConfirm(props) {
 }
 
 EmailConfirm.propTypes = {
-  api: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  send_email_confirmation: PropTypes.func.isRequired,
 };
 
-export default EmailConfirm;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    send_email_confirmation: (props, key) => {
+      return dispatch(AuthActions.send_email_confirmation(props, key));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(EmailConfirm);

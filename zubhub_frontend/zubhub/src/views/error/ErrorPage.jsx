@@ -7,8 +7,10 @@ import { Box, Typography, Container } from "@material-ui/core";
 import disconnected from "../../assets/images/disconnected-chains.svg";
 import styles from "../../assets/js/styles/views/error/errorPageStyles";
 
+const useStyles = makeStyles(styles);
+
 function ErrorPage(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
   return (
     <Box className={classes.root}>
       <Container className={classes.mainContainerStyle}>

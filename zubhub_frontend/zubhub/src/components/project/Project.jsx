@@ -24,15 +24,17 @@ import nFormatter from "../../assets/js/nFormatter";
 import dFormatter from "../../assets/js/dFormatter";
 import styles from "../../assets/js/styles/components/project/projectStyles";
 
+const useStyles = makeStyles(styles);
+
 function Project(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
 
   const toggle_like = (e, id) => {
     e.preventDefault();
     if (!props.auth.token) {
       props.history.push("/login");
     } else {
-      let toggle_like_promise = props.api.toggle_like({
+      const toggle_like_promise = props.toggle_like({
         id,
         token: props.auth.token,
       });
@@ -45,7 +47,7 @@ function Project(props) {
     if (!props.auth.token) {
       props.history.push("/login");
     } else {
-      let toggle_save_promise = props.api.toggle_save({
+      const toggle_save_promise = props.toggle_save({
         id,
         token: props.auth.token,
       });
@@ -53,7 +55,7 @@ function Project(props) {
     }
   };
 
-  let { project } = props;
+  const { project } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
@@ -176,7 +178,8 @@ function Project(props) {
 Project.propTypes = {
   auth: PropTypes.object.isRequired,
   updateProjects: PropTypes.func.isRequired,
-  api: PropTypes.object.isRequired,
+  toggle_like: PropTypes.func.isRequired,
+  toggle_save: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
 };
 

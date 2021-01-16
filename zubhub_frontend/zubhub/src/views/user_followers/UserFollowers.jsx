@@ -18,13 +18,101 @@ import {
   Avatar,
 } from "@material-ui/core";
 
+import * as UserActions from "../../store/actions/userActions";
 import CustomButton from "../../components/button/Button";
 import ErrorPage from "../error/ErrorPage";
 import LoadingPage from "../loading/LoadingPage";
 import styles from "../../assets/js/styles/views/user_followers/userFollowersStyles";
 
+const useStyles = makeStyles(styles);
+
+const fetchPage = (page, props) => {
+  const username = props.match.params.username;
+  return props.get_followers({ page, username });
+};
+
+const toggle_follow = (e, props, state, id) => {
+  e.preventDefault();
+  if (!props.auth.token) {
+    props.history.push("/login");
+  } else {
+    return props
+      .toggle_follow({ id, token: props.auth.token })
+      .then((res) => {
+        if (res.profile && res.profile.username) {
+          const followers = state.followers.map((follower) =>
+            follower.id !== res.profile.id ? follower : res.profile
+          );
+          return { followers };
+        } else {
+          res = Object.keys(res)
+            .map((key) => res[key])
+            .join("\n");
+          throw new Error(res);
+        }
+      })
+      .catch((error) => {
+        if (error.message.startsWith("Unexpected")) {
+          toast.warning(
+            "An error occured while performing this action. Please try again later"
+          );
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  }
+};
+
+const buildFollowers = (followers, classes, props, state, handleSetState) =>
+  followers.map((follower) => (
+    <Grid
+      item
+      xs={12}
+      sm={6}
+      md={4}
+      lg={3}
+      className={classes.followersGridStyle}
+      align="center"
+      key={follower.id}
+    >
+      <Link
+        className={classes.textDecorationNone}
+        to={`/creators/${follower.username}`}
+      >
+        <Card className={classes.cardStyle}>
+          <Avatar
+            className={classes.avatarStyle}
+            src={follower.avatar}
+            alt={follower.username}
+          />
+          {follower.id !== props.auth.id ? (
+            <CustomButton
+              variant="contained"
+              onClick={(e, id = follower.id) =>
+                handleSetState(toggle_follow(e, props, state, id))
+              }
+              primaryButtonStyle
+            >
+              {follower.followers.includes(props.auth.id)
+                ? "Unfollow"
+                : "Follow"}
+            </CustomButton>
+          ) : null}
+          <Typography
+            component="h3"
+            color="textPrimary"
+            className={classes.userNameStyle}
+          >
+            {follower.username}
+          </Typography>
+        </Card>
+      </Link>
+    </Grid>
+  ));
+
 function UserFollowers(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
     followers: [],
@@ -34,115 +122,19 @@ function UserFollowers(props) {
   });
 
   React.useEffect(() => {
-    fetchPage();
+    handleSetState(fetchPage(null, props));
   }, []);
 
-  const fetchPage = (page) => {
-    let username = props.match.params.username;
-    props.api
-      .get_followers({ page, username })
-      .then((res) => {
-        if (Array.isArray(res.results)) {
-          return setState({
-            ...state,
-            followers: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
-            loading: false,
-          });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        toast.warning(error.message);
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
-  };
-
-  const toggle_follow = (e, id) => {
-    e.preventDefault();
-    if (!props.auth.token) {
-      props.history.push("/login");
-    } else {
-      props.api
-        .toggle_follow({ id, token: props.auth.token })
-        .then((res) => {
-          if (res.id) {
-            let followers = state.followers.map((follower) =>
-              follower.id !== res.id ? follower : res
-            );
-            return setState({ ...state, followers });
-          } else {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
-          }
-        })
-        .catch((error) => {
-          setState({ ...state, loading: false });
-          if (error.message.startsWith("Unexpected")) {
-            toast.warning(
-              "An error occured while performing this action. Please try again later"
-            );
-          } else {
-            toast.warning(error.message);
-          }
-        });
     }
   };
 
-  const buildFollowers = (followers) =>
-    followers.map((follower) => (
-      <Grid
-        item
-        xs={12}
-        sm={6}
-        md={4}
-        lg={3}
-        className={classes.followersGridStyle}
-        align="center"
-      >
-        <Link
-          className={classes.textDecorationNone}
-          to={`/creators/${follower.username}`}
-          key={follower.id}
-        >
-          <Card className={classes.cardStyle}>
-            <Avatar
-              className={classes.avatarStyle}
-              src={follower.avatar}
-              alt={follower.username}
-            />
-            {follower.id !== props.auth.id ? (
-              <CustomButton
-                variant="contained"
-                onClick={(e, id = follower.id) => toggle_follow(e, id)}
-                primaryButtonStyle
-              >
-                {follower.followers.includes(props.auth.id)
-                  ? "Unfollow"
-                  : "Follow"}
-              </CustomButton>
-            ) : null}
-            <Typography
-              component="h3"
-              color="textPrimary"
-              className={classes.userNameStyle}
-            >
-              {follower.username}
-            </Typography>
-          </Card>
-        </Link>
-      </Grid>
-    ));
-
-  let { followers, prevPage, nextPage, loading } = state;
-  let username = props.match.params.username;
+  const { followers, prevPage, nextPage, loading } = state;
+  const username = props.match.params.username;
   if (loading) {
     return <LoadingPage />;
   } else if (followers.length > 0) {
@@ -159,7 +151,7 @@ function UserFollowers(props) {
                 {username}'s followers
               </Typography>
             </Grid>
-            {buildFollowers(followers)}
+            {buildFollowers(followers, classes, props, state, handleSetState)}
           </Grid>
           <ButtonGroup
             aria-label="previous and next page buttons"
@@ -170,7 +162,10 @@ function UserFollowers(props) {
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split("?")[1]) => fetchPage(page)}
+                onClick={(e, page = prevPage.split("?")[1]) => {
+                  handleSetState({ loading: true });
+                  handleSetState(fetchPage(page, props));
+                }}
                 primaryButtonStyle
               >
                 Prev
@@ -181,7 +176,10 @@ function UserFollowers(props) {
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split("?")[1]) => fetchPage(page)}
+                onClick={(e, page = nextPage.split("?")[1]) => {
+                  handleSetState({ loading: true });
+                  handleSetState(fetchPage(page, props));
+                }}
                 primaryButtonStyle
               >
                 Next
@@ -198,7 +196,8 @@ function UserFollowers(props) {
 
 UserFollowers.propTypes = {
   auth: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
+  toggle_follow: PropTypes.func.isRequired,
+  get_followers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -207,4 +206,15 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(UserFollowers);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    toggle_follow: (value) => {
+      return dispatch(UserActions.toggle_follow(value));
+    },
+    get_followers: (value) => {
+      return dispatch(UserActions.get_followers(value));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserFollowers);

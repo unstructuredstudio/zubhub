@@ -36,86 +36,53 @@ import CustomButton from "../../components/button/Button";
 import * as AuthActions from "../../store/actions/authActions";
 import styles from "../../assets/js/styles/views/signup/signupStyles";
 
+const useStyles = makeStyles(styles);
+
+const handleMouseDownPassword = (e) => {
+  e.preventDefault();
+};
+
+const get_locations = (props) => {
+  return props.get_locations();
+};
+
+const signup = (e, props) => {
+  e.preventDefault();
+  if (props.values.location.length < 1) {
+    props.validateField("location");
+  } else {
+    return props.signup(props);
+  }
+};
+
+const handleTooltipToggle = ({ toolTipOpen }) => {
+  return { toolTipOpen: !toolTipOpen };
+};
+
 function Signup(props) {
   const [state, setState] = React.useState({
     error: null,
+    locations: [],
+    showPassword1: false,
+    showPassword2: false,
+    toolTipOpen: false,
   });
 
-  const [locations, setLocations] = React.useState([]);
-  const [showPassword1, setShowPassword1] = React.useState(false);
-  const [showPassword2, setShowPassword2] = React.useState(false);
-  const [toolTipOpen, setToolTipOpen] = React.useState(false);
-
   React.useEffect(() => {
-    props.api
-      .get_locations()
-      .then((res) => {
-        if (Array.isArray(res) && res.length > 0 && res[0].name) {
-          setLocations(res);
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
-          setState({
-            error:
-              "An error occured while performing this action. Please try again later",
-          });
-        } else {
-          setState({ ...state, error: error.message });
-        }
-      });
+    handleSetState(get_locations(props));
   }, []);
 
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
 
-  const signup = (e) => {
-    e.preventDefault();
-    if (props.values.location.length < 1) {
-      props.validateField("location");
-    } else {
-      props.api
-        .signup(props.values)
-        .then((res) => {
-          if (!res.key) {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
-          }
-          return props.set_auth_user({ token: res.key });
-        })
-        .then((val) => props.history.push("/profile"))
-        .catch((error) => {
-          if (error.message.startsWith("Unexpected")) {
-            setState({
-              error:
-                "An error occured while performing this action. Please try again later",
-            });
-          } else {
-            setState({ ...state, error: error.message });
-          }
-        });
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
+      });
     }
   };
 
-  const handleMouseDownPassword = (e) => {
-    e.preventDefault();
-  };
-
-  const handleTooltipClose = () => {
-    setToolTipOpen(false);
-  };
-
-  const handleTooltipOpen = () => {
-    setToolTipOpen(true);
-  };
-
-  let { error } = state;
+  const { error, locations, toolTipOpen, showPassword1, showPassword2 } = state;
 
   return (
     <Box className={classes.root}>
@@ -127,7 +94,7 @@ function Signup(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={signup}
+                onSubmit={(e) => handleSetState(signup(e, props))}
               >
                 <Typography
                   gutterBottom
@@ -168,12 +135,18 @@ function Signup(props) {
                       >
                         Username
                       </InputLabel>
-                      <ClickAwayListener onClickAway={handleTooltipClose}>
+                      <ClickAwayListener
+                        onClickAway={() =>
+                          handleSetState(handleTooltipToggle(state))
+                        }
+                      >
                         <Tooltip
                           title="Do not use your real name here!"
                           placement="top-start"
                           arrow
-                          onClose={handleTooltipClose}
+                          onClose={() =>
+                            handleSetState(handleTooltipToggle(state))
+                          }
                           PopperProps={{
                             disablePortal: true,
                           }}
@@ -187,7 +160,9 @@ function Signup(props) {
                             id="username"
                             name="username"
                             type="text"
-                            onClick={handleTooltipOpen}
+                            onClick={() =>
+                              handleSetState(handleTooltipToggle(state))
+                            }
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             labelWidth={90}
@@ -342,7 +317,12 @@ function Signup(props) {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={() => setShowPassword1(!showPassword1)}
+                              onClick={() =>
+                                setState({
+                                  ...state,
+                                  showPassword1: !showPassword1,
+                                })
+                              }
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
@@ -391,7 +371,12 @@ function Signup(props) {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={() => setShowPassword2(!showPassword2)}
+                              onClick={() =>
+                                setState({
+                                  ...state,
+                                  showPassword2: !showPassword2,
+                                })
+                              }
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
@@ -461,8 +446,9 @@ function Signup(props) {
 
 Signup.propTypes = {
   auth: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
-  set_auth_user: PropTypes.object.isRequired,
+  set_auth_user: PropTypes.func.isRequired,
+  signup: PropTypes.func.isRequired,
+  get_locations: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -475,6 +461,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     set_auth_user: (auth_user) => {
       dispatch(AuthActions.setAuthUser(auth_user));
+    },
+    signup: (props) => {
+      return dispatch(AuthActions.signup(props));
+    },
+    get_locations: (props) => {
+      return dispatch(AuthActions.get_locations());
     },
   };
 };

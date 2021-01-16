@@ -4,8 +4,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Container, Box, CircularProgress } from "@material-ui/core";
 import styles from "../../assets/js/styles/views/loading/loadingPageStyles";
 
+const useStyles = makeStyles(styles);
+
 function LoadingPage() {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
   return (
     <Box className={classes.root}>
       <Container className={classes.mainContainerStyle}>

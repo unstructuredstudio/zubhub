@@ -120,4 +120,5 @@ return(
   );
 }
 
-export default withAPI(App)
+
+export default App

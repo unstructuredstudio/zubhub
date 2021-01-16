@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import { withFormik } from "formik";
 import * as Yup from "yup";
 
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { nanoid } from "nanoid";
@@ -31,14 +30,76 @@ import {
   FormControl,
 } from "@material-ui/core";
 
+import * as ProjectActions from "../../store/actions/projectActions";
 import ErrorPage from "../error/ErrorPage";
 import DO, { doConfig } from "../../assets/js/DO";
 import { useStateUpdateCallback } from "../../assets/js/customHooks";
 import CustomButton from "../../components/button/Button";
 import styles from "../../assets/js/styles/views/create_project/createProjectStyles";
 
+const useStyles = makeStyles(styles);
+
+let image_field_touched = false;
+let video_field_touched = false;
+
+const handleImageFieldChange = (e, refs, props) => {
+  props.setFieldValue(e.currentTarget.name, refs.imageEl.current);
+  refs.imageCountEl.current.innerText = refs.imageEl.current.files.length;
+  refs.imageCountEl.current.style.fontSize = "0.8rem";
+};
+
+const handleImageButtonClick = (e, props, refs) => {
+  e.preventDefault();
+  refs.imageEl.current.click();
+  props.setFieldTouched("project_images");
+};
+
+const removeMaterialsUsed = (e, props, refs, value) => {
+  e.preventDefault();
+  const hidden_materials_field = refs.materialsUsedEl.current;
+  hidden_materials_field.value = hidden_materials_field.value
+    .split(",")
+    .filter((material) => material !== value)
+    .join(",");
+
+  props.setFieldValue("materials_used", hidden_materials_field.value, true);
+  return { materials_used: hidden_materials_field.value.split(",") };
+};
+
+const handleAddMaterialFieldChange = (e, props, refs) => {
+  props.validateField("materials_used");
+  const value = refs.addMaterialsUsedEl.current.firstChild.value;
+  if (value.includes(",")) {
+    refs.addMaterialsUsedEl.current.firstChild.value = value.split(",")[0];
+    return addMaterialUsed(e, props, refs);
+  }
+};
+
+const addMaterialUsed = (e, props, refs) => {
+  e.preventDefault();
+  const new_material = refs.addMaterialsUsedEl.current.firstChild;
+  if (new_material.value !== "") {
+    const hidden_materials_field = refs.materialsUsedEl.current;
+    hidden_materials_field.value = hidden_materials_field.value
+      ? `${hidden_materials_field.value},${new_material.value}`
+      : new_material.value;
+    new_material.value = "";
+    props.setFieldValue("materials_used", hidden_materials_field.value, true);
+    new_material.focus();
+    return { materials_used: hidden_materials_field.value.split(",") };
+  }
+};
+
 function CreateProject(props) {
-  const classes = makeStyles(styles)();
+  const refs = {
+    imageEl: React.useRef(null),
+    imageUploadButtonEl: React.useRef(null),
+    imageCountEl: React.useRef(null),
+    videoEl: React.useRef(null),
+    addMaterialsUsedEl: React.useRef(null),
+    materialsUsedEl: React.useRef(null),
+  };
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
     error: null,
@@ -59,9 +120,39 @@ function CreateProject(props) {
       state.image_upload.images_to_upload ===
       state.image_upload.successful_uploads
     ) {
-      upload_project();
+      handleSetState(upload_project());
     }
   }, [state.image_upload.successful_uploads]);
+
+  React.useEffect(() => {
+    if (props.touched["project_images"] && props.errors["project_images"]) {
+      refs.imageUploadButtonEl.current.setAttribute(
+        "style",
+        "border-color:#F54336; color:#F54336"
+      );
+    } else {
+      refs.imageUploadButtonEl.current.setAttribute(
+        "style",
+        "border-color: #00B8C4; color:#00B8C4"
+      );
+    }
+
+    if (props.touched["project_images"]) {
+      image_field_touched = true;
+    } else {
+      image_field_touched = false;
+    }
+
+    if (props.touched["video"]) {
+      video_field_touched = true;
+    } else {
+      video_field_touched = false;
+    }
+  }, [
+    props.errors["project_images"],
+    props.touched["project_images"],
+    props.touched["video"],
+  ]);
 
   const upload = (image) => {
     const params = {
@@ -74,8 +165,8 @@ function CreateProject(props) {
 
     DO.upload(params)
       .on("httpUploadProgress", (e) => {
-        let progress = Math.round((e.loaded * 100.0) / e.total);
-        let { image_upload } = state;
+        const progress = Math.round((e.loaded * 100.0) / e.total);
+        const { image_upload } = state;
         image_upload.upload_info[image.name] = progress;
 
         let total = 0;
@@ -86,27 +177,26 @@ function CreateProject(props) {
         total = total / Object.keys(image_upload.upload_info).length;
         image_upload.upload_percent = total;
 
-        setState({ ...state, image_upload });
+        handleSetState({ image_upload });
       })
       .send((err, data) => {
         if (err) {
-          let { image_upload } = state;
+          const { image_upload } = state;
           image_upload.upload_dialog = false;
 
           if (err.message.startsWith("Unexpected")) {
-            setState({
-              ...state,
+            handleSetState({
               error:
                 "An error occured while performing this action. Please try again later",
               image_upload,
             });
           } else {
-            setState({ ...state, error: err.message, image_upload });
+            handleSetState({ error: err.message, image_upload });
           }
         } else {
-          let secure_url = data.Location;
-          let public_id = data.Key;
-          let { image_upload } = state;
+          const secure_url = data.Location;
+          const public_id = data.Key;
+          const { image_upload } = state;
 
           image_upload.uploaded_images_url.push({
             image_url: secure_url,
@@ -114,44 +204,21 @@ function CreateProject(props) {
           });
           image_upload.successful_uploads = image_upload.successful_uploads + 1;
 
-          setState({ ...state, image_upload });
+          handleSetState({ image_upload });
         }
       });
   };
 
   const upload_project = () => {
-    let { image_upload } = state;
+    const { image_upload } = state;
     image_upload.upload_dialog = false;
-    setState({ ...state, image_upload });
-    props.api
-      .create_project({
-        ...props.values,
-        token: props.auth.token,
-        images: state.image_upload.uploaded_images_url,
-        video: props.values.video ? props.values.video : "",
-      })
-      .then((res) => {
-        if (!res.comments) {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        } else {
-          toast.success("Your project was created successfully!!");
-          return props.history.push("/profile");
-        }
-      })
-      .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
-          setState({
-            ...state,
-            error:
-              "An error occured while performing this action. Please try again later",
-          });
-        } else {
-          setState({ ...state, error: error.message });
-        }
-      });
+    handleSetState({ image_upload });
+    return props.create_project({
+      ...props.values,
+      token: props.auth.token,
+      images: state.image_upload.uploaded_images_url,
+      video: props.values.video ? props.values.video : "",
+    });
   };
 
   const init_project = (e) => {
@@ -161,32 +228,33 @@ function CreateProject(props) {
     } else {
       props.setFieldTouched("title");
       props.setFieldTouched("description");
+      props.setFieldTouched("project_images");
+      props.setFieldTouched("video");
       props.setFieldTouched("materials_used");
-
       props.validateField("title");
       props.validateField("description");
+      props.validateField("project_images");
+      props.validateField("video");
       props.validateField("materials_used");
 
-      let media_fields = mediaFieldsValidation();
-
-      if (media_fields.image_is_empty && media_fields.video_is_empty) {
+      if (
+        props.errors["title"] ||
+        props.errors["description"] ||
+        props.errors["project_images"] ||
+        props.errors["video"] ||
+        props.errors["materials_used"]
+      ) {
         return;
-      } else if (media_fields.video_value_not_url) {
-        return;
-      } else if (media_fields.too_many_images === true) {
-        return;
-      } else if (media_fields.image_size_too_large === true) {
-        return;
-      } else if (media_fields.image_is_empty) {
-        upload_project();
+      } else if (refs.imageEl.current.files.length === 0) {
+        handleSetState(upload_project());
       } else {
-        let project_images = document.querySelector("#project_images").files;
+        const project_images = refs.imageEl.current.files;
 
-        let { image_upload } = state;
+        const { image_upload } = state;
         image_upload.images_to_upload = project_images.length;
         image_upload.upload_dialog = true;
         image_upload.upload_percent = 0;
-        setState({ ...state, image_upload });
+        handleSetState({ image_upload });
 
         for (let index = 0; index < project_images.length; index++) {
           upload(project_images[index]);
@@ -195,131 +263,15 @@ function CreateProject(props) {
     }
   };
 
-  const mediaFieldsValidation = () => {
-    let image_upload_button = document.querySelector("#image_upload_button");
-    let media_fields = document.querySelector("#project_images");
-    let video = document.querySelector("#video");
-    let imageCount = document.querySelector(".imageCountStyle");
-    imageCount.innerText = media_fields.files.length;
-    imageCount.style.fontSize = "0.8rem";
-
-    let result = {};
-
-    if (/^(ftp|http|https):\/\/[^ "]+$/.test(video.value) === false) {
-      props.setFieldTouched("video");
-      props.setFieldError(
-        "video",
-        "you are required to submit a video url here"
-      );
-      result["video_value_not_url"] = true;
-    }
-
-    if (media_fields.files.length < 1) {
-      result["image_is_empty"] = true;
-      if (video.value === "") {
-        image_upload_button.setAttribute(
-          "style",
-          "border-color:#F54336; color:#F54336"
-        );
-        props.setFieldTouched("project_images");
-        props.setFieldTouched("video");
-        props.setFieldError(
-          "project_images",
-          "you must provide either image(s) or video url"
-        );
-        props.setFieldError(
-          "video",
-          "you must provide either image(s) or video url"
-        );
-        result["video_is_empty"] = true;
-      }
-    } else if (media_fields.files.length > 10) {
-      image_upload_button.setAttribute(
-        "style",
-        "border-color:#F54336; color:#F54336"
-      );
-      props.setFieldTouched("project_images");
-      props.setFieldError("project_images", "too many images uploaded");
-      result["too_many_images"] = true;
-    } else {
-      let image_size_too_large = false;
-
-      for (let index = 0; index < media_fields.files.length; index++) {
-        if (media_fields.files[index].size / 1000 > 3072) {
-          image_size_too_large = true;
-        }
-      }
-      if (image_size_too_large) {
-        image_upload_button.setAttribute(
-          "style",
-          "border-color:#F54336; color:#F54336"
-        );
-        props.setFieldTouched("project_images");
-        props.setFieldError(
-          "project_images",
-          "one or more of your image is greater than 3mb"
-        );
-        result["image_size_too_large"] = image_size_too_large;
-      }
-
-      return result;
-    }
-
-    image_upload_button.setAttribute(
-      "style",
-      "border-color: #00B8C4; color:#00B8C4"
-    );
-    return result;
-  };
-
-  const handleImageButtonClick = () => {
-    document.querySelector("#project_images").click();
-    props.setFieldTouched("project_images");
-  };
-
-  const handleAddMaterialFieldChange = (e) => {
-    props.validateField("materials_used");
-    let value = e.currentTarget.value;
-    if (value.includes(",")) {
-      e.currentTarget.value = value.split(",")[0];
-      addMaterialUsed(e);
-    }
-  };
-
-  const addMaterialUsed = (e) => {
-    e.preventDefault();
-    let new_material = document.querySelector("#add_materials_used");
-    if (new_material.value !== "") {
-      let hidden_materials_field = document.querySelector("#materials_used");
-      hidden_materials_field.value = hidden_materials_field.value
-        ? `${hidden_materials_field.value},${new_material.value}`
-        : new_material.value;
-      new_material.value = "";
-      props.setFieldValue("materials_used", hidden_materials_field.value, true);
-      setState({
-        ...state,
-        materials_used: hidden_materials_field.value.split(","),
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
     }
-    new_material.focus();
   };
 
-  const removeMaterialsUsed = (e, value) => {
-    e.preventDefault();
-    let hidden_materials_field = document.querySelector("#materials_used");
-    hidden_materials_field.value = hidden_materials_field.value
-      .split(",")
-      .filter((material) => material !== value)
-      .join(",");
-
-    props.setFieldValue("materials_used", hidden_materials_field.value, true);
-    setState({
-      ...state,
-      materials_used: hidden_materials_field.value.split(","),
-    });
-  };
-
-  let { error, image_upload, materials_used } = state;
+  const { error, image_upload, materials_used } = state;
   if (!props.auth.token) {
     return (
       <ErrorPage error="You are not logged in. Click on the signin button to get started" />
@@ -442,13 +394,21 @@ function CreateProject(props) {
                       >
                         <label htmlFor="project_images">
                           <CustomButton
+                            ref={refs.imageUploadButtonEl}
                             variant="outlined"
                             size="large"
                             margin="normal"
                             id="image_upload_button"
                             startIcon={<ImageIcon />}
-                            endIcon={<span className="imageCountStyle"></span>}
-                            onClick={handleImageButtonClick}
+                            endIcon={
+                              <span
+                                ref={refs.imageCountEl}
+                                className="imageCountStyle"
+                              ></span>
+                            }
+                            onClick={(e) =>
+                              handleImageButtonClick(e, props, refs)
+                            }
                             secondaryButtonStyle
                             imageUploadButtonStyle
                             fullWidth
@@ -457,6 +417,7 @@ function CreateProject(props) {
                           </CustomButton>
                         </label>
                         <input
+                          ref={refs.imageEl}
                           className={classes.displayNone}
                           aria-hidden="true"
                           type="file"
@@ -464,7 +425,9 @@ function CreateProject(props) {
                           id="project_images"
                           name="project_images"
                           multiple
-                          onChange={mediaFieldsValidation}
+                          onChange={(e) =>
+                            handleImageFieldChange(e, refs, props)
+                          }
                           onBlur={props.handleBlur}
                         />
                         <FormHelperText error>
@@ -489,6 +452,7 @@ function CreateProject(props) {
                           Video URL
                         </InputLabel>
                         <OutlinedInput
+                          ref={refs.videoEl}
                           className={classes.customInputStyle}
                           id="video"
                           name="video"
@@ -532,8 +496,15 @@ function CreateProject(props) {
                                 className={classes.customChipStyle}
                                 key={num}
                                 label={material}
-                                onDelete={(e, value = material) =>
-                                  removeMaterialsUsed(e, value)
+                                onDelete={(e) =>
+                                  handleSetState(
+                                    removeMaterialsUsed(
+                                      e,
+                                      props,
+                                      refs,
+                                      material
+                                    )
+                                  )
                                 }
                                 color="secondary"
                                 variant="outlined"
@@ -544,6 +515,7 @@ function CreateProject(props) {
                         <Grid container spacing={1}>
                           <Grid item xs={8} sm={8} md={8}>
                             <OutlinedInput
+                              ref={refs.addMaterialsUsedEl}
                               className={classes.customInputStyle}
                               id="add_materials_used"
                               name="add_materials_used"
@@ -552,7 +524,11 @@ function CreateProject(props) {
                               onClick={() =>
                                 props.setFieldTouched("materials_used")
                               }
-                              onChange={handleAddMaterialFieldChange}
+                              onChange={(e) =>
+                                handleSetState(
+                                  handleAddMaterialFieldChange(e, props, refs)
+                                )
+                              }
                               onBlur={() =>
                                 props.validateField("materials_used")
                               }
@@ -566,7 +542,9 @@ function CreateProject(props) {
                             <CustomButton
                               variant="outlined"
                               size="large"
-                              onClick={addMaterialUsed}
+                              onClick={(e) =>
+                                handleSetState(addMaterialUsed(e, props, refs))
+                              }
                               secondaryButtonStyle
                               fullWidth
                             >
@@ -575,6 +553,7 @@ function CreateProject(props) {
                           </Grid>
                         </Grid>
                         <input
+                          ref={refs.materialsUsedEl}
                           id="materials_used"
                           name="materials_used"
                           className={classes.displayNone}
@@ -646,7 +625,7 @@ function CreateProject(props) {
 
 CreateProject.propTypes = {
   auth: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
+  create_project: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -655,7 +634,18 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(
+const mapDispatchToProps = (dispatch) => {
+  return {
+    create_project: (props) => {
+      return dispatch(ProjectActions.create_project(props));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
   withFormik({
     mapPropsToValue: () => ({
       title: "",
@@ -670,9 +660,52 @@ export default connect(mapStateToProps)(
       description: Yup.string()
         .max(10000, "your description shouldn't be more than 10,000 characters")
         .required("description is required"),
+      project_images: Yup.mixed()
+        .test(
+          "image_is_empty",
+          "you must provide either image(s) or video url",
+          function (value) {
+            return image_field_touched && !value && !this.parent.video
+              ? false
+              : true;
+          }
+        )
+        .test("too_many_images", "too many images uploaded", (value) => {
+          if (value) {
+            return value.files.length > 10 ? false : true;
+          } else {
+            return true;
+          }
+        })
+        .test(
+          "image_size_too_large",
+          "one or more of your image is greater than 3mb",
+          (value) => {
+            if (value) {
+              let image_size_too_large = false;
+              for (let index = 0; index < value.files.length; index++) {
+                if (value.files[index].size / 1000 > 3072) {
+                  image_size_too_large = true;
+                }
+              }
+              return image_size_too_large ? false : true;
+            } else {
+              return true;
+            }
+          }
+        ),
       video: Yup.string()
         .url("you are required to submit a video url here")
-        .max(1000, "your video url shouldn't be more than 1000 characters"),
+        .max(1000, "your video url shouldn't be more than 1000 characters")
+        .test(
+          "video_is_empty",
+          "you must provide either image(s) or video url",
+          function (value) {
+            return video_field_touched && !value && !this.parent.project_images
+              ? false
+              : true;
+          }
+        ),
       materials_used: Yup.string()
         .max(
           10000,

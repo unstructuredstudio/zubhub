@@ -16,76 +16,65 @@ import {
   Container,
 } from "@material-ui/core";
 
+import * as ProjectActions from "../../store/actions/projectActions";
 import CustomButton from "../../components/button/Button";
 import ErrorPage from "../error/ErrorPage";
 import LoadingPage from "../loading/LoadingPage";
 import Project from "../../components/project/Project";
 import styles from "../../assets/js/styles/views/user_projects/userProjectsStyles";
 
+const useStyles = makeStyles(styles);
+
+const fetchPage = (page, props) => {
+  const username = props.match.params.username;
+  return props.get_user_projects({ page, username });
+};
+
+const updateProjects = (res, { results: projects }) => {
+  return res
+    .then((res) => {
+      if (res.project && res.project.title) {
+        projects = projects.map((project) =>
+          project.id === res.project.id ? res.project : project
+        );
+        return { results: projects };
+      } else {
+        res = Object.keys(res)
+          .map((key) => res[key])
+          .join("\n");
+        throw new Error(res);
+      }
+    })
+    .catch((error) => {
+      toast.warning(error.message);
+      return { loading: false };
+    });
+};
+
 function UserProjects(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
-    projects: [],
+    results: [],
     prevPage: null,
     nextPage: null,
     loading: true,
   });
 
   React.useEffect(() => {
-    fetchPage();
+    handleSetState(fetchPage(null, props));
   }, []);
 
-  const fetchPage = (page) => {
-    let username = props.match.params.username;
-    props.api
-      .get_user_projects({ page, username })
-      .then((res) => {
-        if (Array.isArray(res.results)) {
-          return setState({
-            ...state,
-            projects: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
-            loading: false,
-          });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        toast.warning(error.message);
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
+    }
   };
 
-  const updateProjects = (res) => {
-    res
-      .then((res) => {
-        if (res.id) {
-          let { projects } = state;
-          projects = projects.map((project) =>
-            project.id === res.id ? res : project
-          );
-          return setState({ ...state, projects });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        toast.warning(error.message);
-      });
-  };
-
-  let { projects, prevPage, nextPage, loading } = state;
-  let username = props.match.params.username;
+  const { results: projects, prevPage, nextPage, loading } = state;
+  const username = props.match.params.username;
   if (loading) {
     return <LoadingPage />;
   } else if (projects.length > 0) {
@@ -115,7 +104,9 @@ function UserProjects(props) {
                 <Project
                   project={project}
                   key={project.id}
-                  updateProjects={updateProjects}
+                  updateProjects={(res) =>
+                    handleSetState(updateProjects(res, state))
+                  }
                   {...props}
                 />
               </Grid>
@@ -130,7 +121,9 @@ function UserProjects(props) {
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split("?")[1]) => fetchPage(page)}
+                onClick={(e, page = prevPage.split("?")[1]) =>
+                  handleSetState(fetchPage(page, props))
+                }
                 primaryButtonStyle
               >
                 Prev
@@ -141,7 +134,9 @@ function UserProjects(props) {
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split("?")[1]) => fetchPage(page)}
+                onClick={(e, page = nextPage.split("?")[1]) =>
+                  handleSetState(fetchPage(page, props))
+                }
                 primaryButtonStyle
               >
                 Next
@@ -157,7 +152,10 @@ function UserProjects(props) {
 }
 
 UserProjects.propTypes = {
-  api: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  get_user_projects: PropTypes.func.isRequired,
+  toggle_like: PropTypes.func.isRequired,
+  toggle_save: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -166,4 +164,18 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(UserProjects);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    get_user_projects: (values) => {
+      return dispatch(ProjectActions.get_user_projects(values));
+    },
+    toggle_like: (props) => {
+      return dispatch(ProjectActions.toggle_like(props));
+    },
+    toggle_save: (props) => {
+      return dispatch(ProjectActions.toggle_save(props));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserProjects);

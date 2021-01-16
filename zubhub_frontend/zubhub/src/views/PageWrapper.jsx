@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -26,15 +26,37 @@ import {
 
 import CustomButton from "../components/button/Button.js";
 import LoadingPage from "./loading/LoadingPage";
-import { withAPI } from "../api";
 import * as AuthActions from "../store/actions/authActions";
 import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
 import logo from "../assets/images/logos/logo.png";
 import styles from "../assets/js/styles/views/page_wrapper/pageWrapperStyles";
 import commonStyles from "../assets/js/styles";
 
+const useStyles = makeStyles(styles);
+
+const logout = (e, props) => {
+  e.preventDefault();
+  return props.logout(props);
+};
+
+const handleScrollTopClick = (e, ref) => {
+  e.preventDefault();
+  if (ref.current) {
+    ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+};
+
+const handleProfileMenuOpen = (e) => {
+  return { anchorEl: e.currentTarget };
+};
+
+const handleProfileMenuClose = () => {
+  return { anchorEl: null };
+};
+
 function PageWrapper(props) {
-  const classes = makeStyles(styles)();
+  const backToTopEl = React.useRef(null);
+  const classes = useStyles();
   const commonClasses = makeStyles(commonStyles)();
 
   const [state, setState] = React.useState({
@@ -45,81 +67,23 @@ function PageWrapper(props) {
 
   React.useEffect(() => {
     if (props.auth.token) {
-      setState({ ...state, loading: true });
-      props.api
-        .get_auth_user(props.auth.token)
-        .then((res) => {
-          if (!res.username) {
-            throw new Error(
-              "an error occured while getting user profile, please try again later"
-            );
-          }
-          props.set_auth_user({
-            ...props.auth,
-            username: res.username,
-            id: res.id,
-          });
-        })
-        .catch((error) => toast.warning(error.message))
-        .finally(() => {
-          setState({ ...state, loading: false });
-        });
+      handleSetState({ loading: true });
+      props.get_auth_user(props).finally(() => {
+        handleSetState({ loading: false });
+      });
     }
   }, [props.auth.token]);
 
-  const logout = (e) => {
-    e.preventDefault();
-    props.api
-      .logout(props.auth.token)
-      .then((res) => {
-        props.set_auth_user({ token: null, username: null, id: null });
-      })
-      .then((res) => {
-        props.history.push("/");
-      })
-      .catch((error) => {
-        toast.warning(
-          "An error occured while signing you out. please try again"
-        );
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
-  };
-
-  const handleScrollTopClick = (e) => {
-    const anchor = (e.target.ownerDocument || document).querySelector(
-      "#back-to-top-anchor"
-    );
-
-    if (anchor) {
-      anchor.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
 
-  const scrollTop = (props) => {
-    return (
-      <Zoom in={useScrollTrigger}>
-        <div
-          onClick={handleScrollTopClick}
-          role="presentation"
-          className={classes.scrollTopButtonStyle}
-        >
-          <Fab color="secondary" size="small" aria-label="scroll back to top">
-            <KeyboardArrowUpIcon />
-          </Fab>
-        </div>
-      </Zoom>
-    );
-  };
-
-  const handleProfileMenuOpen = (e) => {
-    setState({ ...state, anchorEl: e.currentTarget });
-  };
-
-  const handleProfileMenuClose = () => {
-    setState({ ...state, anchorEl: null });
-  };
-
-  let { anchorEl, loading } = state;
-  let profileMenuOpen = Boolean(anchorEl);
+  const { anchorEl, loading } = state;
+  const profileMenuOpen = Boolean(anchorEl);
   return (
     <>
       <ToastContainer />
@@ -175,7 +139,7 @@ function PageWrapper(props) {
                     aria-label={`${props.auth.username}' Avatar`}
                     aria-controls="profile_menu"
                     aria-haspopup="true"
-                    onClick={handleProfileMenuOpen}
+                    onClick={(e) => handleSetState(handleProfileMenuOpen(e))}
                     src={`https://robohash.org/${props.auth.username}`}
                     alt={props.auth.username}
                   />
@@ -193,7 +157,7 @@ function PageWrapper(props) {
                       horizontal: "right",
                     }}
                     open={profileMenuOpen}
-                    onClose={handleProfileMenuClose}
+                    onClose={(e) => handleSetState(handleProfileMenuClose(e))}
                   >
                     <MenuItem className={classes.profileStyle}>
                       <a className={classes.textDecorationNone} href="/profile">
@@ -223,7 +187,7 @@ function PageWrapper(props) {
                     <MenuItem className={classes.logOutStyle}>
                       <Typography
                         className={classes.textDecorationNone}
-                        onClick={logout}
+                        onClick={(e) => logout(e, props)}
                       >
                         <Typography
                           variant="subtitle2"
@@ -241,7 +205,7 @@ function PageWrapper(props) {
           </Toolbar>
         </Container>
       </AppBar>
-      <Toolbar id="back-to-top-anchor" />
+      <Toolbar ref={backToTopEl} />
 
       {loading ? <LoadingPage /> : props.children}
 
@@ -256,7 +220,17 @@ function PageWrapper(props) {
             alt="unstructured-studio-logo"
           />
         </a>
-        {scrollTop(props)}
+        <Zoom in={useScrollTrigger}>
+          <div
+            onClick={(e) => handleScrollTopClick(e, backToTopEl)}
+            role="presentation"
+            className={classes.scrollTopButtonStyle}
+          >
+            <Fab color="secondary" size="small" aria-label="scroll back to top">
+              <KeyboardArrowUpIcon />
+            </Fab>
+          </div>
+        </Zoom>
       </footer>
     </>
   );
@@ -264,8 +238,9 @@ function PageWrapper(props) {
 
 PageWrapper.propTypes = {
   auth: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
   set_auth_user: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
+  get_auth_user: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -279,10 +254,13 @@ const mapDispatchToProps = (dispatch) => {
     set_auth_user: (auth_user) => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
+    logout: (props) => {
+      return dispatch(AuthActions.logout(props));
+    },
+    get_auth_user: (props) => {
+      return dispatch(AuthActions.get_auth_user(props));
+    },
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withAPI(PageWrapper));
+export default connect(mapStateToProps, mapDispatchToProps)(PageWrapper);

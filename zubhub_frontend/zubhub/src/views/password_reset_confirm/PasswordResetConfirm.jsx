@@ -2,6 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 
+import { connect } from "react-redux";
+
 import { toast } from "react-toastify";
 
 import { withFormik } from "formik";
@@ -26,11 +28,41 @@ import {
   FormControl,
 } from "@material-ui/core";
 
+import * as AuthActions from "../../store/actions/authActions";
 import CustomButton from "../../components/button/Button";
 import styles from "../../assets/js/styles/views/password_reset_confirm/passwordResetConfirmStyles";
 
+const useStyles = makeStyles(styles);
+
+const getUidAndToken = (queryString) => {
+  let uid = queryString.split("&&");
+  const token = uid[1].split("=")[1];
+  uid = uid[0].split("=")[1];
+  return { uid, token };
+};
+
+const resetPassword = (e, props) => {
+  e.preventDefault();
+  const { uid, token } = getUidAndToken(props.location.search);
+  return props.password_reset_confirm({ ...props.values, uid, token });
+};
+
+const handleClickShowPassword = (field, state) => {
+  if (field === 1) {
+    const { showPassword1 } = state;
+    return { showPassword1: !showPassword1 };
+  } else if (field === 2) {
+    const { showPassword2 } = state;
+    return { showPassword2: !showPassword2 };
+  }
+};
+
+const handleMouseDownPassword = (e) => {
+  e.preventDefault();
+};
+
 function PasswordResetConfirm(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
     error: null,
@@ -38,54 +70,15 @@ function PasswordResetConfirm(props) {
     showPassword2: false,
   });
 
-  const getUidAndToken = (queryString) => {
-    let uid = queryString.split("&&");
-    let token = uid[1].split("=")[1];
-    uid = uid[0].split("=")[1];
-    return { uid, token };
-  };
-
-  const resetPassword = (e) => {
-    e.preventDefault();
-    let { uid, token } = getUidAndToken(props.location.search);
-    props.api
-      .password_reset_confirm({ ...props.values, uid, token })
-      .then((res) => {
-        toast.success(
-          "Congratulations! your password reset was successful! you will now be redirected to login"
-        );
-        setTimeout(() => {
-          props.history.push("/login");
-        }, 4000);
-      })
-      .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
-          setState({
-            ...state,
-            error:
-              "An error occured while performing this action. Please try again later",
-          });
-        } else {
-          setState({ ...state, error: error.message });
-        }
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
-  };
-
-  const handleClickShowPassword = (field) => {
-    if (field === 1) {
-      let { showPassword1 } = state;
-      setState({ ...state, showPassword1: !showPassword1 });
-    } else if (field === 2) {
-      let { showPassword2 } = state;
-      setState({ ...state, showPassword2: !showPassword2 });
     }
   };
 
-  const handleMouseDownPassword = (e) => {
-    e.preventDefault();
-  };
-
-  let { error, showPassword1, showPassword2 } = state;
+  const { error, showPassword1, showPassword2 } = state;
 
   return (
     <Box className={classes.root}>
@@ -97,7 +90,7 @@ function PasswordResetConfirm(props) {
                 className="auth-form"
                 name="password_reset_confirm"
                 noValidate="noValidate"
-                onSubmit={resetPassword}
+                onSubmit={(e) => handleSetState(resetPassword(e, props))}
               >
                 <Typography
                   gutterBottom
@@ -149,7 +142,9 @@ function PasswordResetConfirm(props) {
                             <IconButton
                               aria-label="toggle password visibility"
                               onClick={(e, field = 1) =>
-                                handleClickShowPassword(field)
+                                handleSetState(
+                                  handleClickShowPassword(field, state)
+                                )
                               }
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
@@ -201,7 +196,9 @@ function PasswordResetConfirm(props) {
                             <IconButton
                               aria-label="toggle password visibility"
                               onClick={(e, field = 2) =>
-                                handleClickShowPassword(field)
+                                handleSetState(
+                                  handleClickShowPassword(field, state)
+                                )
                               }
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
@@ -244,20 +241,40 @@ function PasswordResetConfirm(props) {
 }
 
 PasswordResetConfirm.propTypes = {
-  api: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+  password_reset_confirm: PropTypes.func.isRequired,
 };
 
-export default withFormik({
-  mapPropsToValue: () => ({
-    new_password1: "",
-    new_password2: "",
-  }),
-  validationSchema: Yup.object().shape({
-    new_password1: Yup.string()
-      .min(8, "your password is too short")
-      .required("input your password"),
-    new_password2: Yup.string()
-      .oneOf([Yup.ref("new_password1"), null], "Passwords must match")
-      .required("input a confirmation password"),
-  }),
-})(PasswordResetConfirm);
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    password_reset_confirm: (props) => {
+      return dispatch(AuthActions.password_reset_confirm(props));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  withFormik({
+    mapPropsToValue: () => ({
+      new_password1: "",
+      new_password2: "",
+    }),
+    validationSchema: Yup.object().shape({
+      new_password1: Yup.string()
+        .min(8, "your password is too short")
+        .required("input your password"),
+      new_password2: Yup.string()
+        .oneOf([Yup.ref("new_password1"), null], "Passwords must match")
+        .required("input a confirmation password"),
+    }),
+  })(PasswordResetConfirm)
+);

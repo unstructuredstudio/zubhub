@@ -32,52 +32,39 @@ import CustomButton from "../../components/button/Button";
 import * as AuthActions from "../../store/actions/authActions";
 import styles from "../../assets/js/styles/views/login/loginStyles";
 
+const useStyles = makeStyles(styles);
+
+const handleClickShowPassword = (state) => {
+  const { showPassword } = state;
+  return { showPassword: !showPassword };
+};
+
+const handleMouseDownPassword = (e) => {
+  e.preventDefault();
+};
+
+const login = (e, props) => {
+  e.preventDefault();
+  return props.login(props);
+};
+
 function Login(props) {
-  const classes = makeStyles(styles)();
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
     error: null,
     showPassword: false,
   });
 
-  const login = (e) => {
-    e.preventDefault();
-    props.api
-      .login(props.values)
-      .then((res) => {
-        if (!res.key) {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-        return props.set_auth_user({ token: res.key });
-      })
-
-      .then((val) => props.history.push("/profile"))
-      .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
-          setState({
-            ...state,
-            error:
-              "An error occured while performing this action. Please try again later",
-          });
-        } else {
-          setState({ ...state, error: error.message });
-        }
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
+    }
   };
 
-  const handleClickShowPassword = () => {
-    let { showPassword } = state;
-    setState({ ...state, showPassword: !showPassword });
-  };
-
-  const handleMouseDownPassword = (e) => {
-    e.preventDefault();
-  };
-
-  let { error, showPassword } = state;
+  const { error, showPassword } = state;
 
   return (
     <Box className={classes.root}>
@@ -89,7 +76,7 @@ function Login(props) {
                 className="auth-form"
                 name="login"
                 noValidate="noValidate"
-                onSubmit={login}
+                onSubmit={(e) => handleSetState(login(e, props))}
               >
                 <Typography
                   gutterBottom
@@ -168,7 +155,9 @@ function Login(props) {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
+                              onClick={() =>
+                                handleSetState(handleClickShowPassword(state))
+                              }
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
@@ -247,8 +236,8 @@ function Login(props) {
 
 Login.propTypes = {
   auth: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
   set_auth_user: PropTypes.object.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -261,6 +250,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     set_auth_user: (auth_user) => {
       dispatch(AuthActions.setAuthUser(auth_user));
+    },
+    login: (props) => {
+      return dispatch(AuthActions.login(props));
     },
   };
 };

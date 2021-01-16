@@ -31,169 +31,118 @@ import {
 
 import CustomButton from "../../components/button/Button";
 import * as AuthActions from "../../store/actions/authActions";
+import * as UserActions from "../../store/actions/userActions";
+import * as ProjectActions from "../../store/actions/projectActions";
 import ErrorPage from "../error/ErrorPage";
 import LoadingPage from "../loading/LoadingPage";
 import Project from "../../components/project/Project";
 import styles from "../../assets/js/styles/views/profile/profileStyles";
 
+const useStyles = makeStyles(styles);
+
+const handleToggleEditProfileModal = ({ openEditProfileModal }) => {
+  openEditProfileModal = !openEditProfileModal;
+  return { openEditProfileModal };
+};
+
+const getUserPofile = (props) => {
+  let username = props.match.params.username;
+
+  if (!username) {
+    username = props.auth.username;
+  } else if (props.auth.username === username) props.history.push("/profile");
+  return props.get_user_profile({ username, token: props.auth.token });
+};
+
+const updateProfile = (e, props, state, newUserNameEL) => {
+  e.preventDefault();
+  const username = newUserNameEL.current.firstChild;
+  if (username.value) {
+    return props
+      .edit_user_profile({
+        token: props.auth.token,
+        username: username.value,
+      })
+      .then((res) => {
+        username.value = "";
+        return { ...res, ...handleToggleEditProfileModal(state) };
+      });
+  } else {
+    return handleToggleEditProfileModal(state);
+  }
+};
+
+const copyProfileUrl = (profile) => {
+  const tempInput = document.createElement("textarea");
+  tempInput.value = `${document.location.origin}/creators/${profile.username}`;
+  tempInput.style.top = "0";
+  tempInput.style.top = "0";
+  tempInput.style.position = "fixed";
+  const rootElem = document.querySelector("#root");
+  rootElem.appendChild(tempInput);
+  tempInput.focus();
+  tempInput.select();
+  if (document.execCommand("copy")) {
+    toast.success(
+      "your profile url has been successfully copied to your clipboard!"
+    );
+    rootElem.removeChild(tempInput);
+  }
+};
+
+const updateProjects = (res, { results: projects }) => {
+  return res
+    .then((res) => {
+      if (res.project && res.project.title) {
+        projects = projects.map((project) =>
+          project.id === res.project.id ? res.project : project
+        );
+        return { results: projects };
+      } else {
+        res = Object.keys(res)
+          .map((key) => res[key])
+          .join("\n");
+        throw new Error(res);
+      }
+    })
+    .catch((error) => {
+      toast.warning(error.message);
+      return { loading: false };
+    });
+};
+
+const toggle_follow = (id, props) => {
+  if (!props.auth.token) {
+    props.history.push("/login");
+  } else {
+    return props.toggle_follow({ id, token: props.auth.token });
+  }
+};
+
 function Profile(props) {
-  const classes = makeStyles(styles)();
+  const newUserNameEL = React.useRef(null);
+  const classes = useStyles();
 
   const [state, setState] = React.useState({
-    projects: [],
+    results: [],
     openEditProfileModal: false,
     loading: true,
+    profile: {},
   });
 
-  const [profile, setProfile] = React.useState({});
-
   React.useEffect(() => {
-    get_user_profile();
+    handleSetState(getUserPofile(props));
   }, []);
 
-  const get_user_profile = () => {
-    let username = props.match.params.username;
-
-    if (!username) {
-      username = props.auth.username;
-    } else if (props.auth.username === username) props.history.push("/profile");
-    props.api
-      .get_user_profile({ username, token: props.auth.token })
-      .then((res) => {
-        if (!res.username) {
-          throw new Error(
-            "an error occured while fetching user profile, please try again later"
-          );
-        } else {
-          setProfile(res);
-          return props.api.get_user_projects({
-            username: res.username,
-            limit: 4,
-          });
-        }
-      })
-      .then((res) => {
-        if (Array.isArray(res.results)) {
-          return setState({ ...state, projects: res.results, loading: false });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        toast.warning(error.message);
-        setState({ ...state, loading: false });
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setState({ ...state, ...obj });
       });
-  };
-
-  const toggle_follow = (id) => {
-    if (!props.auth.token) {
-      props.history.push("/login");
-    } else {
-      props.api
-        .toggle_follow({ id, token: props.auth.token })
-        .then((res) => {
-          if (res.id) {
-            return setProfile(res);
-          } else {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
-          }
-        })
-        .catch((error) => {
-          setState({ ...state, loading: false });
-          if (error.message.startsWith("Unexpected")) {
-            toast.warning(
-              "An error occured while performing this action. Please try again later"
-            );
-          } else {
-            toast.warning(error.message);
-          }
-        });
     }
   };
 
-  const handleToggleEditProfileModal = () => {
-    let { openEditProfileModal } = state;
-    openEditProfileModal = !openEditProfileModal;
-    setState({ ...state, openEditProfileModal });
-  };
-
-  const copyProfileUrl = (e) => {
-    let tempInput = document.createElement("textarea");
-    tempInput.value = `${document.location.origin}/creators/${profile.username}`;
-    tempInput.style.top = "0";
-    tempInput.style.top = "0";
-    tempInput.style.position = "fixed";
-    let rootElem = document.querySelector("#root");
-    rootElem.appendChild(tempInput);
-    tempInput.focus();
-    tempInput.select();
-    if (document.execCommand("copy")) {
-      toast.success(
-        "your profile url has been successfully copied to your clipboard!"
-      );
-      rootElem.removeChild(tempInput);
-    }
-  };
-
-  const updateProfile = (e) => {
-    e.preventDefault();
-    let username = document.querySelector("#new_username");
-    if (username.value) {
-      props.api
-        .edit_user_profile({
-          token: props.auth.token,
-          username: username.value,
-        })
-        .then((res) => {
-          if (res.username) {
-            setProfile(res);
-            props.set_auth_user({
-              ...props.auth,
-              username: res.username,
-            });
-            handleToggleEditProfileModal();
-            username.value = "";
-          } else {
-            throw new Error(
-              "An error occured while updating your profile, please try again later"
-            );
-          }
-        })
-        .catch((error) => toast.warning(error.message));
-    } else {
-      handleToggleEditProfileModal();
-    }
-  };
-
-  const updateProjects = (res) => {
-    res
-      .then((res) => {
-        if (res.id) {
-          let { projects } = state;
-          projects = projects.map((project) =>
-            project.id === res.id ? res : project
-          );
-          return setState({ ...state, projects });
-        } else {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
-        }
-      })
-      .catch((error) => {
-        setState({ ...state, loading: false });
-        toast.warning(error.message);
-      });
-  };
-
-  let { projects, loading, openEditProfileModal } = state;
+  const { results: projects, profile, loading, openEditProfileModal } = state;
 
   if (loading) {
     return <LoadingPage />;
@@ -209,7 +158,9 @@ function Profile(props) {
                   variant="contained"
                   margin="normal"
                   primaryButtonStyle
-                  onClick={handleToggleEditProfileModal}
+                  onClick={() =>
+                    handleSetState(handleToggleEditProfileModal(state))
+                  }
                 >
                   Edit
                 </CustomButton>
@@ -219,7 +170,9 @@ function Profile(props) {
                   variant="outlined"
                   margin="normal"
                   secondaryButtonStyle
-                  onClick={(e, id = profile.id) => toggle_follow(id)}
+                  onClick={() =>
+                    handleSetState(toggle_follow(profile.id, props))
+                  }
                 >
                   {profile.followers.includes(props.auth.id)
                     ? "Unfollow"
@@ -246,7 +199,7 @@ function Profile(props) {
                             classes.profileShareButtonStyle
                           )}
                           aria-label="share profile url"
-                          onClick={copyProfileUrl}
+                          onClick={() => copyProfileUrl(profile)}
                         >
                           <ShareIcon />
                         </Fab>
@@ -356,7 +309,9 @@ function Profile(props) {
                         <Project
                           project={project}
                           key={project.id}
-                          updateProjects={updateProjects}
+                          updateProjects={(res) =>
+                            handleSetState(updateProjects(res, state))
+                          }
                           {...props}
                         />
                       </Grid>
@@ -368,7 +323,7 @@ function Profile(props) {
         </Box>
         <Dialog
           open={openEditProfileModal}
-          onClose={handleToggleEditProfileModal}
+          onClose={() => handleSetState(handleToggleEditProfileModal(state))}
           aria-labelledby="edit user profile"
         >
           <DialogTitle id="edit-user-profile">Edit User Profile</DialogTitle>
@@ -388,7 +343,7 @@ function Profile(props) {
               </InputLabel>
               <OutlinedInput
                 className={classes.customInputStyle}
-                id="new_username"
+                ref={newUserNameEL}
                 name="username"
                 type="text"
                 labelWidth={90}
@@ -398,7 +353,9 @@ function Profile(props) {
           <DialogActions>
             <CustomButton
               variant="outlined"
-              onClick={handleToggleEditProfileModal}
+              onClick={() =>
+                handleSetState(handleToggleEditProfileModal(state))
+              }
               color="primary"
               secondaryButtonStyle
             >
@@ -406,7 +363,9 @@ function Profile(props) {
             </CustomButton>
             <CustomButton
               variant="contained"
-              onClick={updateProfile}
+              onClick={(e) =>
+                handleSetState(updateProfile(e, props, state, newUserNameEL))
+              }
               primaryButtonStyle
             >
               Save
@@ -424,8 +383,12 @@ function Profile(props) {
 
 Profile.propTypes = {
   auth: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
   set_auth_user: PropTypes.func.isRequired,
+  get_user_profile: PropTypes.func.isRequired,
+  edit_user_profile: PropTypes.func.isRequired,
+  toggle_follow: PropTypes.func.isRequired,
+  toggle_like: PropTypes.func.isRequired,
+  toggle_save: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -438,6 +401,21 @@ const mapDispatchToProps = (dispatch) => {
   return {
     set_auth_user: (auth_user) => {
       dispatch(AuthActions.setAuthUser(auth_user));
+    },
+    get_user_profile: (props) => {
+      return dispatch(UserActions.get_user_profile(props));
+    },
+    edit_user_profile: (props) => {
+      return dispatch(UserActions.edit_user_profile(props));
+    },
+    toggle_follow: (props) => {
+      return dispatch(UserActions.toggle_follow(props));
+    },
+    toggle_like: (props) => {
+      return dispatch(ProjectActions.toggle_like(props));
+    },
+    toggle_save: (props) => {
+      return dispatch(ProjectActions.toggle_save(props));
     },
   };
 };

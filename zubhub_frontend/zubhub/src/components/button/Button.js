@@ -8,8 +8,11 @@ import Button from "@material-ui/core/Button";
 
 import styles from "../../assets/js/styles/components/button/buttonStyles";
 
-function CustomButton(props){
-  const classes = makeStyles(styles)();
+
+const useStyles = makeStyles(styles);
+
+const CustomButton = React.forwardRef((props,ref)=>{
+  const classes = useStyles();
 
   const {
     children,
@@ -30,11 +33,11 @@ function CustomButton(props){
   });
 
 return (
-  <Button {...rest} classes={muiClasses} className={btnClasses}>
+  <Button ref={ref} {...rest} classes={muiClasses} className={btnClasses}>
   {children}
 </Button>
     )
-}
+});
 
 Button.propTypes = {
   size: PropTypes.oneOf(["small", "large"]),
