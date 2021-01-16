@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { makeStyles } from "@material-ui/core/styles";
-import { Box, Typography, Container } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
+import { Box, Typography, Container } from '@material-ui/core';
 
-import disconnected from "../../assets/images/disconnected-chains.svg";
-import styles from "../../assets/js/styles/views/error/errorPageStyles";
+import disconnected from '../../assets/images/disconnected-chains.svg';
+import styles from '../../assets/js/styles/views/error/errorPageStyles';
 
 const useStyles = makeStyles(styles);
 

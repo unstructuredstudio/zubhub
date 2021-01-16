@@ -1,14 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from "@material-ui/core/styles";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { makeStyles } from '@material-ui/core/styles';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import {
   CssBaseline,
   Container,
@@ -22,15 +22,15 @@ import {
   Menu,
   MenuItem,
   Avatar,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import CustomButton from "../components/button/Button.js";
-import LoadingPage from "./loading/LoadingPage";
-import * as AuthActions from "../store/actions/authActions";
-import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
-import logo from "../assets/images/logos/logo.png";
-import styles from "../assets/js/styles/views/page_wrapper/pageWrapperStyles";
-import commonStyles from "../assets/js/styles";
+import CustomButton from '../components/button/Button.js';
+import LoadingPage from './loading/LoadingPage';
+import * as AuthActions from '../store/actions/authActions';
+import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
+import logo from '../assets/images/logos/logo.png';
+import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
+import commonStyles from '../assets/js/styles';
 
 const useStyles = makeStyles(styles);
 
@@ -42,11 +42,11 @@ const logout = (e, props) => {
 const handleScrollTopClick = (e, ref) => {
   e.preventDefault();
   if (ref.current) {
-    ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 };
 
-const handleProfileMenuOpen = (e) => {
+const handleProfileMenuOpen = e => {
   return { anchorEl: e.currentTarget };
 };
 
@@ -74,9 +74,9 @@ function PageWrapper(props) {
     }
   }, [props.auth.token]);
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -139,7 +139,7 @@ function PageWrapper(props) {
                     aria-label={`${props.auth.username}' Avatar`}
                     aria-controls="profile_menu"
                     aria-haspopup="true"
-                    onClick={(e) => handleSetState(handleProfileMenuOpen(e))}
+                    onClick={e => handleSetState(handleProfileMenuOpen(e))}
                     src={`https://robohash.org/${props.auth.username}`}
                     alt={props.auth.username}
                   />
@@ -148,16 +148,16 @@ function PageWrapper(props) {
                     id="profile_menu"
                     anchorEl={anchorEl}
                     anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
+                      vertical: 'top',
+                      horizontal: 'right',
                     }}
                     keepMounted
                     transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
+                      vertical: 'top',
+                      horizontal: 'right',
                     }}
                     open={profileMenuOpen}
-                    onClose={(e) => handleSetState(handleProfileMenuClose(e))}
+                    onClose={e => handleSetState(handleProfileMenuClose(e))}
                   >
                     <MenuItem className={classes.profileStyle}>
                       <a className={classes.textDecorationNone} href="/profile">
@@ -187,7 +187,7 @@ function PageWrapper(props) {
                     <MenuItem className={classes.logOutStyle}>
                       <Typography
                         className={classes.textDecorationNone}
-                        onClick={(e) => logout(e, props)}
+                        onClick={e => logout(e, props)}
                       >
                         <Typography
                           variant="subtitle2"
@@ -222,7 +222,7 @@ function PageWrapper(props) {
         </a>
         <Zoom in={useScrollTrigger}>
           <div
-            onClick={(e) => handleScrollTopClick(e, backToTopEl)}
+            onClick={e => handleScrollTopClick(e, backToTopEl)}
             role="presentation"
             className={classes.scrollTopButtonStyle}
           >
@@ -243,21 +243,21 @@ PageWrapper.propTypes = {
   get_auth_user: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: (auth_user) => {
+    set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    logout: (props) => {
+    logout: props => {
       return dispatch(AuthActions.logout(props));
     },
-    get_auth_user: (props) => {
+    get_auth_user: props => {
       return dispatch(AuthActions.get_auth_user(props));
     },
   };

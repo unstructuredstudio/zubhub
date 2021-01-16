@@ -1,13 +1,13 @@
-import React from "react";
-import clsx from "clsx";
-import PropTypes from "prop-types";
+import React from 'react';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { withFormik } from "formik";
-import * as Yup from "yup";
+import { withFormik } from 'formik';
+import * as Yup from 'yup';
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
   Box,
@@ -20,11 +20,11 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import * as AuthActions from "../../store/actions/authActions";
-import CustomButton from "../../components/button/Button";
-import styles from "../../assets/js/styles/views/password_reset/passwordResetStyles";
+import * as AuthActions from '../../store/actions/authActions';
+import CustomButton from '../../components/button/Button';
+import styles from '../../assets/js/styles/views/password_reset/passwordResetStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -40,9 +40,9 @@ function PasswordReset(props) {
     error: null,
   });
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -60,9 +60,7 @@ function PasswordReset(props) {
                 className="auth-form"
                 name="password_reset"
                 noValidate="noValidate"
-                onSubmit={(e) =>
-                  handleSetState(sendPasswordResetLink(e, props))
-                }
+                onSubmit={e => handleSetState(sendPasswordResetLink(e, props))}
               >
                 <Typography
                   gutterBottom
@@ -96,7 +94,7 @@ function PasswordReset(props) {
                         shrink: true,
                       }}
                       margin="normal"
-                      error={props.touched["email"] && props.errors["email"]}
+                      error={props.touched['email'] && props.errors['email']}
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
@@ -114,7 +112,7 @@ function PasswordReset(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched["email"] && props.errors["email"]}
+                        {props.touched['email'] && props.errors['email']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -144,15 +142,15 @@ PasswordReset.propTypes = {
   send_password_reset_link: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    send_password_reset_link: (props) => {
+    send_password_reset_link: props => {
       return dispatch(AuthActions.send_password_reset_link(props));
     },
   };
@@ -160,14 +158,14 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(
   withFormik({
     mapPropsToValue: () => ({
-      email: "",
+      email: '',
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email("invalid email").required("email required"),
+      email: Yup.string().email('invalid email').required('email required'),
     }),
-  })(PasswordReset)
+  })(PasswordReset),
 );

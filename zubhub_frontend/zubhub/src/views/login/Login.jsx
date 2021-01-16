@@ -1,13 +1,13 @@
-import React from "react";
-import clsx from "clsx";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import React from 'react';
+import clsx from 'clsx';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { makeStyles } from "@material-ui/core/styles";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { makeStyles } from '@material-ui/core/styles';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {
   Grid,
   Box,
@@ -23,23 +23,23 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import { withFormik } from "formik";
-import * as Yup from "yup";
+import { withFormik } from 'formik';
+import * as Yup from 'yup';
 
-import CustomButton from "../../components/button/Button";
-import * as AuthActions from "../../store/actions/authActions";
-import styles from "../../assets/js/styles/views/login/loginStyles";
+import CustomButton from '../../components/button/Button';
+import * as AuthActions from '../../store/actions/authActions';
+import styles from '../../assets/js/styles/views/login/loginStyles';
 
 const useStyles = makeStyles(styles);
 
-const handleClickShowPassword = (state) => {
+const handleClickShowPassword = state => {
   const { showPassword } = state;
   return { showPassword: !showPassword };
 };
 
-const handleMouseDownPassword = (e) => {
+const handleMouseDownPassword = e => {
   e.preventDefault();
 };
 
@@ -56,9 +56,9 @@ function Login(props) {
     showPassword: false,
   });
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -76,7 +76,7 @@ function Login(props) {
                 className="auth-form"
                 name="login"
                 noValidate="noValidate"
-                onSubmit={(e) => handleSetState(login(e, props))}
+                onSubmit={e => handleSetState(login(e, props))}
               >
                 <Typography
                   gutterBottom
@@ -108,7 +108,7 @@ function Login(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched["username"] && props.errors["username"]
+                        props.touched['username'] && props.errors['username']
                       }
                     >
                       <InputLabel
@@ -127,7 +127,7 @@ function Login(props) {
                         labelWidth={150}
                       />
                       <FormHelperText error>
-                        {props.touched["username"] && props.errors["username"]}
+                        {props.touched['username'] && props.errors['username']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -140,7 +140,7 @@ function Login(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched["password"] && props.errors["password"]
+                        props.touched['password'] && props.errors['password']
                       }
                     >
                       <InputLabel htmlFor="password">Password</InputLabel>
@@ -148,7 +148,7 @@ function Login(props) {
                         className={classes.customInputStyle}
                         id="password"
                         name="password"
-                        type={showPassword ? "text" : "password"}
+                        type={showPassword ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
@@ -172,7 +172,7 @@ function Login(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched["password"] && props.errors["password"]}
+                        {props.touched['password'] && props.errors['password']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -240,18 +240,18 @@ Login.propTypes = {
   login: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: (auth_user) => {
+    set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    login: (props) => {
+    login: props => {
       return dispatch(AuthActions.login(props));
     },
   };
@@ -259,16 +259,16 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(
   withFormik({
     mapPropsToValue: () => ({
-      password: "",
+      password: '',
     }),
     validationSchema: Yup.object().shape({
       password: Yup.string()
-        .min(8, "your password is too short")
-        .required("input your password"),
+        .min(8, 'your password is too short')
+        .required('input your password'),
     }),
-  })(Login)
+  })(Login),
 );

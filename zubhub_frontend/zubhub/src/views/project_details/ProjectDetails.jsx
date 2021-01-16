@@ -1,18 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import clsx from "clsx";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
 
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
-import { makeStyles } from "@material-ui/core/styles";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import CommentIcon from "@material-ui/icons/Comment";
+import { makeStyles } from '@material-ui/core/styles';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import CommentIcon from '@material-ui/icons/Comment';
 import {
   Avatar,
   Box,
@@ -21,37 +21,37 @@ import {
   Container,
   Paper,
   Dialog,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import * as UserActions from "../../store/actions/userActions";
-import * as ProjectActions from "../../store/actions/projectActions";
-import CustomButton from "../../components/button/Button";
-import ErrorPage from "../error/ErrorPage";
-import LoadingPage from "../loading/LoadingPage";
-import ClapIcon, { ClapBorderIcon } from "../../assets/js/icons/ClapIcon";
-import nFormatter from "../../assets/js/nFormatter";
-import dFormatter from "../../assets/js/dFormatter";
+import * as UserActions from '../../store/actions/userActions';
+import * as ProjectActions from '../../store/actions/projectActions';
+import CustomButton from '../../components/button/Button';
+import ErrorPage from '../error/ErrorPage';
+import LoadingPage from '../loading/LoadingPage';
+import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
+import nFormatter from '../../assets/js/nFormatter';
+import dFormatter from '../../assets/js/dFormatter';
 import styles, {
   sliderSettings,
-} from "../../assets/js/styles/views/project_details/projectDetailsStyles";
-import commonStyles from "../../assets/js/styles";
-import Project from "../../components/project/Project";
+} from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import commonStyles from '../../assets/js/styles';
+import Project from '../../components/project/Project';
 
 const useStyles = makeStyles(styles);
 
-const constructCommentBox = (refs) => {
-  refs.commentText.current.addEventListener("focus", (e) =>
-    handleCommentTextFocus(refs)
+const constructCommentBox = refs => {
+  refs.commentText.current.addEventListener('focus', e =>
+    handleCommentTextFocus(refs),
   );
 
-  document.addEventListener("click", (e) => handleDocumentClick(e, refs));
+  document.addEventListener('click', e => handleDocumentClick(e, refs));
 };
 
-const handleCommentTextFocus = (refs) => {
-  refs.commentBox.current.classList.remove("comment-collapsed");
-  refs.commentBox.current.classList.add("comment");
-  refs.commentAuthorName.current.classList.remove("display-none");
-  refs.commentPublishButton.current.classList.remove("display-none");
+const handleCommentTextFocus = refs => {
+  refs.commentBox.current.classList.remove('comment-collapsed');
+  refs.commentBox.current.classList.add('comment');
+  refs.commentAuthorName.current.classList.remove('display-none');
+  refs.commentPublishButton.current.classList.remove('display-none');
 };
 
 const handleDocumentClick = (e, refs) => {
@@ -63,16 +63,16 @@ const handleDocumentClick = (e, refs) => {
         refs.commentText.current,
       ].includes(e.target)
     ) {
-      refs.commentBox.current.classList.remove("comment");
-      refs.commentBox.current.classList.add("comment-collapsed");
-      refs.commentAuthorName.current.classList.add("display-none");
-      refs.commentPublishButton.current.classList.add("display-none");
+      refs.commentBox.current.classList.remove('comment');
+      refs.commentBox.current.classList.add('comment-collapsed');
+      refs.commentAuthorName.current.classList.add('display-none');
+      refs.commentPublishButton.current.classList.add('display-none');
     }
   } catch {}
 };
 
 const handleOpenEnlargedImageDialog = (e, state) => {
-  const image_url = e.currentTarget.getAttribute("src");
+  const image_url = e.currentTarget.getAttribute('src');
   const openEnlargedImageDialog = !state.openEnlargedImageDialog;
   return { enlargedImageUrl: image_url, openEnlargedImageDialog };
 };
@@ -80,11 +80,11 @@ const handleOpenEnlargedImageDialog = (e, state) => {
 const add_comment = (e, props, refs, state) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push("/login");
+    props.history.push('/login');
   } else {
     const textarea = refs.commentText.current;
     const comment_text = textarea.value;
-    textarea.value = "";
+    textarea.value = '';
     return props.add_comment({
       id: state.project.id,
       token: props.auth.token,
@@ -96,7 +96,7 @@ const add_comment = (e, props, refs, state) => {
 const toggle_save = (e, props, id) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push("/login");
+    props.history.push('/login');
   } else {
     return props.toggle_save({
       id,
@@ -108,7 +108,7 @@ const toggle_save = (e, props, id) => {
 const toggle_like = (e, props, id) => {
   e.preventDefault();
   if (!props.auth.token) {
-    return props.history.push("/login");
+    return props.history.push('/login');
   } else {
     return props.toggle_like({ id, token: props.auth.token });
   }
@@ -117,7 +117,7 @@ const toggle_like = (e, props, id) => {
 const toggle_follow = (e, props, id, state) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push("/login");
+    props.history.push('/login');
   } else {
     return props
       .toggle_follow({ id, token: props.auth.token })
@@ -133,7 +133,8 @@ const toggle_follow = (e, props, id, state) => {
 };
 
 const buildMaterialsUsedComponent = (classes, state) => {
-  const arr = state.project.materials_used.split(",");
+  const arr =
+    state.project.materials_used && state.project.materials_used.split(',');
   return arr.map((material, index) => (
     <Typography
       key={index}
@@ -158,7 +159,7 @@ function ProjectDetails(props) {
   const [state, setState] = React.useState({
     project: {},
     loading: true,
-    enlargedImageUrl: "",
+    enlargedImageUrl: '',
     openEnlargedImageDialog: false,
   });
 
@@ -168,19 +169,19 @@ function ProjectDetails(props) {
       props.get_project({
         id: props.match.params.id,
         token: props.auth.token,
-      })
+      }),
     );
 
     return () => {
       try {
-        commentTextEl.removeEventListener("focus", () =>
-          handleCommentTextFocus(refs)
+        commentTextEl.removeEventListener('focus', () =>
+          handleCommentTextFocus(refs),
         );
       } catch {}
 
       try {
-        document.removeEventListener("click", (e) =>
-          handleDocumentClick(e, refs)
+        document.removeEventListener('click', e =>
+          handleDocumentClick(e, refs),
         );
       } catch {}
     };
@@ -192,9 +193,9 @@ function ProjectDetails(props) {
     } catch {}
   }, [state.project]);
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -235,16 +236,16 @@ function ProjectDetails(props) {
                     <CustomButton
                       className={commonClasses.marginLeft1em}
                       variant="contained"
-                      onClick={(e) =>
+                      onClick={e =>
                         handleSetState(
-                          toggle_follow(e, props, project.creator.id, state)
+                          toggle_follow(e, props, project.creator.id, state),
                         )
                       }
                       primaryButtonStyle
                     >
                       {project.creator.followers.includes(props.auth.id)
-                        ? "Unfollow"
-                        : "Follow"}
+                        ? 'Unfollow'
+                        : 'Follow'}
                     </CustomButton>
                   ) : null}
                 </Grid>
@@ -259,7 +260,7 @@ function ProjectDetails(props) {
                   md={12}
                   className={clsx(
                     classes.positionRelative,
-                    classes.marginBottom1em
+                    classes.marginBottom1em,
                   )}
                 >
                   <Grid
@@ -269,7 +270,7 @@ function ProjectDetails(props) {
                     md={12}
                     className={clsx(
                       classes.videoWrapperStyle,
-                      classes.positionRelative
+                      classes.positionRelative,
                     )}
                   >
                     {project.video ? (
@@ -292,7 +293,7 @@ function ProjectDetails(props) {
                       size="small"
                       aria-label="like button"
                       variant="extended"
-                      onClick={(e) =>
+                      onClick={e =>
                         handleSetState(toggle_like(e, props, project.id))
                       }
                     >
@@ -309,7 +310,7 @@ function ProjectDetails(props) {
                       className={classes.actionBoxButtonStyle}
                       size="small"
                       aria-label="save button"
-                      onClick={(e) =>
+                      onClick={e =>
                         handleSetState(toggle_save(e, props, project.id))
                       }
                     >
@@ -330,20 +331,20 @@ function ProjectDetails(props) {
                     </Typography>
                   </Box>
                 </Grid>
-                {project.images.length > 0 ? (
+                {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>
                       <Slider {...sliderSettings(project.images.length)}>
-                        {project.images.map((image) => (
+                        {project.images.map(image => (
                           <div>
                             <img
                               key={image.public_id}
                               className={classes.carouselImageStyle}
                               src={image.image_url}
                               alt={image.public_id}
-                              onClick={(e) =>
+                              onClick={e =>
                                 handleSetState(
-                                  handleOpenEnlargedImageDialog(e, state)
+                                  handleOpenEnlargedImageDialog(e, state),
                                 )
                               }
                             />
@@ -411,8 +412,8 @@ function ProjectDetails(props) {
                     ref={refs.commentAuthorName}
                     className={clsx(
                       classes.textDecorationNone,
-                      "comment-meta__a",
-                      "display-none"
+                      'comment-meta__a',
+                      'display-none',
                     )}
                     to={`/creators/${props.auth.username}`}
                   >
@@ -429,10 +430,10 @@ function ProjectDetails(props) {
                   ></textarea>
                   <CustomButton
                     ref={refs.commentPublishButton}
-                    onClick={(e) =>
+                    onClick={e =>
                       handleSetState(add_comment(e, props, refs, state))
                     }
-                    className={clsx("comment-publish-button", "display-none")}
+                    className={clsx('comment-publish-button', 'display-none')}
                     variant="contained"
                     primaryButtonStyle
                   >
@@ -440,41 +441,42 @@ function ProjectDetails(props) {
                   </CustomButton>
                 </form>
               </Box>
-              {project.comments.map((comment) => (
-                <Box className={classes.commentsStyle} key={comment.id}>
-                  <Link
-                    className={clsx(
-                      classes.textDecorationNone,
-                      classes.commentMetaStyle
-                    )}
-                    to={`/creators/${props.auth.username}`}
-                  >
-                    <Avatar
-                      className={classes.commentAvatarStyle}
-                      src={`https://robohash.org/${comment.creator}`}
-                      alt={comment.creator}
-                    />
-                    <Box>
-                      <Typography color="textPrimary">
-                        {comment.creator}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {dFormatter(comment.created_on)}
-                      </Typography>
-                    </Box>
-                  </Link>
+              {project.comments &&
+                project.comments.map(comment => (
+                  <Box className={classes.commentsStyle} key={comment.id}>
+                    <Link
+                      className={clsx(
+                        classes.textDecorationNone,
+                        classes.commentMetaStyle,
+                      )}
+                      to={`/creators/${props.auth.username}`}
+                    >
+                      <Avatar
+                        className={classes.commentAvatarStyle}
+                        src={`https://robohash.org/${comment.creator}`}
+                        alt={comment.creator}
+                      />
+                      <Box>
+                        <Typography color="textPrimary">
+                          {comment.creator}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          {dFormatter(comment.created_on)}
+                        </Typography>
+                      </Box>
+                    </Link>
 
-                  {comment.text}
-                </Box>
-              ))}
+                    {comment.text}
+                  </Box>
+                ))}
             </Container>
           </Paper>
         </Box>
         <Dialog
           PaperProps={{
             style: {
-              backgroundColor: "transparent",
-              boxShadow: "none",
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
             },
           }}
           className={classes.enlargedImageDialogStyle}
@@ -511,27 +513,27 @@ ProjectDetails.propTypes = {
   add_comment: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    get_project: (values) => {
+    get_project: values => {
       return dispatch(ProjectActions.get_project(values));
     },
-    toggle_follow: (values) => {
+    toggle_follow: values => {
       return dispatch(UserActions.toggle_follow(values));
     },
-    toggle_like: (values) => {
+    toggle_like: values => {
       return dispatch(ProjectActions.toggle_like(values));
     },
-    toggle_save: (values) => {
+    toggle_save: values => {
       return dispatch(ProjectActions.toggle_save(values));
     },
-    add_comment: (values) => {
+    add_comment: values => {
       return dispatch(ProjectActions.add_comment(values));
     },
   };

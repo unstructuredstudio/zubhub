@@ -1,12 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import {
   Avatar,
   Box,
@@ -16,13 +16,13 @@ import {
   CardContent,
   Fab,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import ClapIcon, { ClapBorderIcon } from "../../assets/js/icons/ClapIcon";
-import CommentIcon from "../../assets/js/icons/CommentIcon";
-import nFormatter from "../../assets/js/nFormatter";
-import dFormatter from "../../assets/js/dFormatter";
-import styles from "../../assets/js/styles/components/project/projectStyles";
+import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
+import CommentIcon from '../../assets/js/icons/CommentIcon';
+import nFormatter from '../../assets/js/nFormatter';
+import dFormatter from '../../assets/js/dFormatter';
+import styles from '../../assets/js/styles/components/project/projectStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -32,7 +32,7 @@ function Project(props) {
   const toggle_like = (e, id) => {
     e.preventDefault();
     if (!props.auth.token) {
-      props.history.push("/login");
+      props.history.push('/login');
     } else {
       const toggle_like_promise = props.toggle_like({
         id,
@@ -45,7 +45,7 @@ function Project(props) {
   const toggle_save = (e, id) => {
     e.preventDefault();
     if (!props.auth.token) {
-      props.history.push("/login");
+      props.history.push('/login');
     } else {
       const toggle_save_promise = props.toggle_save({
         id,
@@ -143,7 +143,7 @@ function Project(props) {
                 <Typography
                   className={clsx(
                     classes.captionIconStyle,
-                    classes.VisibilityIconStyle
+                    classes.VisibilityIconStyle,
                   )}
                   color="textSecondary"
                   variant="caption"

@@ -1,18 +1,18 @@
-import React from "react";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import React from 'react';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import { withFormik } from "formik";
-import * as Yup from "yup";
+import { withFormik } from 'formik';
+import * as Yup from 'yup';
 
-import "react-toastify/dist/ReactToastify.css";
+import 'react-toastify/dist/ReactToastify.css';
 
-import { nanoid } from "nanoid";
+import { nanoid } from 'nanoid';
 
-import { makeStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import ImageIcon from "@material-ui/icons/Image";
+import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import ImageIcon from '@material-ui/icons/Image';
 import {
   Grid,
   Box,
@@ -28,14 +28,14 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import * as ProjectActions from "../../store/actions/projectActions";
-import ErrorPage from "../error/ErrorPage";
-import DO, { doConfig } from "../../assets/js/DO";
-import { useStateUpdateCallback } from "../../assets/js/customHooks";
-import CustomButton from "../../components/button/Button";
-import styles from "../../assets/js/styles/views/create_project/createProjectStyles";
+import * as ProjectActions from '../../store/actions/projectActions';
+import ErrorPage from '../error/ErrorPage';
+import DO, { doConfig } from '../../assets/js/DO';
+import { useStateUpdateCallback } from '../../assets/js/customHooks';
+import CustomButton from '../../components/button/Button';
+import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -45,32 +45,32 @@ let video_field_touched = false;
 const handleImageFieldChange = (e, refs, props) => {
   props.setFieldValue(e.currentTarget.name, refs.imageEl.current);
   refs.imageCountEl.current.innerText = refs.imageEl.current.files.length;
-  refs.imageCountEl.current.style.fontSize = "0.8rem";
+  refs.imageCountEl.current.style.fontSize = '0.8rem';
 };
 
 const handleImageButtonClick = (e, props, refs) => {
   e.preventDefault();
   refs.imageEl.current.click();
-  props.setFieldTouched("project_images");
+  props.setFieldTouched('project_images');
 };
 
 const removeMaterialsUsed = (e, props, refs, value) => {
   e.preventDefault();
   const hidden_materials_field = refs.materialsUsedEl.current;
   hidden_materials_field.value = hidden_materials_field.value
-    .split(",")
-    .filter((material) => material !== value)
-    .join(",");
+    .split(',')
+    .filter(material => material !== value)
+    .join(',');
 
-  props.setFieldValue("materials_used", hidden_materials_field.value, true);
-  return { materials_used: hidden_materials_field.value.split(",") };
+  props.setFieldValue('materials_used', hidden_materials_field.value, true);
+  return { materials_used: hidden_materials_field.value.split(',') };
 };
 
 const handleAddMaterialFieldChange = (e, props, refs) => {
-  props.validateField("materials_used");
+  props.validateField('materials_used');
   const value = refs.addMaterialsUsedEl.current.firstChild.value;
-  if (value.includes(",")) {
-    refs.addMaterialsUsedEl.current.firstChild.value = value.split(",")[0];
+  if (value.includes(',')) {
+    refs.addMaterialsUsedEl.current.firstChild.value = value.split(',')[0];
     return addMaterialUsed(e, props, refs);
   }
 };
@@ -78,15 +78,15 @@ const handleAddMaterialFieldChange = (e, props, refs) => {
 const addMaterialUsed = (e, props, refs) => {
   e.preventDefault();
   const new_material = refs.addMaterialsUsedEl.current.firstChild;
-  if (new_material.value !== "") {
+  if (new_material.value !== '') {
     const hidden_materials_field = refs.materialsUsedEl.current;
     hidden_materials_field.value = hidden_materials_field.value
       ? `${hidden_materials_field.value},${new_material.value}`
       : new_material.value;
-    new_material.value = "";
-    props.setFieldValue("materials_used", hidden_materials_field.value, true);
+    new_material.value = '';
+    props.setFieldValue('materials_used', hidden_materials_field.value, true);
     new_material.focus();
-    return { materials_used: hidden_materials_field.value.split(",") };
+    return { materials_used: hidden_materials_field.value.split(',') };
   }
 };
 
@@ -125,52 +125,52 @@ function CreateProject(props) {
   }, [state.image_upload.successful_uploads]);
 
   React.useEffect(() => {
-    if (props.touched["project_images"] && props.errors["project_images"]) {
+    if (props.touched['project_images'] && props.errors['project_images']) {
       refs.imageUploadButtonEl.current.setAttribute(
-        "style",
-        "border-color:#F54336; color:#F54336"
+        'style',
+        'border-color:#F54336; color:#F54336',
       );
     } else {
       refs.imageUploadButtonEl.current.setAttribute(
-        "style",
-        "border-color: #00B8C4; color:#00B8C4"
+        'style',
+        'border-color: #00B8C4; color:#00B8C4',
       );
     }
 
-    if (props.touched["project_images"]) {
+    if (props.touched['project_images']) {
       image_field_touched = true;
     } else {
       image_field_touched = false;
     }
 
-    if (props.touched["video"]) {
+    if (props.touched['video']) {
       video_field_touched = true;
     } else {
       video_field_touched = false;
     }
   }, [
-    props.errors["project_images"],
-    props.touched["project_images"],
-    props.touched["video"],
+    props.errors['project_images'],
+    props.touched['project_images'],
+    props.touched['video'],
   ]);
 
-  const upload = (image) => {
+  const upload = image => {
     const params = {
       Bucket: `${doConfig.bucketName}`,
       Key: `${doConfig.project_images}/${nanoid()}`,
       Body: image,
       ContentType: image.type,
-      ACL: "public-read",
+      ACL: 'public-read',
     };
 
     DO.upload(params)
-      .on("httpUploadProgress", (e) => {
+      .on('httpUploadProgress', e => {
         const progress = Math.round((e.loaded * 100.0) / e.total);
         const { image_upload } = state;
         image_upload.upload_info[image.name] = progress;
 
         let total = 0;
-        Object.keys(image_upload.upload_info).forEach((each) => {
+        Object.keys(image_upload.upload_info).forEach(each => {
           total = total + image_upload.upload_info[each];
         });
 
@@ -184,10 +184,10 @@ function CreateProject(props) {
           const { image_upload } = state;
           image_upload.upload_dialog = false;
 
-          if (err.message.startsWith("Unexpected")) {
+          if (err.message.startsWith('Unexpected')) {
             handleSetState({
               error:
-                "An error occured while performing this action. Please try again later",
+                'An error occured while performing this action. Please try again later',
               image_upload,
             });
           } else {
@@ -217,32 +217,32 @@ function CreateProject(props) {
       ...props.values,
       token: props.auth.token,
       images: state.image_upload.uploaded_images_url,
-      video: props.values.video ? props.values.video : "",
+      video: props.values.video ? props.values.video : '',
     });
   };
 
-  const init_project = (e) => {
+  const init_project = e => {
     e.preventDefault();
     if (!props.auth.token) {
-      props.history.push("/login");
+      props.history.push('/login');
     } else {
-      props.setFieldTouched("title");
-      props.setFieldTouched("description");
-      props.setFieldTouched("project_images");
-      props.setFieldTouched("video");
-      props.setFieldTouched("materials_used");
-      props.validateField("title");
-      props.validateField("description");
-      props.validateField("project_images");
-      props.validateField("video");
-      props.validateField("materials_used");
+      props.setFieldTouched('title');
+      props.setFieldTouched('description');
+      props.setFieldTouched('project_images');
+      props.setFieldTouched('video');
+      props.setFieldTouched('materials_used');
+      props.validateField('title');
+      props.validateField('description');
+      props.validateField('project_images');
+      props.validateField('video');
+      props.validateField('materials_used');
 
       if (
-        props.errors["title"] ||
-        props.errors["description"] ||
-        props.errors["project_images"] ||
-        props.errors["video"] ||
-        props.errors["materials_used"]
+        props.errors['title'] ||
+        props.errors['description'] ||
+        props.errors['project_images'] ||
+        props.errors['video'] ||
+        props.errors['materials_used']
       ) {
         return;
       } else if (refs.imageEl.current.files.length === 0) {
@@ -263,9 +263,9 @@ function CreateProject(props) {
     }
   };
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -324,7 +324,7 @@ function CreateProject(props) {
                         size="small"
                         fullWidth
                         margin="small"
-                        error={props.touched["title"] && props.errors["title"]}
+                        error={props.touched['title'] && props.errors['title']}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -343,7 +343,7 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
-                          {props.touched["title"] && props.errors["title"]}
+                          {props.touched['title'] && props.errors['title']}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -356,8 +356,8 @@ function CreateProject(props) {
                         fullWidth
                         margin="small"
                         error={
-                          props.touched["description"] &&
-                          props.errors["description"]
+                          props.touched['description'] &&
+                          props.errors['description']
                         }
                       >
                         <InputLabel
@@ -378,8 +378,8 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
-                          {props.touched["description"] &&
-                            props.errors["description"]}
+                          {props.touched['description'] &&
+                            props.errors['description']}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -388,8 +388,8 @@ function CreateProject(props) {
                       <FormControl
                         fullWidth
                         error={
-                          props.touched["project_images"] &&
-                          props.errors["project_images"]
+                          props.touched['project_images'] &&
+                          props.errors['project_images']
                         }
                       >
                         <label htmlFor="project_images">
@@ -406,7 +406,7 @@ function CreateProject(props) {
                                 className="imageCountStyle"
                               ></span>
                             }
-                            onClick={(e) =>
+                            onClick={e =>
                               handleImageButtonClick(e, props, refs)
                             }
                             secondaryButtonStyle
@@ -425,13 +425,11 @@ function CreateProject(props) {
                           id="project_images"
                           name="project_images"
                           multiple
-                          onChange={(e) =>
-                            handleImageFieldChange(e, refs, props)
-                          }
+                          onChange={e => handleImageFieldChange(e, refs, props)}
                           onBlur={props.handleBlur}
                         />
                         <FormHelperText error>
-                          {props.errors["project_images"]}
+                          {props.errors['project_images']}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -443,7 +441,7 @@ function CreateProject(props) {
                         size="small"
                         fullWidth
                         margin="small"
-                        error={props.touched["video"] && props.errors["video"]}
+                        error={props.touched['video'] && props.errors['video']}
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
@@ -462,7 +460,7 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
-                          {props.touched["video"] && props.errors["video"]}
+                          {props.touched['video'] && props.errors['video']}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -475,14 +473,14 @@ function CreateProject(props) {
                         fullWidth
                         margin="small"
                         error={
-                          props.touched["materials_used"] &&
-                          props.errors["materials_used"]
+                          props.touched['materials_used'] &&
+                          props.errors['materials_used']
                         }
                       >
                         <InputLabel
                           className={clsx(
                             classes.customLabelStyle,
-                            classes.largeLabel
+                            classes.largeLabel,
                           )}
                           htmlFor="add_materials_used"
                           shrink
@@ -491,25 +489,25 @@ function CreateProject(props) {
                         </InputLabel>
                         <Box className={classes.materialsUsedViewStyle}>
                           {materials_used.map((material, num) =>
-                            material !== "" ? (
+                            material !== '' ? (
                               <Chip
                                 className={classes.customChipStyle}
                                 key={num}
                                 label={material}
-                                onDelete={(e) =>
+                                onDelete={e =>
                                   handleSetState(
                                     removeMaterialsUsed(
                                       e,
                                       props,
                                       refs,
-                                      material
-                                    )
+                                      material,
+                                    ),
                                   )
                                 }
                                 color="secondary"
                                 variant="outlined"
                               />
-                            ) : null
+                            ) : null,
                           )}
                         </Box>
                         <Grid container spacing={1}>
@@ -522,27 +520,27 @@ function CreateProject(props) {
                               type="text"
                               placeholder="Add a material and click the + button"
                               onClick={() =>
-                                props.setFieldTouched("materials_used")
+                                props.setFieldTouched('materials_used')
                               }
-                              onChange={(e) =>
+                              onChange={e =>
                                 handleSetState(
-                                  handleAddMaterialFieldChange(e, props, refs)
+                                  handleAddMaterialFieldChange(e, props, refs),
                                 )
                               }
                               onBlur={() =>
-                                props.validateField("materials_used")
+                                props.validateField('materials_used')
                               }
                             />
                             <FormHelperText error>
-                              {props.touched["materials_used"] &&
-                                props.errors["materials_used"]}
+                              {props.touched['materials_used'] &&
+                                props.errors['materials_used']}
                             </FormHelperText>
                           </Grid>
                           <Grid item xs={4} sm={4} md={4}>
                             <CustomButton
                               variant="outlined"
                               size="large"
-                              onClick={(e) =>
+                              onClick={e =>
                                 handleSetState(addMaterialUsed(e, props, refs))
                               }
                               secondaryButtonStyle
@@ -578,8 +576,8 @@ function CreateProject(props) {
                 <Dialog
                   PaperProps={{
                     style: {
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
+                      backgroundColor: 'transparent',
+                      boxShadow: 'none',
                     },
                   }}
                   className={classes.uploadProgressDialogStyle}
@@ -609,7 +607,7 @@ function CreateProject(props) {
                         variant="caption"
                         component="div"
                       >{`${Math.round(
-                        image_upload.upload_percent
+                        image_upload.upload_percent,
                       )}%`}</Typography>
                     </Box>
                   </Box>
@@ -628,15 +626,15 @@ CreateProject.propTypes = {
   create_project: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    create_project: (props) => {
+    create_project: props => {
       return dispatch(ProjectActions.create_project(props));
     },
   };
@@ -644,33 +642,33 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(
   withFormik({
     mapPropsToValue: () => ({
-      title: "",
-      description: "",
-      video: "",
-      materials_used: "",
+      title: '',
+      description: '',
+      video: '',
+      materials_used: '',
     }),
     validationSchema: Yup.object().shape({
       title: Yup.string()
         .max(100, "your project title shouldn't be more than 100 characters")
-        .required("title is required"),
+        .required('title is required'),
       description: Yup.string()
         .max(10000, "your description shouldn't be more than 10,000 characters")
-        .required("description is required"),
+        .required('description is required'),
       project_images: Yup.mixed()
         .test(
-          "image_is_empty",
-          "you must provide either image(s) or video url",
+          'image_is_empty',
+          'you must provide either image(s) or video url',
           function (value) {
             return image_field_touched && !value && !this.parent.video
               ? false
               : true;
-          }
+          },
         )
-        .test("too_many_images", "too many images uploaded", (value) => {
+        .test('too_many_images', 'too many images uploaded', value => {
           if (value) {
             return value.files.length > 10 ? false : true;
           } else {
@@ -678,9 +676,9 @@ export default connect(
           }
         })
         .test(
-          "image_size_too_large",
-          "one or more of your image is greater than 3mb",
-          (value) => {
+          'image_size_too_large',
+          'one or more of your image is greater than 3mb',
+          value => {
             if (value) {
               let image_size_too_large = false;
               for (let index = 0; index < value.files.length; index++) {
@@ -692,26 +690,26 @@ export default connect(
             } else {
               return true;
             }
-          }
+          },
         ),
       video: Yup.string()
-        .url("you are required to submit a video url here")
+        .url('you are required to submit a video url here')
         .max(1000, "your video url shouldn't be more than 1000 characters")
         .test(
-          "video_is_empty",
-          "you must provide either image(s) or video url",
+          'video_is_empty',
+          'you must provide either image(s) or video url',
           function (value) {
             return video_field_touched && !value && !this.parent.project_images
               ? false
               : true;
-          }
+          },
         ),
       materials_used: Yup.string()
         .max(
           10000,
-          "your materials used shouldn't be more than 10,000 characters"
+          "your materials used shouldn't be more than 10,000 characters",
         )
-        .required("materials used is required"),
+        .required('materials used is required'),
     }),
-  })(CreateProject)
+  })(CreateProject),
 );

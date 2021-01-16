@@ -1,21 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
-import { makeStyles } from "@material-ui/core/styles";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import { Grid, Box, ButtonGroup, Container } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { Grid, Box, ButtonGroup, Container } from '@material-ui/core';
 
-import * as ProjectActions from "../../store/actions/projectActions";
-import CustomButton from "../../components/button/Button";
-import ErrorPage from "../error/ErrorPage";
-import LoadingPage from "../loading/LoadingPage";
-import Project from "../../components/project/Project";
-import styles from "../../assets/js/styles/views/projects/projectsStyles";
+import * as ProjectActions from '../../store/actions/projectActions';
+import CustomButton from '../../components/button/Button';
+import ErrorPage from '../error/ErrorPage';
+import LoadingPage from '../loading/LoadingPage';
+import Project from '../../components/project/Project';
+import styles from '../../assets/js/styles/views/projects/projectsStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -25,21 +25,21 @@ const fetchPage = (page, props) => {
 
 const updateProjects = (res, props) => {
   return res
-    .then((res) => {
+    .then(res => {
       if (res.project && res.project.title) {
-        const results = props.projects.results.map((project) =>
-          project.id === res.project.id ? res.project : project
+        const results = props.projects.results.map(project =>
+          project.id === res.project.id ? res.project : project,
         );
         props.set_projects({ ...props.projects, results });
         return { loading: false };
       } else {
         res = Object.keys(res)
-          .map((key) => res[key])
-          .join("\n");
+          .map(key => res[key])
+          .join('\n');
         throw new Error(res);
       }
     })
-    .catch((error) => {
+    .catch(error => {
       toast.warning(error.message);
       return { loading: false };
     });
@@ -56,9 +56,9 @@ function Projects(props) {
     handleSetState(fetchPage(null, props));
   }, []);
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -73,12 +73,12 @@ function Projects(props) {
 
   if (loading) {
     return <LoadingPage />;
-  } else if (projects.length > 0) {
+  } else if (projects && projects.length > 0) {
     return (
       <Box className={classes.root}>
         <Container class={classes.mainContainerStyle}>
           <Grid container>
-            {projects.map((project) => (
+            {projects.map(project => (
               <Grid
                 item
                 xs={12}
@@ -91,7 +91,7 @@ function Projects(props) {
                 <Project
                   project={project}
                   key={project.id}
-                  updateProjects={(res) =>
+                  updateProjects={res =>
                     handleSetState(updateProjects(res, props))
                   }
                   {...props}
@@ -108,7 +108,7 @@ function Projects(props) {
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split("?")[1]) => {
+                onClick={(e, page = prevPage.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -122,7 +122,7 @@ function Projects(props) {
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split("?")[1]) => {
+                onClick={(e, page = nextPage.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -150,25 +150,25 @@ Projects.propTypes = {
   toggle_save: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
     projects: state.projects.all_projects,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    get_projects: (page) => {
+    get_projects: page => {
       return dispatch(ProjectActions.get_projects(page));
     },
-    set_projects: (projects) => {
+    set_projects: projects => {
       return dispatch(ProjectActions.set_projects(projects));
     },
-    toggle_like: (props) => {
+    toggle_like: props => {
       return dispatch(ProjectActions.toggle_like(props));
     },
-    toggle_save: (props) => {
+    toggle_save: props => {
       return dispatch(ProjectActions.toggle_save(props));
     },
   };

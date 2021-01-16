@@ -1,13 +1,13 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
-import { toast } from "react-toastify";
+import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import { makeStyles } from "@material-ui/core/styles";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { makeStyles } from '@material-ui/core/styles';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import {
   Grid,
   Container,
@@ -16,13 +16,13 @@ import {
   ButtonGroup,
   Typography,
   Avatar,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import * as UserActions from "../../store/actions/userActions";
-import CustomButton from "../../components/button/Button";
-import ErrorPage from "../error/ErrorPage";
-import LoadingPage from "../loading/LoadingPage";
-import styles from "../../assets/js/styles/views/user_followers/userFollowersStyles";
+import * as UserActions from '../../store/actions/userActions';
+import CustomButton from '../../components/button/Button';
+import ErrorPage from '../error/ErrorPage';
+import LoadingPage from '../loading/LoadingPage';
+import styles from '../../assets/js/styles/views/user_followers/userFollowersStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -34,27 +34,27 @@ const fetchPage = (page, props) => {
 const toggle_follow = (e, props, state, id) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push("/login");
+    props.history.push('/login');
   } else {
     return props
       .toggle_follow({ id, token: props.auth.token })
-      .then((res) => {
+      .then(res => {
         if (res.profile && res.profile.username) {
-          const followers = state.followers.map((follower) =>
-            follower.id !== res.profile.id ? follower : res.profile
+          const followers = state.followers.map(follower =>
+            follower.id !== res.profile.id ? follower : res.profile,
           );
           return { followers };
         } else {
           res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
+            .map(key => res[key])
+            .join('\n');
           throw new Error(res);
         }
       })
-      .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
           toast.warning(
-            "An error occured while performing this action. Please try again later"
+            'An error occured while performing this action. Please try again later',
           );
         } else {
           toast.warning(error.message);
@@ -65,7 +65,7 @@ const toggle_follow = (e, props, state, id) => {
 };
 
 const buildFollowers = (followers, classes, props, state, handleSetState) =>
-  followers.map((follower) => (
+  followers.map(follower => (
     <Grid
       item
       xs={12}
@@ -95,8 +95,8 @@ const buildFollowers = (followers, classes, props, state, handleSetState) =>
               primaryButtonStyle
             >
               {follower.followers.includes(props.auth.id)
-                ? "Unfollow"
-                : "Follow"}
+                ? 'Unfollow'
+                : 'Follow'}
             </CustomButton>
           ) : null}
           <Typography
@@ -125,9 +125,9 @@ function UserFollowers(props) {
     handleSetState(fetchPage(null, props));
   }, []);
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -137,7 +137,7 @@ function UserFollowers(props) {
   const username = props.match.params.username;
   if (loading) {
     return <LoadingPage />;
-  } else if (followers.length > 0) {
+  } else if (followers && followers.length > 0) {
     return (
       <Box className={classes.root}>
         <Container className={classes.mainContainerStyle}>
@@ -162,7 +162,7 @@ function UserFollowers(props) {
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split("?")[1]) => {
+                onClick={(e, page = prevPage.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -176,7 +176,7 @@ function UserFollowers(props) {
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split("?")[1]) => {
+                onClick={(e, page = nextPage.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -200,18 +200,18 @@ UserFollowers.propTypes = {
   get_followers: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    toggle_follow: (value) => {
+    toggle_follow: value => {
       return dispatch(UserActions.toggle_follow(value));
     },
-    get_followers: (value) => {
+    get_followers: value => {
       return dispatch(UserActions.get_followers(value));
     },
   };

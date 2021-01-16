@@ -1,17 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import classNames from "classnames";
+import classNames from 'classnames';
 
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
-import styles from "../../assets/js/styles/components/button/buttonStyles";
-
+import styles from '../../assets/js/styles/components/button/buttonStyles';
 
 const useStyles = makeStyles(styles);
 
-const CustomButton = React.forwardRef((props,ref)=>{
+const CustomButton = React.forwardRef((props, ref) => {
   const classes = useStyles();
 
   const {
@@ -28,19 +27,19 @@ const CustomButton = React.forwardRef((props,ref)=>{
     [classes.primaryButtonStyle]: primaryButtonStyle,
     [classes.secondaryButtonStyle]: secondaryButtonStyle,
     [classes.imageUploadButtonStyle]: imageUploadButtonStyle,
-    [classes.fullWidth]:fullWidth,
-    [className]: className
+    [classes.fullWidth]: fullWidth,
+    [className]: className,
   });
 
-return (
-  <Button ref={ref} {...rest} classes={muiClasses} className={btnClasses}>
-  {children}
-</Button>
-    )
+  return (
+    <Button ref={ref} {...rest} classes={muiClasses} className={btnClasses}>
+      {children}
+    </Button>
+  );
 });
 
 Button.propTypes = {
-  size: PropTypes.oneOf(["small", "large"]),
+  size: PropTypes.oneOf(['small', 'large']),
   primaryButtonStyle: PropTypes.bool,
   secondaryButtonStyle: PropTypes.bool,
   imageUploadButtonStyle: PropTypes.bool,
@@ -49,7 +48,7 @@ Button.propTypes = {
   fullWidth: PropTypes.bool,
   type: PropTypes.string,
   muiClasses: PropTypes.object,
-  children: PropTypes.node
-}
+  children: PropTypes.node,
+};
 
 export default CustomButton;

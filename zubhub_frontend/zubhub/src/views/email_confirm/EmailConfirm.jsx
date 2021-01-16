@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import "react-toastify/dist/ReactToastify.css";
+import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
   Box,
@@ -14,18 +14,18 @@ import {
   CardActionArea,
   CardContent,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import * as AuthActions from "../../store/actions/authActions";
-import CustomButton from "../../components/button/Button";
-import styles from "../../assets/js/styles/views/email_confirm/emailConfirmStyles";
+import * as AuthActions from '../../store/actions/authActions';
+import CustomButton from '../../components/button/Button';
+import styles from '../../assets/js/styles/views/email_confirm/emailConfirmStyles';
 
 const useStyles = makeStyles(styles);
 
-const getUsernameAndKey = (queryString) => {
-  let username = queryString.split("&&");
-  const key = username[1].split("=")[1];
-  username = username[0].split("=")[1];
+const getUsernameAndKey = queryString => {
+  let username = queryString.split('&&');
+  const key = username[1].split('=')[1];
+  username = username[0].split('=')[1];
   return { username, key };
 };
 
@@ -45,9 +45,9 @@ function EmailConfirm(props) {
     key: key ?? null,
   });
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -66,7 +66,7 @@ function EmailConfirm(props) {
                 className="auth-form"
                 name="email_confirm"
                 noValidate="noValidate"
-                onSubmit={(e) => handleSetState(confirmEmail(e, props, state))}
+                onSubmit={e => handleSetState(confirmEmail(e, props, state))}
               >
                 <Typography
                   gutterBottom
@@ -121,13 +121,13 @@ EmailConfirm.propTypes = {
   send_email_confirmation: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     send_email_confirmation: (props, key) => {
       return dispatch(AuthActions.send_email_confirmation(props, key));

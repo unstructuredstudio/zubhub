@@ -1,14 +1,14 @@
-import React from "react";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import React from 'react';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
-import { makeStyles } from "@material-ui/core/styles";
-import ShareIcon from "@material-ui/icons/Share";
+import { makeStyles } from '@material-ui/core/styles';
+import ShareIcon from '@material-ui/icons/Share';
 import {
   Tooltip,
   Badge,
@@ -27,16 +27,16 @@ import {
   InputLabel,
   FormControl,
   Divider,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import CustomButton from "../../components/button/Button";
-import * as AuthActions from "../../store/actions/authActions";
-import * as UserActions from "../../store/actions/userActions";
-import * as ProjectActions from "../../store/actions/projectActions";
-import ErrorPage from "../error/ErrorPage";
-import LoadingPage from "../loading/LoadingPage";
-import Project from "../../components/project/Project";
-import styles from "../../assets/js/styles/views/profile/profileStyles";
+import CustomButton from '../../components/button/Button';
+import * as AuthActions from '../../store/actions/authActions';
+import * as UserActions from '../../store/actions/userActions';
+import * as ProjectActions from '../../store/actions/projectActions';
+import ErrorPage from '../error/ErrorPage';
+import LoadingPage from '../loading/LoadingPage';
+import Project from '../../components/project/Project';
+import styles from '../../assets/js/styles/views/profile/profileStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -45,12 +45,12 @@ const handleToggleEditProfileModal = ({ openEditProfileModal }) => {
   return { openEditProfileModal };
 };
 
-const getUserPofile = (props) => {
+const getUserPofile = props => {
   let username = props.match.params.username;
 
   if (!username) {
     username = props.auth.username;
-  } else if (props.auth.username === username) props.history.push("/profile");
+  } else if (props.auth.username === username) props.history.push('/profile');
   return props.get_user_profile({ username, token: props.auth.token });
 };
 
@@ -63,8 +63,8 @@ const updateProfile = (e, props, state, newUserNameEL) => {
         token: props.auth.token,
         username: username.value,
       })
-      .then((res) => {
-        username.value = "";
+      .then(res => {
+        username.value = '';
         return { ...res, ...handleToggleEditProfileModal(state) };
       });
   } else {
@@ -72,19 +72,19 @@ const updateProfile = (e, props, state, newUserNameEL) => {
   }
 };
 
-const copyProfileUrl = (profile) => {
-  const tempInput = document.createElement("textarea");
+const copyProfileUrl = profile => {
+  const tempInput = document.createElement('textarea');
   tempInput.value = `${document.location.origin}/creators/${profile.username}`;
-  tempInput.style.top = "0";
-  tempInput.style.top = "0";
-  tempInput.style.position = "fixed";
-  const rootElem = document.querySelector("#root");
+  tempInput.style.top = '0';
+  tempInput.style.top = '0';
+  tempInput.style.position = 'fixed';
+  const rootElem = document.querySelector('#root');
   rootElem.appendChild(tempInput);
   tempInput.focus();
   tempInput.select();
-  if (document.execCommand("copy")) {
+  if (document.execCommand('copy')) {
     toast.success(
-      "your profile url has been successfully copied to your clipboard!"
+      'your profile url has been successfully copied to your clipboard!',
     );
     rootElem.removeChild(tempInput);
   }
@@ -92,20 +92,20 @@ const copyProfileUrl = (profile) => {
 
 const updateProjects = (res, { results: projects }) => {
   return res
-    .then((res) => {
+    .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map((project) =>
-          project.id === res.project.id ? res.project : project
+        projects = projects.map(project =>
+          project.id === res.project.id ? res.project : project,
         );
         return { results: projects };
       } else {
         res = Object.keys(res)
-          .map((key) => res[key])
-          .join("\n");
+          .map(key => res[key])
+          .join('\n');
         throw new Error(res);
       }
     })
-    .catch((error) => {
+    .catch(error => {
       toast.warning(error.message);
       return { loading: false };
     });
@@ -113,7 +113,7 @@ const updateProjects = (res, { results: projects }) => {
 
 const toggle_follow = (id, props) => {
   if (!props.auth.token) {
-    props.history.push("/login");
+    props.history.push('/login');
   } else {
     return props.toggle_follow({ id, token: props.auth.token });
   }
@@ -134,9 +134,9 @@ function Profile(props) {
     handleSetState(getUserPofile(props));
   }, []);
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -175,16 +175,16 @@ function Profile(props) {
                   }
                 >
                   {profile.followers.includes(props.auth.id)
-                    ? "Unfollow"
-                    : "Follow"}
+                    ? 'Unfollow'
+                    : 'Follow'}
                 </CustomButton>
               )}
               <Box className={classes.avatarBoxStyle}>
                 <Badge
                   overlap="circle"
                   anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
+                    vertical: 'top',
+                    horizontal: 'right',
                   }}
                   badgeContent={
                     props.auth.id === profile.id ? (
@@ -196,7 +196,7 @@ function Profile(props) {
                         <Fab
                           className={clsx(
                             classes.secondaryButton,
-                            classes.profileShareButtonStyle
+                            classes.profileShareButtonStyle,
                           )}
                           aria-label="share profile url"
                           onClick={() => copyProfileUrl(profile)}
@@ -270,7 +270,7 @@ function Profile(props) {
               <Box className={classes.aboutMeBoxStyle}>
                 {profile.bio
                   ? profile.bio
-                  : "You will be able to change this next month 😀!"}
+                  : 'You will be able to change this next month 😀!'}
               </Box>
             </Paper>
 
@@ -288,7 +288,7 @@ function Profile(props) {
                     className={clsx(
                       classes.secondaryLink,
                       classes.floatRight,
-                      classes.textDecorationNone
+                      classes.textDecorationNone,
                     )}
                     to={`/creators/${profile.username}/projects`}
                   >
@@ -297,7 +297,7 @@ function Profile(props) {
                 </Typography>
                 <Grid container>
                   {Array.isArray(projects) &&
-                    projects.map((project) => (
+                    projects.map(project => (
                       <Grid
                         item
                         xs={12}
@@ -309,7 +309,7 @@ function Profile(props) {
                         <Project
                           project={project}
                           key={project.id}
-                          updateProjects={(res) =>
+                          updateProjects={res =>
                             handleSetState(updateProjects(res, state))
                           }
                           {...props}
@@ -363,7 +363,7 @@ function Profile(props) {
             </CustomButton>
             <CustomButton
               variant="contained"
-              onClick={(e) =>
+              onClick={e =>
                 handleSetState(updateProfile(e, props, state, newUserNameEL))
               }
               primaryButtonStyle
@@ -391,30 +391,30 @@ Profile.propTypes = {
   toggle_save: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: (auth_user) => {
+    set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    get_user_profile: (props) => {
+    get_user_profile: props => {
       return dispatch(UserActions.get_user_profile(props));
     },
-    edit_user_profile: (props) => {
+    edit_user_profile: props => {
       return dispatch(UserActions.edit_user_profile(props));
     },
-    toggle_follow: (props) => {
+    toggle_follow: props => {
       return dispatch(UserActions.toggle_follow(props));
     },
-    toggle_like: (props) => {
+    toggle_like: props => {
       return dispatch(ProjectActions.toggle_like(props));
     },
-    toggle_save: (props) => {
+    toggle_save: props => {
       return dispatch(ProjectActions.toggle_save(props));
     },
   };

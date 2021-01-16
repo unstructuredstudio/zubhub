@@ -1,16 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import clsx from "clsx";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import { withFormik } from "formik";
-import * as Yup from "yup";
+import { withFormik } from 'formik';
+import * as Yup from 'yup';
 
-import { makeStyles } from "@material-ui/core/styles";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { makeStyles } from '@material-ui/core/styles';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {
   Grid,
   Box,
@@ -30,26 +30,26 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import CustomButton from "../../components/button/Button";
-import * as AuthActions from "../../store/actions/authActions";
-import styles from "../../assets/js/styles/views/signup/signupStyles";
+import CustomButton from '../../components/button/Button';
+import * as AuthActions from '../../store/actions/authActions';
+import styles from '../../assets/js/styles/views/signup/signupStyles';
 
 const useStyles = makeStyles(styles);
 
-const handleMouseDownPassword = (e) => {
+const handleMouseDownPassword = e => {
   e.preventDefault();
 };
 
-const get_locations = (props) => {
+const get_locations = props => {
   return props.get_locations();
 };
 
 const signup = (e, props) => {
   e.preventDefault();
   if (props.values.location.length < 1) {
-    props.validateField("location");
+    props.validateField('location');
   } else {
     return props.signup(props);
   }
@@ -74,9 +74,9 @@ function Signup(props) {
 
   const classes = useStyles();
 
-  const handleSetState = (obj) => {
+  const handleSetState = obj => {
     if (obj) {
-      Promise.resolve(obj).then((obj) => {
+      Promise.resolve(obj).then(obj => {
         setState({ ...state, ...obj });
       });
     }
@@ -94,7 +94,7 @@ function Signup(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={(e) => handleSetState(signup(e, props))}
+                onSubmit={e => handleSetState(signup(e, props))}
               >
                 <Typography
                   gutterBottom
@@ -126,7 +126,7 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched["username"] && props.errors["username"]
+                        props.touched['username'] && props.errors['username']
                       }
                     >
                       <InputLabel
@@ -170,7 +170,7 @@ function Signup(props) {
                         </Tooltip>
                       </ClickAwayListener>
                       <FormHelperText error>
-                        {props.touched["username"] && props.errors["username"]}
+                        {props.touched['username'] && props.errors['username']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -185,7 +185,7 @@ function Signup(props) {
                         shrink: true,
                       }}
                       margin="normal"
-                      error={props.touched["email"] && props.errors["email"]}
+                      error={props.touched['email'] && props.errors['email']}
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
@@ -203,7 +203,7 @@ function Signup(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched["email"] && props.errors["email"]}
+                        {props.touched['email'] && props.errors['email']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -216,8 +216,8 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched["dateOfBirth"] &&
-                        props.errors["dateOfBirth"]
+                        props.touched['dateOfBirth'] &&
+                        props.errors['dateOfBirth']
                       }
                     >
                       <InputLabel
@@ -238,8 +238,8 @@ function Signup(props) {
                         labelWidth={90}
                       />
                       <FormHelperText error>
-                        {props.touched["dateOfBirth"] &&
-                          props.errors["dateOfBirth"]}
+                        {props.touched['dateOfBirth'] &&
+                          props.errors['dateOfBirth']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -252,8 +252,8 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched["user_location"] &&
-                        props.errors["user_location"]
+                        props.touched['user_location'] &&
+                        props.errors['user_location']
                       }
                     >
                       <InputLabel
@@ -276,15 +276,15 @@ function Signup(props) {
                           <em>None</em>
                         </MenuItem>
                         {Array.isArray(locations) &&
-                          locations.map((location) => (
+                          locations.map(location => (
                             <MenuItem key={location.name} value={location.name}>
                               {location.name}
                             </MenuItem>
                           ))}
                       </Select>
                       <FormHelperText error>
-                        {props.touched["user_location"] &&
-                          props.errors["user_location"]}
+                        {props.touched['user_location'] &&
+                          props.errors['user_location']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -297,7 +297,7 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched["password1"] && props.errors["password1"]
+                        props.touched['password1'] && props.errors['password1']
                       }
                     >
                       <InputLabel
@@ -310,7 +310,7 @@ function Signup(props) {
                         className={classes.customInputStyle}
                         id="password1"
                         name="password1"
-                        type={showPassword1 ? "text" : "password"}
+                        type={showPassword1 ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
@@ -337,8 +337,8 @@ function Signup(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched["password1"] &&
-                          props.errors["password1"]}
+                        {props.touched['password1'] &&
+                          props.errors['password1']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -351,7 +351,7 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched["password2"] && props.errors["password2"]
+                        props.touched['password2'] && props.errors['password2']
                       }
                     >
                       <InputLabel
@@ -364,7 +364,7 @@ function Signup(props) {
                         className={classes.customInputStyle}
                         id="password2"
                         name="password2"
-                        type={showPassword2 ? "text" : "password"}
+                        type={showPassword2 ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
@@ -391,8 +391,8 @@ function Signup(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched["password2"] &&
-                          props.errors["password2"]}
+                        {props.touched['password2'] &&
+                          props.errors['password2']}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -451,21 +451,21 @@ Signup.propTypes = {
   get_locations: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: (auth_user) => {
+    set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    signup: (props) => {
+    signup: props => {
       return dispatch(AuthActions.signup(props));
     },
-    get_locations: (props) => {
+    get_locations: props => {
       return dispatch(AuthActions.get_locations());
     },
   };
@@ -473,29 +473,29 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(
   withFormik({
     mapPropsToValue: () => ({
-      email: "",
-      user_location: "",
-      password1: "",
-      password2: "",
+      email: '',
+      user_location: '',
+      password1: '',
+      password2: '',
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email("invalid email").required("invalid email"),
+      email: Yup.string().email('invalid email').required('invalid email'),
       dateOfBirth: Yup.date()
         .max(new Date(), "your date of birth can't be greater than today")
-        .required("please input your date of birth"),
+        .required('please input your date of birth'),
       user_location: Yup.string()
-        .min(1, "your location is too short")
-        .required("please input your location"),
+        .min(1, 'your location is too short')
+        .required('please input your location'),
       password1: Yup.string()
-        .min(8, "your password is too short")
-        .required("input your password"),
+        .min(8, 'your password is too short')
+        .required('input your password'),
       password2: Yup.string()
-        .oneOf([Yup.ref("password1"), null], "Passwords must match")
-        .required("input a confirmation password"),
+        .oneOf([Yup.ref('password1'), null], 'Passwords must match')
+        .required('input a confirmation password'),
     }),
-  })(Signup)
+  })(Signup),
 );
