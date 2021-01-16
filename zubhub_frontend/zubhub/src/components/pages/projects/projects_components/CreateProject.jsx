@@ -494,7 +494,7 @@ class CreateProject extends Component {
                             placeholder="Project Title"
                             onChange={this.props.handleChange}
                             onBlur={this.props.handleBlur}
-                            labelWidth={90}
+                            labelWidth={40}
                           />
                           <FormHelperText error>
                             {this.props.touched["title"] &&
@@ -611,6 +611,14 @@ class CreateProject extends Component {
                             labelWidth={90}
                           />
                           <FormHelperText error>
+                            <Typography
+                              color="textSecondary"
+                              variant="caption"
+                              component="span"
+                            >
+                              YouTube, Vimeo, Google Drive links are supported
+                            </Typography>
+                            <br />
                             {this.props.touched["video"] &&
                               this.props.errors["video"]}
                           </FormHelperText>
