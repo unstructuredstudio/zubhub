@@ -183,7 +183,7 @@ class UserProjects extends Component {
               ))}
             </Grid>
             <ButtonGroup
-              aria-label={t("userProjects.aria_labels.prev_nxt_buttons")}
+              aria-label={t("userProjects.ariaLabels.prevNxtButtons")}
               className={classes.buttonGroupStyle}
             >
               {prevPage ? (
@@ -222,7 +222,7 @@ class UserProjects extends Component {
       );
     } else {
       return (
-        <ErrorPage error={t("userProjects.others.errors.no_user_projects")} />
+        <ErrorPage error={t("userProjects.others.errors.noUserProjects")} />
       );
     }
   }

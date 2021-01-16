@@ -252,7 +252,7 @@ class CreateProject extends Component {
             .join("\n");
           throw new Error(res);
         }
-        toast.success(this.props.t("createProject.others.toast_success"));
+        toast.success(this.props.t("createProject.others.toastSuccess"));
         return this.props.history.push("/profile");
       })
       .catch((error) => {
@@ -274,14 +274,14 @@ class CreateProject extends Component {
 
       if (media_fields.image_is_empty && media_fields.video_is_empty) {
         this.props.setErrors({
-          project_images: "image_or_video",
+          project_images: "imageOrVideo",
         });
         this.props.setErrors({
-          video: "image_or_video",
+          video: "imageOrVideo",
         });
       } else if (media_fields.too_many_images === true) {
         this.props.setErrors({
-          project_images: "too_many_images",
+          project_images: "tooManyImages",
         });
       } else if (media_fields.image_size_too_large === true) {
         this.props.setErrors({
@@ -323,10 +323,10 @@ class CreateProject extends Component {
           "border-color:#F54336; color:#F54336"
         );
         this.props.setErrors({
-          project_images: "image_or_video",
+          project_images: "imageOrVideo",
         });
         this.props.setErrors({
-          video: "image_or_video",
+          video: "imageOrVideo",
         });
         result["video_is_empty"] = true;
       }
@@ -336,7 +336,7 @@ class CreateProject extends Component {
         "border-color:#F54336; color:#F54336"
       );
       this.props.setErrors({
-        project_images: "too_many_images",
+        project_images: "tooManyImages",
       });
       result["too_many_images"] = true;
     } else {
@@ -353,7 +353,7 @@ class CreateProject extends Component {
           "border-color:#F54336; color:#F54336"
         );
         this.props.setErrors({
-          project_images: "image_size_too_large",
+          project_images: "imageSizeTooLarge",
         });
         result["image_size_too_large"] = image_size_too_large;
       }
@@ -423,9 +423,7 @@ class CreateProject extends Component {
     let { error, image_upload, materials_used } = this.state;
     let { classes, t } = this.props;
     if (!this.props.auth.token) {
-      return (
-        <ErrorPage error={t("createProject.others.errors.not_logged_in")} />
-      );
+      return <ErrorPage error={t("createProject.others.errors.notLoggedIn")} />;
     } else {
       return (
         <Box className={classes.root}>
@@ -571,7 +569,7 @@ class CreateProject extends Component {
                               }
                               onClick={this.handleImageButtonClick}
                             >
-                              {t("createProject.inputs.project_images.label")}
+                              {t("createProject.inputs.projectImages.label")}
                             </Button>
                           </label>
                           <input
@@ -588,7 +586,7 @@ class CreateProject extends Component {
                           <FormHelperText error>
                             {this.props.errors["project_images"] &&
                               t(
-                                `createProject.inputs.project_images.errors.${this.props.errors["project_images"]}`
+                                `createProject.inputs.projectImages.errors.${this.props.errors["project_images"]}`
                               )}
                           </FormHelperText>
                         </FormControl>
@@ -627,7 +625,7 @@ class CreateProject extends Component {
                               variant="caption"
                               component="span"
                             >
-                              {t("createProject.inputs.video.helper_text")}
+                              {t("createProject.inputs.video.helperText")}
                             </Typography>
                             <br />
                             {this.props.touched["video"] &&
@@ -659,7 +657,7 @@ class CreateProject extends Component {
                             htmlFor="add_materials_used"
                             shrink
                           >
-                            {t("createProject.inputs.materials_used.label")}
+                            {t("createProject.inputs.materialsUsed.label")}
                           </InputLabel>
                           <Box className={classes.materialsUsedViewStyle}>
                             {materials_used.map((material, num) =>
@@ -697,7 +695,7 @@ class CreateProject extends Component {
                                 {this.props.touched["materials_used"] &&
                                   this.props.errors["materials_used"] &&
                                   t(
-                                    `createProject.inputs.materials_used.errors.${this.props.errors["materials_used"]}`
+                                    `createProject.inputs.materialsUsed.errors.${this.props.errors["materials_used"]}`
                                   )}
                               </FormHelperText>
                             </Grid>
@@ -803,7 +801,7 @@ export default connect(mapStateToProps)(
     validationSchema: Yup.object().shape({
       title: Yup.string().max(100, "max").required("required"),
       description: Yup.string().max(10000, "max").required("required"),
-      video: Yup.string().url("should_be_video_url").max(1000, "max"),
+      video: Yup.string().url("shouldBeVideoUrl").max(1000, "max"),
       materials_used: Yup.string().max(10000, "max").required("required"),
     }),
     handleSubmit: (values, { setSubmitting }) => {},

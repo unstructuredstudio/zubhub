@@ -166,9 +166,7 @@ class PasswordResetConfirm extends Component {
     this.props.api
       .password_reset_confirm({ ...this.props.values, uid, token })
       .then((res) => {
-        toast.success(
-          this.props.t("passwordResetConfirm.others.toast_success")
-        );
+        toast.success(this.props.t("passwordResetConfirm.others.toastSuccess"));
         setTimeout(() => {
           this.props.history.push("/login");
         }, 4000);
@@ -255,7 +253,7 @@ class PasswordResetConfirm extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="new_password1"
                         >
-                          {t("passwordResetConfirm.inputs.new_password1.label")}
+                          {t("passwordResetConfirm.inputs.newPassword1.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -288,7 +286,7 @@ class PasswordResetConfirm extends Component {
                           {this.props.touched["new_password1"] &&
                             this.props.errors["new_password1"] &&
                             t(
-                              `passwordResetConfirm.inputs.new_password1.errors.${this.props.errors["new_password1"]}`
+                              `passwordResetConfirm.inputs.newPassword1.errors.${this.props.errors["new_password1"]}`
                             )}
                         </FormHelperText>
                       </FormControl>
@@ -310,7 +308,7 @@ class PasswordResetConfirm extends Component {
                           className={classes.customLabelStyle}
                           htmlFor="new_password2"
                         >
-                          {t("passwordResetConfirm.inputs.new_password2.label")}
+                          {t("passwordResetConfirm.inputs.newPassword2.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -343,7 +341,7 @@ class PasswordResetConfirm extends Component {
                           {this.props.touched["new_password2"] &&
                             this.props.errors["new_password2"] &&
                             t(
-                              `passwordResetConfirm.inputs.new_password2.errors.${this.props.errors["new_password2"]}`
+                              `passwordResetConfirm.inputs.newPassword2.errors.${this.props.errors["new_password2"]}`
                             )}
                         </FormHelperText>
                       </FormControl>
@@ -381,7 +379,7 @@ export default withFormik({
   validationSchema: Yup.object().shape({
     new_password1: Yup.string().min(8, "min").required("required"),
     new_password2: Yup.string()
-      .oneOf([Yup.ref("new_password1"), null], "no_match")
+      .oneOf([Yup.ref("new_password1"), null], "noMatch")
       .required("required"),
   }),
   handleSubmit: (values, { setSubmitting }) => {},

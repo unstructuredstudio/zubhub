@@ -251,7 +251,7 @@ class PageWrapper extends Component {
                         className={classes.primaryButtonStyle}
                         size="small"
                       >
-                        {t("pageWrapper.navbar.create_project")}
+                        {t("pageWrapper.navbar.createProject")}
                       </Button>
                     </Link>
                     <Avatar
@@ -303,7 +303,7 @@ class PageWrapper extends Component {
                             color="textPrimary"
                             component="span"
                           >
-                            {t("pageWrapper.navbar.saved_projects")}
+                            {t("pageWrapper.navbar.savedProjects")}
                           </Typography>
                         </Link>
                       </MenuItem>

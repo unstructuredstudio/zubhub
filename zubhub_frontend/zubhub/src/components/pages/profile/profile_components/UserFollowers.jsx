@@ -284,7 +284,7 @@ class UserFollowers extends Component {
               {this.followers(followers)}
             </Grid>
             <ButtonGroup
-              aria-label={t("userFollowers.aria_labels.prev_nxt_buttons")}
+              aria-label={t("userFollowers.ariaLabels.prevNxtButtons")}
               className={classes.buttonGroupStyle}
             >
               {prevPage ? (
@@ -322,7 +322,7 @@ class UserFollowers extends Component {
         </Box>
       );
     } else {
-      return <ErrorPage error={t("userFollower.others.errors.no_followers")} />;
+      return <ErrorPage error={t("userFollower.others.errors.noFollowers")} />;
     }
   }
 }

@@ -233,7 +233,7 @@ class Profile extends Component {
       .then((res) => {
         if (!res.username) {
           throw new Error(
-            this.props.t("profile.others.errors.profile_fetch_error")
+            this.props.t("profile.others.errors.profileFetchError")
           );
         }
         this.setState({ profile: res });
@@ -302,7 +302,7 @@ class Profile extends Component {
     tempInput.focus();
     tempInput.select();
     if (document.execCommand("copy")) {
-      toast.success(this.props.t("profile.others.toast_success"));
+      toast.success(this.props.t("profile.others.toastSuccess"));
       rootElem.removeChild(tempInput);
     }
   };
@@ -326,7 +326,7 @@ class Profile extends Component {
           username.value = "";
         } else {
           throw new Error(
-            this.props.t("profile.others.errors.profile_update_error")
+            this.props.t("profile.others.errors.profileUpdateError")
           );
         }
       })
@@ -405,7 +405,7 @@ class Profile extends Component {
                     badgeContent={
                       this.props.auth.id === profile.id ? (
                         <Tooltip
-                          title={t("profile.tooltips.share_profile")}
+                          title={t("profile.tooltips.shareProfile")}
                           placement="right-start"
                           arrow
                         >
@@ -414,7 +414,7 @@ class Profile extends Component {
                               classes.secondaryButton,
                               classes.profileShareButtonStyle
                             )}
-                            aria-label={t("profile.aria_labels.share_profile")}
+                            aria-label={t("profile.ariaLabels.shareProfile")}
                             onClick={this.copyProfileUrl}
                           >
                             <ShareIcon />
@@ -453,7 +453,7 @@ class Profile extends Component {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.projects_count} {t("profile.projects_count")}
+                        {profile.projects_count} {t("profile.projectsCount")}
                       </Typography>
                     </Link>
                     <Link
@@ -464,8 +464,7 @@ class Profile extends Component {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.followers.length}{" "}
-                        {t("profile.followers_count")}
+                        {profile.followers.length} {t("profile.followersCount")}
                       </Typography>
                     </Link>
                   </Box>
@@ -507,7 +506,7 @@ class Profile extends Component {
                       )}
                       to={`/creators/${profile.username}/projects`}
                     >
-                      {t("profile.projects.view_all")}
+                      {t("profile.projects.viewAll")}
                     </Link>
                   </Typography>
                   <Grid container>
@@ -536,7 +535,7 @@ class Profile extends Component {
           <Dialog
             open={openEditProfileModal}
             onClose={this.handleToggleEditProfileModal}
-            aria-labelledby={t("profile.aria_labels.edit_profile")}
+            aria-labelledby={t("profile.ariaLabels.editProfile")}
           >
             <DialogTitle id="edit-user-profile">
               {t("profile.edit.dialog.primary")}
@@ -585,9 +584,7 @@ class Profile extends Component {
         </>
       );
     } else {
-      return (
-        <ErrorPage error={t("profile.others.errors.profile_fetch_error")} />
-      );
+      return <ErrorPage error={t("profile.others.errors.profileFetchError")} />;
     }
   }
 }

@@ -325,7 +325,7 @@ class Signup extends Component {
                           onClickAway={this.handleTooltipClose}
                         >
                           <Tooltip
-                            title={t("signup.tooltips.no_real_name")}
+                            title={t("signup.tooltips.noRealName")}
                             placement="top-start"
                             arrow
                             onClose={this.handleTooltipClose}
@@ -416,7 +416,7 @@ class Signup extends Component {
                           htmlFor="dateOfBirth"
                           shrink
                         >
-                          {t("signup.inputs.date_of_birth.label")}
+                          {t("signup.inputs.dateOfBirth.label")}
                         </InputLabel>
                         <OutlinedInput
                           className={classes.customInputStyle}
@@ -432,7 +432,7 @@ class Signup extends Component {
                           {this.props.touched["dateOfBirth"] &&
                             this.props.errors["dateOfBirth"] &&
                             t(
-                              `signup.inputs.date_of_birth.errors.${this.props.errors["dateOfBirth"]}`
+                              `signup.inputs.dateOfBirth.errors.${this.props.errors["dateOfBirth"]}`
                             )}
                         </FormHelperText>
                       </FormControl>
@@ -615,7 +615,7 @@ class Signup extends Component {
                         color="textSecondary"
                         component="p"
                       >
-                        {t("signup.others.already_a_member")}
+                        {t("signup.others.alreadyAMember")}
                       </Typography>
                       <Divider className={classes.divider} />
                     </Box>
@@ -673,12 +673,12 @@ export default connect(
     }),
     validationSchema: Yup.object().shape({
       username: Yup.string().required("required"),
-      email: Yup.string().email("invalid_email").required("required"),
+      email: Yup.string().email("invalidEmail").required("required"),
       dateOfBirth: Yup.date().max(new Date(), "max").required("required"),
       user_location: Yup.string().min(1, "min").required("required"),
       password1: Yup.string().min(8, "min").required("required"),
       password2: Yup.string()
-        .oneOf([Yup.ref("password1"), null], "no_match")
+        .oneOf([Yup.ref("password1"), null], "noMatch")
         .required("required"),
     }),
     handleSubmit: (values, { setSubmitting }) => {},

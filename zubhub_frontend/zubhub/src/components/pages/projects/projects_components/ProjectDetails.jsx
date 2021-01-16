@@ -413,7 +413,7 @@ class ProjectDetails extends Component {
       })
       .then((res) => {
         if (res.title) {
-          return this.setState({ project: res, loading: false });
+          this.setState({ project: res, loading: false });
         } else {
           res = Object.keys(res)
             .map((key) => res[key])
@@ -727,7 +727,7 @@ class ProjectDetails extends Component {
                         className={classes.actionBoxButtonStyle}
                         size="small"
                         aria-label={t(
-                          "projectDetails.aria_labels.like_button.label"
+                          "projectDetails.ariaLabels.likeButton.label"
                         )}
                         variant="extended"
                         onClick={(e, id = project.id) =>
@@ -737,13 +737,13 @@ class ProjectDetails extends Component {
                         {project.likes.includes(this.props.auth.id) ? (
                           <ClapIcon
                             arial-label={t(
-                              "projectDetails.aria_labels.like_button.unlilke"
+                              "projectDetails.ariaLabels.likeButton.unlilke"
                             )}
                           />
                         ) : (
                           <ClapBorderIcon
                             arial-label={t(
-                              "projectDetails.aria_labels.like_button.like"
+                              "projectDetails.ariaLabels.likeButton.like"
                             )}
                           />
                         )}
@@ -755,7 +755,7 @@ class ProjectDetails extends Component {
                         className={classes.actionBoxButtonStyle}
                         size="small"
                         aria-label={t(
-                          "projectDetails.aria_labels.save_button.label"
+                          "projectDetails.ariaLabels.saveButton.label"
                         )}
                         onClick={(e, id = project.id) =>
                           this.toggle_save(e, id)
@@ -764,13 +764,13 @@ class ProjectDetails extends Component {
                         {project.saved_by.includes(this.props.auth.id) ? (
                           <BookmarkIcon
                             aria-label={t(
-                              "projectDetails.aria_labels.save_button.unsave"
+                              "projectDetails.ariaLabels.saveButton.unsave"
                             )}
                           />
                         ) : (
                           <BookmarkBorderIcon
                             aria-label={t(
-                              "projectDetails.aria_labels.save_button.save"
+                              "projectDetails.ariaLabels.saveButton.save"
                             )}
                           />
                         )}
@@ -890,33 +890,36 @@ class ProjectDetails extends Component {
                     </Button>
                   </form>
                 </Box>
-                {project.comments.map((comment) => (
-                  <Box className={classes.commentsStyle} key={comment.id}>
-                    <Link
-                      className={clsx(
-                        classes.textDecorationNone,
-                        classes.commentMetaStyle
-                      )}
-                      to={`/creators/${this.props.auth.username}`}
-                    >
-                      <Avatar
-                        className={classes.commentAvatarStyle}
-                        src={`https://robohash.org/${comment.creator}`}
-                        alt={comment.creator}
-                      />
-                      <Box>
-                        <Typography color="textPrimary">
-                          {comment.creator}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {dFormatter(comment.created_on)}
-                        </Typography>
-                      </Box>
-                    </Link>
+                {project.comments &&
+                  project.comments.map((comment) => (
+                    <Box className={classes.commentsStyle} key={comment.id}>
+                      <Link
+                        className={clsx(
+                          classes.textDecorationNone,
+                          classes.commentMetaStyle
+                        )}
+                        to={`/creators/${this.props.auth.username}`}
+                      >
+                        <Avatar
+                          className={classes.commentAvatarStyle}
+                          src={`https://robohash.org/${comment.creator}`}
+                          alt={comment.creator}
+                        />
+                        <Box>
+                          <Typography color="textPrimary">
+                            {comment.creator}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            {`${dFormatter(comment.created_on).value} ${t(
+                              `project.${dFormatter(comment.created_on).key}`
+                            )} ${t("project.ago")}`}
+                          </Typography>
+                        </Box>
+                      </Link>
 
-                    {comment.text}
-                  </Box>
-                ))}
+                      {comment.text}
+                    </Box>
+                  ))}
               </Container>
             </Paper>
           </Box>
@@ -934,7 +937,7 @@ class ProjectDetails extends Component {
                 openEnlargedImageDialog: !openEnlargedImageDialog,
               })
             }
-            aria-labelledby={t("projectDetails.aria_labels.image_dialog")}
+            aria-labelledby={t("projectDetails.ariaLabels.imageDialog")}
           >
             <img
               className={classes.enlargedImageStyle}
@@ -945,7 +948,7 @@ class ProjectDetails extends Component {
         </>
       );
     } else {
-      return <ErrorPage error={t("pageDetails.others.errors.unexpected")} />;
+      return <ErrorPage error={t("projectDetails.others.errors.unexpected")} />;
     }
   }
 }

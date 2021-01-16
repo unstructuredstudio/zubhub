@@ -157,7 +157,7 @@ class EmailConfirm extends Component {
     this.props.api
       .send_email_confirmation(this.state.key)
       .then((res) => {
-        toast.success(this.props.t("emailConfirm.others.toast_success"));
+        toast.success(this.props.t("emailConfirm.others.toastSuccess"));
         setTimeout(() => {
           this.props.history.push("/");
         }, 4000);

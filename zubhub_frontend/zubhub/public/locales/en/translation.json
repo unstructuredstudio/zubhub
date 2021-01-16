@@ -3,8 +3,8 @@
     "navbar":{
       "login":"Login",
       "signup":"Sign Up",
-      "create_project":"Create Project",
-      "saved_projects":"Saved Projects",
+      "createProject":"Create Project",
+      "savedProjects":"Saved Projects",
       "logout":"Logout"
     }
   },
@@ -26,11 +26,11 @@
         "email":{
           "label":"Email",
           "errors":{
-            "invalid_email":"invalid email",
+            "invalidEmail":"invalid email",
             "required":"this field is required"
           }
         },
-        "date_of_birth":{
+        "dateOfBirth":{
           "label":"Date Of Birth",
           "errors":{
             "max":"your date of birth can't be greater than today",
@@ -54,21 +54,21 @@
         "password2":{
           "label":"Confirm Password",
           "errors":{
-            "no_match":"Passwords must match",
+            "noMatch":"Passwords must match",
             "required":"this field is required"
           }
         }
       },
       "submit":"Signup",
       "others":{
-       "already_a_member":"Already a Member ?",
+       "alreadyAMember":"Already a Member ?",
        "login":"Login",
        "errors":{
          "unexpected":"An error occured while performing this action. Please try again later"
        }
       },
       "tooltips":{
-        "no_real_name":"Do not use your real name here!"
+        "noRealName":"Do not use your real name here!"
       }
    },
 
@@ -95,9 +95,9 @@
      },
      "submit":"Login",
      "others":{
-       "not_a_member":"Not a Member ?",
+       "notAMember":"Not a Member ?",
        "signup":"Sign Up",
-       "forgot_password":"Forgot Password?",
+       "forgotPassword":"Forgot Password?",
        "errors":{
         "unexpected":"An error occured while performing this action. Please try again later"
       }
@@ -122,7 +122,7 @@
         },
         "submit":"Send Reset Link",
         "others":{
-          "toast_success":"We just sent a password reset link to your email!",
+          "toastSuccess":"We just sent a password reset link to your email!",
           "errors":{
             "unexpected":"An error occured while performing this action. Please try again later"
           }
@@ -135,24 +135,24 @@
           "primary":"Password Reset Confirmation"
         },
         "inputs":{
-          "new_password1":{
+          "newPassword1":{
            "label":"New Password",
            "errors":{
              "min":"your password is too short",
              "required":"this field is required"
            }
           },
-          "new_password2":{
+          "newPassword2":{
             "label":"Confirm Password",
             "errors":{
-              "no_match":"Passwords must match",
+              "noMatch":"Passwords must match",
               "required":"this field is required"
             }
           }
         },
         "submit":"Reset Password",
           "others":{
-            "toast_success":"Congratulations! your password reset was successful! you will now be redirected to login",
+            "toastSuccess":"Congratulations! your password reset was successful! you will now be redirected to login",
             "errors":{
               "unexpected":"An error occured while performing this action. Please try again later"
             }
@@ -168,7 +168,7 @@
         },
         "submit":"Confirm",
         "others":{
-          "toast_success":"Congratulations!, your email has been confirmed!",
+          "toastSuccess":"Congratulations!, your email has been confirmed!",
           "errors":{
           "unexpected":"An error occured while performing this action. Please try again later"}
         }
@@ -222,24 +222,24 @@
               "required":"this field is required"
             }
           },
-          "project_images":{
+          "projectImages":{
             "label":"Images",
             "errors":{
-              "image_or_video":"you must provide either image(s) or video url",
-              "image_size_too_large":"one or more of your image is greater than 3mb",
-              "too_many_images":"too many images uploaded"
+              "imageOrVideo":"you must provide either image(s) or video url",
+              "imageSizeTooLarge":"one or more of your image is greater than 3mb",
+              "tooManyImages":"too many images uploaded"
             }
           },
           "video":{
             "label":"Video URL",
-            "helper_text":"YouTube, Vimeo, Google Drive links are supported",
+            "helperText":"YouTube, Vimeo, Google Drive links are supported",
             "errors":{
-             "should_be_video_url":"you are required to submit a video url here",
+             "shouldBeVideoUrl":"you are required to submit a video url here",
              "max":"you are required to submit a video url here",
-             "image_or_video":"you must provide either image(s) or video url"
+             "imageOrVideo":"you must provide either image(s) or video url"
             }
           },
-          "materials_used":{
+          "materialsUsed":{
             "label":"Materials Used",
             "errors":{
              "max":"you are required to submit a video url here",
@@ -249,9 +249,9 @@
         },
         "submit":"Create Project",
         "others":{
-          "toast_success":"Your project was created successfully!!",
+          "toastSuccess":"Your project was created successfully!!",
           "errors":{
-            "not_logged_in":"You are not logged in. Click on the signin button to get started",
+            "notLoggedIn":"You are not logged in. Click on the signin button to get started",
             "unexpected":"An error occured while performing this action. Please try again later"
           }
         }
@@ -261,12 +261,12 @@
         "title":"Your saved projects",
         "prev":"Prev",
         "next":"Next",
-        "aria_labels":{
-          "prev_nxt_buttons":"previous and next page buttons"
+        "ariaLabels":{
+          "prevNxtButtons":"previous and next page buttons"
         },
         "others":{
           "errors":{
-            "no_saved_projects":"user have no saved projects",
+            "noSavedProjects":"user have no saved projects",
             "unexpected":"An error occured while performing this action. Please try again later"
           }
         }
@@ -287,18 +287,18 @@
             "action":"Comment"
           }
         },
-        "aria_labels":{
-          "like_button":{
+        "ariaLabels":{
+          "likeButton":{
             "label":"like button",
             "like":"like",
             "unlike":"unlike"
           },
-          "save_button":{
+          "saveButton":{
             "label":"save button",
             "save":"save",
             "unsave":"unsave"
           },
-          "image_dialog":"enlarged image dialog"
+          "imageDialog":"enlarged image dialog"
         },
         "others":{
           "errors":{
@@ -321,28 +321,28 @@
         },
         "follow":"Follow",
         "unfollow":"Unfollow",
-        "projects_count":"Projects",
-        "followers_count":"Followers",
+        "projectsCount":"Projects",
+        "followersCount":"Followers",
         "about":{
           "label":"About Me",
           "placeholder":"You will be able to change this next month 😀!"
          },
          "projects":{
            "label":"Latest projects of",
-           "view_all":"View all >>"
+           "viewAll":"View all >>"
          },
         "tooltips":{
-          "share_profile":"Share your profile with friends!"
+          "shareProfile":"Share your profile with friends!"
         },
-        "aria_labels":{
-          "share_profile":"share profile url",
-          "edit_profile":"edit user profile"
+        "ariaLabels":{
+          "shareProfile":"share profile url",
+          "editProfile":"edit user profile"
         },
         "others":{
-          "toast_success":"your profile url has been successfully copied to your clipboard!",
+          "toastSuccess":"your profile url has been successfully copied to your clipboard!",
           "errors":{
-            "profile_fetch_error":"An error occured while fetching profile, please try again later",
-            "profile_update_error":"An error occured while updating your profile, please try again later",
+            "profileFetchError":"An error occured while fetching profile, please try again later",
+            "profileUpdateError":"An error occured while updating your profile, please try again later",
             "unexpected":"an error occured while fetching user profile, please try again later"
           }
         }
@@ -352,12 +352,12 @@
         "title":"projects",
         "prev":"Prev",
         "next":"Next",
-        "aria_labels":{
-          "prev_nxt_buttons":"previous and next page buttons"
+        "ariaLabels":{
+          "prevNxtButtons":"previous and next page buttons"
         },
         "others":{
           "errors":{
-            "no_user_projects":"user have not created any projects yet"
+            "noUserProjects":"user have not created any projects yet"
           }
         }
       },
@@ -370,12 +370,12 @@
         },
         "prev":"Prev",
         "next":"Next",
-        "aria_labels":{
-          "prev_nxt_buttons":"previous and next page buttons"
+        "ariaLabels":{
+          "prevNxtButtons":"previous and next page buttons"
         },
         "others":{
           "errors":{
-            "no_followers":"user have no followers yet",
+            "noFollowers":"user have no followers yet",
             "unexpected":"An error occured while performing this action. Please try again later"
           }
         }

@@ -354,7 +354,7 @@ class Login extends Component {
                         color="textSecondary"
                         component="p"
                       >
-                        {t("login.others.not_a_member")}
+                        {t("login.others.notAMember")}
                       </Typography>
                       <Divider className={classes.divider} />
                     </Box>
@@ -376,7 +376,7 @@ class Login extends Component {
                         to="/password-reset"
                         className={classes.secondaryLink}
                       >
-                        {t("login.others.forgot_password")}
+                        {t("login.others.forgotPassword")}
                       </Link>
                     </Box>
                   </Grid>

@@ -123,7 +123,7 @@ class PasswordReset extends Component {
     this.props.api
       .send_password_reset_link(this.props.values.email)
       .then((res) => {
-        toast.success("passwordReset.others.toast_success");
+        toast.success("passwordReset.others.toastSuccess");
         setTimeout(() => {
           this.props.history.push("/");
         }, 4000);
