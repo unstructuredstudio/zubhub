@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/zubhub_backend
     ports:
-      - 8000:8000
+      - 8000
     depends_on:
       - db
       - rabbitmq
@@ -34,15 +34,37 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 5432:5432
+      - 5432
+
+  reverse-proxy:
+    image: valian/docker-nginx-auto-ssl:1.0.0
+    container_name: reverse-proxy
+    restart: on-failure
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./.ssl-data:/etc/resty-auto-ssl
+    environment:
+      ALLOWED_DOMAINS: "(api|www.api|rabbitmq|flower|prometheus).zubhub.unstructured.studio"
+      SITES:
+        "api.zubhub.unstructured.studio=web:8000;www.api.zubhub.unstructured.studio=web:8000;\
+        rabbitmq.zubhub.unstructured.studio=rabbitmq:15672;flower.zubhub.unstructured.studio=flower:5555;\
+        prometheus.zubhub.unstructured.studio=prometheus:9090"
+      FORCE_HTTPS: "true"
+    depends_on:
+      - web
+      - rabbitmq
+      - flower
+      - prometheus
 
   rabbitmq:
     env_file: .env
     image: rabbitmq:3-management
     restart: on-failure
     ports:
-      - 5672:5672
-      - 15672:15672
+      - 5672
+      - 15672
 
   celery_worker:
     env_file: .env
@@ -65,7 +87,7 @@ services:
       dockerfile: ./Dockerfile
     image: zubhub_celery_flower
     ports:
-      - 5555:5555
+      - 5555
     command: /start-flower
     restart: on-failure
     volumes:
@@ -78,7 +100,7 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - 9090:9090
+      - 9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     restart: on-failure
@@ -99,3 +121,4 @@ services:
 
 volumes:
   postgres_data:
+  .ssl-data:
