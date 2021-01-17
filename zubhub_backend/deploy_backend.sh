@@ -6,6 +6,6 @@ cp -r zubhub/zubhub_backend/ zubhub_backend/
 rm -rf zubhub/ zubhub_backend/.env.example
 cd zubhub_backend
 docker-compose down
-docker-compose up -d --build
+docker-compose -f ./docker-compose.prod.yml up -d --build
 echo "Updated backend"
 # EOT
