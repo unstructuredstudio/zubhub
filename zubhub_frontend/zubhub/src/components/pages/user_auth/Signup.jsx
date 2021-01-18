@@ -98,6 +98,11 @@ const styles = (theme) => ({
       },
     },
   },
+  DOBInputStyle: {
+    "&.MuiOutlinedInput-root fieldset legend": {
+      width: "75.5px !important",
+    },
+  },
   primaryButton: {
     width: "100%",
     backgroundColor: "#00B8C4",
@@ -415,7 +420,10 @@ class Signup extends Component {
                           Date Of Birth
                         </InputLabel>
                         <OutlinedInput
-                          className={classes.customInputStyle}
+                          className={clsx(
+                            classes.customInputStyle,
+                            classes.DOBInputStyle
+                          )}
                           id="dateOfBirth"
                           name="dateOfBirth"
                           type="date"
