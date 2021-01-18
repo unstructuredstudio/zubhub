@@ -5,9 +5,9 @@ services:
     container_name: zubhub_frontend
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/prod/default.conf:/etc/nginx/conf.d/default.conf
     restart: on-failure
     ports:
       - "80"
