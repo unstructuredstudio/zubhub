@@ -166,10 +166,7 @@ class Login extends Component {
       .login(this.props.values)
       .then((res) => {
         if (!res.key) {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
+          throw new Error(JSON.stringify(res));
         }
         return this.props.set_auth_user({ token: res.key });
       })
@@ -183,13 +180,21 @@ class Login extends Component {
       })
       .then((val) => this.props.history.push("/profile"))
       .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
+        const messages = JSON.parse(error.message);
+        if (typeof messages === "object") {
+          Object.keys(messages).forEach((key) => {
+            if (key === "non_field_errors") {
+              this.setState({ error: messages[key][0] });
+            } else {
+              this.props.setFieldTouched(key, true, false);
+              this.props.setFieldError(key, messages[key][0]);
+            }
+          });
+        } else {
           this.setState({
             error:
               "An error occured while performing this action. Please try again later",
           });
-        } else {
-          this.setState({ error: error.message });
         }
       });
   };
@@ -411,11 +416,9 @@ export default connect(
       password: "",
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email("invalid email").required("invalid email"),
       password: Yup.string()
         .min(8, "your password is too short")
         .required("input your password"),
     }),
-    handleSubmit: (values, { setSubmitting }) => {},
   })(withStyles(styles)(Login))
 );

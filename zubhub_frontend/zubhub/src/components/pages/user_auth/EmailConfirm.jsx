@@ -157,10 +157,14 @@ class EmailConfirm extends Component {
     this.props.api
       .send_email_confirmation(this.state.key)
       .then((res) => {
-        toast.success("Congratulations!, your email has been confirmed!");
-        setTimeout(() => {
-          this.props.history.push("/");
-        }, 4000);
+        if (res.detail !== "ok") {
+          throw new Error(res.detail);
+        } else {
+          toast.success("Congratulations!, your email has been confirmed!");
+          setTimeout(() => {
+            this.props.history.push("/");
+          }, 4000);
+        }
       })
       .catch((error) => {
         if (error.message.startsWith("Unexpected")) {

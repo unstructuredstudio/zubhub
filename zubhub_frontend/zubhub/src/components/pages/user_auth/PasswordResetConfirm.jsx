@@ -166,21 +166,33 @@ class PasswordResetConfirm extends Component {
     this.props.api
       .password_reset_confirm({ ...this.props.values, uid, token })
       .then((res) => {
-        toast.success(
-          "Congratulations! your password reset was successful! you will now be redirected to login"
-        );
-        setTimeout(() => {
-          this.props.history.push("/login");
-        }, 4000);
+        if (res.detail !== "Password has been reset with the new password.") {
+          throw new Error(JSON.stringify(res));
+        } else {
+          toast.success(
+            "Congratulations! your password reset was successful! you will now be redirected to login"
+          );
+          setTimeout(() => {
+            this.props.history.push("/login");
+          }, 4000);
+        }
       })
       .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
+        const messages = JSON.parse(error.message);
+        if (typeof messages === "object") {
+          Object.keys(messages).forEach((key) => {
+            if (key !== "new_password1" && key !== "new_password2") {
+              this.setState({ error: messages[key][0] });
+            } else {
+              this.props.setFieldTouched(key, true, false);
+              this.props.setFieldError(key, messages[key][0]);
+            }
+          });
+        } else {
           this.setState({
             error:
               "An error occured while performing this action. Please try again later",
           });
-        } else {
-          this.setState({ error: error.message });
         }
       });
   };
@@ -284,8 +296,8 @@ class PasswordResetConfirm extends Component {
                           labelWidth={70}
                         />
                         <FormHelperText error>
-                          {this.props.touched["new_password"] &&
-                            this.props.errors["new_password"]}
+                          {this.props.touched["new_password1"] &&
+                            this.props.errors["new_password1"]}
                         </FormHelperText>
                       </FormControl>
                     </Grid>

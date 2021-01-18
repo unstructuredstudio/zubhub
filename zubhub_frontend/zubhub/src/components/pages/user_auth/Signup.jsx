@@ -204,10 +204,7 @@ class Signup extends Component {
         .signup(this.props.values)
         .then((res) => {
           if (!res.key) {
-            res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
-            throw new Error(res);
+            throw new Error(JSON.stringify(res));
           }
           return this.props.set_auth_user({ token: res.key });
         })
@@ -221,13 +218,24 @@ class Signup extends Component {
         )
         .then((val) => this.props.history.push("/profile"))
         .catch((error) => {
-          if (error.message.startsWith("Unexpected")) {
+          const messages = JSON.parse(error.message);
+          if (typeof messages === "object") {
+            Object.keys(messages).forEach((key) => {
+              if (key === "non_field_errors") {
+                this.setState({ error: messages[key][0] });
+              } else if (key === "location") {
+                this.props.setFieldTouched("user_location", true, false);
+                this.props.setFieldError("user_location", messages[key][0]);
+              } else {
+                this.props.setFieldTouched(key, true, false);
+                this.props.setFieldError(key, messages[key][0]);
+              }
+            });
+          } else {
             this.setState({
               error:
                 "An error occured while performing this action. Please try again later",
             });
-          } else {
-            this.setState({ error: error.message });
           }
         });
     }
@@ -655,7 +663,7 @@ export default connect(
       password2: "",
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email("invalid email").required("invalid email"),
+      email: Yup.string().email("invalid email"),
       dateOfBirth: Yup.date()
         .max(new Date(), "your date of birth can't be greater than today")
         .required("please input your date of birth"),

@@ -214,6 +214,7 @@ class Profile extends Component {
       projects: [],
       openEditProfileModal: false,
       loading: true,
+      dialogError: null,
     };
   }
 
@@ -290,7 +291,7 @@ class Profile extends Component {
   handleToggleEditProfileModal = () => {
     let { openEditProfileModal } = this.state;
     openEditProfileModal = !openEditProfileModal;
-    this.setState({ openEditProfileModal });
+    this.setState({ openEditProfileModal, dialogError: null });
   };
 
   copyProfileUrl = (e) => {
@@ -320,21 +321,21 @@ class Profile extends Component {
         username: username.value,
       })
       .then((res) => {
-        if (res.username) {
-          this.setState({ profile: res });
-          this.props.set_auth_user({
-            ...this.props.auth,
-            username: res.username,
-          });
-          this.handleToggleEditProfileModal();
-          username.value = "";
-        } else {
-          throw new Error(
-            "An error occured while updating your profile, please try again later"
-          );
+        if (!res.id) {
+          res = Object.keys(res)
+            .map((key) => res[key])
+            .join("\n");
+          throw new Error(res);
         }
+        this.setState({ profile: res });
+        this.props.set_auth_user({
+          ...this.props.auth,
+          username: res.username,
+        });
+        this.handleToggleEditProfileModal();
+        username.value = "";
       })
-      .catch((error) => toast.warning(error.message));
+      .catch((error) => this.setState({ dialogError: error.message }));
   };
 
   setProfile = (value) => {};
@@ -362,7 +363,13 @@ class Profile extends Component {
   };
 
   render() {
-    let { profile, projects, loading, openEditProfileModal } = this.state;
+    let {
+      profile,
+      projects,
+      loading,
+      openEditProfileModal,
+      dialogError,
+    } = this.state;
     let { classes } = this.props;
 
     if (loading) {
@@ -544,6 +551,16 @@ class Profile extends Component {
             aria-labelledby="edit user profile"
           >
             <DialogTitle id="edit-user-profile">Edit User Profile</DialogTitle>
+            <Box
+              component="p"
+              className={dialogError !== null && classes.errorBox}
+            >
+              {dialogError !== null && (
+                <Box component="span" className={classes.error}>
+                  {dialogError}
+                </Box>
+              )}
+            </Box>
             <DialogContent>
               <FormControl
                 className={clsx(classes.margin, classes.textField)}

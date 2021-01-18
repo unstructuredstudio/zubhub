@@ -247,23 +247,28 @@ class CreateProject extends Component {
         video: this.props.values.video ? this.props.values.video : "",
       })
       .then((res) => {
-        if (!res.title) {
-          res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
-          throw new Error(res);
+        if (!res.id) {
+          throw new Error(JSON.stringify(res));
         }
         toast.success("Your project was created successfully!!");
         return this.props.history.push("/profile");
       })
       .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
+        const messages = JSON.parse(error.message);
+        if (typeof messages === "object") {
+          Object.keys(messages).forEach((key) => {
+            if (key === "non_field_errors") {
+              this.setState({ error: messages[key][0] });
+            } else {
+              this.props.setFieldTouched(key, true, false);
+              this.props.setFieldError(key, messages[key][0]);
+            }
+          });
+        } else {
           this.setState({
             error:
               "An error occured while performing this action. Please try again later",
           });
-        } else {
-          this.setState({ error: error.message });
         }
       });
   };
@@ -276,30 +281,30 @@ class CreateProject extends Component {
 
       if (media_fields.image_is_empty && media_fields.video_is_empty) {
         this.props.setErrors({
-          project_images: "you must provide either image(s) or video url",
+          images: "you must provide either image(s) or video url",
         });
         this.props.setErrors({
           video: "you must provide either image(s) or video url",
         });
       } else if (media_fields.too_many_images === true) {
-        this.props.setErrors({ project_images: "too many images uploaded" });
+        this.props.setErrors({ images: "too many images uploaded" });
       } else if (media_fields.image_size_too_large === true) {
         this.props.setErrors({
-          project_images: "one or more of your image is greater than 3mb",
+          images: "one or more of your image is greater than 3mb",
         });
       } else if (media_fields.image_is_empty) {
         this.upload_project();
       } else {
-        let project_images = document.querySelector("#project_images").files;
+        let images = document.querySelector("#images").files;
 
         let { image_upload } = this.state;
-        image_upload.images_to_upload = project_images.length;
+        image_upload.images_to_upload = images.length;
         image_upload.upload_dialog = true;
         image_upload.upload_percent = 0;
         this.setState({ image_upload });
 
-        for (let index = 0; index < project_images.length; index++) {
-          this.upload(project_images[index]);
+        for (let index = 0; index < images.length; index++) {
+          this.upload(images[index]);
         }
       }
     }
@@ -307,7 +312,7 @@ class CreateProject extends Component {
 
   mediaFieldsValidation = () => {
     let image_upload_button = document.querySelector("#image_upload_button");
-    let media_fields = document.querySelector("#project_images");
+    let media_fields = document.querySelector("#images");
     let video = document.querySelector("#video");
     let imageCount = document.querySelector(".imageCountStyle");
     imageCount.innerText = media_fields.files.length;
@@ -323,7 +328,7 @@ class CreateProject extends Component {
           "border-color:#F54336; color:#F54336"
         );
         this.props.setErrors({
-          project_images: "you must provide either image(s) or video url",
+          images: "you must provide either image(s) or video url",
         });
         this.props.setErrors({
           video: "you must provide either image(s) or video url",
@@ -335,7 +340,7 @@ class CreateProject extends Component {
         "style",
         "border-color:#F54336; color:#F54336"
       );
-      this.props.setErrors({ project_images: "too many images uploaded" });
+      this.props.setErrors({ images: "too many images uploaded" });
       result["too_many_images"] = true;
     } else {
       let image_size_too_large = false;
@@ -351,7 +356,7 @@ class CreateProject extends Component {
           "border-color:#F54336; color:#F54336"
         );
         this.props.setErrors({
-          project_images: "one or more of your image is greater than 3mb",
+          images: "one or more of your image is greater than 3mb",
         });
         result["image_size_too_large"] = image_size_too_large;
       }
@@ -367,8 +372,8 @@ class CreateProject extends Component {
   };
 
   handleImageButtonClick = () => {
-    document.querySelector("#project_images").click();
-    this.props.setFieldTouched("project_images");
+    document.querySelector("#images").click();
+    this.props.setFieldTouched("images");
   };
 
   handleAddMaterialFieldChange = (e) => {
@@ -543,11 +548,11 @@ class CreateProject extends Component {
                         <FormControl
                           fullWidth
                           error={
-                            this.props.touched["project_images"] &&
-                            this.props.errors["project_images"]
+                            this.props.touched["images"] &&
+                            this.props.errors["images"]
                           }
                         >
-                          <label htmlFor="project_images">
+                          <label htmlFor="images">
                             <Button
                               className={clsx(
                                 classes.secondaryButton,
@@ -571,14 +576,14 @@ class CreateProject extends Component {
                             aria-hidden="true"
                             type="file"
                             accept="image/*"
-                            id="project_images"
-                            name="project_images"
+                            id="images"
+                            name="images"
                             multiple
                             onChange={this.mediaFieldsValidation}
                             onBlur={this.props.handleBlur}
                           />
                           <FormHelperText error>
-                            {this.props.errors["project_images"]}
+                            {this.props.errors["images"]}
                           </FormHelperText>
                         </FormControl>
                       </Grid>

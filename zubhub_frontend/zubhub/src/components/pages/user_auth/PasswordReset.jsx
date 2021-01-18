@@ -123,19 +123,31 @@ class PasswordReset extends Component {
     this.props.api
       .send_password_reset_link(this.props.values.email)
       .then((res) => {
-        toast.success("We just sent a password reset link to your email!");
-        setTimeout(() => {
-          this.props.history.push("/");
-        }, 4000);
+        if (res.detail !== "Password reset e-mail has been sent.") {
+          throw new Error(JSON.stringify(res));
+        } else {
+          toast.success("We just sent a password reset link to your email!");
+          setTimeout(() => {
+            this.props.history.push("/");
+          }, 4000);
+        }
       })
       .catch((error) => {
-        if (error.message.startsWith("Unexpected")) {
+        const messages = JSON.parse(error.message);
+        if (typeof messages === "object") {
+          Object.keys(messages).forEach((key) => {
+            if (key !== "email") {
+              this.setState({ error: messages[key][0] });
+            } else {
+              this.props.setFieldTouched(key, true, false);
+              this.props.setFieldError(key, messages[key][0]);
+            }
+          });
+        } else {
           this.setState({
             error:
               "An error occured while performing this action. Please try again later",
           });
-        } else {
-          this.setState({ error: error.message });
         }
       });
   };
@@ -213,7 +225,7 @@ class PasswordReset extends Component {
                           type="text"
                           onChange={this.props.handleChange}
                           onBlur={this.props.handleBlur}
-                          labelWidth={70}
+                          labelWidth={50}
                         />
                         <FormHelperText error>
                           {this.props.touched["email"] &&
