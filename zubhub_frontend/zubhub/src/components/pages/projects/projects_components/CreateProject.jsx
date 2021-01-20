@@ -533,6 +533,17 @@ class CreateProject extends Component {
                             labelWidth={90}
                           />
                           <FormHelperText error>
+                            <Typography
+                              color="textSecondary"
+                              variant="caption"
+                              component="span"
+                            >
+                              Tell us something interesting about the project!
+                              You can share what it is about, what inspired you
+                              to make it, your making process, fun and
+                              challenging moments you experienced, etc.
+                            </Typography>
+                            <br />
                             {this.props.touched["description"] &&
                               this.props.errors["description"]}
                           </FormHelperText>
