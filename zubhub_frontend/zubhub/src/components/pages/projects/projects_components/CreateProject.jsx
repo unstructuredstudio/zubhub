@@ -9,6 +9,8 @@ import ErrorPage from "../../infos/ErrorPage";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import DO, { doConfig } from "../../../../assets/js/DO";
+import worker from "workerize-loader!../../../../assets/js/removeMetaDataWorker"; // eslint-disable-line import/no-webpack-loader-syntax
+import Compressor from "../../../../assets/js/Compressor";
 import { nanoid } from "nanoid";
 import { withStyles, fade } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -164,7 +166,7 @@ class CreateProject extends Component {
       materials_used: [],
       image_upload: {
         upload_dialog: false,
-        images_to_upload: 0,
+        images_to_upload: [],
         successful_uploads: 0,
         upload_info: {},
         upload_percent: 0,
@@ -225,7 +227,7 @@ class CreateProject extends Component {
 
           this.setState({ image_upload }, () => {
             if (
-              this.state.image_upload.images_to_upload ===
+              this.state.image_upload.images_to_upload.length ===
               this.state.image_upload.successful_uploads
             ) {
               this.upload_project();
@@ -272,50 +274,41 @@ class CreateProject extends Component {
     if (!this.props.auth.token) {
       this.props.history.push("/login");
     } else {
-      let media_fields = this.mediaFieldsValidation();
+      let { image_upload } = this.state;
+      let media_fields = this.mediaFieldsValidation(
+        image_upload.images_to_upload
+      );
 
-      if (media_fields.image_is_empty && media_fields.video_is_empty) {
-        this.props.setErrors({
-          project_images: "you must provide either image(s) or video url",
-        });
-        this.props.setErrors({
-          video: "you must provide either image(s) or video url",
-        });
-      } else if (media_fields.too_many_images === true) {
-        this.props.setErrors({ project_images: "too many images uploaded" });
-      } else if (media_fields.image_size_too_large === true) {
-        this.props.setErrors({
-          project_images: "one or more of your image is greater than 3mb",
-        });
+      if (media_fields.image_is_empty && Object.keys(media_fields).length > 1) {
+        return;
       } else if (media_fields.image_is_empty) {
         this.upload_project();
       } else {
-        let project_images = document.querySelector("#project_images").files;
-
-        let { image_upload } = this.state;
-        image_upload.images_to_upload = project_images.length;
         image_upload.upload_dialog = true;
         image_upload.upload_percent = 0;
         this.setState({ image_upload });
 
-        for (let index = 0; index < project_images.length; index++) {
-          this.upload(project_images[index]);
+        for (
+          let index = 0;
+          index < image_upload.images_to_upload.length;
+          index++
+        ) {
+          this.upload(image_upload.images_to_upload[index]);
         }
       }
     }
   };
 
-  mediaFieldsValidation = () => {
+  mediaFieldsValidation = (images) => {
     let image_upload_button = document.querySelector("#image_upload_button");
-    let media_fields = document.querySelector("#project_images");
     let video = document.querySelector("#video");
     let imageCount = document.querySelector(".imageCountStyle");
-    imageCount.innerText = media_fields.files.length;
+    imageCount.innerText = images.length;
     imageCount.style.fontSize = "0.8rem";
 
     let result = {};
 
-    if (media_fields.files.length < 1) {
+    if (images.length < 1) {
       result["image_is_empty"] = true;
       if (video.value === "") {
         image_upload_button.setAttribute(
@@ -330,7 +323,7 @@ class CreateProject extends Component {
         });
         result["video_is_empty"] = true;
       }
-    } else if (media_fields.files.length > 10) {
+    } else if (images.length > 10) {
       image_upload_button.setAttribute(
         "style",
         "border-color:#F54336; color:#F54336"
@@ -340,8 +333,8 @@ class CreateProject extends Component {
     } else {
       let image_size_too_large = false;
 
-      for (let index = 0; index < media_fields.files.length; index++) {
-        if (media_fields.files[index].size / 1000 > 3072) {
+      for (let index = 0; index < images.length; index++) {
+        if (images[index].size / 1000 > 10240) {
           image_size_too_large = true;
         }
       }
@@ -351,7 +344,7 @@ class CreateProject extends Component {
           "border-color:#F54336; color:#F54336"
         );
         this.props.setErrors({
-          project_images: "one or more of your image is greater than 3mb",
+          project_images: "one or more of your image is greater than 10mb",
         });
         result["image_size_too_large"] = image_size_too_large;
       }
@@ -364,6 +357,36 @@ class CreateProject extends Component {
       "border-color: #00B8C4; color:#00B8C4"
     );
     return result;
+  };
+
+  handleImageFieldChange = (e) => {
+    e.preventDefault();
+    let images = document.querySelector("#project_images");
+    let media_fields = this.mediaFieldsValidation(images.files);
+
+    if (
+      Object.keys(media_fields).length === 0 ||
+      (!(Object.keys(media_fields).length === 1) && media_fields.video_is_empty)
+    ) {
+      console.log(images.files);
+
+      this.removeMetaData(images.files);
+    }
+  };
+
+  removeMetaData = (images) => {
+    const newWorker = worker();
+    newWorker.removeMetaData(images);
+    newWorker.addEventListener("message", (e) => {
+      Compressor(e.data, this.setImages);
+    });
+  };
+
+  setImages = (compressed) => {
+    let { image_upload } = this.state;
+    image_upload.images_to_upload = compressed;
+
+    this.setState({ image_upload });
   };
 
   handleImageButtonClick = () => {
@@ -574,7 +597,7 @@ class CreateProject extends Component {
                             id="project_images"
                             name="project_images"
                             multiple
-                            onChange={this.mediaFieldsValidation}
+                            onChange={this.handleImageFieldChange}
                             onBlur={this.props.handleBlur}
                           />
                           <FormHelperText error>
