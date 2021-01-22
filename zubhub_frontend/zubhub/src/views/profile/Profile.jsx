@@ -265,6 +265,17 @@ function Profile(props) {
                       {profile.followers.length} Followers
                     </Typography>
                   </Link>
+                  <Link
+                    to={`/creators/${profile.username}/following`}
+                    className={classes.textDecorationNone}
+                  >
+                    <Typography
+                      className={classes.moreInfoStyle}
+                      component="h5"
+                    >
+                      {profile.following_count} Following
+                    </Typography>
+                  </Link>
                 </Box>
               </Box>
             </Container>

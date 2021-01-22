@@ -32,12 +32,15 @@ class Creator(AbstractUser):
     location = models.ForeignKey(
         Location, null=True, on_delete=models.SET_NULL)
     bio = models.CharField(max_length=255, blank=True, null=True)
-    followers = models.ManyToManyField("self", symmetrical=False)
+    followers = models.ManyToManyField(
+        "self", symmetrical=False, related_name="following")
     followers_count = models.IntegerField(blank=True, default=0)
+    following_count = models.IntegerField(blank=True, default=0)
     projects_count = models.IntegerField(blank=True, default=0)
 
     def save(self, *args, **kwargs):
         self.avatar = 'https://robohash.org/{0}'.format(self.username)
         self.followers_count = self.followers.count()
+        self.following_count = self.following.count()
         self.projects_count = self.projects.count()
         super().save(*args, **kwargs)

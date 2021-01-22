@@ -171,6 +171,16 @@ class API {
   };
   /*****************************************************************/
 
+  /********************** get following *******************************/
+  get_following = ({ page, username }) => {
+    const url = page
+      ? `creators/${username}/following/?${page}`
+      : `creators/${username}/following/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+  /*****************************************************************/
+
   /********************** get saved *******************************/
   get_saved = ({ page, token }) => {
     const url = page ? `projects/saved/?${page}` : `projects/saved/`;
