@@ -409,6 +409,17 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
+                          <Typography
+                            color="textSecondary"
+                            variant="caption"
+                            component="span"
+                          >
+                            Tell us something interesting about the project! You
+                            can share what it is about, what inspired you to
+                            make it, your making process, fun and challenging
+                            moments you experienced, etc.
+                          </Typography>
+                          <br />
                           {props.touched['description'] &&
                             props.errors['description']}
                         </FormHelperText>
@@ -498,6 +509,14 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
+                          <Typography
+                            color="textSecondary"
+                            variant="caption"
+                            component="span"
+                          >
+                            YouTube, Vimeo, Google Drive links are supported
+                          </Typography>
+                          <br />
                           {props.touched['video'] && props.errors['video']}
                         </FormHelperText>
                       </FormControl>
