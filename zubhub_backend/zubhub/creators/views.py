@@ -93,6 +93,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
         else:
             obj.followers.add(self.request.user)
             obj.save()
+        self.request.user.save()
 
         return obj
 
