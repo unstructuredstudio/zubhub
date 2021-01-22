@@ -33,6 +33,8 @@ import {
 import * as ProjectActions from '../../store/actions/projectActions';
 import ErrorPage from '../error/ErrorPage';
 import DO, { doConfig } from '../../assets/js/DO';
+import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
+import Compress from '../../assets/js/Compress';
 import { useStateUpdateCallback } from '../../assets/js/customHooks';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
@@ -42,10 +44,23 @@ const useStyles = makeStyles(styles);
 let image_field_touched = false;
 let video_field_touched = false;
 
-const handleImageFieldChange = (e, refs, props) => {
-  props.setFieldValue(e.currentTarget.name, refs.imageEl.current);
+const handleImageFieldChange = (refs, props, state, handleSetState) => {
   refs.imageCountEl.current.innerText = refs.imageEl.current.files.length;
   refs.imageCountEl.current.style.fontSize = '0.8rem';
+
+  props.setFieldValue('project_images', refs.imageEl.current).then(errors => {
+    if (!errors['project_images']) {
+      removeMetaData(refs.imageEl.current.files, state, handleSetState);
+    }
+  });
+};
+
+const removeMetaData = (images, state, handleSetState) => {
+  const newWorker = worker();
+  newWorker.removeMetaData(images);
+  newWorker.addEventListener('message', e => {
+    Compress(e.data, state, handleSetState);
+  });
 };
 
 const handleImageButtonClick = (e, props, refs) => {
@@ -117,7 +132,7 @@ function CreateProject(props) {
 
   useStateUpdateCallback(() => {
     if (
-      state.image_upload.images_to_upload ===
+      state.image_upload.images_to_upload.length ===
       state.image_upload.successful_uploads
     ) {
       handleSetState(upload_project());
@@ -252,35 +267,30 @@ function CreateProject(props) {
       props.setFieldTouched('project_images');
       props.setFieldTouched('video');
       props.setFieldTouched('materials_used');
-      props.validateField('title');
-      props.validateField('description');
-      props.validateField('project_images');
-      props.validateField('video');
-      props.validateField('materials_used');
 
-      if (
-        props.errors['title'] ||
-        props.errors['description'] ||
-        props.errors['project_images'] ||
-        props.errors['video'] ||
-        props.errors['materials_used']
-      ) {
-        return;
-      } else if (refs.imageEl.current.files.length === 0) {
-        handleSetState(upload_project());
-      } else {
-        const project_images = refs.imageEl.current.files;
+      image_field_touched = true;
+      video_field_touched = true;
 
-        const { image_upload } = state;
-        image_upload.images_to_upload = project_images.length;
-        image_upload.upload_dialog = true;
-        image_upload.upload_percent = 0;
-        handleSetState({ image_upload });
+      props.validateForm().then(errors => {
+        if (Object.keys(errors).length > 0) {
+          return;
+        } else if (refs.imageEl.current.files.length === 0) {
+          handleSetState(upload_project());
+        } else {
+          const { image_upload } = state;
+          image_upload.upload_dialog = true;
+          image_upload.upload_percent = 0;
+          handleSetState({ image_upload });
 
-        for (let index = 0; index < project_images.length; index++) {
-          upload(project_images[index]);
+          for (
+            let index = 0;
+            index < image_upload.images_to_upload.length;
+            index++
+          ) {
+            upload(image_upload.images_to_upload[index]);
+          }
         }
-      }
+      });
     }
   };
 
@@ -446,7 +456,14 @@ function CreateProject(props) {
                           id="project_images"
                           name="project_images"
                           multiple
-                          onChange={e => handleImageFieldChange(e, refs, props)}
+                          onChange={e =>
+                            handleImageFieldChange(
+                              refs,
+                              props,
+                              state,
+                              handleSetState,
+                            )
+                          }
                           onBlur={props.handleBlur}
                         />
                         <FormHelperText error>
@@ -689,6 +706,19 @@ export default connect(
               : true;
           },
         )
+        .test('not_an_image', 'only images are allowed', value => {
+          if (value) {
+            let not_an_image = false;
+            for (let index = 0; index < value.files.length; index++) {
+              if (value.files[index].type.split('/')[0] !== 'image') {
+                not_an_image = true;
+              }
+            }
+            return not_an_image ? false : true;
+          } else {
+            return true;
+          }
+        })
         .test('too_many_images', 'too many images uploaded', value => {
           if (value) {
             return value.files.length > 10 ? false : true;
@@ -698,12 +728,12 @@ export default connect(
         })
         .test(
           'image_size_too_large',
-          'one or more of your image is greater than 3mb',
+          'one or more of your image is greater than 10mb',
           value => {
             if (value) {
               let image_size_too_large = false;
               for (let index = 0; index < value.files.length; index++) {
-                if (value.files[index].size / 1000 > 3072) {
+                if (value.files[index].size / 1000 > 10240) {
                   image_size_too_large = true;
                 }
               }
