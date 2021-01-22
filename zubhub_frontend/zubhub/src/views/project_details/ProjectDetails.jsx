@@ -35,7 +35,6 @@ import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
-import Project from '../../components/project/Project';
 
 const useStyles = makeStyles(styles);
 

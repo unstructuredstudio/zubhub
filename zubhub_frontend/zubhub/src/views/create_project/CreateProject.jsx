@@ -213,12 +213,33 @@ function CreateProject(props) {
     const { image_upload } = state;
     image_upload.upload_dialog = false;
     handleSetState({ image_upload });
-    return props.create_project({
-      ...props.values,
-      token: props.auth.token,
-      images: state.image_upload.uploaded_images_url,
-      video: props.values.video ? props.values.video : '',
-    });
+    return props
+      .create_project({
+        ...props.values,
+        token: props.auth.token,
+        images: state.image_upload.uploaded_images_url,
+        video: props.values.video ? props.values.video : '',
+      })
+      .catch(error => {
+        const messages = JSON.parse(error.message);
+        if (typeof messages === 'object') {
+          let non_field_errors;
+          Object.keys(messages).forEach(key => {
+            if (key === 'non_field_errors') {
+              non_field_errors = { error: messages[key][0] };
+            } else {
+              props.setFieldTouched(key, true, false);
+              props.setFieldError(key, messages[key][0]);
+            }
+          });
+          if (non_field_errors) return non_field_errors;
+        } else {
+          return {
+            error:
+              'An error occured while performing this action. Please try again later',
+          };
+        }
+      });
   };
 
   const init_project = e => {

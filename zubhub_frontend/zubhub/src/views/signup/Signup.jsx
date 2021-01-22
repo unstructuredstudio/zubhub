@@ -51,7 +51,29 @@ const signup = (e, props) => {
   if (props.values.location.length < 1) {
     props.validateField('location');
   } else {
-    return props.signup(props);
+    return props.signup(props).catch(error => {
+      const messages = JSON.parse(error.message);
+      if (typeof messages === 'object') {
+        let non_field_errors;
+        Object.keys(messages).forEach(key => {
+          if (key === 'non_field_errors') {
+            non_field_errors = { error: messages[key][0] };
+          } else if (key === 'location') {
+            props.setFieldTouched('user_location', true, false);
+            props.setFieldError('user_location', messages[key][0]);
+          } else {
+            props.setFieldTouched(key, true, false);
+            props.setFieldError(key, messages[key][0]);
+          }
+        });
+        return non_field_errors;
+      } else {
+        return {
+          error:
+            'An error occured while performing this action. Please try again later',
+        };
+      }
+    });
   }
 };
 
@@ -483,7 +505,7 @@ export default connect(
       password2: '',
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email('invalid email').required('invalid email'),
+      email: Yup.string().email('invalid email'),
       dateOfBirth: Yup.date()
         .max(new Date(), "your date of birth can't be greater than today")
         .required('please input your date of birth'),
