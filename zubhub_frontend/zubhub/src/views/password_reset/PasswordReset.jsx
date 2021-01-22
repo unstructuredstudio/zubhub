@@ -30,26 +30,7 @@ const useStyles = makeStyles(styles);
 
 const sendPasswordResetLink = (e, props) => {
   e.preventDefault();
-  return props.send_password_reset_link(props).catch(error => {
-    const messages = JSON.parse(error.message);
-    let non_field_errors;
-    if (typeof messages === 'object') {
-      Object.keys(messages).forEach(key => {
-        if (key !== 'email') {
-          non_field_errors = { error: messages[key][0] };
-        } else {
-          props.setFieldTouched(key, true, false);
-          props.setFieldError(key, messages[key][0]);
-        }
-      });
-      return non_field_errors;
-    } else {
-      return {
-        error:
-          'An error occured while performing this action. Please try again later',
-      };
-    }
-  });
+  return props.send_password_reset_link(props);
 };
 
 function PasswordReset(props) {

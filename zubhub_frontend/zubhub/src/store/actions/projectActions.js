@@ -13,14 +13,28 @@ export const set_projects = projects => {
 
 export const create_project = props => {
   return dispatch => {
-    return API.create_project(props).then(res => {
-      if (!res.id) {
-        throw new Error(JSON.stringify(res));
-      } else {
-        toast.success('Your project was created successfully!!');
-        return props.history.push('/profile');
-      }
-    });
+    return API.create_project(props)
+      .then(res => {
+        if (!res.comments) {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        } else {
+          toast.success('Your project was created successfully!!');
+          return props.history.push('/profile');
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          return {
+            error:
+              'An error occured while performing this action. Please try again later',
+          };
+        } else {
+          return { error: error.message };
+        }
+      });
   };
 };
 

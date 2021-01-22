@@ -31,16 +31,7 @@ const getUsernameAndKey = queryString => {
 
 const confirmEmail = (e, props, state) => {
   e.preventDefault();
-  return props.send_email_confirmation(props, state.key).catch(error => {
-    if (error.message.startsWith('Unexpected')) {
-      return {
-        error:
-          'An error occured while performing this action. Please try again later',
-      };
-    } else {
-      return { error: error.message };
-    }
-  });
+  return props.send_email_confirmation(props, state.key);
 };
 
 function EmailConfirm(props) {

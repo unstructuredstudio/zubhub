@@ -173,48 +173,6 @@ function PageWrapper(props) {
                     <MenuItem>
                       <Link
                         className={classes.textDecorationNone}
-                        to={`/creators/${props.auth.username}/projects`}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
-                          Projects
-                        </Typography>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to={`/creators/${props.auth.username}/followers`}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
-                          Followers
-                        </Typography>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to={`/creators/${props.auth.username}/following`}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
-                          Following
-                        </Typography>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
                         to="/projects/saved"
                       >
                         <Typography

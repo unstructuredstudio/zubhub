@@ -64,16 +64,9 @@ const updateProfile = (e, props, state, newUserNameEL) => {
         username: username.value,
       })
       .then(res => {
-        if (!res.id) {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
         username.value = '';
         return { ...res, ...handleToggleEditProfileModal(state) };
-      })
-      .catch(error => ({ dialogError: error.message }));
+      });
   } else {
     return handleToggleEditProfileModal(state);
   }
@@ -135,7 +128,6 @@ function Profile(props) {
     openEditProfileModal: false,
     loading: true,
     profile: {},
-    dialogError: null,
   });
 
   React.useEffect(() => {
@@ -150,13 +142,7 @@ function Profile(props) {
     }
   };
 
-  const {
-    results: projects,
-    profile,
-    loading,
-    openEditProfileModal,
-    dialogError,
-  } = state;
+  const { results: projects, profile, loading, openEditProfileModal } = state;
 
   if (loading) {
     return <LoadingPage />;
@@ -341,16 +327,6 @@ function Profile(props) {
           aria-labelledby="edit user profile"
         >
           <DialogTitle id="edit-user-profile">Edit User Profile</DialogTitle>
-          <Box
-            component="p"
-            className={dialogError !== null && classes.errorBox}
-          >
-            {dialogError !== null && (
-              <Box component="span" className={classes.error}>
-                {dialogError}
-              </Box>
-            )}
-          </Box>{' '}
           <DialogContent>
             <FormControl
               className={clsx(classes.margin, classes.textField)}
