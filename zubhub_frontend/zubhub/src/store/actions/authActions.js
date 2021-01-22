@@ -17,27 +17,14 @@ export const login = props => {
     return API.login(props.values)
       .then(res => {
         if (!res.key) {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
+          throw new Error(JSON.stringify(res));
         }
         dispatch({
           type: 'SET_AUTH_USER',
           payload: { token: res.key },
         });
       })
-      .then(() => props.history.push('/profile'))
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          return {
-            error:
-              'An error occured while performing this action. Please try again later',
-          };
-        } else {
-          return { error: error.message };
-        }
-      });
+      .then(() => props.history.push('/profile'));
   };
 };
 
@@ -85,95 +72,61 @@ export const signup = props => {
     return API.signup(props.values)
       .then(res => {
         if (!res.key) {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
+          throw new Error(JSON.stringify(res));
         }
         dispatch({
           type: 'SET_AUTH_USER',
           payload: { token: res.key },
         });
       })
-      .then(() => props.history.push('/profile'))
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          return {
-            error:
-              'An error occured while performing this action. Please try again later',
-          };
-        } else {
-          return { error: error.message };
-        }
-      });
+      .then(() => props.history.push('/profile'));
   };
 };
 
 export const send_email_confirmation = (props, key) => {
   return () => {
-    return API.send_email_confirmation(key)
-      .then(res => {
+    return API.send_email_confirmation(key).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
         toast.success('Congratulations!, your email has been confirmed!');
         setTimeout(() => {
           props.history.push('/');
         }, 4000);
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          return {
-            error:
-              'An error occured while performing this action. Please try again later',
-          };
-        } else {
-          return { error: error.message };
-        }
-      });
+      }
+    });
   };
 };
 
 export const send_password_reset_link = props => {
   return () => {
-    return API.send_password_reset_link(props.values.email)
-      .then(res => {
+    return API.send_password_reset_link(props.values.email).then(res => {
+      if (res.detail !== 'Password reset e-mail has been sent.') {
+        throw new Error(JSON.stringify(res));
+      } else {
         toast.success('We just sent a password reset link to your email!');
         setTimeout(() => {
           props.history.push('/');
         }, 4000);
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          return {
-            error:
-              'An error occured while performing this action. Please try again later',
-          };
-        } else {
-          return { error: error.message };
-        }
-      });
+      }
+    });
   };
 };
 
 export const password_reset_confirm = props => {
   return () => {
-    return API.password_reset_confirm(props)
-      .then(res => {
+    return API.password_reset_confirm(props).then(res => {
+      if (res.detail !== 'Password has been reset with the new password.') {
+        throw new Error(JSON.stringify(res));
+      } else {
         toast.success(
           'Congratulations! your password reset was successful! you will now be redirected to login',
         );
         setTimeout(() => {
           props.history.push('/login');
         }, 4000);
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          return {
-            error:
-              'An error occured while performing this action. Please try again later',
-          };
-        } else {
-          return { error: error.message };
-        }
-      });
+      }
+    });
   };
 };
 
