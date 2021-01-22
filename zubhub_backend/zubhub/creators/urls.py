@@ -11,6 +11,8 @@ urlpatterns = [
          UserProjectsAPIView.as_view(), name="user_projects"),
     path('<str:username>/followers/',
          UserFollowersAPIView.as_view(), name='user_followers'),
+    path('<str:username>/following/',
+         UserFollowingAPIView.as_view(), name='user_following'),
     path('<str:username>/', UserProfileAPIView.as_view(), name='user_profile'),
     path('<uuid:pk>/toggle_follow/',
          ToggleFollowAPIView.as_view(), name="toggle_follow")

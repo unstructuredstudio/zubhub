@@ -68,6 +68,16 @@ class UserFollowersAPIView(ListAPIView):
         return Creator.objects.get(username=username).followers.all()
 
 
+class UserFollowingAPIView(ListAPIView):
+    serializer_class = CreatorSerializer
+    permission_classes = [AllowAny]
+    pagination_class = CreatorNumberPagination
+
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        return Creator.objects.get(username=username).following.all()
+
+
 class ToggleFollowAPIView(RetrieveAPIView):
     serializer_class = CreatorSerializer
     queryset = Creator.objects.all()
