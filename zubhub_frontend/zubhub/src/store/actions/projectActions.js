@@ -13,15 +13,14 @@ export const set_projects = projects => {
 
 export const create_project = props => {
   return dispatch => {
-    return API.create_project(props)
-      .then(res => {
-          if (!res.id) {
-            throw new Error(JSON.stringify(res));
-          } else {
-          toast.success('Your project was created successfully!!');
-          return props.history.push('/profile');
-        }
-      })
+    return API.create_project(props).then(res => {
+      if (!res.id) {
+        throw new Error(JSON.stringify(res));
+      } else {
+        toast.success('Your project was created successfully!!');
+        return props.history.push('/profile');
+      }
+    });
   };
 };
 

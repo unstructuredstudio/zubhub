@@ -16,15 +16,15 @@ export const login = props => {
   return dispatch => {
     return API.login(props.values)
       .then(res => {
-          if (!res.key) {
-            throw new Error(JSON.stringify(res));
-          }
+        if (!res.key) {
+          throw new Error(JSON.stringify(res));
+        }
         dispatch({
           type: 'SET_AUTH_USER',
           payload: { token: res.key },
         });
       })
-      .then(() => props.history.push('/profile'))
+      .then(() => props.history.push('/profile'));
   };
 };
 
@@ -79,50 +79,46 @@ export const signup = props => {
           payload: { token: res.key },
         });
       })
-      .then(() => props.history.push('/profile'))
+      .then(() => props.history.push('/profile'));
   };
 };
 
 export const send_email_confirmation = (props, key) => {
   return () => {
-    return API.send_email_confirmation(key)
-      .then(res => {
-        if (res.detail !== 'ok') {
-          throw new Error(res.detail);
-        } else {
+    return API.send_email_confirmation(key).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
         toast.success('Congratulations!, your email has been confirmed!');
         setTimeout(() => {
           props.history.push('/');
         }, 4000);
       }
-      })
+    });
   };
 };
 
 export const send_password_reset_link = props => {
   return () => {
-    return API.send_password_reset_link(props.values.email)
-      .then(res => {
-        if (res.detail !== "Password reset e-mail has been sent.") {
-          throw new Error(JSON.stringify(res));
-        } else {
+    return API.send_password_reset_link(props.values.email).then(res => {
+      if (res.detail !== 'Password reset e-mail has been sent.') {
+        throw new Error(JSON.stringify(res));
+      } else {
         toast.success('We just sent a password reset link to your email!');
         setTimeout(() => {
           props.history.push('/');
         }, 4000);
       }
-      })
+    });
   };
 };
 
 export const password_reset_confirm = props => {
   return () => {
-    return API.password_reset_confirm(props)
-      .then(res => {
-        if (res.detail !== "Password has been reset with the new password.") {
-          throw new Error(JSON.stringify(res));
-        } 
-        else {
+    return API.password_reset_confirm(props).then(res => {
+      if (res.detail !== 'Password has been reset with the new password.') {
+        throw new Error(JSON.stringify(res));
+      } else {
         toast.success(
           'Congratulations! your password reset was successful! you will now be redirected to login',
         );
@@ -130,7 +126,7 @@ export const password_reset_confirm = props => {
           props.history.push('/login');
         }, 4000);
       }
-      })
+    });
   };
 };
 
