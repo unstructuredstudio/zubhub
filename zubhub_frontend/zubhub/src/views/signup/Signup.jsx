@@ -250,7 +250,10 @@ function Signup(props) {
                         Date Of Birth
                       </InputLabel>
                       <OutlinedInput
-                        className={classes.customInputStyle}
+                        className={clsx(
+                          classes.customInputStyle,
+                          classes.DOBInputStyle,
+                        )}
                         id="dateOfBirth"
                         name="dateOfBirth"
                         type="date"
