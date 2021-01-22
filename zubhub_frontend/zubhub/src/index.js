@@ -1,30 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import { ThemeProvider } from '@material-ui/styles';
-import {theme} from './assets/js/muiTheme';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import {Provider} from 'react-redux';
-import configureStore from './store/configureStore';
-import {PersistGate} from 'redux-persist/integration/react';
-import API, {APIContext} from './components/api';
 
-let {store, persistor} = configureStore();
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux';
+
+import { ThemeProvider } from '@material-ui/styles';
+import { theme } from './assets/js/muiTheme';
+
+import App from './App';
+import './assets/css/index.css';
+import configureStore from './store/configureStore';
+import reportWebVitals from './reportWebVitals';
+
+let { store, persistor } = configureStore();
 
 ReactDOM.render(
-  <APIContext.Provider value={new API()}>
   <Provider store={store}>
-  <PersistGate loading={null} persistor={persistor}>
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>
-  </PersistGate>
-  </Provider>
-  </APIContext.Provider>,
-  document.getElementById('root')
+    <PersistGate loading={null} persistor={persistor}>
+      <React.StrictMode>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </React.StrictMode>
+    </PersistGate>
+  </Provider>,
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
