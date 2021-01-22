@@ -44,28 +44,7 @@ const getUidAndToken = queryString => {
 const resetPassword = (e, props) => {
   e.preventDefault();
   const { uid, token } = getUidAndToken(props.location.search);
-  return props
-    .password_reset_confirm({ ...props.values, uid, token })
-    .catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        let non_field_errors;
-        Object.keys(messages).forEach(key => {
-          if (key !== 'new_password1' && key !== 'new_password2') {
-            non_field_errors = { error: messages[key][0] };
-          } else {
-            props.setFieldTouched(key, true, false);
-            props.setFieldError(key, messages[key][0]);
-          }
-        });
-        return non_field_errors;
-      } else {
-        return {
-          error:
-            'An error occured while performing this action. Please try again later',
-        };
-      }
-    });
+  return props.password_reset_confirm({ ...props.values, uid, token });
 };
 
 const handleClickShowPassword = (field, state) => {

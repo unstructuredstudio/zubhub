@@ -10,8 +10,4 @@ services:
       - ./nginx/dev/default.conf:/etc/nginx/conf.d/default.conf
     restart: on-failure
     ports:
-<<<<<<< HEAD
-      - "80:80"
-=======
       - "3000:3000"
->>>>>>> e27329f26fe2cff77464c3965a2859d1d6c0b01f

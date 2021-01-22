@@ -42,11 +42,6 @@ const styles = theme => ({
       },
     },
   },
-  DOBInputStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '75.5px !important',
-    },
-  },
   secondaryLink: {
     color: '#00B8C4',
     '&:hover': {
