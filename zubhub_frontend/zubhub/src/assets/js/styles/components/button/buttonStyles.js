@@ -16,6 +16,15 @@ const styles = theme => ({
       backgroundColor: 'rgba(255,255,255,0.8)',
     },
   },
+  dangerButtonStyle: {
+    borderRadius: 15,
+    backgroundColor: 'rgb(220, 0, 78)',
+    color: 'white',
+    '&:hover': {
+      color: 'white',
+      backgroundColor: '#9A0036',
+    },
+  },
   imageUploadButtonStyle: {
     '& MuiButton-label': {
       width: '100%',
