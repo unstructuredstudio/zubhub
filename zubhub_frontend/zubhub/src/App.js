@@ -9,6 +9,7 @@ import PasswordReset from './views/password_reset/PasswordReset';
 import PasswordResetConfirm from './views/password_reset_confirm/PasswordResetConfirm';
 import EmailConfirm from './views/email_confirm/EmailConfirm';
 import Profile from './views/profile/Profile';
+import EditProfile from './views/edit_profile/EditProfile';
 import UserProjects from './views/user_projects/UserProjects';
 import UserFollowers from './views/user_followers/UserFollowers';
 import UserFollowing from './views/user_following/UserFollowing';
@@ -117,6 +118,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps}>
               <Profile {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/edit-profile"
+          render={routeProps => (
+            <PageWrapper {...routeProps}>
+              <EditProfile {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

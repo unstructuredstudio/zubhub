@@ -36,23 +36,19 @@ export const get_user_profile = props => {
 
 export const edit_user_profile = props => {
   return dispatch => {
-    return API.edit_user_profile(props)
-      .then(res => {
-        if (res.username) {
-          dispatch(
-            AuthActions.setAuthUser({
-              username: res.username,
-            }),
-          );
+    return API.edit_user_profile(props).then(res => {
+      if (res.id) {
+        dispatch(
+          AuthActions.setAuthUser({
+            username: res.username,
+          }),
+        );
 
-          return { profile: res };
-        } else {
-          throw new Error(
-            'An error occured while updating your profile, please try again later',
-          );
-        }
-      })
-      .catch(error => toast.warning(error.message));
+        return { profile: res };
+      } else {
+        throw new Error(JSON.stringify(res));
+      }
+    });
   };
 };
 

@@ -33,6 +33,7 @@ import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import commonStyles from '../assets/js/styles';
 
 const useStyles = makeStyles(styles);
+const useCommonStyles = makeStyles(commonStyles);
 
 const logout = (e, props) => {
   e.preventDefault();
@@ -57,7 +58,7 @@ const handleProfileMenuClose = () => {
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
-  const commonClasses = makeStyles(commonStyles)();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     username: null,
@@ -228,16 +229,12 @@ function PageWrapper(props) {
                     </MenuItem>
                     <MenuItem className={classes.logOutStyle}>
                       <Typography
-                        className={classes.textDecorationNone}
+                        className={commonClasses.colorRed}
+                        variant="subtitle2"
+                        component="span"
                         onClick={e => logout(e, props)}
                       >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
-                          Logout
-                        </Typography>
+                        Logout
                       </Typography>
                     </MenuItem>
                   </Menu>

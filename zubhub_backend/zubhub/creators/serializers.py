@@ -13,10 +13,12 @@ class CreatorSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
+    location = serializers.SlugRelatedField(
+        slug_field='name', queryset=Location.objects.all())
 
     class Meta:
         model = Creator
-        fields = ('id', 'username', 'email', 'avatar',
+        fields = ('id', 'username', 'email', 'avatar', 'location',
                   'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count')
 
 

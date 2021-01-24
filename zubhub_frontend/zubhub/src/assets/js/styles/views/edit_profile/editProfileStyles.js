@@ -26,7 +26,6 @@ const styles = theme => ({
   },
 
   customInputStyle: {
-    width: '100%',
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
       border: '1px solid #00B8C4',
@@ -48,31 +47,39 @@ const styles = theme => ({
       width: '75.5px !important',
     },
   },
-  uploadProgressLabelStyle: {
-    color: 'white',
+  staticLabelInputSmallStyle: {
+    '&.MuiOutlinedInput-root fieldset legend': {
+      width: '40px !important',
+    },
   },
-  uploadProgressStyle: {
+  secondaryLink: {
     color: '#00B8C4',
-  },
-  customChipStyle: {
-    border: '1px solid #00B8C4',
-    color: '#00B8C4',
-    margin: '0.5em',
-  },
-  materialsUsedViewStyle: {
-    padding: '0.5em',
+    '&:hover': {
+      color: '#03848C',
+    },
   },
   center: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  divider: {
+    width: '30%',
+    marginRight: '1em',
+    marginLeft: '1em',
+    [theme.breakpoints.down('573')]: {
+      width: '20%',
+    },
+    [theme.breakpoints.down('423')]: {
+      marginLeft: '0.5em',
+      marginRight: '0.5em',
+    },
+    [theme.breakpoints.down('378')]: {
+      width: '10%',
+    },
+  },
   textDecorationNone: {
     textDecoration: 'none',
-  },
-  displayNone: { display: 'none' },
-  largeLabel: {
-    fontSize: '1.3rem',
   },
   errorBox: {
     width: '100%',

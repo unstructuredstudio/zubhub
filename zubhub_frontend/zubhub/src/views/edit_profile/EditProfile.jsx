@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
 
+import { toast } from 'react-toastify';
+
 import { makeStyles } from '@material-ui/core/styles';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {
   Grid,
   Box,
@@ -22,8 +22,6 @@ import {
   Select,
   MenuItem,
   Typography,
-  InputAdornment,
-  IconButton,
   OutlinedInput,
   Tooltip,
   ClickAwayListener,
@@ -34,46 +32,72 @@ import {
 
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
-import styles from '../../assets/js/styles/views/signup/signupStyles';
+import * as UserActions from '../../store/actions/userActions';
+import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
 
 const useStyles = makeStyles(styles);
-
-const handleMouseDownPassword = e => {
-  e.preventDefault();
-};
 
 const get_locations = props => {
   return props.get_locations();
 };
 
-const signup = (e, props) => {
+const getProfile = (refs, props) => {
+  return props.get_auth_user(props).then(obj => {
+    if (!obj.id) {
+      return obj;
+    } else {
+      props.setFieldValue('username', obj.username);
+      if (refs.usernameEl.current)
+        refs.usernameEl.current.firstChild.value = obj.username;
+
+      props.setFieldValue('bio', obj.bio);
+      if (refs.bioEl.current) refs.bioEl.current.firstChild.value = obj.bio;
+
+      if (obj.dateOfBirth) {
+        props.setFieldValue('dateOfBirth', obj.dateOfBirth);
+      }
+
+      if (obj.location) {
+        props.setFieldValue('user_location', obj.location);
+      }
+    }
+  });
+};
+
+const editProfile = (e, props) => {
   e.preventDefault();
   if (props.values.user_location.length < 1) {
     props.validateField('user_location');
   } else {
-    return props.signup(props).catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        let non_field_errors;
-        Object.keys(messages).forEach(key => {
-          if (key === 'non_field_errors') {
-            non_field_errors = { error: messages[key][0] };
-          } else if (key === 'location') {
-            props.setFieldTouched('user_location', true, false);
-            props.setFieldError('user_location', messages[key][0]);
-          } else {
-            props.setFieldTouched(key, true, false);
-            props.setFieldError(key, messages[key][0]);
-          }
-        });
-        return non_field_errors;
-      } else {
-        return {
-          error:
-            'An error occured while performing this action. Please try again later',
-        };
-      }
-    });
+    return props
+      .edit_user_profile({ ...props.values, token: props.auth.token })
+      .then(res => {
+        toast.success('Your profile was updated successfully!!');
+        props.history.push('/profile');
+      })
+      .catch(error => {
+        const messages = JSON.parse(error.message);
+        if (typeof messages === 'object') {
+          let non_field_errors;
+          Object.keys(messages).forEach(key => {
+            if (key === 'non_field_errors') {
+              non_field_errors = { error: messages[key][0] };
+            } else if (key === 'location') {
+              props.setFieldTouched('user_location', true, false);
+              props.setFieldError('user_location', messages[key][0]);
+            } else {
+              props.setFieldTouched(key, true, false);
+              props.setFieldError(key, messages[key][0]);
+            }
+          });
+          return non_field_errors;
+        } else {
+          return {
+            error:
+              'An error occured while performing this action. Please try again later',
+          };
+        }
+      });
   }
 };
 
@@ -81,16 +105,23 @@ const handleTooltipToggle = ({ toolTipOpen }) => {
   return { toolTipOpen: !toolTipOpen };
 };
 
-function Signup(props) {
+function EditProfile(props) {
+  const refs = {
+    usernameEl: React.useRef(null),
+    bioEl: React.useRef(null),
+    dobEl: React.useRef(null),
+    locationEl: React.useRef(null),
+  };
+
   const [state, setState] = React.useState({
     error: null,
     locations: [],
-    showPassword1: false,
-    showPassword2: false,
+    current_location: '',
     toolTipOpen: false,
   });
 
   React.useEffect(() => {
+    getProfile(refs, props);
     handleSetState(get_locations(props));
   }, []);
 
@@ -104,7 +135,7 @@ function Signup(props) {
     }
   };
 
-  const { error, locations, toolTipOpen, showPassword1, showPassword2 } = state;
+  const { error, locations, toolTipOpen } = state;
 
   return (
     <Box className={classes.root}>
@@ -116,7 +147,7 @@ function Signup(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => handleSetState(signup(e, props))}
+                onSubmit={e => handleSetState(editProfile(e, props))}
               >
                 <Typography
                   gutterBottom
@@ -125,10 +156,10 @@ function Signup(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  Welcome to Zubhub
+                  Edit Profile
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  Create an account to submit a project
+                  Have changes to make to your Profile? go ahead!
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
@@ -154,6 +185,7 @@ function Signup(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="username"
+                        shrink={props.values['username'] ? true : false}
                       >
                         Username
                       </InputLabel>
@@ -178,7 +210,15 @@ function Signup(props) {
                           disableTouchListener
                         >
                           <OutlinedInput
-                            className={classes.customInputStyle}
+                            ref={refs.usernameEl}
+                            className={
+                              props.values['username']
+                                ? clsx(
+                                    classes.customInputStyle,
+                                    classes.staticLabelInputStyle,
+                                  )
+                                : classes.customInputStyle
+                            }
                             id="username"
                             name="username"
                             type="text"
@@ -203,39 +243,6 @@ function Signup(props) {
                       variant="outlined"
                       size="small"
                       fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin="normal"
-                      error={props.touched['email'] && props.errors['email']}
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="email"
-                      >
-                        Email
-                      </InputLabel>
-                      <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="email"
-                        name="email"
-                        type="text"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        labelWidth={70}
-                      />
-                      <FormHelperText error>
-                        {props.touched['email'] && props.errors['email']}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
                       margin="normal"
                       error={
                         props.touched['dateOfBirth'] &&
@@ -245,19 +252,28 @@ function Signup(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="dateOfBirth"
-                        shrink
+                        shrink={props.values['dateOfBirth'] ? true : false}
                       >
                         Date Of Birth
                       </InputLabel>
                       <OutlinedInput
-                        className={clsx(
-                          classes.customInputStyle,
-                          classes.DOBInputStyle,
-                        )}
+                        ref={refs.dobEl}
+                        className={
+                          props.values['dateOfBirth']
+                            ? clsx(
+                                classes.customInputStyle,
+                                classes.staticLabelInputStyle,
+                              )
+                            : classes.customInputStyle
+                        }
                         id="dateOfBirth"
                         name="dateOfBirth"
                         type="date"
-                        defaultValue=""
+                        value={
+                          props.values['dateOfBirth']
+                            ? props.values['dateOfBirth']
+                            : ''
+                        }
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         labelWidth={90}
@@ -269,8 +285,61 @@ function Signup(props) {
                     </FormControl>
                   </Grid>
 
+                  <Grid item xs={12}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="small"
+                      error={props.touched['bio'] && props.errors['bio']}
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="bio"
+                        shrink={props.values['bio'] ? true : false}
+                      >
+                        Bio
+                      </InputLabel>
+                      <OutlinedInput
+                        ref={refs.bioEl}
+                        className={
+                          props.values['bio']
+                            ? clsx(
+                                classes.customInputStyle,
+                                classes.staticLabelInputSmallStyle,
+                              )
+                            : classes.customInputStyle
+                        }
+                        id="bio"
+                        name="bio"
+                        type="text"
+                        multiline
+                        rows={6}
+                        rowsMax={6}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={50}
+                      />
+                      <FormHelperText error>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          Tell us something interesting about you! You can share
+                          what care about, your hobbies, things you have been
+                          working on recently, etc.
+                        </Typography>
+                        <br />
+                        {props.touched['bio'] && props.errors['bio']}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+
                   <Grid item xs={12} sm={6} md={6}>
                     <FormControl
+                      ref={refs.locationEl}
                       className={clsx(classes.margin, classes.textField)}
                       variant="outlined"
                       size="small"
@@ -284,6 +353,7 @@ function Signup(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         id="user_location"
+                        shrink={props.values['user_location'] ? true : false}
                       >
                         Location
                       </InputLabel>
@@ -291,8 +361,19 @@ function Signup(props) {
                         labelId="user_location"
                         id="user_location"
                         name="user_location"
-                        className={classes.customInputStyle}
-                        defaultValue=""
+                        className={
+                          props.values['user_location']
+                            ? clsx(
+                                classes.customInputStyle,
+                                classes.staticLabelInputStyle,
+                              )
+                            : classes.customInputStyle
+                        }
+                        value={
+                          props.values.user_location
+                            ? props.values.user_location
+                            : ''
+                        }
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         label="Location"
@@ -313,114 +394,6 @@ function Signup(props) {
                       </FormHelperText>
                     </FormControl>
                   </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        props.touched['password1'] && props.errors['password1']
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password1"
-                      >
-                        Password
-                      </InputLabel>
-                      <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="password1"
-                        name="password1"
-                        type={showPassword1 ? 'text' : 'password'}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={() =>
-                                setState({
-                                  ...state,
-                                  showPassword1: !showPassword1,
-                                })
-                              }
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword1 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        labelWidth={70}
-                      />
-                      <FormHelperText error>
-                        {props.touched['password1'] &&
-                          props.errors['password1']}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        props.touched['password2'] && props.errors['password2']
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password2"
-                      >
-                        Confirm Password
-                      </InputLabel>
-                      <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="password2"
-                        name="password2"
-                        type={showPassword2 ? 'text' : 'password'}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={() =>
-                                setState({
-                                  ...state,
-                                  showPassword2: !showPassword2,
-                                })
-                              }
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword2 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        labelWidth={70}
-                      />
-                      <FormHelperText error>
-                        {props.touched['password2'] &&
-                          props.errors['password2']}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
                   <Grid item xs={12}>
                     <CustomButton
                       variant="contained"
@@ -429,7 +402,7 @@ function Signup(props) {
                       type="submit"
                       fullWidth
                     >
-                      Signup
+                      Edit Profile
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -443,20 +416,20 @@ function Signup(props) {
                       color="textSecondary"
                       component="p"
                     >
-                      Already a Member ?
+                      OR
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Link to="/login" className={classes.textDecorationNone}>
+                  <Link to="/profile" className={classes.textDecorationNone}>
                     <CustomButton
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
                       fullWidth
                     >
-                      Login
+                      Back To Profile
                     </CustomButton>
                   </Link>
                 </Grid>
@@ -469,10 +442,11 @@ function Signup(props) {
   );
 }
 
-Signup.propTypes = {
+EditProfile.propTypes = {
   auth: PropTypes.object.isRequired,
+  get_auth_user: PropTypes.func.isRequired,
   set_auth_user: PropTypes.func.isRequired,
-  signup: PropTypes.func.isRequired,
+  edit_user_profile: PropTypes.func.isRequired,
   get_locations: PropTypes.func.isRequired,
 };
 
@@ -484,11 +458,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
+    get_auth_user: props => {
+      return dispatch(AuthActions.get_auth_user(props));
     },
-    signup: props => {
-      return dispatch(AuthActions.signup(props));
+    edit_user_profile: props => {
+      return dispatch(UserActions.edit_user_profile(props));
     },
     get_locations: props => {
       return dispatch(AuthActions.get_locations());
@@ -502,25 +476,22 @@ export default connect(
 )(
   withFormik({
     mapPropsToValue: () => ({
-      email: '',
+      username: '',
       user_location: '',
-      password1: '',
-      password2: '',
+      bio: '',
     }),
     validationSchema: Yup.object().shape({
-      email: Yup.string().email('invalid email'),
+      username: Yup.string().required('please input your username'),
       dateOfBirth: Yup.date()
         .max(new Date(), "your date of birth can't be greater than today")
         .required('please input your date of birth'),
+      bio: Yup.string().max(
+        255,
+        "your bio shouldn't be more than 255 characters",
+      ),
       user_location: Yup.string()
         .min(1, 'your location is too short')
         .required('please input your location'),
-      password1: Yup.string()
-        .min(8, 'your password is too short')
-        .required('input your password'),
-      password2: Yup.string()
-        .oneOf([Yup.ref('password1'), null], 'Passwords must match')
-        .required('input a confirmation password'),
     }),
-  })(Signup),
+  })(EditProfile),
 );

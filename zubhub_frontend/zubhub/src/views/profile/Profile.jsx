@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import { makeStyles } from '@material-ui/core/styles';
 import ShareIcon from '@material-ui/icons/Share';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {
   Tooltip,
   Badge,
@@ -17,6 +18,8 @@ import {
   Box,
   Container,
   Paper,
+  Menu,
+  MenuItem,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,13 +40,10 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
+import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
-
-const handleToggleEditProfileModal = ({ openEditProfileModal }) => {
-  openEditProfileModal = !openEditProfileModal;
-  return { openEditProfileModal };
-};
+const useCommonStyles = makeStyles(commonStyles);
 
 const getUserPofile = props => {
   let username = props.match.params.username;
@@ -52,31 +52,6 @@ const getUserPofile = props => {
     username = props.auth.username;
   } else if (props.auth.username === username) props.history.push('/profile');
   return props.get_user_profile({ username, token: props.auth.token });
-};
-
-const updateProfile = (e, props, state, newUserNameEL) => {
-  e.preventDefault();
-  const username = newUserNameEL.current.firstChild;
-  if (username.value) {
-    return props
-      .edit_user_profile({
-        token: props.auth.token,
-        username: username.value,
-      })
-      .then(res => {
-        if (!res.id) {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-        username.value = '';
-        return { ...res, ...handleToggleEditProfileModal(state) };
-      })
-      .catch(error => ({ dialogError: error.message }));
-  } else {
-    return handleToggleEditProfileModal(state);
-  }
 };
 
 const copyProfileUrl = profile => {
@@ -126,16 +101,39 @@ const toggle_follow = (id, props) => {
   }
 };
 
+const handleMoreMenuOpen = e => {
+  return { moreAnchorEl: e.currentTarget };
+};
+
+const handleMoreMenuClose = () => {
+  return { moreAnchorEl: null };
+};
+
+const handleToggleDeleteAccountModal = state => {
+  const openDeleteAccountModal = !state.openDeleteAccountModal;
+  return { openDeleteAccountModal, moreAnchorEl: null };
+};
+
+const deleteAccount = (usernameEl, props, state) => {
+  if (usernameEl.current.firstChild.value !== props.auth.username) {
+    return { dialogError: 'The username you submitted is incorrect' };
+  } else {
+    return props.delete_account(props);
+  }
+};
+
 function Profile(props) {
-  const newUserNameEL = React.useRef(null);
+  const usernameEl = React.useRef(null);
   const classes = useStyles();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     results: [],
-    openEditProfileModal: false,
     loading: true,
     profile: {},
+    openDeleteAccountModal: false,
     dialogError: null,
+    moreAnchorEl: null,
   });
 
   React.useEffect(() => {
@@ -154,9 +152,12 @@ function Profile(props) {
     results: projects,
     profile,
     loading,
-    openEditProfileModal,
+    openDeleteAccountModal,
     dialogError,
+    moreAnchorEl,
   } = state;
+
+  const moreMenuOpen = Boolean(moreAnchorEl);
 
   if (loading) {
     return <LoadingPage />;
@@ -167,17 +168,52 @@ function Profile(props) {
           <Paper className={classes.profileHeaderStyle}>
             <Container maxWidth="md">
               {props.auth.username === profile.username ? (
-                <CustomButton
-                  className={classes.floatRight}
-                  variant="contained"
-                  margin="normal"
-                  primaryButtonStyle
-                  onClick={() =>
-                    handleSetState(handleToggleEditProfileModal(state))
-                  }
-                >
-                  Edit
-                </CustomButton>
+                <>
+                  <CustomButton
+                    className={classes.floatRight}
+                    onClick={e => handleSetState(handleMoreMenuOpen(e))}
+                  >
+                    <MoreVertIcon />
+                  </CustomButton>
+                  <CustomButton
+                    className={classes.floatRight}
+                    variant="contained"
+                    margin="normal"
+                    primaryButtonStyle
+                    onClick={() => props.history.push('/edit-profile')}
+                  >
+                    Edit
+                  </CustomButton>
+                  <Menu
+                    className={classes.moreMenuStyle}
+                    id="profile_menu"
+                    anchorEl={moreAnchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={moreMenuOpen}
+                    onClose={e => handleSetState(handleMoreMenuClose(e))}
+                  >
+                    <MenuItem>
+                      <Typography
+                        variant="subtitle2"
+                        className={commonClasses.colorRed}
+                        component="span"
+                        onClick={() =>
+                          handleSetState(handleToggleDeleteAccountModal(state))
+                        }
+                      >
+                        Delete Account
+                      </Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
               ) : (
                 <CustomButton
                   className={classes.floatRight}
@@ -295,7 +331,7 @@ function Profile(props) {
               <Box className={classes.aboutMeBoxStyle}>
                 {profile.bio
                   ? profile.bio
-                  : 'You will be able to change this next month 😀!'}
+                  : 'Tell us more about you. Click the edit button at the page top to get started 🙂'}
               </Box>
             </Paper>
 
@@ -347,11 +383,11 @@ function Profile(props) {
           </Container>
         </Box>
         <Dialog
-          open={openEditProfileModal}
-          onClose={() => handleSetState(handleToggleEditProfileModal(state))}
-          aria-labelledby="edit user profile"
+          open={openDeleteAccountModal}
+          onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
+          aria-labelledby="delete account"
         >
-          <DialogTitle id="edit-user-profile">Edit User Profile</DialogTitle>
+          <DialogTitle id="delete-project">Delete Account</DialogTitle>
           <Box
             component="p"
             className={dialogError !== null && classes.errorBox}
@@ -363,6 +399,11 @@ function Profile(props) {
             )}
           </Box>{' '}
           <DialogContent>
+            <Typography>
+              Are you sure you want to delete this account? you can't undo this
+              action!!! if you still want procceed, type your username into the
+              field below and click procceed
+            </Typography>
             <FormControl
               className={clsx(classes.margin, classes.textField)}
               variant="outlined"
@@ -378,7 +419,7 @@ function Profile(props) {
               </InputLabel>
               <OutlinedInput
                 className={classes.customInputStyle}
-                ref={newUserNameEL}
+                ref={usernameEl}
                 name="username"
                 type="text"
                 labelWidth={90}
@@ -389,7 +430,7 @@ function Profile(props) {
             <CustomButton
               variant="outlined"
               onClick={() =>
-                handleSetState(handleToggleEditProfileModal(state))
+                handleSetState(handleToggleDeleteAccountModal(state))
               }
               color="primary"
               secondaryButtonStyle
@@ -399,11 +440,11 @@ function Profile(props) {
             <CustomButton
               variant="contained"
               onClick={e =>
-                handleSetState(updateProfile(e, props, state, newUserNameEL))
+                handleSetState(deleteAccount(usernameEl, props, state))
               }
-              primaryButtonStyle
+              dangerButtonStyle
             >
-              Save
+              Procceed
             </CustomButton>
           </DialogActions>
         </Dialog>
@@ -442,6 +483,12 @@ const mapDispatchToProps = dispatch => {
     },
     edit_user_profile: props => {
       return dispatch(UserActions.edit_user_profile(props));
+    },
+    delete_account: props => {
+      return dispatch(AuthActions.delete_account(props));
+    },
+    logout: props => {
+      return dispatch(AuthActions.logout(props));
     },
     toggle_follow: props => {
       return dispatch(UserActions.toggle_follow(props));

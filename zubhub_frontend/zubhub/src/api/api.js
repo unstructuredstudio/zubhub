@@ -190,14 +190,31 @@ class API {
   /*****************************************************************/
 
   /************************** edit user profile **************************/
-  edit_user_profile = profile => {
-    const { username } = profile;
+  edit_user_profile = props => {
+    const { token, username, dateOfBirth, bio, user_location } = props;
 
     const url = 'creators/edit_creator/';
     const method = 'PUT';
-    const token = profile.token;
-    const body = JSON.stringify({ username });
+    const body = JSON.stringify({
+      username,
+      dateOfBirth,
+      bio,
+      location: user_location,
+    });
     return this.request({ url, method, token, body }).then(res => res.json());
+  };
+  /********************************************************************/
+
+  /************************** delete account **************************/
+  delete_account = ({ token }) => {
+    const url = 'creators/delete/';
+    const method = 'DELETE';
+    return this.request({ url, method, token }).then(res => ({
+      detail:
+        res.status === 204
+          ? 'ok'
+          : 'An error occured while deleting account. Please try again later',
+    }));
   };
   /********************************************************************/
 

@@ -52,7 +52,7 @@ export const get_auth_user = props => {
   return dispatch => {
     return API.get_auth_user(props.auth.token)
       .then(res => {
-        if (!res.username) {
+        if (!res.id) {
           throw new Error(
             'an error occured while getting user profile, please try again later',
           );
@@ -62,6 +62,8 @@ export const get_auth_user = props => {
           type: 'SET_AUTH_USER',
           payload: { ...props.auth, username: res.username, id: res.id },
         });
+
+        return res;
       })
       .catch(error => toast.warning(error.message));
   };
@@ -151,6 +153,30 @@ export const get_locations = () => {
           };
         } else {
           return { error: error.message };
+        }
+      });
+  };
+};
+
+export const delete_account = props => {
+  return () => {
+    return API.delete_account({ token: props.auth.token })
+      .then(res => {
+        if (res.detail !== 'ok') {
+          throw new Error(res.detail);
+        } else {
+          toast.success('account have been deleted successfully!!!');
+          props.logout(props);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          return {
+            dialogError:
+              'An error occured while performing this action. Please try again later',
+          };
+        } else {
+          return { dialogError: error.message };
         }
       });
   };
