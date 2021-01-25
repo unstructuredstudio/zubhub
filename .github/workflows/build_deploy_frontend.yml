@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -39,3 +39,31 @@ jobs:
           tags: unstructuredstudio/zubhub-frontend:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Copy file via scp
+        uses: appleboy/scp-action@master
+        env:
+          HOST: ${{ secrets.DO_FRONTEND_HOST }}
+          USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
+          PORT: ${{ secrets.DO_SSHPORT }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+        with:
+          source: "."
+          target: "."
+
+      - name: Executing remote  command
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ secrets.DO_FRONTEND_HOST }}
+          USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
+          PORT: ${{ secrets.DO_SSHPORT }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "cat SUCCESS.md"
+    
