@@ -5,7 +5,7 @@ on:
     branches:
       - phase2
     paths:
-      - 'zubhub_frontend/zubhub/**'
+      - '*'
       - '!zubhub_frontend/zubhub/README.md'
       - '!zubhub_frontend/zubhub/.env.example'
       - '!zubhub_frontend/zubhub/.prettierrc.yaml'

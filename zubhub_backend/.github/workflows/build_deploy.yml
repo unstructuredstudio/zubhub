@@ -5,7 +5,7 @@ on:
     branches:
       - phase2
     paths:
-      - "zubhub_backend/**"
+      - "*"
       - "!zubhub_backend/.gitignore"
       - "!zubhub_backend/.env.example"
       - "!zubhub_backend/.dockerignore"
