@@ -9,6 +9,7 @@ on:
       - "!zubhub_backend/.gitignore"
       - "!zubhub_backend/.env.example"
       - "!zubhub_backend/.dockerignore"
+  workflow_dispatch:
 
 jobs:
   path-context:
