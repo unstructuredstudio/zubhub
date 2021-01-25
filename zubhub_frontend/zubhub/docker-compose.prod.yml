@@ -1,4 +1,4 @@
-version: "3.3"
+version: '3.3'
 
 services:
   zubhub_frontend:
@@ -10,7 +10,7 @@ services:
       - ./nginx/prod/default.conf:/etc/nginx/conf.d/default.conf
     restart: on-failure
     ports:
-      - "80"
+      - '80'
 
   reverse-proxy:
     image: valian/docker-nginx-auto-ssl:1.0.0
@@ -22,9 +22,9 @@ services:
     volumes:
       - ./.ssl-data:/etc/resty-auto-ssl
     environment:
-      ALLOWED_DOMAINS: "(zubhub|www.zubhub).unstructured.studio"
-      SITES: "zubhub.unstructured.studio=zubhub_frontend;www.zubhub.unstructured.studio=zubhub_frontend"
-      FORCE_HTTPS: "true"
+      ALLOWED_DOMAINS: '(zubhub|www.zubhub).unstructured.studio'
+      SITES: 'zubhub.unstructured.studio=zubhub_frontend;www.zubhub.unstructured.studio=zubhub_frontend'
+      FORCE_HTTPS: 'true'
     depends_on:
       - zubhub_frontend
 
