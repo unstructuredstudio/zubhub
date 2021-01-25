@@ -10,6 +10,7 @@ on:
       - "!zubhub_frontend/zubhub/.env.example"
       - "!zubhub_frontend/zubhub/.prettierrc.yaml"
       - "!zubhub_frontend/zubhub/.gitignore"
+  workflow_dispatch:
 
 jobs:
   main:
