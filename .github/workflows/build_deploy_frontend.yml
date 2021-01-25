@@ -36,6 +36,6 @@ jobs:
           context: ./zubhub_frontend/zubhub/
           file: ./zubhub_frontend/zubhub/Dockerfile.prod
           push: true
-          tags: unstructured/zubhub-frontend:latest
+          tags: unstructuredstudio/zubhub-frontend:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
