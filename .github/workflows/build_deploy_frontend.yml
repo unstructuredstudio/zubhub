@@ -33,9 +33,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: zubhub_frontend/zubhub/
-          file: zubhub_frontend/zubhub/Dockerfile.prod
-          platforms: linux/amd64,linux/arm64,linux/386
+          context: .
+          file: ./zubhub_frontend/zubhub/Dockerfile.prod
           push: true
           tags: unstructured/zubhub-frontend:latest
       - name: Image digest
