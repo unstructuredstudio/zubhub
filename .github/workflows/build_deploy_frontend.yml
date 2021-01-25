@@ -56,7 +56,7 @@ jobs:
           KEY: ${{ secrets.DO_SSHKEY }}
         with:
           source: "."
-          target: "/temp"
+          target: "temp"
 
       - name: Executing remote  command
         uses: appleboy/ssh-action@master
