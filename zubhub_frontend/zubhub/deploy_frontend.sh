@@ -1,5 +1,9 @@
 #! /bin/bash
 
+echo "changing to project directory"
+cd /home/zubhub-frontend/
+echo "done changing to project directory"
+
 echo "copying .env file and ssl folder"
 mv zubhub_frontend/zubhub/.env zubhub/zubhub_frontend/zubhub/.env
 mv zubhub_frontend/zubhub/.ssl-data zubhub/zubhub_frontend/zubhub/
@@ -17,7 +21,7 @@ echo "done removing unneccessary files and folders"
 cd zubhub_frontend/zubhub/
 
 echo "stopping and rebuilding the containers"
-docker-compose down
+docker-compose -f docker-compose.prod.yml down
 docker-compose -f docker-compose.prod.yml up -d --build
 echo "Updated frontend"
 # EOT
