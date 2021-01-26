@@ -3,16 +3,16 @@ name: Backend Production Deployment
 on:
   push:
     branches:
-      - phase2
+      - master
     paths:
-      - "*"
+      - "zubhub_backend/**"
       - "!zubhub_backend/.gitignore"
       - "!zubhub_backend/.env.example"
       - "!zubhub_backend/.dockerignore"
   workflow_dispatch:
 
 jobs:
-  path-context:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -32,10 +32,34 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: zubhub_backend/
-          file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64,linux/386
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/Dockerfile
           push: true
-          tags: unstructured/zubhub-backend:latest
+          tags: unstructuredstudio/zubhub-backend:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Copy file via scp
+        uses: appleboy/scp-action@master
+        env:
+          HOST: ${{ secrets.DO_BACKEND_HOST }}
+          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+        with:
+          source: "."
+          target: "/home/zubhub-backend/zubhub"
+
+      - name: Executing remote  command
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ secrets.DO_BACKEND_HOST }}
+          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "cp /home/zubhub-backend/zubhub/zubhub_backend/deploy_backend.sh /home/zubhub-backend/ && sudo bash /home/zubhub-backend/deploy_backend.sh"
