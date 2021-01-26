@@ -25,7 +25,6 @@ services:
       - rabbitmq
 
   db:
-    container_name: db
     image: postgres:11
     env_file: .env
     restart: on-failure

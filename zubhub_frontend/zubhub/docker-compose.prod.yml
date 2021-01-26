@@ -3,8 +3,9 @@ version: '3.3'
 services:
   zubhub_frontend:
     container_name: zubhub_frontend
-    image: unstructuredstudio/zubhub-frontend:latest
-    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     volumes:
       - ./nginx/prod/default.conf:/etc/nginx/conf.d/default.conf
     restart: on-failure
