@@ -5,14 +5,24 @@ mv /home/zubhub-frontend/zubhub_frontend/zubhub/.env /home/zubhub-frontend/zubhu
 mv /home/zubhub-frontend/zubhub_frontend/zubhub/.ssl-data /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/
 echo "done copying .env file and ssl folder"
 
-echo "removing unneccessary files and folders"
+echo "removing old project folder"
 rm -rf /home/zubhub-frontend/zubhub_frontend
+echo "removing old project folder"
+
+echo "copying new project folder"
 cp -r /home/zubhub-frontend/zubhub/zubhub_frontend/ /home/zubhub-frontend/zubhub_frontend/
+echo "done copying new project folder"
+
+echo "changing permission of cert storage folder"
+sudo chown -R nobody:nogroup /home/zubhub-frontend/zubhub_frontend/zubhub/.ssl-data/storage
+echo "done changing permission of cert storage folder"
+
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/.env.example
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/Dockerfile
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/docker-compose.yml
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/nginx/dev
-echo "done removing unneccessary files and folders"
+
+
 
 
 echo "stopping and rebuilding the containers"
