@@ -1,9 +1,5 @@
 #! /bin/bash
 
-echo "changing to project directory"
-cd /home/zubhub-frontend/
-echo "done changing to project directory"
-
 echo "copying .env file and ssl folder"
 mv zubhub_frontend/zubhub/.env zubhub/zubhub_frontend/zubhub/.env
 mv zubhub_frontend/zubhub/.ssl-data zubhub/zubhub_frontend/zubhub/
