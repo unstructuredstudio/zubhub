@@ -65,5 +65,5 @@ jobs:
           USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
           PORT: ${{ secrets.DO_SSHPORT }}
           KEY: ${{ secrets.DO_SSHKEY }}
-          script: "sudo bash /home/zubhub-frontend/zubhub_frontend/zubhub/deploy_frontend.sh"
+          script: "cp /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/deploy_frontend.sh /home/zubhub-frontend/ && sudo bash /home/zubhub-frontend/zubhub_frontend/zubhub/deploy_frontend.sh"
     
