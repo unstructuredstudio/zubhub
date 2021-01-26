@@ -17,10 +17,13 @@ echo "changing permission of cert storage folder"
 sudo chown -R nobody:nogroup /home/zubhub-frontend/zubhub_frontend/zubhub/.ssl-data/storage
 echo "done changing permission of cert storage folder"
 
+echo "removing uneccessary files and folders"
+rm -rf /home/zubhub-frontend/zubhub
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/.env.example
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/Dockerfile
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/docker-compose.yml
 rm -rf /home/zubhub-frontend/zubhub_frontend/zubhub/nginx/dev
+echo "done removing uneccessary files and folders"
 
 
 

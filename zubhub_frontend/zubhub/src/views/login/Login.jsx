@@ -45,7 +45,26 @@ const handleMouseDownPassword = e => {
 
 const login = (e, props) => {
   e.preventDefault();
-  return props.login(props);
+  return props.login(props).catch(error => {
+    const messages = JSON.parse(error.message);
+    if (typeof messages === 'object') {
+      let non_field_errors;
+      Object.keys(messages).forEach(key => {
+        if (key === 'non_field_errors') {
+          non_field_errors = { error: messages[key][0] };
+        } else {
+          props.setFieldTouched(key, true, false);
+          props.setFieldError(key, messages[key][0]);
+        }
+      });
+      return non_field_errors;
+    } else {
+      return {
+        error:
+          'An error occured while performing this action. Please try again later',
+      };
+    }
+  });
 };
 
 function Login(props) {

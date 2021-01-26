@@ -2,8 +2,6 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { withAPI } from './api';
-
 import PageWrapper from './views/PageWrapper';
 import Signup from './views/signup/Signup';
 import Login from './views/login/Login';
@@ -13,6 +11,7 @@ import EmailConfirm from './views/email_confirm/EmailConfirm';
 import Profile from './views/profile/Profile';
 import UserProjects from './views/user_projects/UserProjects';
 import UserFollowers from './views/user_followers/UserFollowers';
+import UserFollowing from './views/user_following/UserFollowing';
 import Projects from './views/projects/Projects';
 import SavedProjects from './views/saved_projects/SavedProjects';
 import CreateProject from './views/create_project/CreateProject';
@@ -91,6 +90,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps}>
               <UserFollowers {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/creators/:username/following"
+          render={routeProps => (
+            <PageWrapper {...routeProps}>
+              <UserFollowing {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

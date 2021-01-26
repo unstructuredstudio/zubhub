@@ -3,9 +3,9 @@ name: Frontend Production Deployment
 on:
   push:
     branches:
-      - phase2
+      - master
     paths:
-      - "zubhub_frontend/zubhub/"
+      - "zubhub_frontend/zubhub/**"
       - "!zubhub_frontend/zubhub/README.md"
       - "!zubhub_frontend/zubhub/.env.example"
       - "!zubhub_frontend/zubhub/.prettierrc.yaml"
@@ -13,35 +13,35 @@ on:
   workflow_dispatch:
 
 jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v1
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v1
-#       - name: Login to DockerHub
-#         uses: docker/login-action@v1
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#       - name: Checkout files
-#         uses: actions/checkout@v2
+      - name: Checkout files
+        uses: actions/checkout@v2
 
-#       - name: Build and push
-#         id: docker_build
-#         uses: docker/build-push-action@v2
-#         with:
-#           context: ./zubhub_frontend/zubhub/
-#           file: ./zubhub_frontend/zubhub/Dockerfile.prod
-#           push: true
-#           tags: unstructuredstudio/zubhub-frontend:latest
-#       - name: Image digest
-#         run: echo ${{ steps.docker_build.outputs.digest }}
-  
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_frontend/zubhub/
+          file: ./zubhub_frontend/zubhub/Dockerfile.prod
+          push: true
+          tags: unstructuredstudio/zubhub-frontend:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
   deploy:
-#     needs: build
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -52,7 +52,6 @@ jobs:
         env:
           HOST: ${{ secrets.DO_FRONTEND_HOST }}
           USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
-          PORT: ${{ secrets.DO_SSHPORT }}
           KEY: ${{ secrets.DO_SSHKEY }}
         with:
           source: "."
@@ -66,4 +65,3 @@ jobs:
           PORT: ${{ secrets.DO_SSHPORT }}
           KEY: ${{ secrets.DO_SSHKEY }}
           script: "cp /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/deploy_frontend.sh /home/zubhub-frontend/ && sudo bash /home/zubhub-frontend/deploy_frontend.sh"
-    
