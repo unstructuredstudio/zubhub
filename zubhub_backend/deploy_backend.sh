@@ -1,8 +1,10 @@
 #! /bin/bash
 
-echo "copying .env file and ssl folder"
+echo "copying important files and folders from old project to new project"
 mv /home/zubhub-backend/zubhub_backend/.env /home/zubhub-backend/zubhub/zubhub_backend/.env
-echo "done copying .env file and ssl folder"
+cp -r /home/zubhub-backend/zubhub_backend/zubhub/creators/migrations/ /home/zubhub-backend/zubhub/zubhub_backend/zubhub/creators/migrations/
+cp -r /home/zubhub-backend/zubhub_backend/zubhub/projects/migrations/ /home/zubhub-backend/zubhub/zubhub_backend/zubhub/projects/migrations/
+echo "copying important files and folders from old project to new project"
 
 echo "removing old project folder"
 rm -rf /home/zubhub-backend/zubhub_backend
