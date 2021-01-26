@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   web:
+    container_name: web
     image: unstructuredstudio/zubhub-backend:latest
     env_file: .env
     command: /start
@@ -24,8 +25,9 @@ services:
       - rabbitmq
 
   db:
-    env_file: .env
+    container_name: db
     image: postgres:11
+    env_file: .env
     restart: on-failure
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -57,19 +59,18 @@ services:
       - prometheus
 
   rabbitmq:
-    env_file: .env
+    container_name: rabbitmq
     image: rabbitmq:3-management
-    restart: on-failure
+    env_file: .env
+    restart: always
     ports:
       - 5672
       - 15672
 
   celery_worker:
+    container_name: celery_worker
+    image: unstructuredstudio/zubhub-backend:latest
     env_file: .env
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    image: zubhub_celery_worker
     command: /start-celeryworker
     restart: on-failure
     volumes:
@@ -79,11 +80,9 @@ services:
       - db
 
   flower:
+    container_name: flower
+    image: unstructuredstudio/zubhub-backend:latest
     env_file: .env
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    image: zubhub_celery_flower
     ports:
       - 5555
     command: /start-flower
@@ -96,6 +95,7 @@ services:
       - db
 
   prometheus:
+    container_name: prometheus
     image: prom/prometheus
     ports:
       - 9090

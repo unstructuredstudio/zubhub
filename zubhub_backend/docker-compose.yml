@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   web:
+    container_name: web
     env_file: .env
     build:
       context: .
@@ -26,6 +27,7 @@ services:
       - rabbitmq
 
   db:
+    container_name: db
     env_file: .env
     image: postgres:11
     restart: on-failure
@@ -37,6 +39,7 @@ services:
       - 5432:5432
 
   rabbitmq:
+    container_name: rabbitmq
     env_file: .env
     image: rabbitmq:3-management
     restart: on-failure
@@ -45,11 +48,11 @@ services:
       - 15672:15672
 
   celery_worker:
+    container_name: celery_worker
     env_file: .env
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: zubhub_celery_worker
     command: /start-celeryworker
     restart: on-failure
     volumes:
@@ -59,11 +62,11 @@ services:
       - db
 
   flower:
+    container_name: flower
     env_file: .env
     build:
       context: .
       dockerfile: ./Dockerfile
-    image: zubhub_celery_flower
     ports:
       - 5555:5555
     command: /start-flower
@@ -76,6 +79,7 @@ services:
       - db
 
   prometheus:
+    container_name: prometheus
     image: prom/prometheus
     ports:
       - 9090:9090
