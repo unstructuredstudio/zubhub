@@ -96,6 +96,9 @@ class Comment(models.Model):
     text = models.CharField(max_length=10000)
     created_on = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return self.text
+
     def save(self, *args, **kwargs):
         self.project.save()
         super().save(*args, **kwargs)

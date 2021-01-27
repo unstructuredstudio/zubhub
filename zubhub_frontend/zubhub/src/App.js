@@ -139,6 +139,15 @@ function App(props) {
           )}
         />
         <Route
+          path="/projects/:id/edit"
+          render={routeProps => (
+            <PageWrapper {...routeProps}>
+              <CreateProject {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/projects/:id"
           render={routeProps => (
             <PageWrapper {...routeProps}>
