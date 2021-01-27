@@ -1,199 +1,199 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import Box from "@material-ui/core/Box";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import Fab from "@material-ui/core/Fab";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import ClapIcon, { ClapBorderIcon } from "../../../../assets/js/icons/ClapIcon";
-import CommentIcon from "../../../../assets/js/icons/CommentIcon";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import nFormatter from "../../../../assets/js/nFormatter";
-import dFormatter from "../../../../assets/js/dFormatter";
-import Typography from "@material-ui/core/Typography";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import Fab from '@material-ui/core/Fab';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
+import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import ClapIcon, { ClapBorderIcon } from '../../../../assets/js/icons/ClapIcon';
+import CommentIcon from '../../../../assets/js/icons/CommentIcon';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import nFormatter from '../../../../assets/js/nFormatter';
+import dFormatter from '../../../../assets/js/dFormatter';
+import Typography from '@material-ui/core/Typography';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     maxWidth: 345,
-    height: "100%",
+    height: '100%',
     paddingTop: 0,
-    paddingBottom: "0!important",
-    marginTop: "1em",
-    marginBottom: "1em",
-    marginLeft: "1em",
-    marginRight: "1em",
-    borderRadius: "15px",
-    textAlign: "left",
-    backgroundColor: "#ffffff",
-    flex: "1 0 auto",
-    display: "flex",
-    flexDirection: "column",
-    background: "rgba(255,204,0,1)",
+    paddingBottom: '0!important',
+    marginTop: '1em',
+    marginBottom: '1em',
+    marginLeft: '1em',
+    marginRight: '1em',
+    borderRadius: '15px',
+    textAlign: 'left',
+    backgroundColor: '#ffffff',
+    flex: '1 0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    background: 'rgba(255,204,0,1)',
     background:
-      "-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))",
+      '-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
     background:
-      "-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
-    alignItems: "center",
-    flexDirection: "column",
-    justifyContent: "center",
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   mediaBoxStyle: {
-    width: "100%",
-    height: "13em",
-    position: "relative",
+    width: '100%',
+    height: '13em',
+    position: 'relative',
   },
   mediaStyle: {
-    width: "100%",
-    height: "100%",
-    borderStyle: "none",
+    width: '100%',
+    height: '100%',
+    borderStyle: 'none',
   },
   mediaImageStyle: {
-    objectFit: "cover",
-    width: "100%",
-    height: "13em",
-    position: "absolute",
+    objectFit: 'cover',
+    width: '100%',
+    height: '13em',
+    position: 'absolute',
   },
   actionAreaStyle: {
     flexGrow: 100,
   },
   contentStyle: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
   fabButtonStyle: {
-    color: "#ffcc00",
-    backgroundColor: "#dc3545",
-    position: "absolute",
-    marginLeft: "1em",
-    right: "1em",
-    top: "-1.8em",
-    "&:hover": {
-      backgroundColor: "#b52836",
-      backgroundSize: "100%",
+    color: '#ffcc00',
+    backgroundColor: '#dc3545',
+    position: 'absolute',
+    marginLeft: '1em',
+    right: '1em',
+    top: '-1.8em',
+    '&:hover': {
+      backgroundColor: '#b52836',
+      backgroundSize: '100%',
     },
-    "& svg": {
-      fill: "#ffcc00",
+    '& svg': {
+      fill: '#ffcc00',
     },
-    "& svg:hover": {
-      fill: "#ffcc00",
+    '& svg:hover': {
+      fill: '#ffcc00',
     },
   },
   likeButtonStyle: {
-    right: "4.5em",
-    top: "-1.6em",
+    right: '4.5em',
+    top: '-1.6em',
   },
   titleStyle: {
     fontWeight: 900,
-    fontSize: "1.3rem",
+    fontSize: '1.3rem',
   },
   descriptionStyle: {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     flexGrow: 1,
   },
   creatorBoxStyle: {
-    marginTop: "0.5em",
-    marginBottom: "0.5em",
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    marginTop: '0.5em',
+    marginBottom: '0.5em',
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   creatorAvatarStyle: {
-    marginRight: "0.5em",
+    marginRight: '0.5em',
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
   },
   captionStyle: {
-    display: "flex",
-    justifyContent: "space-between",
+    display: 'flex',
+    justifyContent: 'space-between',
   },
   captionIconStyle: {
-    display: "flex",
-    alignItems: "center",
-    marginRight: "1em",
-    "& svg": {
-      fill: "rgba(0,0,0,0.54)",
-      marginRight: "0.5em",
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: '1em',
+    '& svg': {
+      fill: 'rgba(0,0,0,0.54)',
+      marginRight: '0.5em',
     },
   },
   VisibilityIconStyle: {
-    "& svg": {
-      fontSize: "1.1rem",
+    '& svg': {
+      fontSize: '1.1rem',
     },
   },
   moreInfoBoxStyle: {
-    height: "3em",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    height: '3em',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   moreInfoStyle: {
-    marginLeft: "0.5em",
-    marginRight: "0.5em",
-    fontWeight: "bold",
-    fontSize: "0.9rem",
-    color: "#00B8C4",
+    marginLeft: '0.5em',
+    marginRight: '0.5em',
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    color: '#00B8C4',
   },
   primaryButton: {
-    backgroundColor: "#00B8C4",
+    backgroundColor: '#00B8C4',
     borderRadius: 15,
-    color: "white",
-    marginLeft: "1em",
-    "&:hover": {
-      backgroundColor: "#03848C",
+    color: 'white',
+    marginLeft: '1em',
+    '&:hover': {
+      backgroundColor: '#03848C',
     },
   },
   secondaryButton: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 15,
-    borderColor: "#00B8C4",
-    color: "#00B8C4",
-    marginLeft: "1em",
-    "&:hover": {
-      color: "#03848C",
-      borderColor: "#03848C",
-      backgroundColor: "#F2F2F2",
+    borderColor: '#00B8C4',
+    color: '#00B8C4',
+    marginLeft: '1em',
+    '&:hover': {
+      color: '#03848C',
+      borderColor: '#03848C',
+      backgroundColor: '#F2F2F2',
     },
   },
   secondaryLink: {
-    color: "#00B8C4",
-    "&:hover": {
-      color: "#03848C",
+    color: '#00B8C4',
+    '&:hover': {
+      color: '#03848C',
     },
   },
   center: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textDecorationNone: {
-    textDecoration: "none",
+    textDecoration: 'none',
   },
-  floatRight: { float: "right" },
-  displayNone: { display: "none" },
-  positionRelative: { position: "relative" },
+  floatRight: { float: 'right' },
+  displayNone: { display: 'none' },
+  positionRelative: { position: 'relative' },
   largeLabel: {
-    fontSize: "1.3rem",
+    fontSize: '1.3rem',
   },
 });
 
@@ -201,7 +201,7 @@ class Project extends Component {
   toggle_like = (e, id) => {
     e.preventDefault();
     if (!this.props.auth.token) {
-      this.props.history.push("/login");
+      this.props.history.push('/login');
     } else {
       let toggle_like_promise = this.props.api.toggle_like({
         id,
@@ -214,7 +214,7 @@ class Project extends Component {
   toggle_save = (e, id) => {
     e.preventDefault();
     if (!this.props.auth.token) {
-      this.props.history.push("/login");
+      this.props.history.push('/login');
     } else {
       let toggle_save_promise = this.props.api.toggle_save({
         id,
@@ -266,7 +266,7 @@ class Project extends Component {
               <Fab
                 className={clsx(
                   classes.fabButtonStyle,
-                  classes.likeButtonStyle
+                  classes.likeButtonStyle,
                 )}
                 size="small"
                 aria-label="like button"
@@ -319,7 +319,7 @@ class Project extends Component {
                   <Typography
                     className={clsx(
                       classes.captionIconStyle,
-                      classes.VisibilityIconStyle
+                      classes.VisibilityIconStyle,
                     )}
                     color="textSecondary"
                     variant="caption"
@@ -342,8 +342,8 @@ class Project extends Component {
                   component="span"
                 >
                   {`${dFormatter(project.created_on).value} ${t(
-                    `project.${dFormatter(project.created_on).key}`
-                  )} ${t("project.ago")}`}
+                    `project.${dFormatter(project.created_on).key}`,
+                  )} ${t('project.ago')}`}
                 </Typography>
               </Box>
             </CardContent>

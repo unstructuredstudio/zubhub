@@ -1,9 +1,9 @@
-export default function dFormatter(str) {
-    let date = new Date(str);
+const dFormatter = str => {
+  const date = new Date(str);
 
-    var seconds = Math.floor((new Date() - date) / 1000);
+    const seconds = Math.floor((new Date() - date) / 1000);
   
-    var interval = seconds / 31536000;
+    let interval = seconds / 31536000;
   
     if (interval > 1) {
       let result = Math.round(interval);
@@ -32,3 +32,5 @@ export default function dFormatter(str) {
     let result = Math.round(interval);
     return {value:result, key:(result > 1 ? "seconds" : "second")};
   }
+
+  export default dFormatter;

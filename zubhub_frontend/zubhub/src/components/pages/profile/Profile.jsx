@@ -1,208 +1,208 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ErrorPage from "../infos/ErrorPage";
-import LoadingPage from "../infos/LoadingPage";
-import { Link } from "react-router-dom";
-import Project from "../projects/projects_components/Project";
-import * as AuthActions from "../../../store/actions/authActions";
-import "react-toastify/dist/ReactToastify.css";
-import "react-toastify/dist/ReactToastify.css";
-import clsx from "clsx";
-import PropTypes from "prop-types";
-import { withStyles, fade } from "@material-ui/core/styles";
-import ShareIcon from "@material-ui/icons/Share";
-import Tooltip from "@material-ui/core/Tooltip";
-import Badge from "@material-ui/core/Badge";
-import Avatar from "@material-ui/core/Avatar";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import Paper from "@material-ui/core/Paper";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import Fab from "@material-ui/core/Fab";
-import Typography from "@material-ui/core/Typography";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import { Divider } from "@material-ui/core";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ErrorPage from '../infos/ErrorPage';
+import LoadingPage from '../infos/LoadingPage';
+import { Link } from 'react-router-dom';
+import Project from '../projects/projects_components/Project';
+import * as AuthActions from '../../../store/actions/authActions';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { withStyles, fade } from '@material-ui/core/styles';
+import ShareIcon from '@material-ui/icons/Share';
+import Tooltip from '@material-ui/core/Tooltip';
+import Badge from '@material-ui/core/Badge';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import Paper from '@material-ui/core/Paper';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import Typography from '@material-ui/core/Typography';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import { Divider } from '@material-ui/core';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
-    flex: "1 0 auto",
+    flex: '1 0 auto',
   },
   profileHeaderStyle: {
-    paddingTop: "1.5em",
-    background: "rgba(255,204,0,1)",
+    paddingTop: '1.5em',
+    background: 'rgba(255,204,0,1)',
     background:
-      "-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))",
+      '-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
     background:
-      "-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      '-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      "linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)",
+      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
   },
   avatarBoxStyle: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
   },
   profileShareButtonStyle: {
-    borderRadius: "50% !important",
+    borderRadius: '50% !important',
   },
   avatarStyle: {
-    width: "100%",
-    height: "100%",
-    paddingTop: "1.5em",
-    paddingBottom: "1.5em",
-    "& img": {
-      width: "10em",
-      backgroundColor: "white",
-      height: "10em",
-      borderRadius: "50%",
+    width: '100%',
+    height: '100%',
+    paddingTop: '1.5em',
+    paddingBottom: '1.5em',
+    '& img': {
+      width: '10em',
+      backgroundColor: 'white',
+      height: '10em',
+      borderRadius: '50%',
       boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     },
   },
   ProfileDetailStyle: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   userNameStyle: {
     fontWeight: 900,
-    fontSize: "2rem",
+    fontSize: '2rem',
   },
-  emailStyle: { marginBottom: "0.5em" },
+  emailStyle: { marginBottom: '0.5em' },
   dividerStyle: {
-    width: "100vw",
+    width: '100vw',
   },
   moreInfoBoxStyle: {
-    height: "3em",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    height: '3em',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   moreInfoStyle: {
-    marginLeft: "0.5em",
-    marginRight: "0.5em",
-    fontWeight: "bold",
-    fontSize: "0.9rem",
-    color: "#00B8C4",
+    marginLeft: '0.5em',
+    marginRight: '0.5em',
+    fontWeight: 'bold',
+    fontSize: '0.9rem',
+    color: '#00B8C4',
   },
   profileLowerStyle: {
-    margin: "1em",
-    padding: "1em",
-    paddingBottom: "4em",
+    margin: '1em',
+    padding: '1em',
+    paddingBottom: '4em',
   },
   titleStyle: {
     fontWeight: 900,
-    fontSize: "1.5rem",
+    fontSize: '1.5rem',
   },
   aboutMeBoxStyle: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "7em",
-    borderRadius: "15px",
-    backgroundColor: "#E4E4E4",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '7em',
+    borderRadius: '15px',
+    backgroundColor: '#E4E4E4',
   },
   cardStyle: {
     border: 0,
     borderRadius: 15,
-    boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .12)",
-    color: "white",
-    padding: "0 30px",
+    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .12)',
+    color: 'white',
+    padding: '0 30px',
   },
   customLabelStyle: {
-    "&.MuiFormLabel-root.Mui-focused": {
-      color: "#00B8C4",
+    '&.MuiFormLabel-root.Mui-focused': {
+      color: '#00B8C4',
     },
   },
 
   projectGridStyle: {
-    marginBottom: "2em",
+    marginBottom: '2em',
   },
   customInputStyle: {
     borderRadius: 15,
-    "&.MuiOutlinedInput-notchedOutline": {
-      border: "1px solid #00B8C4",
-      boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+    '&.MuiOutlinedInput-notchedOutline': {
+      border: '1px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
     },
-    "&.MuiOutlinedInput-root": {
-      "&:hover fieldset": {
-        border: "1px solid #00B8C4",
-        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+    '&.MuiOutlinedInput-root': {
+      '&:hover fieldset': {
+        border: '1px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
       },
-      "&.Mui-focused fieldset": {
-        border: "1px solid #00B8C4",
-        boxShadow: `${fade("#00B8C4", 0.25)} 0 0 0 0.2rem`,
+      '&.Mui-focused fieldset': {
+        border: '1px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
       },
     },
   },
   primaryButton: {
-    backgroundColor: "#00B8C4",
+    backgroundColor: '#00B8C4',
     borderRadius: 15,
-    color: "white",
-    marginLeft: "1em",
-    "&:hover": {
-      backgroundColor: "#03848C",
+    color: 'white',
+    marginLeft: '1em',
+    '&:hover': {
+      backgroundColor: '#03848C',
     },
   },
   secondaryButton: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 15,
-    borderColor: "#00B8C4",
-    color: "#00B8C4",
-    marginLeft: "1em",
-    "&:hover": {
-      color: "#03848C",
-      borderColor: "#03848C",
-      backgroundColor: "#F2F2F2",
+    borderColor: '#00B8C4',
+    color: '#00B8C4',
+    marginLeft: '1em',
+    '&:hover': {
+      color: '#03848C',
+      borderColor: '#03848C',
+      backgroundColor: '#F2F2F2',
     },
   },
   secondaryLink: {
-    color: "#00B8C4",
-    "&:hover": {
-      color: "#03848C",
+    color: '#00B8C4',
+    '&:hover': {
+      color: '#03848C',
     },
   },
   center: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textDecorationNone: {
-    textDecoration: "none",
+    textDecoration: 'none',
   },
-  floatRight: { float: "right" },
-  displayNone: { display: "none" },
+  floatRight: { float: 'right' },
+  displayNone: { display: 'none' },
   largeLabel: {
-    fontSize: "1.3rem",
+    fontSize: '1.3rem',
   },
   errorBox: {
-    width: "100%",
-    padding: "1em",
+    width: '100%',
+    padding: '1em',
     borderRadius: 6,
-    borderWidth: "1px",
-    borderColor: "#a94442",
-    backgroundColor: "#ffcdd2",
+    borderWidth: '1px',
+    borderColor: '#a94442',
+    backgroundColor: '#ffcdd2',
   },
   error: {
-    color: "#a94442",
+    color: '#a94442',
   },
 });
 
@@ -227,13 +227,13 @@ class Profile extends Component {
     if (!username) {
       username = this.props.auth.username;
     } else if (this.props.auth.username === username)
-      this.props.history.push("/profile");
+      this.props.history.push('/profile');
     this.props.api
       .get_user_profile({ username, token: this.props.auth.token })
-      .then((res) => {
+      .then(res => {
         if (!res.username) {
           throw new Error(
-            this.props.t("profile.others.errors.profileFetchError")
+            this.props.t('profile.others.errors.profileFetchError'),
           );
         }
         this.setState({ profile: res });
@@ -242,42 +242,42 @@ class Profile extends Component {
           limit: 4,
         });
       })
-      .then((res) => {
+      .then(res => {
         if (Array.isArray(res.results)) {
           return this.setState({ projects: res.results, loading: false });
         } else {
           res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
+            .map(key => res[key])
+            .join('\n');
           throw new Error(res);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         toast.warning(error.message);
         this.setState({ loading: false });
       });
   };
 
-  toggle_follow = (id) => {
+  toggle_follow = id => {
     if (!this.props.auth.token) {
-      this.props.history.push("/login");
+      this.props.history.push('/login');
     } else {
       this.props.api
         .toggle_follow({ id, token: this.props.auth.token })
-        .then((res) => {
+        .then(res => {
           if (res.id) {
             return this.setState({ profile: res });
           } else {
             res = Object.keys(res)
-              .map((key) => res[key])
-              .join("\n");
+              .map(key => res[key])
+              .join('\n');
             throw new Error(res);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.setState({ loading: false });
-          if (error.message.startsWith("Unexpected")) {
-            toast.warning(this.props.t("profile.others.errors.unexpected"));
+          if (error.message.startsWith('Unexpected')) {
+            toast.warning(this.props.t('profile.others.errors.unexpected'));
           } else {
             toast.warning(error.message);
           }
@@ -291,31 +291,31 @@ class Profile extends Component {
     this.setState({ openEditProfileModal });
   };
 
-  copyProfileUrl = (e) => {
-    let tempInput = document.createElement("textarea");
+  copyProfileUrl = e => {
+    let tempInput = document.createElement('textarea');
     tempInput.value = `${document.location.origin}/creators/${this.state.profile.username}`;
-    tempInput.style.top = "0";
-    tempInput.style.top = "0";
-    tempInput.style.position = "fixed";
-    let rootElem = document.querySelector("#root");
+    tempInput.style.top = '0';
+    tempInput.style.top = '0';
+    tempInput.style.position = 'fixed';
+    let rootElem = document.querySelector('#root');
     rootElem.appendChild(tempInput);
     tempInput.focus();
     tempInput.select();
-    if (document.execCommand("copy")) {
-      toast.success(this.props.t("profile.others.toastSuccess"));
+    if (document.execCommand('copy')) {
+      toast.success(this.props.t('profile.others.toastSuccess'));
       rootElem.removeChild(tempInput);
     }
   };
 
-  updateProfile = (e) => {
+  updateProfile = e => {
     e.preventDefault();
-    let username = document.querySelector("#new_username");
+    let username = document.querySelector('#new_username');
     this.props.api
       .edit_user_profile({
         token: this.props.auth.token,
         username: username.value,
       })
-      .then((res) => {
+      .then(res => {
         if (res.username) {
           this.setState({ profile: res });
           this.props.set_auth_user({
@@ -323,35 +323,35 @@ class Profile extends Component {
             username: res.username,
           });
           this.handleToggleEditProfileModal();
-          username.value = "";
+          username.value = '';
         } else {
           throw new Error(
-            this.props.t("profile.others.errors.profileUpdateError")
+            this.props.t('profile.others.errors.profileUpdateError'),
           );
         }
       })
-      .catch((error) => toast.warning(error.message));
+      .catch(error => toast.warning(error.message));
   };
 
-  setProfile = (value) => {};
+  setProfile = value => {};
 
-  updateProjects = (res) => {
+  updateProjects = res => {
     res
-      .then((res) => {
+      .then(res => {
         if (res.id) {
           let { projects } = this.state;
-          projects = projects.map((project) =>
-            project.id === res.id ? res : project
+          projects = projects.map(project =>
+            project.id === res.id ? res : project,
           );
           return this.setState({ projects });
         } else {
           res = Object.keys(res)
-            .map((key) => res[key])
-            .join("\n");
+            .map(key => res[key])
+            .join('\n');
           throw new Error(res);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ loading: false });
         toast.warning(error.message);
       });
@@ -377,13 +377,13 @@ class Profile extends Component {
                     margin="normal"
                     onClick={this.handleToggleEditProfileModal}
                   >
-                    {t("profile.edit.label")}
+                    {t('profile.edit.label')}
                   </Button>
                 ) : (
                   <Button
                     className={clsx(
                       classes.secondaryButton,
-                      classes.floatRight
+                      classes.floatRight,
                     )}
                     variant="outlined"
                     size="medium"
@@ -391,30 +391,30 @@ class Profile extends Component {
                     onClick={(e, id = profile.id) => this.toggle_follow(id)}
                   >
                     {profile.followers.includes(this.props.auth.id)
-                      ? t("profile.unfollow")
-                      : t("profile.follow")}
+                      ? t('profile.unfollow')
+                      : t('profile.follow')}
                   </Button>
                 )}
                 <Box className={classes.avatarBoxStyle}>
                   <Badge
                     overlap="circle"
                     anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
+                      vertical: 'top',
+                      horizontal: 'right',
                     }}
                     badgeContent={
                       this.props.auth.id === profile.id ? (
                         <Tooltip
-                          title={t("profile.tooltips.shareProfile")}
+                          title={t('profile.tooltips.shareProfile')}
                           placement="right-start"
                           arrow
                         >
                           <Fab
                             className={clsx(
                               classes.secondaryButton,
-                              classes.profileShareButtonStyle
+                              classes.profileShareButtonStyle,
                             )}
-                            aria-label={t("profile.ariaLabels.shareProfile")}
+                            aria-label={t('profile.ariaLabels.shareProfile')}
                             onClick={this.copyProfileUrl}
                           >
                             <ShareIcon />
@@ -453,7 +453,7 @@ class Profile extends Component {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.projects_count} {t("profile.projectsCount")}
+                        {profile.projects_count} {t('profile.projectsCount')}
                       </Typography>
                     </Link>
                     <Link
@@ -464,7 +464,7 @@ class Profile extends Component {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.followers.length} {t("profile.followersCount")}
+                        {profile.followers.length} {t('profile.followersCount')}
                       </Typography>
                     </Link>
                   </Box>
@@ -481,10 +481,10 @@ class Profile extends Component {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t("profile.about.label")}
+                  {t('profile.about.label')}
                 </Typography>
                 <Box className={classes.aboutMeBoxStyle}>
-                  {profile.bio ? profile.bio : t("profile.about.placeholder")}
+                  {profile.bio ? profile.bio : t('profile.about.placeholder')}
                 </Box>
               </Paper>
 
@@ -497,20 +497,20 @@ class Profile extends Component {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    {t("profile.projects.label")} {profile.username}
+                    {t('profile.projects.label')} {profile.username}
                     <Link
                       className={clsx(
                         classes.secondaryLink,
                         classes.floatRight,
-                        classes.textDecorationNone
+                        classes.textDecorationNone,
                       )}
                       to={`/creators/${profile.username}/projects`}
                     >
-                      {t("profile.projects.viewAll")}
+                      {t('profile.projects.viewAll')}
                     </Link>
                   </Typography>
                   <Grid container>
-                    {projects.map((project) => (
+                    {projects.map(project => (
                       <Grid
                         item
                         xs={12}
@@ -535,10 +535,10 @@ class Profile extends Component {
           <Dialog
             open={openEditProfileModal}
             onClose={this.handleToggleEditProfileModal}
-            aria-labelledby={t("profile.ariaLabels.editProfile")}
+            aria-labelledby={t('profile.ariaLabels.editProfile')}
           >
             <DialogTitle id="edit-user-profile">
-              {t("profile.edit.dialog.primary")}
+              {t('profile.edit.dialog.primary')}
             </DialogTitle>
             <DialogContent>
               <FormControl
@@ -552,7 +552,7 @@ class Profile extends Component {
                   className={classes.customLabelStyle}
                   htmlFor="username"
                 >
-                  {t("profile.edit.dialog.username")}
+                  {t('profile.edit.dialog.username')}
                 </InputLabel>
                 <OutlinedInput
                   className={classes.customInputStyle}
@@ -570,21 +570,21 @@ class Profile extends Component {
                 onClick={this.handleToggleEditProfileModal}
                 color="primary"
               >
-                {t("profile.edit.dialog.cancel")}
+                {t('profile.edit.dialog.cancel')}
               </Button>
               <Button
                 variant="contained"
                 onClick={this.updateProfile}
                 className={classes.primaryButton}
               >
-                {t("profile.edit.dialog.save")}
+                {t('profile.edit.dialog.save')}
               </Button>
             </DialogActions>
           </Dialog>
         </>
       );
     } else {
-      return <ErrorPage error={t("profile.others.errors.profileFetchError")} />;
+      return <ErrorPage error={t('profile.others.errors.profileFetchError')} />;
     }
   }
 }
@@ -593,15 +593,15 @@ Profile.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: (auth_user) => {
+    set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
   };
@@ -609,5 +609,5 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withStyles(styles)(Profile));

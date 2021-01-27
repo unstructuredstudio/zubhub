@@ -1,118 +1,118 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import { withAPI } from "./api";
+import { withAPI } from './api';
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import * as AuthActions from "../store/actions/authActions";
-import unstructuredLogo from "../assets/images/logos/unstructured-logo.png";
-import logo from "../assets/images/logos/logo.png";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import * as AuthActions from '../store/actions/authActions';
+import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
+import logo from '../assets/images/logos/logo.png';
 
-import languageMap from "../assets/js/languageMap.json";
+import languageMap from '../assets/js/languageMap.json';
 
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Container from "@material-ui/core/Container";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Box from "@material-ui/core/Box";
-import Fab from "@material-ui/core/Fab";
-import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import Zoom from "@material-ui/core/Zoom";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Select from "@material-ui/core/Select";
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import Box from '@material-ui/core/Box';
+import Fab from '@material-ui/core/Fab';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Zoom from '@material-ui/core/Zoom';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
 
-const styles = (theme) => ({
+const styles = theme => ({
   navBarStyle: {
-    backgroundColor: "#DC3545",
+    backgroundColor: '#DC3545',
   },
   mainContainerStyle: {
-    maxWidth: "2000px",
+    maxWidth: '2000px',
   },
   logoStyle: {
     flexGrow: 1,
-    "& img": {
-      height: "2em",
+    '& img': {
+      height: '2em',
     },
-    [theme.breakpoints.down("402")]: {
-      "& img": {
-        height: "1em",
+    [theme.breakpoints.down('402')]: {
+      '& img': {
+        height: '1em',
       },
     },
   },
   footerLogoStyle: {
-    height: "5em",
-    [theme.breakpoints.down("376")]: {
-      height: "3em",
+    height: '5em',
+    [theme.breakpoints.down('376')]: {
+      height: '3em',
     },
-    [theme.breakpoints.down("230")]: {
-      height: "2em",
+    [theme.breakpoints.down('230')]: {
+      height: '2em',
     },
   },
   navActionStyle: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
   avatarStyle: {
-    cursor: "pointer",
-    backgroundColor: "white",
-    marginLeft: "1em",
+    cursor: 'pointer',
+    backgroundColor: 'white',
+    marginLeft: '1em',
   },
   profileMenuStyle: {
     paddingTop: 0,
     paddingBottom: 0,
   },
-  profileStyle: { backgroundColor: "#F5F5F5" },
+  profileStyle: { backgroundColor: '#F5F5F5' },
   logOutStyle: {
-    borderTop: "1px solid #C4C4C4",
+    borderTop: '1px solid #C4C4C4',
   },
   languageSelectStyle: {
-    maxWidth: "5em",
-    display: "block",
+    maxWidth: '5em',
+    display: 'block',
   },
   scrollTopButtonStyle: {
     zIndex: 100,
-    position: "fixed",
+    position: 'fixed',
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
   primaryButtonStyle: {
-    marginLeft: "1em",
-    backgroundColor: "#00B8C4",
+    marginLeft: '1em',
+    backgroundColor: '#00B8C4',
     borderRadius: 15,
-    color: "white",
-    "&:hover": {
-      backgroundColor: "#03848C",
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#03848C',
     },
   },
   secondaryButtonStyle: {
     borderRadius: 15,
-    backgroundColor: "white",
-    color: "#00B8C4",
-    "&:hover": {
-      color: "#03848C",
-      backgroundColor: "rgba(255,255,255,0.8)",
+    backgroundColor: 'white',
+    color: '#00B8C4',
+    '&:hover': {
+      color: '#03848C',
+      backgroundColor: 'rgba(255,255,255,0.8)',
     },
   },
   center: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textDecorationNone: {
-    textDecoration: "none",
+    textDecoration: 'none',
   },
-  displayNone: { display: "none" },
+  displayNone: { display: 'none' },
   largeLabel: {
-    fontSize: "1.3rem",
+    fontSize: '1.3rem',
   },
 });
 
@@ -129,10 +129,10 @@ class PageWrapper extends Component {
     if (this.props.auth.token) {
       this.props.api
         .get_auth_user(this.props.auth.token)
-        .then((res) => {
+        .then(res => {
           if (!res.username) {
             throw new Error(
-              "an error occured while getting user profile, please try again later"
+              'an error occured while getting user profile, please try again later',
             );
           }
           this.props.set_auth_user({
@@ -141,42 +141,42 @@ class PageWrapper extends Component {
             id: res.id,
           });
         })
-        .catch((error) => toast.warning(error.message));
+        .catch(error => toast.warning(error.message));
     }
   }
 
-  handleChangeLanguage = (e) => {
+  handleChangeLanguage = e => {
     this.props.i18n.changeLanguage(e.target.value);
   };
 
-  logout = (e) => {
+  logout = e => {
     e.preventDefault();
     this.props.api
       .logout(this.props.auth.token)
-      .then((res) => {
+      .then(res => {
         this.props.set_auth_user({ token: null, username: null, id: null });
       })
-      .then((res) => {
-        this.props.history.push("/");
+      .then(res => {
+        this.props.history.push('/');
       })
-      .catch((error) => {
+      .catch(error => {
         toast.warning(
-          "An error occured while signing you out. please try again"
+          'An error occured while signing you out. please try again',
         );
       });
   };
 
-  handleScrollTopClick = (e) => {
+  handleScrollTopClick = e => {
     const anchor = (e.target.ownerDocument || document).querySelector(
-      "#back-to-top-anchor"
+      '#back-to-top-anchor',
     );
 
     if (anchor) {
-      anchor.scrollIntoView({ behavior: "smooth", block: "center" });
+      anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
-  scrollTop = (props) => {
+  scrollTop = props => {
     const { classes } = props;
 
     return (
@@ -194,7 +194,7 @@ class PageWrapper extends Component {
     );
   };
 
-  handleProfileMenuOpen = (e) => {
+  handleProfileMenuOpen = e => {
     this.setState({ anchorEl: e.currentTarget });
   };
 
@@ -227,7 +227,7 @@ class PageWrapper extends Component {
                         size="large"
                         className={classes.secondaryButtonStyle}
                       >
-                        {t("pageWrapper.navbar.login")}
+                        {t('pageWrapper.navbar.login')}
                       </Button>
                     </Link>
                     <Link className={classes.textDecorationNone} to="/signup">
@@ -236,7 +236,7 @@ class PageWrapper extends Component {
                         size="large"
                         className={classes.primaryButtonStyle}
                       >
-                        {t("pageWrapper.navbar.signup")}
+                        {t('pageWrapper.navbar.signup')}
                       </Button>
                     </Link>
                   </>
@@ -251,7 +251,7 @@ class PageWrapper extends Component {
                         className={classes.primaryButtonStyle}
                         size="small"
                       >
-                        {t("pageWrapper.navbar.createProject")}
+                        {t('pageWrapper.navbar.createProject')}
                       </Button>
                     </Link>
                     <Avatar
@@ -268,13 +268,13 @@ class PageWrapper extends Component {
                       id="profile_menu"
                       anchorEl={anchorEl}
                       anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
+                        vertical: 'top',
+                        horizontal: 'right',
                       }}
                       keepMounted
                       transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
+                        vertical: 'top',
+                        horizontal: 'right',
                       }}
                       open={profileMenuOpen}
                       onClose={this.handleProfileMenuClose}
@@ -303,7 +303,7 @@ class PageWrapper extends Component {
                             color="textPrimary"
                             component="span"
                           >
-                            {t("pageWrapper.navbar.savedProjects")}
+                            {t('pageWrapper.navbar.savedProjects')}
                           </Typography>
                         </Link>
                       </MenuItem>
@@ -317,7 +317,7 @@ class PageWrapper extends Component {
                             color="textPrimary"
                             component="span"
                           >
-                            {t("pageWrapper.navbar.logout")}
+                            {t('pageWrapper.navbar.logout')}
                           </Typography>
                         </Typography>
                       </MenuItem>
@@ -366,15 +366,15 @@ PageWrapper.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: (auth_user) => {
+    set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
   };
@@ -382,5 +382,5 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(withStyles(styles)(PageWrapper));
