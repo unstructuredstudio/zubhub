@@ -2,9 +2,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from creators.permissions import IsOwner
+from projects.permissions import IsOwner
 from .models import Project
 from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
 from .pagination import ProjectNumberPagination
@@ -17,6 +17,26 @@ class ProjectCreateAPIView(CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
+
+
+class ProjectUpdateAPIView(UpdateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def perform_update(self, serializer):
+        serializer.save(creator=self.request.user)
+
+
+class ProjectDeleteAPIView(DestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def delete(self, request, *args, **kwargs):
+        result = self.destroy(request, *args, **kwargs)
+        request.user.save()
+        return result
 
 
 class ProjectListAPIView(ListAPIView):
@@ -62,7 +82,7 @@ class SavedProjectsAPIView(ListAPIView):
 
 class ToggleLikeAPIView(RetrieveAPIView):
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Project.objects.filter(published=True)
@@ -83,7 +103,7 @@ class ToggleLikeAPIView(RetrieveAPIView):
 
 class ToggleSaveAPIView(RetrieveAPIView):
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Project.objects.filter(published=True)

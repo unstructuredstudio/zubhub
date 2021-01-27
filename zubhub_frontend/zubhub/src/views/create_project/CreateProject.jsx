@@ -31,6 +31,7 @@ import {
 } from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
+import LoadingPage from '../loading/LoadingPage';
 import ErrorPage from '../error/ErrorPage';
 import DO, { doConfig } from '../../assets/js/DO';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -43,6 +44,53 @@ const useStyles = makeStyles(styles);
 
 let image_field_touched = false;
 let video_field_touched = false;
+
+const getProject = (refs, props, state) => {
+  return props
+    .get_project({
+      id: props.match.params.id,
+      token: props.auth.token,
+    })
+    .then(obj => {
+      if (!obj.project) {
+        return obj;
+      } else {
+        const { image_upload } = state;
+
+        props.setFieldValue('title', obj.project.title);
+        if (refs.titleEl.current)
+          refs.titleEl.current.firstChild.value = obj.project.title;
+
+        props.setFieldValue('description', obj.project.description);
+        if (refs.descEl.current)
+          refs.descEl.current.firstChild.value = obj.project.description;
+
+        if (obj.project.video) {
+          props.setFieldValue('video', obj.project.video);
+          if (refs.videoEl.current)
+            refs.videoEl.current.firstChild.value = obj.project.video;
+        }
+
+        if (refs.imageCountEl.current) {
+          refs.imageCountEl.current.innerText = obj.project.images.length;
+          refs.imageCountEl.current.style.fontSize = '0.8rem';
+        }
+
+        if (refs.materialsUsedEl.current) {
+          props.setFieldValue('materials_used', obj.project.materials_used);
+          refs.materialsUsedEl.current.value = obj.project.materials_used;
+        }
+
+        image_upload.uploaded_images_url = obj.project.images;
+
+        return {
+          loading: false,
+          materials_used: obj.project.materials_used.split(','),
+          image_upload,
+        };
+      }
+    });
+};
 
 const handleImageFieldChange = (refs, props, state, handleSetState) => {
   refs.imageCountEl.current.innerText = refs.imageEl.current.files.length;
@@ -107,6 +155,8 @@ const addMaterialUsed = (e, props, refs) => {
 
 function CreateProject(props) {
   const refs = {
+    titleEl: React.useRef(null),
+    descEl: React.useRef(null),
     imageEl: React.useRef(null),
     imageUploadButtonEl: React.useRef(null),
     imageCountEl: React.useRef(null),
@@ -117,6 +167,7 @@ function CreateProject(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
+    loading: true,
     error: null,
     materialsUsedModalOpen: false,
     materials_used: [],
@@ -129,6 +180,14 @@ function CreateProject(props) {
       uploaded_images_url: [],
     },
   });
+
+  React.useEffect(() => {
+    if (props.match.params.id) {
+      handleSetState(getProject(refs, props, state));
+    } else {
+      handleSetState({ loading: false });
+    }
+  }, []);
 
   useStateUpdateCallback(() => {
     if (
@@ -228,37 +287,42 @@ function CreateProject(props) {
     const { image_upload } = state;
     image_upload.upload_dialog = false;
     handleSetState({ image_upload });
-    return props
-      .create_project({
-        ...props.values,
-        token: props.auth.token,
-        images: state.image_upload.uploaded_images_url,
-        video: props.values.video ? props.values.video : '',
-      })
-      .catch(error => {
-        const messages = JSON.parse(error.message);
-        if (typeof messages === 'object') {
-          let non_field_errors;
-          Object.keys(messages).forEach(key => {
-            if (key === 'non_field_errors') {
-              non_field_errors = { error: messages[key][0] };
-            } else {
-              props.setFieldTouched(key, true, false);
-              props.setFieldError(key, messages[key][0]);
-            }
-          });
-          if (non_field_errors) return non_field_errors;
-        } else {
-          return {
-            error:
-              'An error occured while performing this action. Please try again later',
-          };
-        }
-      });
+
+    const create_or_update = props.match.params.id
+      ? props.update_project
+      : props.create_project;
+
+    return create_or_update({
+      ...props.values,
+      id: props.match.params.id,
+      token: props.auth.token,
+      images: state.image_upload.uploaded_images_url,
+      video: props.values.video ? props.values.video : '',
+    }).catch(error => {
+      const messages = JSON.parse(error.message);
+      if (typeof messages === 'object') {
+        let non_field_errors;
+        Object.keys(messages).forEach(key => {
+          if (key === 'non_field_errors') {
+            non_field_errors = { error: messages[key][0] };
+          } else {
+            props.setFieldTouched(key, true, false);
+            props.setFieldError(key, messages[key][0]);
+          }
+        });
+        if (non_field_errors) return non_field_errors;
+      } else {
+        return {
+          error:
+            'An error occured while performing this action. Please try again later',
+        };
+      }
+    });
   };
 
   const init_project = e => {
     e.preventDefault();
+
     if (!props.auth.token) {
       props.history.push('/login');
     } else {
@@ -272,7 +336,15 @@ function CreateProject(props) {
       video_field_touched = true;
 
       props.validateForm().then(errors => {
-        if (Object.keys(errors).length > 0) {
+        if (
+          Object.keys(errors).length > 0 &&
+          !(Object.keys(errors).length === 2) &&
+          !(
+            errors['project_images'] ===
+            'you must provide either image(s) or video url'
+          ) &&
+          state.image_upload.uploaded_images_url.length === 0
+        ) {
           return;
         } else if (refs.imageEl.current.files.length === 0) {
           handleSetState(upload_project());
@@ -303,6 +375,7 @@ function CreateProject(props) {
   };
 
   const { error, image_upload, materials_used } = state;
+  const id = props.match.params.id;
   if (!props.auth.token) {
     return (
       <ErrorPage error="You are not logged in. Click on the signin button to get started" />
@@ -360,11 +433,20 @@ function CreateProject(props) {
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="title"
+                          shrink={id ? true : false}
                         >
                           Title
                         </InputLabel>
                         <OutlinedInput
-                          className={classes.customInputStyle}
+                          ref={refs.titleEl}
+                          className={
+                            id
+                              ? clsx(
+                                  classes.customInputStyle,
+                                  classes.staticLabelInputSmallStyle,
+                                )
+                              : classes.customInputStyle
+                          }
                           id="title"
                           name="title"
                           type="text"
@@ -394,15 +476,25 @@ function CreateProject(props) {
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="description"
+                          shrink={id ? true : false}
                         >
                           Description
                         </InputLabel>
                         <OutlinedInput
-                          className={classes.customInputStyle}
+                          ref={refs.descEl}
+                          className={
+                            id
+                              ? clsx(
+                                  classes.customInputStyle,
+                                  classes.staticLabelInputStyle,
+                                )
+                              : classes.customInputStyle
+                          }
                           id="description"
                           name="description"
                           type="text"
                           multiline
+                          rows={6}
                           rowsMax={6}
                           onChange={props.handleChange}
                           onBlur={props.handleBlur}
@@ -495,12 +587,20 @@ function CreateProject(props) {
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="video"
+                          shrink={id ? true : false}
                         >
                           Video URL
                         </InputLabel>
                         <OutlinedInput
                           ref={refs.videoEl}
-                          className={classes.customInputStyle}
+                          className={
+                            id
+                              ? clsx(
+                                  classes.customInputStyle,
+                                  classes.staticLabelInputStyle,
+                                )
+                              : classes.customInputStyle
+                          }
                           id="video"
                           name="video"
                           type="text"
@@ -680,7 +780,9 @@ function CreateProject(props) {
 
 CreateProject.propTypes = {
   auth: PropTypes.object.isRequired,
+  get_project: PropTypes.func.isRequired,
   create_project: PropTypes.func.isRequired,
+  update_project: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -691,8 +793,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    get_project: values => {
+      return dispatch(ProjectActions.get_project(values));
+    },
     create_project: props => {
       return dispatch(ProjectActions.create_project(props));
+    },
+    update_project: props => {
+      return dispatch(ProjectActions.update_project(props));
     },
   };
 };

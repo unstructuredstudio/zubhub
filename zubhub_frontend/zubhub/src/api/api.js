@@ -236,6 +236,44 @@ class API {
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
+  /************************************************************************/
+
+  /************************** update project **************************/
+  update_project = ({
+    token,
+    id,
+    title,
+    description,
+    video,
+    images,
+    materials_used,
+  }) => {
+    const url = `projects/${id}/update/`;
+    const method = 'PATCH';
+    const body = JSON.stringify({
+      id,
+      title,
+      description,
+      images,
+      video,
+      materials_used,
+    });
+    return this.request({ url, method, token, body }).then(res => res.json());
+  };
+  /************************************************************************/
+
+  /************************** delete project **************************/
+  delete_project = ({ token, id }) => {
+    const url = `projects/${id}/delete/`;
+    const method = 'DELETE';
+    return this.request({ url, method, token }).then(res => ({
+      detail:
+        res.status === 204
+          ? 'ok'
+          : 'An error occured while deleting project. Please try again later',
+    }));
+  };
+  /************************************************************************/
 
   /************************** get projects **************************/
   get_projects = page => {

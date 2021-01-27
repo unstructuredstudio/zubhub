@@ -40,9 +40,6 @@ const toggle_follow = (e, props, state, id) => {
       .toggle_follow({ id, token: props.auth.token })
       .then(res => {
         if (res.profile && res.profile.username) {
-          //   const following = state.following.map(creator =>
-          //     creator.id !== res.profile.id ? creator : res.profile,
-          //   );
           const { following } = state;
           following.forEach((creator, index) => {
             if (creator.id === res.profile.id) {

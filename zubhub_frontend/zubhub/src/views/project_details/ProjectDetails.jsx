@@ -21,6 +21,9 @@ import {
   Container,
   Paper,
   Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@material-ui/core';
 
 import * as UserActions from '../../store/actions/userActions';
@@ -35,6 +38,7 @@ import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles(styles);
 
@@ -74,6 +78,24 @@ const handleOpenEnlargedImageDialog = (e, state) => {
   const image_url = e.currentTarget.getAttribute('src');
   const openEnlargedImageDialog = !state.openEnlargedImageDialog;
   return { enlargedImageUrl: image_url, openEnlargedImageDialog };
+};
+
+const handleToggleDeleteProjectModal = state => {
+  const openDeleteProjectModal = !state.openDeleteProjectModal;
+  return { openDeleteProjectModal };
+};
+
+const deleteProject = (props, state) => {
+  if (props.auth.token && props.auth.id === state.project.creator.id) {
+    return props
+      .delete_project({
+        ...props,
+        id: state.project.id,
+      })
+      .catch(error => ({ dialogError: error.message }));
+  } else {
+    return handleToggleDeleteProjectModal(state);
+  }
 };
 
 const add_comment = (e, props, refs, state) => {
@@ -160,6 +182,8 @@ function ProjectDetails(props) {
     loading: true,
     enlargedImageUrl: '',
     openEnlargedImageDialog: false,
+    openDeleteProjectModal: false,
+    dialogError: null,
   });
 
   React.useEffect(() => {
@@ -200,7 +224,14 @@ function ProjectDetails(props) {
     }
   };
 
-  const { project, loading, enlargedImageUrl, openEnlargedImageDialog } = state;
+  const {
+    project,
+    loading,
+    enlargedImageUrl,
+    openEnlargedImageDialog,
+    openDeleteProjectModal,
+    dialogError,
+  } = state;
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
@@ -231,7 +262,32 @@ function ProjectDetails(props) {
                       {project.creator.username}
                     </Typography>
                   </Link>
-                  {project.creator.id !== props.auth.id ? (
+                  {project.creator.id === props.auth.id ? (
+                    <>
+                      <Link
+                        className={classes.textDecorationNone}
+                        to={`/projects/${project.id}/edit`}
+                      >
+                        <CustomButton
+                          className={commonClasses.marginLeft1em}
+                          variant="contained"
+                          primaryButtonStyle
+                        >
+                          Edit
+                        </CustomButton>
+                      </Link>
+                      <CustomButton
+                        className={commonClasses.marginLeft1em}
+                        variant="contained"
+                        dangerButtonStyle
+                        onClick={() =>
+                          handleSetState(handleToggleDeleteProjectModal(state))
+                        }
+                      >
+                        Delete
+                      </CustomButton>
+                    </>
+                  ) : (
                     <CustomButton
                       className={commonClasses.marginLeft1em}
                       variant="contained"
@@ -246,7 +302,7 @@ function ProjectDetails(props) {
                         ? 'Unfollow'
                         : 'Follow'}
                     </CustomButton>
-                  ) : null}
+                  )}
                 </Grid>
               </Grid>
             </Container>
@@ -494,6 +550,49 @@ function ProjectDetails(props) {
             alt={`${project.title}`}
           />
         </Dialog>
+
+        <Dialog
+          open={openDeleteProjectModal}
+          onClose={() => handleSetState(handleToggleDeleteProjectModal(state))}
+          aria-labelledby="edit user profile"
+        >
+          <DialogTitle id="delete-project">Delete Project</DialogTitle>
+          <Box
+            component="p"
+            className={dialogError !== null && classes.errorBox}
+          >
+            {dialogError !== null && (
+              <Box component="span" className={classes.error}>
+                {dialogError}
+              </Box>
+            )}
+          </Box>{' '}
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete this project? you can't undo this
+              action!!!
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <CustomButton
+              variant="outlined"
+              onClick={() =>
+                handleSetState(handleToggleDeleteProjectModal(state))
+              }
+              color="primary"
+              secondaryButtonStyle
+            >
+              Cancel
+            </CustomButton>
+            <CustomButton
+              variant="contained"
+              onClick={e => handleSetState(deleteProject(props, state))}
+              dangerButtonStyle
+            >
+              Delete
+            </CustomButton>
+          </DialogActions>
+        </Dialog>
       </>
     );
   } else {
@@ -522,6 +621,9 @@ const mapDispatchToProps = dispatch => {
   return {
     get_project: values => {
       return dispatch(ProjectActions.get_project(values));
+    },
+    delete_project: props => {
+      return dispatch(ProjectActions.delete_project(props));
     },
     toggle_follow: values => {
       return dispatch(UserActions.toggle_follow(values));

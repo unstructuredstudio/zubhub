@@ -12,12 +12,39 @@ export const set_projects = projects => {
 };
 
 export const create_project = props => {
-  return dispatch => {
+  return () => {
     return API.create_project(props).then(res => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
         toast.success('Your project was created successfully!!');
+        return props.history.push('/profile');
+      }
+    });
+  };
+};
+
+export const update_project = props => {
+  return () => {
+    return API.update_project(props).then(res => {
+      if (!res.id) {
+        throw new Error(JSON.stringify(res));
+      } else {
+        toast.success('Your project was updated successfully!!');
+        return props.history.push('/profile');
+      }
+    });
+  };
+};
+
+export const delete_project = props => {
+  return () => {
+    const { auth, id } = props;
+    return API.delete_project({ token: auth.token, id }).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
+        toast.success('Your project was deleted successfully!!');
         return props.history.push('/profile');
       }
     });
