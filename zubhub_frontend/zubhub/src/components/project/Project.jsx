@@ -50,6 +50,7 @@ function Project(props) {
       const toggle_save_promise = props.toggle_save({
         id,
         token: props.auth.token,
+        t: props.t,
       });
       props.updateProjects(toggle_save_promise);
     }
@@ -166,8 +167,8 @@ function Project(props) {
                 component="span"
               >
                 {`${dFormatter(project.created_on).value} ${t(
-                  `project.${dFormatter(project.created_on).key}`,
-                )} ${t('project.ago')}`}
+                  `date.${dFormatter(project.created_on).key}`,
+                )} ${t('date.ago')}`}
               </Typography>
             </Box>
           </CardContent>

@@ -43,24 +43,31 @@ const resetPassword = (e, props) => {
   e.preventDefault();
   const { uid, token } = getUidAndToken(props.location.search);
   return props
-    .password_reset_confirm({ ...props.values, uid, token })
+    .password_reset_confirm({
+      ...props.values,
+      uid,
+      token,
+      t: props.t,
+      history: props.history,
+    })
     .catch(error => {
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {
-        let non_field_errors;
+        const server_errors = {};
         Object.keys(messages).forEach(key => {
           if (key !== 'new_password1' && key !== 'new_password2') {
-            non_field_errors = { error: messages[key][0] };
+            server_errors['non_field_errors'] = messages[key][0];
           } else {
-            props.setFieldTouched(key, true, false);
-            props.setFieldError(key, messages[key][0]);
+            server_errors[key] = messages[key][0];
           }
         });
-        return non_field_errors;
+
+        props.setStatus({ ...props.status, ...server_errors });
       } else {
-        return {
-          error: props.t('passwordResetConfirm.others.errors.unexpected'),
-        };
+        props.setStatus({
+          ...props.status,
+          non_field_errors: props.t('passwordResetConfirm.errors.unexpected'),
+        });
       }
     });
 };
@@ -83,7 +90,6 @@ function PasswordResetConfirm(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    error: null,
     showPassword1: false,
     showPassword2: false,
   });
@@ -96,7 +102,7 @@ function PasswordResetConfirm(props) {
     }
   };
 
-  const { error, showPassword1, showPassword2 } = state;
+  const { showPassword1, showPassword2 } = state;
   const { t } = props;
 
   return (
@@ -109,7 +115,7 @@ function PasswordResetConfirm(props) {
                 className="auth-form"
                 name="password_reset_confirm"
                 noValidate="noValidate"
-                onSubmit={e => handleSetState(resetPassword(e, props))}
+                onSubmit={e => resetPassword(e, props)}
               >
                 <Typography
                   gutterBottom
@@ -118,14 +124,21 @@ function PasswordResetConfirm(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('passwordResetConfirm.welcome.primary')}
+                  {t('passwordResetConfirm.welcomeMsg.primary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box component="p" className={error && classes.errorBox}>
-                      {error && (
+                    <Box
+                      component="p"
+                      className={
+                        props.status &&
+                        props.status['non_field_errors'] &&
+                        classes.errorBox
+                      }
+                    >
+                      {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
-                          {error}
+                          {props.status['non_field_errors']}
                         </Box>
                       )}
                     </Box>
@@ -139,8 +152,9 @@ function PasswordResetConfirm(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['new_password1'] &&
-                        props.errors['new_password1']
+                        (props.status && props.status['new_password1']) ||
+                        (props.touched['new_password1'] &&
+                          props.errors['new_password1'])
                       }
                     >
                       <InputLabel
@@ -179,11 +193,12 @@ function PasswordResetConfirm(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched['new_password'] &&
-                          props.errors['new_password'] &&
-                          t(
-                            `passwordResetConfirm.inputs.newPassword1.errors.${props.errors['new_password1']}`,
-                          )}
+                        {(props.status && props.status['new_password1']) ||
+                          (props.touched['new_password1'] &&
+                            props.errors['new_password1'] &&
+                            t(
+                              `passwordResetConfirm.inputs.newPassword1.errors.${props.errors['new_password1']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -196,8 +211,9 @@ function PasswordResetConfirm(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['new_password2'] &&
-                        props.errors['new_password2']
+                        (props.status && props.status['new_password2']) ||
+                        (props.touched['new_password2'] &&
+                          props.errors['new_password2'])
                       }
                     >
                       <InputLabel
@@ -236,11 +252,12 @@ function PasswordResetConfirm(props) {
                         labelWidth={150}
                       />
                       <FormHelperText error>
-                        {props.touched['new_password2'] &&
-                          props.errors['new_password2'] &&
-                          t(
-                            `passwordResetConfirm.inputs.newPassword2.errors.${props.errors['new_password2']}`,
-                          )}
+                        {(props.status && props.status['new_password2']) ||
+                          (props.touched['new_password2'] &&
+                            props.errors['new_password2'] &&
+                            t(
+                              `passwordResetConfirm.inputs.newPassword2.errors.${props.errors['new_password2']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -252,7 +269,7 @@ function PasswordResetConfirm(props) {
                       primaryButtonStyle
                       fullWidth
                     >
-                      {t('passwordResetConfirm.submit')}
+                      {t('passwordResetConfirm.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -278,8 +295,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    password_reset_confirm: props => {
-      return dispatch(AuthActions.password_reset_confirm(props));
+    password_reset_confirm: args => {
+      return dispatch(AuthActions.password_reset_confirm(args));
     },
   };
 };

@@ -30,43 +30,35 @@ const useStyles = makeStyles(styles);
 
 const sendPasswordResetLink = (e, props) => {
   e.preventDefault();
-  return props.send_password_reset_link(props).catch(error => {
-    const messages = JSON.parse(error.message);
-    let non_field_errors;
-    if (typeof messages === 'object') {
-      Object.keys(messages).forEach(key => {
-        if (key !== 'email') {
-          non_field_errors = { error: messages[key][0] };
-        } else {
-          props.setFieldTouched(key, true, false);
-          props.setFieldError(key, messages[key][0]);
-        }
-      });
-      return non_field_errors;
-    } else {
-      return {
-        error: props.t('passwordReset.others.errors.unexpected'),
-      };
-    }
-  });
+  return props
+    .send_password_reset_link({
+      email: props.values.email,
+      t: props.t,
+      history: props.history,
+    })
+    .catch(error => {
+      const messages = JSON.parse(error.message);
+      if (typeof messages === 'object') {
+        const server_errors = {};
+        Object.keys(messages).forEach(key => {
+          if (key !== 'email') {
+            server_errors['non_field_errors'] = messages[key][0];
+          } else {
+            server_errors[key] = messages[key][0];
+          }
+        });
+        props.setStatus({ ...props.status, ...server_errors });
+      } else {
+        props.setStatus({
+          ...props.status,
+          non_field_errors: props.t('passwordResetConfirm.errors.unexpected'),
+        });
+      }
+    });
 };
 
 function PasswordReset(props) {
   const classes = useStyles();
-
-  const [state, setState] = React.useState({
-    error: null,
-  });
-
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
-      });
-    }
-  };
-
-  const { error } = state;
   const { t } = props;
 
   return (
@@ -79,7 +71,7 @@ function PasswordReset(props) {
                 className="auth-form"
                 name="password_reset"
                 noValidate="noValidate"
-                onSubmit={e => handleSetState(sendPasswordResetLink(e, props))}
+                onSubmit={e => sendPasswordResetLink(e, props)}
               >
                 <Typography
                   gutterBottom
@@ -88,17 +80,24 @@ function PasswordReset(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('passwordReset.welcome.primary')}
+                  {t('passwordReset.welcomeMsg.primary')}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  {t('passwordReset.welcome.secondary')}
+                  {t('passwordReset.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box component="p" className={error && classes.errorBox}>
-                      {error && (
+                    <Box
+                      component="p"
+                      className={
+                        props.status &&
+                        props.status['non_field_errors'] &&
+                        classes.errorBox
+                      }
+                    >
+                      {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
-                          {error}
+                          {props.status['non_field_errors']}
                         </Box>
                       )}
                     </Box>
@@ -113,7 +112,10 @@ function PasswordReset(props) {
                         shrink: true,
                       }}
                       margin="normal"
-                      error={props.touched['email'] && props.errors['email']}
+                      error={
+                        (props.status && props.status['email']) ||
+                        (props.touched['email'] && props.errors['email'])
+                      }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
@@ -131,11 +133,12 @@ function PasswordReset(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched['email'] &&
-                          props.errors['email'] &&
-                          t(
-                            `passwordReset.inputs.email.errors.${props.errors['email']}`,
-                          )}
+                        {(props.status && props.status['email']) ||
+                          (props.touched['email'] &&
+                            props.errors['email'] &&
+                            t(
+                              `passwordReset.inputs.email.errors.${props.errors['email']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -147,7 +150,7 @@ function PasswordReset(props) {
                       type="submit"
                       fullWidth
                     >
-                      {t('passwordReset.submit')}
+                      {t('passwordReset.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>

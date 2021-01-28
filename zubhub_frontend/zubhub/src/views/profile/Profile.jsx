@@ -95,12 +95,12 @@ const copyProfileUrl = ({ profile, props }) => {
   tempInput.focus();
   tempInput.select();
   if (document.execCommand('copy')) {
-    toast.success(props.t('profile.others.toastSuccess'));
+    toast.success(props.t('profile.toastSuccess'));
     rootElem.removeChild(tempInput);
   }
 };
 
-const updateProjects = (res, { results: projects }) => {
+const updateProjects = (res, { results: projects }, props) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
@@ -116,7 +116,11 @@ const updateProjects = (res, { results: projects }) => {
       }
     })
     .catch(error => {
-      toast.warning(error.message);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
       return { loading: false };
     });
 };
@@ -338,7 +342,7 @@ function Profile(props) {
                           project={project}
                           key={project.id}
                           updateProjects={res =>
-                            handleSetState(updateProjects(res, state))
+                            handleSetState(updateProjects(res, state, props))
                           }
                           {...props}
                         />
@@ -415,7 +419,7 @@ function Profile(props) {
       </>
     );
   } else {
-    return <ErrorPage error={t('profile.others.errors.profileFetchError')} />;
+    return <ErrorPage error={t('profile.errors.profileFetchError')} />;
   }
 }
 
@@ -440,20 +444,20 @@ const mapDispatchToProps = dispatch => {
     set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    get_user_profile: props => {
-      return dispatch(UserActions.get_user_profile(props));
+    get_user_profile: args => {
+      return dispatch(UserActions.get_user_profile(args));
     },
-    edit_user_profile: props => {
-      return dispatch(UserActions.edit_user_profile(props));
+    edit_user_profile: args => {
+      return dispatch(UserActions.edit_user_profile(args));
     },
-    toggle_follow: props => {
-      return dispatch(UserActions.toggle_follow(props));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    toggle_like: props => {
-      return dispatch(ProjectActions.toggle_like(props));
+    toggle_like: args => {
+      return dispatch(ProjectActions.toggle_like(args));
     },
-    toggle_save: props => {
-      return dispatch(ProjectActions.toggle_save(props));
+    toggle_save: args => {
+      return dispatch(ProjectActions.toggle_save(args));
     },
   };
 };

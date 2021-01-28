@@ -28,7 +28,7 @@ const useStyles = makeStyles(styles);
 
 const fetchPage = (page, props) => {
   const username = props.match.params.username;
-  return props.get_following({ page, username });
+  return props.get_following({ page, username, t: props.t });
 };
 
 const toggle_follow = (e, props, state, id) => {
@@ -37,7 +37,7 @@ const toggle_follow = (e, props, state, id) => {
     props.history.push('/login');
   } else {
     return props
-      .toggle_follow({ id, token: props.auth.token })
+      .toggle_follow({ id, token: props.auth.token, t: props.t })
       .then(res => {
         if (res.profile && res.profile.username) {
           const { following } = state;
@@ -56,7 +56,7 @@ const toggle_follow = (e, props, state, id) => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(props.t('userFollowing.others.errors.unexpected'));
+          toast.warning(props.t('userFollowing.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -193,7 +193,7 @@ function UserFollowing(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('userFollowing.others.errors.noFollowing')} />;
+    return <ErrorPage error={t('userFollowing.errors.noFollowing')} />;
   }
 }
 
@@ -211,11 +211,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggle_follow: value => {
-      return dispatch(UserActions.toggle_follow(value));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    get_following: value => {
-      return dispatch(UserActions.get_following(value));
+    get_following: args => {
+      return dispatch(UserActions.get_following(args));
     },
   };
 };

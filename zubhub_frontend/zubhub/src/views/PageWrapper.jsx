@@ -39,7 +39,11 @@ const useStyles = makeStyles(styles);
 
 const logout = (e, props) => {
   e.preventDefault();
-  return props.logout(props);
+  return props.logout({
+    token: props.auth.token,
+    history: props.history,
+    t: props.t,
+  });
 };
 
 const handleScrollTopClick = (e, ref) => {
@@ -202,7 +206,7 @@ function PageWrapper(props) {
                           color="textPrimary"
                           component="span"
                         >
-                          {t('pageWrapper.navbar.follwers')}
+                          {t('pageWrapper.navbar.followers')}
                         </Typography>
                       </Link>
                     </MenuItem>
@@ -316,8 +320,8 @@ const mapDispatchToProps = dispatch => {
     set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    logout: props => {
-      return dispatch(AuthActions.logout(props));
+    logout: args => {
+      return dispatch(AuthActions.logout(args));
     },
     get_auth_user: props => {
       return dispatch(AuthActions.get_auth_user(props));

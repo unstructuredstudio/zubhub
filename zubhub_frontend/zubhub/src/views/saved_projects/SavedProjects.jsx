@@ -29,11 +29,11 @@ const fetchPage = (page, props) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    return props.get_saved({ ...props, page });
+    return props.get_saved({ page, token: props.auth.token, t: props.t });
   }
 };
 
-const updateProjects = (res, { results: projects }) => {
+const updateProjects = (res, { results: projects }, props) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
@@ -49,7 +49,11 @@ const updateProjects = (res, { results: projects }) => {
       }
     })
     .catch(error => {
-      toast.warning(error.message);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('savedProjects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
       return { loading: false };
     });
 };
@@ -108,7 +112,7 @@ function SavedProjects(props) {
                   project={project}
                   key={project.id}
                   updateProjects={res =>
-                    handleSetState(updateProjects(res, state))
+                    handleSetState(updateProjects(res, state, props))
                   }
                   {...props}
                 />
@@ -152,9 +156,7 @@ function SavedProjects(props) {
       </Box>
     );
   } else {
-    return (
-      <ErrorPage error={t('savedProjects.others.errors.noSavedProjects')} />
-    );
+    return <ErrorPage error={t('savedProjects.errors.noSavedProjects')} />;
   }
 }
 

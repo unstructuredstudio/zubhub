@@ -5,14 +5,14 @@ import { toast } from 'react-toastify';
 
 const API = new ZubhubAPI();
 
-export const get_user_profile = props => {
+export const get_user_profile = args => {
   return dispatch => {
     let profile;
-    return API.get_user_profile(props)
+    return API.get_user_profile(args)
       .then(res => {
         if (!res.username) {
           throw new Error(
-            props.t("profile.others.errors.profileFetchError")
+            args.t("profile.errors.profileFetchError")
           );
         } else {
           profile = res;
@@ -28,15 +28,21 @@ export const get_user_profile = props => {
         return { ...res, profile, loading: false };
       })
       .catch(error => {
-        toast.warning(error.message);
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(
+            args.t("profile.errors.unexpected")
+          );
+        } else {
+          toast.warning(error.message);
+        }
         return { loading: false };
       });
   };
 };
 
-export const edit_user_profile = props => {
+export const edit_user_profile = args => {
   return dispatch => {
-    return API.edit_user_profile(props)
+    return API.edit_user_profile(args)
       .then(res => {
         if (res.username) {
           dispatch(
@@ -48,17 +54,24 @@ export const edit_user_profile = props => {
           return { profile: res };
         } else {
           throw new Error(
-            props.t("profile.others.errors.profileUpdateError"),
+            args.t("profile.errors.profileUpdateError"),
           );
         }
       })
-      .catch(error => toast.warning(error.message));
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+        toast.warning(
+          args.t("profile.errors.unexpected")
+        );
+      } else {
+        toast.warning(error.message);
+      }});
   };
 };
 
-export const toggle_follow = props => {
+export const toggle_follow = args => {
   return () => {
-    return API.toggle_follow(props)
+    return API.toggle_follow(args)
       .then(res => {
         if (res.username) {
           return { profile: res };
@@ -72,7 +85,7 @@ export const toggle_follow = props => {
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           toast.warning(
-            props.t("projectDetails.others.errors.unexpected")
+            args.t("profile.errors.unexpected")
           );
         } else {
           toast.warning(error.message);
@@ -82,9 +95,9 @@ export const toggle_follow = props => {
   };
 };
 
-export const get_followers = value => {
+export const get_followers = args => {
   return () => {
-    return API.get_followers(value)
+    return API.get_followers(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
@@ -101,15 +114,21 @@ export const get_followers = value => {
         }
       })
       .catch(error => {
-        toast.warning(error.message);
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(
+            args.t("profile.errors.unexpected")
+          );
+        } else {
+          toast.warning(error.message);
+        }
         return { loading: false };
       });
   };
 };
 
-export const get_following = value => {
+export const get_following = args => {
   return () => {
-    return API.get_following(value)
+    return API.get_following(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
@@ -126,7 +145,13 @@ export const get_following = value => {
         }
       })
       .catch(error => {
-        toast.warning(error.message);
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(
+            args.t("profile.errors.unexpected")
+          );
+        } else {
+          toast.warning(error.message);
+        }
         return { loading: false };
       });
   };

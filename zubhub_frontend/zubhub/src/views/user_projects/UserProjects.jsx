@@ -27,10 +27,10 @@ const useStyles = makeStyles(styles);
 
 const fetchPage = (page, props) => {
   const username = props.match.params.username;
-  return props.get_user_projects({ page, username });
+  return props.get_user_projects({ page, username, t: props.t });
 };
 
-const updateProjects = (res, { results: projects }) => {
+const updateProjects = (res, { results: projects }, props) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
@@ -46,7 +46,11 @@ const updateProjects = (res, { results: projects }) => {
       }
     })
     .catch(error => {
-      toast.warning(error.message);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('savedProjects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
       return { loading: false };
     });
 };
@@ -106,7 +110,7 @@ function UserProjects(props) {
                   project={project}
                   key={project.id}
                   updateProjects={res =>
-                    handleSetState(updateProjects(res, state))
+                    handleSetState(updateProjects(res, state, props))
                   }
                   {...props}
                 />
@@ -148,7 +152,7 @@ function UserProjects(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('userProjects.others.errors.noUserProjects')} />;
+    return <ErrorPage error={t('userProjects.errors.noUserProjects')} />;
   }
 }
 
@@ -167,14 +171,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_user_projects: values => {
-      return dispatch(ProjectActions.get_user_projects(values));
+    get_user_projects: args => {
+      return dispatch(ProjectActions.get_user_projects(args));
     },
-    toggle_like: props => {
-      return dispatch(ProjectActions.toggle_like(props));
+    toggle_like: args => {
+      return dispatch(ProjectActions.toggle_like(args));
     },
-    toggle_save: props => {
-      return dispatch(ProjectActions.toggle_save(props));
+    toggle_save: args => {
+      return dispatch(ProjectActions.toggle_save(args));
     },
   };
 };

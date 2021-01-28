@@ -88,8 +88,10 @@ const deleteProject = (props, state) => {
   if (props.auth.token && props.auth.id === state.project.creator.id) {
     return props
       .delete_project({
-        ...props,
+        token: props.auth.token,
         id: state.project.id,
+        t: props.t,
+        history: props.history,
       })
       .catch(error => ({ dialogError: error.message }));
   } else {
@@ -193,6 +195,7 @@ function ProjectDetails(props) {
       props.get_project({
         id: props.match.params.id,
         token: props.auth.token,
+        t: props.t,
       }),
     );
 
@@ -542,8 +545,8 @@ function ProjectDetails(props) {
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
                           {`${dFormatter(comment.created_on).value} ${t(
-                            `project.${dFormatter(comment.created_on).key}`,
-                          )} ${t('project.ago')}`}{' '}
+                            `date.${dFormatter(comment.created_on).key}`,
+                          )} ${t('date.ago')}`}{' '}
                         </Typography>
                       </Box>
                     </Link>
@@ -624,7 +627,7 @@ function ProjectDetails(props) {
       </>
     );
   } else {
-    return <ErrorPage error={t('projectDetails.others.errors.unexpected')} />;
+    return <ErrorPage error={t('projectDetails.errors.unexpected')} />;
   }
 }
 
@@ -645,23 +648,23 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_project: values => {
-      return dispatch(ProjectActions.get_project(values));
+    get_project: args => {
+      return dispatch(ProjectActions.get_project(args));
     },
-    delete_project: props => {
-      return dispatch(ProjectActions.delete_project(props));
+    delete_project: args => {
+      return dispatch(ProjectActions.delete_project(args));
     },
-    toggle_follow: values => {
-      return dispatch(UserActions.toggle_follow(values));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    toggle_like: values => {
-      return dispatch(ProjectActions.toggle_like(values));
+    toggle_like: args => {
+      return dispatch(ProjectActions.toggle_like(args));
     },
-    toggle_save: values => {
-      return dispatch(ProjectActions.toggle_save(values));
+    toggle_save: args => {
+      return dispatch(ProjectActions.toggle_save(args));
     },
-    add_comment: values => {
-      return dispatch(ProjectActions.add_comment(values));
+    add_comment: args => {
+      return dispatch(ProjectActions.add_comment(args));
     },
   };
 };

@@ -43,36 +43,37 @@ const handleMouseDownPassword = e => {
 };
 
 const get_locations = props => {
-  return props.get_locations(props);
+  return props.get_locations({ t: props.t });
 };
 
 const signup = (e, props) => {
   e.preventDefault();
-  if (props.values.location.length < 1) {
-    props.validateField('location');
+  if (props.values.user_location.length < 1) {
+    props.validateField('user_location');
   } else {
-    return props.signup(props).catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        let non_field_errors;
-        Object.keys(messages).forEach(key => {
-          if (key === 'non_field_errors') {
-            non_field_errors = { error: messages[key][0] };
-          } else if (key === 'location') {
-            props.setFieldTouched('user_location', true, false);
-            props.setFieldError('user_location', messages[key][0]);
-          } else {
-            props.setFieldTouched(key, true, false);
-            props.setFieldError(key, messages[key][0]);
-          }
-        });
-        return non_field_errors;
-      } else {
-        return {
-          error: props.t('signup.others.errors.unexpected'),
-        };
-      }
-    });
+    return props
+      .signup({ values: props.values, history: props.history })
+      .catch(error => {
+        const messages = JSON.parse(error.message);
+        if (typeof messages === 'object') {
+          const server_errors = {};
+          Object.keys(messages).forEach(key => {
+            if (key === 'non_field_errors') {
+              server_errors['non_field_errors'] = messages[key][0];
+            } else if (key === 'location') {
+              server_errors['user_location'] = messages[key][0];
+            } else {
+              server_errors[key] = messages[key][0];
+            }
+          });
+          props.setStatus({ ...props.status, ...server_errors });
+        } else {
+          props.setStatus({
+            ...props.status,
+            non_field_errors: props.t('signup.errors.unexpected'),
+          });
+        }
+      });
   }
 };
 
@@ -82,7 +83,6 @@ const handleTooltipToggle = ({ toolTipOpen }) => {
 
 function Signup(props) {
   const [state, setState] = React.useState({
-    error: null,
     locations: [],
     showPassword1: false,
     showPassword2: false,
@@ -103,7 +103,7 @@ function Signup(props) {
     }
   };
 
-  const { error, locations, toolTipOpen, showPassword1, showPassword2 } = state;
+  const { locations, toolTipOpen, showPassword1, showPassword2 } = state;
   const { t } = props;
 
   return (
@@ -116,7 +116,7 @@ function Signup(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => handleSetState(signup(e, props))}
+                onSubmit={e => signup(e, props)}
               >
                 <Typography
                   gutterBottom
@@ -125,17 +125,24 @@ function Signup(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('signup.welcome.primary')}
+                  {t('signup.welcomeMsg.primary')}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  {t('signup.welcome.secondary')}
+                  {t('signup.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box component="p" className={error && classes.errorBox}>
-                      {error && (
+                    <Box
+                      component="p"
+                      className={
+                        props.status &&
+                        props.status['non_field_errors'] &&
+                        classes.errorBox
+                      }
+                    >
+                      {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
-                          {error}
+                          {props.status['non_field_errors']}
                         </Box>
                       )}
                     </Box>
@@ -148,7 +155,8 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['username'] && props.errors['username']
+                        (props.status && props.status['username']) ||
+                        (props.touched['username'] && props.errors['username'])
                       }
                     >
                       <InputLabel
@@ -163,7 +171,7 @@ function Signup(props) {
                         }
                       >
                         <Tooltip
-                          title="Do not use your real name here!"
+                          title={t('signup.tooltips.noRealName')}
                           placement="top-start"
                           arrow
                           onClose={() =>
@@ -192,11 +200,12 @@ function Signup(props) {
                         </Tooltip>
                       </ClickAwayListener>
                       <FormHelperText error>
-                        {props.touched['username'] &&
-                          props.errors['username'] &&
-                          t(
-                            `signup.inputs.username.errors.${this.props.errors['username']}`,
-                          )}
+                        {(props.status && props.status['username']) ||
+                          (props.touched['username'] &&
+                            props.errors['username'] &&
+                            t(
+                              `signup.inputs.username.errors.${this.props.errors['username']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -211,7 +220,10 @@ function Signup(props) {
                         shrink: true,
                       }}
                       margin="normal"
-                      error={props.touched['email'] && props.errors['email']}
+                      error={
+                        (props.status && props.status['email']) ||
+                        (props.touched['email'] && props.errors['email'])
+                      }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
@@ -229,11 +241,12 @@ function Signup(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched['email'] &&
-                          props.errors['email'] &&
-                          t(
-                            `signup.inputs.email.errors.${props.errors['email']}`,
-                          )}
+                        {(props.status && props.status['email']) ||
+                          (props.touched['email'] &&
+                            props.errors['email'] &&
+                            t(
+                              `signup.inputs.email.errors.${props.errors['email']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -246,8 +259,9 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['dateOfBirth'] &&
-                        props.errors['dateOfBirth']
+                        (props.status && props.status['dateOfBirth']) ||
+                        (props.touched['dateOfBirth'] &&
+                          props.errors['dateOfBirth'])
                       }
                     >
                       <InputLabel
@@ -271,11 +285,12 @@ function Signup(props) {
                         labelWidth={90}
                       />
                       <FormHelperText error>
-                        {props.touched['dateOfBirth'] &&
-                          props.errors['dateOfBirth'] &&
-                          t(
-                            `signup.inputs.dateOfBirth.errors.${props.errors['dateOfBirth']}`,
-                          )}
+                        {(props.status && props.status['dateOfBirth']) ||
+                          (props.touched['dateOfBirth'] &&
+                            props.errors['dateOfBirth'] &&
+                            t(
+                              `signup.inputs.dateOfBirth.errors.${props.errors['dateOfBirth']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -288,8 +303,9 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['user_location'] &&
-                        props.errors['user_location']
+                        (props.status && props.status['user_location']) ||
+                        (props.touched['user_location'] &&
+                          props.errors['user_location'])
                       }
                     >
                       <InputLabel
@@ -319,11 +335,12 @@ function Signup(props) {
                           ))}
                       </Select>
                       <FormHelperText error>
-                        {props.touched['user_location'] &&
-                          props.errors['user_location'] &&
-                          t(
-                            `signup.inputs.location.errors.${props.errors['user_location']}`,
-                          )}
+                        {(props.status && props.status['user_location']) ||
+                          (props.touched['user_location'] &&
+                            props.errors['user_location'] &&
+                            t(
+                              `signup.inputs.location.errors.${props.errors['user_location']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -336,7 +353,9 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['password1'] && props.errors['password1']
+                        (props.status && props.status['password1']) ||
+                        (props.touched['password1'] &&
+                          props.errors['password1'])
                       }
                     >
                       <InputLabel
@@ -355,7 +374,9 @@ function Signup(props) {
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
-                              aria-label="toggle password visibility"
+                              aria-label={t(
+                                'signup.ariaLabel.togglePasswordVisibility',
+                              )}
                               onClick={() =>
                                 setState({
                                   ...state,
@@ -376,11 +397,12 @@ function Signup(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched['password1'] &&
-                          props.errors['password1'] &&
-                          t(
-                            `signup.inputs.password1.errors.${props.errors['password1']}`,
-                          )}
+                        {(props.status && props.status['password1']) ||
+                          (props.touched['password1'] &&
+                            props.errors['password1'] &&
+                            t(
+                              `signup.inputs.password1.errors.${props.errors['password1']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -393,7 +415,9 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['password2'] && props.errors['password2']
+                        (props.status && props.status['password2']) ||
+                        (props.touched['password2'] &&
+                          props.errors['password2'])
                       }
                     >
                       <InputLabel
@@ -412,7 +436,9 @@ function Signup(props) {
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
-                              aria-label="toggle password visibility"
+                              aria-label={t(
+                                'signup.ariaLabel.togglePasswordVisibility',
+                              )}
                               onClick={() =>
                                 setState({
                                   ...state,
@@ -433,11 +459,12 @@ function Signup(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched['password2'] &&
-                          props.errors['password2'] &&
-                          t(
-                            `signup.inputs.password2.errors.${props.errors['password2']}`,
-                          )}
+                        {(props.status && props.status['password2']) ||
+                          (props.touched['password2'] &&
+                            props.errors['password2'] &&
+                            t(
+                              `signup.inputs.password2.errors.${props.errors['password2']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -449,7 +476,7 @@ function Signup(props) {
                       type="submit"
                       fullWidth
                     >
-                      {t('signup.submit')}
+                      {t('signup.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -463,7 +490,7 @@ function Signup(props) {
                       color="textSecondary"
                       component="p"
                     >
-                      {t('signup.others.alreadyAMember')}
+                      {t('signup.alreadyAMember')}
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
@@ -476,7 +503,7 @@ function Signup(props) {
                       secondaryButtonStyle
                       fullWidth
                     >
-                      {t('signup.others.login')}
+                      {t('signup.login')}
                     </CustomButton>
                   </Link>
                 </Grid>
@@ -507,11 +534,11 @@ const mapDispatchToProps = dispatch => {
     set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    signup: props => {
-      return dispatch(AuthActions.signup(props));
+    signup: args => {
+      return dispatch(AuthActions.signup(args));
     },
-    get_locations: props => {
-      return dispatch(AuthActions.get_locations(props));
+    get_locations: args => {
+      return dispatch(AuthActions.get_locations(args));
     },
   };
 };
@@ -530,7 +557,7 @@ export default connect(
     }),
     validationSchema: Yup.object().shape({
       username: Yup.string().required('required'),
-      email: Yup.string().email('invalidEmail').required('required'),
+      email: Yup.string().email('invalid').required('required'),
       dateOfBirth: Yup.date().max(new Date(), 'max').required('required'),
       user_location: Yup.string().min(1, 'min').required('required'),
       password1: Yup.string().min(8, 'min').required('required'),

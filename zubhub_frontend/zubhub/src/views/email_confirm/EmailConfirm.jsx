@@ -31,15 +31,21 @@ const getUsernameAndKey = queryString => {
 
 const confirmEmail = (e, props, state) => {
   e.preventDefault();
-  return props.send_email_confirmation(props, state.key).catch(error => {
-    if (error.message.startsWith('Unexpected')) {
-      return {
-        error: props.t('emailConfirm.others.errors.unexpected'),
-      };
-    } else {
-      return { error: error.message };
-    }
-  });
+  return props
+    .send_email_confirmation({
+      key: state.key,
+      t: props.t,
+      history: props.history,
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        props.setStatus({
+          non_field_errors: props.t('emailConfirm.errors.unexpected'),
+        });
+      } else {
+        props.setStatus({ non_field_errors: error.message });
+      }
+    });
 };
 
 function EmailConfirm(props) {
@@ -48,7 +54,6 @@ function EmailConfirm(props) {
   let { username, key } = getUsernameAndKey(props.location.search);
 
   const [state, setState] = React.useState({
-    error: null,
     username: username ?? null,
     key: key ?? null,
   });
@@ -84,21 +89,28 @@ function EmailConfirm(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('emailConfirm.welcome.primary')}
+                  {t('emailConfirm.welcomeMsg.primary')}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  {t('emailConfirm.welcome.secondary').replace('<>', username)}
+                  {t('emailConfirm.welcomeMsg.secondary').replace(
+                    '<>',
+                    username,
+                  )}
                 </Typography>
 
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <Box
                       component="p"
-                      className={error !== null && classes.errorBox}
+                      className={
+                        props.status &&
+                        props.status['non_field_errors'] &&
+                        classes.errorBox
+                      }
                     >
-                      {error !== null && (
+                      {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
-                          {error}
+                          {props.status['non_field_errors']}
                         </Box>
                       )}
                     </Box>
@@ -111,7 +123,7 @@ function EmailConfirm(props) {
                       fullWidth
                       primaryButtonStyle
                     >
-                      {t('emailConfirm.submit')}
+                      {t('emailConfirm.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -137,8 +149,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    send_email_confirmation: (props, key) => {
-      return dispatch(AuthActions.send_email_confirmation(props, key));
+    send_email_confirmation: args => {
+      return dispatch(AuthActions.send_email_confirmation(args));
     },
   };
 };

@@ -31,7 +31,6 @@ import {
 } from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
-import LoadingPage from '../loading/LoadingPage';
 import ErrorPage from '../error/ErrorPage';
 import DO, { doConfig } from '../../assets/js/DO';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -194,7 +193,7 @@ function CreateProject(props) {
       state.image_upload.images_to_upload.length ===
       state.image_upload.successful_uploads
     ) {
-      handleSetState(upload_project());
+      upload_project();
     }
   }, [state.image_upload.successful_uploads]);
 
@@ -260,7 +259,7 @@ function CreateProject(props) {
 
           if (err.message.startsWith('Unexpected')) {
             handleSetState({
-              error: props.t('createProject.others.errors.unexpected'),
+              error: props.t('createProject.errors.unexpected'),
               image_upload,
             });
           } else {
@@ -301,20 +300,20 @@ function CreateProject(props) {
     }).catch(error => {
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {
-        let non_field_errors;
+        const server_errors = {};
         Object.keys(messages).forEach(key => {
           if (key === 'non_field_errors') {
-            non_field_errors = { error: messages[key][0] };
+            server_errors['non_field_errors'] = messages[key][0];
           } else {
-            props.setFieldTouched(key, true, false);
-            props.setFieldError(key, messages[key][0]);
+            server_errors[key] = messages[key][0];
           }
         });
-        if (non_field_errors) return non_field_errors;
+        props.setStatus({ ...props.status, ...server_errors });
       } else {
-        return {
-          error: props.t('createProject.others.errors.unexpected'),
-        };
+        props.setStatus({
+          ...props.status,
+          non_field_errors: props.t('createProject.errors.unexpected'),
+        });
       }
     });
   };
@@ -343,7 +342,7 @@ function CreateProject(props) {
         ) {
           return;
         } else if (refs.imageEl.current.files.length === 0) {
-          handleSetState(upload_project());
+          upload_project();
         } else {
           const { image_upload } = state;
           image_upload.upload_dialog = true;
@@ -370,11 +369,11 @@ function CreateProject(props) {
     }
   };
 
-  const { error, image_upload, materials_used } = state;
+  const { image_upload, materials_used } = state;
   const { t } = props;
   const id = props.match.params.id;
   if (!props.auth.token) {
-    return <ErrorPage error={t('createProject.others.errors.notLoggedIn')} />;
+    return <ErrorPage error={t('createProject.errors.notLoggedIn')} />;
   } else {
     return (
       <Box className={classes.root}>
@@ -395,22 +394,31 @@ function CreateProject(props) {
                     component="h2"
                     color="textPrimary"
                   >
-                    {t('createProject.welcome.primary')}
+                    {!id
+                      ? t('createProject.welcomeMsg.primary')
+                      : t('createProject.inputs.edit')}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    {t('createProject.welcome.secondary')}
+                    {t('createProject.welcomeMsg.secondary')}
                   </Typography>
 
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
-                      <Box component="p" className={error && classes.errorBox}>
-                        {error && (
+                      <Box
+                        component="p"
+                        className={
+                          props.status &&
+                          props.status['non_field_errors'] &&
+                          classes.errorBox
+                        }
+                      >
+                        {props.status && props.status['non_field_errors'] && (
                           <Box component="span" className={classes.error}>
-                            {error}
+                            {props.status['non_field_errors']}
                           </Box>
                         )}
                       </Box>
@@ -423,25 +431,24 @@ function CreateProject(props) {
                         size="small"
                         fullWidth
                         margin="small"
-                        error={props.touched['title'] && props.errors['title']}
+                        error={
+                          (props.status && props.status['title']) ||
+                          (props.touched['title'] && props.errors['title'])
+                        }
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="title"
-                          shrink={id ? true : false}
+                          shrink
                         >
                           {t('createProject.inputs.title.label')}
                         </InputLabel>
                         <OutlinedInput
                           ref={refs.titleEl}
-                          className={
-                            id
-                              ? clsx(
-                                  classes.customInputStyle,
-                                  classes.staticLabelInputSmallStyle,
-                                )
-                              : classes.customInputStyle
-                          }
+                          className={clsx(
+                            classes.customInputStyle,
+                            classes.staticLabelInputSmallStyle,
+                          )}
                           id="title"
                           name="title"
                           type="text"
@@ -451,11 +458,12 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
-                          {props.touched['title'] &&
-                            props.errors['title'] &&
-                            t(
-                              `createProject.inputs.title.errors.${props.errors['title']}`,
-                            )}
+                          {(props.status && props.status['title']) ||
+                            (props.touched['title'] &&
+                              props.errors['title'] &&
+                              t(
+                                `createProject.inputs.title.errors.${props.errors['title']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -468,27 +476,24 @@ function CreateProject(props) {
                         fullWidth
                         margin="small"
                         error={
-                          props.touched['description'] &&
-                          props.errors['description']
+                          (props.status && props.status['description']) ||
+                          (props.touched['description'] &&
+                            props.errors['description'])
                         }
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="description"
-                          shrink={id ? true : false}
+                          shrink
                         >
                           {t('createProject.inputs.description.label')}
                         </InputLabel>
                         <OutlinedInput
                           ref={refs.descEl}
-                          className={
-                            id
-                              ? clsx(
-                                  classes.customInputStyle,
-                                  classes.staticLabelInputStyle,
-                                )
-                              : classes.customInputStyle
-                          }
+                          className={clsx(
+                            classes.customInputStyle,
+                            classes.staticLabelInputStyle,
+                          )}
                           id="description"
                           name="description"
                           type="text"
@@ -508,11 +513,12 @@ function CreateProject(props) {
                             {t('createProject.inputs.description.helperText')}
                           </Typography>
                           <br />
-                          {props.touched['description'] &&
-                            props.errors['description'] &&
-                            t(
-                              `createProject.inputs.description.errors.${props.errors['description']}`,
-                            )}
+                          {(props.status && props.status['description']) ||
+                            (props.touched['description'] &&
+                              props.errors['description'] &&
+                              t(
+                                `createProject.inputs.description.errors.${props.errors['description']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -521,8 +527,9 @@ function CreateProject(props) {
                       <FormControl
                         fullWidth
                         error={
-                          props.touched['project_images'] &&
-                          props.errors['project_images']
+                          (props.status && props.status['project_images']) ||
+                          (props.touched['project_images'] &&
+                            props.errors['project_images'])
                         }
                       >
                         <label htmlFor="project_images">
@@ -569,10 +576,11 @@ function CreateProject(props) {
                           onBlur={props.handleBlur}
                         />
                         <FormHelperText error>
-                          {props.errors['project_images'] &&
-                            t(
-                              `createProject.inputs.projectImages.errors.${props.errors['project_images']}`,
-                            )}
+                          {(props.status && props.status['project_images']) ||
+                            (props.errors['project_images'] &&
+                              t(
+                                `createProject.inputs.projectImages.errors.${props.errors['project_images']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -584,25 +592,24 @@ function CreateProject(props) {
                         size="small"
                         fullWidth
                         margin="small"
-                        error={props.touched['video'] && props.errors['video']}
+                        error={
+                          (props.status && props.status['video']) ||
+                          (props.touched['video'] && props.errors['video'])
+                        }
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="video"
-                          shrink={id ? true : false}
+                          shrink
                         >
                           {t('createProject.inputs.video.label')}
                         </InputLabel>
                         <OutlinedInput
                           ref={refs.videoEl}
-                          className={
-                            id
-                              ? clsx(
-                                  classes.customInputStyle,
-                                  classes.staticLabelInputStyle,
-                                )
-                              : classes.customInputStyle
-                          }
+                          className={clsx(
+                            classes.customInputStyle,
+                            classes.staticLabelInputStyle,
+                          )}
                           id="video"
                           name="video"
                           type="text"
@@ -619,11 +626,12 @@ function CreateProject(props) {
                             {t('createProject.inputs.video.helperText')}
                           </Typography>
                           <br />
-                          {props.touched['video'] &&
-                            props.errors['video'] &&
-                            t(
-                              `createProject.inputs.video.errors.${props.errors['video']}`,
-                            )}
+                          {(props.status && props.status['video']) ||
+                            (props.touched['video'] &&
+                              props.errors['video'] &&
+                              t(
+                                `createProject.inputs.video.errors.${props.errors['video']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -636,8 +644,9 @@ function CreateProject(props) {
                         fullWidth
                         margin="small"
                         error={
-                          props.touched['materials_used'] &&
-                          props.errors['materials_used']
+                          (props.status && props.status['materials_used']) ||
+                          (props.touched['materials_used'] &&
+                            props.errors['materials_used'])
                         }
                       >
                         <InputLabel
@@ -697,11 +706,13 @@ function CreateProject(props) {
                               }
                             />
                             <FormHelperText error>
-                              {props.touched['materials_used'] &&
-                                props.errors['materials_used'] &&
-                                t(
-                                  `createProject.inputs.materialsUsed.errors.${props.errors['materials_used']}`,
-                                )}
+                              {(props.status &&
+                                props.status['materials_used']) ||
+                                (props.touched['materials_used'] &&
+                                  props.errors['materials_used'] &&
+                                  t(
+                                    `createProject.inputs.materialsUsed.errors.${props.errors['materials_used']}`,
+                                  ))}
                             </FormHelperText>
                           </Grid>
                           <Grid item xs={4} sm={4} md={4}>
@@ -736,7 +747,9 @@ function CreateProject(props) {
                         primaryButtonStyle
                         fullWidth
                       >
-                        {t('createProject.submit')}
+                        {!id
+                          ? t('createProject.inputs.submit')
+                          : t('createProject.inputs.edit')}
                       </CustomButton>
                     </Grid>
                   </Grid>
@@ -836,7 +849,7 @@ export default connect(
             ? false
             : true;
         })
-        .test('not_an_image', 'only images are allowed', value => {
+        .test('not_an_image', 'onlyImages', value => {
           if (value) {
             let not_an_image = false;
             for (let index = 0; index < value.files.length; index++) {
