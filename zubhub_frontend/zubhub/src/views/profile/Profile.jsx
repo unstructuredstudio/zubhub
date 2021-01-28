@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import { makeStyles } from '@material-ui/core/styles';
 import ShareIcon from '@material-ui/icons/Share';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {
   Tooltip,
   Badge,
@@ -17,6 +18,8 @@ import {
   Box,
   Container,
   Paper,
+  Menu,
+  MenuItem,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,13 +40,10 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
+import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
-
-const handleToggleEditProfileModal = ({ openEditProfileModal }) => {
-  openEditProfileModal = !openEditProfileModal;
-  return { openEditProfileModal };
-};
+const useCommonStyles = makeStyles(commonStyles);
 
 const getUserPofile = props => {
   let username = props.match.params.username;
@@ -51,35 +51,14 @@ const getUserPofile = props => {
   if (!username) {
     username = props.auth.username;
   } else if (props.auth.username === username) props.history.push('/profile');
-  return props.get_user_profile({ username, token: props.auth.token });
+  return props.get_user_profile({
+    username,
+    token: props.auth.token,
+    t: props.t,
+  });
 };
 
-const updateProfile = (e, props, state, newUserNameEL) => {
-  e.preventDefault();
-  const username = newUserNameEL.current.firstChild;
-  if (username.value) {
-    return props
-      .edit_user_profile({
-        token: props.auth.token,
-        username: username.value,
-      })
-      .then(res => {
-        if (!res.id) {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-        username.value = '';
-        return { ...res, ...handleToggleEditProfileModal(state) };
-      })
-      .catch(error => ({ dialogError: error.message }));
-  } else {
-    return handleToggleEditProfileModal(state);
-  }
-};
-
-const copyProfileUrl = profile => {
+const copyProfileUrl = ({ profile, props }) => {
   const tempInput = document.createElement('textarea');
   tempInput.value = `${document.location.origin}/creators/${profile.username}`;
   tempInput.style.top = '0';
@@ -90,14 +69,12 @@ const copyProfileUrl = profile => {
   tempInput.focus();
   tempInput.select();
   if (document.execCommand('copy')) {
-    toast.success(
-      'your profile url has been successfully copied to your clipboard!',
-    );
+    toast.success(props.t('profile.toastSuccess'));
     rootElem.removeChild(tempInput);
   }
 };
 
-const updateProjects = (res, { results: projects }) => {
+const updateProjects = (res, { results: projects }, props) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
@@ -113,7 +90,11 @@ const updateProjects = (res, { results: projects }) => {
       }
     })
     .catch(error => {
-      toast.warning(error.message);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
       return { loading: false };
     });
 };
@@ -122,20 +103,48 @@ const toggle_follow = (id, props) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    return props.toggle_follow({ id, token: props.auth.token });
+    return props.toggle_follow({ id, token: props.auth.token, t: props.t });
+  }
+};
+
+const handleMoreMenuOpen = e => {
+  return { moreAnchorEl: e.currentTarget };
+};
+
+const handleMoreMenuClose = () => {
+  return { moreAnchorEl: null };
+};
+
+const handleToggleDeleteAccountModal = state => {
+  const openDeleteAccountModal = !state.openDeleteAccountModal;
+  return { openDeleteAccountModal, moreAnchorEl: null };
+};
+
+const deleteAccount = (usernameEl, props) => {
+  if (usernameEl.current.firstChild.value !== props.auth.username) {
+    return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
+  } else {
+    return props.delete_account({
+      token: props.auth.token,
+      history: props.history,
+      logout: props.logout,
+      t: props.t,
+    });
   }
 };
 
 function Profile(props) {
-  const newUserNameEL = React.useRef(null);
+  const usernameEl = React.useRef(null);
   const classes = useStyles();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     results: [],
-    openEditProfileModal: false,
     loading: true,
     profile: {},
+    openDeleteAccountModal: false,
     dialogError: null,
+    moreAnchorEl: null,
   });
 
   React.useEffect(() => {
@@ -154,9 +163,13 @@ function Profile(props) {
     results: projects,
     profile,
     loading,
-    openEditProfileModal,
+    openDeleteAccountModal,
     dialogError,
+    moreAnchorEl,
   } = state;
+
+  const moreMenuOpen = Boolean(moreAnchorEl);
+  const { t } = props;
 
   if (loading) {
     return <LoadingPage />;
@@ -167,17 +180,52 @@ function Profile(props) {
           <Paper className={classes.profileHeaderStyle}>
             <Container maxWidth="md">
               {props.auth.username === profile.username ? (
-                <CustomButton
-                  className={classes.floatRight}
-                  variant="contained"
-                  margin="normal"
-                  primaryButtonStyle
-                  onClick={() =>
-                    handleSetState(handleToggleEditProfileModal(state))
-                  }
-                >
-                  Edit
-                </CustomButton>
+                <>
+                  <CustomButton
+                    className={classes.floatRight}
+                    onClick={e => handleSetState(handleMoreMenuOpen(e))}
+                  >
+                    <MoreVertIcon />
+                  </CustomButton>
+                  <CustomButton
+                    className={classes.floatRight}
+                    variant="contained"
+                    margin="normal"
+                    primaryButtonStyle
+                    onClick={() => props.history.push('/edit-profile')}
+                  >
+                    {t('profile.edit')}
+                  </CustomButton>
+                  <Menu
+                    className={classes.moreMenuStyle}
+                    id="profile_menu"
+                    anchorEl={moreAnchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={moreMenuOpen}
+                    onClose={e => handleSetState(handleMoreMenuClose(e))}
+                  >
+                    <MenuItem>
+                      <Typography
+                        variant="subtitle2"
+                        className={commonClasses.colorRed}
+                        component="span"
+                        onClick={() =>
+                          handleSetState(handleToggleDeleteAccountModal(state))
+                        }
+                      >
+                        {t('profile.delete.label')}
+                      </Typography>
+                    </MenuItem>
+                  </Menu>
+                </>
               ) : (
                 <CustomButton
                   className={classes.floatRight}
@@ -189,8 +237,8 @@ function Profile(props) {
                   }
                 >
                   {profile.followers.includes(props.auth.id)
-                    ? 'Unfollow'
-                    : 'Follow'}
+                    ? t('profile.unfollow')
+                    : t('profile.follow')}
                 </CustomButton>
               )}
               <Box className={classes.avatarBoxStyle}>
@@ -203,7 +251,7 @@ function Profile(props) {
                   badgeContent={
                     props.auth.id === profile.id ? (
                       <Tooltip
-                        title="Share your profile with friends!"
+                        title={t('profile.tooltips.shareProfile')}
                         placement="right-start"
                         arrow
                       >
@@ -212,8 +260,8 @@ function Profile(props) {
                             classes.secondaryButton,
                             classes.profileShareButtonStyle,
                           )}
-                          aria-label="share profile url"
-                          onClick={() => copyProfileUrl(profile)}
+                          aria-label={t('profile.ariaLabels.shareProfile')}
+                          onClick={() => copyProfileUrl({ profile, props })}
                         >
                           <ShareIcon />
                         </Fab>
@@ -251,7 +299,7 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.projects_count} Projects
+                      {profile.projects_count} {t('profile.projectsCount')}
                     </Typography>
                   </Link>
                   <Link
@@ -262,7 +310,18 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.followers.length} Followers
+                      {profile.followers.length} {t('profile.followersCount')}
+                    </Typography>
+                  </Link>
+                  <Link
+                    to={`/creators/${profile.username}/following`}
+                    className={classes.textDecorationNone}
+                  >
+                    <Typography
+                      className={classes.moreInfoStyle}
+                      component="h5"
+                    >
+                      {profile.following_count} {t('profile.followingCount')}
                     </Typography>
                   </Link>
                   <Link
@@ -290,12 +349,10 @@ function Profile(props) {
                 color="textPrimary"
                 className={classes.titleStyle}
               >
-                About Me
+                {t('profile.about.label')}
               </Typography>
               <Box className={classes.aboutMeBoxStyle}>
-                {profile.bio
-                  ? profile.bio
-                  : 'You will be able to change this next month 😀!'}
+                {profile.bio ? profile.bio : t('profile.about.placeholder')}
               </Box>
             </Paper>
 
@@ -308,7 +365,7 @@ function Profile(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  Latest projects of {profile.username}
+                  {t('profile.projects.label')} {profile.username}
                   <Link
                     className={clsx(
                       classes.secondaryLink,
@@ -317,7 +374,7 @@ function Profile(props) {
                     )}
                     to={`/creators/${profile.username}/projects`}
                   >
-                    View all >>
+                    {t('profile.projects.viewAll')}
                   </Link>
                 </Typography>
                 <Grid container>
@@ -335,7 +392,7 @@ function Profile(props) {
                           project={project}
                           key={project.id}
                           updateProjects={res =>
-                            handleSetState(updateProjects(res, state))
+                            handleSetState(updateProjects(res, state, props))
                           }
                           {...props}
                         />
@@ -347,11 +404,13 @@ function Profile(props) {
           </Container>
         </Box>
         <Dialog
-          open={openEditProfileModal}
-          onClose={() => handleSetState(handleToggleEditProfileModal(state))}
-          aria-labelledby="edit user profile"
+          open={openDeleteAccountModal}
+          onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
+          aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
         >
-          <DialogTitle id="edit-user-profile">Edit User Profile</DialogTitle>
+          <DialogTitle id="delete-project">
+            {t('profile.delete.dialog.primary')}
+          </DialogTitle>
           <Box
             component="p"
             className={dialogError !== null && classes.errorBox}
@@ -363,6 +422,7 @@ function Profile(props) {
             )}
           </Box>{' '}
           <DialogContent>
+            <Typography>{t('profile.delete.dialog.secondary')}</Typography>
             <FormControl
               className={clsx(classes.margin, classes.textField)}
               variant="outlined"
@@ -374,11 +434,11 @@ function Profile(props) {
                 className={classes.customLabelStyle}
                 htmlFor="username"
               >
-                New Username
+                {t('profile.delete.dialog.inputs.username')}
               </InputLabel>
               <OutlinedInput
                 className={classes.customInputStyle}
-                ref={newUserNameEL}
+                ref={usernameEl}
                 name="username"
                 type="text"
                 labelWidth={90}
@@ -389,30 +449,28 @@ function Profile(props) {
             <CustomButton
               variant="outlined"
               onClick={() =>
-                handleSetState(handleToggleEditProfileModal(state))
+                handleSetState(handleToggleDeleteAccountModal(state))
               }
               color="primary"
               secondaryButtonStyle
             >
-              Cancel
+              {t('profile.delete.dialog.cancel')}
             </CustomButton>
             <CustomButton
               variant="contained"
               onClick={e =>
-                handleSetState(updateProfile(e, props, state, newUserNameEL))
+                handleSetState(deleteAccount(usernameEl, props, state))
               }
-              primaryButtonStyle
+              dangerButtonStyle
             >
-              Save
+              {t('profile.delete.dialog.procceed')}
             </CustomButton>
           </DialogActions>
         </Dialog>
       </>
     );
   } else {
-    return (
-      <ErrorPage error="An error occured while fetching profile, please try again later" />
-    );
+    return <ErrorPage error={t('profile.errors.profileFetchError')} />;
   }
 }
 
@@ -420,7 +478,8 @@ Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   set_auth_user: PropTypes.func.isRequired,
   get_user_profile: PropTypes.func.isRequired,
-  edit_user_profile: PropTypes.func.isRequired,
+  delete_account: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
   toggle_follow: PropTypes.func.isRequired,
   toggle_like: PropTypes.func.isRequired,
   toggle_save: PropTypes.func.isRequired,
@@ -437,20 +496,23 @@ const mapDispatchToProps = dispatch => {
     set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    get_user_profile: props => {
-      return dispatch(UserActions.get_user_profile(props));
+    get_user_profile: args => {
+      return dispatch(UserActions.get_user_profile(args));
     },
-    edit_user_profile: props => {
-      return dispatch(UserActions.edit_user_profile(props));
+    delete_account: args => {
+      return dispatch(AuthActions.delete_account(args));
     },
-    toggle_follow: props => {
-      return dispatch(UserActions.toggle_follow(props));
+    logout: args => {
+      return dispatch(AuthActions.logout(args));
     },
-    toggle_like: props => {
-      return dispatch(ProjectActions.toggle_like(props));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    toggle_save: props => {
-      return dispatch(ProjectActions.toggle_save(props));
+    toggle_like: args => {
+      return dispatch(ProjectActions.toggle_like(args));
+    },
+    toggle_save: args => {
+      return dispatch(ProjectActions.toggle_save(args));
     },
   };
 };

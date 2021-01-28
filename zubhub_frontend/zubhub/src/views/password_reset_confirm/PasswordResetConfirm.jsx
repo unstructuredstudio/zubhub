@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 
-import { toast } from 'react-toastify';
-
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -45,25 +43,31 @@ const resetPassword = (e, props) => {
   e.preventDefault();
   const { uid, token } = getUidAndToken(props.location.search);
   return props
-    .password_reset_confirm({ ...props.values, uid, token })
+    .password_reset_confirm({
+      ...props.values,
+      uid,
+      token,
+      t: props.t,
+      history: props.history,
+    })
     .catch(error => {
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {
-        let non_field_errors;
+        const server_errors = {};
         Object.keys(messages).forEach(key => {
           if (key !== 'new_password1' && key !== 'new_password2') {
-            non_field_errors = { error: messages[key][0] };
+            server_errors['non_field_errors'] = messages[key][0];
           } else {
-            props.setFieldTouched(key, true, false);
-            props.setFieldError(key, messages[key][0]);
+            server_errors[key] = messages[key][0];
           }
         });
-        return non_field_errors;
+
+        props.setStatus({ ...props.status, ...server_errors });
       } else {
-        return {
-          error:
-            'An error occured while performing this action. Please try again later',
-        };
+        props.setStatus({
+          ...props.status,
+          non_field_errors: props.t('passwordResetConfirm.errors.unexpected'),
+        });
       }
     });
 };
@@ -86,7 +90,6 @@ function PasswordResetConfirm(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    error: null,
     showPassword1: false,
     showPassword2: false,
   });
@@ -99,7 +102,8 @@ function PasswordResetConfirm(props) {
     }
   };
 
-  const { error, showPassword1, showPassword2 } = state;
+  const { showPassword1, showPassword2 } = state;
+  const { t } = props;
 
   return (
     <Box className={classes.root}>
@@ -111,7 +115,7 @@ function PasswordResetConfirm(props) {
                 className="auth-form"
                 name="password_reset_confirm"
                 noValidate="noValidate"
-                onSubmit={e => handleSetState(resetPassword(e, props))}
+                onSubmit={e => resetPassword(e, props)}
               >
                 <Typography
                   gutterBottom
@@ -120,14 +124,21 @@ function PasswordResetConfirm(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  Password Reset Confirmation
+                  {t('passwordResetConfirm.welcomeMsg.primary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box component="p" className={error && classes.errorBox}>
-                      {error && (
+                    <Box
+                      component="p"
+                      className={
+                        props.status &&
+                        props.status['non_field_errors'] &&
+                        classes.errorBox
+                      }
+                    >
+                      {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
-                          {error}
+                          {props.status['non_field_errors']}
                         </Box>
                       )}
                     </Box>
@@ -141,15 +152,16 @@ function PasswordResetConfirm(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['new_password1'] &&
-                        props.errors['new_password1']
+                        (props.status && props.status['new_password1']) ||
+                        (props.touched['new_password1'] &&
+                          props.errors['new_password1'])
                       }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="new_password1"
                       >
-                        New Password
+                        {t('passwordResetConfirm.inputs.newPassword1.label')}
                       </InputLabel>
                       <OutlinedInput
                         className={classes.customInputStyle}
@@ -181,8 +193,12 @@ function PasswordResetConfirm(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched['new_password'] &&
-                          props.errors['new_password']}
+                        {(props.status && props.status['new_password1']) ||
+                          (props.touched['new_password1'] &&
+                            props.errors['new_password1'] &&
+                            t(
+                              `passwordResetConfirm.inputs.newPassword1.errors.${props.errors['new_password1']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -195,15 +211,16 @@ function PasswordResetConfirm(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['new_password2'] &&
-                        props.errors['new_password2']
+                        (props.status && props.status['new_password2']) ||
+                        (props.touched['new_password2'] &&
+                          props.errors['new_password2'])
                       }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="new_password2"
                       >
-                        Confirm Password
+                        {t('passwordResetConfirm.inputs.newPassword2.label')}
                       </InputLabel>
                       <OutlinedInput
                         className={classes.customInputStyle}
@@ -235,8 +252,12 @@ function PasswordResetConfirm(props) {
                         labelWidth={150}
                       />
                       <FormHelperText error>
-                        {props.touched['new_password2'] &&
-                          props.errors['new_password2']}
+                        {(props.status && props.status['new_password2']) ||
+                          (props.touched['new_password2'] &&
+                            props.errors['new_password2'] &&
+                            t(
+                              `passwordResetConfirm.inputs.newPassword2.errors.${props.errors['new_password2']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -248,7 +269,7 @@ function PasswordResetConfirm(props) {
                       primaryButtonStyle
                       fullWidth
                     >
-                      Reset Password
+                      {t('passwordResetConfirm.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -274,8 +295,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    password_reset_confirm: props => {
-      return dispatch(AuthActions.password_reset_confirm(props));
+    password_reset_confirm: args => {
+      return dispatch(AuthActions.password_reset_confirm(args));
     },
   };
 };
@@ -290,12 +311,10 @@ export default connect(
       new_password2: '',
     }),
     validationSchema: Yup.object().shape({
-      new_password1: Yup.string()
-        .min(8, 'your password is too short')
-        .required('input your password'),
+      new_password1: Yup.string().min(8, 'min').required('required'),
       new_password2: Yup.string()
-        .oneOf([Yup.ref('new_password1'), null], 'Passwords must match')
-        .required('input a confirmation password'),
+        .oneOf([Yup.ref('new_password1'), null], 'noMatch')
+        .required('required'),
     }),
   })(PasswordResetConfirm),
 );

@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from projects.serializers import ProjectListSerializer
@@ -40,6 +40,18 @@ class EditCreatorAPIView(UpdateAPIView):
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.get(pk=self.request.user.pk)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+
+class DeleteCreatorAPIView(DestroyAPIView):
+    queryset = Creator.objects.all()
+    serializer_class = CreatorSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    lookup_field = "pk"
+
+    def get_object(self):
+        obj = self.queryset.get(pk=self.request.user.pk)
         self.check_object_permissions(self.request, obj)
         return obj
 

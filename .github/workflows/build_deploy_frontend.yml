@@ -3,9 +3,9 @@ name: Frontend Production Deployment
 on:
   push:
     branches:
-      - phase2
+      - master
     paths:
-      - "*"
+      - "zubhub_frontend/zubhub/**"
       - "!zubhub_frontend/zubhub/README.md"
       - "!zubhub_frontend/zubhub/.env.example"
       - "!zubhub_frontend/zubhub/.prettierrc.yaml"
@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -33,10 +33,35 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: zubhub_frontend/zubhub/
-          file: ./Dockerfile.prod
-          platforms: linux/amd64,linux/arm64,linux/386
+          context: ./zubhub_frontend/zubhub/
+          file: ./zubhub_frontend/zubhub/Dockerfile.prod
           push: true
-          tags: unstructured/zubhub-frontend:latest
+          tags: unstructuredstudio/zubhub-frontend:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Copy file via scp
+        uses: appleboy/scp-action@master
+        env:
+          HOST: ${{ secrets.DO_FRONTEND_HOST }}
+          USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+        with:
+          source: "."
+          target: "/home/zubhub-frontend/zubhub"
+
+      - name: Executing remote  command
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ secrets.DO_FRONTEND_HOST }}
+          USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
+          PORT: ${{ secrets.DO_SSHPORT }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "cp /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/deploy_frontend.sh /home/zubhub-frontend/ && sudo bash /home/zubhub-frontend/deploy_frontend.sh"

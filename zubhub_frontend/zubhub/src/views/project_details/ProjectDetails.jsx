@@ -38,7 +38,6 @@ import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
-import { toast } from 'react-toastify';
 
 const useStyles = makeStyles(styles);
 
@@ -89,8 +88,10 @@ const deleteProject = (props, state) => {
   if (props.auth.token && props.auth.id === state.project.creator.id) {
     return props
       .delete_project({
-        ...props,
+        token: props.auth.token,
         id: state.project.id,
+        t: props.t,
+        history: props.history,
       })
       .catch(error => ({ dialogError: error.message }));
   } else {
@@ -110,6 +111,7 @@ const add_comment = (e, props, refs, state) => {
       id: state.project.id,
       token: props.auth.token,
       text: comment_text,
+      t: props.t,
     });
   }
 };
@@ -122,6 +124,7 @@ const toggle_save = (e, props, id) => {
     return props.toggle_save({
       id,
       token: props.auth.token,
+      t: props.t,
     });
   }
 };
@@ -131,7 +134,7 @@ const toggle_like = (e, props, id) => {
   if (!props.auth.token) {
     return props.history.push('/login');
   } else {
-    return props.toggle_like({ id, token: props.auth.token });
+    return props.toggle_like({ id, token: props.auth.token, t: props.t });
   }
 };
 
@@ -141,7 +144,7 @@ const toggle_follow = (e, props, id, state) => {
     props.history.push('/login');
   } else {
     return props
-      .toggle_follow({ id, token: props.auth.token })
+      .toggle_follow({ id, token: props.auth.token, t: props.t })
       .then(({ profile }) => {
         const { project } = state;
         if (project.creator.id === profile.id) {
@@ -192,6 +195,7 @@ function ProjectDetails(props) {
       props.get_project({
         id: props.match.params.id,
         token: props.auth.token,
+        t: props.t,
       }),
     );
 
@@ -232,6 +236,7 @@ function ProjectDetails(props) {
     openDeleteProjectModal,
     dialogError,
   } = state;
+  const { t } = props;
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
@@ -273,7 +278,7 @@ function ProjectDetails(props) {
                           variant="contained"
                           primaryButtonStyle
                         >
-                          Edit
+                          {t('projectDetails.project.edit')}
                         </CustomButton>
                       </Link>
                       <CustomButton
@@ -284,7 +289,7 @@ function ProjectDetails(props) {
                           handleSetState(handleToggleDeleteProjectModal(state))
                         }
                       >
-                        Delete
+                        {t('projectDetails.project.delete.label')}
                       </CustomButton>
                     </>
                   ) : (
@@ -299,8 +304,8 @@ function ProjectDetails(props) {
                       primaryButtonStyle
                     >
                       {project.creator.followers.includes(props.auth.id)
-                        ? 'Unfollow'
-                        : 'Follow'}
+                        ? t('projectDetails.project.creator.unfollow')
+                        : t('projectDetails.project.creator.follow')}
                     </CustomButton>
                   )}
                 </Grid>
@@ -346,16 +351,26 @@ function ProjectDetails(props) {
                     <CustomButton
                       className={classes.actionBoxButtonStyle}
                       size="small"
-                      aria-label="like button"
+                      aria-label={t(
+                        'projectDetails.ariaLabels.likeButton.label',
+                      )}
                       variant="extended"
                       onClick={e =>
                         handleSetState(toggle_like(e, props, project.id))
                       }
                     >
                       {project.likes.includes(props.auth.id) ? (
-                        <ClapIcon arial-label="unlike" />
+                        <ClapIcon
+                          arial-label={t(
+                            'projectDetails.ariaLabels.likeButton.unlilke',
+                          )}
+                        />
                       ) : (
-                        <ClapBorderIcon arial-label="like" />
+                        <ClapBorderIcon
+                          arial-label={t(
+                            'projectDetails.ariaLabels.likeButton.like',
+                          )}
+                        />
                       )}
                       <Typography>
                         {nFormatter(project.likes.length)}
@@ -364,15 +379,25 @@ function ProjectDetails(props) {
                     <CustomButton
                       className={classes.actionBoxButtonStyle}
                       size="small"
-                      aria-label="save button"
+                      aria-label={t(
+                        'projectDetails.ariaLabels.saveButton.label',
+                      )}
                       onClick={e =>
                         handleSetState(toggle_save(e, props, project.id))
                       }
                     >
                       {project.saved_by.includes(props.auth.id) ? (
-                        <BookmarkIcon aria-label="unsave" />
+                        <BookmarkIcon
+                          aria-label={t(
+                            'projectDetails.ariaLabels.saveButton.unsave',
+                          )}
+                        />
                       ) : (
-                        <BookmarkBorderIcon aria-label="save" />
+                        <BookmarkBorderIcon
+                          aria-label={t(
+                            'projectDetails.ariaLabels.saveButton.save',
+                          )}
+                        />
                       )}
                     </CustomButton>
                     <Typography
@@ -414,7 +439,7 @@ function ProjectDetails(props) {
                     variant="h5"
                     className={classes.descriptionHeadingStyle}
                   >
-                    Description
+                    {t('projectDetails.project.description')}
                   </Typography>
                   <Typography
                     className={classes.descriptionBodyStyle}
@@ -428,7 +453,7 @@ function ProjectDetails(props) {
                     variant="h5"
                     className={classes.descriptionHeadingStyle}
                   >
-                    Materials used
+                    {t('projectDetails.project.materials')}
                   </Typography>
                   <Typography
                     className={classes.descriptionBodyStyle}
@@ -444,7 +469,8 @@ function ProjectDetails(props) {
                 variant="h5"
                 className={classes.descriptionHeadingStyle}
               >
-                <CommentIcon /> {nFormatter(project.comments.length)} Comments
+                <CommentIcon /> {nFormatter(project.comments.length)}{' '}
+                {t('projectDetails.project.comments.label')}
               </Typography>
               <Box
                 className="comment-box comment-collapsed"
@@ -481,7 +507,9 @@ function ProjectDetails(props) {
                     className="comment-text"
                     name="comment"
                     id="comment"
-                    placeholder="write a comment ..."
+                    placeholder={`${t(
+                      'projectDetails.project.comments.write',
+                    )} ...`}
                   ></textarea>
                   <CustomButton
                     ref={refs.commentPublishButton}
@@ -492,7 +520,7 @@ function ProjectDetails(props) {
                     variant="contained"
                     primaryButtonStyle
                   >
-                    Comment
+                    {t('projectDetails.project.comments.action')}
                   </CustomButton>
                 </form>
               </Box>
@@ -516,7 +544,9 @@ function ProjectDetails(props) {
                           {comment.creator}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          {dFormatter(comment.created_on)}
+                          {`${dFormatter(comment.created_on).value} ${t(
+                            `date.${dFormatter(comment.created_on).key}`,
+                          )} ${t('date.ago')}`}{' '}
                         </Typography>
                       </Box>
                     </Link>
@@ -542,7 +572,7 @@ function ProjectDetails(props) {
               openEnlargedImageDialog: !openEnlargedImageDialog,
             })
           }
-          aria-labelledby="enlarged image dialog"
+          aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
           <img
             className={classes.enlargedImageStyle}
@@ -554,9 +584,11 @@ function ProjectDetails(props) {
         <Dialog
           open={openDeleteProjectModal}
           onClose={() => handleSetState(handleToggleDeleteProjectModal(state))}
-          aria-labelledby="edit user profile"
+          aria-labelledby={t('projectDetails.ariaLabels.deleteProject')}
         >
-          <DialogTitle id="delete-project">Delete Project</DialogTitle>
+          <DialogTitle id="delete-project">
+            {t('projectDetails.project.delete.dialog.primary')}
+          </DialogTitle>
           <Box
             component="p"
             className={dialogError !== null && classes.errorBox}
@@ -569,8 +601,7 @@ function ProjectDetails(props) {
           </Box>{' '}
           <DialogContent>
             <Typography>
-              Are you sure you want to delete this project? you can't undo this
-              action!!!
+              {t('projectDetails.project.delete.dialog.secondary')}
             </Typography>
           </DialogContent>
           <DialogActions>
@@ -582,23 +613,21 @@ function ProjectDetails(props) {
               color="primary"
               secondaryButtonStyle
             >
-              Cancel
+              {t('projectDetails.project.delete.dialog.cancel')}
             </CustomButton>
             <CustomButton
               variant="contained"
               onClick={e => handleSetState(deleteProject(props, state))}
               dangerButtonStyle
             >
-              Delete
+              {t('projectDetails.project.delete.dialog.proceed')}
             </CustomButton>
           </DialogActions>
         </Dialog>
       </>
     );
   } else {
-    return (
-      <ErrorPage error="An error occured while fetching project details, please try again later" />
-    );
+    return <ErrorPage error={t('projectDetails.errors.unexpected')} />;
   }
 }
 
@@ -619,23 +648,23 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_project: values => {
-      return dispatch(ProjectActions.get_project(values));
+    get_project: args => {
+      return dispatch(ProjectActions.get_project(args));
     },
-    delete_project: props => {
-      return dispatch(ProjectActions.delete_project(props));
+    delete_project: args => {
+      return dispatch(ProjectActions.delete_project(args));
     },
-    toggle_follow: values => {
-      return dispatch(UserActions.toggle_follow(values));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    toggle_like: values => {
-      return dispatch(ProjectActions.toggle_like(values));
+    toggle_like: args => {
+      return dispatch(ProjectActions.toggle_like(args));
     },
-    toggle_save: values => {
-      return dispatch(ProjectActions.toggle_save(values));
+    toggle_save: args => {
+      return dispatch(ProjectActions.toggle_save(args));
     },
-    add_comment: values => {
-      return dispatch(ProjectActions.add_comment(values));
+    add_comment: args => {
+      return dispatch(ProjectActions.add_comment(args));
     },
   };
 };
