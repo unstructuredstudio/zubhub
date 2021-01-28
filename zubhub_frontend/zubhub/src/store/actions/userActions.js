@@ -11,9 +11,7 @@ export const get_user_profile = args => {
     return API.get_user_profile(args)
       .then(res => {
         if (!res.username) {
-          throw new Error(
-            args.t("profile.errors.profileFetchError")
-          );
+          throw new Error(args.t('profile.errors.profileFetchError'));
         } else {
           profile = res;
           return dispatch(
@@ -29,9 +27,7 @@ export const get_user_profile = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("profile.errors.unexpected")
-          );
+          toast.warning(args.t('profile.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -73,9 +69,7 @@ export const toggle_follow = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("profile.errors.unexpected")
-          );
+          toast.warning(args.t('profile.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -104,9 +98,7 @@ export const get_followers = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("profile.errors.unexpected")
-          );
+          toast.warning(args.t('profile.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -135,37 +127,10 @@ export const get_following = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("profile.errors.unexpected")
-          );
+          toast.warning(args.t('profile.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
-        return { loading: false };
-      });
-  };
-};
-
-export const get_following = value => {
-  return () => {
-    return API.get_following(value)
-      .then(res => {
-        if (Array.isArray(res.results)) {
-          return {
-            following: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
-            loading: false,
-          };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        toast.warning(error.message);
         return { loading: false };
       });
   };

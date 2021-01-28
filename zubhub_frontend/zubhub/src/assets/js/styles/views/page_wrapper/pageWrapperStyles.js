@@ -49,8 +49,8 @@ const styles = theme => ({
     right: theme.spacing(2),
   },
   languageSelectStyle: {
-    "display":"block",
-    "maxWidth":"7em",
+    display: 'block',
+    maxWidth: '7em',
   },
   center: {
     display: 'flex',

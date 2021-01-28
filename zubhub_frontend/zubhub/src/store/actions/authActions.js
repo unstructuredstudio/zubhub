@@ -42,9 +42,7 @@ export const logout = args => {
         args.history.push('/');
       })
       .catch(error => {
-        toast.warning(
-          args.t("pageWrapper.errors.logoutFailed"),
-        );
+        toast.warning(args.t('pageWrapper.errors.logoutFailed'));
       });
   };
 };
@@ -54,9 +52,7 @@ export const get_auth_user = props => {
     return API.get_auth_user(props.auth.token)
       .then(res => {
         if (!res.id) {
-          throw new Error(
-            props.t("pageWrapper.errors.unexpected"),
-          );
+          throw new Error(props.t('pageWrapper.errors.unexpected'));
         }
 
         dispatch({
@@ -86,13 +82,13 @@ export const signup = args => {
   };
 };
 
-export const send_email_confirmation = (args) => {
+export const send_email_confirmation = args => {
   return () => {
     return API.send_email_confirmation(args.key).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
-        toast.success(args.t("emailConfirm.toastSuccess"));
+        toast.success(args.t('emailConfirm.toastSuccess'));
         setTimeout(() => {
           args.history.push('/');
         }, 4000);
@@ -104,10 +100,10 @@ export const send_email_confirmation = (args) => {
 export const send_password_reset_link = args => {
   return () => {
     return API.send_password_reset_link(args.email).then(res => {
-      if (res.detail !== "ok") {
+      if (res.detail !== 'ok') {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(args.t("passwordReset.toastSuccess"));
+        toast.success(args.t('passwordReset.toastSuccess'));
         setTimeout(() => {
           args.history.push('/');
         }, 4000);
@@ -119,12 +115,10 @@ export const send_password_reset_link = args => {
 export const password_reset_confirm = args => {
   return () => {
     return API.password_reset_confirm(args).then(res => {
-      if (res.detail !== "ok") {
+      if (res.detail !== 'ok') {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(
-          args.t("passwordResetConfirm.toastSuccess"),
-        );
+        toast.success(args.t('passwordResetConfirm.toastSuccess'));
         setTimeout(() => {
           args.history.push('/login');
         }, 4000);
@@ -133,7 +127,7 @@ export const password_reset_confirm = args => {
   };
 };
 
-export const get_locations = (args) => {
+export const get_locations = args => {
   return () => {
     return API.get_locations()
       .then(res => {
@@ -149,8 +143,7 @@ export const get_locations = (args) => {
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           return {
-            error:
-            args.t("signup.errors.unexpected"),
+            error: args.t('signup.errors.unexpected'),
           };
         } else {
           return { error: error.message };
@@ -166,14 +159,14 @@ export const delete_account = args => {
         if (res.detail !== 'ok') {
           throw new Error(res.detail);
         } else {
-          toast.success(args.t("profile.delete.toastSuccess"));
+          toast.success(args.t('profile.delete.toastSuccess'));
           args.logout(args);
         }
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           return {
-            dialogError:args.t("profile.delete.errors.unexpected")
+            dialogError: args.t('profile.delete.errors.unexpected'),
           };
         } else {
           return { dialogError: error.message };

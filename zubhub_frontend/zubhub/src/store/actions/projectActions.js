@@ -43,7 +43,7 @@ export const delete_project = args => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
-        toast.success(args.t("projectDetails.deleteToastSuccess"));
+        toast.success(args.t('projectDetails.deleteToastSuccess'));
         return args.history.push('/profile');
       }
     });
@@ -65,9 +65,7 @@ export const get_project = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("projectDetails.errors.unexpected")
-          );
+          toast.warning(args.t('projectDetails.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -95,9 +93,7 @@ export const get_projects = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("projects.errors.unexpected")
-          );
+          toast.warning(args.t('projects.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -121,9 +117,7 @@ export const get_user_projects = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("projects.errors.unexpected")
-          );
+          toast.warning(args.t('projects.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -150,9 +144,7 @@ export const get_saved = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("savedProjects.errors.unexpected"),
-          );
+          toast.warning(args.t('savedProjects.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -176,9 +168,7 @@ export const toggle_like = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("projectDetails.errors.unexpected")
-          );
+          toast.warning(args.t('projectDetails.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -203,9 +193,7 @@ export const toggle_save = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("projects.errors.unexpected"),
-          );
+          toast.warning(args.t('projects.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -229,9 +217,7 @@ export const add_comment = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            args.t("projectDetails.errors.unexpected")
-          );
+          toast.warning(args.t('projectDetails.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }

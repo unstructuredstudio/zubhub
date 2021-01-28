@@ -136,7 +136,7 @@ function UserFollowing(props) {
 
   const { following, prevPage, nextPage, loading } = state;
   const { t } = props;
-  
+
   const username = props.match.params.username;
   if (loading) {
     return <LoadingPage />;
@@ -152,7 +152,6 @@ function UserFollowing(props) {
                 gutterBottom
               >
                 {t('userFollowing.title').replace('<>', username)}
-
               </Typography>
             </Grid>
             {buildFollowing(following, classes, props, state, handleSetState)}

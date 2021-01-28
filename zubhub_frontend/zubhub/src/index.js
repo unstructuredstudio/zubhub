@@ -1,4 +1,4 @@
-import React,{Suspense} from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 
 import reportWebVitals from './reportWebVitals';
@@ -18,17 +18,17 @@ let { store, persistor } = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-  <PersistGate loading={null} persistor={persistor}>
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-    <Suspense fallback={null}>
-      <App />
-    </Suspense>
-    </ThemeProvider>
-  </React.StrictMode>
-  </PersistGate>
+    <PersistGate loading={null} persistor={persistor}>
+      <React.StrictMode>
+        <ThemeProvider theme={theme}>
+          <Suspense fallback={null}>
+            <App />
+          </Suspense>
+        </ThemeProvider>
+      </React.StrictMode>
+    </PersistGate>
   </Provider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
