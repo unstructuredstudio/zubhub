@@ -1,3 +1,5 @@
+import i18next from 'i18next';
+
 class API {
   constructor() {
     this.domain =
@@ -15,6 +17,7 @@ class API {
         withCredentials: 'true',
         headers: new Headers({
           'Content-Type': 'application/json',
+          'Accept-Language': `${i18next.language},en;q=0.5`
         }),
       });
     } else if (token && body) {
@@ -26,6 +29,7 @@ class API {
         headers: new Headers({
           Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
+          'Accept-Language': `${i18next.language},en;q=0.5`
         }),
         body,
       });
@@ -38,6 +42,7 @@ class API {
         headers: new Headers({
           Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
+          'Accept-Language': `${i18next.language},en;q=0.5`
         }),
       });
     } else if (body) {
@@ -48,6 +53,7 @@ class API {
         withCredentials: 'true',
         headers: new Headers({
           'Content-Type': 'application/json',
+          'Accept-Language': `${i18next.language},en;q=0.5`
         }),
         body,
       });
@@ -59,6 +65,7 @@ class API {
     const url = 'rest-auth/login/';
     const method = 'POST';
     const body = JSON.stringify({ username, password });
+    console.log("stringified json",body);
 
     return this.request({ url, method, body }).then(res => res.json());
   };
@@ -102,7 +109,10 @@ class API {
     const method = 'POST';
     const body = JSON.stringify({ key });
 
-    return this.request({ url, method, body }).then(res => res.json());
+    return this.request({ url, method, body }).then(res =>{
+      const status = res.status;
+      return res.json().then(res=>({...res, detail: status === 200 ? "ok": res.detail }))
+    })
   };
   /*******************************************************************/
 
@@ -112,7 +122,10 @@ class API {
     const method = 'POST';
     const body = JSON.stringify({ email });
 
-    return this.request({ url, method, body }).then(res => res.json());
+    return this.request({ url, method, body }).then(res =>{
+      const status = res.status;
+      return res.json().then(res=>({...res, detail: status === 200 ? "ok": res.detail }))
+    })
   };
   /********************************************************************/
 
@@ -120,9 +133,12 @@ class API {
   password_reset_confirm = ({ new_password1, new_password2, uid, token }) => {
     const url = 'rest-auth/password/reset/confirm/';
     const method = 'POST';
-    const body = JSON.stringify({ new_password1, new_password2, uid, token });
+    const body = JSON.stringify({new_password1, new_password2, uid, token });
 
-    return this.request({ url, method, body }).then(res => res.json());
+    return this.request({ url, method, body }).then(res =>{
+      const status = res.status;
+      return res.json().then(res=>({...res, detail: status === 200 ? "ok": res.detail }))
+    })
   };
   /********************************************************************/
 
@@ -209,12 +225,10 @@ class API {
   delete_account = ({ token }) => {
     const url = 'creators/delete/';
     const method = 'DELETE';
-    return this.request({ url, method, token }).then(res => ({
-      detail:
-        res.status === 204
-          ? 'ok'
-          : 'An error occured while deleting account. Please try again later',
-    }));
+    return this.request({ url, method, token }).then(res =>{
+      const status = res.status;
+      return res.json().then(res=>({...res, detail: status === 204 ? "ok": res.detail }))
+    })
   };
   /********************************************************************/
 
@@ -253,9 +267,45 @@ class API {
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
+  /************************************************************************/
+
+  /************************** update project **************************/
+  update_project = ({
+    token,
+    id,
+    title,
+    description,
+    video,
+    images,
+    materials_used,
+  }) => {
+    const url = `projects/${id}/update/`;
+    const method = 'PATCH';
+    const body = JSON.stringify({
+      id,
+      title,
+      description,
+      images,
+      video,
+      materials_used,
+    });
+    return this.request({ url, method, token, body }).then(res => res.json());
+  };
+  /************************************************************************/
+
+  /************************** delete project **************************/
+  delete_project = ({ token, id }) => {
+    const url = `projects/${id}/delete/`;
+    const method = 'DELETE';
+    return this.request({ url, method, token }).then(res =>{
+      const status = res.status;
+      return res.json().then(res=>({...res, detail: status === 204 ? "ok": res.detail }))
+    })
+  };
+  /************************************************************************/
 
   /************************** get projects **************************/
-  get_projects = page => {
+  get_projects = ({page}) => {
     const url = page ? `projects/?${page}` : `projects/`;
     return this.request({ url }).then(res => res.json());
   };

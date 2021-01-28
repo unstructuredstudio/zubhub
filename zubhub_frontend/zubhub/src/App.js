@@ -2,6 +2,8 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+import { withTranslation } from 'react-i18next';
+
 import PageWrapper from './views/PageWrapper';
 import Signup from './views/signup/Signup';
 import Login from './views/login/Login';
@@ -26,7 +28,7 @@ function App(props) {
           exact={true}
           path="/"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <Projects {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -35,7 +37,7 @@ function App(props) {
         <Route
           path="/signup"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <Signup {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -44,7 +46,7 @@ function App(props) {
         <Route
           path="/login"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <Login {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -53,7 +55,7 @@ function App(props) {
         <Route
           path="/password-reset"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <PasswordReset {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -62,7 +64,7 @@ function App(props) {
         <Route
           path="/password-reset-confirm"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <PasswordResetConfirm {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -71,7 +73,7 @@ function App(props) {
         <Route
           path="/email-confirm"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <EmailConfirm {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -80,7 +82,7 @@ function App(props) {
         <Route
           path="/creators/:username/projects"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <UserProjects {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -89,7 +91,7 @@ function App(props) {
         <Route
           path="/creators/:username/followers"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <UserFollowers {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -98,7 +100,7 @@ function App(props) {
         <Route
           path="/creators/:username/following"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <UserFollowing {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -107,7 +109,7 @@ function App(props) {
         <Route
           path="/creators/:username"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <Profile {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -116,7 +118,7 @@ function App(props) {
         <Route
           path="/profile"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <Profile {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -125,7 +127,7 @@ function App(props) {
         <Route
           path="/edit-profile"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <EditProfile {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -134,7 +136,7 @@ function App(props) {
         <Route
           path="/projects/create"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <CreateProject {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -143,15 +145,24 @@ function App(props) {
         <Route
           path="/projects/saved"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <SavedProjects {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
         <Route
+          path="/projects/:id/edit"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <CreateProject {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/projects/:id"
           render={routeProps => (
-            <PageWrapper {...routeProps}>
+            <PageWrapper {...routeProps} {...props}>
               <ProjectDetails {...routeProps} {...props} />
             </PageWrapper>
           )}
@@ -161,4 +172,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default withTranslation()(App);

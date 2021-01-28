@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from creators.serializers import CreatorSerializer
 from .models import Project, Comment, Image
+import time
 
 
 Creator = get_user_model()
@@ -79,6 +80,35 @@ class ProjectSerializer(serializers.ModelSerializer):
         project = Project.objects.create(**validated_data)
         for image in images_data:
             Image.objects.create(project=project, **image)
+        return project
+
+    def update(self, project, validated_data):
+        images_data = validated_data.pop('images')
+
+        project.title = validated_data.pop("title")
+        project.description = validated_data.pop("description")
+        project.video = validated_data.pop("video")
+        project.materials_used = validated_data.pop("materials_used")
+
+        project.save()
+
+        images = project.images.all()
+        images_to_save = []
+        if len(images) != len(images_data):
+            for image_dict in images_data:
+                exist = False
+                for image in images:
+                    if image_dict["image_url"] == image.image_url:
+                        exist = True
+                if not exist:
+                    images_to_save.append(image_dict)
+
+            for image in images:
+                image.delete()
+
+        for image in images_to_save:
+            Image.objects.create(project=project, **image)
+
         return project
 
 

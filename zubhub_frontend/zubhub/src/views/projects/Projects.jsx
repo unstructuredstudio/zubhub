@@ -20,7 +20,7 @@ import styles from '../../assets/js/styles/views/projects/projectsStyles';
 const useStyles = makeStyles(styles);
 
 const fetchPage = (page, props) => {
-  return props.get_projects(page);
+  return props.get_projects({ page, t: props.t });
 };
 
 const updateProjects = (res, props) => {
@@ -40,7 +40,11 @@ const updateProjects = (res, props) => {
       }
     })
     .catch(error => {
-      toast.warning(error.message);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
       return { loading: false };
     });
 };
@@ -70,6 +74,7 @@ function Projects(props) {
     previous: prevPage,
     next: nextPage,
   } = props.projects;
+  const { t } = props;
 
   if (loading) {
     return <LoadingPage />;
@@ -100,7 +105,7 @@ function Projects(props) {
             ))}
           </Grid>
           <ButtonGroup
-            aria-label="previous and next page buttons"
+            aria-label={t('projects.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
             {prevPage ? (
@@ -114,7 +119,7 @@ function Projects(props) {
                 }}
                 primaryButtonStyle
               >
-                Prev
+                {t('projects.prev')}
               </CustomButton>
             ) : null}
             {nextPage ? (
@@ -128,7 +133,7 @@ function Projects(props) {
                 }}
                 primaryButtonStyle
               >
-                Next
+                {t('projects.next')}
               </CustomButton>
             ) : null}
           </ButtonGroup>
@@ -136,9 +141,7 @@ function Projects(props) {
       </Box>
     );
   } else {
-    return (
-      <ErrorPage error="An error occured while fetching Projects, please try again later" />
-    );
+    return <ErrorPage error={t('projects.errors.unexpected')} />;
   }
 }
 
@@ -162,14 +165,14 @@ const mapDispatchToProps = dispatch => {
     get_projects: page => {
       return dispatch(ProjectActions.get_projects(page));
     },
-    set_projects: projects => {
-      return dispatch(ProjectActions.set_projects(projects));
+    set_projects: args => {
+      return dispatch(ProjectActions.set_projects(args));
     },
-    toggle_like: props => {
-      return dispatch(ProjectActions.toggle_like(props));
+    toggle_like: args => {
+      return dispatch(ProjectActions.toggle_like(args));
     },
-    toggle_save: props => {
-      return dispatch(ProjectActions.toggle_save(props));
+    toggle_save: args => {
+      return dispatch(ProjectActions.toggle_save(args));
     },
   };
 };

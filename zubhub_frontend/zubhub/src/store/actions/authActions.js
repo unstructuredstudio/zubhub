@@ -12,9 +12,10 @@ export const setAuthUser = auth_user => {
   };
 };
 
-export const login = props => {
+export const login = args => {
   return dispatch => {
-    return API.login(props.values)
+    console.log(args);
+    return API.login(args.values)
       .then(res => {
         if (!res.key) {
           throw new Error(JSON.stringify(res));
@@ -24,13 +25,13 @@ export const login = props => {
           payload: { token: res.key },
         });
       })
-      .then(() => props.history.push('/profile'));
+      .then(() => args.history.push('/profile'));
   };
 };
 
-export const logout = props => {
+export const logout = args => {
   return dispatch => {
-    API.logout(props.auth.token)
+    API.logout(args.token)
       .then(res => {
         dispatch({
           type: 'SET_AUTH_USER',
@@ -38,11 +39,11 @@ export const logout = props => {
         });
       })
       .then(res => {
-        props.history.push('/');
+        args.history.push('/');
       })
       .catch(error => {
         toast.warning(
-          'An error occured while signing you out. please try again',
+          args.t("pageWrapper.errors.logoutFailed"),
         );
       });
   };
@@ -54,7 +55,7 @@ export const get_auth_user = props => {
       .then(res => {
         if (!res.id) {
           throw new Error(
-            'an error occured while getting user profile, please try again later',
+            props.t("pageWrapper.errors.unexpected"),
           );
         }
 
@@ -69,9 +70,9 @@ export const get_auth_user = props => {
   };
 };
 
-export const signup = props => {
+export const signup = args => {
   return dispatch => {
-    return API.signup(props.values)
+    return API.signup(args.values)
       .then(res => {
         if (!res.key) {
           throw new Error(JSON.stringify(res));
@@ -81,58 +82,58 @@ export const signup = props => {
           payload: { token: res.key },
         });
       })
-      .then(() => props.history.push('/profile'));
+      .then(() => args.history.push('/profile'));
   };
 };
 
-export const send_email_confirmation = (props, key) => {
+export const send_email_confirmation = (args) => {
   return () => {
-    return API.send_email_confirmation(key).then(res => {
+    return API.send_email_confirmation(args.key).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
-        toast.success('Congratulations!, your email has been confirmed!');
+        toast.success(args.t("emailConfirm.toastSuccess"));
         setTimeout(() => {
-          props.history.push('/');
+          args.history.push('/');
         }, 4000);
       }
     });
   };
 };
 
-export const send_password_reset_link = props => {
+export const send_password_reset_link = args => {
   return () => {
-    return API.send_password_reset_link(props.values.email).then(res => {
-      if (res.detail !== 'Password reset e-mail has been sent.') {
+    return API.send_password_reset_link(args.email).then(res => {
+      if (res.detail !== "ok") {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success('We just sent a password reset link to your email!');
+        toast.success(args.t("passwordReset.toastSuccess"));
         setTimeout(() => {
-          props.history.push('/');
+          args.history.push('/');
         }, 4000);
       }
     });
   };
 };
 
-export const password_reset_confirm = props => {
+export const password_reset_confirm = args => {
   return () => {
-    return API.password_reset_confirm(props).then(res => {
-      if (res.detail !== 'Password has been reset with the new password.') {
+    return API.password_reset_confirm(args).then(res => {
+      if (res.detail !== "ok") {
         throw new Error(JSON.stringify(res));
       } else {
         toast.success(
-          'Congratulations! your password reset was successful! you will now be redirected to login',
+          args.t("passwordResetConfirm.toastSuccess"),
         );
         setTimeout(() => {
-          props.history.push('/login');
+          args.history.push('/login');
         }, 4000);
       }
     });
   };
 };
 
-export const get_locations = () => {
+export const get_locations = (args) => {
   return () => {
     return API.get_locations()
       .then(res => {
@@ -149,7 +150,7 @@ export const get_locations = () => {
         if (error.message.startsWith('Unexpected')) {
           return {
             error:
-              'An error occured while performing this action. Please try again later',
+            args.t("signup.errors.unexpected"),
           };
         } else {
           return { error: error.message };
@@ -158,22 +159,21 @@ export const get_locations = () => {
   };
 };
 
-export const delete_account = props => {
+export const delete_account = args => {
   return () => {
-    return API.delete_account({ token: props.auth.token })
+    return API.delete_account(args)
       .then(res => {
         if (res.detail !== 'ok') {
           throw new Error(res.detail);
         } else {
-          toast.success('account have been deleted successfully!!!');
-          props.logout(props);
+          toast.success(args.t("profile.delete.toastSuccess"));
+          args.logout(args);
         }
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           return {
-            dialogError:
-              'An error occured while performing this action. Please try again later',
+            dialogError:args.t("profile.delete.errors.unexpected")
           };
         } else {
           return { dialogError: error.message };

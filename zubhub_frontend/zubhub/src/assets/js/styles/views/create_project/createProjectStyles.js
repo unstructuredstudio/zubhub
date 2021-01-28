@@ -48,6 +48,11 @@ const styles = theme => ({
       width: '75.5px !important',
     },
   },
+  staticLabelInputSmallStyle: {
+    '&.MuiOutlinedInput-root fieldset legend': {
+      width: '40px !important',
+    },
+  },
   uploadProgressLabelStyle: {
     color: 'white',
   },

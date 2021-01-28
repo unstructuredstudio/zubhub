@@ -38,7 +38,7 @@ import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles'
 const useStyles = makeStyles(styles);
 
 const get_locations = props => {
-  return props.get_locations();
+  return props.get_locations({ t: props.t });
 };
 
 const getProfile = (refs, props) => {
@@ -72,30 +72,28 @@ const editProfile = (e, props) => {
     return props
       .edit_user_profile({ ...props.values, token: props.auth.token })
       .then(res => {
-        toast.success('Your profile was updated successfully!!');
+        toast.success(props.t('editProfile.toastSuccess'));
         props.history.push('/profile');
       })
       .catch(error => {
         const messages = JSON.parse(error.message);
         if (typeof messages === 'object') {
-          let non_field_errors;
+          const server_errors = {};
           Object.keys(messages).forEach(key => {
             if (key === 'non_field_errors') {
-              non_field_errors = { error: messages[key][0] };
+              server_errors['non_field_errors'] = messages[key][0];
             } else if (key === 'location') {
-              props.setFieldTouched('user_location', true, false);
-              props.setFieldError('user_location', messages[key][0]);
+              server_errors['user_location'] = messages[key][0];
             } else {
-              props.setFieldTouched(key, true, false);
-              props.setFieldError(key, messages[key][0]);
+              server_errors[key] = messages[key][0];
             }
           });
-          return non_field_errors;
+          props.setStatus({ ...props.status, ...server_errors });
         } else {
-          return {
-            error:
-              'An error occured while performing this action. Please try again later',
-          };
+          props.setStatus({
+            ...props.status,
+            non_field_errors: props.t('editProfile.errors.unexpected'),
+          });
         }
       });
   }
@@ -114,7 +112,6 @@ function EditProfile(props) {
   };
 
   const [state, setState] = React.useState({
-    error: null,
     locations: [],
     current_location: '',
     toolTipOpen: false,
@@ -135,7 +132,8 @@ function EditProfile(props) {
     }
   };
 
-  const { error, locations, toolTipOpen } = state;
+  const { locations, toolTipOpen } = state;
+  const { t } = props;
 
   return (
     <Box className={classes.root}>
@@ -147,7 +145,7 @@ function EditProfile(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => handleSetState(editProfile(e, props))}
+                onSubmit={e => editProfile(e, props)}
               >
                 <Typography
                   gutterBottom
@@ -156,17 +154,24 @@ function EditProfile(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  Edit Profile
+                  {t('editProfile.welcomeMsg.primary')}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  Have changes to make to your Profile? go ahead!
+                  {t('editProfile.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box component="p" className={error && classes.errorBox}>
-                      {error && (
+                    <Box
+                      component="p"
+                      className={
+                        props.status &&
+                        props.status['non_field_errors'] &&
+                        classes.errorBox
+                      }
+                    >
+                      {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
-                          {error}
+                          {props.status['non_field_errors']}
                         </Box>
                       )}
                     </Box>
@@ -179,7 +184,8 @@ function EditProfile(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['username'] && props.errors['username']
+                        (props.status && props.status['username']) ||
+                        (props.touched['username'] && props.errors['username'])
                       }
                     >
                       <InputLabel
@@ -187,7 +193,7 @@ function EditProfile(props) {
                         htmlFor="username"
                         shrink={props.values['username'] ? true : false}
                       >
-                        Username
+                        {t('editProfile.inputs.username.label')}
                       </InputLabel>
                       <ClickAwayListener
                         onClickAway={() =>
@@ -195,7 +201,7 @@ function EditProfile(props) {
                         }
                       >
                         <Tooltip
-                          title="Do not use your real name here!"
+                          title={t('editProfile.tooltips.noRealName')}
                           placement="top-start"
                           arrow
                           onClose={() =>
@@ -232,107 +238,12 @@ function EditProfile(props) {
                         </Tooltip>
                       </ClickAwayListener>
                       <FormHelperText error>
-                        {props.touched['username'] && props.errors['username']}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        props.touched['dateOfBirth'] &&
-                        props.errors['dateOfBirth']
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="dateOfBirth"
-                        shrink={props.values['dateOfBirth'] ? true : false}
-                      >
-                        Date Of Birth
-                      </InputLabel>
-                      <OutlinedInput
-                        ref={refs.dobEl}
-                        className={
-                          props.values['dateOfBirth']
-                            ? clsx(
-                                classes.customInputStyle,
-                                classes.staticLabelInputStyle,
-                              )
-                            : classes.customInputStyle
-                        }
-                        id="dateOfBirth"
-                        name="dateOfBirth"
-                        type="date"
-                        value={
-                          props.values['dateOfBirth']
-                            ? props.values['dateOfBirth']
-                            : ''
-                        }
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        labelWidth={90}
-                      />
-                      <FormHelperText error>
-                        {props.touched['dateOfBirth'] &&
-                          props.errors['dateOfBirth']}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="small"
-                      error={props.touched['bio'] && props.errors['bio']}
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="bio"
-                        shrink={props.values['bio'] ? true : false}
-                      >
-                        Bio
-                      </InputLabel>
-                      <OutlinedInput
-                        ref={refs.bioEl}
-                        className={
-                          props.values['bio']
-                            ? clsx(
-                                classes.customInputStyle,
-                                classes.staticLabelInputSmallStyle,
-                              )
-                            : classes.customInputStyle
-                        }
-                        id="bio"
-                        name="bio"
-                        type="text"
-                        multiline
-                        rows={6}
-                        rowsMax={6}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        labelWidth={50}
-                      />
-                      <FormHelperText error>
-                        <Typography
-                          color="textSecondary"
-                          variant="caption"
-                          component="span"
-                        >
-                          Tell us something interesting about you! You can share
-                          what care about, your hobbies, things you have been
-                          working on recently, etc.
-                        </Typography>
-                        <br />
-                        {props.touched['bio'] && props.errors['bio']}
+                        {(props.status && props.status['username']) ||
+                          (props.touched['username'] &&
+                            props.errors['username'] &&
+                            t(
+                              `editProfile.inputs.username.errors.${this.props.errors['username']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -346,8 +257,9 @@ function EditProfile(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['user_location'] &&
-                        props.errors['user_location']
+                        (props.status && props.status['user_location']) ||
+                        (props.touched['user_location'] &&
+                          props.errors['user_location'])
                       }
                     >
                       <InputLabel
@@ -355,7 +267,7 @@ function EditProfile(props) {
                         id="user_location"
                         shrink={props.values['user_location'] ? true : false}
                       >
-                        Location
+                        {t('editProfile.inputs.location.label')}
                       </InputLabel>
                       <Select
                         labelId="user_location"
@@ -389,11 +301,74 @@ function EditProfile(props) {
                           ))}
                       </Select>
                       <FormHelperText error>
-                        {props.touched['user_location'] &&
-                          props.errors['user_location']}
+                        {(props.status && props.status['user_location']) ||
+                          (props.touched['user_location'] &&
+                            props.errors['user_location'] &&
+                            t(
+                              `editProfile.inputs.location.errors.${props.errors['user_location']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
+
+                  <Grid item xs={12}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="small"
+                      error={
+                        (props.status && props.status['bio']) ||
+                        (props.touched['bio'] && props.errors['bio'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="bio"
+                        shrink={props.values['bio'] ? true : false}
+                      >
+                        {t('editProfile.inputs.bio.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        ref={refs.bioEl}
+                        className={
+                          props.values['bio']
+                            ? clsx(
+                                classes.customInputStyle,
+                                classes.staticLabelInputSmallStyle,
+                              )
+                            : classes.customInputStyle
+                        }
+                        id="bio"
+                        name="bio"
+                        type="text"
+                        multiline
+                        rows={6}
+                        rowsMax={6}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={50}
+                      />
+                      <FormHelperText error>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          {t('editProfile.inputs.bio.helpText')}
+                        </Typography>
+                        <br />
+                        {(props.status && props.status['bio']) ||
+                          (props.touched['bio'] &&
+                            props.errors['bio'] &&
+                            t(
+                              `editProfile.inputs.bio.errors.${props.errors['bio']}`,
+                            ))}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+
                   <Grid item xs={12}>
                     <CustomButton
                       variant="contained"
@@ -402,7 +377,7 @@ function EditProfile(props) {
                       type="submit"
                       fullWidth
                     >
-                      Edit Profile
+                      {t('editProfile.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -416,7 +391,7 @@ function EditProfile(props) {
                       color="textSecondary"
                       component="p"
                     >
-                      OR
+                      {t('editProfile.or')}
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
@@ -429,7 +404,7 @@ function EditProfile(props) {
                       secondaryButtonStyle
                       fullWidth
                     >
-                      Back To Profile
+                      {t('editProfile.backToProfile')}
                     </CustomButton>
                   </Link>
                 </Grid>
@@ -481,17 +456,9 @@ export default connect(
       bio: '',
     }),
     validationSchema: Yup.object().shape({
-      username: Yup.string().required('please input your username'),
-      dateOfBirth: Yup.date()
-        .max(new Date(), "your date of birth can't be greater than today")
-        .required('please input your date of birth'),
-      bio: Yup.string().max(
-        255,
-        "your bio shouldn't be more than 255 characters",
-      ),
-      user_location: Yup.string()
-        .min(1, 'your location is too short')
-        .required('please input your location'),
+      username: Yup.string().required('required'),
+      user_location: Yup.string().min(1, 'min').required('required'),
+      bio: Yup.string().max(255, 'tooLong'),
     }),
   })(EditProfile),
 );

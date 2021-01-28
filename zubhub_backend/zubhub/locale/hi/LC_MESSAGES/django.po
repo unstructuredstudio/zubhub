@@ -1,0 +1,86 @@
+# Translation of custom error messages to hindi.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST Ndibe Raymond <ndiberaymond1@gmail.com>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-10 06:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FIRST Ndibe Raymond <ndiberaymond1@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: hindi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: zubhub/creators/serializers.py:46
+msgid "Date of Birth must be less than today's date"
+msgstr "जन्म तिथि आज की तारीख से कम होनी चाहिए"
+
+#: zubhub/creators/serializers.py:51
+msgid "Location is required"
+msgstr "स्थान की आवश्यकता है"
+
+#: zubhub/projects/serializers.py:68 zubhub/projects/serializers.py:74
+msgid "you must provide either image(s) or video url"
+msgstr "आपको छवि या वीडियो url प्रदान करना चाहिए"
+
+#: zubhub/templates/account/email/email_confirmation_message.txt:6
+msgid "Hello from "
+msgstr "से नमस्कार "
+
+#: zubhub/templates/account/email/email_confirmation_message.txt:7
+#, python-format
+msgid ""
+"\n"
+"You're receiving this e-mail because user %(user_display)s has given yours "
+"as an e-mail address to connect their account.\n"
+msgstr ""
+"\n"
+"आप यह ई-मेल प्राप्त कर रहे हैं क्योंकि उपयोगकर्ता %(user_display)s ने आपका दिया है"
+"उनके खाते को जोड़ने के लिए एक ई-मेल पते के रूप में। \n"
+
+#: zubhub/templates/account/email/email_confirmation_message.txt:10
+msgid "To confirm this is correct, go to "
+msgstr "यह सही है, इसकी पुष्टि करने के लिए "
+
+#: zubhub/templates/account/email/email_confirmation_message.txt:12
+msgid "Thank you from"
+msgstr "से साभार"
+
+#: zubhub/templates/account/email/email_confirmation_subject.txt:3
+msgid "Please Confirm Your E-mail Address"
+msgstr "कृपया अपने ईमेल पते की पुष्टि करें"
+
+#: zubhub/templates/registration/password_reset_email.html:4
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at "
+msgstr ""
+"आप यह ईमेल प्राप्त कर रहे हैं क्योंकि आपने अपने लिए पासवर्ड रीसेट का अनुरोध किया है "
+"उपयोगकर्ता खाता "
+
+#: zubhub/templates/registration/password_reset_email.html:5
+msgid "Please go to the following page and choose a new password:"
+msgstr "कृपया निम्न पृष्ठ पर जाएं और एक नया पासवर्ड चुनें:"
+
+#: zubhub/templates/registration/password_reset_email.html:10
+msgid "Your username, in case you've forgotten:"
+msgstr "आपका उपयोगकर्ता नाम, यदि आप भूल गए हैं:"
+
+#: zubhub/templates/registration/password_reset_email.html:11
+msgid "Thanks for using our site!"
+msgstr "हमारी साइट का उपयोग करने के लिए धन्यवाद!"
+
+#: zubhub/templates/registration/password_reset_email.html:12
+msgid "The "
+msgstr "यह "
+
+#: zubhub/templates/registration/password_reset_email.html:12
+msgid " Team"
+msgstr "टीम"

@@ -51,10 +51,14 @@ const getUserPofile = props => {
   if (!username) {
     username = props.auth.username;
   } else if (props.auth.username === username) props.history.push('/profile');
-  return props.get_user_profile({ username, token: props.auth.token });
+  return props.get_user_profile({
+    username,
+    token: props.auth.token,
+    t: props.t,
+  });
 };
 
-const copyProfileUrl = profile => {
+const copyProfileUrl = ({ profile, props }) => {
   const tempInput = document.createElement('textarea');
   tempInput.value = `${document.location.origin}/creators/${profile.username}`;
   tempInput.style.top = '0';
@@ -65,14 +69,12 @@ const copyProfileUrl = profile => {
   tempInput.focus();
   tempInput.select();
   if (document.execCommand('copy')) {
-    toast.success(
-      'your profile url has been successfully copied to your clipboard!',
-    );
+    toast.success(props.t('profile.toastSuccess'));
     rootElem.removeChild(tempInput);
   }
 };
 
-const updateProjects = (res, { results: projects }) => {
+const updateProjects = (res, { results: projects }, props) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
@@ -88,7 +90,11 @@ const updateProjects = (res, { results: projects }) => {
       }
     })
     .catch(error => {
-      toast.warning(error.message);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
       return { loading: false };
     });
 };
@@ -97,7 +103,7 @@ const toggle_follow = (id, props) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    return props.toggle_follow({ id, token: props.auth.token });
+    return props.toggle_follow({ id, token: props.auth.token, t: props.t });
   }
 };
 
@@ -114,11 +120,16 @@ const handleToggleDeleteAccountModal = state => {
   return { openDeleteAccountModal, moreAnchorEl: null };
 };
 
-const deleteAccount = (usernameEl, props, state) => {
+const deleteAccount = (usernameEl, props) => {
   if (usernameEl.current.firstChild.value !== props.auth.username) {
-    return { dialogError: 'The username you submitted is incorrect' };
+    return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
   } else {
-    return props.delete_account(props);
+    return props.delete_account({
+      token: props.auth.token,
+      history: props.history,
+      logout: props.logout,
+      t: props.t,
+    });
   }
 };
 
@@ -158,6 +169,7 @@ function Profile(props) {
   } = state;
 
   const moreMenuOpen = Boolean(moreAnchorEl);
+  const { t } = props;
 
   if (loading) {
     return <LoadingPage />;
@@ -182,7 +194,7 @@ function Profile(props) {
                     primaryButtonStyle
                     onClick={() => props.history.push('/edit-profile')}
                   >
-                    Edit
+                    {t('profile.edit')}
                   </CustomButton>
                   <Menu
                     className={classes.moreMenuStyle}
@@ -209,7 +221,7 @@ function Profile(props) {
                           handleSetState(handleToggleDeleteAccountModal(state))
                         }
                       >
-                        Delete Account
+                        {t('profile.delete.label')}
                       </Typography>
                     </MenuItem>
                   </Menu>
@@ -225,8 +237,8 @@ function Profile(props) {
                   }
                 >
                   {profile.followers.includes(props.auth.id)
-                    ? 'Unfollow'
-                    : 'Follow'}
+                    ? t('profile.unfollow')
+                    : t('profile.follow')}
                 </CustomButton>
               )}
               <Box className={classes.avatarBoxStyle}>
@@ -239,7 +251,7 @@ function Profile(props) {
                   badgeContent={
                     props.auth.id === profile.id ? (
                       <Tooltip
-                        title="Share your profile with friends!"
+                        title={t('profile.tooltips.shareProfile')}
                         placement="right-start"
                         arrow
                       >
@@ -248,8 +260,8 @@ function Profile(props) {
                             classes.secondaryButton,
                             classes.profileShareButtonStyle,
                           )}
-                          aria-label="share profile url"
-                          onClick={() => copyProfileUrl(profile)}
+                          aria-label={t('profile.ariaLabels.shareProfile')}
+                          onClick={() => copyProfileUrl({ profile, props })}
                         >
                           <ShareIcon />
                         </Fab>
@@ -287,7 +299,7 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.projects_count} Projects
+                      {profile.projects_count} {t('profile.projectsCount')}
                     </Typography>
                   </Link>
                   <Link
@@ -298,7 +310,7 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.followers.length} Followers
+                      {profile.followers.length} {t('profile.followersCount')}
                     </Typography>
                   </Link>
                   <Link
@@ -309,7 +321,7 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.following_count} Following
+                      {profile.following_count} {t('profile.followingCount')}
                     </Typography>
                   </Link>
                 </Box>
@@ -326,12 +338,10 @@ function Profile(props) {
                 color="textPrimary"
                 className={classes.titleStyle}
               >
-                About Me
+                {t('profile.about.label')}
               </Typography>
               <Box className={classes.aboutMeBoxStyle}>
-                {profile.bio
-                  ? profile.bio
-                  : 'Tell us more about you. Click the edit button at the page top to get started 🙂'}
+                {profile.bio ? profile.bio : t('profile.about.placeholder')}
               </Box>
             </Paper>
 
@@ -344,7 +354,7 @@ function Profile(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  Latest projects of {profile.username}
+                  {t('profile.projects.label')} {profile.username}
                   <Link
                     className={clsx(
                       classes.secondaryLink,
@@ -353,7 +363,7 @@ function Profile(props) {
                     )}
                     to={`/creators/${profile.username}/projects`}
                   >
-                    View all >>
+                    {t('profile.projects.viewAll')}
                   </Link>
                 </Typography>
                 <Grid container>
@@ -371,7 +381,7 @@ function Profile(props) {
                           project={project}
                           key={project.id}
                           updateProjects={res =>
-                            handleSetState(updateProjects(res, state))
+                            handleSetState(updateProjects(res, state, props))
                           }
                           {...props}
                         />
@@ -385,9 +395,11 @@ function Profile(props) {
         <Dialog
           open={openDeleteAccountModal}
           onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
-          aria-labelledby="delete account"
+          aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
         >
-          <DialogTitle id="delete-project">Delete Account</DialogTitle>
+          <DialogTitle id="delete-project">
+            {t('profile.delete.dialog.primary')}
+          </DialogTitle>
           <Box
             component="p"
             className={dialogError !== null && classes.errorBox}
@@ -399,11 +411,7 @@ function Profile(props) {
             )}
           </Box>{' '}
           <DialogContent>
-            <Typography>
-              Are you sure you want to delete this account? you can't undo this
-              action!!! if you still want procceed, type your username into the
-              field below and click procceed
-            </Typography>
+            <Typography>{t('profile.delete.dialog.secondary')}</Typography>
             <FormControl
               className={clsx(classes.margin, classes.textField)}
               variant="outlined"
@@ -415,7 +423,7 @@ function Profile(props) {
                 className={classes.customLabelStyle}
                 htmlFor="username"
               >
-                New Username
+                {t('profile.delete.dialog.inputs.username')}
               </InputLabel>
               <OutlinedInput
                 className={classes.customInputStyle}
@@ -435,7 +443,7 @@ function Profile(props) {
               color="primary"
               secondaryButtonStyle
             >
-              Cancel
+              {t('profile.delete.dialog.cancel')}
             </CustomButton>
             <CustomButton
               variant="contained"
@@ -444,16 +452,14 @@ function Profile(props) {
               }
               dangerButtonStyle
             >
-              Procceed
+              {t('profile.delete.dialog.procceed')}
             </CustomButton>
           </DialogActions>
         </Dialog>
       </>
     );
   } else {
-    return (
-      <ErrorPage error="An error occured while fetching profile, please try again later" />
-    );
+    return <ErrorPage error={t('profile.errors.profileFetchError')} />;
   }
 }
 
@@ -461,7 +467,8 @@ Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   set_auth_user: PropTypes.func.isRequired,
   get_user_profile: PropTypes.func.isRequired,
-  edit_user_profile: PropTypes.func.isRequired,
+  delete_account: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
   toggle_follow: PropTypes.func.isRequired,
   toggle_like: PropTypes.func.isRequired,
   toggle_save: PropTypes.func.isRequired,
@@ -478,26 +485,23 @@ const mapDispatchToProps = dispatch => {
     set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    get_user_profile: props => {
-      return dispatch(UserActions.get_user_profile(props));
+    get_user_profile: args => {
+      return dispatch(UserActions.get_user_profile(args));
     },
-    edit_user_profile: props => {
-      return dispatch(UserActions.edit_user_profile(props));
+    delete_account: args => {
+      return dispatch(AuthActions.delete_account(args));
     },
-    delete_account: props => {
-      return dispatch(AuthActions.delete_account(props));
+    logout: args => {
+      return dispatch(AuthActions.logout(args));
     },
-    logout: props => {
-      return dispatch(AuthActions.logout(props));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    toggle_follow: props => {
-      return dispatch(UserActions.toggle_follow(props));
+    toggle_like: args => {
+      return dispatch(ProjectActions.toggle_like(args));
     },
-    toggle_like: props => {
-      return dispatch(ProjectActions.toggle_like(props));
-    },
-    toggle_save: props => {
-      return dispatch(ProjectActions.toggle_save(props));
+    toggle_save: args => {
+      return dispatch(ProjectActions.toggle_save(args));
     },
   };
 };
