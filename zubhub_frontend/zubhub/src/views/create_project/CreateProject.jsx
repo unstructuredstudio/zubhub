@@ -31,7 +31,6 @@ import {
 } from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
-import LoadingPage from '../loading/LoadingPage';
 import ErrorPage from '../error/ErrorPage';
 import DO, { doConfig } from '../../assets/js/DO';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -194,7 +193,7 @@ function CreateProject(props) {
       state.image_upload.images_to_upload.length ===
       state.image_upload.successful_uploads
     ) {
-      handleSetState(upload_project());
+      upload_project();
     }
   }, [state.image_upload.successful_uploads]);
 
@@ -260,8 +259,7 @@ function CreateProject(props) {
 
           if (err.message.startsWith('Unexpected')) {
             handleSetState({
-              error:
-                'An error occured while performing this action. Please try again later',
+              error: props.t('createProject.errors.unexpected'),
               image_upload,
             });
           } else {
@@ -298,24 +296,24 @@ function CreateProject(props) {
       token: props.auth.token,
       images: state.image_upload.uploaded_images_url,
       video: props.values.video ? props.values.video : '',
+      t: props.t,
     }).catch(error => {
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {
-        let non_field_errors;
+        const server_errors = {};
         Object.keys(messages).forEach(key => {
           if (key === 'non_field_errors') {
-            non_field_errors = { error: messages[key][0] };
+            server_errors['non_field_errors'] = messages[key][0];
           } else {
-            props.setFieldTouched(key, true, false);
-            props.setFieldError(key, messages[key][0]);
+            server_errors[key] = messages[key][0];
           }
         });
-        if (non_field_errors) return non_field_errors;
+        props.setStatus({ ...props.status, ...server_errors });
       } else {
-        return {
-          error:
-            'An error occured while performing this action. Please try again later',
-        };
+        props.setStatus({
+          ...props.status,
+          non_field_errors: props.t('createProject.errors.unexpected'),
+        });
       }
     });
   };
@@ -339,15 +337,12 @@ function CreateProject(props) {
         if (
           Object.keys(errors).length > 0 &&
           !(Object.keys(errors).length === 2) &&
-          !(
-            errors['project_images'] ===
-            'you must provide either image(s) or video url'
-          ) &&
+          !(errors['project_images'] === 'imageOrVideo') &&
           state.image_upload.uploaded_images_url.length === 0
         ) {
           return;
         } else if (refs.imageEl.current.files.length === 0) {
-          handleSetState(upload_project());
+          upload_project();
         } else {
           const { image_upload } = state;
           image_upload.upload_dialog = true;
@@ -374,12 +369,11 @@ function CreateProject(props) {
     }
   };
 
-  const { error, image_upload, materials_used } = state;
+  const { image_upload, materials_used } = state;
+  const { t } = props;
   const id = props.match.params.id;
   if (!props.auth.token) {
-    return (
-      <ErrorPage error="You are not logged in. Click on the signin button to get started" />
-    );
+    return <ErrorPage error={t('createProject.errors.notLoggedIn')} />;
   } else {
     return (
       <Box className={classes.root}>
@@ -400,22 +394,31 @@ function CreateProject(props) {
                     component="h2"
                     color="textPrimary"
                   >
-                    Create Project
+                    {!id
+                      ? t('createProject.welcomeMsg.primary')
+                      : t('createProject.inputs.edit')}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
                   >
-                    Tell us about your project!
+                    {t('createProject.welcomeMsg.secondary')}
                   </Typography>
 
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
-                      <Box component="p" className={error && classes.errorBox}>
-                        {error && (
+                      <Box
+                        component="p"
+                        className={
+                          props.status &&
+                          props.status['non_field_errors'] &&
+                          classes.errorBox
+                        }
+                      >
+                        {props.status && props.status['non_field_errors'] && (
                           <Box component="span" className={classes.error}>
-                            {error}
+                            {props.status['non_field_errors']}
                           </Box>
                         )}
                       </Box>
@@ -428,25 +431,24 @@ function CreateProject(props) {
                         size="small"
                         fullWidth
                         margin="small"
-                        error={props.touched['title'] && props.errors['title']}
+                        error={
+                          (props.status && props.status['title']) ||
+                          (props.touched['title'] && props.errors['title'])
+                        }
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="title"
-                          shrink={id ? true : false}
+                          shrink
                         >
-                          Title
+                          {t('createProject.inputs.title.label')}
                         </InputLabel>
                         <OutlinedInput
                           ref={refs.titleEl}
-                          className={
-                            id
-                              ? clsx(
-                                  classes.customInputStyle,
-                                  classes.staticLabelInputSmallStyle,
-                                )
-                              : classes.customInputStyle
-                          }
+                          className={clsx(
+                            classes.customInputStyle,
+                            classes.staticLabelInputSmallStyle,
+                          )}
                           id="title"
                           name="title"
                           type="text"
@@ -456,7 +458,12 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
-                          {props.touched['title'] && props.errors['title']}
+                          {(props.status && props.status['title']) ||
+                            (props.touched['title'] &&
+                              props.errors['title'] &&
+                              t(
+                                `createProject.inputs.title.errors.${props.errors['title']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -469,27 +476,24 @@ function CreateProject(props) {
                         fullWidth
                         margin="small"
                         error={
-                          props.touched['description'] &&
-                          props.errors['description']
+                          (props.status && props.status['description']) ||
+                          (props.touched['description'] &&
+                            props.errors['description'])
                         }
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="description"
-                          shrink={id ? true : false}
+                          shrink
                         >
-                          Description
+                          {t('createProject.inputs.description.label')}
                         </InputLabel>
                         <OutlinedInput
                           ref={refs.descEl}
-                          className={
-                            id
-                              ? clsx(
-                                  classes.customInputStyle,
-                                  classes.staticLabelInputStyle,
-                                )
-                              : classes.customInputStyle
-                          }
+                          className={clsx(
+                            classes.customInputStyle,
+                            classes.staticLabelInputStyle,
+                          )}
                           id="description"
                           name="description"
                           type="text"
@@ -506,14 +510,15 @@ function CreateProject(props) {
                             variant="caption"
                             component="span"
                           >
-                            Tell us something interesting about the project! You
-                            can share what it is about, what inspired you to
-                            make it, your making process, fun and challenging
-                            moments you experienced, etc.
+                            {t('createProject.inputs.description.helperText')}
                           </Typography>
                           <br />
-                          {props.touched['description'] &&
-                            props.errors['description']}
+                          {(props.status && props.status['description']) ||
+                            (props.touched['description'] &&
+                              props.errors['description'] &&
+                              t(
+                                `createProject.inputs.description.errors.${props.errors['description']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -522,8 +527,9 @@ function CreateProject(props) {
                       <FormControl
                         fullWidth
                         error={
-                          props.touched['project_images'] &&
-                          props.errors['project_images']
+                          (props.status && props.status['project_images']) ||
+                          (props.touched['project_images'] &&
+                            props.errors['project_images'])
                         }
                       >
                         <label htmlFor="project_images">
@@ -547,7 +553,7 @@ function CreateProject(props) {
                             imageUploadButtonStyle
                             fullWidth
                           >
-                            Images
+                            {t('createProject.inputs.projectImages.label')}
                           </CustomButton>
                         </label>
                         <input
@@ -570,7 +576,11 @@ function CreateProject(props) {
                           onBlur={props.handleBlur}
                         />
                         <FormHelperText error>
-                          {props.errors['project_images']}
+                          {(props.status && props.status['project_images']) ||
+                            (props.errors['project_images'] &&
+                              t(
+                                `createProject.inputs.projectImages.errors.${props.errors['project_images']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -582,25 +592,24 @@ function CreateProject(props) {
                         size="small"
                         fullWidth
                         margin="small"
-                        error={props.touched['video'] && props.errors['video']}
+                        error={
+                          (props.status && props.status['video']) ||
+                          (props.touched['video'] && props.errors['video'])
+                        }
                       >
                         <InputLabel
                           className={classes.customLabelStyle}
                           htmlFor="video"
-                          shrink={id ? true : false}
+                          shrink
                         >
-                          Video URL
+                          {t('createProject.inputs.video.label')}
                         </InputLabel>
                         <OutlinedInput
                           ref={refs.videoEl}
-                          className={
-                            id
-                              ? clsx(
-                                  classes.customInputStyle,
-                                  classes.staticLabelInputStyle,
-                                )
-                              : classes.customInputStyle
-                          }
+                          className={clsx(
+                            classes.customInputStyle,
+                            classes.staticLabelInputStyle,
+                          )}
                           id="video"
                           name="video"
                           type="text"
@@ -614,10 +623,15 @@ function CreateProject(props) {
                             variant="caption"
                             component="span"
                           >
-                            YouTube, Vimeo, Google Drive links are supported
+                            {t('createProject.inputs.video.helperText')}
                           </Typography>
                           <br />
-                          {props.touched['video'] && props.errors['video']}
+                          {(props.status && props.status['video']) ||
+                            (props.touched['video'] &&
+                              props.errors['video'] &&
+                              t(
+                                `createProject.inputs.video.errors.${props.errors['video']}`,
+                              ))}
                         </FormHelperText>
                       </FormControl>
                     </Grid>
@@ -630,8 +644,9 @@ function CreateProject(props) {
                         fullWidth
                         margin="small"
                         error={
-                          props.touched['materials_used'] &&
-                          props.errors['materials_used']
+                          (props.status && props.status['materials_used']) ||
+                          (props.touched['materials_used'] &&
+                            props.errors['materials_used'])
                         }
                       >
                         <InputLabel
@@ -642,7 +657,7 @@ function CreateProject(props) {
                           htmlFor="add_materials_used"
                           shrink
                         >
-                          Materials Used
+                          {t('createProject.inputs.materialsUsed.label')}
                         </InputLabel>
                         <Box className={classes.materialsUsedViewStyle}>
                           {materials_used.map((material, num) =>
@@ -675,7 +690,9 @@ function CreateProject(props) {
                               id="add_materials_used"
                               name="add_materials_used"
                               type="text"
-                              placeholder="Add a material and click the + button"
+                              placeholder={t(
+                                'createProject.inputs.materialsUsed.placeholder',
+                              )}
                               onClick={() =>
                                 props.setFieldTouched('materials_used')
                               }
@@ -689,8 +706,13 @@ function CreateProject(props) {
                               }
                             />
                             <FormHelperText error>
-                              {props.touched['materials_used'] &&
-                                props.errors['materials_used']}
+                              {(props.status &&
+                                props.status['materials_used']) ||
+                                (props.touched['materials_used'] &&
+                                  props.errors['materials_used'] &&
+                                  t(
+                                    `createProject.inputs.materialsUsed.errors.${props.errors['materials_used']}`,
+                                  ))}
                             </FormHelperText>
                           </Grid>
                           <Grid item xs={4} sm={4} md={4}>
@@ -725,7 +747,9 @@ function CreateProject(props) {
                         primaryButtonStyle
                         fullWidth
                       >
-                        Create Project
+                        {!id
+                          ? t('createProject.inputs.submit')
+                          : t('createProject.inputs.edit')}
                       </CustomButton>
                     </Grid>
                   </Grid>
@@ -817,23 +841,15 @@ export default connect(
       materials_used: '',
     }),
     validationSchema: Yup.object().shape({
-      title: Yup.string()
-        .max(100, "your project title shouldn't be more than 100 characters")
-        .required('title is required'),
-      description: Yup.string()
-        .max(10000, "your description shouldn't be more than 10,000 characters")
-        .required('description is required'),
+      title: Yup.string().max(100, 'max').required('required'),
+      description: Yup.string().max(10000, 'max').required('required'),
       project_images: Yup.mixed()
-        .test(
-          'image_is_empty',
-          'you must provide either image(s) or video url',
-          function (value) {
-            return image_field_touched && !value && !this.parent.video
-              ? false
-              : true;
-          },
-        )
-        .test('not_an_image', 'only images are allowed', value => {
+        .test('image_is_empty', 'imageOrVideo', function (value) {
+          return image_field_touched && !value && !this.parent.video
+            ? false
+            : true;
+        })
+        .test('not_an_image', 'onlyImages', value => {
           if (value) {
             let not_an_image = false;
             for (let index = 0; index < value.files.length; index++) {
@@ -846,48 +862,35 @@ export default connect(
             return true;
           }
         })
-        .test('too_many_images', 'too many images uploaded', value => {
+        .test('too_many_images', 'tooManyImages', value => {
           if (value) {
             return value.files.length > 10 ? false : true;
           } else {
             return true;
           }
         })
-        .test(
-          'image_size_too_large',
-          'one or more of your image is greater than 10mb',
-          value => {
-            if (value) {
-              let image_size_too_large = false;
-              for (let index = 0; index < value.files.length; index++) {
-                if (value.files[index].size / 1000 > 10240) {
-                  image_size_too_large = true;
-                }
+        .test('image_size_too_large', 'imageSizeTooLarge', value => {
+          if (value) {
+            let image_size_too_large = false;
+            for (let index = 0; index < value.files.length; index++) {
+              if (value.files[index].size / 1000 > 10240) {
+                image_size_too_large = true;
               }
-              return image_size_too_large ? false : true;
-            } else {
-              return true;
             }
-          },
-        ),
+            return image_size_too_large ? false : true;
+          } else {
+            return true;
+          }
+        }),
       video: Yup.string()
-        .url('you are required to submit a video url here')
-        .max(1000, "your video url shouldn't be more than 1000 characters")
-        .test(
-          'video_is_empty',
-          'you must provide either image(s) or video url',
-          function (value) {
-            return video_field_touched && !value && !this.parent.project_images
-              ? false
-              : true;
-          },
-        ),
-      materials_used: Yup.string()
-        .max(
-          10000,
-          "your materials used shouldn't be more than 10,000 characters",
-        )
-        .required('materials used is required'),
+        .url('shouldBeVideoUrl')
+        .max(1000, 'max')
+        .test('video_is_empty', 'imageOrVideo', function (value) {
+          return video_field_touched && !value && !this.parent.project_images
+            ? false
+            : true;
+        }),
+      materials_used: Yup.string().max(10000, 'max').required('required'),
     }),
   })(CreateProject),
 );

@@ -28,7 +28,7 @@ const useStyles = makeStyles(styles);
 
 const fetchPage = (page, props) => {
   const username = props.match.params.username;
-  return props.get_following({ page, username });
+  return props.get_following({ page, username, t: props.t });
 };
 
 const toggle_follow = (e, props, state, id) => {
@@ -37,7 +37,7 @@ const toggle_follow = (e, props, state, id) => {
     props.history.push('/login');
   } else {
     return props
-      .toggle_follow({ id, token: props.auth.token })
+      .toggle_follow({ id, token: props.auth.token, t: props.t })
       .then(res => {
         if (res.profile && res.profile.username) {
           const { following } = state;
@@ -56,9 +56,7 @@ const toggle_follow = (e, props, state, id) => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            'An error occured while performing this action. Please try again later',
-          );
+          toast.warning(props.t('userFollowing.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -98,8 +96,8 @@ const buildFollowing = (following, classes, props, state, handleSetState) =>
               primaryButtonStyle
             >
               {creator.followers.includes(props.auth.id)
-                ? 'Unfollow'
-                : 'Follow'}
+                ? props.t('userFollowing.following.unfollow')
+                : props.t('userFollowing.following.follow')}
             </CustomButton>
           ) : null}
           <Typography
@@ -137,6 +135,7 @@ function UserFollowing(props) {
   };
 
   const { following, prevPage, nextPage, loading } = state;
+  const { t } = props;
   const username = props.match.params.username;
   if (loading) {
     return <LoadingPage />;
@@ -151,13 +150,14 @@ function UserFollowing(props) {
                 variant="h3"
                 gutterBottom
               >
-                Creators {username} is following
+                {t('userFollowing.title').replace('<>', username)}
+                {/* Creators {username} is following */}
               </Typography>
             </Grid>
             {buildFollowing(following, classes, props, state, handleSetState)}
           </Grid>
           <ButtonGroup
-            aria-label="previous and next page buttons"
+            aria-label={t('userFollowing.ariaLabels.prevNextButtons')}
             className={classes.buttonGroupStyle}
           >
             {prevPage ? (
@@ -171,7 +171,7 @@ function UserFollowing(props) {
                 }}
                 primaryButtonStyle
               >
-                Prev
+                {t('userFollowing.prev')}
               </CustomButton>
             ) : null}
             {nextPage ? (
@@ -185,7 +185,7 @@ function UserFollowing(props) {
                 }}
                 primaryButtonStyle
               >
-                Next
+                {t('userFollowing.next')}
               </CustomButton>
             ) : null}
           </ButtonGroup>
@@ -193,7 +193,7 @@ function UserFollowing(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error="Creator is not following anyone yet" />;
+    return <ErrorPage error={t('userFollowing.errors.noFollowing')} />;
   }
 }
 
@@ -211,11 +211,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggle_follow: value => {
-      return dispatch(UserActions.toggle_follow(value));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    get_following: value => {
-      return dispatch(UserActions.get_following(value));
+    get_following: args => {
+      return dispatch(UserActions.get_following(args));
     },
   };
 };
