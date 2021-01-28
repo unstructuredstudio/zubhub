@@ -145,3 +145,28 @@ export const get_following = args => {
       });
   };
 };
+
+export const get_following = value => {
+  return () => {
+    return API.get_following(value)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          return {
+            following: res.results,
+            prevPage: res.previous,
+            nextPage: res.next,
+            loading: false,
+          };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        toast.warning(error.message);
+        return { loading: false };
+      });
+  };
+};
