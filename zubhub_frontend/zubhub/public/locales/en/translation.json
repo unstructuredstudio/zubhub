@@ -312,13 +312,25 @@
   },
 
   "profile": {
-    "edit": {
-      "label": "Edit",
+    "edit": "Edit",
+    "delete": {
+      "label": "Delete Account",
       "dialog": {
-        "primary": "Edit User Profile",
-        "username": "New Username",
+        "primary": "Delete Account",
+        "secondary": "Are you sure you want to delete this account? you can't undo this action!!! if you still want procceed, type your username into the field below and click procceed",
+        "inputs": {
+          "username": "Your Username"
+        },
         "cancel": "Cancel",
-        "save": "Save"
+        "procceed": "Procceed"
+      },
+      "ariaLabels": {
+        "deleteAccount": "delete account"
+      },
+      "toastSuccess": "account have been deleted successfully!!!",
+      "errors": {
+        "incorrectUsername": "The username you submitted is incorrect",
+        "unexpected": "An error occured while performing this action. Please try again later"
       }
     },
     "follow": "Follow",
@@ -346,6 +358,45 @@
       "profileFetchError": "An error occured while fetching profile, please try again later",
       "profileUpdateError": "An error occured while updating your profile, please try again later",
       "unexpected": "an error occured while fetching user profile, please try again later"
+    }
+  },
+
+  "editProfile": {
+    "welcomeMsg": {
+      "primary": "Edit Profile",
+      "secondary": "Have changes to make to your Profile? go ahead!"
+    },
+    "inputs": {
+      "username": {
+        "label": "Username",
+        "errors": {
+          "required": "this field is required"
+        }
+      },
+      "location": {
+        "label": "Location",
+        "errors": {
+          "min": "your location is too short",
+          "required": "this field is required"
+        }
+      },
+      "bio": {
+        "label": "Bio",
+        "helpText": "Tell us something interesting about you! You can share what care about, your hobbies, things you have been working on recently, etc.",
+        "errors": {
+          "tooLong": "your bio shouldn't be more than 255 characters"
+        }
+      },
+      "submit": "Edit Profile"
+    },
+    "or": "OR",
+    "backToProfile": "Back To Profile",
+    "toastSuccess": "Your profile was updated successfully!!",
+    "errors": {
+      "unexpected": "an error occured while performing this action, please try again later"
+    },
+    "tooltips": {
+      "noRealName": "Do not use your real name here!"
     }
   },
 

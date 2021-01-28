@@ -36,6 +36,7 @@ import commonStyles from '../assets/js/styles';
 import languageMap from '../assets/js/languageMap.json';
 
 const useStyles = makeStyles(styles);
+const useCommonStyles = makeStyles(commonStyles);
 
 const logout = (e, props) => {
   e.preventDefault();
@@ -68,7 +69,7 @@ const handleChangeLanguage = ({ e, props }) => {
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
-  const commonClasses = makeStyles(commonStyles)();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     username: null,
@@ -240,16 +241,12 @@ function PageWrapper(props) {
                     </MenuItem>
                     <MenuItem className={classes.logOutStyle}>
                       <Typography
-                        className={classes.textDecorationNone}
+                        className={commonClasses.colorRed}
+                        variant="subtitle2"
+                        component="span"
                         onClick={e => logout(e, props)}
                       >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
-                          {t('pageWrapper.navbar.logout')}
-                        </Typography>
+                        {t('pageWrapper.navbar.logout')}
                       </Typography>
                     </MenuItem>
                   </Menu>

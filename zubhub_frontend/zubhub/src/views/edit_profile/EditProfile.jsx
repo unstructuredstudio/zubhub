@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 import { withFormik } from 'formik';
 import * as Yup from 'yup';
 
+import { toast } from 'react-toastify';
+
 import { makeStyles } from '@material-ui/core/styles';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {
   Grid,
   Box,
@@ -22,8 +22,6 @@ import {
   Select,
   MenuItem,
   Typography,
-  InputAdornment,
-  IconButton,
   OutlinedInput,
   Tooltip,
   ClickAwayListener,
@@ -34,25 +32,49 @@ import {
 
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
-import styles from '../../assets/js/styles/views/signup/signupStyles';
+import * as UserActions from '../../store/actions/userActions';
+import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
 
 const useStyles = makeStyles(styles);
-
-const handleMouseDownPassword = e => {
-  e.preventDefault();
-};
 
 const get_locations = props => {
   return props.get_locations({ t: props.t });
 };
 
-const signup = (e, props) => {
+const getProfile = (refs, props) => {
+  return props.get_auth_user(props).then(obj => {
+    if (!obj.id) {
+      return obj;
+    } else {
+      props.setFieldValue('username', obj.username);
+      if (refs.usernameEl.current)
+        refs.usernameEl.current.firstChild.value = obj.username;
+
+      props.setFieldValue('bio', obj.bio);
+      if (refs.bioEl.current) refs.bioEl.current.firstChild.value = obj.bio;
+
+      if (obj.dateOfBirth) {
+        props.setFieldValue('dateOfBirth', obj.dateOfBirth);
+      }
+
+      if (obj.location) {
+        props.setFieldValue('user_location', obj.location);
+      }
+    }
+  });
+};
+
+const editProfile = (e, props) => {
   e.preventDefault();
   if (props.values.user_location.length < 1) {
     props.validateField('user_location');
   } else {
     return props
-      .signup({ values: props.values, history: props.history })
+      .edit_user_profile({ ...props.values, token: props.auth.token })
+      .then(res => {
+        toast.success(props.t('editProfile.toastSuccess'));
+        props.history.push('/profile');
+      })
       .catch(error => {
         const messages = JSON.parse(error.message);
         if (typeof messages === 'object') {
@@ -70,7 +92,7 @@ const signup = (e, props) => {
         } else {
           props.setStatus({
             ...props.status,
-            non_field_errors: props.t('signup.errors.unexpected'),
+            non_field_errors: props.t('editProfile.errors.unexpected'),
           });
         }
       });
@@ -81,15 +103,22 @@ const handleTooltipToggle = ({ toolTipOpen }) => {
   return { toolTipOpen: !toolTipOpen };
 };
 
-function Signup(props) {
+function EditProfile(props) {
+  const refs = {
+    usernameEl: React.useRef(null),
+    bioEl: React.useRef(null),
+    dobEl: React.useRef(null),
+    locationEl: React.useRef(null),
+  };
+
   const [state, setState] = React.useState({
     locations: [],
-    showPassword1: false,
-    showPassword2: false,
+    current_location: '',
     toolTipOpen: false,
   });
 
   React.useEffect(() => {
+    getProfile(refs, props);
     handleSetState(get_locations(props));
   }, []);
 
@@ -103,7 +132,7 @@ function Signup(props) {
     }
   };
 
-  const { locations, toolTipOpen, showPassword1, showPassword2 } = state;
+  const { locations, toolTipOpen } = state;
   const { t } = props;
 
   return (
@@ -116,7 +145,7 @@ function Signup(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => signup(e, props)}
+                onSubmit={e => editProfile(e, props)}
               >
                 <Typography
                   gutterBottom
@@ -125,10 +154,10 @@ function Signup(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('signup.welcomeMsg.primary')}
+                  {t('editProfile.welcomeMsg.primary')}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  {t('signup.welcomeMsg.secondary')}
+                  {t('editProfile.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
@@ -162,8 +191,9 @@ function Signup(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="username"
+                        shrink={props.values['username'] ? true : false}
                       >
-                        {t('signup.inputs.username.label')}
+                        {t('editProfile.inputs.username.label')}
                       </InputLabel>
                       <ClickAwayListener
                         onClickAway={() =>
@@ -171,7 +201,7 @@ function Signup(props) {
                         }
                       >
                         <Tooltip
-                          title={t('signup.tooltips.noRealName')}
+                          title={t('editProfile.tooltips.noRealName')}
                           placement="top-start"
                           arrow
                           onClose={() =>
@@ -186,7 +216,15 @@ function Signup(props) {
                           disableTouchListener
                         >
                           <OutlinedInput
-                            className={classes.customInputStyle}
+                            ref={refs.usernameEl}
+                            className={
+                              props.values['username']
+                                ? clsx(
+                                    classes.customInputStyle,
+                                    classes.staticLabelInputStyle,
+                                  )
+                                : classes.customInputStyle
+                            }
                             id="username"
                             name="username"
                             type="text"
@@ -204,7 +242,7 @@ function Signup(props) {
                           (props.touched['username'] &&
                             props.errors['username'] &&
                             t(
-                              `signup.inputs.username.errors.${this.props.errors['username']}`,
+                              `editProfile.inputs.username.errors.${this.props.errors['username']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
@@ -212,91 +250,7 @@ function Signup(props) {
 
                   <Grid item xs={12} sm={6} md={6}>
                     <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      margin="normal"
-                      error={
-                        (props.status && props.status['email']) ||
-                        (props.touched['email'] && props.errors['email'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="email"
-                      >
-                        {t('signup.inputs.email.label')}
-                      </InputLabel>
-                      <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="email"
-                        name="email"
-                        type="text"
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        labelWidth={70}
-                      />
-                      <FormHelperText error>
-                        {(props.status && props.status['email']) ||
-                          (props.touched['email'] &&
-                            props.errors['email'] &&
-                            t(
-                              `signup.inputs.email.errors.${props.errors['email']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['dateOfBirth']) ||
-                        (props.touched['dateOfBirth'] &&
-                          props.errors['dateOfBirth'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="dateOfBirth"
-                        shrink
-                      >
-                        {t('signup.inputs.dateOfBirth.label')}
-                      </InputLabel>
-                      <OutlinedInput
-                        className={clsx(
-                          classes.customInputStyle,
-                          classes.DOBInputStyle,
-                        )}
-                        id="dateOfBirth"
-                        name="dateOfBirth"
-                        type="date"
-                        defaultValue=""
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        labelWidth={90}
-                      />
-                      <FormHelperText error>
-                        {(props.status && props.status['dateOfBirth']) ||
-                          (props.touched['dateOfBirth'] &&
-                            props.errors['dateOfBirth'] &&
-                            t(
-                              `signup.inputs.dateOfBirth.errors.${props.errors['dateOfBirth']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
+                      ref={refs.locationEl}
                       className={clsx(classes.margin, classes.textField)}
                       variant="outlined"
                       size="small"
@@ -311,15 +265,27 @@ function Signup(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         id="user_location"
+                        shrink={props.values['user_location'] ? true : false}
                       >
-                        {t('signup.inputs.location.label')}
+                        {t('editProfile.inputs.location.label')}
                       </InputLabel>
                       <Select
                         labelId="user_location"
                         id="user_location"
                         name="user_location"
-                        className={classes.customInputStyle}
-                        defaultValue=""
+                        className={
+                          props.values['user_location']
+                            ? clsx(
+                                classes.customInputStyle,
+                                classes.staticLabelInputStyle,
+                              )
+                            : classes.customInputStyle
+                        }
+                        value={
+                          props.values.user_location
+                            ? props.values.user_location
+                            : ''
+                        }
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         label="Location"
@@ -339,135 +305,70 @@ function Signup(props) {
                           (props.touched['user_location'] &&
                             props.errors['user_location'] &&
                             t(
-                              `signup.inputs.location.errors.${props.errors['user_location']}`,
+                              `editProfile.inputs.location.errors.${props.errors['user_location']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={6}>
+                  <Grid item xs={12}>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
                       variant="outlined"
                       size="small"
                       fullWidth
-                      margin="normal"
+                      margin="small"
                       error={
-                        (props.status && props.status['password1']) ||
-                        (props.touched['password1'] &&
-                          props.errors['password1'])
+                        (props.status && props.status['bio']) ||
+                        (props.touched['bio'] && props.errors['bio'])
                       }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
-                        htmlFor="password1"
+                        htmlFor="bio"
+                        shrink={props.values['bio'] ? true : false}
                       >
-                        {t('signup.inputs.password1.label')}
+                        {t('editProfile.inputs.bio.label')}
                       </InputLabel>
                       <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="password1"
-                        name="password1"
-                        type={showPassword1 ? 'text' : 'password'}
+                        ref={refs.bioEl}
+                        className={
+                          props.values['bio']
+                            ? clsx(
+                                classes.customInputStyle,
+                                classes.staticLabelInputSmallStyle,
+                              )
+                            : classes.customInputStyle
+                        }
+                        id="bio"
+                        name="bio"
+                        type="text"
+                        multiline
+                        rows={6}
+                        rowsMax={6}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label={t(
-                                'signup.ariaLabel.togglePasswordVisibility',
-                              )}
-                              onClick={() =>
-                                setState({
-                                  ...state,
-                                  showPassword1: !showPassword1,
-                                })
-                              }
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword1 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        labelWidth={70}
+                        labelWidth={50}
                       />
                       <FormHelperText error>
-                        {(props.status && props.status['password1']) ||
-                          (props.touched['password1'] &&
-                            props.errors['password1'] &&
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          {t('editProfile.inputs.bio.helpText')}
+                        </Typography>
+                        <br />
+                        {(props.status && props.status['bio']) ||
+                          (props.touched['bio'] &&
+                            props.errors['bio'] &&
                             t(
-                              `signup.inputs.password1.errors.${props.errors['password1']}`,
+                              `editProfile.inputs.bio.errors.${props.errors['bio']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['password2']) ||
-                        (props.touched['password2'] &&
-                          props.errors['password2'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password2"
-                      >
-                        {t('signup.inputs.password2.label')}
-                      </InputLabel>
-                      <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="password2"
-                        name="password2"
-                        type={showPassword2 ? 'text' : 'password'}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label={t(
-                                'signup.ariaLabel.togglePasswordVisibility',
-                              )}
-                              onClick={() =>
-                                setState({
-                                  ...state,
-                                  showPassword2: !showPassword2,
-                                })
-                              }
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {showPassword2 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        labelWidth={70}
-                      />
-                      <FormHelperText error>
-                        {(props.status && props.status['password2']) ||
-                          (props.touched['password2'] &&
-                            props.errors['password2'] &&
-                            t(
-                              `signup.inputs.password2.errors.${props.errors['password2']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
                   <Grid item xs={12}>
                     <CustomButton
                       variant="contained"
@@ -476,7 +377,7 @@ function Signup(props) {
                       type="submit"
                       fullWidth
                     >
-                      {t('signup.inputs.submit')}
+                      {t('editProfile.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -490,20 +391,20 @@ function Signup(props) {
                       color="textSecondary"
                       component="p"
                     >
-                      {t('signup.alreadyAMember')}
+                      {t('editProfile.or')}
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Link to="/login" className={classes.textDecorationNone}>
+                  <Link to="/profile" className={classes.textDecorationNone}>
                     <CustomButton
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
                       fullWidth
                     >
-                      {t('signup.login')}
+                      {t('editProfile.backToProfile')}
                     </CustomButton>
                   </Link>
                 </Grid>
@@ -516,10 +417,11 @@ function Signup(props) {
   );
 }
 
-Signup.propTypes = {
+EditProfile.propTypes = {
   auth: PropTypes.object.isRequired,
+  get_auth_user: PropTypes.func.isRequired,
   set_auth_user: PropTypes.func.isRequired,
-  signup: PropTypes.func.isRequired,
+  edit_user_profile: PropTypes.func.isRequired,
   get_locations: PropTypes.func.isRequired,
 };
 
@@ -531,14 +433,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
+    get_auth_user: props => {
+      return dispatch(AuthActions.get_auth_user(props));
     },
-    signup: args => {
-      return dispatch(AuthActions.signup(args));
+    edit_user_profile: props => {
+      return dispatch(UserActions.edit_user_profile(props));
     },
-    get_locations: args => {
-      return dispatch(AuthActions.get_locations(args));
+    get_locations: props => {
+      return dispatch(AuthActions.get_locations());
     },
   };
 };
@@ -550,20 +452,13 @@ export default connect(
   withFormik({
     mapPropsToValue: () => ({
       username: '',
-      email: '',
       user_location: '',
-      password1: '',
-      password2: '',
+      bio: '',
     }),
     validationSchema: Yup.object().shape({
       username: Yup.string().required('required'),
-      email: Yup.string().email('invalid').required('required'),
-      dateOfBirth: Yup.date().max(new Date(), 'max').required('required'),
       user_location: Yup.string().min(1, 'min').required('required'),
-      password1: Yup.string().min(8, 'min').required('required'),
-      password2: Yup.string()
-        .oneOf([Yup.ref('password1'), null], 'noMatch')
-        .required('required'),
+      bio: Yup.string().max(255, 'tooLong'),
     }),
-  })(Signup),
+  })(EditProfile),
 );

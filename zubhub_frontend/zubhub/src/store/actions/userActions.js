@@ -42,30 +42,19 @@ export const get_user_profile = args => {
 
 export const edit_user_profile = args => {
   return dispatch => {
-    return API.edit_user_profile(args)
-      .then(res => {
-        if (res.username) {
-          dispatch(
-            AuthActions.setAuthUser({
-              username: res.username,
-            }),
-          );
-
-          return { profile: res };
-        } else {
-          throw new Error(
-            args.t("profile.errors.profileUpdateError"),
-          );
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-        toast.warning(
-          args.t("profile.errors.unexpected")
+    return API.edit_user_profile(args).then(res => {
+      if (res.id) {
+        dispatch(
+          AuthActions.setAuthUser({
+            username: res.username,
+          }),
         );
+
+        return { profile: res };
       } else {
-        toast.warning(error.message);
-      }});
+        throw new Error(JSON.stringify(res));
+      }
+    });
   };
 };
 
