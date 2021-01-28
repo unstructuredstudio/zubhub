@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
+
+import reportWebVitals from './reportWebVitals';
 
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
@@ -10,7 +12,7 @@ import { theme } from './assets/js/muiTheme';
 import App from './App';
 import './assets/css/index.css';
 import configureStore from './store/configureStore';
-import reportWebVitals from './reportWebVitals';
+import './i18n';
 
 let { store, persistor } = configureStore();
 
@@ -19,7 +21,9 @@ ReactDOM.render(
     <PersistGate loading={null} persistor={persistor}>
       <React.StrictMode>
         <ThemeProvider theme={theme}>
-          <App />
+          <Suspense fallback={null}>
+            <App />
+          </Suspense>
         </ThemeProvider>
       </React.StrictMode>
     </PersistGate>

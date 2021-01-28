@@ -50,12 +50,13 @@ function Project(props) {
       const toggle_save_promise = props.toggle_save({
         id,
         token: props.auth.token,
+        t: props.t,
       });
       props.updateProjects(toggle_save_promise);
     }
   };
 
-  const { project } = props;
+  const { project, t } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
@@ -165,7 +166,9 @@ function Project(props) {
                 variant="caption"
                 component="span"
               >
-                {dFormatter(project.created_on)}
+                {`${dFormatter(project.created_on).value} ${t(
+                  `date.${dFormatter(project.created_on).key}`,
+                )} ${t('date.ago')}`}
               </Typography>
             </Box>
           </CardContent>

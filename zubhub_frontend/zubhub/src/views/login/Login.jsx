@@ -45,33 +45,33 @@ const handleMouseDownPassword = e => {
 
 const login = (e, props) => {
   e.preventDefault();
-  return props.login(props).catch(error => {
-    const messages = JSON.parse(error.message);
-    if (typeof messages === 'object') {
-      let non_field_errors;
-      Object.keys(messages).forEach(key => {
-        if (key === 'non_field_errors') {
-          non_field_errors = { error: messages[key][0] };
-        } else {
-          props.setFieldTouched(key, true, false);
-          props.setFieldError(key, messages[key][0]);
-        }
-      });
-      return non_field_errors;
-    } else {
-      return {
-        error:
-          'An error occured while performing this action. Please try again later',
-      };
-    }
-  });
+  return props
+    .login({ values: props.values, history: props.history })
+    .catch(error => {
+      const messages = JSON.parse(error.message);
+      if (typeof messages === 'object') {
+        const server_errors = {};
+        Object.keys(messages).forEach(key => {
+          if (key === 'non_field_errors') {
+            server_errors['non_field_errors'] = messages[key][0];
+          } else {
+            server_errors[key] = messages[key][0];
+          }
+        });
+        props.setStatus({ ...props.status, ...server_errors });
+      } else {
+        props.setStatus({
+          ...props.status,
+          non_field_errors: props.t('login.errors.unexpected'),
+        });
+      }
+    });
 };
 
 function Login(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    error: null,
     showPassword: false,
   });
 
@@ -83,7 +83,8 @@ function Login(props) {
     }
   };
 
-  const { error, showPassword } = state;
+  const { showPassword } = state;
+  const { t } = props;
 
   return (
     <Box className={classes.root}>
@@ -104,17 +105,24 @@ function Login(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  Welcome to Zubhub
+                  {t('login.welcomeMsg.primary')}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  Login to get started!
+                  {t('login.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box component="p" className={error && classes.errorBox}>
-                      {error && (
+                    <Box
+                      component="p"
+                      className={
+                        props.status &&
+                        props.status['non_field_errors'] &&
+                        classes.errorBox
+                      }
+                    >
+                      {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
-                          {error}
+                          {props.status['non_field_errors']}
                         </Box>
                       )}
                     </Box>
@@ -127,14 +135,15 @@ function Login(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['username'] && props.errors['username']
+                        (props.status && props.status['username']) ||
+                        (props.touched['username'] && props.errors['username'])
                       }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="username"
                       >
-                        Username Or Email
+                        {t('login.inputs.username.label')}
                       </InputLabel>
                       <OutlinedInput
                         className={classes.customInputStyle}
@@ -146,7 +155,12 @@ function Login(props) {
                         labelWidth={150}
                       />
                       <FormHelperText error>
-                        {props.touched['username'] && props.errors['username']}
+                        {(props.status && props.status['username']) ||
+                          (props.touched['username'] &&
+                            props.errors['username'] &&
+                            t(
+                              `login.inputs.username.errors.${props.errors['username']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -159,10 +173,13 @@ function Login(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        props.touched['password'] && props.errors['password']
+                        (props.status && props.status['password']) ||
+                        (props.touched['password'] && props.errors['password'])
                       }
                     >
-                      <InputLabel htmlFor="password">Password</InputLabel>
+                      <InputLabel htmlFor="password">
+                        {t('login.inputs.password.label')}
+                      </InputLabel>
                       <OutlinedInput
                         className={classes.customInputStyle}
                         id="password"
@@ -191,7 +208,12 @@ function Login(props) {
                         labelWidth={70}
                       />
                       <FormHelperText error>
-                        {props.touched['password'] && props.errors['password']}
+                        {(props.status && props.status['password']) ||
+                          (props.touched['password'] &&
+                            props.errors['password'] &&
+                            t(
+                              `login.inputs.password.errors.${props.errors['password']}`,
+                            ))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -203,7 +225,7 @@ function Login(props) {
                       primaryButtonStyle
                       fullWidth
                     >
-                      Login
+                      {t('login.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -217,7 +239,7 @@ function Login(props) {
                       color="textSecondary"
                       component="p"
                     >
-                      Not a Member ?
+                      {t('login.notAMember')}
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
@@ -230,7 +252,7 @@ function Login(props) {
                       secondaryButtonStyle
                       fullWidth
                     >
-                      Signup
+                      {t('login.signup')}
                     </CustomButton>
                   </Link>
                 </Grid>
@@ -240,7 +262,7 @@ function Login(props) {
                       to="/password-reset"
                       className={classes.secondaryLink}
                     >
-                      Forgot Password?
+                      {t('login.forgotPassword')}
                     </Link>
                   </Box>
                 </Grid>
@@ -270,8 +292,8 @@ const mapDispatchToProps = dispatch => {
     set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    login: props => {
-      return dispatch(AuthActions.login(props));
+    login: args => {
+      return dispatch(AuthActions.login(args));
     },
   };
 };
@@ -285,9 +307,8 @@ export default connect(
       password: '',
     }),
     validationSchema: Yup.object().shape({
-      password: Yup.string()
-        .min(8, 'your password is too short')
-        .required('input your password'),
+      username: Yup.string().required('required'),
+      password: Yup.string().min(8, 'min').required('required'),
     }),
   })(Login),
 );

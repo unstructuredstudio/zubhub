@@ -17,6 +17,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     children,
     primaryButtonStyle,
     secondaryButtonStyle,
+    dangerButtonStyle,
     imageUploadButtonStyle,
     fullWidth,
     className,
@@ -26,6 +27,7 @@ const CustomButton = React.forwardRef((props, ref) => {
   const btnClasses = classNames({
     [classes.primaryButtonStyle]: primaryButtonStyle,
     [classes.secondaryButtonStyle]: secondaryButtonStyle,
+    [classes.dangerButtonStyle]: dangerButtonStyle,
     [classes.imageUploadButtonStyle]: imageUploadButtonStyle,
     [classes.fullWidth]: fullWidth,
     [className]: className,
@@ -42,6 +44,7 @@ Button.propTypes = {
   size: PropTypes.oneOf(['small', 'large']),
   primaryButtonStyle: PropTypes.bool,
   secondaryButtonStyle: PropTypes.bool,
+  dangerButtonStyle: PropTypes.bool,
   imageUploadButtonStyle: PropTypes.bool,
   className: PropTypes.string,
   variant: PropTypes.string,

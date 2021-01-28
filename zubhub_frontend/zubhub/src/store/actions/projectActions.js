@@ -12,21 +12,47 @@ export const set_projects = projects => {
 };
 
 export const create_project = props => {
-  return dispatch => {
+  return () => {
     return API.create_project(props).then(res => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success('Your project was created successfully!!');
+        toast.success(props.t('createProject.createToastSuccess'));
         return props.history.push('/profile');
       }
     });
   };
 };
 
-export const get_project = value => {
+export const update_project = props => {
   return () => {
-    return API.get_project(value)
+    return API.update_project(props).then(res => {
+      if (!res.id) {
+        throw new Error(JSON.stringify(res));
+      } else {
+        toast.success(props.t('createProject.updateToastSuccess'));
+        return props.history.push('/profile');
+      }
+    });
+  };
+};
+
+export const delete_project = args => {
+  return () => {
+    return API.delete_project({ token: args.token, id: args.id }).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
+        toast.success(args.t('projectDetails.deleteToastSuccess'));
+        return args.history.push('/profile');
+      }
+    });
+  };
+};
+
+export const get_project = args => {
+  return () => {
+    return API.get_project(args)
       .then(res => {
         if (res.title) {
           return { project: res, loading: false };
@@ -38,15 +64,19 @@ export const get_project = value => {
         }
       })
       .catch(error => {
-        toast.warning(error.message);
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projectDetails.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
         return { loading: false };
       });
   };
 };
 
-export const get_projects = page => {
+export const get_projects = args => {
   return dispatch => {
-    return API.get_projects(page)
+    return API.get_projects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           dispatch({
@@ -62,15 +92,19 @@ export const get_projects = page => {
         }
       })
       .catch(error => {
-        toast.warning(error.message);
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
         return { loading: false };
       });
   };
 };
 
-export const get_user_projects = props => {
+export const get_user_projects = args => {
   return () => {
-    return API.get_user_projects(props)
+    return API.get_user_projects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return { ...res, loading: false };
@@ -82,15 +116,19 @@ export const get_user_projects = props => {
         }
       })
       .catch(error => {
-        toast.warning(error.message);
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
         return { loading: false };
       });
   };
 };
 
-export const get_saved = value => {
+export const get_saved = args => {
   return () => {
-    return API.get_saved(value)
+    return API.get_saved(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
@@ -106,9 +144,7 @@ export const get_saved = value => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            'An error occured while performing this action. Please try again later',
-          );
+          toast.warning(args.t('savedProjects.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -117,9 +153,9 @@ export const get_saved = value => {
   };
 };
 
-export const toggle_like = props => {
+export const toggle_like = args => {
   return () => {
-    return API.toggle_like(props)
+    return API.toggle_like(args)
       .then(res => {
         if (res.title) {
           return { project: res };
@@ -132,9 +168,7 @@ export const toggle_like = props => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            'An error occured while performing this action. Please try again later',
-          );
+          toast.warning(args.t('projectDetails.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -144,9 +178,9 @@ export const toggle_like = props => {
   };
 };
 
-export const toggle_save = props => {
+export const toggle_save = args => {
   return () => {
-    return API.toggle_save(props)
+    return API.toggle_save(args)
       .then(res => {
         if (res.title) {
           return { project: res };
@@ -159,9 +193,7 @@ export const toggle_save = props => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            'An error occured while performing this action. Please try again later',
-          );
+          toast.warning(args.t('projects.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -170,9 +202,9 @@ export const toggle_save = props => {
   };
 };
 
-export const add_comment = props => {
+export const add_comment = args => {
   return () => {
-    return API.add_comment(props)
+    return API.add_comment(args)
       .then(res => {
         if (res.title) {
           return { project: res };
@@ -185,9 +217,7 @@ export const add_comment = props => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            'An error occured while performing this action. Please try again later',
-          );
+          toast.warning(args.t('projectDetails.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }

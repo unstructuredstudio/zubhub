@@ -6,31 +6,31 @@ const dFormatter = str => {
   let interval = seconds / 31536000;
 
   if (interval > 1) {
-    const result = Math.round(interval);
-    return result + (result > 1 ? ' years' : ' year') + ' ago';
+    let result = Math.round(interval);
+    return { value: result, key: result > 1 ? 'years' : 'year' };
   }
   interval = seconds / 2592000;
   if (interval > 1) {
-    const result = Math.round(interval);
-    return result + (result > 1 ? ' months' : ' month') + ' ago';
+    let result = Math.round(interval);
+    return { value: result, key: result > 1 ? 'months' : 'month' };
   }
   interval = seconds / 86400;
   if (interval > 1) {
-    const result = Math.round(interval);
-    return result + (result > 1 ? ' days' : ' day') + ' ago';
+    let result = Math.round(interval);
+    return { value: result, key: result > 1 ? 'days' : 'day' };
   }
   interval = seconds / 3600;
   if (interval > 1) {
-    const result = Math.round(interval);
-    return result + (result > 1 ? ' hours' : ' hour') + ' ago';
+    let result = Math.round(interval);
+    return { value: result, key: result > 1 ? 'hours' : 'hour' };
   }
   interval = seconds / 60;
   if (interval > 1) {
-    const result = Math.round(interval);
-    return result + (result > 1 ? ' minutes' : ' minute') + ' ago';
+    let result = Math.round(interval);
+    return { value: result, key: result > 1 ? 'minutes' : 'minute' };
   }
-  const result = Math.round(interval);
-  return result + (result > 1 ? ' seconds' : ' second') + ' ago';
+  let result = Math.round(interval);
+  return { value: result, key: result > 1 ? 'seconds' : 'second' };
 };
 
 export default dFormatter;

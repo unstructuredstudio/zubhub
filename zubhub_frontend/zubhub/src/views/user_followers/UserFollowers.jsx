@@ -28,7 +28,7 @@ const useStyles = makeStyles(styles);
 
 const fetchPage = (page, props) => {
   const username = props.match.params.username;
-  return props.get_followers({ page, username });
+  return props.get_followers({ page, username, t: props.t });
 };
 
 const toggle_follow = (e, props, state, id) => {
@@ -37,7 +37,7 @@ const toggle_follow = (e, props, state, id) => {
     props.history.push('/login');
   } else {
     return props
-      .toggle_follow({ id, token: props.auth.token })
+      .toggle_follow({ id, token: props.auth.token, t: props.t })
       .then(res => {
         if (res.profile && res.profile.username) {
           const followers = state.followers.map(follower =>
@@ -53,9 +53,7 @@ const toggle_follow = (e, props, state, id) => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(
-            'An error occured while performing this action. Please try again later',
-          );
+          toast.warning(props.t('userFollowers.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -95,8 +93,8 @@ const buildFollowers = (followers, classes, props, state, handleSetState) =>
               primaryButtonStyle
             >
               {follower.followers.includes(props.auth.id)
-                ? 'Unfollow'
-                : 'Follow'}
+                ? props.t('userFollowers.follower.unfollow')
+                : props.t('userFollowers.follower.follow')}
             </CustomButton>
           ) : null}
           <Typography
@@ -135,6 +133,7 @@ function UserFollowers(props) {
 
   const { followers, prevPage, nextPage, loading } = state;
   const username = props.match.params.username;
+  const { t } = props;
   if (loading) {
     return <LoadingPage />;
   } else if (followers && followers.length > 0) {
@@ -148,13 +147,13 @@ function UserFollowers(props) {
                 variant="h3"
                 gutterBottom
               >
-                {username}'s followers
+                {username}'s {t('userFollowers.title')}
               </Typography>
             </Grid>
             {buildFollowers(followers, classes, props, state, handleSetState)}
           </Grid>
           <ButtonGroup
-            aria-label="previous and next page buttons"
+            aria-label={t('userFollowers.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
             {prevPage ? (
@@ -168,7 +167,7 @@ function UserFollowers(props) {
                 }}
                 primaryButtonStyle
               >
-                Prev
+                {t('userFollowers.prev')}
               </CustomButton>
             ) : null}
             {nextPage ? (
@@ -182,7 +181,7 @@ function UserFollowers(props) {
                 }}
                 primaryButtonStyle
               >
-                Next
+                {t('userFollowers.next')}
               </CustomButton>
             ) : null}
           </ButtonGroup>
@@ -190,7 +189,7 @@ function UserFollowers(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error="user have not followers yet" />;
+    return <ErrorPage error={t('userFollowers.errors.noFollowers')} />;
   }
 }
 
@@ -208,11 +207,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggle_follow: value => {
-      return dispatch(UserActions.toggle_follow(value));
+    toggle_follow: args => {
+      return dispatch(UserActions.toggle_follow(args));
     },
-    get_followers: value => {
-      return dispatch(UserActions.get_followers(value));
+    get_followers: args => {
+      return dispatch(UserActions.get_followers(args));
     },
   };
 };

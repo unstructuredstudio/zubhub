@@ -29,11 +29,11 @@ const fetchPage = (page, props) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    return props.get_saved({ page, token: props.auth.token });
+    return props.get_saved({ page, token: props.auth.token, t: props.t });
   }
 };
 
-const updateProjects = (res, { results: projects }) => {
+const updateProjects = (res, { results: projects }, props) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
@@ -49,7 +49,11 @@ const updateProjects = (res, { results: projects }) => {
       }
     })
     .catch(error => {
-      toast.warning(error.message);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('savedProjects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
       return { loading: false };
     });
 };
@@ -77,6 +81,7 @@ function SavedProjects(props) {
   };
 
   const { results: projects, prevPage, nextPage, loading } = state;
+  const { t } = props;
   if (loading) {
     return <LoadingPage />;
   } else if (projects && projects.length > 0) {
@@ -90,7 +95,7 @@ function SavedProjects(props) {
                 variant="h3"
                 gutterBottom
               >
-                Your saved projects
+                {t('savedProjects.title')}
               </Typography>
             </Grid>
             {projects.map(project => (
@@ -107,7 +112,7 @@ function SavedProjects(props) {
                   project={project}
                   key={project.id}
                   updateProjects={res =>
-                    handleSetState(updateProjects(res, state))
+                    handleSetState(updateProjects(res, state, props))
                   }
                   {...props}
                 />
@@ -115,7 +120,7 @@ function SavedProjects(props) {
             ))}
           </Grid>
           <ButtonGroup
-            aria-label="previous and next page buttons"
+            aria-label={t('savedProjects.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
             {prevPage ? (
@@ -129,7 +134,7 @@ function SavedProjects(props) {
                 }}
                 primaryButtonStyle
               >
-                Prev
+                {t('savedProjects.prev')}
               </CustomButton>
             ) : null}
             {nextPage ? (
@@ -143,7 +148,7 @@ function SavedProjects(props) {
                 }}
                 primaryButtonStyle
               >
-                Next
+                {t('savedProjects.next')}
               </CustomButton>
             ) : null}
           </ButtonGroup>
@@ -151,7 +156,7 @@ function SavedProjects(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error="user have no saved projects" />;
+    return <ErrorPage error={t('savedProjects.errors.noSavedProjects')} />;
   }
 }
 
@@ -170,8 +175,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_saved: value => {
-      return dispatch(ProjectActions.get_saved(value));
+    get_saved: props => {
+      return dispatch(ProjectActions.get_saved(props));
     },
     toggle_like: props => {
       return dispatch(ProjectActions.toggle_like(props));

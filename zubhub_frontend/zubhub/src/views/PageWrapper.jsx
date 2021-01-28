@@ -22,6 +22,7 @@ import {
   Menu,
   MenuItem,
   Avatar,
+  Select,
 } from '@material-ui/core';
 
 import CustomButton from '../components/button/Button.js';
@@ -32,11 +33,18 @@ import logo from '../assets/images/logos/logo.png';
 import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import commonStyles from '../assets/js/styles';
 
+import languageMap from '../assets/js/languageMap.json';
+
 const useStyles = makeStyles(styles);
+const useCommonStyles = makeStyles(commonStyles);
 
 const logout = (e, props) => {
   e.preventDefault();
-  return props.logout(props);
+  return props.logout({
+    token: props.auth.token,
+    history: props.history,
+    t: props.t,
+  });
 };
 
 const handleScrollTopClick = (e, ref) => {
@@ -54,10 +62,14 @@ const handleProfileMenuClose = () => {
   return { anchorEl: null };
 };
 
+const handleChangeLanguage = ({ e, props }) => {
+  props.i18n.changeLanguage(e.target.value);
+};
+
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
-  const commonClasses = makeStyles(commonStyles)();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     username: null,
@@ -83,6 +95,7 @@ function PageWrapper(props) {
   };
 
   const { anchorEl, loading } = state;
+  const { t } = props;
   const profileMenuOpen = Boolean(anchorEl);
   return (
     <>
@@ -105,7 +118,7 @@ function PageWrapper(props) {
                       size="large"
                       secondaryButtonStyle
                     >
-                      Login
+                      {t('pageWrapper.navbar.login')}
                     </CustomButton>
                   </Link>
                   <Link className={classes.textDecorationNone} to="/signup">
@@ -115,7 +128,7 @@ function PageWrapper(props) {
                       primaryButtonStyle
                       className={commonClasses.marginLeft1em}
                     >
-                      Sign Up
+                      {t('pageWrapper.navbar.signup')}
                     </CustomButton>
                   </Link>
                 </>
@@ -131,7 +144,7 @@ function PageWrapper(props) {
                       primaryButtonStyle
                       size="small"
                     >
-                      Create Project
+                      {t('pageWrapper.navbar.createProject')}
                     </CustomButton>
                   </Link>
                   <Avatar
@@ -180,7 +193,7 @@ function PageWrapper(props) {
                           color="textPrimary"
                           component="span"
                         >
-                          Projects
+                          {t('pageWrapper.navbar.projects')}
                         </Typography>
                       </Link>
                     </MenuItem>
@@ -194,7 +207,7 @@ function PageWrapper(props) {
                           color="textPrimary"
                           component="span"
                         >
-                          Followers
+                          {t('pageWrapper.navbar.followers')}
                         </Typography>
                       </Link>
                     </MenuItem>
@@ -208,7 +221,7 @@ function PageWrapper(props) {
                           color="textPrimary"
                           component="span"
                         >
-                          Following
+                          {t('pageWrapper.navbar.following')}
                         </Typography>
                       </Link>
                     </MenuItem>
@@ -222,22 +235,18 @@ function PageWrapper(props) {
                           color="textPrimary"
                           component="span"
                         >
-                          Saved Projects
+                          {t('pageWrapper.navbar.savedProjects')}
                         </Typography>
                       </Link>
                     </MenuItem>
                     <MenuItem className={classes.logOutStyle}>
                       <Typography
-                        className={classes.textDecorationNone}
+                        className={commonClasses.colorRed}
+                        variant="subtitle2"
+                        component="span"
                         onClick={e => logout(e, props)}
                       >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
-                          Logout
-                        </Typography>
+                        {t('pageWrapper.navbar.logout')}
                       </Typography>
                     </MenuItem>
                   </Menu>
@@ -262,6 +271,18 @@ function PageWrapper(props) {
             alt="unstructured-studio-logo"
           />
         </a>
+        <Select
+          id="languages"
+          className={classes.languageSelectStyle}
+          value={props.i18n.language}
+          onChange={e => handleChangeLanguage({ e, props })}
+        >
+          {Object.keys(languageMap).map((ln, index) => (
+            <MenuItem key={index} value={ln}>
+              {languageMap[ln]}
+            </MenuItem>
+          ))}
+        </Select>
         <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}
@@ -296,8 +317,8 @@ const mapDispatchToProps = dispatch => {
     set_auth_user: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    logout: props => {
-      return dispatch(AuthActions.logout(props));
+    logout: args => {
+      return dispatch(AuthActions.logout(args));
     },
     get_auth_user: props => {
       return dispatch(AuthActions.get_auth_user(props));
