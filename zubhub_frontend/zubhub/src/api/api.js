@@ -109,12 +109,9 @@ class API {
     const method = 'POST';
     const body = JSON.stringify({ key });
 
-    return this.request({ url, method, body }).then(res => {
-      const status = res.status;
-      return res
-        .json()
-        .then(res => ({ ...res, detail: status === 200 ? 'ok' : res.detail }));
-    });
+    return this.request({ url, method, body }).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
+    );
   };
   /*******************************************************************/
 
@@ -124,12 +121,9 @@ class API {
     const method = 'POST';
     const body = JSON.stringify({ email });
 
-    return this.request({ url, method, body }).then(res => {
-      const status = res.status;
-      return res
-        .json()
-        .then(res => ({ ...res, detail: status === 200 ? 'ok' : res.detail }));
-    });
+    return this.request({ url, method, body }).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
+    );
   };
   /********************************************************************/
 
@@ -139,12 +133,9 @@ class API {
     const method = 'POST';
     const body = JSON.stringify({ new_password1, new_password2, uid, token });
 
-    return this.request({ url, method, body }).then(res => {
-      const status = res.status;
-      return res
-        .json()
-        .then(res => ({ ...res, detail: status === 200 ? 'ok' : res.detail }));
-    });
+    return this.request({ url, method, body }).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
+    );
   };
   /********************************************************************/
 
@@ -231,12 +222,9 @@ class API {
   delete_account = ({ token }) => {
     const url = 'creators/delete/';
     const method = 'DELETE';
-    return this.request({ url, method, token }).then(res => {
-      const status = res.status;
-      return res
-        .json()
-        .then(res => ({ ...res, detail: status === 204 ? 'ok' : res.detail }));
-    });
+    return this.request({ url, method, token }).then(res =>
+      Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
+    );
   };
   /********************************************************************/
 
@@ -305,12 +293,9 @@ class API {
   delete_project = ({ token, id }) => {
     const url = `projects/${id}/delete/`;
     const method = 'DELETE';
-    return this.request({ url, method, token }).then(res => {
-      const status = res.status;
-      return res
-        .json()
-        .then(res => ({ ...res, detail: status === 204 ? 'ok' : res.detail }));
-    });
+    return this.request({ url, method, token }).then(res =>
+      Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
+    );
   };
   /************************************************************************/
 

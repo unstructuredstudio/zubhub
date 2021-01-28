@@ -189,7 +189,7 @@ function UserFollowers(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('userFollower.errors.noFollowers')} />;
+    return <ErrorPage error={t('userFollowers.errors.noFollowers')} />;
   }
 }
 

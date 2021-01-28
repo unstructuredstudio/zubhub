@@ -324,17 +324,6 @@ function Profile(props) {
                       {profile.following_count} {t('profile.followingCount')}
                     </Typography>
                   </Link>
-                  <Link
-                    to={`/creators/${profile.username}/following`}
-                    className={classes.textDecorationNone}
-                  >
-                    <Typography
-                      className={classes.moreInfoStyle}
-                      component="h5"
-                    >
-                      {profile.following_count} Following
-                    </Typography>
-                  </Link>
                 </Box>
               </Box>
             </Container>
