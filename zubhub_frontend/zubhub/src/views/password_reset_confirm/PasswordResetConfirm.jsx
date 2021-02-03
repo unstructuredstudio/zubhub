@@ -62,10 +62,9 @@ const resetPassword = (e, props) => {
           }
         });
 
-        props.setStatus({ ...props.status, ...server_errors });
+        props.setStatus({ ...server_errors });
       } else {
         props.setStatus({
-          ...props.status,
           non_field_errors: props.t('passwordResetConfirm.errors.unexpected'),
         });
       }

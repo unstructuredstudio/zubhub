@@ -30,6 +30,8 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core';
 
 import CustomButton from '../../components/button/Button';
@@ -37,6 +39,9 @@ import * as AuthActions from '../../store/actions/authActions';
 import styles from '../../assets/js/styles/views/signup/signupStyles';
 
 const useStyles = makeStyles(styles);
+
+let phone_field_touched;
+let email_field_touched;
 
 const handleMouseDownPassword = e => {
   e.preventDefault();
@@ -48,11 +53,22 @@ const get_locations = props => {
 
 const signup = (e, props) => {
   e.preventDefault();
-  if (props.values.user_location.length < 1) {
-    props.validateField('user_location');
+  if (!props.values.user_location || props.values.user_location.length < 1) {
+    props.setFieldTouched('username', true);
+    props.setFieldTouched('email', true);
+    props.setFieldTouched('phone', true);
+    props.setFieldTouched('dateOfBirth', true);
+    props.setFieldTouched('user_location', true);
+    props.setFieldTouched('password1', true);
+    props.setFieldTouched('password2', true);
+    phone_field_touched = true;
+    email_field_touched = true;
   } else {
     return props
-      .signup({ values: props.values, history: props.history })
+      .signup({
+        values: { ...props.values, subscribe: !props.values.subscribe },
+        history: props.history,
+      })
       .catch(error => {
         const messages = JSON.parse(error.message);
         if (typeof messages === 'object') {
@@ -66,10 +82,9 @@ const signup = (e, props) => {
               server_errors[key] = messages[key][0];
             }
           });
-          props.setStatus({ ...props.status, ...server_errors });
+          props.setStatus({ ...server_errors });
         } else {
           props.setStatus({
-            ...props.status,
             non_field_errors: props.t('signup.errors.unexpected'),
           });
         }
@@ -81,17 +96,38 @@ const handleTooltipToggle = ({ toolTipOpen }) => {
   return { toolTipOpen: !toolTipOpen };
 };
 
+const handleToggleSubscribeBox = (e, props, state) => {
+  let subscribeBoxChecked = !state.subscribeBoxChecked;
+  props.setFieldValue('subscribe', subscribeBoxChecked);
+  return { subscribeBoxChecked };
+};
+
 function Signup(props) {
   const [state, setState] = React.useState({
     locations: [],
     showPassword1: false,
     showPassword2: false,
     toolTipOpen: false,
+    subscribeBoxChecked: false,
   });
 
   React.useEffect(() => {
     handleSetState(get_locations(props));
   }, []);
+
+  React.useEffect(() => {
+    if (props.touched['email']) {
+      email_field_touched = true;
+    } else {
+      email_field_touched = false;
+    }
+
+    if (props.touched['phone']) {
+      phone_field_touched = true;
+    } else {
+      phone_field_touched = false;
+    }
+  }, [props.touched['email'], props.touched['phone']]);
 
   const classes = useStyles();
 
@@ -103,7 +139,13 @@ function Signup(props) {
     }
   };
 
-  const { locations, toolTipOpen, showPassword1, showPassword2 } = state;
+  const {
+    locations,
+    toolTipOpen,
+    showPassword1,
+    showPassword2,
+    subscribeBoxChecked,
+  } = state;
   const { t } = props;
 
   return (
@@ -204,7 +246,7 @@ function Signup(props) {
                           (props.touched['username'] &&
                             props.errors['username'] &&
                             t(
-                              `signup.inputs.username.errors.${this.props.errors['username']}`,
+                              `signup.inputs.username.errors.${props.errors['username']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
@@ -216,9 +258,6 @@ function Signup(props) {
                       variant="outlined"
                       size="small"
                       fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
                       margin="normal"
                       error={
                         (props.status && props.status['email']) ||
@@ -246,6 +285,44 @@ function Signup(props) {
                             props.errors['email'] &&
                             t(
                               `signup.inputs.email.errors.${props.errors['email']}`,
+                            ))}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['phone']) ||
+                        (props.touched['phone'] && props.errors['phone'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="phone"
+                      >
+                        {t('signup.inputs.phone.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        className={classes.customInputStyle}
+                        id="phone"
+                        name="phone"
+                        type="phone"
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={70}
+                      />
+                      <FormHelperText error>
+                        {(props.status && props.status['phone']) ||
+                          (props.touched['phone'] &&
+                            props.errors['phone'] &&
+                            t(
+                              `signup.inputs.phone.errors.${props.errors['phone']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
@@ -456,7 +533,7 @@ function Signup(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={70}
+                        labelWidth={150}
                       />
                       <FormHelperText error>
                         {(props.status && props.status['password2']) ||
@@ -468,6 +545,83 @@ function Signup(props) {
                       </FormHelperText>
                     </FormControl>
                   </Grid>
+
+                  <Grid item xs={12}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="small"
+                      error={
+                        (props.status && props.status['bio']) ||
+                        (props.touched['bio'] && props.errors['bio'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="bio"
+                      >
+                        {t('signup.inputs.bio.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        className={classes.customInputStyle}
+                        id="bio"
+                        name="bio"
+                        type="text"
+                        multiline
+                        rows={6}
+                        rowsMax={6}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={50}
+                      />
+                      <FormHelperText error>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          {t('signup.inputs.bio.helpText')}
+                        </Typography>
+                        <br />
+                        {(props.status && props.status['bio']) ||
+                          (props.touched['bio'] &&
+                            props.errors['bio'] &&
+                            t(
+                              `signup.inputs.bio.errors.${props.errors['bio']}`,
+                            ))}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      value={subscribeBoxChecked}
+                      onChange={e =>
+                        handleSetState(
+                          handleToggleSubscribeBox(e, props, state),
+                        )
+                      }
+                      control={
+                        <Checkbox
+                          name="subscribe"
+                          id="subscribe"
+                          color="primary"
+                        />
+                      }
+                      label={
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          {t('signup.unsubscribe')}
+                        </Typography>
+                      }
+                      labelPlacement="end"
+                    />
+                  </Grid>
+
                   <Grid item xs={12}>
                     <CustomButton
                       variant="contained"
@@ -551,13 +705,29 @@ export default connect(
     mapPropsToValue: () => ({
       username: '',
       email: '',
+      phone: '',
       user_location: '',
       password1: '',
       password2: '',
     }),
     validationSchema: Yup.object().shape({
       username: Yup.string().required('required'),
-      email: Yup.string().email('invalid').required('required'),
+      email: Yup.string()
+        .email('invalid')
+        .test('email_is_empty', 'phoneOrEmail', function (value) {
+          return email_field_touched && !value && !this.parent.phone
+            ? false
+            : true;
+        }),
+      phone: Yup.string()
+        .test('phone_is_invalid', 'invalid', function (value) {
+          return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
+        })
+        .test('phone_is_empty', 'phoneOrEmail', function (value) {
+          return phone_field_touched && !value && !this.parent.email
+            ? false
+            : true;
+        }),
       dateOfBirth: Yup.date().max(new Date(), 'max').required('required'),
       user_location: Yup.string().min(1, 'min').required('required'),
       password1: Yup.string().min(8, 'min').required('required'),
@@ -565,5 +735,6 @@ export default connect(
         .oneOf([Yup.ref('password1'), null], 'noMatch')
         .required('required'),
     }),
+    bio: Yup.string().max(255, 'tooLong'),
   })(Signup),
 );
