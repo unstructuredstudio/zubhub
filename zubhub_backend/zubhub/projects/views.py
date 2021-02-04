@@ -26,6 +26,7 @@ class ProjectUpdateAPIView(UpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(creator=self.request.user)
+        self.request.user.save()
 
 
 class ProjectDeleteAPIView(DestroyAPIView):
