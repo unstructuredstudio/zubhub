@@ -33,6 +33,7 @@ const styles = theme => ({
     },
   },
   disconnectedStyle: {
+    height:'20em',
     [theme.breakpoints.down('500')]: {
       height: '10em',
     },
