@@ -19,7 +19,8 @@ rm -rf /home/zubhub-backend/zubhub/ /home/zubhub-backend/zubhub_backend/.env.exa
 echo "done removing uneccessary files and folders"
 
 echo "rebuilding containers"
-docker-compose -f /home/zubhub-backend/zubhub_backend/docker-compose.prod.yml down
-docker-compose -f /home/zubhub-backend/zubhub_backend/docker-compose.prod.yml up -d --build
+cd /home/zubhub-backend/zubhub_backend/
+docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.yml up -d --build
 echo "Updated backend"
 # EOT
