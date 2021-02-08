@@ -19,6 +19,9 @@ class CreatorSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(allow_blank=True, default="")
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
+    projects_count = serializers.IntegerField(read_only=True)
+    following_count = serializers.IntegerField(read_only=True)
+    dateOfBirth = serializers.DateField(read_only=True)
     location = serializers.SlugRelatedField(
         slug_field='name', queryset=Location.objects.all())
 
