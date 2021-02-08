@@ -204,7 +204,7 @@ function Signup(props) {
                           (props.touched['username'] &&
                             props.errors['username'] &&
                             t(
-                              `signup.inputs.username.errors.${this.props.errors['username']}`,
+                              `signup.inputs.username.errors.${props.errors['username']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
