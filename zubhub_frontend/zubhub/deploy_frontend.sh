@@ -29,7 +29,8 @@ echo "done removing uneccessary files and folders"
 
 
 echo "stopping and rebuilding the containers"
-docker-compose -f /home/zubhub-frontend/zubhub_frontend/zubhub/docker-compose.prod.yml down
-docker-compose -f /home/zubhub-frontend/zubhub_frontend/zubhub/docker-compose.prod.yml up -d --build
+cd /home/zubhub-frontend/zubhub_frontend/zubhub/
+docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.yml up -d --build
 echo "Updated frontend"
 # EOT
