@@ -14,7 +14,6 @@ export const setAuthUser = auth_user => {
 
 export const login = args => {
   return dispatch => {
-    console.log(args);
     return API.login(args.values)
       .then(res => {
         if (!res.key) {
@@ -89,6 +88,21 @@ export const send_email_confirmation = args => {
         throw new Error(res.detail);
       } else {
         toast.success(args.t('emailConfirm.toastSuccess'));
+        setTimeout(() => {
+          args.history.push('/');
+        }, 4000);
+      }
+    });
+  };
+};
+
+export const send_phone_confirmation = args => {
+  return () => {
+    return API.send_phone_confirmation(args.key).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
+        toast.success(args.t('phoneConfirm.toastSuccess'));
         setTimeout(() => {
           args.history.push('/');
         }, 4000);

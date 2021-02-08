@@ -1,16 +1,24 @@
+from django.utils.translation import ugettext_lazy as _
+from rest_framework import status
+from django.http import Http404
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_auth.registration.views import RegisterView
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
 
-from .serializers import CreatorSerializer, LocationSerializer
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+from .serializers import CreatorSerializer, LocationSerializer, VerifyPhoneSerializer, CustomRegisterSerializer
 from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
+from .utils import perform_send_phone_confirmation, perform_send_email_confirmation
+
+from .models import PhoneConfirmationHMAC
 
 
 Creator = get_user_model()
@@ -28,14 +36,58 @@ class UserProfileAPIView(RetrieveAPIView):
     lookup_field = "username"
     permission_classes = [AllowAny]
 
+    # perform_send_phone_confirmation
+
+
+class RegisterCreatorAPIView(RegisterView):
+    serializer_class = CustomRegisterSerializer
+
+    def perform_create(self, serializer):
+        creator = super().perform_create(serializer)
+        perform_send_phone_confirmation(
+            self.request._request, creator, signup=True)
+        return creator
+
+
+class VerifyPhoneView(APIView):
+    permission_classes = (AllowAny,)
+    allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+
+    def get_serializer(self, *args, **kwargs):
+        return VerifyPhoneSerializer(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        key = self.kwargs["key"]
+        phoneconfirmation = PhoneConfirmationHMAC.from_key(key)
+        if not phoneconfirmation:
+            raise Http404()
+
+        return phoneconfirmation
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.kwargs['key'] = serializer.validated_data['key']
+        confirmation = self.get_object()
+        confirmation.confirm(self.request)
+        return Response({'detail': _('ok')}, status=status.HTTP_200_OK)
+
 
 class EditCreatorAPIView(UpdateAPIView):
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
 
-    def patch(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    def perform_update(self, serializer):
+        response = super().perform_update(serializer)
+        creator = Creator.objects.filter(pk=self.request.user.pk)
+        if len(creator) > 0:
+            perform_send_phone_confirmation(
+                self.request._request, creator[0], signup=True)
+
+            perform_send_email_confirmation(
+                self.request._request, creator[0], signup=True)
+        return response
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset())

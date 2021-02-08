@@ -47,8 +47,15 @@
       "email": {
         "label": "Email",
         "errors": {
-          "invalid": "invalid email",
-          "required": "this field is required"
+          "phoneOrEmail": "you must provide either email or phone number",
+          "invalid": "invalid email"
+        }
+      },
+      "phone": {
+        "label": "Phone",
+        "errors": {
+          "phoneOrEmail": "you must provide either email or phone number",
+          "invalid": "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
         }
       },
       "dateOfBirth": {
@@ -79,8 +86,16 @@
           "required": "this field is required"
         }
       },
+      "bio": {
+        "label": "Bio",
+        "helpText": "Tell us something interesting about you! You can share what care about, your hobbies, things you have been working on recently, etc.",
+        "errors": {
+          "tooLong": "your bio shouldn't be more than 255 characters"
+        }
+      },
       "submit": "Signup"
     },
+    "unsubscribe": "I don't want to receive updates on new tinkering projects and ideas via WhatsApp/SMS or e-mail",
     "alreadyAMember": "Already a Member ?",
     "login": "Login",
     "errors": {
@@ -180,6 +195,20 @@
       "submit": "Confirm"
     },
     "toastSuccess": "Congratulations!, your email has been confirmed!",
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "phoneConfirm": {
+    "welcomeMsg": {
+      "primary": "Phone Confirmation",
+      "secondary": " Please Confirm that you are <> and that the phone number you connected to your account belongs to you:"
+    },
+    "inputs": {
+      "submit": "Confirm"
+    },
+    "toastSuccess": "Congratulations!, your phone number has been confirmed!",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }
@@ -383,6 +412,20 @@
         "errors": {
           "min": "your location is too short",
           "required": "this field is required"
+        }
+      },
+      "email": {
+        "label": "Email",
+        "disabledHelperText": "to edit this field mail admin@unstrucutred.studio",
+        "errors": {
+          "invalid": "invalid email"
+        }
+      },
+      "phone": {
+        "label": "Phone",
+        "disabledHelperText": "to edit this field mail admin@unstrucutred.studio",
+        "errors": {
+          "invalid": "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
         }
       },
       "bio": {

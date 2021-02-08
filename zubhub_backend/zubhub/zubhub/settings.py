@@ -94,9 +94,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'mptt',
-    'APIS.apps.ApisConfig',
-    'creators.apps.CreatorsConfig',
-    'projects.apps.ProjectsConfig',
+    'APIS',
+    'creators',
+    'projects',
 ]
 
 
@@ -273,6 +273,11 @@ EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
+
+
+DEFAULT_FROM_PHONE = os.environ.get("DEFAULT_FROM_PHONE")
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 
 # EMAIL_PORT = 1025
 CELERY_EMAIL_CHUNK_SIZE = 1

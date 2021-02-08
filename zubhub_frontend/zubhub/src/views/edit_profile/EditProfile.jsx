@@ -44,22 +44,36 @@ const get_locations = props => {
 const getProfile = (refs, props) => {
   return props.get_auth_user(props).then(obj => {
     if (!obj.id) {
-      return obj;
+      return;
     } else {
-      props.setFieldValue('username', obj.username);
-      if (refs.usernameEl.current)
+      let init_email_and_phone = {};
+      if (refs.usernameEl.current && obj.username) {
+        props.setFieldValue('username', obj.username);
         refs.usernameEl.current.firstChild.value = obj.username;
+      }
 
-      props.setFieldValue('bio', obj.bio);
-      if (refs.bioEl.current) refs.bioEl.current.firstChild.value = obj.bio;
+      if (refs.emailEl.current && obj.email) {
+        props.setFieldValue('email', obj.email);
+        refs.emailEl.current.firstChild.value = obj.email;
+        init_email_and_phone['init_email'] = obj.email; //this is a hack: we need to find a better way of setting knowing when phone and email exists. state doesn't seem to work
+      }
 
-      if (obj.dateOfBirth) {
-        props.setFieldValue('dateOfBirth', obj.dateOfBirth);
+      if (refs.phoneEl.current && obj.phone) {
+        props.setFieldValue('phone', obj.phone);
+        refs.phoneEl.current.firstChild.value = obj.phone;
+        init_email_and_phone['init_phone'] = obj.phone; //this is a hack: we need to find a better way of setting knowing when phone and email exists. state doesn't seem to work
       }
 
       if (obj.location) {
         props.setFieldValue('user_location', obj.location);
       }
+
+      if (refs.bioEl.current && obj.bio) {
+        props.setFieldValue('bio', obj.bio);
+        refs.bioEl.current.firstChild.value = obj.bio;
+      }
+
+      props.setStatus(init_email_and_phone); //the hack continues
     }
   });
 };
@@ -88,10 +102,14 @@ const editProfile = (e, props) => {
               server_errors[key] = messages[key][0];
             }
           });
-          props.setStatus({ ...props.status, ...server_errors });
+          props.setStatus({
+            //this is a hack. we need to find a more react way of maintaining initial state for email and phone.
+            init_email: props.status && props.status.init_email,
+            init_phone: props.status && props.status.init_phone,
+            ...server_errors,
+          });
         } else {
           props.setStatus({
-            ...props.status,
             non_field_errors: props.t('editProfile.errors.unexpected'),
           });
         }
@@ -106,14 +124,14 @@ const handleTooltipToggle = ({ toolTipOpen }) => {
 function EditProfile(props) {
   const refs = {
     usernameEl: React.useRef(null),
-    bioEl: React.useRef(null),
-    dobEl: React.useRef(null),
     locationEl: React.useRef(null),
+    emailEl: React.useRef(null),
+    phoneEl: React.useRef(null),
+    bioEl: React.useRef(null),
   };
 
   const [state, setState] = React.useState({
     locations: [],
-    current_location: '',
     toolTipOpen: false,
   });
 
@@ -191,7 +209,7 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="username"
-                        shrink={props.values['username'] ? true : false}
+                        shrink
                       >
                         {t('editProfile.inputs.username.label')}
                       </InputLabel>
@@ -217,14 +235,10 @@ function EditProfile(props) {
                         >
                           <OutlinedInput
                             ref={refs.usernameEl}
-                            className={
-                              props.values['username']
-                                ? clsx(
-                                    classes.customInputStyle,
-                                    classes.staticLabelInputStyle,
-                                  )
-                                : classes.customInputStyle
-                            }
+                            className={clsx(
+                              classes.customInputStyle,
+                              classes.staticLabelInputStyle,
+                            )}
                             id="username"
                             name="username"
                             type="text"
@@ -242,7 +256,7 @@ function EditProfile(props) {
                           (props.touched['username'] &&
                             props.errors['username'] &&
                             t(
-                              `editProfile.inputs.username.errors.${this.props.errors['username']}`,
+                              `editProfile.inputs.username.errors.${props.errors['username']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
@@ -265,7 +279,7 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         id="user_location"
-                        shrink={props.values['user_location'] ? true : false}
+                        shrink
                       >
                         {t('editProfile.inputs.location.label')}
                       </InputLabel>
@@ -273,14 +287,10 @@ function EditProfile(props) {
                         labelId="user_location"
                         id="user_location"
                         name="user_location"
-                        className={
-                          props.values['user_location']
-                            ? clsx(
-                                classes.customInputStyle,
-                                classes.staticLabelInputStyle,
-                              )
-                            : classes.customInputStyle
-                        }
+                        className={clsx(
+                          classes.customInputStyle,
+                          classes.staticLabelInputStyle,
+                        )}
                         value={
                           props.values.user_location
                             ? props.values.user_location
@@ -311,6 +321,122 @@ function EditProfile(props) {
                     </FormControl>
                   </Grid>
 
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['email']) ||
+                        (props.touched['email'] && props.errors['email'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="email"
+                        shrink
+                      >
+                        {t('editProfile.inputs.email.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        ref={refs.emailEl}
+                        disabled={
+                          props.status && props.status['init_email']
+                            ? true
+                            : false
+                        }
+                        className={clsx(
+                          classes.customInputStyle,
+                          classes.staticLabelInputStyle,
+                        )}
+                        id="email"
+                        name="email"
+                        type="text"
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={70}
+                      />
+                      <FormHelperText error>
+                        {props.status && props.status['init_email'] && (
+                          <Typography
+                            color="textSecondary"
+                            variant="caption"
+                            component="span"
+                          >
+                            {t('editProfile.inputs.email.disabledHelperText')}
+                          </Typography>
+                        )}
+                        <br />
+                        {(props.status && props.status['email']) ||
+                          (props.touched['email'] &&
+                            props.errors['email'] &&
+                            t(
+                              `editProfile.inputs.email.errors.${props.errors['email']}`,
+                            ))}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['phone']) ||
+                        (props.touched['phone'] && props.errors['phone'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="phone"
+                        shrink
+                      >
+                        {t('editProfile.inputs.phone.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        ref={refs.phoneEl}
+                        disabled={
+                          props.status && props.status['init_phone']
+                            ? true
+                            : false
+                        }
+                        className={clsx(
+                          classes.customInputStyle,
+                          classes.staticLabelInputStyle,
+                        )}
+                        id="phone"
+                        name="phone"
+                        type="phone"
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={70}
+                      />
+                      <FormHelperText error>
+                        {props.status && props.status['init_phone'] && (
+                          <Typography
+                            color="textSecondary"
+                            variant="caption"
+                            component="span"
+                          >
+                            {t('editProfile.inputs.phone.disabledHelperText')}
+                          </Typography>
+                        )}
+                        <br />
+                        {(props.status && props.status['phone']) ||
+                          (props.touched['phone'] &&
+                            props.errors['phone'] &&
+                            t(
+                              `editProfile.inputs.phone.errors.${props.errors['phone']}`,
+                            ))}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+
                   <Grid item xs={12}>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
@@ -326,20 +452,16 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="bio"
-                        shrink={props.values['bio'] ? true : false}
+                        shrink
                       >
                         {t('editProfile.inputs.bio.label')}
                       </InputLabel>
                       <OutlinedInput
                         ref={refs.bioEl}
-                        className={
-                          props.values['bio']
-                            ? clsx(
-                                classes.customInputStyle,
-                                classes.staticLabelInputSmallStyle,
-                              )
-                            : classes.customInputStyle
-                        }
+                        className={clsx(
+                          classes.customInputStyle,
+                          classes.staticLabelInputStyle,
+                        )}
                         id="bio"
                         name="bio"
                         type="text"
@@ -458,6 +580,10 @@ export default connect(
     validationSchema: Yup.object().shape({
       username: Yup.string().required('required'),
       user_location: Yup.string().min(1, 'min').required('required'),
+      email: Yup.string().email('invalid'),
+      phone: Yup.string().test('phone_is_invalid', 'invalid', function (value) {
+        return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
+      }),
       bio: Yup.string().max(255, 'tooLong'),
     }),
   })(EditProfile),
