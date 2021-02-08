@@ -65,7 +65,6 @@ class API {
     const url = 'rest-auth/login/';
     const method = 'POST';
     const body = JSON.stringify({ username, password });
-    console.log('stringified json', body);
 
     return this.request({ url, method, body }).then(res => res.json());
   };
