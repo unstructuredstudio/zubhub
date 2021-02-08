@@ -13,6 +13,7 @@ import { nanoid } from 'nanoid';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ImageIcon from '@material-ui/icons/Image';
+import HelpIcon from '@material-ui/icons/Help';
 import {
   Grid,
   Box,
@@ -21,13 +22,13 @@ import {
   CardActionArea,
   CardContent,
   Dialog,
-  Chip,
   Typography,
   CircularProgress,
   OutlinedInput,
-  InputLabel,
   FormHelperText,
   FormControl,
+  Tooltip,
+  ClickAwayListener,
 } from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
@@ -38,8 +39,10 @@ import Compress from '../../assets/js/Compress';
 import { useStateUpdateCallback } from '../../assets/js/customHooks';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
+import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
+const useCommonStyles = makeStyles(commonStyles);
 
 let image_field_touched = false;
 let video_field_touched = false;
@@ -56,28 +59,37 @@ const getProject = (refs, props, state) => {
       } else {
         const { image_upload } = state;
 
-        props.setFieldValue('title', obj.project.title);
-        if (refs.titleEl.current)
+        if (refs.titleEl.current && obj.project.title) {
+          props.setFieldValue('title', obj.project.title);
           refs.titleEl.current.firstChild.value = obj.project.title;
+        }
 
-        props.setFieldValue('description', obj.project.description);
-        if (refs.descEl.current)
+        if (refs.descEl.current && obj.project.description) {
+          props.setFieldValue('description', obj.project.description);
           refs.descEl.current.firstChild.value = obj.project.description;
+        }
 
-        if (obj.project.video) {
+        if (refs.videoEl.current && obj.project.video) {
           props.setFieldValue('video', obj.project.video);
-          if (refs.videoEl.current)
-            refs.videoEl.current.firstChild.value = obj.project.video;
+          refs.videoEl.current.firstChild.value = obj.project.video;
         }
 
-        if (refs.imageCountEl.current) {
-          refs.imageCountEl.current.innerText = obj.project.images.length;
-          refs.imageCountEl.current.style.fontSize = '0.8rem';
+        if (refs.imageCountEl.current && obj.project.images.length > 0) {
+          refs.imageCountEl.current.innerText = `${
+            obj.project.images.length
+          } ${props.t(
+            `createProject.inputs.${
+              obj.project.images.length < 2 ? 'image' : 'images'
+            }`,
+          )}`;
         }
 
-        if (refs.materialsUsedEl.current) {
-          props.setFieldValue('materials_used', obj.project.materials_used);
-          refs.materialsUsedEl.current.value = obj.project.materials_used;
+        if (refs.addMaterialsUsedEl.current && obj.project.materials_used) {
+          props.setFieldValue(
+            'materials_used',
+            obj.project.materials_used,
+            true,
+          );
         }
 
         image_upload.uploaded_images_url = obj.project.images;
@@ -92,8 +104,13 @@ const getProject = (refs, props, state) => {
 };
 
 const handleImageFieldChange = (refs, props, state, handleSetState) => {
-  refs.imageCountEl.current.innerText = refs.imageEl.current.files.length;
-  refs.imageCountEl.current.style.fontSize = '0.8rem';
+  refs.imageCountEl.current.innerText = `${
+    refs.imageEl.current.files.length
+  } ${props.t(
+    `createProject.inputs.${
+      refs.imageEl.current.files.length < 2 ? 'image' : 'images'
+    }`,
+  )}`;
 
   props.setFieldValue('project_images', refs.imageEl.current).then(errors => {
     if (!errors['project_images']) {
@@ -116,39 +133,73 @@ const handleImageButtonClick = (e, props, refs) => {
   props.setFieldTouched('project_images');
 };
 
-const removeMaterialsUsed = (e, props, refs, value) => {
-  e.preventDefault();
-  const hidden_materials_field = refs.materialsUsedEl.current;
-  hidden_materials_field.value = hidden_materials_field.value
-    .split(',')
-    .filter(material => material !== value)
-    .join(',');
+const handleDescTooltipOpen = () => {
+  return { descToolTipOpen: true };
+};
 
-  props.setFieldValue('materials_used', hidden_materials_field.value, true);
-  return { materials_used: hidden_materials_field.value.split(',') };
+const handleDescTooltipClose = () => {
+  return { descToolTipOpen: false };
 };
 
 const handleAddMaterialFieldChange = (e, props, refs) => {
-  props.validateField('materials_used');
-  const value = refs.addMaterialsUsedEl.current.firstChild.value;
-  if (value.includes(',')) {
-    refs.addMaterialsUsedEl.current.firstChild.value = value.split(',')[0];
-    return addMaterialUsed(e, props, refs);
+  const children = refs.addMaterialsUsedEl.current.children;
+  let value = '';
+  for (let index = 0; index < children.length; index++) {
+    if (children[index].children[0].value) {
+      if (index < 1) {
+        value = value.concat(children[index].children[0].value);
+      } else {
+        value = value.concat(`,${children[index].children[0].value}`);
+      }
+    } else {
+      if (index >= 1) {
+        value = value.concat(',');
+      }
+    }
+  }
+
+  props.setFieldValue('materials_used', value, true);
+};
+
+const BuildMaterialUsedNodes = (props, refs) => {
+  const classes = useStyles();
+  const commonClasses = useCommonStyles();
+
+  if (props.values['materials_used']) {
+    return props.values['materials_used']
+      .split(',')
+      .map((material, index) => (
+        <OutlinedInput
+          key={index}
+          className={clsx(classes.customInputStyle, commonClasses.marginTop1em)}
+          type="text"
+          onBlur={() => props.setFieldTouched('materials_used', true)}
+          onChange={e => handleAddMaterialFieldChange(e, props, refs)}
+          value={material}
+          placeholder={`${index + 1}.`}
+        />
+      ));
+  } else {
+    return ['', '', ''].map((material, index) => (
+      <OutlinedInput
+        key={index}
+        className={clsx(classes.customInputStyle, commonClasses.marginTop1em)}
+        type="text"
+        onBlur={() => props.setFieldTouched('materials_used', true)}
+        onChange={e => handleAddMaterialFieldChange(e, props, refs)}
+        placeholder={`${index + 1}.`}
+      />
+    ));
   }
 };
 
-const addMaterialUsed = (e, props, refs) => {
+const addMaterialsUsedNode = (e, props) => {
   e.preventDefault();
-  const new_material = refs.addMaterialsUsedEl.current.firstChild;
-  if (new_material.value !== '') {
-    const hidden_materials_field = refs.materialsUsedEl.current;
-    hidden_materials_field.value = hidden_materials_field.value
-      ? `${hidden_materials_field.value},${new_material.value}`
-      : new_material.value;
-    new_material.value = '';
-    props.setFieldValue('materials_used', hidden_materials_field.value, true);
-    new_material.focus();
-    return { materials_used: hidden_materials_field.value.split(',') };
+  let materials_used = props.values['materials_used'];
+  if (!materials_used) {
+    props.setFieldValue('materials_used', ',,,');
+  } else {
+    props.setFieldValue('materials_used', materials_used.concat(','));
   }
 };
 
@@ -161,11 +212,12 @@ function CreateProject(props) {
     imageCountEl: React.useRef(null),
     videoEl: React.useRef(null),
     addMaterialsUsedEl: React.useRef(null),
-    materialsUsedEl: React.useRef(null),
   };
   const classes = useStyles();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
+    descToolTipOpen: false,
     loading: true,
     error: null,
     materialsUsedModalOpen: false,
@@ -286,12 +338,18 @@ function CreateProject(props) {
     image_upload.upload_dialog = false;
     handleSetState({ image_upload });
 
+    const materials_used = props.values['materials_used']
+      .split(',')
+      .filter(value => (value ? true : false))
+      .join(',');
+
     const create_or_update = props.match.params.id
       ? props.update_project
       : props.create_project;
 
     return create_or_update({
       ...props.values,
+      materials_used,
       id: props.match.params.id,
       token: props.auth.token,
       images: state.image_upload.uploaded_images_url,
@@ -369,7 +427,7 @@ function CreateProject(props) {
     }
   };
 
-  const { image_upload, materials_used } = state;
+  const { descToolTipOpen, image_upload } = state;
   const { t } = props;
   const id = props.match.params.id;
   if (!props.auth.token) {
@@ -424,7 +482,7 @@ function CreateProject(props) {
                       </Box>
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid item xs={12} className={commonClasses.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -436,26 +494,26 @@ function CreateProject(props) {
                           (props.touched['title'] && props.errors['title'])
                         }
                       >
-                        <InputLabel
-                          className={classes.customLabelStyle}
-                          htmlFor="title"
-                          shrink
-                        >
-                          {t('createProject.inputs.title.label')}
-                        </InputLabel>
+                        <label htmlFor="title">
+                          <Typography
+                            color="textSecondary"
+                            className={clsx(
+                              classes.customLabelStyle,
+                              commonClasses.marginBottom1em,
+                            )}
+                          >
+                            <Box className={classes.fieldNumberStyle}>1</Box>
+                            {t('createProject.inputs.title.label')}
+                          </Typography>
+                        </label>
                         <OutlinedInput
                           ref={refs.titleEl}
-                          className={clsx(
-                            classes.customInputStyle,
-                            classes.staticLabelInputSmallStyle,
-                          )}
+                          className={classes.customInputStyle}
                           id="title"
                           name="title"
                           type="text"
-                          placeholder="Project Title"
                           onChange={props.handleChange}
                           onBlur={props.handleBlur}
-                          labelWidth={90}
                         />
                         <FormHelperText error>
                           {(props.status && props.status['title']) ||
@@ -468,7 +526,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid item xs={12} className={commonClasses.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -481,19 +539,49 @@ function CreateProject(props) {
                             props.errors['description'])
                         }
                       >
-                        <InputLabel
-                          className={classes.customLabelStyle}
-                          htmlFor="description"
-                          shrink
+                        <label htmlFor="description">
+                          <Typography
+                            color="textSecondary"
+                            className={clsx(
+                              classes.customLabelStyle,
+                              commonClasses.marginBottom1em,
+                            )}
+                          >
+                            <Box className={classes.fieldNumberStyle}>2</Box>
+                            {t('createProject.inputs.description.label')}
+                          </Typography>
+                        </label>
+                        <ClickAwayListener
+                          onClickAway={() =>
+                            handleSetState(handleDescTooltipClose())
+                          }
                         >
-                          {t('createProject.inputs.description.label')}
-                        </InputLabel>
+                          <Tooltip
+                            placement="bottom-end"
+                            PopperProps={{
+                              disablePortal: true,
+                            }}
+                            onClose={() =>
+                              handleSetState(handleDescTooltipClose())
+                            }
+                            open={descToolTipOpen}
+                            disableFocusListener
+                            disableHoverListener
+                            title={t(
+                              'createProject.inputs.description.helperText',
+                            )}
+                          >
+                            <HelpIcon
+                              className={classes.questionIconStyle}
+                              onClick={() =>
+                                handleSetState(handleDescTooltipOpen())
+                              }
+                            />
+                          </Tooltip>
+                        </ClickAwayListener>
                         <OutlinedInput
                           ref={refs.descEl}
-                          className={clsx(
-                            classes.customInputStyle,
-                            classes.staticLabelInputStyle,
-                          )}
+                          className={classes.customInputStyle}
                           id="description"
                           name="description"
                           type="text"
@@ -502,17 +590,8 @@ function CreateProject(props) {
                           rowsMax={6}
                           onChange={props.handleChange}
                           onBlur={props.handleBlur}
-                          labelWidth={90}
                         />
                         <FormHelperText error>
-                          <Typography
-                            color="textSecondary"
-                            variant="caption"
-                            component="span"
-                          >
-                            {t('createProject.inputs.description.helperText')}
-                          </Typography>
-                          <br />
                           {(props.status && props.status['description']) ||
                             (props.touched['description'] &&
                               props.errors['description'] &&
@@ -523,7 +602,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={6}>
+                    <Grid item xs={12} className={commonClasses.marginTop1em}>
                       <FormControl
                         fullWidth
                         error={
@@ -533,29 +612,54 @@ function CreateProject(props) {
                         }
                       >
                         <label htmlFor="project_images">
-                          <CustomButton
-                            ref={refs.imageUploadButtonEl}
-                            variant="outlined"
-                            size="large"
-                            margin="normal"
-                            id="image_upload_button"
-                            startIcon={<ImageIcon />}
-                            endIcon={
-                              <span
-                                ref={refs.imageCountEl}
-                                className="imageCountStyle"
-                              ></span>
-                            }
-                            onClick={e =>
-                              handleImageButtonClick(e, props, refs)
-                            }
-                            secondaryButtonStyle
-                            imageUploadButtonStyle
-                            fullWidth
+                          <Typography
+                            color="textSecondary"
+                            className={clsx(
+                              classes.customLabelStyle,
+                              commonClasses.marginBottom1em,
+                            )}
                           >
+                            <Box className={classes.fieldNumberStyle}>3</Box>
                             {t('createProject.inputs.projectImages.label')}
-                          </CustomButton>
+                          </Typography>
                         </label>
+
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          {t(
+                            'createProject.inputs.projectImages.topHelperText',
+                          )}
+                        </Typography>
+                        <Grid container spacing={1}>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <CustomButton
+                              className={classes.customImageButtonStyle}
+                              ref={refs.imageUploadButtonEl}
+                              variant="outlined"
+                              size="large"
+                              margin="normal"
+                              id="image_upload_button"
+                              startIcon={<ImageIcon />}
+                              onClick={e =>
+                                handleImageButtonClick(e, props, refs)
+                              }
+                              secondaryButtonStyle
+                              imageUploadButtonStyle
+                              fullWidth
+                            >
+                              {t('createProject.inputs.projectImages.label2')}
+                            </CustomButton>
+                            <Typography
+                              color="textSecondary"
+                              variant="caption"
+                              component="span"
+                              ref={refs.imageCountEl}
+                            ></Typography>
+                          </Grid>
+                        </Grid>
                         <input
                           ref={refs.imageEl}
                           className={classes.displayNone}
@@ -585,7 +689,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={6}>
+                    <Grid item xs={12} className={commonClasses.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -597,13 +701,25 @@ function CreateProject(props) {
                           (props.touched['video'] && props.errors['video'])
                         }
                       >
-                        <InputLabel
-                          className={classes.customLabelStyle}
-                          htmlFor="video"
-                          shrink
+                        <label htmlFor="video">
+                          <Typography
+                            color="textSecondary"
+                            className={clsx(
+                              classes.customLabelStyle,
+                              commonClasses.marginBottom1em,
+                            )}
+                          >
+                            <Box className={classes.fieldNumberStyle}>4</Box>
+                            {t('createProject.inputs.video.label')}
+                          </Typography>
+                        </label>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
                         >
-                          {t('createProject.inputs.video.label')}
-                        </InputLabel>
+                          {t('createProject.inputs.video.topHelperText')}
+                        </Typography>
                         <OutlinedInput
                           ref={refs.videoEl}
                           className={clsx(
@@ -618,14 +734,6 @@ function CreateProject(props) {
                           labelWidth={90}
                         />
                         <FormHelperText error>
-                          <Typography
-                            color="textSecondary"
-                            variant="caption"
-                            component="span"
-                          >
-                            {t('createProject.inputs.video.helperText')}
-                          </Typography>
-                          <br />
                           {(props.status && props.status['video']) ||
                             (props.touched['video'] &&
                               props.errors['video'] &&
@@ -633,10 +741,17 @@ function CreateProject(props) {
                                 `createProject.inputs.video.errors.${props.errors['video']}`,
                               ))}
                         </FormHelperText>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          {t('createProject.inputs.video.bottomHelperText')}
+                        </Typography>
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={12} md={12}>
+                    <Grid item xs={12} className={commonClasses.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -649,94 +764,46 @@ function CreateProject(props) {
                             props.errors['materials_used'])
                         }
                       >
-                        <InputLabel
-                          className={clsx(
-                            classes.customLabelStyle,
-                            classes.largeLabel,
-                          )}
-                          htmlFor="add_materials_used"
-                          shrink
-                        >
-                          {t('createProject.inputs.materialsUsed.label')}
-                        </InputLabel>
-                        <Box className={classes.materialsUsedViewStyle}>
-                          {materials_used.map((material, num) =>
-                            material !== '' ? (
-                              <Chip
-                                className={classes.customChipStyle}
-                                key={num}
-                                label={material}
-                                onDelete={e =>
-                                  handleSetState(
-                                    removeMaterialsUsed(
-                                      e,
-                                      props,
-                                      refs,
-                                      material,
-                                    ),
-                                  )
-                                }
-                                color="secondary"
-                                variant="outlined"
-                              />
-                            ) : null,
-                          )}
-                        </Box>
-                        <Grid container spacing={1}>
-                          <Grid item xs={8} sm={8} md={8}>
-                            <OutlinedInput
-                              ref={refs.addMaterialsUsedEl}
-                              className={classes.customInputStyle}
-                              id="add_materials_used"
-                              name="add_materials_used"
-                              type="text"
-                              placeholder={t(
-                                'createProject.inputs.materialsUsed.placeholder',
-                              )}
-                              onClick={() =>
-                                props.setFieldTouched('materials_used')
-                              }
-                              onChange={e =>
-                                handleSetState(
-                                  handleAddMaterialFieldChange(e, props, refs),
-                                )
-                              }
-                              onBlur={() =>
-                                props.validateField('materials_used')
-                              }
-                            />
-                            <FormHelperText error>
-                              {(props.status &&
-                                props.status['materials_used']) ||
-                                (props.touched['materials_used'] &&
-                                  props.errors['materials_used'] &&
-                                  t(
-                                    `createProject.inputs.materialsUsed.errors.${props.errors['materials_used']}`,
-                                  ))}
-                            </FormHelperText>
+                        <label htmlFor="add_materials_used">
+                          <Typography
+                            color="textSecondary"
+                            className={clsx(
+                              classes.customLabelStyle,
+                              commonClasses.marginBottom1em,
+                            )}
+                          >
+                            <Box className={classes.fieldNumberStyle}>5</Box>
+                            {t('createProject.inputs.materialsUsed.label')}
+                          </Typography>
+                        </label>
+
+                        <Grid container spacing={1} alignItems="flex-end">
+                          <Grid item xs={12} sm={8}>
+                            <Box ref={refs.addMaterialsUsedEl}>
+                              {BuildMaterialUsedNodes(props, refs)}
+                            </Box>
                           </Grid>
-                          <Grid item xs={4} sm={4} md={4}>
+                          <Grid item xs={12} sm={4} md={4}>
                             <CustomButton
                               variant="outlined"
                               size="large"
-                              onClick={e =>
-                                handleSetState(addMaterialUsed(e, props, refs))
-                              }
+                              onClick={e => addMaterialsUsedNode(e, props)}
                               secondaryButtonStyle
                               fullWidth
                             >
-                              <AddIcon />
+                              <AddIcon />{' '}
+                              {t('createProject.inputs.materialsUsed.addMore')}
                             </CustomButton>
                           </Grid>
+                          <FormHelperText error>
+                            {(props.status && props.status['materials_used']) ||
+                              (props.touched['materials_used'] &&
+                                props.errors['materials_used'] &&
+                                t(
+                                  `createProject.inputs.materialsUsed.errors.${props.errors['materials_used']}`,
+                                ))}
+                          </FormHelperText>
                         </Grid>
-                        <input
-                          ref={refs.materialsUsedEl}
-                          id="materials_used"
-                          name="materials_used"
-                          className={classes.displayNone}
-                          onChange={props.handleChange}
-                          onBlur={props.handleBlur}
-                        />
                       </FormControl>
                     </Grid>
                     <Grid item xs={12}>
@@ -890,7 +957,20 @@ export default connect(
             ? false
             : true;
         }),
-      materials_used: Yup.string().max(10000, 'max').required('required'),
+      materials_used: Yup.string()
+        .max(10000, 'max')
+        .test('empty', 'required', value => {
+          let is_empty = true;
+
+          value &&
+            value.split(',').forEach(material => {
+              if (material) {
+                is_empty = false;
+              }
+            });
+
+          return !is_empty;
+        }),
     }),
   })(CreateProject),
 );
