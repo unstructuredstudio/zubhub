@@ -1,0 +1,11 @@
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+{% trans "Hello from " %}{% default_display_name %}!
+{% blocktrans %}
+You're receiving this text because user {{user}} has connected your phone number to their account.
+{% endblocktrans %}
+{% trans "To confirm this is correct, go to " %} {% default_frontend_protocol %}://{% default_frontend_domain %}/phone-confirm?user={{user}}&&key={{key}}
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!

@@ -10,6 +10,7 @@ import Login from './views/login/Login';
 import PasswordReset from './views/password_reset/PasswordReset';
 import PasswordResetConfirm from './views/password_reset_confirm/PasswordResetConfirm';
 import EmailConfirm from './views/email_confirm/EmailConfirm';
+import PhoneConfirm from './views/phone_confirm/PhoneConfirm';
 import Profile from './views/profile/Profile';
 import EditProfile from './views/edit_profile/EditProfile';
 import UserProjects from './views/user_projects/UserProjects';
@@ -75,6 +76,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <EmailConfirm {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/phone-confirm"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <PhoneConfirm {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

@@ -58,10 +58,9 @@ const login = (e, props) => {
             server_errors[key] = messages[key][0];
           }
         });
-        props.setStatus({ ...props.status, ...server_errors });
+        props.setStatus({ ...server_errors });
       } else {
         props.setStatus({
-          ...props.status,
           non_field_errors: props.t('login.errors.unexpected'),
         });
       }

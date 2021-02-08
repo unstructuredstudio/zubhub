@@ -23,6 +23,8 @@ const styles = theme => ({
     '&.MuiFormLabel-root.Mui-focused': {
       color: '#00B8C4',
     },
+    fontWeight: 'bold',
+    fontSize: '1rem !important',
   },
 
   customInputStyle: {
@@ -43,15 +45,21 @@ const styles = theme => ({
       },
     },
   },
-  staticLabelInputStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '75.5px !important',
-    },
+  fieldNumberStyle: {
+    height: '20px',
+    width: '20px',
+    backgroundColor: '#00B8C4',
+    color: 'white',
+    display: 'inline-block',
+    textAlign: 'center',
+    borderRadius: '50%',
+    lineHeight: '17px',
+    marginRight: '0.3em',
   },
-  staticLabelInputSmallStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '40px !important',
-    },
+  questionIconStyle: {
+    position: 'absolute',
+    color: '#00B8C4',
+    right: '10px',
   },
   uploadProgressLabelStyle: {
     color: 'white',
