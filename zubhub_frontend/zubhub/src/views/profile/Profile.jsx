@@ -285,9 +285,14 @@ function Profile(props) {
                   {profile.username}
                 </Typography>
                 {props.auth.username === profile.username ? (
-                  <Typography className={classes.emailStyle} component="h5">
-                    {profile.email}
-                  </Typography>
+                  <>
+                    <Typography className={classes.emailStyle} component="h5">
+                      {profile.email}
+                    </Typography>
+                    <Typography className={classes.emailStyle} component="h5">
+                      {profile.phone}
+                    </Typography>
+                  </>
                 ) : null}
                 <Divider className={classes.dividerStyle} />
                 <Box className={classes.moreInfoBoxStyle}>
