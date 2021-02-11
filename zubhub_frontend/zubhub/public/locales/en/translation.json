@@ -20,10 +20,11 @@
       "login": "Login",
       "signup": "Sign Up",
       "createProject": "Create Project",
-      "projects": "Projects",
+      "profile": "My Profile",
+      "projects": "My Projects",
       "followers": "Followers",
       "following": "Following",
-      "savedProjects": "Saved Projects",
+      "savedProjects": "Bookmarks",
       "logout": "Logout"
     },
     "errors": {
@@ -340,10 +341,10 @@
     "followingCount": "Following",
     "about": {
       "label": "About Me",
-      "placeholder": "You will be able to change this next month 😀!"
+      "placeholder": "tell us more about you by clicking on the edit button at the top of the page 😀!"
     },
     "projects": {
-      "label": "Latest projects of",
+      "label": "Latest projects",
       "viewAll": "View all >>"
     },
     "tooltips": {

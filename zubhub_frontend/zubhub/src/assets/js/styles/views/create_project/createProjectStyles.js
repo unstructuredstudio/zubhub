@@ -17,9 +17,14 @@ const styles = theme => ({
     padding: '0 30px',
   },
   titleStyle: {
+    fontSize:"2rem",
     fontWeight: 900,
   },
+  descStyle:{
+    fontSize:"1.7rem"
+  },
   customLabelStyle: {
+    fontSize:"1.5rem",
     '&.MuiFormLabel-root.Mui-focused': {
       color: '#00B8C4',
     },
@@ -33,6 +38,7 @@ const styles = theme => ({
       boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
+      fontSize:"1.7rem",
       '&:hover fieldset': {
         border: '1px solid #00B8C4',
         boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,

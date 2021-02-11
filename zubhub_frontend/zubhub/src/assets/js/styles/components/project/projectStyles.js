@@ -30,7 +30,6 @@ const styles = theme => ({
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
     alignItems: 'center',
-    flexDirection: 'column',
     justifyContent: 'center',
   },
   mediaBoxStyle: {
@@ -84,10 +83,14 @@ const styles = theme => ({
     fontSize: '1.3rem',
   },
   descriptionStyle: {
-    whiteSpace: 'nowrap',
+    flexGrow: 1,
+    '& p':{
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    flexGrow: 1,
+   display: "-webkit-box",
+   WebkitLineClamp: 2,
+   WebkitBoxOrient:"vertical",
+    }
   },
   creatorBoxStyle: {
     marginTop: '0.5em',

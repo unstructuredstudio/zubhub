@@ -10,9 +10,9 @@ const styles = theme => ({
     '& img': {
       height: '2em',
     },
-    [theme.breakpoints.down('402')]: {
+    [theme.breakpoints.down('317')]: {
       '& img': {
-        height: '1em',
+        height: '1.5em',
       },
     },
   },
@@ -32,13 +32,12 @@ const styles = theme => ({
   avatarStyle: {
     cursor: 'pointer',
     backgroundColor: 'white',
-    marginLeft: '1em',
   },
   profileMenuStyle: {
     paddingTop: 0,
     paddingBottom: 0,
   },
-  profileStyle: { backgroundColor: '#F5F5F5' },
+  profileStyle: { fontWeight:"bold"},
   logOutStyle: {
     borderTop: '1px solid #C4C4C4',
   },
@@ -48,9 +47,20 @@ const styles = theme => ({
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
+  languageSelectBoxStyle:{
+    marginLeft:"2em",
+    color:"white",
+    [theme.breakpoints.down('282')]: {
+        marginLeft: '1em',
+    },
+  },
   languageSelectStyle: {
-    display: 'block',
-    maxWidth: '7em',
+    display:"inline-block",
+    maxWidth:"5em",
+    color:"white",
+    "& .MuiInputBase-input":{
+      boxSizing: 'border-box'
+    }
   },
   center: {
     display: 'flex',

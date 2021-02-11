@@ -340,9 +340,7 @@ function Profile(props) {
               >
                 {t('profile.about.label')}
               </Typography>
-              <Box className={classes.aboutMeBoxStyle}>
-                {profile.bio ? profile.bio : t('profile.about.placeholder')}
-              </Box>
+              {profile.bio ? profile.bio : t('profile.about.placeholder')}
             </Paper>
 
             {profile.projects_count > 0 ? (
@@ -354,17 +352,20 @@ function Profile(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('profile.projects.label')} {profile.username}
-                  <Link
-                    className={clsx(
-                      classes.secondaryLink,
-                      classes.floatRight,
-                      classes.textDecorationNone,
-                    )}
-                    to={`/creators/${profile.username}/projects`}
+                  {t('profile.projects.label')}
+                  <CustomButton
+                    className={clsx(classes.floatRight)}
+                    variant="outlined"
+                    margin="normal"
+                    secondaryButtonStyle
+                    onClick={() =>
+                      props.history.push(
+                        `/creators/${profile.username}/projects`,
+                      )
+                    }
                   >
                     {t('profile.projects.viewAll')}
-                  </Link>
+                  </CustomButton>
                 </Typography>
                 <Grid container>
                   {Array.isArray(projects) &&

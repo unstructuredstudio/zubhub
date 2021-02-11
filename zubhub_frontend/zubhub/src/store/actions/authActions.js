@@ -14,7 +14,6 @@ export const setAuthUser = auth_user => {
 
 export const login = args => {
   return dispatch => {
-    console.log(args);
     return API.login(args.values)
       .then(res => {
         if (!res.key) {

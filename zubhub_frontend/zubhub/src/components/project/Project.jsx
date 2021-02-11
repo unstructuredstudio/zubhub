@@ -112,14 +112,15 @@ function Project(props) {
             >
               {project.title}
             </Typography>
-            <Typography
-              className={classes.descriptionStyle}
-              variant="subtitle2"
-              color="textSecondary"
-              component="p"
-            >
-              {project.description}
-            </Typography>
+            <Box className={classes.descriptionStyle}>
+              <Typography
+                variant="subtitle2"
+                color="textSecondary"
+                component="p"
+              >
+                {project.description}
+              </Typography>
+            </Box>
             <Link
               to={`/creators/${project.creator.username}`}
               className={classes.textDecorationNone}
