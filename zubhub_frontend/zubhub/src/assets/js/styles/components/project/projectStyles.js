@@ -84,13 +84,13 @@ const styles = theme => ({
   },
   descriptionStyle: {
     flexGrow: 1,
-    '& p':{
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-   display: "-webkit-box",
-   WebkitLineClamp: 2,
-   WebkitBoxOrient:"vertical",
-    }
+    '& p': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: 'vertical',
+    },
   },
   creatorBoxStyle: {
     marginTop: '0.5em',

@@ -114,13 +114,36 @@ function PageWrapper(props) {
               <Box
                 className={clsx(
                   classes.languageSelectBoxStyle,
-                  commonClasses.displayInlineBlock,
+                  commonClasses.displayInlineFlex,
+                  commonClasses.alignCenter,
+                  commonClasses.addOnSmallScreen,
                 )}
               >
                 <TranslateIcon />
                 <Select
                   className={classes.languageSelectStyle}
                   value=""
+                  onChange={e => handleChangeLanguage({ e, props })}
+                >
+                  {Object.keys(languageMap).map((ln, index) => (
+                    <MenuItem key={index} value={ln}>
+                      {languageMap[ln]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+              <Box
+                className={clsx(
+                  classes.languageSelectBoxStyle,
+                  commonClasses.displayInlineFlex,
+                  commonClasses.alignCenter,
+                  commonClasses.removeOnSmallScreen,
+                )}
+              >
+                <TranslateIcon />
+                <Select
+                  className={classes.languageSelectStyle}
+                  value={props.i18n.language}
                   onChange={e => handleChangeLanguage({ e, props })}
                 >
                   {Object.keys(languageMap).map((ln, index) => (
@@ -382,20 +405,50 @@ function PageWrapper(props) {
             alt="unstructured-studio-logo"
           />
         </a>
-        <Box className={classes.languageSelectBoxStyle}>
-          <TranslateIcon />
-          <Select
-            className={classes.languageSelectStyle}
-            value=""
-            onChange={e => handleChangeLanguage({ e, props })}
+        <div>
+          <Box
+            className={clsx(
+              classes.languageSelectBoxStyle,
+              commonClasses.displayInlineFlex,
+              commonClasses.alignCenter,
+              commonClasses.addOnSmallScreen,
+            )}
           >
-            {Object.keys(languageMap).map((ln, index) => (
-              <MenuItem key={index} value={ln}>
-                {languageMap[ln]}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
+            <TranslateIcon />
+            <Select
+              className={classes.languageSelectStyle}
+              value=""
+              onChange={e => handleChangeLanguage({ e, props })}
+            >
+              {Object.keys(languageMap).map((ln, index) => (
+                <MenuItem key={index} value={ln}>
+                  {languageMap[ln]}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+          <Box
+            className={clsx(
+              classes.languageSelectBoxStyle,
+              commonClasses.displayInlineFlex,
+              commonClasses.alignCenter,
+              commonClasses.removeOnSmallScreen,
+            )}
+          >
+            <TranslateIcon />
+            <Select
+              className={classes.languageSelectStyle}
+              value={props.i18n.language}
+              onChange={e => handleChangeLanguage({ e, props })}
+            >
+              {Object.keys(languageMap).map((ln, index) => (
+                <MenuItem key={index} value={ln}>
+                  {languageMap[ln]}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        </div>
         <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}

@@ -9,11 +9,11 @@ const styles = theme => ({
     background:
       'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
-  containerStyle:{
-    maxWidth:"600px",
-    [theme.breakpoints.up('1600')]:{
-      maxWidth:"950px"
-      }
+  containerStyle: {
+    maxWidth: '600px',
+    [theme.breakpoints.up('1600')]: {
+      maxWidth: '950px',
+    },
   },
   cardStyle: {
     border: 0,
@@ -24,24 +24,24 @@ const styles = theme => ({
   },
   titleStyle: {
     fontWeight: 900,
-    fontSize:"1.7rem",
-    [theme.breakpoints.up('1600')]:{
-    fontSize:"2.5rem"
-    }
+    fontSize: '1.7rem',
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '2.5rem',
+    },
   },
-  descStyle:{
-    [theme.breakpoints.up('1600')]:{
-      fontSize:"1.7rem"
-      }
+  descStyle: {
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.7rem',
+    },
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
       color: '#00B8C4',
     },
     fontSize: '1rem',
-    [theme.breakpoints.up('1600')]:{
-      fontSize:"1.7rem"
-      }
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.7rem',
+    },
   },
 
   customInputStyle: {
@@ -59,9 +59,9 @@ const styles = theme => ({
         border: '1px solid #00B8C4',
         boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
       },
-      [theme.breakpoints.up('1600')]:{
-        fontSize:"1.7rem"
-        }
+      [theme.breakpoints.up('1600')]: {
+        fontSize: '1.7rem',
+      },
     },
   },
   staticLabelInputStyle: {
@@ -110,18 +110,18 @@ const styles = theme => ({
     borderWidth: '1px',
     borderColor: '#a94442',
     backgroundColor: '#ffcdd2',
-    [theme.breakpoints.up('1600')]:{
-      fontSize:"1.5rem"
-      }
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.5rem',
+    },
   },
   error: {
     color: '#a94442',
   },
   fieldHelperTextStyle: {
-    [theme.breakpoints.up('1600')]:{
-      fontSize:"1.2rem"
-      }
-  }
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.2rem',
+    },
+  },
 });
 
 export default styles;

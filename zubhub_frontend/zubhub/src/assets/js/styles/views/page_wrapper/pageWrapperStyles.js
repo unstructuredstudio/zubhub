@@ -32,24 +32,32 @@ const styles = theme => ({
   avatarStyle: {
     cursor: 'pointer',
     backgroundColor: 'white',
-    [theme.breakpoints.up('1600')]:{
-      height:"3em",
-      width:"3em"
-      }
+    [theme.breakpoints.up('1600')]: {
+      height: '3em',
+      width: '3em',
+    },
   },
   profileMenuStyle: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    [theme.breakpoints.up('1600')]:{
-      '& .MuiMenu-paper':{
-      width:"10em",
-        '& .MuiTypography-root':{
-          fontSize:"1.2rem"
-        }
-      }
-    }
+    '& .MuiList-root': {
+      paddingTop: 0,
+      '& .MuiListItem-root': {
+        '&:first-child': {
+          backgroundColor: '#ededed',
+          paddingTop: '12px',
+          paddingBottom: '8px',
+        },
+      },
+    },
+    [theme.breakpoints.up('1600')]: {
+      '& .MuiMenu-paper': {
+        width: '10em',
+        '& .MuiTypography-root': {
+          fontSize: '1.2rem',
+        },
+      },
+    },
   },
-  profileStyle: { fontWeight:"bold"},
+  profileStyle: { fontWeight: 'bold' },
   logOutStyle: {
     borderTop: '1px solid #C4C4C4',
   },
@@ -59,20 +67,33 @@ const styles = theme => ({
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
-  languageSelectBoxStyle:{
-    marginLeft:"2em",
-    color:"white",
+  languageSelectBoxStyle: {
+    marginLeft: '1.3em',
+    paddingLeft: '0.7em',
+    color: 'white',
+    backgroundColor: '#d13241',
+    borderRadius: '50px',
     [theme.breakpoints.down('282')]: {
-        marginLeft: '1em',
+      marginLeft: '0.3em',
+    },
+    '&:hover': {
+      backgroundColor: '#c7313f',
     },
   },
   languageSelectStyle: {
-    display:"inline-block",
-    maxWidth:"5em",
-    color:"white",
-    "& .MuiInputBase-input":{
-      boxSizing: 'border-box'
-    }
+    display: 'inline-block',
+    maxWidth: '5em',
+    color: 'white',
+    '&.MuiInput-underline:before': {
+      display: 'none !important',
+    },
+    '&.MuiInput-underline:after': {
+      display: 'none !important',
+    },
+    '& .MuiSelect-root': {
+      boxSizing: 'border-box',
+      backgroundColor: 'rgba(0,0,0,0)',
+    },
   },
   center: {
     display: 'flex',

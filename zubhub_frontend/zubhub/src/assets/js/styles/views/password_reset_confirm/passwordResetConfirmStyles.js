@@ -18,18 +18,18 @@ const styles = theme => ({
   },
   titleStyle: {
     fontWeight: 900,
-    fontSize:"1.7rem",
-    [theme.breakpoints.up('1600')]:{
-    fontSize:"2.5rem"
-    }
+    fontSize: '1.7rem',
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '2.5rem',
+    },
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
       color: '#00B8C4',
     },
-    [theme.breakpoints.up('1600')]:{
-      fontSize:"1.7rem"
-      }
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.7rem',
+    },
   },
 
   customInputStyle: {
@@ -47,9 +47,9 @@ const styles = theme => ({
         border: '1px solid #00B8C4',
         boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
       },
-      [theme.breakpoints.up('1600')]:{
-        fontSize:"1.7rem"
-        }
+      [theme.breakpoints.up('1600')]: {
+        fontSize: '1.7rem',
+      },
     },
   },
   secondaryLink: {
@@ -78,18 +78,18 @@ const styles = theme => ({
     borderWidth: '1px',
     borderColor: '#a94442',
     backgroundColor: '#ffcdd2',
-    [theme.breakpoints.up('1600')]:{
-      fontSize:"1.5rem"
-      }
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.5rem',
+    },
   },
   error: {
     color: '#a94442',
   },
   fieldHelperTextStyle: {
-    [theme.breakpoints.up('1600')]:{
-      fontSize:"1.2rem"
-      }
-  }
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.2rem',
+    },
+  },
 });
 
 export default styles;

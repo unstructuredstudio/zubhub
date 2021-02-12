@@ -14,15 +14,24 @@ const styles = theme => ({
   colorRed: {
     color: 'red',
   },
-  displayInlineBlock:{
-    display:"inline-block"
+  displayInlineBlock: {
+    display: 'inline-block',
   },
-  addOnSmallScreen:{
+  displayInlineFlex: {
+    display: 'inline-flex',
+  },
+  displayFlex: {
+    display: 'flex',
+  },
+  alignCenter: {
+    alignItems: 'center',
+  },
+  addOnSmallScreen: {
     [theme.breakpoints.up('530')]: {
       display: 'none',
     },
   },
-  removeOnSmallScreen:{
+  removeOnSmallScreen: {
     [theme.breakpoints.down('530')]: {
       display: 'none',
     },
@@ -32,6 +41,9 @@ const styles = theme => ({
   },
   left15PX: {
     left: '15px',
+  },
+  width100Percent: {
+    width: '100%',
   },
 });
 
