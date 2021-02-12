@@ -47,10 +47,9 @@ const sendPasswordResetLink = (e, props) => {
             server_errors[key] = messages[key][0];
           }
         });
-        props.setStatus({ ...props.status, ...server_errors });
+        props.setStatus({ ...server_errors });
       } else {
         props.setStatus({
-          ...props.status,
           non_field_errors: props.t('passwordResetConfirm.errors.unexpected'),
         });
       }
@@ -63,7 +62,7 @@ function PasswordReset(props) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -82,7 +81,12 @@ function PasswordReset(props) {
                 >
                   {t('passwordReset.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('passwordReset.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
@@ -132,7 +136,10 @@ function PasswordReset(props) {
                         onBlur={props.handleBlur}
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['email']) ||
                           (props.touched['email'] &&
                             props.errors['email'] &&
@@ -147,6 +154,7 @@ function PasswordReset(props) {
                       variant="contained"
                       size="large"
                       primaryButtonStyle
+                      customButtonStyle
                       type="submit"
                       fullWidth
                     >

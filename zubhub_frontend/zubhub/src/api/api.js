@@ -82,20 +82,26 @@ class API {
   signup = ({
     username,
     email,
+    phone,
     dateOfBirth,
     user_location,
     password1,
     password2,
+    bio,
+    subscribe,
   }) => {
-    const url = 'rest-auth/registration/';
+    const url = 'creators/register/';
     const method = 'POST';
     const body = JSON.stringify({
       username,
       email,
+      phone,
       dateOfBirth,
       location: user_location,
       password1,
       password2,
+      bio,
+      subscribe,
     });
 
     return this.request({ url, method, body }).then(res => res.json());
@@ -105,6 +111,18 @@ class API {
   /*****************send email confirmation ******************/
   send_email_confirmation = key => {
     const url = 'rest-auth/registration/verify-email/';
+    const method = 'POST';
+    const body = JSON.stringify({ key });
+
+    return this.request({ url, method, body }).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
+    );
+  };
+  /*******************************************************************/
+
+  /*****************send phone confirmation ******************/
+  send_phone_confirmation = key => {
+    const url = 'creators/verify-phone/';
     const method = 'POST';
     const body = JSON.stringify({ key });
 
@@ -203,12 +221,22 @@ class API {
 
   /************************** edit user profile **************************/
   edit_user_profile = props => {
-    const { token, username, dateOfBirth, bio, user_location } = props;
+    const {
+      token,
+      username,
+      email,
+      phone,
+      dateOfBirth,
+      bio,
+      user_location,
+    } = props;
 
     const url = 'creators/edit_creator/';
     const method = 'PUT';
     const body = JSON.stringify({
       username,
+      email,
+      phone,
       dateOfBirth,
       bio,
       location: user_location,

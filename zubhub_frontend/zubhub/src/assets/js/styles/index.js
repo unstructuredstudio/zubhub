@@ -1,4 +1,10 @@
 const styles = theme => ({
+  marginTop1em: {
+    marginTop: '1em',
+  },
+  marginBottom1em: {
+    marginBottom: '1em',
+  },
   marginLeft1em: {
     marginLeft: '1em',
   },
@@ -20,6 +26,12 @@ const styles = theme => ({
     [theme.breakpoints.down('530')]: {
       display: 'none',
     },
+  },
+  topMinus20PX: {
+    top: '-20px',
+  },
+  left15PX: {
+    left: '15px',
   },
 });
 

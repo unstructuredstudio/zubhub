@@ -32,10 +32,22 @@ const styles = theme => ({
   avatarStyle: {
     cursor: 'pointer',
     backgroundColor: 'white',
+    [theme.breakpoints.up('1600')]:{
+      height:"3em",
+      width:"3em"
+      }
   },
   profileMenuStyle: {
     paddingTop: 0,
     paddingBottom: 0,
+    [theme.breakpoints.up('1600')]:{
+      '& .MuiMenu-paper':{
+      width:"10em",
+        '& .MuiTypography-root':{
+          fontSize:"1.2rem"
+        }
+      }
+    }
   },
   profileStyle: { fontWeight:"bold"},
   logOutStyle: {

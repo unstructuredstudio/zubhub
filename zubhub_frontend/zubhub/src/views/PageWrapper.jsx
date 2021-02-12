@@ -145,6 +145,7 @@ function PageWrapper(props) {
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
+                      customButtonStyle
                     >
                       {t('pageWrapper.navbar.login')}
                     </CustomButton>
@@ -160,6 +161,7 @@ function PageWrapper(props) {
                       variant="contained"
                       size="large"
                       primaryButtonStyle
+                      customButtonStyle
                       className={commonClasses.marginLeft1em}
                     >
                       {t('pageWrapper.navbar.signup')}
@@ -226,6 +228,7 @@ function PageWrapper(props) {
                     <CustomButton
                       variant="contained"
                       primaryButtonStyle
+                      customButtonStyle
                       size="small"
                     >
                       {t('pageWrapper.navbar.createProject')}

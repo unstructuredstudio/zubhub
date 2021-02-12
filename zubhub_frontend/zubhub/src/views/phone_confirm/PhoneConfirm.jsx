@@ -29,10 +29,10 @@ const getUsernameAndKey = queryString => {
   return { username, key };
 };
 
-const confirmEmail = (e, props, state) => {
+const confirmPhone = (e, props, state) => {
   e.preventDefault();
   return props
-    .send_email_confirmation({
+    .send_phone_confirmation({
       key: state.key,
       t: props.t,
       history: props.history,
@@ -40,7 +40,7 @@ const confirmEmail = (e, props, state) => {
     .catch(error => {
       if (error.message.startsWith('Unexpected')) {
         props.setStatus({
-          non_field_errors: props.t('emailConfirm.errors.unexpected'),
+          non_field_errors: props.t('phoneConfirm.errors.unexpected'),
         });
       } else {
         props.setStatus({ non_field_errors: error.message });
@@ -48,7 +48,7 @@ const confirmEmail = (e, props, state) => {
     });
 };
 
-function EmailConfirm(props) {
+function PhoneConfirm(props) {
   const classes = useStyles();
 
   let { username, key } = getUsernameAndKey(props.location.search);
@@ -69,9 +69,9 @@ function EmailConfirm(props) {
             <CardContent>
               <form
                 className="auth-form"
-                name="email_confirm"
+                name="phone_confirm"
                 noValidate="noValidate"
-                onSubmit={e => confirmEmail(e, props, state)}
+                onSubmit={e => confirmPhone(e, props, state)}
               >
                 <Typography
                   gutterBottom
@@ -80,7 +80,7 @@ function EmailConfirm(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('emailConfirm.welcomeMsg.primary')}
+                  {t('phoneConfirm.welcomeMsg.primary')}
                 </Typography>
                 <Typography
                   className={classes.descStyle}
@@ -88,7 +88,7 @@ function EmailConfirm(props) {
                   color="textSecondary"
                   component="p"
                 >
-                  {t('emailConfirm.welcomeMsg.secondary').replace(
+                  {t('phoneConfirm.welcomeMsg.secondary').replace(
                     '<>',
                     username,
                   )}
@@ -120,7 +120,7 @@ function EmailConfirm(props) {
                       primaryButtonStyle
                       customButtonStyle
                     >
-                      {t('emailConfirm.inputs.submit')}
+                      {t('phoneConfirm.inputs.submit')}
                     </CustomButton>
                   </Grid>
                 </Grid>
@@ -133,7 +133,7 @@ function EmailConfirm(props) {
   );
 }
 
-EmailConfirm.propTypes = {
+PhoneConfirm.propTypes = {
   auth: PropTypes.object.isRequired,
   send_email_confirmation: PropTypes.func.isRequired,
 };
@@ -146,10 +146,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    send_email_confirmation: args => {
-      return dispatch(AuthActions.send_email_confirmation(args));
+    send_phone_confirmation: args => {
+      return dispatch(AuthActions.send_phone_confirmation(args));
     },
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmailConfirm);
+export default connect(mapStateToProps, mapDispatchToProps)(PhoneConfirm);

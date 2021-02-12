@@ -35,6 +35,11 @@ const styles = theme => ({
       },
     },
   },
+  customButtonStyle:{
+    [theme.breakpoints.up('1600')]:{
+    fontSize:"1.5rem"
+    }
+  },
   fullWidth: {
     width: '100%',
   },

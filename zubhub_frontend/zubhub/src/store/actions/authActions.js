@@ -96,6 +96,21 @@ export const send_email_confirmation = args => {
   };
 };
 
+export const send_phone_confirmation = args => {
+  return () => {
+    return API.send_phone_confirmation(args.key).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
+        toast.success(args.t('phoneConfirm.toastSuccess'));
+        setTimeout(() => {
+          args.history.push('/');
+        }, 4000);
+      }
+    });
+  };
+};
+
 export const send_password_reset_link = args => {
   return () => {
     return API.send_password_reset_link(args.email).then(res => {

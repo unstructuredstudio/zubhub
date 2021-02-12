@@ -58,10 +58,9 @@ const login = (e, props) => {
             server_errors[key] = messages[key][0];
           }
         });
-        props.setStatus({ ...props.status, ...server_errors });
+        props.setStatus({ ...server_errors });
       } else {
         props.setStatus({
-          ...props.status,
           non_field_errors: props.t('login.errors.unexpected'),
         });
       }
@@ -88,7 +87,7 @@ function Login(props) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -107,7 +106,12 @@ function Login(props) {
                 >
                   {t('login.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('login.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
@@ -154,7 +158,10 @@ function Login(props) {
                         onBlur={props.handleBlur}
                         labelWidth={150}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['username']) ||
                           (props.touched['username'] &&
                             props.errors['username'] &&
@@ -177,7 +184,10 @@ function Login(props) {
                         (props.touched['password'] && props.errors['password'])
                       }
                     >
-                      <InputLabel htmlFor="password">
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="password"
+                      >
                         {t('login.inputs.password.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -207,7 +217,10 @@ function Login(props) {
                         }
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['password']) ||
                           (props.touched['password'] &&
                             props.errors['password'] &&
@@ -223,6 +236,7 @@ function Login(props) {
                       size="large"
                       type="submit"
                       primaryButtonStyle
+                      customButtonStyle
                       fullWidth
                     >
                       {t('login.inputs.submit')}
@@ -235,6 +249,7 @@ function Login(props) {
                   <Box className={classes.center}>
                     <Divider className={classes.divider} />
                     <Typography
+                      className={classes.dividerText}
                       variant="body2"
                       color="textSecondary"
                       component="p"
@@ -250,6 +265,7 @@ function Login(props) {
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
+                      customButtonStyle
                       fullWidth
                     >
                       {t('login.signup')}

@@ -9,6 +9,12 @@ const styles = theme => ({
     background:
       'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
+  containerStyle:{
+    maxWidth:"600px",
+    [theme.breakpoints.up('1600')]:{
+      maxWidth:"950px"
+      }
+  },
   cardStyle: {
     border: 0,
     borderRadius: 15,
@@ -17,17 +23,26 @@ const styles = theme => ({
     padding: '0 30px',
   },
   titleStyle: {
-    fontSize:"2rem",
     fontWeight: 900,
+    fontSize:"1.7rem",
+    [theme.breakpoints.up('1600')]:{
+    fontSize:"2.5rem"
+    }
   },
   descStyle:{
-    fontSize:"1.7rem"
+    [theme.breakpoints.up('1600')]:{
+      fontSize:"1.7rem"
+      }
   },
   customLabelStyle: {
-    fontSize:"1.5rem",
     '&.MuiFormLabel-root.Mui-focused': {
       color: '#00B8C4',
     },
+    fontWeight: 'bold',
+    fontSize: '1rem',
+    [theme.breakpoints.up('1600')]:{
+      fontSize:"1.7rem"
+      }
   },
 
   customInputStyle: {
@@ -38,7 +53,6 @@ const styles = theme => ({
       boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
-      fontSize:"1.7rem",
       '&:hover fieldset': {
         border: '1px solid #00B8C4',
         boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
@@ -47,17 +61,32 @@ const styles = theme => ({
         border: '1px solid #00B8C4',
         boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
       },
+      [theme.breakpoints.up('1600')]:{
+      fontSize:"1.7rem"
+      }
     },
   },
-  staticLabelInputStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '75.5px !important',
-    },
+  fieldNumberStyle: {
+    height: '20px',
+    width: '20px',
+    backgroundColor: '#00B8C4',
+    color: 'white',
+    display: 'inline-block',
+    textAlign: 'center',
+    borderRadius: '50%',
+    lineHeight: '17px',
+    marginRight: '0.3em',
+    [theme.breakpoints.up('1600')]:{
+      fontSize:"1.2rem"
+      }
   },
-  staticLabelInputSmallStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '40px !important',
-    },
+  questionIconStyle: {
+    position: 'absolute',
+    color: '#00B8C4',
+    right: '0',
+    [theme.breakpoints.up('1600')]:{
+      top:"20px",
+    }
   },
   uploadProgressLabelStyle: {
     color: 'white',
@@ -92,10 +121,18 @@ const styles = theme => ({
     borderWidth: '1px',
     borderColor: '#a94442',
     backgroundColor: '#ffcdd2',
+    [theme.breakpoints.up('1600')]:{
+      fontSize:"1.5rem"
+      }
   },
   error: {
     color: '#a94442',
   },
+  fieldHelperTextStyle: {
+    [theme.breakpoints.up('1600')]:{
+      fontSize:"1.2rem"
+      }
+  }
 });
 
 export default styles;
