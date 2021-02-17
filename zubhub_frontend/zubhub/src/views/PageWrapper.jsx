@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { connect } from 'react-redux';
 
@@ -9,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import TranslateIcon from '@material-ui/icons/Translate';
+import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import {
   CssBaseline,
   Container,
@@ -103,45 +106,152 @@ function PageWrapper(props) {
       <CssBaseline />
       <AppBar className={classes.navBarStyle}>
         <Container className={classes.mainContainerStyle}>
-          <Toolbar>
+          <Toolbar className={classes.toolbarStyle}>
             <Box className={classes.logoStyle}>
               <Link to="/">
                 <img src={logo} alt="logo" />
               </Link>
+              <Box
+                className={clsx(
+                  classes.languageSelectBoxStyle,
+                  commonClasses.displayInlineFlex,
+                  commonClasses.alignCenter,
+                  commonClasses.addOnSmallScreen,
+                )}
+              >
+                <TranslateIcon />
+                <Select
+                  className={classes.languageSelectStyle}
+                  value=""
+                  onChange={e => handleChangeLanguage({ e, props })}
+                >
+                  {Object.keys(languageMap).map((ln, index) => (
+                    <MenuItem key={index} value={ln}>
+                      {languageMap[ln]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
+              <Box
+                className={clsx(
+                  classes.languageSelectBoxStyle,
+                  commonClasses.displayInlineFlex,
+                  commonClasses.alignCenter,
+                  commonClasses.removeOnSmallScreen,
+                )}
+              >
+                <TranslateIcon />
+                <Select
+                  className={classes.languageSelectStyle}
+                  value={props.i18n.language}
+                  onChange={e => handleChangeLanguage({ e, props })}
+                >
+                  {Object.keys(languageMap).map((ln, index) => (
+                    <MenuItem key={index} value={ln}>
+                      {languageMap[ln]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Box>
             </Box>
             <div className={classes.navActionStyle}>
               {!props.auth.token ? (
                 <>
-                  <Link className={classes.textDecorationNone} to="/login">
+                  <Link
+                    className={clsx(
+                      classes.textDecorationNone,
+                      commonClasses.removeOnSmallScreen,
+                    )}
+                    to="/login"
+                  >
                     <CustomButton
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
+                      customButtonStyle
                     >
                       {t('pageWrapper.navbar.login')}
                     </CustomButton>
                   </Link>
-                  <Link className={classes.textDecorationNone} to="/signup">
+                  <Link
+                    className={clsx(
+                      classes.textDecorationNone,
+                      commonClasses.removeOnSmallScreen,
+                    )}
+                    to="/signup"
+                  >
                     <CustomButton
                       variant="contained"
                       size="large"
                       primaryButtonStyle
+                      customButtonStyle
                       className={commonClasses.marginLeft1em}
                     >
                       {t('pageWrapper.navbar.signup')}
                     </CustomButton>
                   </Link>
+
+                  <MenuRoundedIcon
+                    className={commonClasses.addOnSmallScreen}
+                    aria-label={t('pageWrapper.navbar.menu')}
+                    aria-controls="menu"
+                    aria-haspopup="true"
+                    onClick={e => handleSetState(handleProfileMenuOpen(e))}
+                  />
+                  <Menu
+                    className={commonClasses.addOnSmallScreen}
+                    id="menu"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={profileMenuOpen}
+                    onClose={e => handleSetState(handleProfileMenuClose(e))}
+                  >
+                    <MenuItem>
+                      <Link className={classes.textDecorationNone} to="/login">
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.login')}
+                        </Typography>
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link className={classes.textDecorationNone} to="/signup">
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.signup')}
+                        </Typography>
+                      </Link>
+                    </MenuItem>
+                  </Menu>
                 </>
               ) : (
                 <>
                   <Link
-                    className={classes.textDecorationNone}
+                    className={clsx(
+                      classes.textDecorationNone,
+                      commonClasses.marginRight1em,
+                      commonClasses.removeOnSmallScreen,
+                    )}
                     to="/projects/create"
                   >
                     <CustomButton
-                      className={commonClasses.marginLeft1em}
                       variant="contained"
                       primaryButtonStyle
+                      customButtonStyle
                       size="small"
                     >
                       {t('pageWrapper.navbar.createProject')}
@@ -172,16 +282,40 @@ function PageWrapper(props) {
                     open={profileMenuOpen}
                     onClose={e => handleSetState(handleProfileMenuClose(e))}
                   >
-                    <MenuItem className={classes.profileStyle}>
+                    <MenuItem>
+                      <Typography
+                        variant="subtitle2"
+                        color="textPrimary"
+                        component="span"
+                        className={classes.profileStyle}
+                      >
+                        {props.auth.username}
+                      </Typography>
+                    </MenuItem>
+                    <MenuItem>
                       <a className={classes.textDecorationNone} href="/profile">
                         <Typography
                           variant="subtitle2"
                           color="textPrimary"
                           component="span"
                         >
-                          {props.auth.username}
+                          {t('pageWrapper.navbar.profile')}
                         </Typography>
                       </a>
+                    </MenuItem>
+                    <MenuItem className={commonClasses.addOnSmallScreen}>
+                      <Link
+                        className={classes.textDecorationNone}
+                        to="/projects/create"
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.createProject')}
+                        </Typography>
+                      </Link>
                     </MenuItem>
                     <MenuItem>
                       <Link
@@ -271,18 +405,50 @@ function PageWrapper(props) {
             alt="unstructured-studio-logo"
           />
         </a>
-        <Select
-          id="languages"
-          className={classes.languageSelectStyle}
-          value={props.i18n.language}
-          onChange={e => handleChangeLanguage({ e, props })}
-        >
-          {Object.keys(languageMap).map((ln, index) => (
-            <MenuItem key={index} value={ln}>
-              {languageMap[ln]}
-            </MenuItem>
-          ))}
-        </Select>
+        <div>
+          <Box
+            className={clsx(
+              classes.languageSelectBoxStyle,
+              commonClasses.displayInlineFlex,
+              commonClasses.alignCenter,
+              commonClasses.addOnSmallScreen,
+            )}
+          >
+            <TranslateIcon />
+            <Select
+              className={classes.languageSelectStyle}
+              value=""
+              onChange={e => handleChangeLanguage({ e, props })}
+            >
+              {Object.keys(languageMap).map((ln, index) => (
+                <MenuItem key={index} value={ln}>
+                  {languageMap[ln]}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+          <Box
+            className={clsx(
+              classes.languageSelectBoxStyle,
+              commonClasses.displayInlineFlex,
+              commonClasses.alignCenter,
+              commonClasses.removeOnSmallScreen,
+            )}
+          >
+            <TranslateIcon />
+            <Select
+              className={classes.languageSelectStyle}
+              value={props.i18n.language}
+              onChange={e => handleChangeLanguage({ e, props })}
+            >
+              {Object.keys(languageMap).map((ln, index) => (
+                <MenuItem key={index} value={ln}>
+                  {languageMap[ln]}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        </div>
         <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}

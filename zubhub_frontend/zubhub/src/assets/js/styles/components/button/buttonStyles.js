@@ -1,14 +1,14 @@
 const styles = theme => ({
   primaryButtonStyle: {
     backgroundColor: '#00B8C4',
-    borderRadius: 15,
+    borderRadius: 30,
     color: 'white',
     '&:hover': {
       backgroundColor: '#03848C',
     },
   },
   secondaryButtonStyle: {
-    borderRadius: 15,
+    borderRadius: 30,
     backgroundColor: 'white',
     color: '#00B8C4',
     '&:hover': {
@@ -17,7 +17,7 @@ const styles = theme => ({
     },
   },
   dangerButtonStyle: {
-    borderRadius: 15,
+    borderRadius: 30,
     backgroundColor: 'rgb(220, 0, 78)',
     color: 'white',
     '&:hover': {
@@ -33,6 +33,11 @@ const styles = theme => ({
       '& imageCountStyle': {
         flexGrow: 1,
       },
+    },
+  },
+  customButtonStyle: {
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.5rem',
     },
   },
   fullWidth: {

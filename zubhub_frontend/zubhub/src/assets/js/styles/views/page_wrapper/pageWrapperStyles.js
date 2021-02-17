@@ -10,9 +10,9 @@ const styles = theme => ({
     '& img': {
       height: '2em',
     },
-    [theme.breakpoints.down('402')]: {
+    [theme.breakpoints.down('317')]: {
       '& img': {
-        height: '1em',
+        height: '1.5em',
       },
     },
   },
@@ -32,13 +32,32 @@ const styles = theme => ({
   avatarStyle: {
     cursor: 'pointer',
     backgroundColor: 'white',
-    marginLeft: '1em',
+    [theme.breakpoints.up('1600')]: {
+      height: '3em',
+      width: '3em',
+    },
   },
   profileMenuStyle: {
-    paddingTop: 0,
-    paddingBottom: 0,
+    '& .MuiList-root': {
+      paddingTop: 0,
+      '& .MuiListItem-root': {
+        '&:first-child': {
+          backgroundColor: '#ededed',
+          paddingTop: '12px',
+          paddingBottom: '8px',
+        },
+      },
+    },
+    [theme.breakpoints.up('1600')]: {
+      '& .MuiMenu-paper': {
+        width: '10em',
+        '& .MuiTypography-root': {
+          fontSize: '1.2rem',
+        },
+      },
+    },
   },
-  profileStyle: { backgroundColor: '#F5F5F5' },
+  profileStyle: { fontWeight: 'bold' },
   logOutStyle: {
     borderTop: '1px solid #C4C4C4',
   },
@@ -48,9 +67,33 @@ const styles = theme => ({
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   },
+  languageSelectBoxStyle: {
+    marginLeft: '1.3em',
+    paddingLeft: '0.7em',
+    color: 'white',
+    backgroundColor: '#d13241',
+    borderRadius: '50px',
+    [theme.breakpoints.down('282')]: {
+      marginLeft: '0.3em',
+    },
+    '&:hover': {
+      backgroundColor: '#c7313f',
+    },
+  },
   languageSelectStyle: {
-    display: 'block',
-    maxWidth: '7em',
+    display: 'inline-block',
+    maxWidth: '5em',
+    color: 'white',
+    '&.MuiInput-underline:before': {
+      display: 'none !important',
+    },
+    '&.MuiInput-underline:after': {
+      display: 'none !important',
+    },
+    '& .MuiSelect-root': {
+      boxSizing: 'border-box',
+      backgroundColor: 'rgba(0,0,0,0)',
+    },
   },
   center: {
     display: 'flex',

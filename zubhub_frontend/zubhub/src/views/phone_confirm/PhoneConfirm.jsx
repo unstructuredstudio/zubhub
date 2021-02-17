@@ -63,7 +63,7 @@ function PhoneConfirm(props) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -82,7 +82,12 @@ function PhoneConfirm(props) {
                 >
                   {t('phoneConfirm.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('phoneConfirm.welcomeMsg.secondary').replace(
                     '<>',
                     username,
@@ -113,6 +118,7 @@ function PhoneConfirm(props) {
                       type="submit"
                       fullWidth
                       primaryButtonStyle
+                      customButtonStyle
                     >
                       {t('phoneConfirm.inputs.submit')}
                     </CustomButton>

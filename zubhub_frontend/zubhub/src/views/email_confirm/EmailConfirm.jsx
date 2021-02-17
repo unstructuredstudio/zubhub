@@ -63,7 +63,7 @@ function EmailConfirm(props) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -82,7 +82,12 @@ function EmailConfirm(props) {
                 >
                   {t('emailConfirm.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('emailConfirm.welcomeMsg.secondary').replace(
                     '<>',
                     username,
@@ -113,6 +118,7 @@ function EmailConfirm(props) {
                       type="submit"
                       fullWidth
                       primaryButtonStyle
+                      customButtonStyle
                     >
                       {t('emailConfirm.inputs.submit')}
                     </CustomButton>

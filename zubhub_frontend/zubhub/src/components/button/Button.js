@@ -19,6 +19,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     secondaryButtonStyle,
     dangerButtonStyle,
     imageUploadButtonStyle,
+    customButtonStyle,
     fullWidth,
     className,
     muiClasses,
@@ -29,6 +30,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     [classes.secondaryButtonStyle]: secondaryButtonStyle,
     [classes.dangerButtonStyle]: dangerButtonStyle,
     [classes.imageUploadButtonStyle]: imageUploadButtonStyle,
+    [classes.customButtonStyle]: customButtonStyle,
     [classes.fullWidth]: fullWidth,
     [className]: className,
   });
@@ -46,6 +48,7 @@ Button.propTypes = {
   secondaryButtonStyle: PropTypes.bool,
   dangerButtonStyle: PropTypes.bool,
   imageUploadButtonStyle: PropTypes.bool,
+  customButtonStyle: PropTypes.bool,
   className: PropTypes.string,
   variant: PropTypes.string,
   fullWidth: PropTypes.bool,

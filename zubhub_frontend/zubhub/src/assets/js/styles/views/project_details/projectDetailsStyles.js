@@ -21,6 +21,9 @@ const styles = theme => ({
       'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
+    [theme.breakpoints.down('511')]: {
+      paddingTop: '4em',
+    },
   },
   titleStyle: {
     fontWeight: 900,
