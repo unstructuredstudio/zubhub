@@ -39,11 +39,9 @@ const confirmEmail = (e, props, state) => {
     })
     .catch(error => {
       if (error.message.startsWith('Unexpected')) {
-        props.setStatus({
-          non_field_errors: props.t('emailConfirm.errors.unexpected'),
-        });
+        return { errors: props.t('emailConfirm.errors.unexpected') };
       } else {
-        props.setStatus({ non_field_errors: error.message });
+        return { errors: error.message };
       }
     });
 };
@@ -53,10 +51,19 @@ function EmailConfirm(props) {
 
   let { username, key } = getUsernameAndKey(props.location.search);
 
-  const [state] = React.useState({
+  const [state, setState] = React.useState({
     username: username ?? null,
     key: key ?? null,
+    errors: null,
   });
+
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState({ ...state, ...obj });
+      });
+    }
+  };
 
   username = state.username;
   const { t } = props;
@@ -71,7 +78,7 @@ function EmailConfirm(props) {
                 className="auth-form"
                 name="email_confirm"
                 noValidate="noValidate"
-                onSubmit={e => confirmEmail(e, props, state)}
+                onSubmit={e => handleSetState(confirmEmail(e, props, state))}
               >
                 <Typography
                   gutterBottom
