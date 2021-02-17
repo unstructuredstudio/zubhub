@@ -153,7 +153,7 @@ function PageWrapper(props) {
                     aria-controls="profile_menu"
                     aria-haspopup="true"
                     onClick={e => handleSetState(handleProfileMenuOpen(e))}
-                    src={`https://robohash.org/${props.auth.username}`}
+                    src={props.auth.avatar}
                     alt={props.auth.username}
                   />
                   <Menu

@@ -42,6 +42,7 @@ export const edit_user_profile = args => {
       if (res.id) {
         dispatch(
           AuthActions.setAuthUser({
+            avatar: res.avatar,
             username: res.username,
           }),
         );

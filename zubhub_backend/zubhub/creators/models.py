@@ -7,9 +7,9 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
+from django.dispatch import Signal
 from .managers import PhoneNumberManager
 from .utils import user_phone
-from . import signals
 
 try:
     from allauth.account import app_settings as allauth_settings
@@ -51,7 +51,8 @@ class Creator(AbstractUser):
     projects_count = models.IntegerField(blank=True, default=0)
 
     def save(self, *args, **kwargs):
-        self.avatar = 'https://robohash.org/{0}'.format(self.username)
+        if not self.avatar:
+            self.avatar = 'https://robohash.org/{0}'.format(self.username)
         self.followers_count = self.followers.count()
         self.following_count = self.following.count()
         self.projects_count = self.projects.count()
@@ -152,7 +153,7 @@ class PhoneConfirmationHMAC:
         if not self.phone_number.verified:
             phone_number = self.phone_number
             get_adapter(request).confirm_phone(request, phone_number)
-            signals.phone_confirmed.send(
+            Signal().send(
                 sender=self.__class__,
                 request=request,
                 phone_number=phone_number,
@@ -161,7 +162,7 @@ class PhoneConfirmationHMAC:
 
     def send(self, request=None, signup=False):
         get_adapter(request).send_confirmation_text(request, self, signup)
-        signals.phone_confirmation_sent.send(
+        Signal().send(
             sender=self.__class__,
             request=request,
             confirmation=self,

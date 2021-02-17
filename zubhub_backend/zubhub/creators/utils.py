@@ -7,6 +7,8 @@ from django.db.models import Q
 from django.utils.encoding import force_str
 from django.utils.http import base36_to_int, int_to_base36, urlencode
 from django.contrib.auth import get_user_model
+from projects.tasks import delete_image_from_DO_space
+from creators.tasks import upload_image_to_DO_space
 
 
 try:
@@ -143,6 +145,28 @@ def send_phone_confirmation(request, user, signup=False, phone=None):
             )
             assert phone_number
 
+
+def process_avatar(oldInstance, newInstance):
+
+    key = 'avatar/{0}'.format(newInstance.username)
+
+    if oldInstance and oldInstance.username != newInstance.username:
+        newInstance.avatar = 'https://robohash.org/{0}'.format(
+            newInstance.username)
+        newInstance.save()
+
+        if(oldInstance.avatar.find(".com") > 0):
+
+            delete_image_from_DO_space.delay(
+                "zubhub", oldInstance.avatar.split(".com/")[1])
+
+        upload_image_to_DO_space.delay(
+            'zubhub', key, newInstance.id)
+
+    elif not oldInstance:
+
+        upload_image_to_DO_space.delay(
+            'zubhub', key, newInstance.id)
 
 # def sync_user_email_addresses(user):
 #     """
