@@ -106,7 +106,7 @@ function PasswordResetConfirm(props) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -191,7 +191,10 @@ function PasswordResetConfirm(props) {
                         }
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['new_password1']) ||
                           (props.touched['new_password1'] &&
                             props.errors['new_password1'] &&
@@ -250,7 +253,10 @@ function PasswordResetConfirm(props) {
                         }
                         labelWidth={150}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['new_password2']) ||
                           (props.touched['new_password2'] &&
                             props.errors['new_password2'] &&
@@ -266,6 +272,7 @@ function PasswordResetConfirm(props) {
                       size="large"
                       type="submit"
                       primaryButtonStyle
+                      customButtonStyle
                       fullWidth
                     >
                       {t('passwordResetConfirm.inputs.submit')}

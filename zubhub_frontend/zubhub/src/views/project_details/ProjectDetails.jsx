@@ -484,7 +484,7 @@ function ProjectDetails(props) {
                     {props.auth.token ? (
                       <Avatar
                         className={classes.commentAvatarStyle}
-                        src={`https://robohash.org/${props.auth.username}`}
+                        src={props.auth.avatar}
                         alt={props.auth.username}
                       />
                     ) : null}
@@ -536,12 +536,12 @@ function ProjectDetails(props) {
                     >
                       <Avatar
                         className={classes.commentAvatarStyle}
-                        src={`https://robohash.org/${comment.creator}`}
-                        alt={comment.creator}
+                        src={comment.creator.avatar}
+                        alt={comment.creator.username}
                       />
                       <Box>
                         <Typography color="textPrimary">
-                          {comment.creator}
+                          {comment.creator.username}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
                           {`${dFormatter(comment.created_on).value} ${t(

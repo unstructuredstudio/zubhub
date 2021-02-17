@@ -150,7 +150,7 @@ function Signup(props) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -169,7 +169,12 @@ function Signup(props) {
                 >
                   {t('signup.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('signup.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
@@ -241,7 +246,10 @@ function Signup(props) {
                           />
                         </Tooltip>
                       </ClickAwayListener>
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['username']) ||
                           (props.touched['username'] &&
                             props.errors['username'] &&
@@ -279,7 +287,10 @@ function Signup(props) {
                         onBlur={props.handleBlur}
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['email']) ||
                           (props.touched['email'] &&
                             props.errors['email'] &&
@@ -317,7 +328,10 @@ function Signup(props) {
                         onBlur={props.handleBlur}
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['phone']) ||
                           (props.touched['phone'] &&
                             props.errors['phone'] &&
@@ -361,7 +375,10 @@ function Signup(props) {
                         onBlur={props.handleBlur}
                         labelWidth={90}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['dateOfBirth']) ||
                           (props.touched['dateOfBirth'] &&
                             props.errors['dateOfBirth'] &&
@@ -411,7 +428,10 @@ function Signup(props) {
                             </MenuItem>
                           ))}
                       </Select>
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['user_location']) ||
                           (props.touched['user_location'] &&
                             props.errors['user_location'] &&
@@ -473,7 +493,10 @@ function Signup(props) {
                         }
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['password1']) ||
                           (props.touched['password1'] &&
                             props.errors['password1'] &&
@@ -535,7 +558,10 @@ function Signup(props) {
                         }
                         labelWidth={150}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['password2']) ||
                           (props.touched['password2'] &&
                             props.errors['password2'] &&
@@ -576,11 +602,15 @@ function Signup(props) {
                         onBlur={props.handleBlur}
                         labelWidth={50}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         <Typography
                           color="textSecondary"
                           variant="caption"
                           component="span"
+                          className={classes.fieldHelperTextStyle}
                         >
                           {t('signup.inputs.bio.helpText')}
                         </Typography>
@@ -614,6 +644,7 @@ function Signup(props) {
                           color="textSecondary"
                           variant="caption"
                           component="span"
+                          className={classes.fieldHelperTextStyle}
                         >
                           {t('signup.unsubscribe')}
                         </Typography>
@@ -629,6 +660,7 @@ function Signup(props) {
                       primaryButtonStyle
                       type="submit"
                       fullWidth
+                      customButtonStyle
                     >
                       {t('signup.inputs.submit')}
                     </CustomButton>
@@ -655,6 +687,7 @@ function Signup(props) {
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
+                      customButtonStyle
                       fullWidth
                     >
                       {t('signup.login')}

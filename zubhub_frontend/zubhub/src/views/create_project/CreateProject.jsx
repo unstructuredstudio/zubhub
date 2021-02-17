@@ -161,10 +161,7 @@ const handleAddMaterialFieldChange = (e, props, refs) => {
   props.setFieldValue('materials_used', value, true);
 };
 
-const BuildMaterialUsedNodes = (props, refs) => {
-  const classes = useStyles();
-  const commonClasses = useCommonStyles();
-
+const buildMaterialUsedNodes = ({ props, refs, classes, commonClasses }) => {
   if (props.values['materials_used']) {
     return props.values['materials_used']
       .split(',')
@@ -250,28 +247,30 @@ function CreateProject(props) {
   }, [state.image_upload.successful_uploads]);
 
   React.useEffect(() => {
-    if (props.touched['project_images'] && props.errors['project_images']) {
-      refs.imageUploadButtonEl.current.setAttribute(
-        'style',
-        'border-color:#F54336; color:#F54336',
-      );
-    } else {
-      refs.imageUploadButtonEl.current.setAttribute(
-        'style',
-        'border-color: #00B8C4; color:#00B8C4',
-      );
-    }
+    if (props.auth.token) {
+      if (props.touched['project_images'] && props.errors['project_images']) {
+        refs.imageUploadButtonEl.current.setAttribute(
+          'style',
+          'border-color:#F54336; color:#F54336',
+        );
+      } else {
+        refs.imageUploadButtonEl.current.setAttribute(
+          'style',
+          'border-color: #00B8C4; color:#00B8C4',
+        );
+      }
 
-    if (props.touched['project_images']) {
-      image_field_touched = true;
-    } else {
-      image_field_touched = false;
-    }
+      if (props.touched['project_images']) {
+        image_field_touched = true;
+      } else {
+        image_field_touched = false;
+      }
 
-    if (props.touched['video']) {
-      video_field_touched = true;
-    } else {
-      video_field_touched = false;
+      if (props.touched['video']) {
+        video_field_touched = true;
+      } else {
+        video_field_touched = false;
+      }
     }
   }, [
     props.errors['project_images'],
@@ -434,7 +433,7 @@ function CreateProject(props) {
   } else {
     return (
       <Box className={classes.root}>
-        <Container maxWidth="sm">
+        <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
             <CardActionArea>
               <CardContent>
@@ -459,6 +458,7 @@ function CreateProject(props) {
                     variant="body2"
                     color="textSecondary"
                     component="p"
+                    className={classes.descStyle}
                   >
                     {t('createProject.welcomeMsg.secondary')}
                   </Typography>
@@ -514,7 +514,10 @@ function CreateProject(props) {
                           onChange={props.handleChange}
                           onBlur={props.handleBlur}
                         />
-                        <FormHelperText error>
+                        <FormHelperText
+                          error
+                          className={classes.fieldHelperTextStyle}
+                        >
                           {(props.status && props.status['title']) ||
                             (props.touched['title'] &&
                               props.errors['title'] &&
@@ -590,7 +593,10 @@ function CreateProject(props) {
                           onChange={props.handleChange}
                           onBlur={props.handleBlur}
                         />
-                        <FormHelperText error>
+                        <FormHelperText
+                          error
+                          className={classes.fieldHelperTextStyle}
+                        >
                           {(props.status && props.status['description']) ||
                             (props.touched['description'] &&
                               props.errors['description'] &&
@@ -613,10 +619,7 @@ function CreateProject(props) {
                         <label htmlFor="project_images">
                           <Typography
                             color="textSecondary"
-                            className={clsx(
-                              classes.customLabelStyle,
-                              commonClasses.marginBottom1em,
-                            )}
+                            className={classes.customLabelStyle}
                           >
                             <Box className={classes.fieldNumberStyle}>3</Box>
                             {t('createProject.inputs.projectImages.label')}
@@ -627,6 +630,10 @@ function CreateProject(props) {
                           color="textSecondary"
                           variant="caption"
                           component="span"
+                          className={clsx(
+                            classes.fieldHelperTextStyle,
+                            commonClasses.marginBottom1em,
+                          )}
                         >
                           {t(
                             'createProject.inputs.projectImages.topHelperText',
@@ -635,7 +642,6 @@ function CreateProject(props) {
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={6} md={6}>
                             <CustomButton
-                              className={classes.customImageButtonStyle}
                               ref={refs.imageUploadButtonEl}
                               variant="outlined"
                               size="large"
@@ -647,6 +653,7 @@ function CreateProject(props) {
                               }
                               secondaryButtonStyle
                               imageUploadButtonStyle
+                              customButtonStyle
                               fullWidth
                             >
                               {t('createProject.inputs.projectImages.label2')}
@@ -678,7 +685,10 @@ function CreateProject(props) {
                           }
                           onBlur={props.handleBlur}
                         />
-                        <FormHelperText error>
+                        <FormHelperText
+                          error
+                          className={classes.fieldHelperTextStyle}
+                        >
                           {(props.status && props.status['project_images']) ||
                             (props.errors['project_images'] &&
                               t(
@@ -703,10 +713,7 @@ function CreateProject(props) {
                         <label htmlFor="video">
                           <Typography
                             color="textSecondary"
-                            className={clsx(
-                              classes.customLabelStyle,
-                              commonClasses.marginBottom1em,
-                            )}
+                            className={classes.customLabelStyle}
                           >
                             <Box className={classes.fieldNumberStyle}>4</Box>
                             {t('createProject.inputs.video.label')}
@@ -716,6 +723,10 @@ function CreateProject(props) {
                           color="textSecondary"
                           variant="caption"
                           component="span"
+                          className={clsx(
+                            classes.fieldHelperTextStyle,
+                            commonClasses.marginBottom1em,
+                          )}
                         >
                           {t('createProject.inputs.video.topHelperText')}
                         </Typography>
@@ -732,7 +743,10 @@ function CreateProject(props) {
                           onBlur={props.handleBlur}
                           labelWidth={90}
                         />
-                        <FormHelperText error>
+                        <FormHelperText
+                          error
+                          className={classes.fieldHelperTextStyle}
+                        >
                           {(props.status && props.status['video']) ||
                             (props.touched['video'] &&
                               props.errors['video'] &&
@@ -744,6 +758,7 @@ function CreateProject(props) {
                           color="textSecondary"
                           variant="caption"
                           component="span"
+                          className={classes.fieldHelperTextStyle}
                         >
                           {t('createProject.inputs.video.bottomHelperText')}
                         </Typography>
@@ -779,7 +794,12 @@ function CreateProject(props) {
                         <Grid container spacing={1} alignItems="flex-end">
                           <Grid item xs={12} sm={8}>
                             <Box ref={refs.addMaterialsUsedEl}>
-                              {BuildMaterialUsedNodes(props, refs)}
+                              {buildMaterialUsedNodes({
+                                props,
+                                refs,
+                                classes,
+                                commonClasses,
+                              })}
                             </Box>
                           </Grid>
                           <Grid item xs={12} sm={4} md={4}>
@@ -788,13 +808,17 @@ function CreateProject(props) {
                               size="large"
                               onClick={e => addMaterialsUsedNode(e, props)}
                               secondaryButtonStyle
+                              customButtonStyle
                               fullWidth
                             >
                               <AddIcon />{' '}
                               {t('createProject.inputs.materialsUsed.addMore')}
                             </CustomButton>
                           </Grid>
-                          <FormHelperText error>
+                          <FormHelperText
+                            error
+                            className={classes.fieldHelperTextStyle}
+                          >
                             {(props.status && props.status['materials_used']) ||
                               (props.touched['materials_used'] &&
                                 props.errors['materials_used'] &&
@@ -811,6 +835,7 @@ function CreateProject(props) {
                         size="large"
                         type="submit"
                         primaryButtonStyle
+                        customButtonStyle
                         fullWidth
                       >
                         {!id

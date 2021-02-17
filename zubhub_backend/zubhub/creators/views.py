@@ -16,7 +16,7 @@ from .serializers import CreatorSerializer, LocationSerializer, VerifyPhoneSeria
 from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
-from .utils import perform_send_phone_confirmation, perform_send_email_confirmation
+from .utils import perform_send_phone_confirmation, perform_send_email_confirmation, process_avatar
 
 from .models import PhoneConfirmationHMAC
 
@@ -36,14 +36,13 @@ class UserProfileAPIView(RetrieveAPIView):
     lookup_field = "username"
     permission_classes = [AllowAny]
 
-    # perform_send_phone_confirmation
-
 
 class RegisterCreatorAPIView(RegisterView):
     serializer_class = CustomRegisterSerializer
 
     def perform_create(self, serializer):
         creator = super().perform_create(serializer)
+        process_avatar(None, creator)
         perform_send_phone_confirmation(
             self.request._request, creator, signup=True)
         return creator
@@ -87,6 +86,7 @@ class EditCreatorAPIView(UpdateAPIView):
 
             perform_send_email_confirmation(
                 self.request._request, creator[0], signup=True)
+        process_avatar(self.request.user, creator[0])
         return response
 
     def get_object(self):

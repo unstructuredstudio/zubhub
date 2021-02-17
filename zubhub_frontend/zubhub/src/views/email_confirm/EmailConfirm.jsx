@@ -39,11 +39,9 @@ const confirmEmail = (e, props, state) => {
     })
     .catch(error => {
       if (error.message.startsWith('Unexpected')) {
-        props.setStatus({
-          non_field_errors: props.t('emailConfirm.errors.unexpected'),
-        });
+        return { errors: props.t('emailConfirm.errors.unexpected') };
       } else {
-        props.setStatus({ non_field_errors: error.message });
+        return { errors: error.message };
       }
     });
 };
@@ -53,17 +51,26 @@ function EmailConfirm(props) {
 
   let { username, key } = getUsernameAndKey(props.location.search);
 
-  const [state] = React.useState({
+  const [state, setState] = React.useState({
     username: username ?? null,
     key: key ?? null,
+    errors: null,
   });
+
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState({ ...state, ...obj });
+      });
+    }
+  };
 
   username = state.username;
   const { t } = props;
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -71,7 +78,7 @@ function EmailConfirm(props) {
                 className="auth-form"
                 name="email_confirm"
                 noValidate="noValidate"
-                onSubmit={e => confirmEmail(e, props, state)}
+                onSubmit={e => handleSetState(confirmEmail(e, props, state))}
               >
                 <Typography
                   gutterBottom
@@ -82,7 +89,12 @@ function EmailConfirm(props) {
                 >
                   {t('emailConfirm.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('emailConfirm.welcomeMsg.secondary').replace(
                     '<>',
                     username,
@@ -113,6 +125,7 @@ function EmailConfirm(props) {
                       type="submit"
                       fullWidth
                       primaryButtonStyle
+                      customButtonStyle
                     >
                       {t('emailConfirm.inputs.submit')}
                     </CustomButton>

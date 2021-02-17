@@ -20,10 +20,11 @@
       "login": "Login",
       "signup": "Sign Up",
       "createProject": "Create Project",
-      "projects": "Projects",
+      "profile": "My Profile",
+      "projects": "My Projects",
       "followers": "Followers",
       "following": "Following",
-      "savedProjects": "Saved Projects",
+      "savedProjects": "Bookmarks",
       "logout": "Logout"
     },
     "errors": {
@@ -259,7 +260,7 @@
       },
       "video": {
         "label": "Let's add a video",
-        "topHelperText": "It's ok if you don't have them",
+        "topHelperText": "It's ok if you don't have them, add images instead",
         "bottomHelperText": "YouTube, Vimeo, Google Drive links are supported",
         "errors": {
           "shouldBeVideoUrl": "you are required to submit a video url here",
@@ -374,10 +375,10 @@
     "followingCount": "Following",
     "about": {
       "label": "About Me",
-      "placeholder": "You will be able to change this next month 😀!"
+      "placeholder": "tell us more about you by clicking on the edit button at the top of the page 😀!"
     },
     "projects": {
-      "label": "Latest projects of",
+      "label": "Latest projects",
       "viewAll": "View all >>"
     },
     "tooltips": {
@@ -416,14 +417,14 @@
       },
       "email": {
         "label": "Email",
-        "disabledHelperText": "to edit this field mail admin@unstrucutred.studio",
+        "disabledHelperText": "to edit this field mail admin@unstructured.studio",
         "errors": {
           "invalid": "invalid email"
         }
       },
       "phone": {
         "label": "Phone",
-        "disabledHelperText": "to edit this field mail admin@unstrucutred.studio",
+        "disabledHelperText": "to edit this field mail admin@unstructured.studio",
         "errors": {
           "invalid": "Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
         }

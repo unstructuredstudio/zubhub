@@ -155,7 +155,7 @@ function EditProfile(props) {
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -174,7 +174,12 @@ function EditProfile(props) {
                 >
                   {t('editProfile.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('editProfile.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
@@ -251,7 +256,10 @@ function EditProfile(props) {
                           />
                         </Tooltip>
                       </ClickAwayListener>
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['username']) ||
                           (props.touched['username'] &&
                             props.errors['username'] &&
@@ -310,7 +318,10 @@ function EditProfile(props) {
                             </MenuItem>
                           ))}
                       </Select>
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {(props.status && props.status['user_location']) ||
                           (props.touched['user_location'] &&
                             props.errors['user_location'] &&
@@ -358,12 +369,16 @@ function EditProfile(props) {
                         onBlur={props.handleBlur}
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {props.status && props.status['init_email'] && (
                           <Typography
                             color="textSecondary"
                             variant="caption"
                             component="span"
+                            className={classes.fieldHelperTextStyle}
                           >
                             {t('editProfile.inputs.email.disabledHelperText')}
                           </Typography>
@@ -416,12 +431,16 @@ function EditProfile(props) {
                         onBlur={props.handleBlur}
                         labelWidth={70}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         {props.status && props.status['init_phone'] && (
                           <Typography
                             color="textSecondary"
                             variant="caption"
                             component="span"
+                            className={classes.fieldHelperTextStyle}
                           >
                             {t('editProfile.inputs.phone.disabledHelperText')}
                           </Typography>
@@ -472,11 +491,15 @@ function EditProfile(props) {
                         onBlur={props.handleBlur}
                         labelWidth={50}
                       />
-                      <FormHelperText error>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
                         <Typography
                           color="textSecondary"
                           variant="caption"
                           component="span"
+                          className={classes.fieldHelperTextStyle}
                         >
                           {t('editProfile.inputs.bio.helpText')}
                         </Typography>
@@ -498,6 +521,7 @@ function EditProfile(props) {
                       primaryButtonStyle
                       type="submit"
                       fullWidth
+                      customButtonStyle
                     >
                       {t('editProfile.inputs.submit')}
                     </CustomButton>
@@ -524,6 +548,7 @@ function EditProfile(props) {
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
+                      customButtonStyle
                       fullWidth
                     >
                       {t('editProfile.backToProfile')}

@@ -39,11 +39,11 @@ const confirmPhone = (e, props, state) => {
     })
     .catch(error => {
       if (error.message.startsWith('Unexpected')) {
-        props.setStatus({
-          non_field_errors: props.t('phoneConfirm.errors.unexpected'),
-        });
+        return {
+          errors: props.t('phoneConfirm.errors.unexpected'),
+        };
       } else {
-        props.setStatus({ non_field_errors: error.message });
+        return { errors: error.message };
       }
     });
 };
@@ -53,17 +53,27 @@ function PhoneConfirm(props) {
 
   let { username, key } = getUsernameAndKey(props.location.search);
 
-  const [state] = React.useState({
+  const [state, setState] = React.useState({
     username: username ?? null,
     key: key ?? null,
+    errors: null,
   });
 
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState({ ...state, ...obj });
+      });
+    }
+  };
+
   username = state.username;
+  let errors = state.errors;
   const { t } = props;
 
   return (
     <Box className={classes.root}>
-      <Container maxWidth="sm">
+      <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
@@ -71,7 +81,7 @@ function PhoneConfirm(props) {
                 className="auth-form"
                 name="phone_confirm"
                 noValidate="noValidate"
-                onSubmit={e => confirmPhone(e, props, state)}
+                onSubmit={e => handleSetState(confirmPhone(e, props, state))}
               >
                 <Typography
                   gutterBottom
@@ -82,7 +92,12 @@ function PhoneConfirm(props) {
                 >
                   {t('phoneConfirm.welcomeMsg.primary')}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={classes.descStyle}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('phoneConfirm.welcomeMsg.secondary').replace(
                     '<>',
                     username,
@@ -91,17 +106,10 @@ function PhoneConfirm(props) {
 
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box
-                      component="p"
-                      className={
-                        props.status &&
-                        props.status['non_field_errors'] &&
-                        classes.errorBox
-                      }
-                    >
-                      {props.status && props.status['non_field_errors'] && (
+                    <Box component="p" className={errors && classes.errorBox}>
+                      {errors && (
                         <Box component="span" className={classes.error}>
-                          {props.status['non_field_errors']}
+                          {errors}
                         </Box>
                       )}
                     </Box>
@@ -113,6 +121,7 @@ function PhoneConfirm(props) {
                       type="submit"
                       fullWidth
                       primaryButtonStyle
+                      customButtonStyle
                     >
                       {t('phoneConfirm.inputs.submit')}
                     </CustomButton>

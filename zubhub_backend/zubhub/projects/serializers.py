@@ -11,8 +11,7 @@ Creator = get_user_model()
 
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    creator = serializers.SlugRelatedField(
-        slug_field='username', read_only=True)
+    creator = CreatorSerializer(read_only=True)
     created_on = serializers.DateTimeField(read_only=True)
 
     class Meta:
