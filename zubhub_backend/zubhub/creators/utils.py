@@ -168,6 +168,7 @@ def process_avatar(oldInstance, newInstance):
         upload_image_to_DO_space.delay(
             'zubhub', key, newInstance.id)
 
+
 # def sync_user_email_addresses(user):
 #     """
 #     Keep user.email in sync with user.emailaddress_set.

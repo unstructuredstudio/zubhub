@@ -225,3 +225,64 @@ export const add_comment = args => {
       });
   };
 };
+
+export const set_staff_picks = staff_picks => {
+  return dispatch => {
+    dispatch({
+      type: 'SET_PROJECTS',
+      payload: { staff_picks },
+    });
+  };
+};
+
+export const get_staff_picks = args => {
+  return dispatch => {
+    return API.get_staff_picks()
+      .then(res => {
+        if (Array.isArray(res)) {
+          dispatch(set_staff_picks(res));
+          return { loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+export const get_staff_pick = args => {
+  return () => {
+    return API.get_staff_pick(args)
+      .then(res => {
+        if (res.id) {
+          return {
+            staff_pick: res,
+            loading: false,
+          };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('savedProjects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};

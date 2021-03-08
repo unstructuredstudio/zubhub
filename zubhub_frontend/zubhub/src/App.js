@@ -20,6 +20,7 @@ import Projects from './views/projects/Projects';
 import SavedProjects from './views/saved_projects/SavedProjects';
 import CreateProject from './views/create_project/CreateProject';
 import ProjectDetails from './views/project_details/ProjectDetails';
+import StaffPickDetails from './views/staff_pick_details/StaffPickDetails';
 
 function App(props) {
   return (
@@ -139,6 +140,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <EditProfile {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/projects/staff_picks/:id"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <StaffPickDetails {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

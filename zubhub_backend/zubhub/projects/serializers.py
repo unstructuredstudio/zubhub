@@ -2,8 +2,10 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from creators.serializers import CreatorSerializer
-from .models import Project, Comment, Image
+from .models import *
+from .pagination import ProjectNumberPagination
 import time
+from math import ceil
 
 
 Creator = get_user_model()
@@ -135,3 +137,40 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "comments_count",
             "created_on",
         ]
+
+
+class StaffPickSerializer(serializers.ModelSerializer):
+    projects = serializers.SerializerMethodField('paginated_projects')
+
+    class Meta:
+        model = StaffPick
+        fields = [
+            'id',
+            'title',
+            'description',
+            'projects',
+            'created_on',
+        ]
+
+    def paginated_projects(self, obj):
+        projects = obj.projects.all()
+        paginator = ProjectNumberPagination()
+        page = paginator.paginate_queryset(
+            projects, self.context['request'])
+        serializer = ProjectSerializer(page, read_only=True, many=True, context={
+                                       'request': self.context['request']})
+        count = projects.count()
+        num_pages = ceil(count/paginator.page_size)
+        current_page = int(
+            self.context["request"].query_params.get("page", "1"))
+        if current_page != 1:
+            prev_page = current_page - 1
+        else:
+            prev_page = None
+
+        if current_page != num_pages:
+            next_page = current_page + 1
+        else:
+            next_page = None
+
+        return {"results": serializer.data, "prev": prev_page, "next": next_page, "count": count}

@@ -1,12 +1,14 @@
 from django.conf import settings
+from django.core.mail import send_mass_mail
 from django.template.loader import render_to_string
 from allauth.account.adapter import DefaultAccountAdapter
 from django.template import TemplateDoesNotExist
 from twilio.rest import Client
+import json
 
 from .models import Location, Setting
 
-from creators.tasks import send_text
+from creators.tasks import send_text, send_mass_email
 
 from allauth.account import app_settings as allauth_settings
 
@@ -82,4 +84,36 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             phone=phoneconfirmation.phone_number.phone,
             template_name=template_name,
             ctx=ctx,
+        )
+
+    def send_mass_email(self, template_prefix, contexts):
+        template_prefix = "projects/email/" + template_prefix
+        messages = []
+        for ctx in contexts:
+            msg = self.render_mail(template_prefix, ctx["email"], ctx)
+            messages.append(
+                (
+                    msg.subject,
+                    msg.body,
+                    msg.from_email,
+                    msg.to
+                )
+            )
+
+        send_mass_mail(tuple(messages))
+
+    def send_mass_text(self, template_prefix, contexts):
+        template_name = "projects/phone/" + template_prefix + "_message.txt"
+        client = Client(settings.TWILIO_ACCOUNT_SID,
+                        settings.TWILIO_AUTH_TOKEN)
+
+        rendered_text = self.render_text(
+            template_name, contexts[0]["phone"], contexts[0])
+
+        bindings = list(map(lambda context: json.dumps(
+            {'binding_type': 'sms', 'address': context["phone"]}), contexts))
+
+        client.notify.services(settings.TWILIO_NOTIFY_SERVICE_SID).notifications.create(
+            to_binding=bindings,
+            body=rendered_text["body"]
         )

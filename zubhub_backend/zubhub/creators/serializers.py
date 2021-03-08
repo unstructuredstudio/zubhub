@@ -70,7 +70,6 @@ class CreatorSerializer(serializers.ModelSerializer):
         return phone
 
     def update(self, user, validated_data):
-        print("update was called")
         creator = super().update(user, validated_data)
         phone_number = PhoneNumber.objects.filter(user=creator)
         email_address = EmailAddress.objects.filter(user=creator)
