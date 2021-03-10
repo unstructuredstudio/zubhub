@@ -14,6 +14,9 @@ const styles = theme => ({
   colorRed: {
     color: 'red',
   },
+  textDecorationNone: {
+    textDecoration: 'none',
+  },
   displayInlineBlock: {
     display: 'inline-block',
   },
@@ -22,6 +25,10 @@ const styles = theme => ({
   },
   displayFlex: {
     display: 'flex',
+  },
+  displayNone: { display: 'none' },
+  positionAbsolute: {
+    position: 'absolute',
   },
   alignCenter: {
     alignItems: 'center',
@@ -44,6 +51,12 @@ const styles = theme => ({
   },
   width100Percent: {
     width: '100%',
+  },
+  floatRight: {
+    float: 'right',
+  },
+  floatLeft: {
+    float: 'left',
   },
 });
 

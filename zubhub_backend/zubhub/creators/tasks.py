@@ -3,7 +3,6 @@ from random import uniform
 import boto3
 import requests
 from django.conf import settings
-# from django.contrib.auth import get_user_model
 try:
     from allauth.account.adapter import get_adapter
 except ImportError:

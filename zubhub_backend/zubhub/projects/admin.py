@@ -9,18 +9,19 @@ admin.site.index_title = "ZubHub Administration"
 
 
 class ImageAdmin(admin.ModelAdmin):
-    # model = Image
     search_fields = ["project__title", "image_url"]
     list_display = ["image_url"]
 
 
 class CommentAdmin(admin.ModelAdmin):
-    # model = Comment
     list_display = [
         "text", "created_on"]
     search_fields = ["project__tite", "creator__username",
                      "text", "created_on"]
     list_filter = ["created_on"]
+
+    def get_readonly_fields(self, request, obj=None):
+        return ["created_on"]
 
 
 class ProjectImages(admin.StackedInline):
