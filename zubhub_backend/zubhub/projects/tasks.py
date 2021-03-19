@@ -19,3 +19,13 @@ def delete_image_from_DO_space(self, bucket, key):
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
+
+
+@shared_task(bind=True, acks_late=True, max_retries=10)
+def filter_spam_task(self, ctx):
+    from projects.utils import filter_spam
+    try:
+        filter_spam(ctx)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
