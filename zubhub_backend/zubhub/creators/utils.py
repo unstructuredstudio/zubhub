@@ -1,15 +1,16 @@
 import unicodedata
+from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import update_session_auth_hash
 from django.core.exceptions import FieldDoesNotExist, ValidationError
 from django.db import models
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.encoding import force_str
 from django.utils.http import base36_to_int, int_to_base36, urlencode
 from django.contrib.auth import get_user_model
 from projects.tasks import delete_image_from_DO_space
-from creators.tasks import upload_image_to_DO_space
-
+from creators.tasks import upload_image_to_DO_space, send_mass_email, send_mass_text
 
 try:
     from allauth.account.adapter import get_adapter
@@ -167,6 +168,81 @@ def process_avatar(oldInstance, newInstance):
 
         upload_image_to_DO_space.delay(
             'zubhub', key, newInstance.id)
+
+
+def activity_notification(activities, **kwargs):
+
+    from projects.models import Project, Comment
+
+    today = timezone.now().replace(hour=0, minute=0, second=0)
+    yesterday = today - timedelta(days=1)
+    template_name = "activity_notification"
+    ctx = {}
+    email_contexts = []
+    phone_contexts = []
+    staffs = get_user_model().objects.filter(is_staff=True)
+
+    if "edited_project" in activities and kwargs.get("project_id"):
+        ctx["project_id"] = kwargs.get("project_id")
+        ctx["editor"] = kwargs.get("editor")
+
+    else:
+        for activity in activities:
+            ctx[activity] = None
+
+        new_creators = get_user_model().objects.filter(
+            date_joined__gte=yesterday, date_joined__lt=today)
+        new_projects = Project.objects.filter(
+            created_on__gte=yesterday, created_on__lt=today)
+        new_comments = Comment.objects.filter(
+            created_on__gte=yesterday, created_on__lt=today)
+
+        if new_creators:
+            new_creators = list(
+                map(lambda creator: [str(creator.pk), creator.username], new_creators))
+            ctx["new_creators"] = new_creators
+
+        if new_projects:
+            new_projects = list(
+                map(lambda project: [str(project.pk), project.title], new_projects))
+            ctx["new_projects"] = new_projects
+
+        if new_comments:
+            new_comments = list(
+                map(lambda comment: [str(comment.pk), comment.creator.username], new_comments))
+            ctx["new_comments"] = new_comments
+
+    for creator in staffs:
+        if creator.email:
+            email_contexts.append(
+                {"user": creator.username,
+                 "email": creator.email,
+                 **ctx
+                 }
+            )
+
+        if creator.phone:
+            phone_contexts.append(
+                {
+                    "phone": creator.phone,
+                    **ctx
+                }
+            )
+
+    ctx_values = list(filter(lambda x: ctx[x] is not None, list(ctx.keys())))
+
+    if len(email_contexts) > 0 and ctx_values:
+        send_mass_email.delay(
+            template_name=template_name,
+            ctxs=email_contexts
+        )
+
+    if len(phone_contexts) > 0 and ctx_values:
+        send_mass_text.delay(
+            template_name=template_name,
+            ctxs=phone_contexts
+        )
+
 
 # def sync_user_email_addresses(user):
 #     """
