@@ -2,12 +2,14 @@ import uuid
 from math import floor
 from django.utils import timezone
 from django.core import signing
-from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
 from django.dispatch import Signal
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
+
 from .managers import PhoneNumberManager
 from .utils import user_phone
 
@@ -49,6 +51,10 @@ class Creator(AbstractUser):
     followers_count = models.IntegerField(blank=True, default=0)
     following_count = models.IntegerField(blank=True, default=0)
     projects_count = models.IntegerField(blank=True, default=0)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
 
     def save(self, *args, **kwargs):
         if not self.avatar:

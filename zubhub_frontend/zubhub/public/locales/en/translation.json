@@ -27,6 +27,11 @@
       "savedProjects": "Bookmarks",
       "logout": "Logout"
     },
+    "inputs": {
+      "search": {
+        "label": "Search"
+      }
+    },
     "errors": {
       "unexpected": "an error occured while getting user profile, please try again later",
       "logoutFailed": "An error occured while signing you out. please try again"
@@ -286,6 +291,26 @@
     "errors": {
       "notLoggedIn": "You are not logged in. Click on the signin button to get started",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "searchResults": {
+    "projects": "Projects",
+    "creators": "Creators",
+    "resultFound": "result found",
+    "resultsFound": "results found",
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "following": {
+      "follow": "Follow",
+      "unfollow": "Unfollow"
+    },
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later",
+      "noResult": "no result returned for your search term"
     }
   },
 

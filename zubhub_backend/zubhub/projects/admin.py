@@ -38,6 +38,7 @@ class ProjectAdmin(admin.ModelAdmin):
                      "created_on"]
     list_filter = ['created_on', "published"]
     inlines = [ProjectImages, ProjectComments]
+    exclude = ["search_vector"]
 
     def get_readonly_fields(self, request, obj=None):
         return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]

@@ -55,6 +55,30 @@ export const edit_user_profile = args => {
   };
 };
 
+export const search_creators = args => {
+  return () => {
+    return API.search_creators(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          return { ...res, loading: false, type: args.type };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false, type: args.type };
+      });
+  };
+};
+
 export const toggle_follow = args => {
   return () => {
     return API.toggle_follow(args)

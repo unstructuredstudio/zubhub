@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.utils import timezone
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 
 
 Creator = get_user_model()
@@ -31,6 +33,10 @@ class Project(models.Model):
     slug = models.SlugField(unique=True, max_length=1000)
     created_on = models.DateTimeField(default=timezone.now)
     published = models.BooleanField(default=True)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
 
     def save(self, *args, **kwargs):
         if isinstance(self.video, str):

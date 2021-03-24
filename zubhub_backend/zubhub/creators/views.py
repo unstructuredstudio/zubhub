@@ -2,6 +2,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import status
 from django.http import Http404
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
@@ -70,6 +72,18 @@ class VerifyPhoneView(APIView):
         confirmation = self.get_object()
         confirmation.confirm(self.request)
         return Response({'detail': _('ok')}, status=status.HTTP_200_OK)
+
+
+class CreatorSearchAPIView(ListAPIView):
+    serializer_class = CreatorSerializer
+    permission_classes = [AllowAny]
+    pagination_class = CreatorNumberPagination
+
+    def get_queryset(self):
+        query_string = self.request.GET.get("q")
+        query = SearchQuery(query_string)
+        rank = SearchRank(F('search_vector'), query)
+        return Creator.objects.annotate(rank=rank).filter(search_vector=query, is_active=True).order_by('-rank')
 
 
 class EditCreatorAPIView(UpdateAPIView):

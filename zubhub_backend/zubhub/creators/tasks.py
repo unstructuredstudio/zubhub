@@ -1,5 +1,5 @@
-from celery import shared_task
 from random import uniform
+from celery import shared_task
 import boto3
 import requests
 from django.conf import settings

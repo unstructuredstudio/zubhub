@@ -18,7 +18,7 @@ class SettingAdmin(admin.ModelAdmin):
 
 UserAdmin.fieldsets += ('Personal Info',
                         {'fields': ('avatar', 'phone', 'dateOfBirth', 'location', 'bio')}),
-UserAdmin.readonly_fields += ("avatar"),
+UserAdmin.readonly_fields += ('avatar'),
 
 admin.site.register(Creator, UserAdmin)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
