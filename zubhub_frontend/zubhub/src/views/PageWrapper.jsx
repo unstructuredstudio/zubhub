@@ -92,11 +92,10 @@ function PageWrapper(props) {
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
+        setState(state => ({ ...state, ...obj }));
       });
     }
   };
-
   const { anchorEl, loading } = state;
   const { t } = props;
   const profileMenuOpen = Boolean(anchorEl);
@@ -394,7 +393,10 @@ function PageWrapper(props) {
 
       {loading ? <LoadingPage /> : props.children}
 
-      <footer className="footer-distributed" style={{ flexShrink: 0 }}>
+      <footer
+        className={clsx('footer-distributed', classes.footerStyle)}
+        style={{ flexShrink: 0 }}
+      >
         <div className="footer-right"></div>
 
         <div className="footer-left"></div>

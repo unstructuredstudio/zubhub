@@ -102,6 +102,56 @@ export const get_projects = args => {
   };
 };
 
+export const get_categories = args => {
+  return () => {
+    return API.get_categories()
+      .then(res => {
+        if (Array.isArray(res) && res.length > 0 && res[0].name) {
+          return { categories: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+export const suggest_tags = args => {
+  return () => {
+    return API.suggest_tags(args.value)
+      .then(res => {
+        if (Array.isArray(res)) {
+          return res.length > 0
+            ? { tag_suggestion: res }
+            : { tag_suggestion_open: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { tag_suggestion_open: false };
+      });
+  };
+};
+
 export const get_user_projects = args => {
   return () => {
     return API.get_user_projects(args)

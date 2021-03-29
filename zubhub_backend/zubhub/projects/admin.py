@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Project, Comment, Image
+from mptt.admin import DraggableMPTTAdmin
+from .models import Project, Comment, Image, Category, Tag
 
 # Register your models here.
 
@@ -43,6 +44,18 @@ class ProjectAdmin(admin.ModelAdmin):
         return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]
 
 
+class categoryAdmin(admin.ModelAdmin):
+    search_fields = ["name", "description"]
+    readonly_fields = ["id", "slug"]
+
+
+class tagAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    readonly_fields = ["id", "slug"]
+
+
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Category, categoryAdmin)
+admin.site.register(Tag, tagAdmin)

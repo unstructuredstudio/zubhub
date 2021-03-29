@@ -95,6 +95,15 @@ const styles = theme => ({
       backgroundColor: 'rgba(0,0,0,0)',
     },
   },
+  footerStyle: {
+    backgroundColor: '#dc3545',
+    boxSizing: 'border-box',
+    width: '100%',
+    textAlign: 'left',
+    padding: '45px 50px',
+    justifyContent: 'space-between',
+    flexShrink: 0,
+  },
   center: {
     display: 'flex',
     justifyContent: 'center',

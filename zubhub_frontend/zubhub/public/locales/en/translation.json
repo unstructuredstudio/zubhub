@@ -276,6 +276,23 @@
           "required": "this field is required"
         }
       },
+      "category": {
+        "label": "What is the category of your project?",
+        "topHelperText": "choose uncategorized if you are unsure",
+        "errors": {
+          "min": "your category name is too short",
+          "required": "this field is required"
+        }
+      },
+      "tags": {
+        "label": "What tags best describe your project?",
+        "topHelperText": "you can leave this blank if you are unsure",
+        "addTag": "Add a tag",
+        "errors": {
+          "limitReached": "Tag limit reached",
+          "unsupported": "tags support only letters, numbers, spaces, and dashes"
+        }
+      },
       "submit": "Create Project",
       "edit": "Edit Project",
       "image": "image added",
@@ -310,6 +327,8 @@
       },
       "description": "Description",
       "materials": "Materials used",
+      "category": "Category",
+      "tags": "Tags",
       "comments": {
         "label": "Comments",
         "write": "write a comment",
