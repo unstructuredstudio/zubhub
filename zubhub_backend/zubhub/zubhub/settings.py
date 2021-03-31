@@ -93,7 +93,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'crispy_forms',
     'debug_toolbar',
-    'mptt',
+    'treebeard',
     'APIS',
     'creators',
     'projects',
@@ -171,10 +171,11 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.request',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
         },
     },

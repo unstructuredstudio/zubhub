@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import status
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from projects.permissions import IsOwner
-from .models import Project
+from .models import Project, Comment
 from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
 from .pagination import ProjectNumberPagination
 
@@ -143,8 +145,26 @@ class AddCommentAPIView(CreateAPIView):
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
 
-        serializer.save(creator=self.request.user,
-                        project=self.get_object())
+        parent_id = self.request.data.get("parent_id", None)
+        text = serializer.validated_data.get("text", None)
+
+        if parent_id:
+
+            try:
+                parent_comment = Comment.objects.get(id=parent_id)
+            except Comment.DoesNotExist:
+                raise Http404(_("parent comment does not exist"))
+
+            parent_comment.add_child(
+                project=self.get_object(), creator=self.request.user, text=text)
+        else:
+            Comment.add_root(project=self.get_object(),
+                             creator=self.request.user, text=text)
+
+        # Comment
+
+        # serializer.save(creator=self.request.user,
+        #                 project=self.get_object())
 
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)

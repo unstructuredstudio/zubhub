@@ -1,6 +1,6 @@
 import uuid
 from math import floor
-
+from treebeard.mp_tree import MP_Node
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
@@ -86,19 +86,58 @@ class Image(models.Model):
         return "Photo <%s:%s>" % (self.public_id, image)
 
 
-class Comment(models.Model):
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+class Comment(MP_Node):
     project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, related_name="comments")
+        Project, on_delete=models.CASCADE, related_name="comments", blank=True, null=True)
+    profile = models.ForeignKey(Creator, on_delete=models.CASCADE,
+                                related_name="profile_comments", blank=True, null=True)
     creator = models.ForeignKey(
         Creator, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=10000)
     created_on = models.DateTimeField(default=timezone.now)
 
+    node_order_by = ['created_on']
+
     def __str__(self):
         return self.text
 
     def save(self, *args, **kwargs):
-        self.project.save()
+        if self.project:
+            self.project.save()
         super().save(*args, **kwargs)
+
+
+# class Comment(models.Model):
+#     id = models.UUIDField(
+#         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+#     project = models.ForeignKey(
+#         Project, on_delete=models.CASCADE, related_name="comments")
+#     creator = models.ForeignKey(
+#         Creator, on_delete=models.CASCADE, related_name="comments")
+#     text = models.CharField(max_length=10000)
+#     created_on = models.DateTimeField(default=timezone.now)
+
+#     def __str__(self):
+#         return self.text
+
+#     def save(self, *args, **kwargs):
+#         self.project.save()
+#         super().save(*args, **kwargs)
+
+
+# class TreeComment(MP_Node):
+#     project = models.ForeignKey(
+#         Project, on_delete=models.CASCADE, related_name="tree_comments")
+#     creator = models.ForeignKey(
+#         Creator, on_delete=models.CASCADE, related_name="tree_comments")
+#     text = models.CharField(max_length=10000)
+#     created_on = models.DateTimeField(default=timezone.now)
+
+#     node_order_by = ['name']
+
+#     def __str__(self):
+#         return self.text
+
+#     def save(self, *args, **kwargs):
+#         self.project.save()
+#         super().save(*args, **kwargs)

@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_auth.registration.views import RegisterView
@@ -13,6 +13,8 @@ from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
 
 from .serializers import CreatorSerializer, LocationSerializer, VerifyPhoneSerializer, CustomRegisterSerializer
+from projects.serializers import CommentSerializer
+from projects.models import Comment
 from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
@@ -166,3 +168,47 @@ class LocationListAPIView(ListAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]
+
+
+class AddCommentAPIView(CreateAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return Creator.objects.all()
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(self.get_queryset(), pk=pk)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=self.request.data)
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        parent_id = self.request.data.get("parent_id", None)
+        text = serializer.validated_data.get("text", None)
+
+        if parent_id:
+
+            try:
+                parent_comment = Comment.objects.get(id=parent_id)
+            except Comment.DoesNotExist:
+                raise Http404(_("parent comment does not exist"))
+
+            parent_comment.add_child(
+                profile=self.get_object(), creator=self.request.user, text=text)
+        else:
+            Comment.add_root(profile=self.get_object(),
+                             creator=self.request.user, text=text)
+
+        # Comment
+
+        # serializer.save(creator=self.request.user,
+        #                 project=self.get_object())
+
+        result = self.get_object()
+        return Response(CreatorSerializer(result).data, status=status.HTTP_201_CREATED)

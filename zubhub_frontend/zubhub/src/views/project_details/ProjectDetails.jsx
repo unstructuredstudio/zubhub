@@ -12,7 +12,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import CommentIcon from '@material-ui/icons/Comment';
 import {
   Avatar,
   Box,
@@ -29,49 +28,19 @@ import {
 import * as UserActions from '../../store/actions/userActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
+import Comments from '../../components/comments/Comments';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import nFormatter from '../../assets/js/nFormatter';
-import dFormatter from '../../assets/js/dFormatter';
 import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
+import parse_comments from '../../assets/js/parseComments';
 
 const useStyles = makeStyles(styles);
-
-const constructCommentBox = refs => {
-  refs.commentText.current.addEventListener('focus', e =>
-    handleCommentTextFocus(refs),
-  );
-
-  document.addEventListener('click', e => handleDocumentClick(e, refs));
-};
-
-const handleCommentTextFocus = refs => {
-  refs.commentBox.current.classList.remove('comment-collapsed');
-  refs.commentBox.current.classList.add('comment');
-  refs.commentAuthorName.current.classList.remove('display-none');
-  refs.commentPublishButton.current.classList.remove('display-none');
-};
-
-const handleDocumentClick = (e, refs) => {
-  try {
-    if (
-      ![
-        refs.commentBox.current,
-        refs.commentPublishButton.current,
-        refs.commentText.current,
-      ].includes(e.target)
-    ) {
-      refs.commentBox.current.classList.remove('comment');
-      refs.commentBox.current.classList.add('comment-collapsed');
-      refs.commentAuthorName.current.classList.add('display-none');
-      refs.commentPublishButton.current.classList.add('display-none');
-    }
-  } catch {}
-};
+const useCommonStyles = makeStyles(commonStyles);
 
 const handleOpenEnlargedImageDialog = (e, state) => {
   const image_url = e.currentTarget.getAttribute('src');
@@ -96,23 +65,6 @@ const deleteProject = (props, state) => {
       .catch(error => ({ dialogError: error.message }));
   } else {
     return handleToggleDeleteProjectModal(state);
-  }
-};
-
-const add_comment = (e, props, refs, state) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    const textarea = refs.commentText.current;
-    const comment_text = textarea.value;
-    textarea.value = '';
-    return props.add_comment({
-      id: state.project.id,
-      token: props.auth.token,
-      text: comment_text,
-      t: props.t,
-    });
   }
 };
 
@@ -171,14 +123,8 @@ const buildMaterialsUsedComponent = (classes, state) => {
 };
 
 function ProjectDetails(props) {
-  const refs = {
-    commentText: React.useRef(null),
-    commentBox: React.useRef(null),
-    commentAuthorName: React.useRef(null),
-    commentPublishButton: React.useRef(null),
-  };
   const classes = useStyles();
-  const commonClasses = makeStyles(commonStyles)();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     project: {},
@@ -190,40 +136,24 @@ function ProjectDetails(props) {
   });
 
   React.useEffect(() => {
-    const commentTextEl = refs.commentText.current;
-    handleSetState(
+    Promise.resolve(
       props.get_project({
         id: props.match.params.id,
         token: props.auth.token,
         t: props.t,
       }),
-    );
-
-    return () => {
-      try {
-        commentTextEl.removeEventListener('focus', () =>
-          handleCommentTextFocus(refs),
-        );
-      } catch {}
-
-      try {
-        document.removeEventListener('click', e =>
-          handleDocumentClick(e, refs),
-        );
-      } catch {}
-    };
+    ).then(obj => {
+      if (obj.project) {
+        parse_comments(obj.project.comments);
+      }
+      handleSetState(obj);
+    });
   }, []);
-
-  React.useEffect(() => {
-    try {
-      constructCommentBox(refs);
-    } catch {}
-  }, [state.project]);
 
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
+        setState(state => ({ ...state, ...obj }));
       });
     }
   };
@@ -464,97 +394,12 @@ function ProjectDetails(props) {
                 </Grid>
               </Grid>
             </Container>
-            <Container className={classes.commentSectionStyle}>
-              <Typography
-                variant="h5"
-                className={classes.descriptionHeadingStyle}
-              >
-                <CommentIcon /> {nFormatter(project.comments.length)}{' '}
-                {t('projectDetails.project.comments.label')}
-              </Typography>
-              <Box
-                className="comment-box comment-collapsed"
-                ref={refs.commentBox}
-              >
-                <Box className="comment-meta">
-                  <Link
-                    className={clsx(classes.textDecorationNone)}
-                    to={`/creators/${props.auth.username}`}
-                  >
-                    {props.auth.token ? (
-                      <Avatar
-                        className={classes.commentAvatarStyle}
-                        src={props.auth.avatar}
-                        alt={props.auth.username}
-                      />
-                    ) : null}
-                  </Link>
-                  <Link
-                    ref={refs.commentAuthorName}
-                    className={clsx(
-                      classes.textDecorationNone,
-                      'comment-meta__a',
-                      'display-none',
-                    )}
-                    to={`/creators/${props.auth.username}`}
-                  >
-                    {props.auth.username}
-                  </Link>
-                </Box>
-                <form className="comment-form">
-                  <textarea
-                    ref={refs.commentText}
-                    className="comment-text"
-                    name="comment"
-                    id="comment"
-                    placeholder={`${t(
-                      'projectDetails.project.comments.write',
-                    )} ...`}
-                  ></textarea>
-                  <CustomButton
-                    ref={refs.commentPublishButton}
-                    onClick={e =>
-                      handleSetState(add_comment(e, props, refs, state))
-                    }
-                    className={clsx('comment-publish-button', 'display-none')}
-                    variant="contained"
-                    primaryButtonStyle
-                  >
-                    {t('projectDetails.project.comments.action')}
-                  </CustomButton>
-                </form>
-              </Box>
-              {project.comments &&
-                project.comments.map(comment => (
-                  <Box className={classes.commentsStyle} key={comment.id}>
-                    <Link
-                      className={clsx(
-                        classes.textDecorationNone,
-                        classes.commentMetaStyle,
-                      )}
-                      to={`/creators/${props.auth.username}`}
-                    >
-                      <Avatar
-                        className={classes.commentAvatarStyle}
-                        src={comment.creator.avatar}
-                        alt={comment.creator.username}
-                      />
-                      <Box>
-                        <Typography color="textPrimary">
-                          {comment.creator.username}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {`${dFormatter(comment.created_on).value} ${t(
-                            `date.${dFormatter(comment.created_on).key}`,
-                          )} ${t('date.ago')}`}{' '}
-                        </Typography>
-                      </Box>
-                    </Link>
 
-                    {comment.text}
-                  </Box>
-                ))}
-            </Container>
+            <Comments
+              context={{ name: 'project', body: project }}
+              handleSetState={handleSetState}
+              {...props}
+            />
           </Paper>
         </Box>
         <Dialog
@@ -634,6 +479,7 @@ function ProjectDetails(props) {
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
   get_project: PropTypes.func.isRequired,
+  suggest_creators: PropTypes.func.isRequired,
   toggle_follow: PropTypes.func.isRequired,
   toggle_like: PropTypes.func.isRequired,
   toggle_save: PropTypes.func.isRequired,
@@ -650,6 +496,9 @@ const mapDispatchToProps = dispatch => {
   return {
     get_project: args => {
       return dispatch(ProjectActions.get_project(args));
+    },
+    suggest_creators: args => {
+      return dispatch(UserActions.suggest_creators(args));
     },
     delete_project: args => {
       return dispatch(ProjectActions.delete_project(args));

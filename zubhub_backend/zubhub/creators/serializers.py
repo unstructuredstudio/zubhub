@@ -9,6 +9,8 @@ from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.utils import setup_user_email
 from .utils import setup_user_phone
+from projects.models import Comment
+from projects.utils import parse_comment_trees
 
 Creator = get_user_model()
 
@@ -19,6 +21,7 @@ class CreatorSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(allow_blank=True, default="")
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
+    comments = serializers.SerializerMethodField('get_profile_comments')
     projects_count = serializers.IntegerField(read_only=True)
     following_count = serializers.IntegerField(read_only=True)
     dateOfBirth = serializers.DateField(read_only=True)
@@ -27,8 +30,29 @@ class CreatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Creator
-        fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
+        fields = ('id', 'username', 'email', 'phone', 'avatar', 'location', 'comments',
                   'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count')
+
+    def get_profile_comments(self, obj):
+        from projects.serializers import CommentSerializer
+
+        all_comments = obj.profile_comments.all()
+        root_comments = []
+        creators_dict = {}
+
+        for comment in all_comments:
+            if comment.is_root():
+                root_comments.append(comment)
+
+        all_comments = CommentSerializer(all_comments, many=True).data
+
+        for comment in all_comments:
+            creators_dict[comment["creator"]["id"]] = comment["creator"]
+
+        root_comments = list(
+            map(lambda x: Comment.dump_bulk(x)[0], root_comments))
+
+        return parse_comment_trees(root_comments, creators_dict)
 
     def validate_email(self, email):
 

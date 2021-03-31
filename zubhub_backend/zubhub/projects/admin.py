@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Project, Comment, Image
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
+from .models import Project, Image, Comment
 
 # Register your models here.
 
@@ -14,13 +16,13 @@ class ImageAdmin(admin.ModelAdmin):
     list_display = ["image_url"]
 
 
-class CommentAdmin(admin.ModelAdmin):
-    # model = Comment
-    list_display = [
-        "text", "created_on"]
-    search_fields = ["project__tite", "creator__username",
-                     "text", "created_on"]
+class CommentAdmin(TreeAdmin):
+    list_display = ["text", "created_on"]
+    search_fields = ["project__tite",
+                     "creator__username", "text", "created_on"]
     list_filter = ["created_on"]
+
+    form = movenodeform_factory(Comment)
 
 
 class ProjectImages(admin.StackedInline):

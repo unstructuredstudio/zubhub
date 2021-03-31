@@ -310,11 +310,6 @@
       },
       "description": "Description",
       "materials": "Materials used",
-      "comments": {
-        "label": "Comments",
-        "write": "write a comment",
-        "action": "Comment"
-      },
       "edit": "Edit",
       "delete": {
         "label": "Delete",
@@ -341,6 +336,18 @@
       "imageDialog": "enlarged image dialog"
     },
     "deleteToastSuccess": "Your project was deleted successfully!!",
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "comments": {
+    "label": "Comments",
+    "write": "write a comment",
+    "reply": "Reply",
+    "showReplies": "Show Replies",
+    "hideReplies": "Hide Replies",
+    "action": "Comment",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }

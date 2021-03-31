@@ -8,6 +8,8 @@ urlpatterns = [
     path('verify-phone/', VerifyPhoneView.as_view(), name="verify_phone"),
     path('authUser/', auth_user_api_view, name='auth_user_detail'),
     path('edit_creator/', EditCreatorAPIView.as_view(), name='edit_creator'),
+    path('<uuid:pk>/add_comment/',
+         AddCommentAPIView.as_view(), name="add_comment"),
     path('delete/', DeleteCreatorAPIView.as_view(), name='delete_creator'),
     path('locations/', LocationListAPIView.as_view(), name='location_list'),
     path('<str:username>/projects/',
