@@ -11,8 +11,17 @@ const styles = theme => ({
   marginRight1em: {
     marginRight: '1em',
   },
+  textDecorationNone: {
+    textDecoration: 'none',
+  },
   colorRed: {
     color: 'red',
+  },
+  positionRelative: {
+    position: 'relative',
+  },
+  positionAbsolute: {
+    position: 'absolute',
   },
   displayInlineBlock: {
     display: 'inline-block',

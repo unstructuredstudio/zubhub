@@ -58,7 +58,7 @@ class Project(models.Model):
 
         if self.id:
             self.likes_count = self.likes.count()
-            self.comments_count = self.comments.count()
+            self.comments_count = self.comments.filter(published=True).count()
 
         if self.slug:
             pass
@@ -95,6 +95,7 @@ class Comment(models.Model):
         Creator, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=10000)
     created_on = models.DateTimeField(default=timezone.now)
+    published = models.BooleanField(default=True)
 
     def __str__(self):
         return self.text

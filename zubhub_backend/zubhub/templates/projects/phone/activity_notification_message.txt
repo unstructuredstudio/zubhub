@@ -1,0 +1,46 @@
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+
+{% default_display_name %}{% trans " Activity Notification" %}
+
+{% if project_id %}
+
+{% trans "You are receiving this message because " %} {{editor}} {% trans " recently edited a project on Zubhub. To see the details of the edit, click " %}{% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/project/{{project_id}}/change
+
+{% else %}
+
+{% blocktrans %}
+New Creators added in the past 24hrs
+{% endblocktrans %}
+
+{% for creator_list in new_creators %}
+
+{{creator_list.1}}
+{% default_backend_protocol %}://{% default_backend_domain %}/admin/creators/creator/{{creator_list.0}}/change
+{% endfor %}
+
+{% blocktrans %}
+New Projects added in the past 24hrs
+{% endblocktrans %}
+
+{% for project_list in new_projects %}
+
+{{project_list.1}}
+{% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/project/{{project_list.0}}/change
+{% endfor %}
+
+{% blocktrans %}
+New Comments added in the past 24hrs
+{% endblocktrans %}
+
+{% for comment_list in new_comments %}
+
+{{comment_list.1}}
+{% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/comment/{{comment_list.0}}/change
+{% endfor %}
+
+{% endif %}
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!
