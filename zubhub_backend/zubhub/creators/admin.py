@@ -7,9 +7,33 @@ Creator = get_user_model()
 
 
 class PhoneNumberAdmin(admin.ModelAdmin):
-    list_display = ["phone", "verified", "primary"]
+    list_display = ["creator", "phone", "verified", "primary"]
     search_fields = ["phone", "user__username"]
     list_filter = ['verified', "primary"]
+    actions = ["download_csv"]
+
+    def creator(self, obj):
+        if obj:
+            return obj.user.username
+        return None
+
+    def download_csv(self, request, queryset):
+        import csv
+        from django.http import HttpResponse
+        from io import StringIO
+
+        f = StringIO()
+        writer = csv.writer(f)
+
+        writer.writerow(["creator", "phone number", "verified", "primary"])
+        for creator in queryset:
+            writer.writerow([creator.user.username, creator.phone,
+                             creator.verified, creator.primary])
+
+        f.seek(0)
+        response = HttpResponse(f, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=phone_numbers.csv'
+        return response
 
 
 class SettingAdmin(admin.ModelAdmin):
