@@ -6,6 +6,8 @@ from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, R
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from projects.permissions import IsOwner, IsStaffOrModerator
 from .models import Project, Comment
+from .utils import project_changed
+from creators.utils import activity_notification
 from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
 from .pagination import ProjectNumberPagination
 
@@ -26,8 +28,20 @@ class ProjectUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
 
     def perform_update(self, serializer):
-        serializer.save(creator=self.request.user)
+        try:
+            old = Project.objects.get(pk=self.kwargs.get("pk"))
+        except Project.DoesNotExist:
+            pass
+
+        new = serializer.save(creator=self.request.user)
         self.request.user.save()
+
+        if project_changed(old, new):
+            info = {
+                "project_id": str(new.pk),
+                "editor": self.request.user.username
+            }
+            activity_notification(["edited_project"], **info)
 
 
 class ProjectDeleteAPIView(DestroyAPIView):
