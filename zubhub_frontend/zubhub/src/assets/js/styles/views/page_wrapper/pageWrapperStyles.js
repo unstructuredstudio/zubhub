@@ -95,6 +95,43 @@ const styles = theme => ({
       backgroundColor: 'rgba(0,0,0,0)',
     },
   },
+  footerStyle: {
+    backgroundColor: '#dc3545',
+    boxSizing: 'border-box',
+    width: '100%',
+    textAlign: 'left',
+    padding: '45px 50px',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    flexShrink: 0,
+  },
+
+  footerSectionStyle: {
+    minWidth: '600px',
+    margin: '0 2em',
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('1058')]: {
+      margin: '2em 0',
+    },
+    [theme.breakpoints.down('650')]: {
+      flexDirection: 'column',
+      width: '100%',
+      minWidth: 0,
+    },
+  },
+  footerBoxStyle: {
+    marginBottom: '1em',
+  },
+  footerTitleStyle: {
+    fontSize: '1.5rem',
+    color: 'white',
+    marginBottom: '0.2em',
+  },
+  footerLinkStyle: {
+    color: 'white',
+  },
   center: {
     display: 'flex',
     justifyContent: 'center',

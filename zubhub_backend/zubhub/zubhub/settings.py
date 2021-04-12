@@ -94,6 +94,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'mptt',
+    'django_summernote',
+    'zubhub',
     'APIS',
     'creators',
     'projects',
@@ -284,4 +286,30 @@ CELERY_EMAIL_CHUNK_SIZE = 1
 CELERY_EMAIL_TASK_CONFIG = {
     'name': 'djcelery_email_send',
     'ignore_result': False,
+}
+
+
+SUMMERNOTE_CONFIG = {
+
+    # You can put custom Summernote settings
+    'summernote': {
+        # Change editor size
+        'width': '100%',
+        'max-width': '900',
+        'height': '600',
+
+        # Toolbar customization
+        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['emoji', 'link', 'picture', 'video']]
+        ]
+    },
+    "css": ("/static/css/summernote_plugin.css",),
+    "js": ("/static/js/summernote_plugin.js",)
 }

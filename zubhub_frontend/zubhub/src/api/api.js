@@ -366,6 +366,27 @@ class API {
 
     return this.request({ url, method, body, token }).then(res => res.json());
   };
+
+  /************************** get help **************************/
+  get_help = () => {
+    const url = `help/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
+  /************************** get privacy **************************/
+  get_privacy = () => {
+    const url = `privacy/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
+  /************************** get faqs **************************/
+  get_faqs = () => {
+    const url = `faqs/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
 }
 
 export default API;
