@@ -36,6 +36,16 @@ class Location(models.Model):
 
 
 class Creator(AbstractUser):
+    CREATOR = 1
+    MODERATOR = 2
+    STAFF = 3
+
+    ROLE_CHOICES = (
+        (CREATOR, 'CREATOR'),
+        (MODERATOR, 'MODERATOR'),
+        (STAFF, 'STAFF')
+    )
+
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     avatar = models.URLField(max_length=1000, blank=True, null=True)
@@ -49,10 +59,14 @@ class Creator(AbstractUser):
     followers_count = models.IntegerField(blank=True, default=0)
     following_count = models.IntegerField(blank=True, default=0)
     projects_count = models.IntegerField(blank=True, default=0)
+    role = models.PositiveSmallIntegerField(
+        choices=ROLE_CHOICES, blank=True, null=True, default=1)
 
     def save(self, *args, **kwargs):
         if not self.avatar:
             self.avatar = 'https://robohash.org/{0}'.format(self.username)
+        if self.is_staff:
+            self.role = self.STAFF
         self.followers_count = self.followers.count()
         self.following_count = self.following.count()
         self.projects_count = self.projects.count()

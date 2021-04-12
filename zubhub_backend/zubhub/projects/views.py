@@ -4,8 +4,8 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from projects.permissions import IsOwner
-from .models import Project
+from projects.permissions import IsOwner, IsStaffOrModerator
+from .models import Project, Comment
 from .utils import project_changed
 from creators.utils import activity_notification
 from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
@@ -162,3 +162,26 @@ class AddCommentAPIView(CreateAPIView):
 
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
+
+
+class UnpublishCommentAPIView(UpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+
+    def perform_update(self, serializer):
+        comment = serializer.save(published=False)
+        comment.project.save()
+        return comment
+
+
+class DeleteCommentAPIView(DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+
+    def delete(self, request, *args, **kwargs):
+        project = self.get_object().project
+        result = self.destroy(request, *args, **kwargs)
+        project.save()
+        return result

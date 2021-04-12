@@ -40,8 +40,20 @@ class SettingAdmin(admin.ModelAdmin):
     list_filter = ["subscribe"]
 
 
+def role(obj):
+    if obj:
+        if obj.role == Creator.CREATOR:
+            return "creator"
+        if obj.role == Creator.MODERATOR:
+            return "moderator"
+        if obj.role == Creator.STAFF:
+            return "staff"
+    return None
+
+
 UserAdmin.fieldsets += ('Personal Info',
-                        {'fields': ('avatar', 'phone', 'dateOfBirth', 'location', 'bio')}),
+                        {'fields': ('avatar', 'phone', 'dateOfBirth', 'location', 'bio', 'role')}),
+UserAdmin.list_display += (role),
 UserAdmin.readonly_fields += ("avatar"),
 
 admin.site.register(Creator, UserAdmin)

@@ -14,5 +14,9 @@ urlpatterns = [
     path('<uuid:pk>/toggle_save/', ToggleSaveAPIView.as_view(), name="toggle_save"),
     path('<uuid:pk>/add_comment/',
          AddCommentAPIView.as_view(), name="add_comment"),
+    path('<uuid:pk>/unpublish_comment/',
+         UnpublishCommentAPIView.as_view(), name="unpublish_comment"),
+    path('<uuid:pk>/delete_comment/',
+         DeleteCommentAPIView.as_view(), name="delete_comment"),
     path('<uuid:pk>/', ProjectDetailsAPIView.as_view(), name='detail_project'),
 ]

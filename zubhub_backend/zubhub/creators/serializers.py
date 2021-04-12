@@ -14,21 +14,31 @@ Creator = get_user_model()
 
 
 class CreatorSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
     phone = serializers.CharField(allow_blank=True, default="")
     email = serializers.EmailField(allow_blank=True, default="")
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
-    projects_count = serializers.IntegerField(read_only=True)
-    following_count = serializers.IntegerField(read_only=True)
-    dateOfBirth = serializers.DateField(read_only=True)
     location = serializers.SlugRelatedField(
         slug_field='name', queryset=Location.objects.all())
+    role = serializers.SerializerMethodField("get_role")
 
     class Meta:
         model = Creator
-        fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
-                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count')
+        fields = ['id', 'username', 'email', 'phone', 'avatar', 'location',
+                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'role']
+
+        read_only_fields = ["id", "projects_count",
+                            "following_count", "dateOfBirth", "role"]
+
+    def get_role(self, obj):
+        if obj:
+            if obj.role == Creator.CREATOR:
+                return "creator"
+            if obj.role == Creator.STAFF:
+                return "staff"
+            if obj.role == Creator.MODERATOR:
+                return "moderator"
+        return None
 
     def validate_email(self, email):
 

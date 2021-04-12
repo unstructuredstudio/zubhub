@@ -326,6 +326,25 @@ class API {
   };
   /************************************************************************/
 
+  /************************** unpublish comment **************************/
+  unpublish_comment = ({ token, id }) => {
+    const url = `projects/${id}/unpublish_comment/`;
+    const method = 'PATCH';
+    const body = JSON.stringify({});
+    return this.request({ url, method, token, body }).then(res => res.json());
+  };
+  /************************************************************************/
+
+  /************************** delete comment **************************/
+  delete_comment = ({ token, id }) => {
+    const url = `projects/${id}/delete_comment/`;
+    const method = 'DELETE';
+    return this.request({ url, method, token }).then(res =>
+      Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
+    );
+  };
+  /************************************************************************/
+
   /************************** get projects **************************/
   get_projects = ({ page }) => {
     const url = page ? `projects/?${page}` : `projects/`;

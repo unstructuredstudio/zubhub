@@ -326,24 +326,42 @@
         }
       }
     },
+    "comment": {
+      "delete":{
+        "dialog": {
+          "primary": "Delete Comment",
+          "secondary": "Are you sure you want to delete this comment? you can't undo this action!!!",
+          "cancel": "Cancel",
+          "proceed": "Proceed"
+        }
+      }
+    },
     "ariaLabels": {
       "likeButton": {
         "label": "like button",
         "like": "like",
-        "unlike": "unlike",
-        "deleteProject": "delete project dialog"
+        "unlike": "unlike"
       },
       "saveButton": {
         "label": "save button",
         "save": "save",
         "unsave": "unsave"
       },
-      "imageDialog": "enlarged image dialog"
+      "imageDialog": "enlarged image dialog",
+      "deleteProject": "delete project dialog",
+      "deleteComment": "delete comment dialog"
     },
-    "deleteToastSuccess": "Your project was deleted successfully!!",
+    "deleteProjectToastSuccess": "Your project was deleted successfully!!",
+    "deleteCommentToastSuccess": "comment was deleted successfully!!",
+    "unpublishCommentToastSuccess": "comment was unpublished successfully!!",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }
+  },
+
+  "comment": {
+    "unpublish": "Unpublish",
+    "delete": "Delete"
   },
 
   "profile": {
