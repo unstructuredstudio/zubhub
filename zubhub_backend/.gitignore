@@ -6,3 +6,5 @@ staticfiles/
 .env
 .docker/
 .ssl-data
+celerybeat-schedule
+celerybeat.pid
