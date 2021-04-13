@@ -10,6 +10,11 @@ def default_frontend_domain():
 
 
 @register.simple_tag
+def default_backend_domain():
+    return settings.DEFAULT_BACKEND_DOMAIN
+
+
+@register.simple_tag
 def default_display_name():
     return settings.DEFAULT_DISPLAY_NAME
 

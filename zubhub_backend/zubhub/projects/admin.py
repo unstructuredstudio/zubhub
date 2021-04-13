@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Project, Comment, Image
+from .utils import project_changed
+from creators.utils import activity_notification
 
 # Register your models here.
 
@@ -9,7 +11,6 @@ admin.site.index_title = "ZubHub Administration"
 
 
 class ImageAdmin(admin.ModelAdmin):
-    # model = Image
     search_fields = ["project__title", "image_url"]
     list_display = ["image_url"]
 
@@ -26,6 +27,9 @@ class CommentAdmin(admin.ModelAdmin):
         if obj:
             return obj.creator.username
         return None
+
+    def get_readonly_fields(self, request, obj=None):
+        return ["created_on"]
 
 
 class ProjectImages(admin.StackedInline):
@@ -46,6 +50,21 @@ class ProjectAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            old = Project.objects.get(pk=obj.pk)
+
+        super().save_model(request, obj, form, change)
+
+        if change:
+            new = Project.objects.get(pk=obj.pk)
+            if project_changed(old, new):
+                info = {
+                    "project_id": str(new.pk),
+                    "editor": request.user.username
+                }
+                activity_notification(["edited_project"], **info)
 
 
 admin.site.register(Project, ProjectAdmin)

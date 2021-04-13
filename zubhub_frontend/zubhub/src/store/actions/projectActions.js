@@ -43,8 +43,43 @@ export const delete_project = args => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
-        toast.success(args.t('projectDetails.deleteToastSuccess'));
+        toast.success(args.t('projectDetails.deleteProjectToastSuccess'));
         return args.history.push('/profile');
+      }
+    });
+  };
+};
+
+export const unpublish_comment = args => {
+  return () => {
+    return API.unpublish_comment({ token: args.token, id: args.id })
+      .then(res => {
+        if (res.id) {
+          return res;
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projectDetails.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+      });
+  };
+};
+
+export const delete_comment = args => {
+  return () => {
+    return API.delete_comment({ token: args.token, id: args.id }).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
+        toast.success(args.t('projectDetails.deleteCommentToastSuccess'));
       }
     });
   };
@@ -107,7 +142,12 @@ export const get_user_projects = args => {
     return API.get_user_projects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-          return { ...res, loading: false };
+          return {
+            results: res.results,
+            prevPage: res.previous,
+            nextPage: res.next,
+            loading: false,
+          };
         } else {
           res = Object.keys(res)
             .map(key => res[key])

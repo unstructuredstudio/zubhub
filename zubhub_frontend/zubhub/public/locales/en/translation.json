@@ -326,24 +326,42 @@
         }
       }
     },
+    "comment": {
+      "delete":{
+        "dialog": {
+          "primary": "Delete Comment",
+          "secondary": "Are you sure you want to delete this comment? you can't undo this action!!!",
+          "cancel": "Cancel",
+          "proceed": "Proceed"
+        }
+      }
+    },
     "ariaLabels": {
       "likeButton": {
         "label": "like button",
         "like": "like",
-        "unlike": "unlike",
-        "deleteProject": "delete project dialog"
+        "unlike": "unlike"
       },
       "saveButton": {
         "label": "save button",
         "save": "save",
         "unsave": "unsave"
       },
-      "imageDialog": "enlarged image dialog"
+      "imageDialog": "enlarged image dialog",
+      "deleteProject": "delete project dialog",
+      "deleteComment": "delete comment dialog"
     },
-    "deleteToastSuccess": "Your project was deleted successfully!!",
+    "deleteProjectToastSuccess": "Your project was deleted successfully!!",
+    "deleteCommentToastSuccess": "comment was deleted successfully!!",
+    "unpublishCommentToastSuccess": "comment was unpublished successfully!!",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }
+  },
+
+  "comment": {
+    "unpublish": "Unpublish",
+    "delete": "Delete"
   },
 
   "profile": {
@@ -373,9 +391,12 @@
     "projectsCount": "Projects",
     "followersCount": "Followers",
     "followingCount": "Following",
+    "membersCount": "members",
     "about": {
-      "label": "About Me",
-      "placeholder": "tell us more about you by clicking on the edit button at the top of the page 😀!"
+      "label1": "About Me",
+      "label2": "Description",
+      "placeholder1": "tell us more about you by clicking on the edit button at the top of the page 😀!",
+      "placeholder2": "tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
     "projects": {
       "label": "Latest projects",
@@ -458,6 +479,64 @@
     },
     "errors": {
       "noUserProjects": "user have not created any projects yet"
+    }
+  },
+
+  "groupMembers": {
+    "title": "Group Members",
+    "prev": "Prev",
+    "next": "Next",
+    "remove": "Remove",
+    "newMembers": "New Members",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "errors": {
+      "noGroupMembers": "group does not have any members yet",
+      "unauthorized": "Only Groups have access to this page",
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "addGroupMembers": {
+    "welcomeMsg": {
+      "primary": "Add Group Members",
+      "secondary": "To add group members, type in there usernames in the fields below, or upload a csv file containing the usernames"
+    },
+    "inputs": {
+      "groupMembers": {
+        "label": "Group Members",
+        "addMore": "Add More",
+        "bulkAdd": "Bulk Add",
+        "addCSV": "Drop your CSV file here",
+        "errors": {
+          "required": "this field is required"
+        }
+      },
+      "submit": "Submit"
+    },
+    "ariaLabels": {
+      "submitting": "submitting"
+    },
+    "createToastSuccess": "Successful!! now you  have to wait for the Creators to accept your invitiation to join the group. Please do not repeat this request again",
+    "errors": {
+      "notLoggedIn": "You are not logged in. Click on the signin button to get started",
+      "unauthorized": "Only Groups have access to this page",
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "groupInviteConfirm": {
+    "welcomeMsg": {
+      "primary": "Group Invite Confirmation",
+      "secondary": " Please Confirm your invitation to <> group"
+    },
+    "inputs": {
+      "submit": "Confirm"
+    },
+    "toastSuccess": "Congratulations!, you have confirmed your invitation!",
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later"
     }
   },
 

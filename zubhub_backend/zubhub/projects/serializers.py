@@ -59,8 +59,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         many=True, slug_field='id', read_only=True)
     comments = serializers.SerializerMethodField('get_comments')
     images = ImageSerializer(many=True, required=False)
-    created_on = serializers.DateTimeField(read_only=True)
-    views_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Project
@@ -78,6 +76,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             "comments",
             "created_on",
         ]
+        
+    read_only_fields = ["created_on", "views_count"]
 
     def get_comments(self, obj):
         comments = obj.comments.filter(published=True)
