@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Project, Comment, Image, StaffPick
-from .utils import project_changed
+from mptt.admin import DraggableMPTTAdmin
+from .models import Project, Comment, Image, StaffPick, Category, Tag
+from .utils import project_changed, send_staff_pick_notification
 from creators.utils import activity_notification
-from .utils import send_staff_pick_notification
 # Register your models here.
 
 admin.site.site_header = "ZubHub Administration"
@@ -52,6 +52,7 @@ class ProjectAdmin(admin.ModelAdmin):
                      "created_on"]
     list_filter = ['created_on', "published"]
     inlines = [InlineProjectImages, InlineProjectComments]
+    exclude = ["search_vector"]
 
     def get_readonly_fields(self, request, obj=None):
         return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]
@@ -99,7 +100,19 @@ class StaffPickAdmin(admin.ModelAdmin):
             send_staff_pick_notification(obj)
 
 
+class categoryAdmin(admin.ModelAdmin):
+    search_fields = ["name", "description"]
+    readonly_fields = ["id", "slug"]
+
+
+class tagAdmin(admin.ModelAdmin):
+    search_fields = ["name"]
+    readonly_fields = ["id", "slug"]
+
+
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Category, categoryAdmin)
+admin.site.register(Tag, tagAdmin)
 admin.site.register(StaffPick, StaffPickAdmin)

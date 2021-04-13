@@ -235,6 +235,18 @@ const buildMaterialsUsedComponent = (classes, state) => {
   ));
 };
 
+const buildTagsComponent = (classes, tags) => {
+  return tags.map((tag, index) => (
+    <Typography
+      key={index}
+      component="span"
+      className={classes.materialsUsedStyle}
+    >
+      {tag.name}
+    </Typography>
+  ));
+};
+
 function ProjectDetails(props) {
   const refs = {
     commentText: React.useRef(null),
@@ -517,6 +529,16 @@ function ProjectDetails(props) {
                     {project.description}
                   </Typography>
                 </Grid>
+                {project.tags.length > 0 ? (
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography
+                      className={classes.descriptionBodyStyle}
+                      color="textSecondary"
+                    >
+                      {buildTagsComponent(classes, project.tags)}
+                    </Typography>
+                  </Grid>
+                ) : null}
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography
                     variant="h5"
@@ -531,6 +553,22 @@ function ProjectDetails(props) {
                     {buildMaterialsUsedComponent(classes, state)}
                   </Typography>
                 </Grid>
+                {project.category ? (
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography
+                      variant="h5"
+                      className={classes.descriptionHeadingStyle}
+                    >
+                      {t('projectDetails.project.category')}
+                    </Typography>
+                    <Typography
+                      className={classes.descriptionBodyStyle}
+                      color="textSecondary"
+                    >
+                      {project.category}
+                    </Typography>
+                  </Grid>
+                ) : null}
               </Grid>
             </Container>
             <Container className={classes.commentSectionStyle}>

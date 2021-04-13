@@ -27,6 +27,22 @@
       "savedProjects": "Bookmarks",
       "logout": "Logout"
     },
+    "footer": {
+      "privacy": "Privacy",
+      "guidelines": "Guidelines and policy",
+      "termsOfUse": "Terms of Use",
+      "about": "About",
+      "zubhub": "ZubHub",
+      "unstructuredStudio": "Unstructured Studio",
+      "help": "Help",
+      "resources": "Tinkering Resources",
+      "faqs": "FAQs",
+      "contactUs": "Contact Us"
+    "inputs": {
+      "search": {
+        "label": "Search"
+      }
+    },
     "errors": {
       "unexpected": "an error occured while getting user profile, please try again later",
       "logoutFailed": "An error occured while signing you out. please try again"
@@ -293,6 +309,23 @@
           "required": "this field is required"
         }
       },
+      "category": {
+        "label": "What is the category of your project?",
+        "topHelperText": "choose uncategorized if you are unsure",
+        "errors": {
+          "min": "your category name is too short",
+          "required": "this field is required"
+        }
+      },
+      "tags": {
+        "label": "What tags best describe your project?",
+        "topHelperText": "you can leave this blank if you are unsure",
+        "addTag": "Add a tag",
+        "errors": {
+          "limitReached": "Tag limit reached",
+          "unsupported": "tags support only letters, numbers, spaces, and dashes"
+        }
+      },
       "submit": "Create Project",
       "edit": "Edit Project",
       "image": "image added",
@@ -303,6 +336,26 @@
     "errors": {
       "notLoggedIn": "You are not logged in. Click on the signin button to get started",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "searchResults": {
+    "projects": "Projects",
+    "creators": "Creators",
+    "resultFound": "result found",
+    "resultsFound": "results found",
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "following": {
+      "follow": "Follow",
+      "unfollow": "Unfollow"
+    },
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later",
+      "noResult": "no result returned for your search term"
     }
   },
 
@@ -327,6 +380,8 @@
       },
       "description": "Description",
       "materials": "Materials used",
+      "category": "Category",
+      "tags": "Tags",
       "comments": {
         "label": "Comments",
         "write": "write a comment",
@@ -588,6 +643,36 @@
     "errors": {
       "noFollowing": "Creator is not following anyone yet",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "guidelines": {
+    "title": "Guidelines",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "termsOfUse": {
+    "title": "Terms Of Use",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "resources": {
+    "title": "Resources",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "question": "Question",
+    "answer": "Answer",
+    "errors": {
+      "page_empty": "This page is empty"
     }
   }
 }

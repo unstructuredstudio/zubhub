@@ -2,6 +2,7 @@ from celery import shared_task
 from celery.decorators import periodic_task
 from celery.task.schedules import crontab
 from random import uniform
+from celery import shared_task
 import boto3
 import requests
 from django.conf import settings

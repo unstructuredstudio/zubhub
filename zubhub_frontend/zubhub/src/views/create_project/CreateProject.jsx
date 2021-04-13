@@ -21,7 +21,10 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Chip,
   Dialog,
+  Select,
+  MenuItem,
   Typography,
   CircularProgress,
   OutlinedInput,
@@ -46,6 +49,11 @@ const useCommonStyles = makeStyles(commonStyles);
 
 let image_field_touched = false;
 let video_field_touched = false;
+const timer = { id: null };
+
+const get_categories = props => {
+  return props.get_categories({ t: props.t });
+};
 
 const getProject = (refs, props, state) => {
   return props
@@ -90,6 +98,14 @@ const getProject = (refs, props, state) => {
             obj.project.materials_used,
             true,
           );
+        }
+
+        if (obj.project.category) {
+          props.setFieldValue('category', obj.project.category);
+        }
+
+        if (refs.addTagsEl.current && obj.project.tags) {
+          props.setFieldValue('tags', JSON.stringify(obj.project.tags), true);
         }
 
         image_upload.uploaded_images_url = obj.project.images;
@@ -200,6 +216,51 @@ const addMaterialsUsedNode = (e, props) => {
   }
 };
 
+const removeTag = (e, props, value) => {
+  let tags = props.values['tags'];
+  tags = tags ? JSON.parse(tags) : [];
+  tags = tags.filter(tag => tag.name !== value);
+  props.setFieldValue('tags', JSON.stringify(tags));
+};
+
+const handleAddTags = (e, props, addTagsEl) => {
+  const value = e.currentTarget.value.split(',');
+  let tags = props.values['tags'];
+  tags = tags ? JSON.parse(tags) : [];
+
+  const exists =
+    tags.filter(tag => tag.name === value[0]).length > 0 ? true : false;
+
+  if (!exists && value.length > 1 && value[0] && !(tags.length >= 5)) {
+    tags.push({ name: value[0] });
+    props.setFieldValue('tags', JSON.stringify(tags));
+    e.currentTarget.value = '';
+    if (e.currentTarget.focus) e.currentTarget.focus();
+    if (addTagsEl) {
+      addTagsEl.current.value = '';
+      addTagsEl.current.focus();
+    }
+  }
+
+  return { tag_suggestion_open: false, tag_suggestion: [] };
+};
+
+const handleSuggestTags = (e, props, state, handleSetState) => {
+  clearTimeout(timer.id);
+  const value = e.currentTarget.value;
+
+  if (value !== '' && value.search(',') === -1) {
+    timer.id = setTimeout(() => {
+      suggestTags(value, props, handleSetState, state);
+    }, 500);
+  }
+};
+
+const suggestTags = (value, props, handleSetState, state) => {
+  handleSetState({ tag_suggestion_open: true });
+  handleSetState(props.suggest_tags({ value, t: props.t }));
+};
+
 function CreateProject(props) {
   const refs = {
     titleEl: React.useRef(null),
@@ -209,16 +270,19 @@ function CreateProject(props) {
     imageCountEl: React.useRef(null),
     videoEl: React.useRef(null),
     addMaterialsUsedEl: React.useRef(null),
+    addTagsEl: React.useRef(null),
   };
   const classes = useStyles();
   const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
-    descToolTipOpen: false,
+    desc_tool_tip_open: false,
     loading: true,
     error: null,
-    materialsUsedModalOpen: false,
     materials_used: [],
+    categories: [],
+    tag_suggestion: [],
+    tag_suggestion_open: false,
     image_upload: {
       upload_dialog: false,
       images_to_upload: 0,
@@ -231,9 +295,12 @@ function CreateProject(props) {
 
   React.useEffect(() => {
     if (props.match.params.id) {
-      handleSetState(getProject(refs, props, state));
+      Promise.all([
+        getProject(refs, props, state),
+        get_categories(props),
+      ]).then(result => handleSetState({ ...result[0], ...result[1] }));
     } else {
-      handleSetState({ loading: false });
+      handleSetState(get_categories(props));
     }
   }, []);
 
@@ -342,6 +409,12 @@ function CreateProject(props) {
       .filter(value => (value ? true : false))
       .join(',');
 
+    const tags = props.values['tags']
+      ? JSON.parse(props.values['tags']).filter(tag =>
+          tag.name ? true : false,
+        )
+      : [];
+
     const create_or_update = props.match.params.id
       ? props.update_project
       : props.create_project;
@@ -349,10 +422,12 @@ function CreateProject(props) {
     return create_or_update({
       ...props.values,
       materials_used,
+      tags,
       id: props.match.params.id,
       token: props.auth.token,
       images: state.image_upload.uploaded_images_url,
       video: props.values.video ? props.values.video : '',
+      category: props.values.category,
       t: props.t,
     }).catch(error => {
       const messages = JSON.parse(error.message);
@@ -385,6 +460,8 @@ function CreateProject(props) {
       props.setFieldTouched('project_images');
       props.setFieldTouched('video');
       props.setFieldTouched('materials_used');
+      props.setFieldTouched('category');
+      props.setFieldTouched('tags');
 
       image_field_touched = true;
       video_field_touched = true;
@@ -420,12 +497,18 @@ function CreateProject(props) {
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
+        setState(state => ({ ...state, ...obj }));
       });
     }
   };
 
-  const { descToolTipOpen, image_upload } = state;
+  const {
+    desc_tool_tip_open,
+    image_upload,
+    categories,
+    tag_suggestion,
+    tag_suggestion_open,
+  } = state;
   const { t } = props;
   const id = props.match.params.id;
   if (!props.auth.token) {
@@ -566,7 +649,7 @@ function CreateProject(props) {
                             onClose={() =>
                               handleSetState(handleDescTooltipClose())
                             }
-                            open={descToolTipOpen}
+                            open={desc_tool_tip_open}
                             disableFocusListener
                             disableHoverListener
                             title={t(
@@ -829,6 +912,210 @@ function CreateProject(props) {
                         </Grid>
                       </FormControl>
                     </Grid>
+
+                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="small"
+                        error={
+                          (props.status && props.status['category']) ||
+                          (props.touched['category'] &&
+                            props.errors['category'])
+                        }
+                      >
+                        <label htmlFor="category">
+                          <Typography
+                            color="textSecondary"
+                            className={classes.customLabelStyle}
+                          >
+                            <Box className={classes.fieldNumberStyle}>6</Box>
+                            {t('createProject.inputs.category.label')}
+                          </Typography>
+                        </label>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                          className={clsx(
+                            classes.fieldHelperTextStyle,
+                            commonClasses.marginBottom1em,
+                          )}
+                        >
+                          {t('createProject.inputs.category.topHelperText')}
+                        </Typography>
+                        <Select
+                          labelId="category"
+                          id="category"
+                          name="category"
+                          className={classes.customInputStyle}
+                          value={
+                            props.values.category ? props.values.category : ''
+                          }
+                          onChange={props.handleChange}
+                          onBlur={props.handleBlur}
+                          label="Category"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          {Array.isArray(categories) &&
+                            categories.map(category => (
+                              <MenuItem key={category.id} value={category.name}>
+                                {category.name}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText
+                          error
+                          className={classes.fieldHelperTextStyle}
+                        >
+                          {(props.status && props.status['category']) ||
+                            (props.touched['category'] &&
+                              props.errors['category'] &&
+                              t(
+                                `createProject.inputs.category.errors.${props.errors['category']}`,
+                              ))}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="small"
+                        error={
+                          (props.status && props.status['tags']) ||
+                          (props.touched['tags'] && props.errors['tags'])
+                        }
+                      >
+                        <label htmlFor="add_tags">
+                          <Typography
+                            color="textSecondary"
+                            className={classes.customLabelStyle}
+                          >
+                            <Box className={classes.fieldNumberStyle}>7</Box>
+                            {t('createProject.inputs.tags.label')}
+                          </Typography>
+                        </label>
+
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                          className={clsx(
+                            classes.fieldHelperTextStyle,
+                            commonClasses.marginBottom1em,
+                          )}
+                        >
+                          {t('createProject.inputs.tags.topHelperText')}
+                        </Typography>
+                        <Box className={classes.tagsViewStyle}>
+                          {props.values['tags'] &&
+                            JSON.parse(props.values['tags']).map((tag, num) =>
+                              tag && tag.name ? (
+                                <Chip
+                                  className={classes.customChipStyle}
+                                  key={num}
+                                  label={tag.name}
+                                  onDelete={e => removeTag(e, props, tag.name)}
+                                  color="secondary"
+                                  variant="outlined"
+                                />
+                              ) : null,
+                            )}
+                          <input
+                            ref={refs.addTagsEl}
+                            className={classes.tagsInputStyle}
+                            name="tags"
+                            type="text"
+                            autocomplete="off"
+                            placeholder={
+                              props.values['tags'] &&
+                              JSON.parse(props.values['tags']).length >= 5
+                                ? t(
+                                    'createProject.inputs.tags.errors.limitReached',
+                                  )
+                                : `${t('createProject.inputs.tags.addTag')}...`
+                            }
+                            onChange={e => {
+                              handleSuggestTags(
+                                e,
+                                props,
+                                state,
+                                handleSetState,
+                              );
+                              handleSetState(handleAddTags(e, props));
+                            }}
+                            onBlur={e => {
+                              handleAddTags(e, props);
+                            }}
+                          />
+                          <ClickAwayListener
+                            onClickAway={() =>
+                              handleSetState({
+                                tag_suggestion_open: false,
+                                tag_suggestion: [],
+                              })
+                            }
+                          >
+                            <Box
+                              className={clsx(
+                                classes.tagSuggestionStyle,
+                                !tag_suggestion_open
+                                  ? commonClasses.displayNone
+                                  : null,
+                              )}
+                            >
+                              {tag_suggestion && tag_suggestion.length > 0 ? (
+                                tag_suggestion.map((tag, index) => (
+                                  <Typography
+                                    key={index}
+                                    color="textPrimary"
+                                    className={classes.tagSuggestionTextStyle}
+                                    onClick={() => {
+                                      clearTimeout(timer.id);
+                                      handleSetState(
+                                        handleAddTags(
+                                          {
+                                            currentTarget: {
+                                              value: `${tag.name},`,
+                                            },
+                                          },
+                                          props,
+                                          refs.addTagsEl,
+                                        ),
+                                      );
+                                    }}
+                                  >
+                                    {tag.name}
+                                  </Typography>
+                                ))
+                              ) : (
+                                <CircularProgress size={30} thickness={3} />
+                              )}
+                            </Box>
+                          </ClickAwayListener>
+                        </Box>
+                        <FormHelperText
+                          error
+                          className={classes.fieldHelperTextStyle}
+                        >
+                          {(props.status && props.status['tags']) ||
+                            (props.touched['tags'] &&
+                              props.errors['tags'] &&
+                              t(
+                                `createProject.inputs.tags.errors.${props.errors['tags']}`,
+                              ))}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+
                     <Grid item xs={12}>
                       <CustomButton
                         variant="contained"
@@ -896,6 +1183,8 @@ function CreateProject(props) {
 CreateProject.propTypes = {
   auth: PropTypes.object.isRequired,
   get_project: PropTypes.func.isRequired,
+  get_categories: PropTypes.func.isRequired,
+  suggest_tags: PropTypes.func.isRequired,
   create_project: PropTypes.func.isRequired,
   update_project: PropTypes.func.isRequired,
 };
@@ -910,6 +1199,12 @@ const mapDispatchToProps = dispatch => {
   return {
     get_project: values => {
       return dispatch(ProjectActions.get_project(values));
+    },
+    get_categories: values => {
+      return dispatch(ProjectActions.get_categories(values));
+    },
+    suggest_tags: args => {
+      return dispatch(ProjectActions.suggest_tags(args));
     },
     create_project: props => {
       return dispatch(ProjectActions.create_project(props));
@@ -995,6 +1290,22 @@ export default connect(
 
           return !is_empty;
         }),
+      category: Yup.string().min(1, 'min').required('required'),
+      tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
+        if (tags) {
+          tags = JSON.parse(tags);
+          const re = /^[0-9A-Za-z\s\-]+$/;
+          let unsupported = false;
+          for (let tag of tags) {
+            if (!re.test(tag.name)) {
+              unsupported = true;
+            }
+          }
+          return unsupported ? false : true;
+        } else {
+          return false;
+        }
+      }),
     }),
   })(CreateProject),
 );

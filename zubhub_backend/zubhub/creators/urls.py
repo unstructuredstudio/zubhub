@@ -11,6 +11,7 @@ urlpatterns = [
     path('add_members/',
          AddGroupMembersAPIView.as_view(), name="add_members"),
     path('authUser/', auth_user_api_view, name='auth_user_detail'),
+    path('search/', CreatorSearchAPIView.as_view(), name='search_creators'),
     path('edit_creator/', EditCreatorAPIView.as_view(), name='edit_creator'),
     path('delete/', DeleteCreatorAPIView.as_view(), name='delete_creator'),
     path('locations/', LocationListAPIView.as_view(), name='location_list'),

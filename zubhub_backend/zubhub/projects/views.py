@@ -1,14 +1,18 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
+from rest_framework.generics import (UpdateAPIView, CreateAPIView,
+                                     ListAPIView, RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from projects.permissions import IsOwner, IsStaffOrModerator
-from .models import Project, Comment, StaffPick
+from .models import Project, Comment, StaffPick, Category, Tag
 from .utils import project_changed
 from creators.utils import activity_notification
-from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer, StaffPickSerializer
+from .serializers import (ProjectSerializer, ProjectListSerializer,
+                          CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)
 from .pagination import ProjectNumberPagination
 
 
@@ -60,6 +64,29 @@ class ProjectListAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
     pagination_class = ProjectNumberPagination
+
+
+
+class ProjectTagSearchAPIView(ListAPIView):
+    serializer_class = TagSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        query_string = self.request.GET.get('q')
+        query = SearchQuery(query_string)
+        rank = SearchRank(F('search_vector'), query)
+        return Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
+
+class ProjectSearchAPIView(ListAPIView):
+    serializer_class = ProjectListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = ProjectNumberPagination
+
+    def get_queryset(self):
+        query_string = self.request.GET.get("q")
+        query = SearchQuery(query_string, search_type="phrase")
+        rank = SearchRank(F('search_vector'), query)
+        return Project.objects.annotate(rank=rank).filter(search_vector=query, published=True).order_by('-rank')
 
 
 class ProjectDetailsAPIView(RetrieveAPIView):
@@ -162,6 +189,29 @@ class AddCommentAPIView(CreateAPIView):
 
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
+
+class StaffPickListAPIView(ListAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+
+class StaffPickDetailsAPIView(RetrieveAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(queryset, pk=pk)
+
+        return obj
+
+class CategoryListAPIView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [AllowAny]
 
 class StaffPickListAPIView(ListAPIView):
     queryset = StaffPick.objects.filter(is_active=True)
