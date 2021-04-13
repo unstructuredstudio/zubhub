@@ -5,10 +5,10 @@ from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from projects.permissions import IsOwner, IsStaffOrModerator
-from .models import Project, Comment
+from .models import Project, Comment, StaffPick
 from .utils import project_changed
 from creators.utils import activity_notification
-from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
+from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer, StaffPickSerializer
 from .pagination import ProjectNumberPagination
 
 
@@ -163,6 +163,23 @@ class AddCommentAPIView(CreateAPIView):
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 
+class StaffPickListAPIView(ListAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+
+class StaffPickDetailsAPIView(RetrieveAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(queryset, pk=pk)
+
+        return obj
 
 class UnpublishCommentAPIView(UpdateAPIView):
     queryset = Comment.objects.all()

@@ -3,6 +3,7 @@ const defaultState = {
   username: null,
   id: null,
   avatar: null,
+  members_count: null,
   role: null,
 };
 

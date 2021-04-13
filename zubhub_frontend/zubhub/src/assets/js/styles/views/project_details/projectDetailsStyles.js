@@ -229,7 +229,7 @@ const styles = theme => ({
 });
 
 export const sliderSettings = images_num => ({
-  className: 'center slider',
+  className: 'center slider detail-page-slider',
   centerMode: true,
   infinite: true,
   centerPadding: '60px',
@@ -270,7 +270,7 @@ export const sliderSettings = images_num => ({
   ],
 });
 
-function NextArrow(props) {
+export function NextArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div
@@ -297,7 +297,7 @@ function NextArrow(props) {
   );
 }
 
-function PrevArrow(props) {
+export function PrevArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div

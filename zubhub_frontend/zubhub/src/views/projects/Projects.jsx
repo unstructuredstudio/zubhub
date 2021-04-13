@@ -8,13 +8,20 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { Grid, Box, ButtonGroup, Container } from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  ButtonGroup,
+  Container,
+  Typography,
+} from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
+import StaffPick from '../../components/staff_pick/StaffPick';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 
 const useStyles = makeStyles(styles);
@@ -23,15 +30,52 @@ const fetchPage = (page, props) => {
   return props.get_projects({ page, t: props.t });
 };
 
+const fetchStaffPicks = props => {
+  return props.get_staff_picks({ t: props.t });
+};
+
 const updateProjects = (res, props) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        const results = props.projects.results.map(project =>
+        const results = props.projects.all_projects.results.map(project =>
           project.id === res.project.id ? res.project : project,
         );
         props.set_projects({ ...props.projects, results });
         return { loading: false };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
+};
+
+const updateStaffPicks = (res, staff_pick_id, props) => {
+  return res
+    .then(res => {
+      if (res.project && res.project.title) {
+        const staff_picks = props.projects.staff_picks.map(staff_pick =>
+          staff_pick.id === staff_pick_id
+            ? {
+                ...staff_pick,
+                projects: staff_pick.projects.map(project =>
+                  project.id === res.project.id ? res.project : project,
+                ),
+              }
+            : staff_pick,
+        );
+
+        return props.set_staff_picks(staff_picks);
       } else {
         res = Object.keys(res)
           .map(key => res[key])
@@ -57,6 +101,7 @@ function Projects(props) {
   });
 
   React.useEffect(() => {
+    fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
   }, []);
 
@@ -73,7 +118,8 @@ function Projects(props) {
     results: projects,
     previous: prevPage,
     next: nextPage,
-  } = props.projects;
+  } = props.projects.all_projects;
+  const staff_picks = props.projects.staff_picks;
   const { t } = props;
 
   if (loading) {
@@ -82,7 +128,30 @@ function Projects(props) {
     return (
       <Box className={classes.root}>
         <Container class={classes.mainContainerStyle}>
+          {staff_picks.map(staff_pick => (
+            <StaffPick
+              key={staff_pick.id}
+              staff_pick={staff_pick}
+              updateProjects={res =>
+                handleSetState(updateStaffPicks(res, staff_pick.id, props))
+              }
+              {...props}
+            />
+          ))}
           <Grid container>
+            {staff_picks && staff_picks.length > 0 ? (
+              <Grid item xs={12}>
+                <Typography
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
+                  color="textPrimary"
+                  className={classes.titleStyle}
+                >
+                  {t('projects.allProjects')}
+                </Typography>
+              </Grid>
+            ) : null}
             {projects.map(project => (
               <Grid
                 item
@@ -156,7 +225,7 @@ Projects.propTypes = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
-    projects: state.projects.all_projects,
+    projects: state.projects,
   };
 };
 
@@ -173,6 +242,12 @@ const mapDispatchToProps = dispatch => {
     },
     toggle_save: args => {
       return dispatch(ProjectActions.toggle_save(args));
+    },
+    get_staff_picks: args => {
+      return dispatch(ProjectActions.get_staff_picks(args));
+    },
+    set_staff_picks: args => {
+      return dispatch(ProjectActions.set_staff_picks(args));
     },
   };
 };

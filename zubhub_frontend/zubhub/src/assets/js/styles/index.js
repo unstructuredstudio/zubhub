@@ -1,4 +1,6 @@
 const styles = theme => ({
+  floatRight: { float: 'right' },
+  floatLeft: { float: 'left' },
   marginTop1em: {
     marginTop: '1em',
   },
@@ -32,6 +34,10 @@ const styles = theme => ({
   displayFlex: {
     display: 'flex',
   },
+  displayNone: { display: 'none' },
+  positionAbsolute: {
+    position: 'absolute',
+  },
   alignCenter: {
     alignItems: 'center',
   },
@@ -53,6 +59,12 @@ const styles = theme => ({
   },
   width100Percent: {
     width: '100%',
+  },
+  floatRight: {
+    float: 'right',
+  },
+  floatLeft: {
+    float: 'left',
   },
 });
 

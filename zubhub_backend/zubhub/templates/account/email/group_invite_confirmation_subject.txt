@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %} Group invite from {{group_creator_username}}{% endblocktrans %}
+{% endautoescape %}

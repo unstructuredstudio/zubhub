@@ -19,4 +19,7 @@ urlpatterns = [
     path('<uuid:pk>/delete_comment/',
          DeleteCommentAPIView.as_view(), name="delete_comment"),
     path('<uuid:pk>/', ProjectDetailsAPIView.as_view(), name='detail_project'),
+    path('staff_picks/', StaffPickListAPIView.as_view(), name="staff_picks"),
+    path('staff_picks/<uuid:pk>/', StaffPickDetailsAPIView.as_view(),
+         name="staff_pick_details")
 ]
