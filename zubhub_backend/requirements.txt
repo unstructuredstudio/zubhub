@@ -1,3 +1,4 @@
+akismet==1.1
 amqp==2.6.1
 argh==0.26.2
 attrs==20.3.0

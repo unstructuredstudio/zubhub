@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .utils import send_staff_pick_notification
-from .models import *
+from .models import Project, Comment, Image, StaffPick
+from .utils import project_changed
+from creators.utils import activity_notification, send_staff_pick_notification
 # Register your models here.
 
 admin.site.site_header = "ZubHub Administration"
@@ -26,11 +27,20 @@ class ImageAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = [
-        "text", "created_on"]
+    # model = Comment
+    list_display = ["creator",
+                    "text", "created_on", "published"]
     search_fields = ["project__tite", "creator__username",
-                     "text", "created_on"]
-    list_filter = ["created_on"]
+                     "text", "created_on", "published"]
+    list_filter = ["created_on", "published"]
+
+    def creator(self, obj):
+        if obj:
+            return obj.creator.username
+        return None
+
+    def get_readonly_fields(self, request, obj=None):
+        return ["created_on"]
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -43,6 +53,21 @@ class ProjectAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            old = Project.objects.get(pk=obj.pk)
+
+        super().save_model(request, obj, form, change)
+
+        if change:
+            new = Project.objects.get(pk=obj.pk)
+            if project_changed(old, new):
+                info = {
+                    "project_id": str(new.pk),
+                    "editor": request.user.username
+                }
+                activity_notification(["edited_project"], **info)
 
 
 def projects_count(obj):

@@ -2,7 +2,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from creators.serializers import CreatorSerializer
-from .models import *
+from .models import Project, Comment, Image, StaffPick
+from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
 import time
 from math import ceil
@@ -14,7 +15,23 @@ Creator = get_user_model()
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     creator = CreatorSerializer(read_only=True)
+    text = serializers.CharField(max_length=10000)
     created_on = serializers.DateTimeField(read_only=True)
+
+    def save(self, **kwargs):
+        comment = super().save(**kwargs)
+        request = self.context.get("request")
+
+        ctx = {
+            "comment_id": comment.id,
+            "text": comment.text,
+            "method": request.method,
+            "REMOTE_ADDR": request.META["REMOTE_ADDR"],
+            "HTTP_USER_AGENT": request.META["HTTP_USER_AGENT"],
+            "lang": request.LANGUAGE_CODE
+        }
+
+        filter_spam_task.delay(ctx)
 
     class Meta:
         model = Comment
@@ -22,7 +39,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "id",
             "creator",
             "text",
-            "created_on"
+            "created_on",
         ]
 
 
@@ -42,10 +59,8 @@ class ProjectSerializer(serializers.ModelSerializer):
         many=True, slug_field='id', read_only=True)
     saved_by = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
-    comments = CommentSerializer(many=True, read_only=True)
+    comments = serializers.SerializerMethodField('get_comments')
     images = ImageSerializer(many=True, required=False)
-    created_on = serializers.DateTimeField(read_only=True)
-    views_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Project
@@ -63,6 +78,13 @@ class ProjectSerializer(serializers.ModelSerializer):
             "comments",
             "created_on",
         ]
+        
+    read_only_fields = ["created_on", "views_count"]
+
+    def get_comments(self, obj):
+        comments = obj.comments.filter(published=True)
+        serializer = CommentSerializer(comments, read_only=True, many=True)
+        return serializer.data
 
     def validate_video(self, video):
         if(video == "" and len(self.initial_data.get("images")) == 0):

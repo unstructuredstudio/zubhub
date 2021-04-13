@@ -184,27 +184,6 @@ const styles = theme => ({
     borderRadius: '15px',
     backgroundColor: '#E4E4E4',
   },
-  commentAvatarStyle: {
-    backgroundColor: '#c4c4c4',
-    marginRight: '1em',
-  },
-  commentsStyle: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '1em',
-    backgroundColor: 'white',
-    maxWidth: '1000px',
-    width: '100%',
-    fontSize: '1.5rem',
-    borderRadius: '15px',
-    boxShadow: '0 1px 4px rgba(0,0,0,.06)',
-    border: '1px solid rgba(0,0,0,.1)',
-    margin: '0.8em',
-  },
-  commentMetaStyle: {
-    display: 'flex',
-    marginBottom: '1em',
-  },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
       color: '#00B8C4',

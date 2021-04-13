@@ -16,6 +16,9 @@ import EditProfile from './views/edit_profile/EditProfile';
 import UserProjects from './views/user_projects/UserProjects';
 import UserFollowers from './views/user_followers/UserFollowers';
 import UserFollowing from './views/user_following/UserFollowing';
+import GroupMembers from './views/group_members/GroupMembers';
+import AddGroupMembers from './views/add_group_members/AddGroupMembers';
+import GroupInviteConfirm from './views/group_invite_confirm/GroupInviteConfirm';
 import Projects from './views/projects/Projects';
 import SavedProjects from './views/saved_projects/SavedProjects';
 import CreateProject from './views/create_project/CreateProject';
@@ -91,6 +94,15 @@ function App(props) {
         />
 
         <Route
+          path="/group-invite-confirm"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <GroupInviteConfirm {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/creators/:username/projects"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
@@ -113,6 +125,24 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <UserFollowing {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/creators/:username/members"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <GroupMembers {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/creators/:username/add-members"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <AddGroupMembers {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

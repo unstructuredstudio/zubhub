@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+    
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+
+<h1>{% trans "Hello " %}{{ user }}!</h1>
+
+<p>{% trans "Our system just detected a potential spam comment on Zubhub platform, you can inspect it " %} <a href="{% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/comment/{{comment_id}}/change/">{% trans "HERE" %}</a></p>
+
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!
+</body>
+</html>

@@ -1,0 +1,8 @@
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+{% trans "Hello from " %}{% default_display_name %}!
+{% trans "Our system just detected a potential spam comment on Zubhub platform, you can inspect it here: " %} {% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/comment/{{comment_id}}/change/
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}! 

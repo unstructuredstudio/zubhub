@@ -79,6 +79,72 @@ export const toggle_follow = args => {
   };
 };
 
+export const remove_member = args => {
+  return () => {
+    return API.remove_member(args)
+      .then(res => {
+        if (res.username) {
+          return { profile: res };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('groupMembers.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+export const add_members = args => {
+  return () => {
+    return API.add_members(args).then(res => {
+      if (!res.id) {
+        throw new Error(JSON.stringify(res));
+      } else {
+        toast.success(args.t('addGroupMembers.createToastSuccess'));
+        return args.history.push('/profile');
+      }
+    });
+  };
+};
+
+export const get_members = args => {
+  return () => {
+    return API.get_members(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          return {
+            members: res.results,
+            prevPage: res.previous,
+            nextPage: res.next,
+            loading: false,
+          };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('groupMembers.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
 export const get_followers = args => {
   return () => {
     return API.get_followers(args)
@@ -134,5 +200,20 @@ export const get_following = args => {
         }
         return { loading: false };
       });
+  };
+};
+
+export const send_group_invite_confirmation = args => {
+  return () => {
+    return API.send_group_invite_confirmation(args.key).then(res => {
+      if (res.detail !== 'ok') {
+        throw new Error(res.detail);
+      } else {
+        toast.success(args.t('emailConfirm.toastSuccess'));
+        setTimeout(() => {
+          args.history.push('/');
+        }, 4000);
+      }
+    });
   };
 };

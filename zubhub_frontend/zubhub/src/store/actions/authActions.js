@@ -34,7 +34,14 @@ export const logout = args => {
       .then(res => {
         dispatch({
           type: 'SET_AUTH_USER',
-          payload: { token: null, username: null, id: null, avatar: null },
+          payload: {
+            token: null,
+            username: null,
+            id: null,
+            avatar: null,
+            members_count: null,
+            role: null,
+          },
         });
       })
       .then(res => {
@@ -61,6 +68,8 @@ export const get_auth_user = props => {
             username: res.username,
             id: res.id,
             avatar: res.avatar,
+            members_count: res.members_count,
+            role: res.role,
           },
         });
 
