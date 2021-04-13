@@ -12,6 +12,10 @@ def project_saved(sender, instance, **kwargs):
     update_search_index.delay("project")
 
 
+# @receiver(post_save, sender=StaffPick)
+# def staff_pick_saved(sender, instance, **kwargs):
+
+
 @receiver(pre_delete, sender=Image)
 def image_to_be_deleted(sender, instance, **kwargs):
     delete_image_from_DO_space.delay("zubhub", instance.public_id)

@@ -1,8 +1,8 @@
 from django.contrib import admin
 from mptt.admin import DraggableMPTTAdmin
 from .models import Project, Comment, Image, StaffPick, Category, Tag
-from .utils import project_changed
-from creators.utils import activity_notification, send_staff_pick_notification
+from .utils import project_changed, send_staff_pick_notification
+from creators.utils import activity_notification
 # Register your models here.
 
 admin.site.site_header = "ZubHub Administration"

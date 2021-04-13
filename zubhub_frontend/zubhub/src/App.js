@@ -25,7 +25,6 @@ import SavedProjects from './views/saved_projects/SavedProjects';
 import CreateProject from './views/create_project/CreateProject';
 import ProjectDetails from './views/project_details/ProjectDetails';
 import StaffPickDetails from './views/staff_pick_details/StaffPickDetails';
-
 import Guidelines from './views/guidelines/Guidelines';
 import TermsOfUse from './views/terms_of_use/TermsOfUse';
 import Resources from './views/resources/Resources';

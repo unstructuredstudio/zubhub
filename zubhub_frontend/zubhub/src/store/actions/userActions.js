@@ -237,8 +237,10 @@ export const send_group_invite_confirmation = args => {
         setTimeout(() => {
           args.history.push('/');
         }, 4000);
-    }
- });
+       }
+     });
+  };
+};
 
 export const get_help = args => {
   return () => {

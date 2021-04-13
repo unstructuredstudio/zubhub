@@ -183,4 +183,3 @@ class StaffPick(models.Model):
             uid = uid[0: floor(len(uid)/6)]
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
-

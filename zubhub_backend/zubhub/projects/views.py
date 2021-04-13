@@ -190,6 +190,23 @@ class AddCommentAPIView(CreateAPIView):
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 
+class StaffPickListAPIView(ListAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+
+class StaffPickDetailsAPIView(RetrieveAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(queryset, pk=pk)
+
+        return obj
 
 class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.all()
