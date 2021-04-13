@@ -326,24 +326,42 @@
         }
       }
     },
+    "comment": {
+      "delete": {
+        "dialog": {
+          "primary": "टिप्पणी हटाएँ",
+          "secondary": "क्या आप इस कमेंट को मिटाने के बारे में पक्के हैं? आप इस कार्रवाई को पूर्ववत नहीं कर सकते हैं !!!",
+          "cancel": "रद्द करना",
+          "proceed": "बढ़ना"
+        }
+      }
+    },
     "ariaLabels": {
       "likeButton": {
         "label": "बटन की तरह",
         "like": "पसंद",
-        "unlike": "भिन्न",
-        "deleteProject": "परियोजना संवाद हटाएं"
+        "unlike": "भिन्न"
       },
       "saveButton": {
         "label": "बटन सहेजें",
         "save": "सहेजें",
         "unsave": "बिना सोचे समझे"
       },
-      "imageDialog": "बढ़े हुए छवि संवाद"
+      "imageDialog": "बढ़े हुए छवि संवाद",
+      "deleteProject": "परियोजना संवाद हटाएं",
+      "deleteComment": "टिप्पणी संवाद हटाएं"
     },
-    "deleteToastSuccess": "आपका प्रोजेक्ट सफलतापूर्वक हटा दिया गया था !!",
+    "deleteProjectToastSuccess": "आपका प्रोजेक्ट सफलतापूर्वक हटा दिया गया था !!",
+    "deleteCommentToastSuccess": "टिप्पणी सफलतापूर्वक हटा दी गई थी !!",
+    "unpublishCommentToastSuccess": "टिप्पणी सफलतापूर्वक अप्रकाशित की गई थी !!",
     "errors": {
       "unexpected": "यह क्रिया करते समय एक त्रुटि हुई। बाद में पुन: प्रयास करें"
     }
+  },
+
+  "comment": {
+    "unpublish": "अप्रकाशित",
+    "delete": "हटाएं"
   },
 
   "profile": {

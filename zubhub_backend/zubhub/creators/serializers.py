@@ -14,7 +14,6 @@ Creator = get_user_model()
 
 
 class CreatorSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
     phone = serializers.CharField(allow_blank=True, default="")
     email = serializers.EmailField(allow_blank=True, default="")
     followers = serializers.SlugRelatedField(
@@ -29,6 +28,7 @@ class CreatorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Creator
+
         fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
                   'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'members_count', 'role')
 
@@ -39,6 +39,8 @@ class CreatorSerializer(serializers.ModelSerializer):
         if obj:
             if obj.role == Creator.CREATOR:
                 return "creator"
+            if obj.role == Creator.MODERATOR:
+                return "moderator"
             if obj.role == Creator.STAFF:
                 return "staff"
             if obj.role == Creator.Group:
@@ -56,6 +58,7 @@ class CreatorSerializer(serializers.ModelSerializer):
             return obj.creatorgroup.projects_count
         else:
             return obj.projects_count
+
 
     def validate_email(self, email):
 

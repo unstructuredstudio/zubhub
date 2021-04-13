@@ -37,11 +37,13 @@ class Location(models.Model):
 
 class Creator(AbstractUser):
     CREATOR = 1
+    MODERATOR = 2
     STAFF = 3
     GROUP = 4
 
     ROLE_CHOICES = (
         (CREATOR, 'CREATOR'),
+        (MODERATOR, 'MODERATOR'),
         (STAFF, 'STAFF'),
         (GROUP, 'GROUP')
     )

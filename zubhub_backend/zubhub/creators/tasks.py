@@ -1,8 +1,11 @@
 from celery import shared_task
+from celery.decorators import periodic_task
+from celery.task.schedules import crontab
 from random import uniform
 import boto3
 import requests
 from django.conf import settings
+
 try:
     from allauth.account.adapter import get_adapter
 except ImportError:
@@ -42,6 +45,35 @@ def upload_image_to_DO_space(self, bucket, key, user_id):
 
             creator.update(avatar=avatar)
 
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
+
+@shared_task(name="creators.tasks.send_mass_email", bind=True, acks_late=True, max_retries=10)
+def send_mass_email(self, template_name, ctxs):
+    try:
+        get_adapter().send_mass_email(template_name, ctxs)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
+
+@shared_task(name="creators.tasks.send_mass_text", bind=True, acks_late=True, max_retries=10)
+def send_mass_text(self, template_name, ctxs):
+    try:
+        get_adapter().send_mass_text(template_name, ctxs)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
+
+@periodic_task(run_every=(crontab(hour=0, minute=0)), name="creators.tasks.activity_notification_task",
+               bind=True, acks_late=True, max_retries=10, ignore_result=True)
+def activity_notification_task(self):
+    from creators.utils import activity_notification
+    try:
+        activity_notification(["new_creators", "new_projects", "new_comments"])
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))

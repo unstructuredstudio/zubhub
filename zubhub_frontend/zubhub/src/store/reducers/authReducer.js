@@ -4,6 +4,7 @@ const defaultState = {
   id: null,
   avatar: null,
   members_count: null,
+  role: null,
 };
 
 const auth = (state = defaultState, action) => {

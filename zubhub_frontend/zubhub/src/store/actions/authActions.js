@@ -40,6 +40,7 @@ export const logout = args => {
             id: null,
             avatar: null,
             members_count: null,
+            role: null,
           },
         });
       })
@@ -68,6 +69,7 @@ export const get_auth_user = props => {
             id: res.id,
             avatar: res.avatar,
             members_count: res.members_count,
+            role: res.role,
           },
         });
 
