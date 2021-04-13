@@ -1,0 +1,9 @@
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{#{% user_display user as user_display %}#}
+{% autoescape off %}
+{% trans "Hello from " %}{% default_display_name %}!
+{% trans "Check out our latest staff pick by clicking on this url " %} {% default_frontend_protocol %}://{% default_frontend_domain %}/projects/staff_picks/{{staff_pick_id}}
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!

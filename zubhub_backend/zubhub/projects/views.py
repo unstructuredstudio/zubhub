@@ -6,9 +6,11 @@ from django.db.models import F
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from projects.permissions import IsOwner
-from .models import Project
-from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer
+from projects.permissions import IsOwner, IsStaffOrModerator
+from .models import Project, Comment, StaffPick
+from .utils import project_changed
+from creators.utils import activity_notification
+from .serializers import ProjectSerializer, ProjectListSerializer, CommentSerializer, StaffPickSerializer
 from .pagination import ProjectNumberPagination
 
 
@@ -28,8 +30,20 @@ class ProjectUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
 
     def perform_update(self, serializer):
-        serializer.save(creator=self.request.user)
+        try:
+            old = Project.objects.get(pk=self.kwargs.get("pk"))
+        except Project.DoesNotExist:
+            pass
+
+        new = serializer.save(creator=self.request.user)
         self.request.user.save()
+
+        if project_changed(old, new):
+            info = {
+                "project_id": str(new.pk),
+                "editor": self.request.user.username
+            }
+            activity_notification(["edited_project"], **info)
 
 
 class ProjectDeleteAPIView(DestroyAPIView):
@@ -162,3 +176,43 @@ class AddCommentAPIView(CreateAPIView):
 
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
+
+class StaffPickListAPIView(ListAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+
+class StaffPickDetailsAPIView(RetrieveAPIView):
+    queryset = StaffPick.objects.filter(is_active=True)
+    serializer_class = StaffPickSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(queryset, pk=pk)
+
+        return obj
+
+class UnpublishCommentAPIView(UpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+
+    def perform_update(self, serializer):
+        comment = serializer.save(published=False)
+        comment.project.save()
+        return comment
+
+
+class DeleteCommentAPIView(DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+
+    def delete(self, request, *args, **kwargs):
+        project = self.get_object().project
+        result = self.destroy(request, *args, **kwargs)
+        project.save()
+        return result

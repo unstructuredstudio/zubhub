@@ -23,7 +23,6 @@ def delete_image_from_DO_space(self, bucket, key):
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
 
-
 @shared_task(name="projects.tasks.update_search_index", bind=True, acks_late=True, max_retries=10)
 def update_search_index(self, model_name):
     from projects.models import Project
@@ -42,7 +41,15 @@ def update_search_index(self, model_name):
                     search_vector = SearchVector(
                         'title', weight='A') + SearchVector('description', weight='B')
                     Project.objects.update(search_vector=search_vector)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
 
+@shared_task(bind=True, acks_late=True, max_retries=10)
+def filter_spam_task(self, ctx):
+    from projects.utils import filter_spam
+    try:
+        filter_spam(ctx) 
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))

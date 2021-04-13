@@ -1,3 +1,5 @@
+import csv
+from io import StringIO
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import status
 from django.http import Http404
@@ -5,22 +7,24 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_auth.registration.views import RegisterView
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
 
-from .serializers import CreatorSerializer, LocationSerializer, VerifyPhoneSerializer, CustomRegisterSerializer
+from .serializers import (CreatorSerializer, LocationSerializer, VerifyPhoneSerializer,
+                          CustomRegisterSerializer, ConfirmGroupInviteSerializer, AddGroupMembersSerializer)
 from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
-from .utils import perform_send_phone_confirmation, perform_send_email_confirmation, process_avatar
+from .utils import perform_send_phone_confirmation, perform_send_email_confirmation, process_avatar, send_group_invite_notification
 
-from .models import PhoneConfirmationHMAC
+from .models import CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC
 
 
 Creator = get_user_model()
@@ -130,10 +134,18 @@ class UserProjectsAPIView(ListAPIView):
     def get_queryset(self):
         username = self.kwargs.get("username")
         limit = self.request.GET.get("limit")
+        creator = Creator.objects.get(username=username)
+
         if limit:
-            return Creator.objects.get(username=username).projects.all().order_by("-created_on")[:int(limit)]
+            if hasattr(creator, "creatorgroup"):
+                return creator.creatorgroup.get_projects(limit=limit)
+            else:
+                return creator.projects.all().order_by("-created_on")[:int(limit)]
         else:
-            return Creator.objects.get(username=username).projects.all().order_by("-created_on")
+            if hasattr(creator, "creatorgroup"):
+                return creator.creatorgroup.get_projects()
+            else:
+                return creator.projects.all().order_by("-created_on")
 
 
 class UserFollowersAPIView(ListAPIView):
@@ -172,6 +184,104 @@ class ToggleFollowAPIView(RetrieveAPIView):
             obj.followers.add(self.request.user)
             obj.save()
         self.request.user.save()
+
+        return obj
+
+
+class ConfirmGroupInviteAPIView(APIView):
+    permission_classes = (AllowAny,)
+    allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+
+    def get_serializer(self, *args, **kwargs):
+        return ConfirmGroupInviteSerializer(*args, **kwargs)
+
+    def get_object(self, queryset=None):
+        key = self.kwargs["key"]
+        group_invite_confirmation = GroupInviteConfirmationHMAC.from_key(key)
+        if not group_invite_confirmation:
+            raise Http404()
+
+        return group_invite_confirmation
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.kwargs['key'] = serializer.validated_data['key']
+        confirmation = self.get_object()
+        confirmation.confirm(self.request)
+        return Response({'detail': _('ok')}, status=status.HTTP_200_OK)
+
+
+class GroupMembersAPIView(ListAPIView):
+    serializer_class = CreatorSerializer
+    permission_classes = [AllowAny]
+    pagination_class = CreatorNumberPagination
+
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        return Creator.objects.get(username=username).creatorgroup.members.all()
+
+
+class AddGroupMembersAPIView(GenericAPIView):
+    serializer_class = AddGroupMembersSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+
+    def get_queryset(self):
+        creator_group = CreatorGroup.objects.filter(
+            creator=self.request.user).annotate(Count('members'))
+        return creator_group
+
+    def post(self, request):
+        creator_group = self.get_queryset()
+        if not creator_group:
+            return Response(CreatorSerializer(request.user).data)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        group_members = serializer.validated_data.get('group_members')
+        csvf = serializer.validated_data.get('csv')
+        csvf = StringIO(csvf.read().decode())
+        csvf = csv.reader(csvf, delimiter=',')
+        csvf = list(csvf)
+        flat_csv = []
+        for index, arr in enumerate(csvf):
+            if index != 0:
+                flat_csv.append(arr[0])
+
+        # remove leading and trailing white spaces from username strings
+        group_members = list(map(lambda x: x.strip(), group_members))
+
+        group_members = [*group_members, *flat_csv]
+
+        uploaded = Creator.objects.filter(username__in=group_members)
+        all_members = creator_group[0].members.all()
+        uploaded_count = uploaded.count()
+
+        if creator_group[0].members__count > uploaded_count:
+            new_members = all_members.difference(uploaded)
+        else:
+            new_members = uploaded.difference(all_members)
+
+        if new_members.count() > 0:
+            send_group_invite_notification(creator_group[0], new_members)
+
+        return Response(CreatorSerializer(request.user).data)
+
+
+class RemoveGroupMemberAPIView(RetrieveAPIView):
+    serializer_class = CreatorSerializer
+    queryset = Creator.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(self.get_queryset(), pk=pk)
+        creatorgroup = self.request.user.creatorgroup
+
+        if obj in creatorgroup.members.all() and obj.pk != self.request.user.pk:
+            creatorgroup.members.remove(obj)
+            creatorgroup.save()
 
         return obj
 
