@@ -26,6 +26,11 @@ import CreateProject from './views/create_project/CreateProject';
 import ProjectDetails from './views/project_details/ProjectDetails';
 import StaffPickDetails from './views/staff_pick_details/StaffPickDetails';
 
+import Guidelines from './views/guidelines/Guidelines';
+import TermsOfUse from './views/terms_of_use/TermsOfUse';
+import Resources from './views/resources/Resources';
+import FAQs from './views/faqs/FAQs';
+
 function App(props) {
   return (
     <Router>
@@ -224,6 +229,42 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <ProjectDetails {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/guidelines_and_policy"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <Guidelines {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/terms_of_use"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <TermsOfUse {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/resources"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <Resources {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/faqs"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <FAQs {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

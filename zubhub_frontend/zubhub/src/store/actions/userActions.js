@@ -237,7 +237,86 @@ export const send_group_invite_confirmation = args => {
         setTimeout(() => {
           args.history.push('/');
         }, 4000);
-      }
-    });
+    }
+ });
+
+export const get_help = args => {
+  return () => {
+    return API.get_help()
+      .then(res => {
+        if (res) {
+          return { help: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return {
+            loading: false,
+          };
+        } else {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return { loading: false };
+        }
+      });
+  };
+};
+
+export const get_privacy = args => {
+  return () => {
+    return API.get_privacy()
+      .then(res => {
+        if (res) {
+          return { privacy: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return {
+            loading: false,
+          };
+        } else {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return { loading: false };
+        }
+      });
+  };
+};
+
+export const get_faqs = args => {
+  return () => {
+    return API.get_faqs()
+      .then(res => {
+        if (res) {
+          return { faqs: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return {
+            loading: false,
+          };
+        } else {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return { loading: false };
+        }
+      });
   };
 };

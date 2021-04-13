@@ -27,6 +27,17 @@
       "savedProjects": "Bookmarks",
       "logout": "Logout"
     },
+    "footer": {
+      "privacy": "Privacy",
+      "guidelines": "Guidelines and policy",
+      "termsOfUse": "Terms of Use",
+      "about": "About",
+      "zubhub": "ZubHub",
+      "unstructuredStudio": "Unstructured Studio",
+      "help": "Help",
+      "resources": "Tinkering Resources",
+      "faqs": "FAQs",
+      "contactUs": "Contact Us"
     "inputs": {
       "search": {
         "label": "Search"
@@ -613,6 +624,36 @@
     "errors": {
       "noFollowing": "Creator is not following anyone yet",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "guidelines": {
+    "title": "Guidelines",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "termsOfUse": {
+    "title": "Terms Of Use",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "resources": {
+    "title": "Resources",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "question": "Question",
+    "answer": "Answer",
+    "errors": {
+      "page_empty": "This page is empty"
     }
   }
 }
