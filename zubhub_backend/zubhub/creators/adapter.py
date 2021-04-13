@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import get_connection
+from django.core.mail import get_connection, send_mass_mail
 from django.template.loader import render_to_string
 from allauth.account.adapter import DefaultAccountAdapter
 from django.template import TemplateDoesNotExist

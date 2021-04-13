@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from creators.serializers import CreatorSerializer
 from .models import Project, Comment, Image
+from projects.tasks import filter_spam_task
 import time
 
 
@@ -12,7 +13,23 @@ Creator = get_user_model()
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     creator = CreatorSerializer(read_only=True)
+    text = serializers.CharField(max_length=10000)
     created_on = serializers.DateTimeField(read_only=True)
+
+    def save(self, **kwargs):
+        comment = super().save(**kwargs)
+        request = self.context.get("request")
+
+        ctx = {
+            "comment_id": comment.id,
+            "text": comment.text,
+            "method": request.method,
+            "REMOTE_ADDR": request.META["REMOTE_ADDR"],
+            "HTTP_USER_AGENT": request.META["HTTP_USER_AGENT"],
+            "lang": request.LANGUAGE_CODE
+        }
+
+        filter_spam_task.delay(ctx)
 
     class Meta:
         model = Comment
@@ -20,7 +37,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "id",
             "creator",
             "text",
-            "created_on"
+            "created_on",
         ]
 
 
@@ -59,7 +76,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "comments",
             "created_on",
         ]
-
+        
     read_only_fields = ["created_on", "views_count"]
 
     def get_comments(self, obj):

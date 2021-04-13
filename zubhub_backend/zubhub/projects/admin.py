@@ -16,11 +16,17 @@ class ImageAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = [
-        "text", "created_on", "published"]
+    # model = Comment
+    list_display = ["creator",
+                    "text", "created_on", "published"]
     search_fields = ["project__tite", "creator__username",
-                     "text", "created_on"]
-    list_filter = ["created_on"]
+                     "text", "created_on", "published"]
+    list_filter = ["created_on", "published"]
+
+    def creator(self, obj):
+        if obj:
+            return obj.creator.username
+        return None
 
     def get_readonly_fields(self, request, obj=None):
         return ["created_on"]

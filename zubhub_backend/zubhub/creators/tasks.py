@@ -21,6 +21,24 @@ def send_text(self, phone, template_name, ctx):
             uniform(2, 4) ** self.request.retries))
 
 
+@shared_task(name="creators.tasks.send_mass_email", bind=True, acks_late=True, max_retries=10)
+def send_mass_email(self, template_name, ctxs):
+    try:
+        get_adapter().send_mass_email(template_name, ctxs)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
+
+@shared_task(name="creators.tasks.send_mass_text", bind=True, acks_late=True, max_retries=10)
+def send_mass_text(self, template_name, ctxs):
+    try:
+        get_adapter().send_mass_text(template_name, ctxs)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
+
 @shared_task(name="creators.tasks.upload_image_to_DO_space", bind=True, acks_late=True, max_retries=10)
 def upload_image_to_DO_space(self, bucket, key, user_id):
     from creators.models import Creator
