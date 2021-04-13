@@ -3,8 +3,8 @@ from akismet import Akismet
 from .models import Comment
 from creators.tasks import send_mass_email, send_mass_text
 from creators.models import Creator, Setting
-                  
-                  
+
+
 def send_staff_pick_notification(staff_pick):
     subscribed = Setting.objects.filter(subscribe=True)
     email_contexts = []
@@ -25,6 +25,20 @@ def send_staff_pick_notification(staff_pick):
                 {
                     "phone": each.creator.phone,
                     "staff_pick_id": staff_pick.id
+                }
+            )
+
+    if len(email_contexts) > 0:
+        send_mass_email.delay(
+            template_name=template_name,
+            ctxs=email_contexts
+        )
+
+    if len(phone_contexts) > 0:
+        send_mass_text.delay(
+            template_name=template_name,
+            ctxs=phone_contexts
+        )
 
 
 def send_spam_notification(comment_id, staffs):
@@ -91,7 +105,7 @@ def filter_spam(ctx):
 
             send_spam_notification(ctx.get("comment_id"), staffs)
 
-            
+
 def project_changed(obj, instance):
     changed = False
 
