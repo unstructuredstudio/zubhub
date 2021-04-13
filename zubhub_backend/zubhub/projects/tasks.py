@@ -5,9 +5,6 @@ from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from celery import shared_task
 
-from projects.utils import task_lock
-
-
 @shared_task(bind=True, acks_late=True, max_retries=10)
 def delete_image_from_DO_space(self, bucket, key):
     session = boto3.session.Session()
@@ -27,13 +24,16 @@ def delete_image_from_DO_space(self, bucket, key):
 def update_search_index(self, model_name):
     from projects.models import Project
     from creators.models import Creator
+    from projects.models import Tag
+    from projects.utils import task_lock
 
     model_name_hexdigest = md5(model_name.encode("utf-8")).hexdigest()
     lock_id = '{0}-lock-{1}'.format(self.name, model_name_hexdigest)
     try:
         with task_lock(lock_id, self.app.oid) as acquired:
             if acquired:
-
+                if model_name == "tag":
+                    Tag.objects.update(search_vector=SearchVector('name'))
                 if model_name == "creator":
                     Creator.objects.update(
                         search_vector=SearchVector('username'))

@@ -357,6 +357,8 @@ class API {
     video,
     images,
     materials_used,
+    category,
+    tags,
   }) => {
     const url = 'projects/create/';
     const method = 'POST';
@@ -366,6 +368,8 @@ class API {
       images,
       video,
       materials_used,
+      category,
+      tags,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
@@ -380,6 +384,8 @@ class API {
     video,
     images,
     materials_used,
+    category,
+    tags,
   }) => {
     const url = `projects/${id}/update/`;
     const method = 'PATCH';
@@ -390,6 +396,8 @@ class API {
       images,
       video,
       materials_used,
+      category,
+      tags,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
@@ -429,7 +437,21 @@ class API {
     const url = page ? `projects/?${page}` : `projects/`;
     return this.request({ url }).then(res => res.json());
   };
-  /******************************************************************/
+  /*************************************************************/
+
+  /************************** get categories **************************/
+  get_categories = () => {
+    const url = 'projects/categories/';
+    return this.request({ url }).then(res => res.json());
+  };
+  /*************************************************************/
+
+  /************************** suggest tags **************************/
+  suggest_tags = value => {
+    const url = `projects/tags/search/?q=${value}`;
+    return this.request({ url }).then(res => res.json());
+  };
+  /*************************************************************/
 
   /************************** get staff picks **************************/
   get_staff_picks = () => {

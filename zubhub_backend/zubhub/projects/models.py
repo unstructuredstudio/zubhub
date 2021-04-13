@@ -1,6 +1,7 @@
 import uuid
 from math import floor
-
+from treebeard.mp_tree import MP_Node
+from mptt.models import MPTTModel, TreeForeignKey
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
@@ -12,6 +13,29 @@ from django.contrib.postgres.indexes import GinIndex
 Creator = get_user_model()
 
 
+class Category(MP_Node):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    slug = models.SlugField(unique=True, max_length=1000)
+
+    node_order_by = ['name']
+
+    class Meta:
+        verbose_name_plural = "categories"
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            pass
+        else:
+            uid = str(uuid.uuid4())
+            uid = uid[0: floor(len(uid)/6)]
+            self.slug = slugify(self.name) + "-" + uid
+        super().save(*args, **kwargs)
+
+
 class Project(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -21,6 +45,8 @@ class Project(models.Model):
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True, related_name="projects")
     views = models.ManyToManyField(
         Creator, blank=True, related_name="projects_viewed")
     views_count = models.IntegerField(blank=True, default=0)
@@ -111,6 +137,30 @@ class Comment(models.Model):
         super().save(*args, **kwargs)
 
 
+class Tag(models.Model):
+    projects = models.ManyToManyField(
+        Project, blank=True, related_name="tags")
+    name = models.CharField(unique=True, max_length=100)
+    slug = models.SlugField(unique=True, max_length=150)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            pass
+        else:
+            uid = str(uuid.uuid4())
+            uid = uid[0: floor(len(uid)/6)]
+            self.slug = slugify(self.name) + "-" + uid
+        super().save(*args, **kwargs)
+  
+  
+
 class StaffPick(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -133,3 +183,4 @@ class StaffPick(models.Model):
             uid = uid[0: floor(len(uid)/6)]
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
+

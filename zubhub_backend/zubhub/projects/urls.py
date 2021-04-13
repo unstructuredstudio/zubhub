@@ -5,6 +5,7 @@ app_name = "projects"
 
 urlpatterns = [
     path('', ProjectListAPIView.as_view(), name='list_projects'),
+    path('tags/search/', ProjectTagSearchAPIView.as_view(), name='search_tags'),
     path('search/', ProjectSearchAPIView.as_view(), name='search_projects'),
     path('create/', ProjectCreateAPIView.as_view(), name='create_project'),
     path('<uuid:pk>/update/', ProjectUpdateAPIView.as_view(), name='update_project'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('<uuid:pk>/delete_comment/',
          DeleteCommentAPIView.as_view(), name="delete_comment"),
     path('<uuid:pk>/', ProjectDetailsAPIView.as_view(), name='detail_project'),
+    path('categories/', CategoryListAPIView.as_view(), name='category'),
     path('staff_picks/', StaffPickListAPIView.as_view(), name="staff_picks"),
     path('staff_picks/<uuid:pk>/', StaffPickDetailsAPIView.as_view(),
          name="staff_pick_details")

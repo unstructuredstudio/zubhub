@@ -118,11 +118,11 @@ function PageWrapper(props) {
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
+        setState(state => ({ ...state, ...obj }));
       });
     }
   };
-
+  
   const { anchorEl, loading, openSearchForm } = state;
   const { t } = props;
   const profileMenuOpen = Boolean(anchorEl);

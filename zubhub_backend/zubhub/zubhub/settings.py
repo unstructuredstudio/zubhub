@@ -41,12 +41,14 @@ else:
 
 if ENVIRONMENT == 'production':
     SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
     # SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    if not DEBUG:
+        X_FRAME_OPTIONS = 'DENY'
+
     # SESSION_COOKIE_SECURE = True
     # CSRF_COOKIE_SECURE = True
 
@@ -93,6 +95,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'crispy_forms',
     'debug_toolbar',
+    'treebeard',
     'mptt',
     'django_summernote',
     'zubhub',
@@ -176,10 +179,11 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.request',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages'
             ],
         },
     },
@@ -201,6 +205,14 @@ DATABASES = {
         'PORT': 5432
     }
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'default_cache_table',
+    }
+}
+
 
 CACHES = {
     'default': {
