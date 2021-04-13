@@ -12,14 +12,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import SearchIcon from '@material-ui/icons/Search';
 import {
   CssBaseline,
   Container,
   AppBar,
   Toolbar,
+  ClickAwayListener,
   Typography,
   useScrollTrigger,
   Box,
+  IconButton,
+  OutlinedInput,
+  InputAdornment,
+  FormControl,
+  InputLabel,
   Fab,
   Zoom,
   Menu,
@@ -69,6 +76,24 @@ const handleChangeLanguage = ({ e, props }) => {
   props.i18n.changeLanguage(e.target.value);
 };
 
+const handleToggleSearchForm = ({ openSearchForm }) => {
+  return { openSearchForm: !openSearchForm };
+};
+
+const handleCloseSearchForm = () => {
+  return { openSearchForm: false };
+};
+
+const closeSearchFormOrIgnore = e => {
+  let isToggleSearchButton;
+  e.path.forEach(el => {
+    if (el.id === 'toggle-search') {
+      isToggleSearchButton = true;
+    }
+  });
+  if (!isToggleSearchButton) return handleCloseSearchForm();
+};
+
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
@@ -78,6 +103,7 @@ function PageWrapper(props) {
     username: null,
     anchorEl: null,
     loading: false,
+    openSearchForm: false,
   });
 
   React.useEffect(() => {
@@ -96,7 +122,8 @@ function PageWrapper(props) {
       });
     }
   };
-  const { anchorEl, loading } = state;
+  
+  const { anchorEl, loading, openSearchForm } = state;
   const { t } = props;
   const profileMenuOpen = Boolean(anchorEl);
   return (
@@ -105,7 +132,7 @@ function PageWrapper(props) {
       <CssBaseline />
       <AppBar className={classes.navBarStyle}>
         <Container className={classes.mainContainerStyle}>
-          <Toolbar className={classes.toolbarStyle}>
+          <Toolbar className={classes.toolBarStyle}>
             <Box className={classes.logoStyle}>
               <Link to="/">
                 <img src={logo} alt="logo" />
@@ -152,10 +179,59 @@ function PageWrapper(props) {
                   ))}
                 </Select>
               </Box>
+              <form
+                action="/search"
+                className={clsx(classes.searchFormStyle, classes.removeOn894)}
+                role="search"
+              >
+                <FormControl variant="outlined">
+                  <InputLabel
+                    htmlFor="q"
+                    className={classes.searchFormLabelStyle}
+                  >
+                    {t('pageWrapper.inputs.search.label')}
+                  </InputLabel>
+                  <OutlinedInput
+                    name="q"
+                    id="q"
+                    type="search"
+                    className={clsx(
+                      classes.searchFormInputStyle,
+                      'search-form-input',
+                    )}
+                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
+                    pattern="(.|\s)*\S(.|\s)*"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          type="submit"
+                          className={classes.searchFormSubmitStyle}
+                          aria-label={t('pageWrapper.inputs.search.label')}
+                        >
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </form>
             </Box>
             <div className={classes.navActionStyle}>
               {!props.auth.token ? (
                 <>
+                  <IconButton
+                    className={clsx(
+                      classes.toggleSearchFormStyle,
+                      classes.addOn894,
+                    )}
+                    id="toggle-search"
+                    aria-label="toggle search form"
+                    onClick={() =>
+                      handleSetState(handleToggleSearchForm(state))
+                    }
+                  >
+                    <SearchIcon />
+                  </IconButton>
                   <Link
                     className={clsx(
                       classes.textDecorationNone,
@@ -256,6 +332,19 @@ function PageWrapper(props) {
                       {t('pageWrapper.navbar.createProject')}
                     </CustomButton>
                   </Link>
+                  <IconButton
+                    className={clsx(
+                      classes.toggleSearchFormStyle,
+                      classes.addOn894,
+                    )}
+                    id="toggle-search"
+                    aria-label="toggle search form"
+                    onClick={() =>
+                      handleSetState(handleToggleSearchForm(state))
+                    }
+                  >
+                    <SearchIcon />
+                  </IconButton>
                   <Avatar
                     className={classes.avatarStyle}
                     aria-label={`${props.auth.username}' Avatar`}
@@ -387,70 +476,229 @@ function PageWrapper(props) {
               )}
             </div>
           </Toolbar>
+          {openSearchForm ? (
+            <ClickAwayListener
+              onClickAway={e => handleSetState(closeSearchFormOrIgnore(e))}
+            >
+              <form
+                action="/search"
+                className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
+                role="search"
+              >
+                <FormControl variant="outlined">
+                  <InputLabel
+                    htmlFor="q"
+                    className={classes.searchFormLabelStyle}
+                  >
+                    {t('pageWrapper.inputs.search.label')}
+                  </InputLabel>
+                  <OutlinedInput
+                    name="q"
+                    id="q"
+                    type="search"
+                    className={clsx(
+                      classes.smallSearchFormInputStyle,
+                      'search-form-input',
+                    )}
+                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
+                    pattern="(.|\s)*\S(.|\s)*"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          type="submit"
+                          className={classes.searchFormSubmitStyle}
+                          aria-label="search"
+                        >
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </form>
+            </ClickAwayListener>
+          ) : null}
         </Container>
       </AppBar>
       <Toolbar ref={backToTopEl} />
 
       {loading ? <LoadingPage /> : props.children}
 
-      <footer
-        className={clsx('footer-distributed', classes.footerStyle)}
-        style={{ flexShrink: 0 }}
-      >
-        <div className="footer-right"></div>
+      <footer className={clsx('footer-distributed', classes.footerStyle)}>
+        <Box>
+          <a href="https://unstructured.studio">
+            <img
+              src={unstructuredLogo}
+              className={classes.footerLogoStyle}
+              alt="unstructured-studio-logo"
+            />
+          </a>
+          <div>
+            <Box
+              className={clsx(
+                classes.languageSelectBoxStyle,
+                commonClasses.displayInlineFlex,
+                commonClasses.alignCenter,
+                commonClasses.addOnSmallScreen,
+              )}
+            >
+              <TranslateIcon />
+              <Select
+                className={classes.languageSelectStyle}
+                value=""
+                onChange={e => handleChangeLanguage({ e, props })}
+              >
+                {Object.keys(languageMap).map((ln, index) => (
+                  <MenuItem key={index} value={ln}>
+                    {languageMap[ln]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+            <Box
+              className={clsx(
+                classes.languageSelectBoxStyle,
+                commonClasses.displayInlineFlex,
+                commonClasses.alignCenter,
+                commonClasses.removeOnSmallScreen,
+              )}
+            >
+              <TranslateIcon />
+              <Select
+                className={classes.languageSelectStyle}
+                value={props.i18n.language}
+                onChange={e => handleChangeLanguage({ e, props })}
+              >
+                {Object.keys(languageMap).map((ln, index) => (
+                  <MenuItem key={index} value={ln}>
+                    {languageMap[ln]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+          </div>
+        </Box>
 
-        <div className="footer-left"></div>
-        <a href="https://unstructured.studio">
-          <img
-            src={unstructuredLogo}
-            className={classes.footerLogoStyle}
-            alt="unstructured-studio-logo"
-          />
-        </a>
-        <div>
-          <Box
-            className={clsx(
-              classes.languageSelectBoxStyle,
-              commonClasses.displayInlineFlex,
-              commonClasses.alignCenter,
-              commonClasses.addOnSmallScreen,
-            )}
-          >
-            <TranslateIcon />
-            <Select
-              className={classes.languageSelectStyle}
-              value=""
-              onChange={e => handleChangeLanguage({ e, props })}
+        <section className={classes.footerSectionStyle}>
+          <Box className={classes.footerBoxStyle}>
+            <Typography
+              variant="subtitle2"
+              color="textPrimary"
+              className={classes.footerTitleStyle}
             >
-              {Object.keys(languageMap).map((ln, index) => (
-                <MenuItem key={index} value={ln}>
-                  {languageMap[ln]}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-          <Box
-            className={clsx(
-              classes.languageSelectBoxStyle,
-              commonClasses.displayInlineFlex,
-              commonClasses.alignCenter,
-              commonClasses.removeOnSmallScreen,
-            )}
-          >
-            <TranslateIcon />
-            <Select
-              className={classes.languageSelectStyle}
-              value={props.i18n.language}
-              onChange={e => handleChangeLanguage({ e, props })}
+              {t('pageWrapper.footer.privacy')}
+            </Typography>
+
+            <Link
+              to={`/guidelines_and_policy`}
+              className={commonClasses.textDecorationNone}
             >
-              {Object.keys(languageMap).map((ln, index) => (
-                <MenuItem key={index} value={ln}>
-                  {languageMap[ln]}
-                </MenuItem>
-              ))}
-            </Select>
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.guidelines')}
+              </Typography>
+            </Link>
+
+            <Link
+              to={`/terms_of_use`}
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.termsOfUse')}
+              </Typography>
+            </Link>
           </Box>
-        </div>
+
+          <Box className={classes.footerBoxStyle}>
+            <Typography
+              variant="subtitle2"
+              color="textPrimary"
+              className={classes.footerTitleStyle}
+            >
+              {t('pageWrapper.footer.about')}
+            </Typography>
+
+            <a
+              href="https://unstructured.studio/zub-app/"
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.zubhub')}
+              </Typography>
+            </a>
+
+            <a
+              href="https://unstructured.studio/about/"
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.unstructuredStudio')}
+              </Typography>
+            </a>
+          </Box>
+
+          <Box className={classes.footerBoxStyle}>
+            <Typography
+              variant="subtitle2"
+              color="textPrimary"
+              className={classes.footerTitleStyle}
+            >
+              {t('pageWrapper.footer.help')}
+            </Typography>
+
+            <Link
+              to={`/resources`}
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.resources')}
+              </Typography>
+            </Link>
+
+            <Link to={`/faqs`} className={commonClasses.textDecorationNone}>
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.faqs')}
+              </Typography>
+            </Link>
+
+            <a
+              href="mailto:hello@unstructured.studio"
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.contactUs')}
+              </Typography>
+            </a>
+          </Box>
+        </section>
+
         <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}

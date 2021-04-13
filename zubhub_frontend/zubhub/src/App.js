@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
 
 import PageWrapper from './views/PageWrapper';
+import SearchResults from './views/search_results/SearchResults';
 import Signup from './views/signup/Signup';
 import Login from './views/login/Login';
 import PasswordReset from './views/password_reset/PasswordReset';
@@ -16,10 +17,19 @@ import EditProfile from './views/edit_profile/EditProfile';
 import UserProjects from './views/user_projects/UserProjects';
 import UserFollowers from './views/user_followers/UserFollowers';
 import UserFollowing from './views/user_following/UserFollowing';
+import GroupMembers from './views/group_members/GroupMembers';
+import AddGroupMembers from './views/add_group_members/AddGroupMembers';
+import GroupInviteConfirm from './views/group_invite_confirm/GroupInviteConfirm';
 import Projects from './views/projects/Projects';
 import SavedProjects from './views/saved_projects/SavedProjects';
 import CreateProject from './views/create_project/CreateProject';
 import ProjectDetails from './views/project_details/ProjectDetails';
+import StaffPickDetails from './views/staff_pick_details/StaffPickDetails';
+
+import Guidelines from './views/guidelines/Guidelines';
+import TermsOfUse from './views/terms_of_use/TermsOfUse';
+import Resources from './views/resources/Resources';
+import FAQs from './views/faqs/FAQs';
 
 function App(props) {
   return (
@@ -31,6 +41,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <Projects {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/search"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <SearchResults {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -90,6 +109,15 @@ function App(props) {
         />
 
         <Route
+          path="/group-invite-confirm"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <GroupInviteConfirm {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/creators/:username/projects"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
@@ -117,6 +145,24 @@ function App(props) {
         />
 
         <Route
+          path="/creators/:username/members"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <GroupMembers {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/creators/:username/add-members"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <AddGroupMembers {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/creators/:username"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
@@ -139,6 +185,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <EditProfile {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/projects/staff_picks/:id"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <StaffPickDetails {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -174,6 +229,42 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <ProjectDetails {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/guidelines_and_policy"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <Guidelines {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/terms_of_use"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <TermsOfUse {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/resources"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <Resources {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/faqs"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <FAQs {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

@@ -1,0 +1,11 @@
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+{% trans "Hello from " %}{% default_display_name %}!
+{% blocktrans %}
+You're receiving this e-mail because {{ group_creator_username }} invited you to join their group.
+{% endblocktrans %}
+{% trans "To accept the invitation, click this link " %} {% default_frontend_protocol %}://{% default_frontend_domain %}/group-invite-confirm?group={{ group_creator_username }}&&key={{key}}
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!

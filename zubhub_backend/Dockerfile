@@ -25,6 +25,7 @@ RUN pip install --upgrade pip wheel \
   # Requirements are installed here to ensure they will be cached.
   && pip install -r /zubhub_backend/requirements.txt
 
+
 # copy project
 COPY . /zubhub_backend/
 

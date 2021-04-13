@@ -29,17 +29,18 @@ import {
 import * as UserActions from '../../store/actions/userActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
+import Comment from '../../components/comment/Comment';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import nFormatter from '../../assets/js/nFormatter';
-import dFormatter from '../../assets/js/dFormatter';
 import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
+const useCommonStyles = makeStyles(commonStyles);
 
 const constructCommentBox = refs => {
   refs.commentText.current.addEventListener('focus', e =>
@@ -79,6 +80,70 @@ const handleOpenEnlargedImageDialog = (e, state) => {
   return { enlargedImageUrl: image_url, openEnlargedImageDialog };
 };
 
+const unpublishComment = (props, state, id) => {
+  if (
+    props.auth.token &&
+    (props.auth.role === 'moderator' || props.auth.role === 'staff')
+  ) {
+    return props
+      .unpublish_comment({
+        token: props.auth.token,
+        id: id,
+        t: props.t,
+        history: props.history,
+      })
+      .then(updated_comment => {
+        const { project } = state;
+        project.comments = project.comments.filter(comment =>
+          comment.id !== updated_comment.id ? true : false,
+        );
+
+        return { project };
+      });
+  }
+};
+
+const handleToggleDeleteCommentModal = (state, id) => {
+  const openDeleteCommentModal = !state.openDeleteCommentModal;
+  if (openDeleteCommentModal) {
+    return { openDeleteCommentModal: id };
+  }
+  return { openDeleteCommentModal };
+};
+
+const deleteComment = (props, state, id) => {
+  if (
+    props.auth.token &&
+    (props.auth.role === 'moderator' || props.auth.role === 'staff')
+  ) {
+    return props
+      .delete_comment({
+        token: props.auth.token,
+        id: id,
+        t: props.t,
+        history: props.history,
+      })
+      .then(() => {
+        const { project } = state;
+        project.comments = project.comments.filter(comment =>
+          comment.id !== id ? true : false,
+        );
+
+        return {
+          project,
+          ...handleToggleDeleteCommentModal(state),
+          deleteCommentDialogError: null,
+        };
+      })
+      .catch(error => ({ deleteCommentDialogError: error.message }));
+  } else {
+    return {
+      deleteCommentDialogError: null,
+      ...handleToggleDeleteCommentModal(state, id),
+    };
+  }
+};
+
 const handleToggleDeleteProjectModal = state => {
   const openDeleteProjectModal = !state.openDeleteProjectModal;
   return { openDeleteProjectModal };
@@ -93,7 +158,7 @@ const deleteProject = (props, state) => {
         t: props.t,
         history: props.history,
       })
-      .catch(error => ({ dialogError: error.message }));
+      .catch(error => ({ deleteProjectDialogError: error.message }));
   } else {
     return handleToggleDeleteProjectModal(state);
   }
@@ -190,7 +255,7 @@ function ProjectDetails(props) {
     commentPublishButton: React.useRef(null),
   };
   const classes = useStyles();
-  const commonClasses = makeStyles(commonStyles)();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     project: {},
@@ -198,7 +263,9 @@ function ProjectDetails(props) {
     enlargedImageUrl: '',
     openEnlargedImageDialog: false,
     openDeleteProjectModal: false,
-    dialogError: null,
+    openDeleteCommentModal: false,
+    deleteProjectDialogError: null,
+    deleteCommentDialogError: null,
   });
 
   React.useEffect(() => {
@@ -246,7 +313,9 @@ function ProjectDetails(props) {
     enlargedImageUrl,
     openEnlargedImageDialog,
     openDeleteProjectModal,
-    dialogError,
+    openDeleteCommentModal,
+    deleteProjectDialogError,
+    deleteCommentDialogError,
   } = state;
   const { t } = props;
   if (loading) {
@@ -564,33 +633,19 @@ function ProjectDetails(props) {
               </Box>
               {project.comments &&
                 project.comments.map(comment => (
-                  <Box className={classes.commentsStyle} key={comment.id}>
-                    <Link
-                      className={clsx(
-                        classes.textDecorationNone,
-                        classes.commentMetaStyle,
-                      )}
-                      to={`/creators/${props.auth.username}`}
-                    >
-                      <Avatar
-                        className={classes.commentAvatarStyle}
-                        src={comment.creator.avatar}
-                        alt={comment.creator.username}
-                      />
-                      <Box>
-                        <Typography color="textPrimary">
-                          {comment.creator.username}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {`${dFormatter(comment.created_on).value} ${t(
-                            `date.${dFormatter(comment.created_on).key}`,
-                          )} ${t('date.ago')}`}{' '}
-                        </Typography>
-                      </Box>
-                    </Link>
-
-                    {comment.text}
-                  </Box>
+                  <Comment
+                    key={comment.id}
+                    auth={props.auth}
+                    t={t}
+                    comment={comment}
+                    handleUnpublishComment={id =>
+                      handleSetState(unpublishComment(props, state, id))
+                    }
+                    handleDeleteComment={id =>
+                      handleSetState(handleToggleDeleteCommentModal(state, id))
+                    }
+                    {...props}
+                  />
                 ))}
             </Container>
           </Paper>
@@ -629,11 +684,11 @@ function ProjectDetails(props) {
           </DialogTitle>
           <Box
             component="p"
-            className={dialogError !== null && classes.errorBox}
+            className={deleteProjectDialogError !== null && classes.errorBox}
           >
-            {dialogError !== null && (
+            {deleteProjectDialogError !== null && (
               <Box component="span" className={classes.error}>
-                {dialogError}
+                {deleteProjectDialogError}
               </Box>
             )}
           </Box>{' '}
@@ -662,6 +717,58 @@ function ProjectDetails(props) {
             </CustomButton>
           </DialogActions>
         </Dialog>
+
+        <Dialog
+          open={openDeleteCommentModal}
+          onClose={() =>
+            handleSetState(
+              handleToggleDeleteCommentModal(state, openDeleteCommentModal),
+            )
+          }
+          aria-labelledby={t('projectDetails.ariaLabels.deleteComment')}
+        >
+          <DialogTitle id="delete-comment">
+            {t('projectDetails.comment.delete.dialog.primary')}
+          </DialogTitle>
+          <Box
+            component="p"
+            className={deleteCommentDialogError !== null && classes.errorBox}
+          >
+            {deleteCommentDialogError !== null && (
+              <Box component="span" className={classes.error}>
+                {deleteCommentDialogError}
+              </Box>
+            )}
+          </Box>{' '}
+          <DialogContent>
+            <Typography>
+              {t('projectDetails.comment.delete.dialog.secondary')}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <CustomButton
+              variant="outlined"
+              onClick={() =>
+                handleSetState(
+                  handleToggleDeleteCommentModal(state, openDeleteCommentModal),
+                )
+              }
+              color="primary"
+              secondaryButtonStyle
+            >
+              {t('projectDetails.comment.delete.dialog.cancel')}
+            </CustomButton>
+            <CustomButton
+              variant="contained"
+              onClick={(e, id = openDeleteCommentModal) =>
+                handleSetState(deleteComment(props, state, id))
+              }
+              dangerButtonStyle
+            >
+              {t('projectDetails.comment.delete.dialog.proceed')}
+            </CustomButton>
+          </DialogActions>
+        </Dialog>
       </>
     );
   } else {
@@ -672,6 +779,9 @@ function ProjectDetails(props) {
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
   get_project: PropTypes.func.isRequired,
+  delete_project: PropTypes.func.isRequired,
+  unpublish_comment: PropTypes.func.isRequired,
+  delete_comment: PropTypes.func.isRequired,
   toggle_follow: PropTypes.func.isRequired,
   toggle_like: PropTypes.func.isRequired,
   toggle_save: PropTypes.func.isRequired,
@@ -691,6 +801,12 @@ const mapDispatchToProps = dispatch => {
     },
     delete_project: args => {
       return dispatch(ProjectActions.delete_project(args));
+    },
+    unpublish_comment: args => {
+      return dispatch(ProjectActions.unpublish_comment(args));
+    },
+    delete_comment: args => {
+      return dispatch(ProjectActions.delete_comment(args));
     },
     toggle_follow: args => {
       return dispatch(UserActions.toggle_follow(args));

@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from celery import shared_task
 
-
 @shared_task(bind=True, acks_late=True, max_retries=10)
 def delete_image_from_DO_space(self, bucket, key):
     session = boto3.session.Session()
@@ -21,9 +20,10 @@ def delete_image_from_DO_space(self, bucket, key):
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
 
-
 @shared_task(name="projects.tasks.update_search_index", bind=True, acks_late=True, max_retries=10)
 def update_search_index(self, model_name):
+    from projects.models import Project
+    from creators.models import Creator
     from projects.models import Tag
     from projects.utils import task_lock
 
@@ -34,7 +34,22 @@ def update_search_index(self, model_name):
             if acquired:
                 if model_name == "tag":
                     Tag.objects.update(search_vector=SearchVector('name'))
+                if model_name == "creator":
+                    Creator.objects.update(
+                        search_vector=SearchVector('username'))
+                if model_name == "project":
+                    search_vector = SearchVector(
+                        'title', weight='A') + SearchVector('description', weight='B')
+                    Project.objects.update(search_vector=search_vector)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
 
+@shared_task(bind=True, acks_late=True, max_retries=10)
+def filter_spam_task(self, ctx):
+    from projects.utils import filter_spam
+    try:
+        filter_spam(ctx) 
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))

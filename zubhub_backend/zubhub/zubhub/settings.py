@@ -96,6 +96,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'treebeard',
+    'mptt',
+    'django_summernote',
+    'zubhub',
     'APIS',
     'creators',
     'projects',
@@ -108,6 +111,9 @@ DOSPACE_ACCESS_SECRET_KEY = os.environ.get("DOSPACE_ACCESS_SECRET_KEY")
 DOSPACE_REGION = os.environ.get("DOSPACE_REGION")
 DOSPACE_ENDPOINT_URL = os.environ.get("DOSPACE_ENDPOINT_URL")
 DOSPACE_BUCKETNAME = os.environ.get("DOSPACE_BUCKETNAME")
+
+# askimet
+AKISMET_API_KEY = os.environ.get("AKISMET_API_KEY")
 
 
 REST_FRAMEWORK = {
@@ -200,6 +206,13 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'default_cache_table',
+    }
+}
+
 
 CACHES = {
     'default': {
@@ -289,10 +302,37 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_PHONE = os.environ.get("DEFAULT_FROM_PHONE")
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_NOTIFY_SERVICE_SID = os.environ.get("TWILIO_NOTIFY_SERVICE_SID")
 
 # EMAIL_PORT = 1025
 CELERY_EMAIL_CHUNK_SIZE = 1
 CELERY_EMAIL_TASK_CONFIG = {
     'name': 'djcelery_email_send',
     'ignore_result': False,
+}
+
+
+SUMMERNOTE_CONFIG = {
+
+    # You can put custom Summernote settings
+    'summernote': {
+        # Change editor size
+        'width': '100%',
+        'max-width': '900',
+        'height': '600',
+
+        # Toolbar customization
+        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['emoji', 'link', 'picture', 'video']]
+        ]
+    },
+    "css": ("/static/css/summernote_plugin.css",),
+    "js": ("/static/js/summernote_plugin.js",)
 }
