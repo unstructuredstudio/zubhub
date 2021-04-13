@@ -38,6 +38,13 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         phone_number.set_as_primary(conditional=True)
         phone_number.save()
 
+    def confirm_group_invite(self, request, creator, creatorgroup):
+        """
+        confirm group invite for a particular creator
+        """
+        creatorgroup.members.add(creator)
+        creatorgroup.save()
+
     def get_from_phone(self):
         """
         This is a hook that can be overridden to programatically
@@ -85,6 +92,33 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             template_name=template_name,
             ctx=ctx,
         )
+
+    def send_group_invite_text(self, group_invite_confirmation):
+
+        ctx = {
+            "creator_username": group_invite_confirmation.creator.username,
+            "group_creator_username": group_invite_confirmation.group_creator.username,
+            "key": group_invite_confirmation.key,
+        }
+
+        template_name = "account/phone/group_invite_confirmation_message.txt"
+
+        send_text.delay(
+            phone=group_invite_confirmation.creator.phone,
+            template_name=template_name,
+            ctx=ctx,
+        )
+
+    def send_group_invite_mail(self, group_invite_confirmation):
+
+        ctx = {
+            "creator_username": group_invite_confirmation.creator.username,
+            "group_creator_username": group_invite_confirmation.group_creator.username,
+            "key": group_invite_confirmation.key,
+        }
+        email_template = "account/email/group_invite_confirmation"
+        self.send_mail(
+            email_template, group_invite_confirmation.creator.email, ctx)
 
     def send_mass_email(self, template_prefix, contexts):
         template_prefix = "projects/email/" + template_prefix

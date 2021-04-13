@@ -147,6 +147,12 @@ def send_phone_confirmation(request, user, signup=False, phone=None):
             assert phone_number
 
 
+def send_group_invite_notification(creatorgroup, new_members):
+    for member in new_members:
+        if member != creatorgroup.creator:
+            creatorgroup.send_group_invite_confirmation(creator=member)
+
+
 def process_avatar(oldInstance, newInstance):
 
     key = 'avatar/{0}'.format(newInstance.username)

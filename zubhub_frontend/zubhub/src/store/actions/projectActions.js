@@ -142,7 +142,12 @@ export const get_user_projects = args => {
     return API.get_user_projects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-          return { ...res, loading: false };
+          return {
+            results: res.results,
+            prevPage: res.previous,
+            nextPage: res.next,
+            loading: false,
+          };
         } else {
           res = Object.keys(res)
             .map(key => res[key])

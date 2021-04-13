@@ -8,7 +8,13 @@ class API {
         : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
   }
 
-  request = ({ url = '/', method = 'GET', token, body }) => {
+  request = ({
+    url = '/',
+    method = 'GET',
+    token,
+    body,
+    content_type = 'application/json',
+  }) => {
     if (method === 'GET' && !token) {
       return fetch(this.domain + url, {
         method,
@@ -16,7 +22,7 @@ class API {
         xsrfHeaderName: 'X-CSRFToken',
         withCredentials: 'true',
         headers: new Headers({
-          'Content-Type': 'application/json',
+          'Content-Type': content_type,
           'Accept-Language': `${i18next.language},en;q=0.5`,
         }),
       });
@@ -26,11 +32,16 @@ class API {
         xsrfCookieName: 'csrftoken',
         xsrfHeaderName: 'X-CSRFToken',
         withCredentials: 'true',
-        headers: new Headers({
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-          'Accept-Language': `${i18next.language},en;q=0.5`,
-        }),
+        headers: content_type
+          ? new Headers({
+              Authorization: `Token ${token}`,
+              'Content-Type': content_type,
+              'Accept-Language': `${i18next.language},en;q=0.5`,
+            })
+          : new Headers({
+              Authorization: `Token ${token}`,
+              'Accept-Language': `${i18next.language},en;q=0.5`,
+            }),
         body,
       });
     } else if (token) {
@@ -41,7 +52,7 @@ class API {
         withCredentials: 'true',
         headers: new Headers({
           Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': content_type,
           'Accept-Language': `${i18next.language},en;q=0.5`,
         }),
       });
@@ -52,7 +63,7 @@ class API {
         xsrfHeaderName: 'X-CSRFToken',
         withCredentials: 'true',
         headers: new Headers({
-          'Content-Type': 'application/json',
+          'Content-Type': content_type,
           'Accept-Language': `${i18next.language},en;q=0.5`,
         }),
         body,
@@ -191,6 +202,23 @@ class API {
   };
   /*********************************************************************/
 
+  // /*************************** get group projects *********************************/
+  // get_group_projects = ({ username, page, limit }) => {
+  //   let url;
+  //   if (limit && page) {
+  //     url = `creators/${username}/group_projects/?limit=${limit}&&${page}`;
+  //   } else if (limit) {
+  //     url = `creators/${username}/group_projects/?limit=${limit}`;
+  //   } else if (page) {
+  //     url = `creators/${username}/group_projects/?${page}`;
+  //   } else {
+  //     url = `creators/${username}/group_projects/`;
+  //   }
+
+  //   return this.request({ url }).then(res => res.json());
+  // };
+  // /*********************************************************************/
+
   /********************** get followers *******************************/
   get_followers = ({ page, username }) => {
     const url = page
@@ -262,6 +290,48 @@ class API {
     return this.request({ url, token }).then(res => res.json());
   };
   /******************************************************************/
+
+  /********************** get following *******************************/
+  get_members = ({ page, username }) => {
+    const url = page
+      ? `creators/${username}/members/?${page}`
+      : `creators/${username}/members/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+  /*****************************************************************/
+
+  /************************** add members **************************/
+  add_members = ({ token, data }) => {
+    const url = 'creators/add_members/';
+    const method = 'POST';
+    const content_type = false;
+    const body = data;
+    return this.request({ url, method, token, body, content_type }).then(res =>
+      res.json(),
+    );
+  };
+  /************************************************************************/
+
+  /************************** remove member from group **************************/
+  remove_member = ({ id, token }) => {
+    const url = `creators/${id}/remove_member/`;
+
+    return this.request({ url, token }).then(res => res.json());
+  };
+  /******************************************************************/
+
+  /*****************send phone confirmation ******************/
+  send_group_invite_confirmation = key => {
+    const url = 'creators/confirm_group_invite/';
+    const method = 'POST';
+    const body = JSON.stringify({ key });
+
+    return this.request({ url, method, body }).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
+    );
+  };
+  /*******************************************************************/
 
   /************************** get all locations **************************/
   get_locations = () => {

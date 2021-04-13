@@ -39,11 +39,13 @@ class Creator(AbstractUser):
     CREATOR = 1
     MODERATOR = 2
     STAFF = 3
+    GROUP = 4
 
     ROLE_CHOICES = (
         (CREATOR, 'CREATOR'),
         (MODERATOR, 'MODERATOR'),
-        (STAFF, 'STAFF')
+        (STAFF, 'STAFF'),
+        (GROUP, 'GROUP')
     )
 
     id = models.UUIDField(
@@ -60,7 +62,7 @@ class Creator(AbstractUser):
     following_count = models.IntegerField(blank=True, default=0)
     projects_count = models.IntegerField(blank=True, default=0)
     role = models.PositiveSmallIntegerField(
-        choices=ROLE_CHOICES, blank=True, null=True, default=1)
+        choices=ROLE_CHOICES, blank=True, null=True, default=CREATOR)
 
     def save(self, *args, **kwargs):
         if not self.avatar:
@@ -80,6 +82,48 @@ class Setting(models.Model):
 
     def __str__(self):
         return self.creator.username
+
+
+class CreatorGroup(models.Model):
+    creator = models.OneToOneField(
+        Creator, on_delete=models.CASCADE, primary_key=True)
+    description = models.CharField(max_length=10000, blank=True, null=True)
+    members = models.ManyToManyField(
+        Creator, blank=True, related_name="creator_groups")
+    created_on = models.DateTimeField(default=timezone.now)
+    projects_count = models.IntegerField(blank=True, default=0)
+
+    def __str__(self):
+        return self.creator.username
+
+    def get_projects(self, **kwargs):
+        limit = kwargs.get("limit")
+        projects = self.creator.projects.all()
+        members = self.members.prefetch_related("projects")
+        for member in members.all():
+            if not projects:
+                projects = member.projects.all()
+            else:
+                projects |= member.projects.all()
+
+        if projects:
+            projects = projects.order_by("-created_on")
+            count = projects.count()
+            if limit:
+                projects = projects[0:int(limit)]
+
+        # update projects_count if neccessary
+        if self.projects_count != count:
+            self.projects_count = count
+            self.save()
+
+        return projects
+
+    def send_group_invite_confirmation(self, **kwargs):
+        group_invite_confirmation = GroupInviteConfirmationHMAC(
+            kwargs.get("creator"), self.creator)
+        group_invite_confirmation.send()
+        return group_invite_confirmation
 
 
 class PhoneNumber(models.Model):
@@ -181,4 +225,62 @@ class PhoneConfirmationHMAC:
             request=request,
             confirmation=self,
             signup=signup,
+        )
+
+
+class GroupInviteConfirmationHMAC:
+    def __init__(self, creator, group_creator):
+        self.creator = creator
+        self.group_creator = group_creator
+
+    @property
+    def key(self):
+        creator_key = signing.dumps(
+            obj=str(self.creator.pk), salt=allauth_settings.SALT)
+        group_creator_key = signing.dumps(
+            obj=str(self.group_creator.pk), salt=allauth_settings.SALT)
+        return "group_invite".join([creator_key, group_creator_key])
+
+    @classmethod
+    def from_key(cls, key):
+        PHONE_CONFIRMATION_EXPIRE_DAYS = 3
+        try:
+            max_age = 60 * 60 * 24 * PHONE_CONFIRMATION_EXPIRE_DAYS
+            creator_key, group_creator_key = key.split("group_invite")
+            creator = Creator.objects.get(pk=signing.loads(creator_key, max_age=max_age,
+                                                           salt=allauth_settings.SALT))
+            group_creator = Creator.objects.get(pk=signing.loads(
+                group_creator_key, max_age=max_age, salt=allauth_settings.SALT))
+
+            ret = GroupInviteConfirmationHMAC(creator, group_creator)
+        except (
+            signing.SignatureExpired,
+            signing.BadSignature,
+            Creator.DoesNotExist,
+        ):
+            ret = None
+        return ret
+
+    def confirm(self, request):
+
+        if not self.creator in self.group_creator.creatorgroup.members.all():
+            creator = self.creator
+            creatorgroup = self.group_creator.creatorgroup
+            get_adapter(request).confirm_group_invite(
+                request, creator, creatorgroup)
+            Signal().send(
+                sender=self.__class__,
+                request=request,
+                creator=creator,
+                creatorgroup=creatorgroup
+            )
+            return creatorgroup
+
+    def send(self, request=None):
+        get_adapter(request).send_group_invite_text(self)
+        get_adapter(request).send_group_invite_mail(self)
+        Signal().send(
+            sender=self.__class__,
+            request=request,
+            invite_confirmation=self
         )
