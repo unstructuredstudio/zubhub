@@ -163,8 +163,6 @@ class AddCommentAPIView(CreateAPIView):
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 
-
-
 class StaffPickListAPIView(ListAPIView):
     queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer

@@ -86,6 +86,13 @@ class ProjectSerializer(serializers.ModelSerializer):
         serializer = CommentSerializer(comments, read_only=True, many=True)
         return serializer.data
 
+    read_only_fields = ["created_on", "views_count"]
+
+    def get_comments(self, obj):
+        comments = obj.comments.filter(published=True)
+        serializer = CommentSerializer(comments, read_only=True, many=True)
+        return serializer.data
+
     def validate_video(self, video):
         if(video == "" and len(self.initial_data.get("images")) == 0):
             raise serializers.ValidationError(

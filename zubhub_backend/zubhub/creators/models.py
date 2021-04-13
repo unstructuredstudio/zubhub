@@ -51,7 +51,7 @@ class Creator(AbstractUser):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     avatar = models.URLField(max_length=1000, blank=True, null=True)
-    phone = models.CharField(unique=True, max_length=17, blank=True, null=True)
+    phone = models.CharField(max_length=17, blank=True, null=True)
     dateOfBirth = models.DateField(blank=True, null=True)
     location = models.ForeignKey(
         Location, null=True, on_delete=models.SET_NULL)

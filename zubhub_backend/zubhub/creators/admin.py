@@ -95,7 +95,6 @@ class CreatorGroupAdmin(admin.ModelAdmin):
             request, obj, form, change)
 
 
-
 UserAdmin.fieldsets += ('Personal Info',
                         {'fields': ('avatar', 'phone', 'dateOfBirth', 'location', 'bio', 'role')}),
 UserAdmin.list_display += (role),

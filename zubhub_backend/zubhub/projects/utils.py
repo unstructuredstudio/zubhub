@@ -92,7 +92,6 @@ def filter_spam(ctx):
             send_spam_notification(ctx.get("comment_id"), staffs)
 
             
-            
 def project_changed(obj, instance):
     changed = False
 

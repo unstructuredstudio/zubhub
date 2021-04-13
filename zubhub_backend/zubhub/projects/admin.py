@@ -30,6 +30,7 @@ class CommentAdmin(admin.ModelAdmin):
     # model = Comment
     list_display = ["creator",
                     "text", "created_on", "published"]
+
     search_fields = ["project__tite", "creator__username",
                      "text", "created_on", "published"]
     list_filter = ["created_on", "published"]
