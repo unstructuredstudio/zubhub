@@ -2,7 +2,29 @@ from django.conf import settings
 from akismet import Akismet
 from .models import Comment
 from creators.tasks import send_mass_email, send_mass_text
-from creators.models import Creator
+from creators.models import Creator, Setting
+                  
+                  
+def send_staff_pick_notification(staff_pick):
+    subscribed = Setting.objects.filter(subscribe=True)
+    email_contexts = []
+    phone_contexts = []
+    template_name = "new_staff_pick_notification"
+    for each in subscribed:
+        if each.creator.email:
+            email_contexts.append(
+                {"title": staff_pick.title,
+                 "user": each.creator.username,
+                 "email": each.creator.email,
+                 "staff_pick_id": staff_pick.id
+                 }
+            )
+
+        if each.creator.phone:
+            phone_contexts.append(
+                {
+                    "phone": each.creator.phone,
+                    "staff_pick_id": staff_pick.id
 
 
 def send_spam_notification(comment_id, staffs):

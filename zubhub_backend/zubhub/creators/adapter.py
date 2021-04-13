@@ -93,6 +93,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             ctx=ctx,
         )
 
+
     def send_group_invite_text(self, group_invite_confirmation):
 
         ctx = {

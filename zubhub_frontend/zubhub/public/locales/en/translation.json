@@ -216,6 +216,7 @@
   },
 
   "projects": {
+    "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
     "ariaLabels": {
@@ -223,6 +224,22 @@
     },
     "errors": {
       "unexpected": "An error occured while performing this action, please try again later"
+    }
+  },
+
+  "staffPicks": {
+    "viewAll": "View all >>"
+  },
+
+  "staffPickDetails": {
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "errors": {
+      "noStaffPick": "this staff pick doesn't exist",
+      "unexpected": "An error occured while performing this action. Please try again later"
     }
   },
 

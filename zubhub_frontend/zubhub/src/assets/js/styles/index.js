@@ -1,4 +1,6 @@
 const styles = theme => ({
+  floatRight: { float: 'right' },
+  floatLeft: { float: 'left' },
   marginTop1em: {
     marginTop: '1em',
   },

@@ -216,6 +216,7 @@
   },
 
   "projects": {
+    "allProjects": "सभी परियोजनाएं",
     "prev": "पिछला",
     "next": "आगे",
     "ariaLabels": {
@@ -223,6 +224,22 @@
     },
     "errors": {
       "unexpected": "इस क्रिया को करते समय एक त्रुटि हुई, कृपया बाद में पुनः प्रयास करें"
+    }
+  },
+
+  "staffPicks": {
+    "viewAll": "सभी देखें >>"
+  },
+
+  "staffPickDetails": {
+    "prev": "पिछला",
+    "next": "अगला",
+    "ariaLabels": {
+      "prevNxtButtons": "पिछले और अगले पृष्ठ बटन"
+    },
+    "errors": {
+      "noStaffPick": "यह स्टाफ पिक मौजूद नहीं है",
+      "unexpected": "यह क्रिया करते समय एक त्रुटि हुई। बाद में पुन: प्रयास करें"
     }
   },
 

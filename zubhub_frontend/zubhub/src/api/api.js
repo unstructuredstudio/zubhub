@@ -420,6 +420,23 @@ class API {
     const url = page ? `projects/?${page}` : `projects/`;
     return this.request({ url }).then(res => res.json());
   };
+  /******************************************************************/
+
+  /************************** get staff picks **************************/
+  get_staff_picks = () => {
+    const url = 'projects/staff_picks/';
+    return this.request({ url }).then(res => res.json());
+  };
+  /******************************************************************/
+
+  get_staff_pick = ({ page, id }) => {
+    const url = page
+      ? `projects/staff_picks/${id}/?page=${page}`
+      : `projects/staff_picks/${id}`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+  /*****************************************************************/
 
   /************************** get project **************************/
   get_project = ({ id, token }) => {
