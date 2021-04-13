@@ -11,6 +11,8 @@ python /zubhub_backend/zubhub/manage.py makemigrations creators
 python /zubhub_backend/zubhub/manage.py makemigrations projects
 python /zubhub_backend/zubhub/manage.py migrate
 
+python /zubhub_backend/zubhub/manage.py createcachetable
+
 python /zubhub_backend/zubhub/manage.py populate_countries
 
 exec /usr/local/bin/gunicorn zubhub.wsgi --bind 0.0.0.0:8000 --chdir /zubhub_backend/zubhub

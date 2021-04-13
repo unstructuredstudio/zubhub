@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+    
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+
+<h1>{% default_display_name %}{% trans " Activity Notification" %}</h1>
+
+{% if project_id %}
+
+<p>{% trans "You are receiving this message because " %} {{editor}} {% trans " recently edited a project on Zubhub. To see the details of the edit, click " %}<a href="{% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/project/{{project_id}}/change">{% trans "HERE" %}</a></p>
+
+{% else %}
+
+{% blocktrans %}
+<h2>New Creators added in the past 24hrs</h2>
+{% endblocktrans %}
+
+{% for creator_list in new_creators %}
+<h3><a href="{% default_backend_protocol %}://{% default_backend_domain %}/admin/creators/creator/{{creator_list.0}}/change">{{creator_list.1}}</a></h3>
+{% endfor %}
+
+{% blocktrans %}
+<h2>New Projects added in the past 24hrs</h2>
+{% endblocktrans %}
+
+{% for project_list in new_projects %}
+<h3><a href="{% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/project/{{project_list.0}}/change">{{project_list.1}}</a></h3>
+{% endfor %}
+
+{% blocktrans %}
+<h2>New Comments added in the past 24hrs</h2>
+{% endblocktrans %}
+
+{% for comment_list in new_comments %}
+<h3><a href="{% default_backend_protocol %}://{% default_backend_domain %}/admin/projects/comment/{{comment_list.0}}/change">{{comment_list.1}}</a></h3>
+{% endfor %}
+
+{% endif %}
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!
+</body>
+</html>

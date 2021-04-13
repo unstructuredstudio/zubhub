@@ -21,6 +21,7 @@ services:
       - DEFAULT_FROM_PHONE=${DEFAULT_FROM_PHONE}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_NOTIFY_SERVICE_SID=${TWILIO_NOTIFY_SERVICE_SID}
     volumes:
       - .:/zubhub_backend
     ports:

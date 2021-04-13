@@ -1,3 +1,4 @@
+akismet==1.1
 amqp==2.6.1
 argh==0.26.2
 attrs==20.3.0
@@ -27,6 +28,7 @@ django-mptt==0.11.0
 django-rest-auth==0.9.5
 django-rest-swagger==2.2.0
 django-summernote==0.8.11.6
+django-treebeard==4.5.1
 djangorestframework==3.10.3
 factory-boy==2.12.0
 Faker==4.17.1

@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.utils import timezone
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 
 
 Creator = get_user_model()
@@ -31,6 +33,10 @@ class Project(models.Model):
     slug = models.SlugField(unique=True, max_length=1000)
     created_on = models.DateTimeField(default=timezone.now)
     published = models.BooleanField(default=True)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
 
     def save(self, *args, **kwargs):
         if isinstance(self.video, str):
@@ -58,7 +64,7 @@ class Project(models.Model):
 
         if self.id:
             self.likes_count = self.likes.count()
-            self.comments_count = self.comments.count()
+            self.comments_count = self.comments.filter(published=True).count()
 
         if self.slug:
             pass
@@ -95,10 +101,35 @@ class Comment(models.Model):
         Creator, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=10000)
     created_on = models.DateTimeField(default=timezone.now)
+    published = models.BooleanField(default=True)
 
     def __str__(self):
         return self.text
 
     def save(self, *args, **kwargs):
         self.project.save()
+        super().save(*args, **kwargs)
+
+
+class StaffPick(models.Model):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    title = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000)
+    projects = models.ManyToManyField(
+        Project, related_name="staff_picks")
+    slug = models.SlugField(unique=True, max_length=1000)
+    created_on = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            pass
+        else:
+            uid = str(uuid.uuid4())
+            uid = uid[0: floor(len(uid)/6)]
+            self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)

@@ -4,7 +4,7 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Location, PhoneNumber, Setting
+from .models import Location, PhoneNumber, Setting, CreatorGroup
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.utils import setup_user_email
@@ -14,21 +14,51 @@ Creator = get_user_model()
 
 
 class CreatorSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
     phone = serializers.CharField(allow_blank=True, default="")
     email = serializers.EmailField(allow_blank=True, default="")
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
-    projects_count = serializers.IntegerField(read_only=True)
+    projects_count = serializers.SerializerMethodField('get_projects_count')
     following_count = serializers.IntegerField(read_only=True)
     dateOfBirth = serializers.DateField(read_only=True)
     location = serializers.SlugRelatedField(
         slug_field='name', queryset=Location.objects.all())
+    members_count = serializers.SerializerMethodField('get_members_count')
+    role = serializers.SerializerMethodField("get_role")
 
     class Meta:
         model = Creator
+
         fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
-                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count')
+                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'members_count', 'role')
+
+    read_only_fields = ["id", "projects_count",
+                        "following_count", "dateOfBirth", "role"]
+
+    def get_role(self, obj):
+        if obj:
+            if obj.role == Creator.CREATOR:
+                return "creator"
+            if obj.role == Creator.MODERATOR:
+                return "moderator"
+            if obj.role == Creator.STAFF:
+                return "staff"
+            if obj.role == Creator.Group:
+                return 'group'
+        return None
+
+    def get_members_count(self, obj):
+        if hasattr(obj, "creatorgroup"):
+            return obj.creatorgroup.members.count()
+        else:
+            return None
+
+    def get_projects_count(self, obj):
+        if hasattr(obj, "creatorgroup"):
+            return obj.creatorgroup.projects_count
+        else:
+            return obj.projects_count
+
 
     def validate_email(self, email):
 
@@ -70,7 +100,6 @@ class CreatorSerializer(serializers.ModelSerializer):
         return phone
 
     def update(self, user, validated_data):
-        print("update was called")
         creator = super().update(user, validated_data)
         phone_number = PhoneNumber.objects.filter(user=creator)
         email_address = EmailAddress.objects.filter(user=creator)
@@ -154,3 +183,25 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 class VerifyPhoneSerializer(serializers.Serializer):
     key = serializers.CharField()
+
+
+class ConfirmGroupInviteSerializer(serializers.Serializer):
+    key = serializers.CharField()
+
+
+class AddGroupMembersSerializer(serializers.Serializer):
+    group_members = serializers.JSONField(required=False, allow_null=True)
+    csv = serializers.FileField(
+        required=False, allow_null=True, allow_empty_file=True)
+
+    def validate_group_members(self, group_members):
+        if(len(group_members) == 0 and not self.initial_data.get("csv")):
+            raise serializers.ValidationError(
+                _("you must submit group member usernames either through the form or as csv"))
+        return group_members
+
+    def validate_csv(self, csv):
+        if(not csv and len(self.initial_data.get("group_members")) == 0):
+            raise serializers.ValidationError(
+                _("you must submit group member usernames either through the form or as csv"))
+        return csv
