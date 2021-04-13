@@ -42,12 +42,12 @@ const styles = theme => ({
     alignItems: 'center',
   },
   addOnSmallScreen: {
-    [theme.breakpoints.up('530')]: {
+    [theme.breakpoints.up('555')]: {
       display: 'none',
     },
   },
   removeOnSmallScreen: {
-    [theme.breakpoints.down('530')]: {
+    [theme.breakpoints.down('555')]: {
       display: 'none',
     },
   },

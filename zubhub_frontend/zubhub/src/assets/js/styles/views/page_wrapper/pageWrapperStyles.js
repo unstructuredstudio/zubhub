@@ -5,15 +5,126 @@ const styles = theme => ({
   mainContainerStyle: {
     maxWidth: '2000px',
   },
+  toolBarStyle: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
   logoStyle: {
     flexGrow: 1,
     '& img': {
       height: '2em',
     },
-    [theme.breakpoints.down('317')]: {
+    [theme.breakpoints.down('332')]: {
       '& img': {
         height: '1.5em',
       },
+    },
+  },
+  searchFormStyle: {
+    display: 'inline-block',
+    position: 'relative',
+    marginLeft: '1em',
+    '& .search-form-input': {
+      height: '2.5em',
+      position: 'absolute',
+      top: '-1em',
+      maxWidth: '40em',
+      width: '40em',
+      backgroundColor: 'rgba(255,255,255,0.2)',
+      color: 'black',
+      borderRadius: '50px',
+      '&:hover': {
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        '& .MuiInputAdornment-root .MuiButtonBase-root': {
+          color: '#DC3545',
+        },
+      },
+      '&.MuiOutlinedInput-notchedOutline': {
+        border: '1px solid rgba(255,255,255,0.2)',
+      },
+      '&.MuiOutlinedInput-root': {
+        '& fieldset': {
+          border: '1px solid rgba(255,255,255,0.2)',
+        },
+        '&:hover fieldset': {
+          border: '1px solid rgba(255,255,255,0.2)',
+        },
+        '&.Mui-focused fieldset': {
+          border: '1px solid rgba(255,255,255,0.2)',
+        },
+      },
+      [theme.breakpoints.down('1216')]: {
+        width: '30em',
+      },
+      [theme.breakpoints.down('1054')]: {
+        width: '20em',
+      },
+    },
+  },
+
+  smallSearchFormStyle: {
+    height: '2.5em',
+    width: '100%',
+    '& .MuiFormControl-root': {
+      width: '100%',
+    },
+
+    '& .search-form-input': {
+      height: '2em',
+      position: 'absolute',
+      top: '-0.3em',
+      width: '100%',
+      backgroundColor: 'rgba(255,255,255,0.2)',
+      color: 'black',
+      borderRadius: '50px',
+      '&:hover': {
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        '& .MuiInputAdornment-root .MuiButtonBase-root': {
+          color: '#DC3545',
+        },
+      },
+      '&.MuiOutlinedInput-notchedOutline': {
+        border: '1px solid rgba(255,255,255,0.2)',
+      },
+      '&.MuiOutlinedInput-root': {
+        '& fieldset': {
+          border: '1px solid rgba(255,255,255,0.2)',
+        },
+        '&:hover fieldset': {
+          border: '1px solid rgba(255,255,255,0.2)',
+        },
+        '&.Mui-focused fieldset': {
+          border: '1px solid rgba(255,255,255,0.2)',
+        },
+      },
+    },
+  },
+  searchFormLabelStyle: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: '1px',
+    margin: '-1px',
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute!important',
+    width: '1px',
+  },
+
+  searchFormSubmitStyle: {
+    padding: 0,
+    color: '#FFCE0C',
+  },
+  toggleSearchFormStyle: {
+    color: 'white',
+  },
+  addOn894: {
+    [theme.breakpoints.up('894')]: {
+      display: 'none',
+    },
+  },
+  removeOn894: {
+    [theme.breakpoints.down('894')]: {
+      display: 'none',
     },
   },
   footerLogoStyle: {

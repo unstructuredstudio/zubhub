@@ -445,6 +445,10 @@ html,
   margin-bottom: 0px;
 }
 
+.search-form-input input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
 .slick-slider {
   padding-top: 2em;
 }

@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
@@ -60,6 +62,18 @@ class ProjectListAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
     pagination_class = ProjectNumberPagination
+
+
+class ProjectSearchAPIView(ListAPIView):
+    serializer_class = ProjectListSerializer
+    permission_classes = [AllowAny]
+    pagination_class = ProjectNumberPagination
+
+    def get_queryset(self):
+        query_string = self.request.GET.get("q")
+        query = SearchQuery(query_string, search_type="phrase")
+        rank = SearchRank(F('search_vector'), query)
+        return Project.objects.annotate(rank=rank).filter(search_vector=query, published=True).order_by('-rank')
 
 
 class ProjectDetailsAPIView(RetrieveAPIView):

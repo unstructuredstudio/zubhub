@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
 
 import PageWrapper from './views/PageWrapper';
+import SearchResults from './views/search_results/SearchResults';
 import Signup from './views/signup/Signup';
 import Login from './views/login/Login';
 import PasswordReset from './views/password_reset/PasswordReset';
@@ -35,6 +36,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <Projects {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/search"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <SearchResults {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

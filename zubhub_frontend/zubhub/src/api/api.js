@@ -202,22 +202,31 @@ class API {
   };
   /*********************************************************************/
 
-  // /*************************** get group projects *********************************/
-  // get_group_projects = ({ username, page, limit }) => {
-  //   let url;
-  //   if (limit && page) {
-  //     url = `creators/${username}/group_projects/?limit=${limit}&&${page}`;
-  //   } else if (limit) {
-  //     url = `creators/${username}/group_projects/?limit=${limit}`;
-  //   } else if (page) {
-  //     url = `creators/${username}/group_projects/?${page}`;
-  //   } else {
-  //     url = `creators/${username}/group_projects/`;
-  //   }
+  /*************************** search projects *********************************/
+  search_projects = ({ page, query_string }) => {
+    let url;
+    if (page) {
+      url = `projects/search/?q=${query_string}&page=${page}`;
+    } else {
+      url = `projects/search/?q=${query_string}`;
+    }
 
-  //   return this.request({ url }).then(res => res.json());
-  // };
-  // /*********************************************************************/
+    return this.request({ url }).then(res => res.json());
+  };
+  /*********************************************************************/
+
+  /*************************** search creators *********************************/
+  search_creators = ({ page, query_string }) => {
+    let url;
+    if (page) {
+      url = `creators/search/?q=${query_string}&page=${page}`;
+    } else {
+      url = `creators/search/?q=${query_string}`;
+    }
+
+    return this.request({ url }).then(res => res.json());
+  };
+  /*********************************************************************/
 
   /********************** get followers *******************************/
   get_followers = ({ page, username }) => {

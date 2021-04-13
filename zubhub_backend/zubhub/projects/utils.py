@@ -1,9 +1,24 @@
+from contextlib import contextmanager
+from celery.five import monotonic
+from django.core.cache import cache
 from django.conf import settings
 from akismet import Akismet
 from .models import Comment
 from creators.tasks import send_mass_email, send_mass_text
 from creators.models import Creator, Setting
-                  
+
+LOCK_EXPIRE = {"30mins": 60 * 30}
+
+
+@contextmanager
+def task_lock(lock_id, oid):
+    timeout_at = monotonic() + LOCK_EXPIRE["30mins"] - 3
+    status = cache.add(lock_id, oid, LOCK_EXPIRE["30mins"])
+    try:
+        yield status
+    finally:
+        if monotonic() < timeout_at and status:
+            cache.delete(lock_id)                 
                   
 def send_staff_pick_notification(staff_pick):
     subscribed = Setting.objects.filter(subscribe=True)
