@@ -357,7 +357,10 @@ export const get_staff_picks = args => {
         if (Array.isArray(res)) {
           dispatch(set_staff_picks(res));
           return { loading: false };
+        }else if (res.detail === "not found"){
+          dispatch(set_staff_picks([]));
         } else {
+          dispatch(set_staff_picks([]));
           res = Object.keys(res)
             .map(key => res[key])
             .join('\n');
