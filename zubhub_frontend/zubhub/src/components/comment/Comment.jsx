@@ -7,7 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ReplyIcon from '@material-ui/icons/Reply';
-import { Avatar, Box, Typography } from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { Avatar, Box, Typography,  Menu, MenuItem } from '@material-ui/core';
 
 import CustomButton from '../../components/button/Button';
 import CommentInput from '../../components/comment_input/CommentInput';
@@ -30,6 +31,14 @@ const toggleReplyInputCollapsed = (e, { replyInputCollapsed }) => {
   return { replyInputCollapsed: !replyInputCollapsed };
 };
 
+const handleCommentMenuOpen = e => {
+  return { commentMenuAnchorEl: e.currentTarget };
+};
+
+const handleCommentMenuClose = () => {
+  return { commentMenuAnchorEl: null };
+};
+
 function Comment(props) {
   const classes = useStyles();
   const commonClasses = useCommonStyles();
@@ -38,6 +47,7 @@ function Comment(props) {
     replyDepth: props.replyDepth !== undefined ? props.replyDepth + 1 : 0,
     replyInputCollapsed: false,
     repliesCollapsed: false,
+    commentMenuAnchorEl: null,
   });
 
   React.useEffect(() => {
@@ -54,9 +64,10 @@ function Comment(props) {
     }
   };
 
-  const { repliesCollapsed, replyInputCollapsed, replyDepth } = state;
-  const { t, comment, parent } = props;
-
+  const { repliesCollapsed, replyInputCollapsed, replyDepth, commentMenuAnchorEl } = state;
+  const {auth, t, comment, parent, handleUnpublishComment, handleDeleteComment } = props;
+  const commentMenuOpen = Boolean(commentMenuAnchorEl);
+  
   return (
     <Box className={!parent ? classes.commentsStyle : classes.subCommentsStyle}>
       <Box className={commonClasses.positionRelative}>
@@ -91,6 +102,56 @@ function Comment(props) {
             </Typography>
           </Box>
         </Link>
+        {auth.role === 'staff' || auth.role === 'moderator' ? (
+          <>
+            <CustomButton
+              className={clsx(
+                commonClasses.positionAbsolute,
+                classes.commentMenuButtonStyle,
+              )}
+              onClick={e => handleSetState(handleCommentMenuOpen(e))}
+            >
+              <MoreVertIcon />
+            </CustomButton>
+            <Menu
+              className={classes.commentMenuStyle}
+              id="comment_menu"
+              anchorEl={commentMenuAnchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={commentMenuOpen}
+              onClose={e => handleSetState(handleCommentMenuClose(e))}
+            >
+              <MenuItem>
+                <Typography
+                  variant="subtitle2"
+                  component="span"
+                  onClick={() => handleUnpublishComment(comment.id)}
+                >
+                  {t('comment.unpublish')}
+                </Typography>
+              </MenuItem>
+              <MenuItem>
+                <Typography
+                  variant="subtitle2"
+                  className={commonClasses.colorRed}
+                  component="span"
+                  onClick={() => handleDeleteComment(comment.id)}
+                >
+                  {t('comment.delete')}
+                </Typography>
+              </MenuItem>
+            </Menu>
+          </>
+        ) : null}
+       
       </Box>
       <Box className={classes.commentTextSectionStyle}>
         <Typography
@@ -167,6 +228,8 @@ function Comment(props) {
 Comment.propTypes = {
   auth: PropTypes.object.isRequired,
   comment: PropTypes.object.isRequired,
+  handleUnpublishComment: PropTypes.func.isRequired,
+  handleDeleteComment: PropTypes.func.isRequired,
 };
 
 export default Comment;

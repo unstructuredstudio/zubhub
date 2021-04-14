@@ -27,6 +27,23 @@
       "savedProjects": "Bookmarks",
       "logout": "Logout"
     },
+    "footer": {
+      "privacy": "Privacy",
+      "guidelines": "Guidelines and policy",
+      "termsOfUse": "Terms of Use",
+      "about": "About",
+      "zubhub": "ZubHub",
+      "unstructuredStudio": "Unstructured Studio",
+      "help": "Help",
+      "resources": "Tinkering Resources",
+      "faqs": "FAQs",
+      "contactUs": "Contact Us"
+    },
+    "inputs": {
+      "search": {
+        "label": "Search"
+      }
+    },
     "errors": {
       "unexpected": "an error occured while getting user profile, please try again later",
       "logoutFailed": "An error occured while signing you out. please try again"
@@ -216,6 +233,7 @@
   },
 
   "projects": {
+    "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
     "ariaLabels": {
@@ -223,6 +241,22 @@
     },
     "errors": {
       "unexpected": "An error occured while performing this action, please try again later"
+    }
+  },
+
+  "staffPicks": {
+    "viewAll": "View all >>"
+  },
+
+  "staffPickDetails": {
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "errors": {
+      "noStaffPick": "this staff pick doesn't exist",
+      "unexpected": "An error occured while performing this action. Please try again later"
     }
   },
 
@@ -276,6 +310,23 @@
           "required": "this field is required"
         }
       },
+      "category": {
+        "label": "What is the category of your project?",
+        "topHelperText": "choose uncategorized if you are unsure",
+        "errors": {
+          "min": "your category name is too short",
+          "required": "this field is required"
+        }
+      },
+      "tags": {
+        "label": "What tags best describe your project?",
+        "topHelperText": "you can leave this blank if you are unsure",
+        "addTag": "Add a tag",
+        "errors": {
+          "limitReached": "Tag limit reached",
+          "unsupported": "tags support only letters, numbers, spaces, and dashes"
+        }
+      },
       "submit": "Create Project",
       "edit": "Edit Project",
       "image": "image added",
@@ -286,6 +337,26 @@
     "errors": {
       "notLoggedIn": "You are not logged in. Click on the signin button to get started",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "searchResults": {
+    "projects": "Projects",
+    "creators": "Creators",
+    "resultFound": "result found",
+    "resultsFound": "results found",
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "following": {
+      "follow": "Follow",
+      "unfollow": "Unfollow"
+    },
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later",
+      "noResult": "no result returned for your search term"
     }
   },
 
@@ -310,6 +381,13 @@
       },
       "description": "Description",
       "materials": "Materials used",
+      "category": "Category",
+      "tags": "Tags",
+      "comments": {
+        "label": "Comments",
+        "write": "write a comment",
+        "action": "Comment"
+      },
       "edit": "Edit",
       "delete": {
         "label": "Delete",
@@ -321,21 +399,34 @@
         }
       }
     },
+    "comment": {
+      "delete": {
+        "dialog": {
+          "primary": "Delete Comment",
+          "secondary": "Are you sure you want to delete this comment? you can't undo this action!!!",
+          "cancel": "Cancel",
+          "proceed": "Proceed"
+        }
+      }
+    },
     "ariaLabels": {
       "likeButton": {
         "label": "like button",
         "like": "like",
-        "unlike": "unlike",
-        "deleteProject": "delete project dialog"
+        "unlike": "unlike"
       },
       "saveButton": {
         "label": "save button",
         "save": "save",
         "unsave": "unsave"
       },
-      "imageDialog": "enlarged image dialog"
+      "imageDialog": "enlarged image dialog",
+      "deleteProject": "delete project dialog",
+      "deleteComment": "delete comment dialog"
     },
-    "deleteToastSuccess": "Your project was deleted successfully!!",
+    "deleteProjectToastSuccess": "Your project was deleted successfully!!",
+    "deleteCommentToastSuccess": "comment was deleted successfully!!",
+    "unpublishCommentToastSuccess": "comment was unpublished successfully!!",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }
@@ -348,6 +439,8 @@
     "showReplies": "Show Replies",
     "hideReplies": "Hide Replies",
     "action": "Comment",
+    "unpublish": "Unpublish",
+    "delete": "Delete"
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }
@@ -380,9 +473,12 @@
     "projectsCount": "Projects",
     "followersCount": "Followers",
     "followingCount": "Following",
+    "membersCount": "members",
     "about": {
-      "label": "About Me",
-      "placeholder": "tell us more about you by clicking on the edit button at the top of the page 😀!"
+      "label1": "About Me",
+      "label2": "Description",
+      "placeholder1": "tell us more about you by clicking on the edit button at the top of the page 😀!",
+      "placeholder2": "tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
     "projects": {
       "label": "Latest projects",
@@ -468,6 +564,64 @@
     }
   },
 
+  "groupMembers": {
+    "title": "Group Members",
+    "prev": "Prev",
+    "next": "Next",
+    "remove": "Remove",
+    "newMembers": "New Members",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "errors": {
+      "noGroupMembers": "group does not have any members yet",
+      "unauthorized": "Only Groups have access to this page",
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "addGroupMembers": {
+    "welcomeMsg": {
+      "primary": "Add Group Members",
+      "secondary": "To add group members, type in there usernames in the fields below, or upload a csv file containing the usernames"
+    },
+    "inputs": {
+      "groupMembers": {
+        "label": "Group Members",
+        "addMore": "Add More",
+        "bulkAdd": "Bulk Add",
+        "addCSV": "Drop your CSV file here",
+        "errors": {
+          "required": "this field is required"
+        }
+      },
+      "submit": "Submit"
+    },
+    "ariaLabels": {
+      "submitting": "submitting"
+    },
+    "createToastSuccess": "Successful!! now you  have to wait for the Creators to accept your invitiation to join the group. Please do not repeat this request again",
+    "errors": {
+      "notLoggedIn": "You are not logged in. Click on the signin button to get started",
+      "unauthorized": "Only Groups have access to this page",
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "groupInviteConfirm": {
+    "welcomeMsg": {
+      "primary": "Group Invite Confirmation",
+      "secondary": " Please Confirm your invitation to <> group"
+    },
+    "inputs": {
+      "submit": "Confirm"
+    },
+    "toastSuccess": "Congratulations!, you have confirmed your invitation!",
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
   "userFollowers": {
     "title": "followers",
     "follower": {
@@ -499,6 +653,36 @@
     "errors": {
       "noFollowing": "Creator is not following anyone yet",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "guidelines": {
+    "title": "Guidelines",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "termsOfUse": {
+    "title": "Terms Of Use",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "resources": {
+    "title": "Resources",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "question": "Question",
+    "answer": "Answer",
+    "errors": {
+      "page_empty": "This page is empty"
     }
   }
 }

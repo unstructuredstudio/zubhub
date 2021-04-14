@@ -1,4 +1,11 @@
-const defaultState = { token: null, username: null, id: null, avatar: null };
+const defaultState = {
+  token: null,
+  username: null,
+  id: null,
+  avatar: null,
+  members_count: null,
+  role: null,
+};
 
 const auth = (state = defaultState, action) => {
   switch (action.type) {

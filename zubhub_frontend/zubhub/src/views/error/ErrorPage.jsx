@@ -11,8 +11,9 @@ const useStyles = makeStyles(styles);
 
 function ErrorPage(props) {
   const classes = useStyles();
+  const propStyle = props.style;
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} style={propStyle ? propStyle : null}>
       <Container className={classes.mainContainerStyle}>
         <img
           className={classes.disconnectedStyle}

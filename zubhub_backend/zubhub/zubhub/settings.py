@@ -41,12 +41,14 @@ else:
 
 if ENVIRONMENT == 'production':
     SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
     # SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    if not DEBUG:
+        X_FRAME_OPTIONS = 'DENY'
+
     # SESSION_COOKIE_SECURE = True
     # CSRF_COOKIE_SECURE = True
 
@@ -94,6 +96,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'treebeard',
+    'django_summernote',
+    'zubhub',
     'APIS',
     'creators',
     'projects',
@@ -106,6 +110,9 @@ DOSPACE_ACCESS_SECRET_KEY = os.environ.get("DOSPACE_ACCESS_SECRET_KEY")
 DOSPACE_REGION = os.environ.get("DOSPACE_REGION")
 DOSPACE_ENDPOINT_URL = os.environ.get("DOSPACE_ENDPOINT_URL")
 DOSPACE_BUCKETNAME = os.environ.get("DOSPACE_BUCKETNAME")
+
+# askimet
+AKISMET_API_KEY = os.environ.get("AKISMET_API_KEY")
 
 
 REST_FRAMEWORK = {
@@ -198,6 +205,21 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'default_cache_table',
+    }
+}
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'default_cache_table',
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -279,10 +301,37 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_PHONE = os.environ.get("DEFAULT_FROM_PHONE")
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_NOTIFY_SERVICE_SID = os.environ.get("TWILIO_NOTIFY_SERVICE_SID")
 
 # EMAIL_PORT = 1025
 CELERY_EMAIL_CHUNK_SIZE = 1
 CELERY_EMAIL_TASK_CONFIG = {
     'name': 'djcelery_email_send',
     'ignore_result': False,
+}
+
+
+SUMMERNOTE_CONFIG = {
+
+    # You can put custom Summernote settings
+    'summernote': {
+        # Change editor size
+        'width': '100%',
+        'max-width': '900',
+        'height': '600',
+
+        # Toolbar customization
+        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['emoji', 'link', 'picture', 'video']]
+        ]
+    },
+    "css": ("/static/css/summernote_plugin.css",),
+    "js": ("/static/js/summernote_plugin.js",)
 }

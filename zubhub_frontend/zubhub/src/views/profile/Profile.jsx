@@ -161,7 +161,7 @@ function Profile(props) {
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
+        setState(state => ({ ...state, ...obj }));
       });
     }
   };
@@ -336,6 +336,19 @@ function Profile(props) {
                       {profile.following_count} {t('profile.followingCount')}
                     </Typography>
                   </Link>
+                  {profile.members_count !== null ? (
+                    <Link
+                      to={`/creators/${profile.username}/members`}
+                      className={classes.textDecorationNone}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        {profile.members_count} {t('profile.membersCount')}
+                      </Typography>
+                    </Link>
+                  ) : null}
                 </Box>
               </Box>
             </Container>
@@ -350,9 +363,15 @@ function Profile(props) {
                 color="textPrimary"
                 className={classes.titleStyle}
               >
-                {t('profile.about.label')}
+                {!profile.members_count
+                  ? t('profile.about.label1')
+                  : t('profile.about.label2')}
               </Typography>
-              {profile.bio ? profile.bio : t('profile.about.placeholder')}
+              {profile.bio
+                ? profile.bio
+                : !profile.members_count
+                ? t('profile.about.placeholder1')
+                : t('profile.about.placeholder2')}
             </Paper>
 
             {profile.projects_count > 0 ? (

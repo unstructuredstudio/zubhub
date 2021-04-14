@@ -445,6 +445,10 @@ html,
   margin-bottom: 0px;
 }
 
+.search-form-input input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
 .slick-slider {
   padding-top: 2em;
 }
@@ -455,7 +459,7 @@ html,
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-.slick-slider .slick-list {
+.detail-page-slider .slick-list {
   padding: 2em 40px !important;
   margin-left: 1em;
   margin-right: 1em;
