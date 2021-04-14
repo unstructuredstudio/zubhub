@@ -79,6 +79,7 @@ class ProjectTagSearchAPIView(ListAPIView):
         rank = SearchRank(F('search_vector'), query)
         return Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
 
+
 class ProjectSearchAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
@@ -234,6 +235,7 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
         obj = get_object_or_404(queryset, pk=pk)
 
         return obj
+
 
 class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.all()

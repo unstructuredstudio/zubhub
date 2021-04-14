@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
-from rest_framework.generics import (UpdateAPIView, RetrieveAPIView, 
+from rest_framework.generics import (UpdateAPIView, RetrieveAPIView,
                                      ListAPIView, DestroyAPIView, CreateAPIView, GenericAPIView)
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response

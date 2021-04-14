@@ -29,10 +29,10 @@ class ImageAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(TreeAdmin):
-    list_display = ["creator", "text", "created_on"]
+    list_display = ["creator", "text", "created_on", "published"]
     search_fields = ["project__tite",
                      "creator__username", "text", "created_on"]
-    list_filter = ["created_on"]
+    list_filter = ["created_on", "published"]
 
     form = movenodeform_factory(Comment)
 

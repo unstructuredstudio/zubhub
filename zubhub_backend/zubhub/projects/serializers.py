@@ -108,23 +108,11 @@ class ProjectSerializer(serializers.ModelSerializer):
             "comments",
             "created_on",
         ]
-        
-    read_only_fields = ["created_on", "views_count"]
-
-    def get_comments(self, obj):
-        comments = obj.comments.filter(published=True)
-        serializer = CommentSerializer(comments, read_only=True, many=True)
-        return serializer.data
 
     read_only_fields = ["created_on", "views_count"]
 
     def get_comments(self, obj):
-        comments = obj.comments.filter(published=True)
-        serializer = CommentSerializer(comments, read_only=True, many=True)
-        return serializer.data
-
-    def get_comments(self, obj):
-        all_comments = obj.comments.all()
+        all_comments = obj.comments.filter(published=True)
         root_comments = []
         creators_dict = {}
 
