@@ -79,7 +79,6 @@ class ProjectTagSearchAPIView(ListAPIView):
         rank = SearchRank(F('search_vector'), query)
         return Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
 
-      
 class ProjectSearchAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
@@ -241,10 +240,16 @@ class CategoryListAPIView(ListAPIView):
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
 
+
 class StaffPickListAPIView(ListAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        result = StaffPick.objects.filter(is_active=True)
+        if result:
+            return result
+        raise NotFound(detail=_('page not found'), code=404)
 
 
 class StaffPickDetailsAPIView(RetrieveAPIView):
@@ -258,6 +263,7 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
         obj = get_object_or_404(queryset, pk=pk)
 
         return obj
+
 
 class UnpublishCommentAPIView(UpdateAPIView):
     queryset = Comment.objects.all()

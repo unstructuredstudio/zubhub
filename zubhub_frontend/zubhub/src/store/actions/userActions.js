@@ -55,7 +55,6 @@ export const edit_user_profile = args => {
   };
 };
 
-
 export const suggest_creators = args => {
   return () => {
     return API.search_creators(args)

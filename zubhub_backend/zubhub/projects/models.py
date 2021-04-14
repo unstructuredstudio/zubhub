@@ -222,6 +222,30 @@ class Tag(models.Model):
   
   
 
+class Tag(models.Model):
+    projects = models.ManyToManyField(
+        Project, blank=True, related_name="tags")
+    name = models.CharField(unique=True, max_length=100)
+    slug = models.SlugField(unique=True, max_length=150)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            pass
+        else:
+            uid = str(uuid.uuid4())
+            uid = uid[0: floor(len(uid)/6)]
+            self.slug = slugify(self.name) + "-" + uid
+        super().save(*args, **kwargs)
+  
+  
+
 class StaffPick(models.Model):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
