@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
-from rest_framework import status
+from rest_framework import status, NotFound
 from rest_framework.generics import (UpdateAPIView, CreateAPIView,
                                      ListAPIView, RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
@@ -192,25 +192,6 @@ class AddCommentAPIView(CreateAPIView):
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 
 
-class StaffPickListAPIView(ListAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-
-class StaffPickDetailsAPIView(RetrieveAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        pk = self.kwargs.get("pk")
-        obj = get_object_or_404(queryset, pk=pk)
-
-        return obj
-
-
 class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -218,7 +199,6 @@ class CategoryListAPIView(ListAPIView):
 
 
 class StaffPickListAPIView(ListAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
 
@@ -226,7 +206,7 @@ class StaffPickListAPIView(ListAPIView):
         result = StaffPick.objects.filter(is_active=True)
         if result:
             return result
-        return Response({'detail': _('page not found')}, status=status.HTTP_404_NOT_FOUND)
+        raise NotFound(_('page not found'))
 
 
 class StaffPickDetailsAPIView(RetrieveAPIView):
