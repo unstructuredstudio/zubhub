@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
-from rest_framework import status, NotFound
+from rest_framework import status
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import (UpdateAPIView, CreateAPIView,
                                      ListAPIView, RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
@@ -206,7 +207,7 @@ class StaffPickListAPIView(ListAPIView):
         result = StaffPick.objects.filter(is_active=True)
         if result:
             return result
-        raise NotFound(_('page not found'))
+        raise NotFound(detail=_('page not found'), code=404)
 
 
 class StaffPickDetailsAPIView(RetrieveAPIView):
