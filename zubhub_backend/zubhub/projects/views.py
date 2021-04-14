@@ -1,9 +1,12 @@
 from django.shortcuts import get_object_or_404
+from django.http import Http404
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import (UpdateAPIView, CreateAPIView,
                                      ListAPIView, RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
@@ -66,7 +69,6 @@ class ProjectListAPIView(ListAPIView):
     pagination_class = ProjectNumberPagination
 
 
-
 class ProjectTagSearchAPIView(ListAPIView):
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
@@ -77,6 +79,7 @@ class ProjectTagSearchAPIView(ListAPIView):
         rank = SearchRank(F('search_vector'), query)
         return Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
 
+      
 class ProjectSearchAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
@@ -184,16 +187,41 @@ class AddCommentAPIView(CreateAPIView):
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
             )
 
-        serializer.save(creator=self.request.user,
-                        project=self.get_object())
+        parent_id = self.request.data.get("parent_id", None)
+        text = serializer.validated_data.get("text", None)
+
+        if parent_id:
+
+            try:
+                parent_comment = Comment.objects.get(id=parent_id)
+            except Comment.DoesNotExist:
+                raise Http404(_("parent comment does not exist"))
+
+            parent_comment.add_child(
+                project=self.get_object(), creator=self.request.user, text=text)
+        else:
+            Comment.add_root(project=self.get_object(),
+                             creator=self.request.user, text=text)
 
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 
+
+class CategoryListAPIView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [AllowAny]
+
+
 class StaffPickListAPIView(ListAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        result = StaffPick.objects.filter(is_active=True)
+        if result:
+            return result
+        raise NotFound(detail=_('page not found'), code=404)
 
 
 class StaffPickDetailsAPIView(RetrieveAPIView):

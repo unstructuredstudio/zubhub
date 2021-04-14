@@ -38,6 +38,7 @@
       "resources": "Tinkering Resources",
       "faqs": "FAQs",
       "contactUs": "Contact Us"
+    },
     "inputs": {
       "search": {
         "label": "Search"
@@ -399,7 +400,7 @@
       }
     },
     "comment": {
-      "delete":{
+      "delete": {
         "dialog": {
           "primary": "Delete Comment",
           "secondary": "Are you sure you want to delete this comment? you can't undo this action!!!",
@@ -431,9 +432,18 @@
     }
   },
 
-  "comment": {
+  "comments": {
+    "label": "Comments",
+    "write": "write a comment",
+    "reply": "Reply",
+    "showReplies": "Show Replies",
+    "hideReplies": "Hide Replies",
+    "action": "Comment",
     "unpublish": "Unpublish",
     "delete": "Delete"
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
   },
 
   "profile": {

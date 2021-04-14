@@ -466,6 +466,7 @@ html,
 }
 
 .comment-box {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 1em;
@@ -501,6 +502,11 @@ html,
   margin: 0.8em;
 }
 
+.sub-comment-box {
+  width: 90%;
+  margin-left: 3em;
+}
+
 .comment-form,
 .comment-text {
   width: 100%;
@@ -534,8 +540,21 @@ html,
   height: 7em;
 }
 
+.comment-box.comment .sub-comment-text {
+  height: 2em;
+}
+
 .comment-box .comment-form .comment-publish-button {
   margin-left: 0;
+}
+
+.mention {
+  text-decoration: none;
+  color: #00b8c4;
+}
+
+.mention:hover {
+  color: #03848c;
 }
 
 /* Footer Styles */

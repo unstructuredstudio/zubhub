@@ -322,7 +322,7 @@ export const add_comment = args => {
     return API.add_comment(args)
       .then(res => {
         if (res.title) {
-          return { project: res };
+          return { project: res, loading: false };
         } else {
           res = Object.keys(res)
             .map(key => res[key])
@@ -332,7 +332,7 @@ export const add_comment = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projectDetails.errors.unexpected'));
+          toast.warning(args.t('comments.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -357,7 +357,10 @@ export const get_staff_picks = args => {
         if (Array.isArray(res)) {
           dispatch(set_staff_picks(res));
           return { loading: false };
+        }else if (res.detail === "not found"){
+          dispatch(set_staff_picks([]));
         } else {
+          dispatch(set_staff_picks([]));
           res = Object.keys(res)
             .map(key => res[key])
             .join('\n');

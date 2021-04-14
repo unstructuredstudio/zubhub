@@ -1,7 +1,6 @@
 import uuid
 from math import floor
 from treebeard.mp_tree import MP_Node
-from mptt.models import MPTTModel, TreeForeignKey
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
@@ -118,24 +117,86 @@ class Image(models.Model):
         return "Photo <%s:%s>" % (self.public_id, image)
 
 
-class Comment(models.Model):
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+class Comment(MP_Node):
     project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, related_name="comments")
+        Project, on_delete=models.CASCADE, related_name="comments", blank=True, null=True)
+    profile = models.ForeignKey(Creator, on_delete=models.CASCADE,
+                                related_name="profile_comments", blank=True, null=True)
     creator = models.ForeignKey(
         Creator, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=10000)
     created_on = models.DateTimeField(default=timezone.now)
     published = models.BooleanField(default=True)
 
+    node_order_by = ['created_on']
+
     def __str__(self):
         return self.text
 
     def save(self, *args, **kwargs):
-        self.project.save()
+        if self.project:
+            self.project.save()
         super().save(*args, **kwargs)
 
+# class Comment(models.Model):
+#     id = models.UUIDField(
+#         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+#     project = models.ForeignKey(
+#         Project, on_delete=models.CASCADE, related_name="comments")
+#     creator = models.ForeignKey(
+#         Creator, on_delete=models.CASCADE, related_name="comments")
+#     text = models.CharField(max_length=10000)
+#     created_on = models.DateTimeField(default=timezone.now)
+
+#     def __str__(self):
+#         return self.text
+
+#     def save(self, *args, **kwargs):
+#         self.project.save()
+#         super().save(*args, **kwargs)
+
+
+# class TreeComment(MP_Node):
+#     project = models.ForeignKey(
+#         Project, on_delete=models.CASCADE, related_name="tree_comments")
+#     creator = models.ForeignKey(
+#         Creator, on_delete=models.CASCADE, related_name="tree_comments")
+#     text = models.CharField(max_length=10000)
+#     created_on = models.DateTimeField(default=timezone.now)
+
+#     node_order_by = ['name']
+
+#     def __str__(self):
+#         return self.text
+
+#     def save(self, *args, **kwargs):
+#         self.project.save()
+#         super().save(*args, **kwargs)
+
+
+class Tag(models.Model):
+    projects = models.ManyToManyField(
+        Project, blank=True, related_name="tags")
+    name = models.CharField(unique=True, max_length=100)
+    slug = models.SlugField(unique=True, max_length=150)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            pass
+        else:
+            uid = str(uuid.uuid4())
+            uid = uid[0: floor(len(uid)/6)]
+            self.slug = slugify(self.name) + "-" + uid
+        super().save(*args, **kwargs)
+  
+  
 
 class Tag(models.Model):
     projects = models.ManyToManyField(

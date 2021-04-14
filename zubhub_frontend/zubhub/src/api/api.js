@@ -456,7 +456,9 @@ class API {
   /************************** get staff picks **************************/
   get_staff_picks = () => {
     const url = 'projects/staff_picks/';
-    return this.request({ url }).then(res => res.json());
+    return this.request({ url}).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } :(res.status === 404 ? {detail: "not found"} : res.json())),
+    );
   };
   /******************************************************************/
 
@@ -496,13 +498,23 @@ class API {
   /******************************************************************/
 
   /************************** add comment **************************/
-  add_comment = ({ id, text, token }) => {
+  add_comment = ({ id, text, token, parent_id }) => {
     const url = `projects/${id}/add_comment/`;
     const method = 'POST';
-    const body = JSON.stringify({ text });
+    const body = JSON.stringify({ text, parent_id });
 
     return this.request({ url, method, body, token }).then(res => res.json());
   };
+
+  /************************** add profile comment **************************/
+  add_profile_comment = ({ id, text, token, parent_id }) => {
+    const url = `creators/${id}/add_comment/`;
+    const method = 'POST';
+    const body = JSON.stringify({ text, parent_id });
+
+    return this.request({ url, method, body, token }).then(res => res.json());
+  };
+  /***********************************************************************/
 
   /************************** get help **************************/
   get_help = () => {
