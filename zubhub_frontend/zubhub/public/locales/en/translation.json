@@ -440,7 +440,7 @@
     "hideReplies": "Hide Replies",
     "action": "Comment",
     "unpublish": "Unpublish",
-    "delete": "Delete"
+    "delete": "Delete",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }

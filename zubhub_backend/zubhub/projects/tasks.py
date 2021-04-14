@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from celery import shared_task
 
+
 @shared_task(bind=True, acks_late=True, max_retries=10)
 def delete_image_from_DO_space(self, bucket, key):
     session = boto3.session.Session()
@@ -19,6 +20,7 @@ def delete_image_from_DO_space(self, bucket, key):
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
+
 
 @shared_task(name="projects.tasks.update_search_index", bind=True, acks_late=True, max_retries=10)
 def update_search_index(self, model_name):
@@ -50,7 +52,7 @@ def update_search_index(self, model_name):
 def filter_spam_task(self, ctx):
     from projects.utils import filter_spam
     try:
-        filter_spam(ctx) 
+        filter_spam(ctx)
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
