@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext_lazy as _
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import SearchQuery, SearchRank
@@ -66,7 +67,6 @@ class ProjectListAPIView(ListAPIView):
     pagination_class = ProjectNumberPagination
 
 
-
 class ProjectTagSearchAPIView(ListAPIView):
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
@@ -76,6 +76,7 @@ class ProjectTagSearchAPIView(ListAPIView):
         query = SearchQuery(query_string)
         rank = SearchRank(F('search_vector'), query)
         return Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
+
 
 class ProjectSearchAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
@@ -190,6 +191,7 @@ class AddCommentAPIView(CreateAPIView):
         result = self.get_object()
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 
+
 class StaffPickListAPIView(ListAPIView):
     queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
@@ -207,16 +209,24 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
         obj = get_object_or_404(queryset, pk=pk)
 
         return obj
+
 
 class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
 
+
 class StaffPickListAPIView(ListAPIView):
     queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        result = StaffPick.objects.filter(is_active=True)
+        if result:
+            return result
+        return Response({'detail': _('page not found')}, status=status.HTTP_404_NOT_FOUND)
 
 
 class StaffPickDetailsAPIView(RetrieveAPIView):
@@ -230,6 +240,7 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
         obj = get_object_or_404(queryset, pk=pk)
 
         return obj
+
 
 class UnpublishCommentAPIView(UpdateAPIView):
     queryset = Comment.objects.all()

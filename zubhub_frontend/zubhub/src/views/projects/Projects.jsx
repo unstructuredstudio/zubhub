@@ -128,16 +128,17 @@ function Projects(props) {
     return (
       <Box className={classes.root}>
         <Container class={classes.mainContainerStyle}>
-          {staff_picks.map(staff_pick => (
-            <StaffPick
-              key={staff_pick.id}
-              staff_pick={staff_pick}
-              updateProjects={res =>
-                handleSetState(updateStaffPicks(res, staff_pick.id, props))
-              }
-              {...props}
-            />
-          ))}
+          {staff_picks &&
+            staff_picks.map(staff_pick => (
+              <StaffPick
+                key={staff_pick.id}
+                staff_pick={staff_pick}
+                updateProjects={res =>
+                  handleSetState(updateStaffPicks(res, staff_pick.id, props))
+                }
+                {...props}
+              />
+            ))}
           <Grid container>
             {staff_picks && staff_picks.length > 0 ? (
               <Grid item xs={12}>

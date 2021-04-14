@@ -456,7 +456,9 @@ class API {
   /************************** get staff picks **************************/
   get_staff_picks = () => {
     const url = 'projects/staff_picks/';
-    return this.request({ url }).then(res => res.json());
+    return this.request({ url}).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } :(res.status === 404 ? {detail: "not found"} : res.json())),
+    );
   };
   /******************************************************************/
 
