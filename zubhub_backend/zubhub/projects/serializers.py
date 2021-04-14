@@ -1,3 +1,5 @@
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -5,7 +7,7 @@ from creators.serializers import CreatorSerializer
 from .models import Project, Comment, Image, StaffPick, Category, Tag
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
-from .utils import update_images, update_tags
+from .utils import update_images, update_tags, parse_comment_trees
 import time
 from math import ceil
 
@@ -15,8 +17,7 @@ Creator = get_user_model()
 
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    creator = CreatorSerializer(read_only=True)
-    text = serializers.CharField(max_length=10000)
+    creator = serializers.SerializerMethodField('get_creator')
     created_on = serializers.DateTimeField(read_only=True)
 
     def save(self, **kwargs):
@@ -42,6 +43,9 @@ class CommentSerializer(serializers.ModelSerializer):
             "text",
             "created_on",
         ]
+
+    def get_creator(self, obj):
+        return {"id": str(obj.creator.id), "username": obj.creator.username, "avatar": obj.creator.avatar}
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -118,6 +122,25 @@ class ProjectSerializer(serializers.ModelSerializer):
         comments = obj.comments.filter(published=True)
         serializer = CommentSerializer(comments, read_only=True, many=True)
         return serializer.data
+
+    def get_comments(self, obj):
+        all_comments = obj.comments.all()
+        root_comments = []
+        creators_dict = {}
+
+        for comment in all_comments:
+            if comment.is_root():
+                root_comments.append(comment)
+
+        all_comments = CommentSerializer(all_comments, many=True).data
+
+        for comment in all_comments:
+            creators_dict[comment["creator"]["id"]] = comment["creator"]
+
+        root_comments = list(
+            map(lambda x: Comment.dump_bulk(x)[0], root_comments))
+
+        return parse_comment_trees(root_comments, creators_dict)
 
     def validate_video(self, video):
         if(video == "" and len(self.initial_data.get("images")) == 0):

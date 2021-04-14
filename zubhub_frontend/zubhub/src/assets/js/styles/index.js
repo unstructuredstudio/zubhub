@@ -25,6 +25,9 @@ const styles = theme => ({
   positionAbsolute: {
     position: 'absolute',
   },
+  displayNone: {
+    display: 'none',
+  },
   displayInlineBlock: {
     display: 'inline-block',
   },
@@ -34,7 +37,6 @@ const styles = theme => ({
   displayFlex: {
     display: 'flex',
   },
-  displayNone: { display: 'none' },
   positionAbsolute: {
     position: 'absolute',
   },

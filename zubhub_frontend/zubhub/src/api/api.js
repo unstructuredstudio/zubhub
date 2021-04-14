@@ -498,13 +498,23 @@ class API {
   /******************************************************************/
 
   /************************** add comment **************************/
-  add_comment = ({ id, text, token }) => {
+  add_comment = ({ id, text, token, parent_id }) => {
     const url = `projects/${id}/add_comment/`;
     const method = 'POST';
-    const body = JSON.stringify({ text });
+    const body = JSON.stringify({ text, parent_id });
 
     return this.request({ url, method, body, token }).then(res => res.json());
   };
+
+  /************************** add profile comment **************************/
+  add_profile_comment = ({ id, text, token, parent_id }) => {
+    const url = `creators/${id}/add_comment/`;
+    const method = 'POST';
+    const body = JSON.stringify({ text, parent_id });
+
+    return this.request({ url, method, body, token }).then(res => res.json());
+  };
+  /***********************************************************************/
 
   /************************** get help **************************/
   get_help = () => {

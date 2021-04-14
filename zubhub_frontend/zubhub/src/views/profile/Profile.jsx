@@ -39,13 +39,15 @@ import * as ProjectActions from '../../store/actions/projectActions';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
+import Comments from '../../components/comments/Comments';
+import parse_comments from '../../assets/js/parseComments';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const getUserPofile = props => {
+const getUserProfile = props => {
   let username = props.match.params.username;
 
   if (!username) {
@@ -148,7 +150,12 @@ function Profile(props) {
   });
 
   React.useEffect(() => {
-    handleSetState(getUserPofile(props));
+    Promise.resolve(getUserProfile(props)).then(obj => {
+      if (obj.profile) {
+        parse_comments(obj.profile.comments);
+      }
+      handleSetState(obj);
+    });
   }, []);
 
   const handleSetState = obj => {
@@ -415,6 +422,11 @@ function Profile(props) {
                 </Grid>
               </Paper>
             ) : null}
+            <Comments
+              context={{ name: 'profile', body: profile }}
+              handleSetState={handleSetState}
+              {...props}
+            />
           </Container>
         </Box>
         <Dialog
@@ -493,6 +505,8 @@ Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   set_auth_user: PropTypes.func.isRequired,
   get_user_profile: PropTypes.func.isRequired,
+  suggest_creators: PropTypes.func.isRequired,
+  add_comment: PropTypes.func.isRequired,
   delete_account: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
   toggle_follow: PropTypes.func.isRequired,
@@ -513,6 +527,12 @@ const mapDispatchToProps = dispatch => {
     },
     get_user_profile: args => {
       return dispatch(UserActions.get_user_profile(args));
+    },
+    suggest_creators: args => {
+      return dispatch(UserActions.suggest_creators(args));
+    },
+    add_comment: args => {
+      return dispatch(UserActions.add_comment(args));
     },
     delete_account: args => {
       return dispatch(AuthActions.delete_account(args));

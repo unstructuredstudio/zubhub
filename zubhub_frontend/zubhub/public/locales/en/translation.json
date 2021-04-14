@@ -432,9 +432,18 @@
     }
   },
 
-  "comment": {
+  "comments": {
+    "label": "Comments",
+    "write": "write a comment",
+    "reply": "Reply",
+    "showReplies": "Show Replies",
+    "hideReplies": "Hide Replies",
+    "action": "Comment",
     "unpublish": "Unpublish",
     "delete": "Delete"
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
   },
 
   "profile": {

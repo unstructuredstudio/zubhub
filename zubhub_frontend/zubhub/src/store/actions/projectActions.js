@@ -322,7 +322,7 @@ export const add_comment = args => {
     return API.add_comment(args)
       .then(res => {
         if (res.title) {
-          return { project: res };
+          return { project: res, loading: false };
         } else {
           res = Object.keys(res)
             .map(key => res[key])
@@ -332,7 +332,7 @@ export const add_comment = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projectDetails.errors.unexpected'));
+          toast.warning(args.t('comments.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }

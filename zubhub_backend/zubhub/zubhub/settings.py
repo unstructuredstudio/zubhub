@@ -96,7 +96,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'debug_toolbar',
     'treebeard',
-    'mptt',
     'django_summernote',
     'zubhub',
     'APIS',

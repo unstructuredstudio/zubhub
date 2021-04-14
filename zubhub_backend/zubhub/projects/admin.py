@@ -1,5 +1,6 @@
 from django.contrib import admin
-from mptt.admin import DraggableMPTTAdmin
+from treebeard.admin import TreeAdmin
+from treebeard.forms import movenodeform_factory
 from .models import Project, Comment, Image, StaffPick, Category, Tag
 from .utils import project_changed, send_staff_pick_notification
 from creators.utils import activity_notification
@@ -27,14 +28,13 @@ class ImageAdmin(admin.ModelAdmin):
     list_display = ["image_url"]
 
 
-class CommentAdmin(admin.ModelAdmin):
-    # model = Comment
-    list_display = ["creator",
-                    "text", "created_on", "published"]
+class CommentAdmin(TreeAdmin):
+    list_display = ["creator", "text", "created_on"]
+    search_fields = ["project__tite",
+                     "creator__username", "text", "created_on"]
+    list_filter = ["created_on"]
 
-    search_fields = ["project__tite", "creator__username",
-                     "text", "created_on", "published"]
-    list_filter = ["created_on", "published"]
+    form = movenodeform_factory(Comment)
 
     def creator(self, obj):
         if obj:
