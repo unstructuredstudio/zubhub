@@ -48,70 +48,6 @@ const handleOpenEnlargedImageDialog = (e, state) => {
   return { enlargedImageUrl: image_url, openEnlargedImageDialog };
 };
 
-const unpublishComment = (props, state, id) => {
-  if (
-    props.auth.token &&
-    (props.auth.role === 'moderator' || props.auth.role === 'staff')
-  ) {
-    return props
-      .unpublish_comment({
-        token: props.auth.token,
-        id: id,
-        t: props.t,
-        history: props.history,
-      })
-      .then(updated_comment => {
-        const { project } = state;
-        project.comments = project.comments.filter(comment =>
-          comment.id !== updated_comment.id ? true : false,
-        );
-
-        return { project };
-      });
-  }
-};
-
-const handleToggleDeleteCommentModal = (state, id) => {
-  const openDeleteCommentModal = !state.openDeleteCommentModal;
-  if (openDeleteCommentModal) {
-    return { openDeleteCommentModal: id };
-  }
-  return { openDeleteCommentModal };
-};
-
-const deleteComment = (props, state, id) => {
-  if (
-    props.auth.token &&
-    (props.auth.role === 'moderator' || props.auth.role === 'staff')
-  ) {
-    return props
-      .delete_comment({
-        token: props.auth.token,
-        id: id,
-        t: props.t,
-        history: props.history,
-      })
-      .then(() => {
-        const { project } = state;
-        project.comments = project.comments.filter(comment =>
-          comment.id !== id ? true : false,
-        );
-
-        return {
-          project,
-          ...handleToggleDeleteCommentModal(state),
-          deleteCommentDialogError: null,
-        };
-      })
-      .catch(error => ({ deleteCommentDialogError: error.message }));
-  } else {
-    return {
-      deleteCommentDialogError: null,
-      ...handleToggleDeleteCommentModal(state, id),
-    };
-  }
-};
-
 const handleToggleDeleteProjectModal = state => {
   const openDeleteProjectModal = !state.openDeleteProjectModal;
   return { openDeleteProjectModal };
@@ -208,9 +144,7 @@ function ProjectDetails(props) {
     enlargedImageUrl: '',
     openEnlargedImageDialog: false,
     openDeleteProjectModal: false,
-    openDeleteCommentModal: false,
     deleteProjectDialogError: null,
-    deleteCommentDialogError: null,
   });
 
   React.useEffect(() => {
@@ -242,9 +176,7 @@ function ProjectDetails(props) {
     enlargedImageUrl,
     openEnlargedImageDialog,
     openDeleteProjectModal,
-    openDeleteCommentModal,
     deleteProjectDialogError,
-    deleteCommentDialogError,
   } = state;
   const { t } = props;
   if (loading) {
@@ -508,6 +440,7 @@ function ProjectDetails(props) {
             />
           </Paper>
         </Box>
+
         <Dialog
           PaperProps={{
             style: {
@@ -572,58 +505,6 @@ function ProjectDetails(props) {
               dangerButtonStyle
             >
               {t('projectDetails.project.delete.dialog.proceed')}
-            </CustomButton>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog
-          open={openDeleteCommentModal}
-          onClose={() =>
-            handleSetState(
-              handleToggleDeleteCommentModal(state, openDeleteCommentModal),
-            )
-          }
-          aria-labelledby={t('projectDetails.ariaLabels.deleteComment')}
-        >
-          <DialogTitle id="delete-comment">
-            {t('projectDetails.comment.delete.dialog.primary')}
-          </DialogTitle>
-          <Box
-            component="p"
-            className={deleteCommentDialogError !== null && classes.errorBox}
-          >
-            {deleteCommentDialogError !== null && (
-              <Box component="span" className={classes.error}>
-                {deleteCommentDialogError}
-              </Box>
-            )}
-          </Box>{' '}
-          <DialogContent>
-            <Typography>
-              {t('projectDetails.comment.delete.dialog.secondary')}
-            </Typography>
-          </DialogContent>
-          <DialogActions>
-            <CustomButton
-              variant="outlined"
-              onClick={() =>
-                handleSetState(
-                  handleToggleDeleteCommentModal(state, openDeleteCommentModal),
-                )
-              }
-              color="primary"
-              secondaryButtonStyle
-            >
-              {t('projectDetails.comment.delete.dialog.cancel')}
-            </CustomButton>
-            <CustomButton
-              variant="contained"
-              onClick={(e, id = openDeleteCommentModal) =>
-                handleSetState(deleteComment(props, state, id))
-              }
-              dangerButtonStyle
-            >
-              {t('projectDetails.comment.delete.dialog.proceed')}
             </CustomButton>
           </DialogActions>
         </Dialog>

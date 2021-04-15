@@ -1,6 +1,6 @@
 const parse_comments = comments => {
   for (let each_comment of comments) {
-    const mentions = each_comment.text.match(/\B@[a-z0-9_-]+/gi);
+    const mentions = each_comment.text.match(/\B@[a-z0-9_.-]+/gi);
     if (Array.isArray(mentions)) {
       for (let mention of mentions) {
         each_comment.text = each_comment.text.replace(

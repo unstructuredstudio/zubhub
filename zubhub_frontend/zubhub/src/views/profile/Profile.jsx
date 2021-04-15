@@ -534,6 +534,12 @@ const mapDispatchToProps = dispatch => {
     add_comment: args => {
       return dispatch(UserActions.add_comment(args));
     },
+    unpublish_comment: args => {
+      return dispatch(ProjectActions.unpublish_comment(args));
+    },
+    delete_comment: args => {
+      return dispatch(ProjectActions.delete_comment(args));
+    },
     delete_account: args => {
       return dispatch(AuthActions.delete_account(args));
     },
