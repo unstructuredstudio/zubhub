@@ -54,7 +54,8 @@ export const unpublish_comment = args => {
   return () => {
     return API.unpublish_comment({ token: args.token, id: args.id })
       .then(res => {
-        if (res.id) {
+        if (res.text) {
+          toast.success(args.t('comments.unpublishCommentToastSuccess'));
           return res;
         } else {
           res = Object.keys(res)
@@ -65,7 +66,7 @@ export const unpublish_comment = args => {
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projectDetails.errors.unexpected'));
+          toast.warning(args.t('comments.errors.unexpected'));
         } else {
           toast.warning(error.message);
         }
@@ -79,7 +80,7 @@ export const delete_comment = args => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
-        toast.success(args.t('projectDetails.deleteCommentToastSuccess'));
+        toast.success(args.t('comments.deleteCommentToastSuccess'));
       }
     });
   };

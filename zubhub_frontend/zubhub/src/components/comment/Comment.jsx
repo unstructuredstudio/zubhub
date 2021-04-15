@@ -8,7 +8,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import ReplyIcon from '@material-ui/icons/Reply';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Avatar, Box, Typography,  Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Box, Typography, Menu, MenuItem } from '@material-ui/core';
 
 import CustomButton from '../../components/button/Button';
 import CommentInput from '../../components/comment_input/CommentInput';
@@ -64,10 +64,22 @@ function Comment(props) {
     }
   };
 
-  const { repliesCollapsed, replyInputCollapsed, replyDepth, commentMenuAnchorEl } = state;
-  const {auth, t, comment, parent, handleUnpublishComment, handleDeleteComment } = props;
+  const {
+    repliesCollapsed,
+    replyInputCollapsed,
+    replyDepth,
+    commentMenuAnchorEl,
+  } = state;
+  const {
+    auth,
+    t,
+    comment,
+    parent,
+    handleUnpublishComment,
+    handleToggleDeleteCommentModal,
+  } = props;
   const commentMenuOpen = Boolean(commentMenuAnchorEl);
-  
+
   return (
     <Box className={!parent ? classes.commentsStyle : classes.subCommentsStyle}>
       <Box className={commonClasses.positionRelative}>
@@ -135,7 +147,7 @@ function Comment(props) {
                   component="span"
                   onClick={() => handleUnpublishComment(comment.id)}
                 >
-                  {t('comment.unpublish')}
+                  {t('comments.unpublish')}
                 </Typography>
               </MenuItem>
               <MenuItem>
@@ -143,15 +155,14 @@ function Comment(props) {
                   variant="subtitle2"
                   className={commonClasses.colorRed}
                   component="span"
-                  onClick={() => handleDeleteComment(comment.id)}
+                  onClick={() => handleToggleDeleteCommentModal(comment.id)}
                 >
-                  {t('comment.delete')}
+                  {t('comments.delete')}
                 </Typography>
               </MenuItem>
             </Menu>
           </>
         ) : null}
-       
       </Box>
       <Box className={classes.commentTextSectionStyle}>
         <Typography

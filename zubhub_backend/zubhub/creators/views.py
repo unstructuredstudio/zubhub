@@ -25,6 +25,7 @@ from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
 from .utils import perform_send_phone_confirmation, perform_send_email_confirmation, process_avatar, send_group_invite_notification
+from projects.utils import detect_mentions
 
 from .models import CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC
 
@@ -329,10 +330,9 @@ class AddCommentAPIView(CreateAPIView):
             Comment.add_root(profile=self.get_object(),
                              creator=self.request.user, text=text)
 
-        # Comment
-
-        # serializer.save(creator=self.request.user,
-        #                 project=self.get_object())
-
         result = self.get_object()
+        if result:
+            detect_mentions(
+                {"text": text, "profile_username": result.username, "creator": request.user.username})
+
         return Response(CreatorSerializer(result).data, status=status.HTTP_201_CREATED)
