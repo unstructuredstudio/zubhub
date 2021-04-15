@@ -132,25 +132,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         return parse_comment_trees(root_comments, creators_dict)
 
-    def get_comments(self, obj):
-        all_comments = obj.comments.all()
-        root_comments = []
-        creators_dict = {}
-
-        for comment in all_comments:
-            if comment.is_root():
-                root_comments.append(comment)
-
-        all_comments = CommentSerializer(all_comments, many=True).data
-
-        for comment in all_comments:
-            creators_dict[comment["creator"]["id"]] = comment["creator"]
-
-        root_comments = list(
-            map(lambda x: Comment.dump_bulk(x)[0], root_comments))
-
-        return parse_comment_trees(root_comments, creators_dict)
-
     def validate_video(self, video):
         if(video == "" and len(self.initial_data.get("images")) == 0):
             raise serializers.ValidationError(

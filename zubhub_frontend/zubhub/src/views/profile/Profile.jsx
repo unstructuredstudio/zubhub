@@ -290,6 +290,12 @@ function Profile(props) {
                   color="textPrimary"
                 >
                   {profile.username}
+
+                  {profile.role !== 'creator' ? (
+                    <Typography className={classes.roleStyle}>
+                      {profile.role}
+                    </Typography>
+                  ) : null}
                 </Typography>
                 {props.auth.username === profile.username ? (
                   <>
