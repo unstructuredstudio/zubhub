@@ -420,8 +420,6 @@
       "deleteComment": "टिप्पणी संवाद हटाएं"
     },
     "deleteProjectToastSuccess": "आपका प्रोजेक्ट सफलतापूर्वक हटा दिया गया था !!",
-    "deleteCommentToastSuccess": "टिप्पणी सफलतापूर्वक हटा दी गई थी !!",
-    "unpublishCommentToastSuccess": "टिप्पणी सफलतापूर्वक अप्रकाशित की गई थी !!",
     "errors": {
       "unexpected": "यह क्रिया करते समय एक त्रुटि हुई। बाद में पुन: प्रयास करें"
     }
@@ -430,12 +428,14 @@
   "comments": {
     "label": "टिप्पणियाँ",
     "write": "टिप्पणी लिखें",
-    "action": "टिप्पणी",
     "reply": "जवाब दे दो",
-    "unpublish": "अप्रकाशित",
-    "delete": "हटाएं",
     "showReplies": "जवाब दिखाओ",
     "hideReplies": "उत्तर छिपाएं",
+    "action": "टिप्पणी",
+    "unpublish": "अप्रकाशित",
+    "delete": "हटाएं",
+    "deleteCommentToastSuccess": "टिप्पणी सफलतापूर्वक हटा दी गई थी !!",
+    "unpublishCommentToastSuccess": "टिप्पणी सफलतापूर्वक अप्रकाशित की गई थी !!",
     "errors": {
       "unexpected": "यह क्रिया करते समय एक त्रुटि हुई। बाद में पुन: प्रयास करें"
     }

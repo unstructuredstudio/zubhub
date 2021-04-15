@@ -24,16 +24,18 @@ class CommentSerializer(serializers.ModelSerializer):
         comment = super().save(**kwargs)
         request = self.context.get("request")
 
-        ctx = {
-            "comment_id": comment.id,
-            "text": comment.text,
-            "method": request.method,
-            "REMOTE_ADDR": request.META["REMOTE_ADDR"],
-            "HTTP_USER_AGENT": request.META["HTTP_USER_AGENT"],
-            "lang": request.LANGUAGE_CODE
-        }
+        if comment and comment.id:
+            ctx = {
+                "comment_id": comment.id,
+                "text": comment.text,
+                "method": request.method,
+                "REMOTE_ADDR": request.META["REMOTE_ADDR"],
+                "HTTP_USER_AGENT": request.META["HTTP_USER_AGENT"],
+                "lang": request.LANGUAGE_CODE
+            }
 
-        filter_spam_task.delay(ctx)
+            filter_spam_task.delay(ctx)
+            return comment
 
     class Meta:
         model = Comment
@@ -112,7 +114,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     read_only_fields = ["created_on", "views_count"]
 
     def get_comments(self, obj):
-        all_comments = obj.comments.filter(published=True)
+        all_comments = obj.comments.all()
         root_comments = []
         creators_dict = {}
 

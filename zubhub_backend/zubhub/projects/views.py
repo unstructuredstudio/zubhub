@@ -12,7 +12,7 @@ from rest_framework.generics import (UpdateAPIView, CreateAPIView,
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from projects.permissions import IsOwner, IsStaffOrModerator
 from .models import Project, Comment, StaffPick, Category, Tag
-from .utils import project_changed
+from .utils import project_changed, detect_mentions
 from creators.utils import activity_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)
@@ -203,6 +203,10 @@ class AddCommentAPIView(CreateAPIView):
                              creator=self.request.user, text=text)
 
         result = self.get_object()
+        if result:
+            detect_mentions(
+                {"text": text, "project_id": result.pk, "creator": request.user.username})
+
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 
 
@@ -302,7 +306,8 @@ class UnpublishCommentAPIView(UpdateAPIView):
 
     def perform_update(self, serializer):
         comment = serializer.save(published=False)
-        comment.project.save()
+        if comment and comment.project:
+            comment.project.save()
         return comment
 
 
@@ -314,5 +319,8 @@ class DeleteCommentAPIView(DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         project = self.get_object().project
         result = self.destroy(request, *args, **kwargs)
-        project.save()
+
+        if project:
+            project.save()
+
         return result
