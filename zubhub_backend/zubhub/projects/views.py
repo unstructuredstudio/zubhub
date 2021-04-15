@@ -204,41 +204,12 @@ class AddCommentAPIView(CreateAPIView):
                              creator=self.request.user, text=text)
 
         result = self.get_object()
+        
         if result:
             detect_mentions(
                 {"text": text, "project_id": result.pk, "creator": request.user.username})
 
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
-
-
-class CategoryListAPIView(ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
-
-
-class StaffPickListAPIView(ListAPIView):
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        result = StaffPick.objects.filter(is_active=True)
-        if result:
-            return result
-        raise NotFound(detail=_('page not found'), code=404)
-
-
-class StaffPickDetailsAPIView(RetrieveAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        pk = self.kwargs.get("pk")
-        obj = get_object_or_404(queryset, pk=pk)
-
-        return obj
 
 
 class CategoryListAPIView(ListAPIView):
