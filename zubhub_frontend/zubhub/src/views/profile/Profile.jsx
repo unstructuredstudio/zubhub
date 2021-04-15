@@ -290,6 +290,12 @@ function Profile(props) {
                   color="textPrimary"
                 >
                   {profile.username}
+
+                  {profile.role !== 'creator' ? (
+                    <Typography className={classes.roleStyle}>
+                      {profile.role}
+                    </Typography>
+                  ) : null}
                 </Typography>
                 {props.auth.username === profile.username ? (
                   <>
@@ -533,6 +539,12 @@ const mapDispatchToProps = dispatch => {
     },
     add_comment: args => {
       return dispatch(UserActions.add_comment(args));
+    },
+    unpublish_comment: args => {
+      return dispatch(ProjectActions.unpublish_comment(args));
+    },
+    delete_comment: args => {
+      return dispatch(ProjectActions.delete_comment(args));
     },
     delete_account: args => {
       return dispatch(AuthActions.delete_account(args));

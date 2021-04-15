@@ -418,7 +418,9 @@ class API {
     const url = `projects/${id}/unpublish_comment/`;
     const method = 'PATCH';
     const body = JSON.stringify({});
-    return this.request({ url, method, token, body }).then(res => res.json());
+    return this.request({ url, method, token, body }).then(res =>
+      Promise.resolve(res.status === 200 ? res.json() : {"details": "unknown error"}),
+    );
   };
   /************************************************************************/
 

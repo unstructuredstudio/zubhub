@@ -24,16 +24,18 @@ class CommentSerializer(serializers.ModelSerializer):
         comment = super().save(**kwargs)
         request = self.context.get("request")
 
-        ctx = {
-            "comment_id": comment.id,
-            "text": comment.text,
-            "method": request.method,
-            "REMOTE_ADDR": request.META["REMOTE_ADDR"],
-            "HTTP_USER_AGENT": request.META["HTTP_USER_AGENT"],
-            "lang": request.LANGUAGE_CODE
-        }
+        if comment and comment.id:
+            ctx = {
+                "comment_id": comment.id,
+                "text": comment.text,
+                "method": request.method,
+                "REMOTE_ADDR": request.META["REMOTE_ADDR"],
+                "HTTP_USER_AGENT": request.META["HTTP_USER_AGENT"],
+                "lang": request.LANGUAGE_CODE
+            }
 
-        filter_spam_task.delay(ctx)
+            filter_spam_task.delay(ctx)
+            return comment
 
     class Meta:
         model = Comment
@@ -110,25 +112,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         ]
 
     read_only_fields = ["created_on", "views_count"]
-
-    def get_comments(self, obj):
-        all_comments = obj.comments.filter(published=True)
-        root_comments = []
-        creators_dict = {}
-
-        for comment in all_comments:
-            if comment.is_root():
-                root_comments.append(comment)
-
-        all_comments = CommentSerializer(all_comments, many=True).data
-
-        for comment in all_comments:
-            creators_dict[comment["creator"]["id"]] = comment["creator"]
-
-        root_comments = list(
-            map(lambda x: Comment.dump_bulk(x)[0], root_comments))
-
-        return parse_comment_trees(root_comments, creators_dict)
 
     def get_comments(self, obj):
         all_comments = obj.comments.all()

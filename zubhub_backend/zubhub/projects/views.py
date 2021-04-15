@@ -12,7 +12,7 @@ from rest_framework.generics import (UpdateAPIView, CreateAPIView,
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from projects.permissions import IsOwner, IsStaffOrModerator
 from .models import Project, Comment, StaffPick, Category, Tag
-from .utils import project_changed
+from .utils import project_changed, detect_mentions
 from creators.utils import activity_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)
@@ -78,6 +78,7 @@ class ProjectTagSearchAPIView(ListAPIView):
         query = SearchQuery(query_string)
         rank = SearchRank(F('search_vector'), query)
         return Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
+
 
 class ProjectSearchAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
@@ -203,66 +204,11 @@ class AddCommentAPIView(CreateAPIView):
                              creator=self.request.user, text=text)
 
         result = self.get_object()
+        if result:
+            detect_mentions(
+                {"text": text, "project_id": result.pk, "creator": request.user.username})
+
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
-
-
-class CategoryListAPIView(ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
-
-
-class StaffPickListAPIView(ListAPIView):
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        result = StaffPick.objects.filter(is_active=True)
-        if result:
-            return result
-        raise NotFound(detail=_('page not found'), code=404)
-
-
-class StaffPickDetailsAPIView(RetrieveAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        pk = self.kwargs.get("pk")
-        obj = get_object_or_404(queryset, pk=pk)
-
-        return obj
-
-class CategoryListAPIView(ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
-
-
-class StaffPickListAPIView(ListAPIView):
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        result = StaffPick.objects.filter(is_active=True)
-        if result:
-            return result
-        raise NotFound(detail=_('page not found'), code=404)
-
-
-class StaffPickDetailsAPIView(RetrieveAPIView):
-    queryset = StaffPick.objects.filter(is_active=True)
-    serializer_class = StaffPickSerializer
-    permission_classes = [AllowAny]
-
-    def get_object(self):
-        queryset = self.get_queryset()
-        pk = self.kwargs.get("pk")
-        obj = get_object_or_404(queryset, pk=pk)
-
-        return obj
 
 
 class CategoryListAPIView(ListAPIView):
@@ -302,7 +248,8 @@ class UnpublishCommentAPIView(UpdateAPIView):
 
     def perform_update(self, serializer):
         comment = serializer.save(published=False)
-        comment.project.save()
+        if comment and comment.project:
+            comment.project.save()
         return comment
 
 
@@ -314,5 +261,8 @@ class DeleteCommentAPIView(DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         project = self.get_object().project
         result = self.destroy(request, *args, **kwargs)
-        project.save()
+
+        if project:
+            project.save()
+
         return result

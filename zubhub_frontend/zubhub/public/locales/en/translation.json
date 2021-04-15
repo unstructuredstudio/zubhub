@@ -425,8 +425,6 @@
       "deleteComment": "delete comment dialog"
     },
     "deleteProjectToastSuccess": "Your project was deleted successfully!!",
-    "deleteCommentToastSuccess": "comment was deleted successfully!!",
-    "unpublishCommentToastSuccess": "comment was unpublished successfully!!",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }
@@ -441,6 +439,8 @@
     "action": "Comment",
     "unpublish": "Unpublish",
     "delete": "Delete",
+    "deleteCommentToastSuccess": "comment was deleted successfully!!",
+    "unpublishCommentToastSuccess": "comment was unpublished successfully!!",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }

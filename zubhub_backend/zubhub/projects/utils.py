@@ -1,3 +1,4 @@
+import re
 from contextlib import contextmanager
 from celery.five import monotonic
 from django.core.cache import cache
@@ -58,8 +59,8 @@ def update_tags(project, tags_data):
     for tag in tags_data:
         tag, created = Tag.objects.get_or_create(name=tag["name"])
         tag.projects.add(project)
-              
-                  
+
+
 def send_staff_pick_notification(staff_pick):
     subscribed = Setting.objects.filter(subscribe=True)
     email_contexts = []
@@ -198,26 +199,73 @@ def project_changed(obj, instance):
 
     return changed
 
-  
-  
+
 def parse_comment_trees(data, creators_dict):
 
     def recursive_parse(data):
         arr = []
 
         for comment in data:
-            parsed = {}
-            parsed["id"] = comment["id"]
-            parsed["project"] = comment["data"]["project"]
-            parsed["creator"] = creators_dict[comment["data"]["creator"]]
-            parsed["text"] = comment["data"]["text"]
-            parsed["created_on"] = comment["data"]["created_on"]
+            if comment["data"]["published"]:
+                parsed = {}
+                parsed["id"] = comment["id"]
+                parsed["project"] = comment["data"]["project"]
+                parsed["creator"] = creators_dict[comment["data"]["creator"]]
+                parsed["text"] = comment["data"]["text"]
+                parsed["created_on"] = comment["data"]["created_on"]
 
-            children = comment.get("children", [])
-            parsed["replies"] = recursive_parse(children)
+                children = comment.get("children", [])
+                parsed["replies"] = recursive_parse(children)
 
-            arr.append(parsed)
+                arr.append(parsed)
         arr.reverse()
         return arr
 
     return recursive_parse(data)
+
+
+def detect_mentions(kwargs):
+    text = kwargs.get("text", None)
+    creator = kwargs.get("creator", None)
+    project_id = kwargs.get("project_id", None)
+    profile_username = kwargs.get("profile_username", None)
+
+    if isinstance(text, str):
+        mentions = list(map(lambda x: x.split(
+            "@")[1], re.findall("\B@[0-9a-zA-Z_.-]+", text)))
+
+        email_contexts = []
+        phone_contexts = []
+        mentions = Creator.objects.filter(username__in=mentions)
+
+        template_name = "mention_notification"
+        for mention in mentions:
+            if mention.email and (mention.username != creator):
+                email_contexts.append(
+                    {"creator": creator,
+                     "project_id": project_id,
+                     "profile_username": profile_username,
+                     "email": mention.email
+                     }
+                )
+
+            if mention.phone and (mention.username != creator):
+                phone_contexts.append(
+                    {"creator": creator,
+                     "project_id": project_id,
+                     "profile_username": profile_username,
+                     "phone": mention.phone
+                     }
+                )
+
+        if len(email_contexts) > 0:
+            send_mass_email.delay(
+                template_name=template_name,
+                ctxs=email_contexts
+            )
+
+        if len(phone_contexts) > 0:
+            send_mass_text.delay(
+                template_name=template_name,
+                ctxs=phone_contexts
+            )
