@@ -204,6 +204,7 @@ class AddCommentAPIView(CreateAPIView):
                              creator=self.request.user, text=text)
 
         result = self.get_object()
+        
         if result:
             detect_mentions(
                 {"text": text, "project_id": result.pk, "creator": request.user.username})
