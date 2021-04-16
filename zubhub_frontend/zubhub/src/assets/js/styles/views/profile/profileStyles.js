@@ -43,6 +43,28 @@ const styles = theme => ({
   userNameStyle: {
     fontWeight: 900,
     fontSize: '2rem',
+    position:"relative",
+    [theme.breakpoints.down('470')]:{
+       display: "flex",
+       flexDirection:"column",
+       justifyContent:"center",
+       alignItems:"center"
+    }
+  },
+  roleStyle: {
+    backgroundColor:'#00B8C4',
+    borderRadius:"50px",
+    color:"white",
+    padding: "0 0.5em",
+    position:"absolute",
+    display: "inline-block",
+    top: "0.8em",
+    marginLeft: "0.4em",
+    [theme.breakpoints.down('470')]:{
+     marginLeft: 0,
+     position:"static",
+     marginBottom:"0.4em"
+    }
   },
   emailStyle: { marginBottom: '0.5em' },
   dividerStyle: {
