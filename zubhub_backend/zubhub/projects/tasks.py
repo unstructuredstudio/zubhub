@@ -27,6 +27,7 @@ def update_search_index(self, model_name):
     from projects.models import Project
     from creators.models import Creator
     from projects.models import Tag
+    from projects.models import Category
     from projects.utils import task_lock
 
     model_name_hexdigest = md5(model_name.encode("utf-8")).hexdigest()
@@ -34,6 +35,8 @@ def update_search_index(self, model_name):
     try:
         with task_lock(lock_id, self.app.oid) as acquired:
             if acquired:
+                if model_name == "category":
+                    Category.objects.update(search_vector=SearchVector('name'))
                 if model_name == "tag":
                     Tag.objects.update(search_vector=SearchVector('name'))
                 if model_name == "creator":
