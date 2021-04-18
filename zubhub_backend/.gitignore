@@ -5,6 +5,7 @@ __pycache__/
 staticfiles/
 .env
 .docker/
+cadvisor.htpasswd
 .ssl-data
 celerybeat-schedule
 celerybeat.pid
