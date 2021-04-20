@@ -19,7 +19,7 @@ RUN apt-get update \
 WORKDIR /zubhub_backend
 
 # copying neccessary files to work directory
-COPY requirements.txt /zubhub_backend/
+COPY ./requirements.txt /zubhub_backend/
 
 RUN pip install --upgrade pip wheel \
   # Requirements are installed here to ensure they will be cached.
@@ -27,17 +27,9 @@ RUN pip install --upgrade pip wheel \
 
 
 # copy project
-COPY . /zubhub_backend/
+COPY ./zubhub/ /zubhub_backend/zubhub/
 
 
-COPY /start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
-
-COPY /start-celeryworker /start-celeryworker
-RUN sed -i 's/\r$//g' /start-celeryworker
-RUN chmod +x /start-celeryworker
-
-COPY /start-flower /start-flower
-RUN sed -i 's/\r$//g' /start-flower
-RUN chmod +x /start-flower
+COPY ./compose/django/start /zubhub_backend/start
+RUN sed -i 's/\r$//g' /zubhub_backend/start
+RUN chmod +x /zubhub_backend/start

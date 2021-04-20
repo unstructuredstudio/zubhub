@@ -3,11 +3,11 @@ version: "3.3"
 services:
   web:
     container_name: web
+    env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
-    env_file: .env
-    command: /start
+      dockerfile: ./compose/django/Dockerfile
+    command: /zubhub_backend/start
     restart: on-failure
     environment:
       - ENVIRONMENT=${ENVIRONMENT}
@@ -23,7 +23,9 @@ services:
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_NOTIFY_SERVICE_SID=${TWILIO_NOTIFY_SERVICE_SID}
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/zubhub_backend/zubhub
+      - ./compose/django/start:/zubhub_backend/start:ro
+      - ./compose/django/requirements.txt:/zubhub_backend/requirements.txt:ro
     ports:
       - 8000
     depends_on:
@@ -72,32 +74,36 @@ services:
       - 5672
       - 15672
 
-  celery_worker:
-    container_name: celery_worker
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    env_file: .env
-    command: /start-celeryworker
-    restart: on-failure
-    volumes:
-      - .:/zubhub_backend
-    depends_on:
-      - rabbitmq
-      - db
+    celery_worker:
+      container_name: celery_worker
+      env_file: .env
+      build:
+        context: .
+        dockerfile: ./compose/celery/Dockerfile
+      command: /celery/start-celeryworker
+      restart: on-failure
+      volumes:
+        - ./zubhub:/celery/zubhub
+        - ./compose/celery/start-celeryworker:/celery/start-celeryworker:ro
+        - ./compose/celery/requirements.txt:/celery/requirements.txt:ro
+      depends_on:
+        - rabbitmq
+        - db
 
   flower:
     container_name: flower
+    env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
-    env_file: .env
+      dockerfile: ./compose/flower/Dockerfile
     ports:
       - 5555
-    command: /start-flower
+    command: /flower/start-flower
     restart: on-failure
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/flower/zubhub
+      - ./compose/flower/start-flower:/flower/start-flower:ro
+      - ./compose/flower/requirements.txt:/flower/requirements.txt:ro
     depends_on:
       - celery_worker
       - rabbitmq
@@ -112,7 +118,7 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     restart: on-failure
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - cadvisor
 

@@ -6,8 +6,8 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
-    command: /start
+      dockerfile: ./compose/django/Dockerfile
+    command: /zubhub_backend/start
     restart: on-failure
     environment:
       - ENVIRONMENT=${ENVIRONMENT}
@@ -23,7 +23,9 @@ services:
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_NOTIFY_SERVICE_SID=${TWILIO_NOTIFY_SERVICE_SID}
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/zubhub
+      - ./compose/django/start:/start:ro
+      - ./compose/django/requirements.txt:/requirements.txt:ro
     ports:
       - 8000:8000
     depends_on:
@@ -56,11 +58,13 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
-    command: /start-celeryworker
+      dockerfile: ./compose/celery/Dockerfile
+    command: /celery/start-celeryworker
     restart: on-failure
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/zubhub
+      - ./compose/celery/start-celeryworker:/start-celeryworker:ro
+      - ./compose/celery/requirements.txt:/requirements.txt:ro
     depends_on:
       - rabbitmq
       - db
@@ -70,13 +74,15 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./compose/flower/Dockerfile
     ports:
       - 5555:5555
-    command: /start-flower
+    command: /flower/start-flower
     restart: on-failure
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/flower/zubhub
+      - ./compose/flower/start-flower:/start-flower:ro
+      - ./compose/flower/requirements.txt:/requirements.txt:ro
     depends_on:
       - celery_worker
       - rabbitmq
@@ -91,7 +97,7 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     restart: on-failure
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - cadvisor
 
