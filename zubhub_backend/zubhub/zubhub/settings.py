@@ -60,8 +60,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
-                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST]
+# ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
+#                  FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST]
+ALLOWED_HOSTS = ['*']
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
@@ -135,8 +136,8 @@ AUTH_USER_MODEL = 'creators.Creator'
 
 
 # django-allauth config
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT = '/'
+LOGIN_REDIRECT_URL = '/api'
+ACCOUNT_LOGOUT_REDIRECT = '/api'
 
 SITE_ID = 1
 
@@ -251,7 +252,7 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -260,7 +261,7 @@ STATICFILES_FINDER = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 ]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/api/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # django-debug-toolbar

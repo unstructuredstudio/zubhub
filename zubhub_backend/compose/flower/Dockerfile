@@ -31,3 +31,5 @@ COPY ./zubhub/ /flower/zubhub/
 COPY ./compose/flower/start-flower /flower/start-flower
 RUN sed -i 's/\r$//g' /flower/start-flower
 RUN chmod +x /flower/start-flower
+
+ENTRYPOINT [ "/flower/start-flower" ]

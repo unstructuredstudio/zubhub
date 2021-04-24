@@ -33,3 +33,9 @@ COPY ./zubhub/ /zubhub_backend/zubhub/
 COPY ./compose/django/start /zubhub_backend/start
 RUN sed -i 's/\r$//g' /zubhub_backend/start
 RUN chmod +x /zubhub_backend/start
+
+COPY ./compose/docker_secrets_expand.sh /docker_secrets_expand.sh
+RUN sed -i 's/\r$//g' /docker_secrets_expand.sh
+RUN chmod +x /docker_secrets_expand.sh
+
+ENTRYPOINT [ "/zubhub_backend/start" ]

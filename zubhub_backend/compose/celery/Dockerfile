@@ -30,3 +30,9 @@ COPY ./zubhub/ /celery/zubhub/
 COPY ./compose/celery/start-celeryworker /celery/start-celeryworker
 RUN sed -i 's/\r$//g' /celery/start-celeryworker
 RUN chmod +x /celery/start-celeryworker
+
+COPY ./compose/docker_secrets_expand.sh /docker_secrets_expand.sh
+RUN sed -i 's/\r$//g' /docker_secrets_expand.sh
+RUN chmod +x /docker_secrets_expand.sh
+
+ENTRYPOINT [ "/celery/start-celeryworker" ]
