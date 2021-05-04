@@ -1,5 +1,5 @@
 media/
-migrations/
+# migrations/
 __pycache__/
 *.pyc
 staticfiles/

@@ -13,9 +13,10 @@ python /zubhub_backend/zubhub/manage.py collectstatic --noinput
 # python /zubhub_backend/zubhub/manage.py makemigrations projects
 # python /zubhub_backend/zubhub/manage.py migrate
 
-# python /zubhub_backend/zubhub/manage.py createcachetable
+python /zubhub_backend/zubhub/manage.py createcachetable
 
-# python /zubhub_backend/zubhub/manage.py populate_countries
-# python /zubhub_backend/zubhub/manage.py populate_categories
+python /zubhub_backend/zubhub/manage.py populate_countries
+python /zubhub_backend/zubhub/manage.py populate_categories
 
-exec /usr/local/bin/gunicorn zubhub.wsgi --threads=3 --bind 0.0.0.0:8000 --chdir /zubhub_backend/zubhub
+exec /usr/local/bin/gunicorn zubhub.wsgi --threads=3 --bind 0.0.0.0:8000 \
+--access-logfile - --error-logfile -   --chdir /zubhub_backend/zubhub
