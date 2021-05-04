@@ -3,7 +3,7 @@ name: Backend Production Deployment
 on:
   push:
     branches:
-      - deployment
+      - master
     paths:
       - "zubhub_backend/**"
       - "!zubhub_backend/.gitignore"
@@ -73,4 +73,10 @@ jobs:
           HOST: ${{ secrets.DO_BACKEND_HOST }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
           KEY: ${{ secrets.DO_SSHKEY }}
-          script: "cp /home/zubhub-services/zubhub/zubhub_backend/compose/deploy_backend.sh /home/zubhub-services/ && sudo bash /home/zubhub-services/deploy_backend.sh"
+          script: |
+            cp /home/zubhub-services/zubhub/zubhub_backend/compose/deploy_backend.sh /home/zubhub-services/
+            sudo bash /home/zubhub-services/deploy_backend.sh
+            doctl compute droplet list 'zubhub-services*' > droplets.txt
+            droplets_count=`wc -l < droplets.txt`
+            rm droplets.txt
+            docker service scale zubhub-services_web=$(($droplets_count - 1))
