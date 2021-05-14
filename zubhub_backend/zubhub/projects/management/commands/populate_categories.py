@@ -9,11 +9,9 @@ class Command(BaseCommand):
         if len(Category.objects.all()) < 1:
             with open("./zubhub/projects/management/commands/categories.txt", "r") as categories:
                 categories = categories.readlines()
-                Category.add_root(name="uncategorized")
                 for category in categories:
                     self.stdout.write(category)
-                    root_category = Category.objects.get(name="uncategorized")
-                    root_category.add_child(name=category.split("\n")[0])
+                    Category.add_root(name=category.split("\n")[0])
             self.stdout.write(self.style.SUCCESS(
                 'The Category table has been successfully populated!'))
         else:

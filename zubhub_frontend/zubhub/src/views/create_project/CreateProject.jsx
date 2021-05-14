@@ -1290,7 +1290,7 @@ export default connect(
 
           return !is_empty;
         }),
-      category: Yup.string().min(1, 'min').required('required'),
+      category: Yup.string().min(1, 'min'),
       tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
         if (tags) {
           tags = JSON.parse(tags);
