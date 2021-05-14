@@ -1,131 +1,104 @@
-version: "3.3"
+version: "3.9"
 
 services:
   web:
-    container_name: web
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    env_file: .env
-    command: /start
-    restart: on-failure
+    image: unstructuredstudio/zubhub-services_web:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        max_replicas_per_node: 1
     environment:
-      - ENVIRONMENT=${ENVIRONMENT}
-      - SECRET_KEY:${SECRET_KEY}
-      - DEBUG:${DEBUG}
-      - POSTGRES_NAME=${POSTGRES_NAME}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - DEFAULT_FROM_PHONE=${DEFAULT_FROM_PHONE}
-      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
-      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-      - TWILIO_NOTIFY_SERVICE_SID=${TWILIO_NOTIFY_SERVICE_SID}
-    volumes:
-      - .:/zubhub_backend
+      - SECRET_NAME=zubhub_services_secrets
+    secrets:
+      - zubhub_services_secrets
     ports:
       - 8000
     depends_on:
-      - db
       - rabbitmq
 
-  db:
-    image: postgres:11
+  rabbitmq:
+    image: rabbitmq:3-management
     env_file: .env
-    restart: on-failure
-    environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+    deploy:
+      replicas: 1
+      # update_config:
+      #   parallelism: 2
+      #   delay: 10s
+      restart_policy:
+        condition: on-failure
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==manager"
     ports:
-      - 5432
+      - 5672
+      - 15672
 
   reverse-proxy:
     image: valian/docker-nginx-auto-ssl:1.0.0
-    container_name: reverse-proxy
-    restart: on-failure
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==manager"
     ports:
       - 80:80
       - 443:443
     volumes:
       - ./.ssl-data:/etc/resty-auto-ssl
     environment:
-      ALLOWED_DOMAINS: "(api|www.api|rabbitmq|flower|prometheus).zubhub.unstructured.studio"
+      ALLOWED_DOMAINS: "(api|www.api|rabbitmq|prometheus).zubhub.unstructured.studio"
       SITES:
         "api.zubhub.unstructured.studio=web:8000;www.api.zubhub.unstructured.studio=web:8000;\
-        rabbitmq.zubhub.unstructured.studio=rabbitmq:15672;flower.zubhub.unstructured.studio=flower:5555;\
-        prometheus.zubhub.unstructured.studio=prometheus:9090"
+        rabbitmq.zubhub.unstructured.studio=rabbitmq:15672;prometheus.zubhub.unstructured.studio=prometheus:9090"
       FORCE_HTTPS: "true"
     depends_on:
       - web
       - rabbitmq
-      - flower
       - prometheus
 
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3-management
-    env_file: .env
-    restart: always
-    ports:
-      - 5672
-      - 15672
-
   celery_worker:
-    container_name: celery_worker
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    env_file: .env
-    command: /start-celeryworker
-    restart: on-failure
-    volumes:
-      - .:/zubhub_backend
+    image: unstructuredstudio/zubhub-services_celery:latest
+    environment:
+      - SECRET_NAME=zubhub_services_secrets
+    secrets:
+      - zubhub_services_secrets
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==manager"
     depends_on:
       - rabbitmq
-      - db
-
-  flower:
-    container_name: flower
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    env_file: .env
-    ports:
-      - 5555
-    command: /start-flower
-    restart: on-failure
-    volumes:
-      - .:/zubhub_backend
-    depends_on:
-      - celery_worker
-      - rabbitmq
-      - db
 
   prometheus:
-    container_name: prometheus
     image: prom/prometheus
     ports:
       - 9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
-    restart: on-failure
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        max_replicas_per_node: 1
+        constraints:
+          - "node.role==manager"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    depends_on:
-      - cadvisor
+      - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
-  cadvisor:
-    image: google/cadvisor
-    container_name: cadvisor
-    restart: on-failure
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+secrets:
+  zubhub_services_secrets:
+    file: .env
 
 volumes:
-  postgres_data:
   .ssl-data:
