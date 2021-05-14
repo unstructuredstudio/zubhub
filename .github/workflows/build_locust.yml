@@ -3,7 +3,7 @@ name: Build/Deploy/Destroy Locust Service
 on:
   push:
     branches:
-      - stress_testing
+      - master
     paths:
       - "locust/**"
 
@@ -11,7 +11,7 @@ on:
     inputs:
       action_type:
         description:
-          "Do you want build new locust container or deploy/destroy a locust service? type \
+          "Do you want to build new locust container or deploy/destroy a locust service? type \
           'build' to build new container, 'deploy' to deploy a locust service, 'destroy' to \
           destroy existing locust service. defaults to 'build' "
         required: true
@@ -19,7 +19,7 @@ on:
 
 jobs:
   build:
-    if: ${{github.event_name == "push" || github.event.inputs.action_type == 'build' }}
+    if: ${{github.event_name == 'push' || github.event.inputs.action_type == 'build' }}
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -50,24 +50,36 @@ jobs:
     if: ${{ github.event.inputs.action_type == 'deploy' }}
     runs-on: ubuntu-latest
     steps:
-      - name: deploy locust
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+
+      - name: Create new droplet
+        run: |
+          doctl compute droplet create locust --image \
+            ${{ secrets.SOURCE_SNAPSHOT_ID }} --tag-name zubhub-locust --size s-1vcpu-1gb \
+            --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
+          sleep 30s
+          echo "NEW_DROPLET_IP=$(doctl compute droplet get locust \
+            --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_ENV
+
+      - name: Deploy locust
         uses: appleboy/ssh-action@master
         with:
-          HOST: ${{ secrets.DO_BACKEND_HOST }}
+          HOST: ${{ env.NEW_DROPLET_IP }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
           KEY: ${{ secrets.DO_SSHKEY }}
-          script: |
-            docker service create --name zubhub-services_locust unstructuredstudio/zubhub-services_locust:latest \
-              -p 8089:8089 -f /mnt/locust/locustfile.py
+          script: "docker run -d -p 8089:8089 unstructuredstudio/zubhub-services_locust:latest -f /mnt/locust/locustfile.py"
 
   destroy:
     if: ${{ github.event.inputs.action_type == 'destroy' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Spawn down locust
-        uses: appleboy/ssh-action@master
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          HOST: ${{ secrets.DO_BACKEND_HOST }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
-          KEY: ${{ secrets.DO_SSHKEY }}
-          script: "docker service rm zubhub-services_locust"
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+
+      - name: Destroy Target Droplet
+        run: "doctl compute droplet delete -f locust"
