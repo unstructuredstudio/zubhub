@@ -50,6 +50,12 @@ class SaferProxyFix(object):
         })
         forwarded_for = [x for x in [x.strip() for x in forwarded_for] if x]
         remote_addr = self.get_remote_addr(forwarded_for)
+
+        # print("forwarded_for", forwarded_for)
+        # print("remote_addr", remote_addr)
+        # print("forwarded_host", forwarded_host)
+        # print("forwarded_proto", forwarded_proto)
+
         if remote_addr is not None:
             environ['REMOTE_ADDR'] = remote_addr
         if forwarded_host:
