@@ -12,7 +12,7 @@ from rest_framework.generics import (UpdateAPIView, CreateAPIView,
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from projects.permissions import IsOwner, IsStaffOrModerator
 from .models import Project, Comment, StaffPick, Category, Tag
-from .utils import project_changed, detect_mentions
+from .utils import project_changed, detect_mentions, perform_project_search
 from creators.utils import activity_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)
@@ -86,10 +86,7 @@ class ProjectSearchAPIView(ListAPIView):
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
-        query_string = self.request.GET.get("q")
-        query = SearchQuery(query_string, search_type="phrase")
-        rank = SearchRank(F('search_vector'), query)
-        return Project.objects.annotate(rank=rank).filter(search_vector=query, published=True).order_by('-rank')
+        return perform_project_search(self.request.GET.get("q"))
 
 
 class ProjectDetailsAPIView(RetrieveAPIView):

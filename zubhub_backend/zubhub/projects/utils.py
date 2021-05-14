@@ -2,9 +2,12 @@ import re
 from contextlib import contextmanager
 from celery.five import monotonic
 from django.core.cache import cache
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import prefetch_related_objects
+from django.db.models import F
 from django.conf import settings
 from akismet import Akismet
-from .models import Comment, Image, Tag
+from .models import Comment, Image, Tag, Category, Project
 from creators.tasks import send_mass_email, send_mass_text
 from creators.models import Creator, Setting
 
@@ -269,3 +272,51 @@ def detect_mentions(kwargs):
                 template_name=template_name,
                 ctxs=phone_contexts
             )
+
+
+def perform_project_search(query_string):
+    query = SearchQuery(query_string, search_type="phrase")
+    rank = SearchRank(F('search_vector'), query)
+    result_projects = None
+
+    # fetch all projects whose category(s) matches the search query
+    result_categories = Category.objects.filter(search_vector=query)
+    result_categories_tree = None
+
+    for category in result_categories:
+        if result_categories_tree:
+            result_categories_tree |= Category.get_tree(parent=category)
+        else:
+            result_categories_tree = Category.get_tree(parent=category)
+
+    if result_categories_tree:
+        prefetch_related_objects(result_categories_tree, 'projects')
+
+        for category in result_categories_tree:
+            if result_projects:
+                result_projects |= category.projects.all().annotate(rank=rank).order_by('-rank')
+            else:
+                result_projects = category.projects.all().annotate(rank=rank).order_by('-rank')
+    #################################################################
+
+    # fetch all projects whose tag(s) matches the search query
+    result_tags = Tag.objects.filter(
+        search_vector=query).prefetch_related("projects")
+
+    for tag in result_tags:
+        if result_projects:
+            result_projects |= tag.projects.all().annotate(rank=rank).order_by('-rank')
+        else:
+            result_projects = tag.projects.all().annotate(rank=rank).order_by('-rank')
+    ############################################################
+
+    # fetch all projects that matches the search term
+    if result_projects:
+        result_projects |= Project.objects.annotate(rank=rank).filter(
+            search_vector=query, published=True).order_by('-rank')
+    else:
+        result_projects = Project.objects.annotate(rank=rank).filter(
+            search_vector=query, published=True).order_by('-rank')
+    ##############################################################
+
+    return result_projects
