@@ -13,8 +13,6 @@ services:
       - SECRET_NAME=zubhub_services_secrets
     secrets:
       - zubhub_services_secrets
-    ports:
-      - 8000
     depends_on:
       - rabbitmq
 
@@ -32,9 +30,6 @@ services:
         max_replicas_per_node: 1
         constraints:
           - "node.role==manager"
-    ports:
-      - 5672
-      - 15672
 
   reverse-proxy:
     image: valian/docker-nginx-auto-ssl:1.0.0
@@ -81,8 +76,6 @@ services:
 
   prometheus:
     image: prom/prometheus
-    ports:
-      - 9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     deploy:

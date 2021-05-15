@@ -46,8 +46,7 @@ if ENVIRONMENT == 'production':
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    if not DEBUG:
-        X_FRAME_OPTIONS = 'DENY'
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
 
     # SESSION_COOKIE_SECURE = True
     # CSRF_COOKIE_SECURE = True
@@ -60,9 +59,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-# ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
-#                  FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST]
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
+                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST]
+# ALLOWED_HOSTS = ['*']
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
