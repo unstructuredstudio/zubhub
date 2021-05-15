@@ -32,6 +32,13 @@ const styles = theme => ({
   projectGridStyle: {
     marginBottom: '2em',
   },
+  titleStyle: {
+    fontWeight: 900,
+    fontSize: '1.5rem',
+    marginTop: '2em',
+    marginLeft: '1rem',
+    marginRight: '1rem',
+  },
   buttonGroupStyle: {
     paddingLeft: '2em',
     paddingRight: '2em',

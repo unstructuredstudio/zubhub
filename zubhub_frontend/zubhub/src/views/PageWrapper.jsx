@@ -118,7 +118,7 @@ function PageWrapper(props) {
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
+        setState(state => ({ ...state, ...obj }));
       });
     }
   };
@@ -524,61 +524,181 @@ function PageWrapper(props) {
 
       {loading ? <LoadingPage /> : props.children}
 
-      <footer className="footer-distributed" style={{ flexShrink: 0 }}>
-        <div className="footer-right"></div>
+      <footer className={clsx('footer-distributed', classes.footerStyle)}>
+        <Box>
+          <a href="https://unstructured.studio">
+            <img
+              src={unstructuredLogo}
+              className={classes.footerLogoStyle}
+              alt="unstructured-studio-logo"
+            />
+          </a>
+          <div>
+            <Box
+              className={clsx(
+                classes.languageSelectBoxStyle,
+                commonClasses.displayInlineFlex,
+                commonClasses.alignCenter,
+                commonClasses.addOnSmallScreen,
+              )}
+            >
+              <TranslateIcon />
+              <Select
+                className={classes.languageSelectStyle}
+                value=""
+                onChange={e => handleChangeLanguage({ e, props })}
+              >
+                {Object.keys(languageMap).map((ln, index) => (
+                  <MenuItem key={index} value={ln}>
+                    {languageMap[ln]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+            <Box
+              className={clsx(
+                classes.languageSelectBoxStyle,
+                commonClasses.displayInlineFlex,
+                commonClasses.alignCenter,
+                commonClasses.removeOnSmallScreen,
+              )}
+            >
+              <TranslateIcon />
+              <Select
+                className={classes.languageSelectStyle}
+                value={props.i18n.language}
+                onChange={e => handleChangeLanguage({ e, props })}
+              >
+                {Object.keys(languageMap).map((ln, index) => (
+                  <MenuItem key={index} value={ln}>
+                    {languageMap[ln]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
+          </div>
+        </Box>
 
-        <div className="footer-left"></div>
-        <a href="https://unstructured.studio">
-          <img
-            src={unstructuredLogo}
-            className={classes.footerLogoStyle}
-            alt="unstructured-studio-logo"
-          />
-        </a>
-        <div>
-          <Box
-            className={clsx(
-              classes.languageSelectBoxStyle,
-              commonClasses.displayInlineFlex,
-              commonClasses.alignCenter,
-              commonClasses.addOnSmallScreen,
-            )}
-          >
-            <TranslateIcon />
-            <Select
-              className={classes.languageSelectStyle}
-              value=""
-              onChange={e => handleChangeLanguage({ e, props })}
+        <section className={classes.footerSectionStyle}>
+          <Box className={classes.footerBoxStyle}>
+            <Typography
+              variant="subtitle2"
+              color="textPrimary"
+              className={classes.footerTitleStyle}
             >
-              {Object.keys(languageMap).map((ln, index) => (
-                <MenuItem key={index} value={ln}>
-                  {languageMap[ln]}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-          <Box
-            className={clsx(
-              classes.languageSelectBoxStyle,
-              commonClasses.displayInlineFlex,
-              commonClasses.alignCenter,
-              commonClasses.removeOnSmallScreen,
-            )}
-          >
-            <TranslateIcon />
-            <Select
-              className={classes.languageSelectStyle}
-              value={props.i18n.language}
-              onChange={e => handleChangeLanguage({ e, props })}
+              {t('pageWrapper.footer.privacy')}
+            </Typography>
+
+            <Link
+              to={`/guidelines_and_policy`}
+              className={commonClasses.textDecorationNone}
             >
-              {Object.keys(languageMap).map((ln, index) => (
-                <MenuItem key={index} value={ln}>
-                  {languageMap[ln]}
-                </MenuItem>
-              ))}
-            </Select>
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.guidelines')}
+              </Typography>
+            </Link>
+
+            <Link
+              to={`/terms_of_use`}
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.termsOfUse')}
+              </Typography>
+            </Link>
           </Box>
-        </div>
+
+          <Box className={classes.footerBoxStyle}>
+            <Typography
+              variant="subtitle2"
+              color="textPrimary"
+              className={classes.footerTitleStyle}
+            >
+              {t('pageWrapper.footer.about')}
+            </Typography>
+
+            <a
+              href="https://unstructured.studio/zub-app/"
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.zubhub')}
+              </Typography>
+            </a>
+
+            <a
+              href="https://unstructured.studio/about/"
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.unstructuredStudio')}
+              </Typography>
+            </a>
+          </Box>
+
+          <Box className={classes.footerBoxStyle}>
+            <Typography
+              variant="subtitle2"
+              color="textPrimary"
+              className={classes.footerTitleStyle}
+            >
+              {t('pageWrapper.footer.help')}
+            </Typography>
+
+            <Link
+              to={`/resources`}
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.resources')}
+              </Typography>
+            </Link>
+
+            <Link to={`/faqs`} className={commonClasses.textDecorationNone}>
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.faqs')}
+              </Typography>
+            </Link>
+
+            <a
+              href="mailto:hello@unstructured.studio"
+              className={commonClasses.textDecorationNone}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.contactUs')}
+              </Typography>
+            </a>
+          </Box>
+        </section>
+
         <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}

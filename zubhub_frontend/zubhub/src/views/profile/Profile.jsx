@@ -39,13 +39,15 @@ import * as ProjectActions from '../../store/actions/projectActions';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
+import Comments from '../../components/comments/Comments';
+import parse_comments from '../../assets/js/parseComments';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const getUserPofile = props => {
+const getUserProfile = props => {
   let username = props.match.params.username;
 
   if (!username) {
@@ -148,13 +150,18 @@ function Profile(props) {
   });
 
   React.useEffect(() => {
-    handleSetState(getUserPofile(props));
+    Promise.resolve(getUserProfile(props)).then(obj => {
+      if (obj.profile) {
+        parse_comments(obj.profile.comments);
+      }
+      handleSetState(obj);
+    });
   }, []);
 
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        setState({ ...state, ...obj });
+        setState(state => ({ ...state, ...obj }));
       });
     }
   };
@@ -283,6 +290,12 @@ function Profile(props) {
                   color="textPrimary"
                 >
                   {profile.username}
+
+                  {profile.role !== 'creator' ? (
+                    <Typography className={classes.roleStyle}>
+                      {profile.role}
+                    </Typography>
+                  ) : null}
                 </Typography>
                 {props.auth.username === profile.username ? (
                   <>
@@ -329,6 +342,19 @@ function Profile(props) {
                       {profile.following_count} {t('profile.followingCount')}
                     </Typography>
                   </Link>
+                  {profile.members_count !== null ? (
+                    <Link
+                      to={`/creators/${profile.username}/members`}
+                      className={classes.textDecorationNone}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        {profile.members_count} {t('profile.membersCount')}
+                      </Typography>
+                    </Link>
+                  ) : null}
                 </Box>
               </Box>
             </Container>
@@ -343,9 +369,15 @@ function Profile(props) {
                 color="textPrimary"
                 className={classes.titleStyle}
               >
-                {t('profile.about.label')}
+                {!profile.members_count
+                  ? t('profile.about.label1')
+                  : t('profile.about.label2')}
               </Typography>
-              {profile.bio ? profile.bio : t('profile.about.placeholder')}
+              {profile.bio
+                ? profile.bio
+                : !profile.members_count
+                ? t('profile.about.placeholder1')
+                : t('profile.about.placeholder2')}
             </Paper>
 
             {profile.projects_count > 0 ? (
@@ -396,6 +428,11 @@ function Profile(props) {
                 </Grid>
               </Paper>
             ) : null}
+            <Comments
+              context={{ name: 'profile', body: profile }}
+              handleSetState={handleSetState}
+              {...props}
+            />
           </Container>
         </Box>
         <Dialog
@@ -474,6 +511,8 @@ Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   set_auth_user: PropTypes.func.isRequired,
   get_user_profile: PropTypes.func.isRequired,
+  suggest_creators: PropTypes.func.isRequired,
+  add_comment: PropTypes.func.isRequired,
   delete_account: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
   toggle_follow: PropTypes.func.isRequired,
@@ -494,6 +533,18 @@ const mapDispatchToProps = dispatch => {
     },
     get_user_profile: args => {
       return dispatch(UserActions.get_user_profile(args));
+    },
+    suggest_creators: args => {
+      return dispatch(UserActions.suggest_creators(args));
+    },
+    add_comment: args => {
+      return dispatch(UserActions.add_comment(args));
+    },
+    unpublish_comment: args => {
+      return dispatch(ProjectActions.unpublish_comment(args));
+    },
+    delete_comment: args => {
+      return dispatch(ProjectActions.delete_comment(args));
     },
     delete_account: args => {
       return dispatch(AuthActions.delete_account(args));

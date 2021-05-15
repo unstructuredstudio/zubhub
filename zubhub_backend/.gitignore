@@ -1,8 +1,11 @@
 media/
-migrations/
+# migrations/
 __pycache__/
 *.pyc
 staticfiles/
 .env
 .docker/
+cadvisor.htpasswd
 .ssl-data
+celerybeat-schedule
+celerybeat.pid

@@ -1,7 +1,8 @@
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import pre_delete, post_save, pre_save
 from django.dispatch import receiver
 from projects.tasks import delete_image_from_DO_space, update_search_index
-from .models import Project, Image
+from .models import Project, Image, StaffPick, Tag, Category
+from .utils import project_changed
 
 
 @receiver(post_save, sender=Project)
@@ -9,8 +10,20 @@ def project_saved(sender, instance, **kwargs):
     instance.creator.projects_count = instance.creator.projects.count()
     instance.creator.save()
     update_search_index.delay("project")
+# @receiver(post_save, sender=StaffPick)
+# def staff_pick_saved(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=Image)
 def image_to_be_deleted(sender, instance, **kwargs):
     delete_image_from_DO_space.delay("zubhub", instance.public_id)
+
+
+@receiver(post_save, sender=Tag)
+def tag_saved(sender, instance, **kwargs):
+    update_search_index.delay("tag")
+
+
+@receiver(post_save, sender=Category)
+def category_saved(sender, instance, **kwargs):
+    update_search_index.delay("category")

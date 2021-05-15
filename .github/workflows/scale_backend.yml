@@ -1,0 +1,97 @@
+name: Scale Backend Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      scaling_type:
+        description: "Do you want to scale up or down? type either 'up' or 'down'. defaults to 'up'"
+        required: true
+        default: "up"
+
+jobs:
+  scale_up:
+    if: ${{ github.event.inputs.scaling_type == 'up' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+
+      - name: Create new droplet
+        run: |
+          doctl compute droplet list 'zubhub-services*' > droplets.txt
+          droplets_count=`wc -l < droplets.txt`
+          echo "TARGET_DROPLETS_COUNT=$(($droplets_count))" >> $GITHUB_ENV
+          doctl compute droplet create zubhub-services-$(($droplets_count-1)) --image \
+            ${{ secrets.SOURCE_SNAPSHOT_ID }} --tag-name zubhub-services --size s-1vcpu-1gb \
+            --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
+          sleep 30s
+          echo "NEW_DROPLET_IP=$(doctl compute droplet get zubhub-services-$(($droplets_count-1)) \
+            --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_ENV
+
+      - name: Connect new droplet to swarm
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ env.NEW_DROPLET_IP }}
+          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "docker swarm join --token ${{secrets.SWARM_WORKER_JOIN_TOKEN}} ${{secrets.SWARM_MASTER_HOST_AND_PORT}};sleep 10"
+
+      - name: Scale up deployment
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ secrets.DO_BACKEND_HOST }}
+          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "docker service scale zubhub-services_web=${{env.TARGET_DROPLETS_COUNT}}"
+
+  scale_down:
+    if: ${{ github.event.inputs.scaling_type == 'down' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+
+      - name: Get target Droplet IP and Droplet Count
+        run: |
+          doctl compute droplet list 'zubhub-services*' > droplets.txt
+          droplets_count=`wc -l < droplets.txt`
+          echo "TARGET_DROPLETS_COUNT=$(($droplets_count - 2))" >> $GITHUB_ENV
+          echo "TARGET_DROPLET_IP=$(doctl compute droplet get zubhub-services-$(($droplets_count-2)) \
+            --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_ENV
+
+      - name: Scale down deployment
+        if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ secrets.DO_BACKEND_HOST }}
+          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "docker service scale zubhub-services_web=${{env.TARGET_DROPLETS_COUNT}}"
+
+      - name: Disconnect Target Droplet From Swarm
+        if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ env.TARGET_DROPLET_IP }}
+          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "docker swarm leave;sleep 5s"
+
+      - name: Destroy Target Droplet
+        if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
+        run: |
+          doctl compute droplet delete -f zubhub-services-$TARGET_DROPLETS_COUNT
+          sleep 10s
+
+      - name: Remove Target Droplet From Node List
+        if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
+        uses: appleboy/ssh-action@master
+        with:
+          HOST: ${{ secrets.DO_BACKEND_HOST }}
+          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          KEY: ${{ secrets.DO_SSHKEY }}
+          script: "docker node rm zubhub-services-${{env.TARGET_DROPLETS_COUNT}}"

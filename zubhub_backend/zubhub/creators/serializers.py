@@ -4,31 +4,84 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Location, PhoneNumber, Setting
+from .models import Location, PhoneNumber, Setting, CreatorGroup
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.utils import setup_user_email
 from .utils import setup_user_phone
+from projects.models import Comment
+from projects.utils import parse_comment_trees
 
 Creator = get_user_model()
 
 
 class CreatorSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
     phone = serializers.CharField(allow_blank=True, default="")
     email = serializers.EmailField(allow_blank=True, default="")
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
-    projects_count = serializers.IntegerField(read_only=True)
+    comments = serializers.SerializerMethodField('get_profile_comments')
+    projects_count = serializers.SerializerMethodField('get_projects_count')
     following_count = serializers.IntegerField(read_only=True)
     dateOfBirth = serializers.DateField(read_only=True)
     location = serializers.SlugRelatedField(
         slug_field='name', queryset=Location.objects.all())
+    members_count = serializers.SerializerMethodField('get_members_count')
+    role = serializers.SerializerMethodField("get_role")
 
     class Meta:
         model = Creator
-        fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
-                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count')
+
+        fields = ('id', 'username', 'email', 'phone', 'avatar', 'location', 'comments',
+                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'members_count', 'role')
+
+    read_only_fields = ["id", "projects_count",
+                        "following_count", "dateOfBirth", "role"]
+
+    def get_role(self, obj):
+        if obj:
+            if obj.role == Creator.CREATOR:
+                return "creator"
+            if obj.role == Creator.MODERATOR:
+                return "moderator"
+            if obj.role == Creator.STAFF:
+                return "staff"
+            if obj.role == Creator.Group:
+                return 'group'
+        return None
+
+    def get_members_count(self, obj):
+        if hasattr(obj, "creatorgroup"):
+            return obj.creatorgroup.members.count()
+        else:
+            return None
+
+    def get_projects_count(self, obj):
+        if hasattr(obj, "creatorgroup"):
+            return obj.creatorgroup.projects_count
+        else:
+            return obj.projects_count
+
+    def get_profile_comments(self, obj):
+        from projects.serializers import CommentSerializer
+
+        all_comments = obj.profile_comments.all()
+        root_comments = []
+        creators_dict = {}
+
+        for comment in all_comments:
+            if comment.is_root():
+                root_comments.append(comment)
+
+        all_comments = CommentSerializer(all_comments, many=True).data
+
+        for comment in all_comments:
+            creators_dict[comment["creator"]["id"]] = comment["creator"]
+
+        root_comments = list(
+            map(lambda x: Comment.dump_bulk(x)[0], root_comments))
+
+        return parse_comment_trees(root_comments, creators_dict)
 
     def validate_email(self, email):
 
@@ -153,3 +206,25 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 class VerifyPhoneSerializer(serializers.Serializer):
     key = serializers.CharField()
+
+
+class ConfirmGroupInviteSerializer(serializers.Serializer):
+    key = serializers.CharField()
+
+
+class AddGroupMembersSerializer(serializers.Serializer):
+    group_members = serializers.JSONField(required=False, allow_null=True)
+    csv = serializers.FileField(
+        required=False, allow_null=True, allow_empty_file=True)
+
+    def validate_group_members(self, group_members):
+        if(len(group_members) == 0 and not self.initial_data.get("csv")):
+            raise serializers.ValidationError(
+                _("you must submit group member usernames either through the form or as csv"))
+        return group_members
+
+    def validate_csv(self, csv):
+        if(not csv and len(self.initial_data.get("group_members")) == 0):
+            raise serializers.ValidationError(
+                _("you must submit group member usernames either through the form or as csv"))
+        return csv

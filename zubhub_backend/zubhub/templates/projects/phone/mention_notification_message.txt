@@ -1,0 +1,18 @@
+{% load account %}
+{% load i18n %}
+{% load default_template_tags %}
+{% autoescape off %}
+
+{% default_display_name %}{% trans " Mention Notification" %}
+
+{% if project_id %}
+
+{% trans "You are receiving this message because " %} {{creator}} {% trans " mentioned you on a project's comment. To view project details, click here" %} {% default_frontend_protocol %}://{% default_frontend_domain %}/projects/{{project_id}}
+
+{% else %}
+
+{% trans "You are receiving this message because " %} {{creator}} {% trans " mentioned you on " %} {{profile_username}}'s {% trans " profile. To view details, click here" %} {% default_frontend_protocol %}://{% default_frontend_domain %}/creators/{{profile_name}}
+
+{% endif %}
+{% endautoescape %}
+{% trans "Thank you from" %} {% default_display_name %}!

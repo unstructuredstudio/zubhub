@@ -1,0 +1,14 @@
+#!/bin/bash
+
+. /docker_secrets_expand.sh
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+cd zubhub
+
+exec celery -A zubhub beat -l DEBUG &
+exec celery -A zubhub worker -l INFO &
+
+tail -f /dev/null
