@@ -314,8 +314,7 @@
         "label": "What is the category of your project?",
         "topHelperText": "choose uncategorized if you are unsure",
         "errors": {
-          "min": "your category name is too short",
-          "required": "this field is required"
+          "min": "your category name is too short"
         }
       },
       "tags": {
@@ -383,11 +382,7 @@
       "materials": "Materials used",
       "category": "Category",
       "tags": "Tags",
-      "comments": {
-        "label": "Comments",
-        "write": "write a comment",
-        "action": "Comment"
-      },
+      "none": "None",
       "edit": "Edit",
       "delete": {
         "label": "Delete",

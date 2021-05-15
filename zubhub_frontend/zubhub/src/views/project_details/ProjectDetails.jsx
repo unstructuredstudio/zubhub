@@ -122,15 +122,15 @@ const buildMaterialsUsedComponent = (classes, state) => {
   ));
 };
 
-const buildTagsComponent = (classes, tags) => {
+const buildTagsComponent = (classes, tags, history) => {
   return tags.map((tag, index) => (
-    <Typography
+    <CustomButton
       key={index}
-      component="span"
-      className={classes.materialsUsedStyle}
+      className={classes.tagsStyle}
+      onClick={() => history.push(`/search?q=${tag.name}`)}
     >
       {tag.name}
-    </Typography>
+    </CustomButton>
   ));
 };
 
@@ -392,12 +392,9 @@ function ProjectDetails(props) {
                 </Grid>
                 {project.tags.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                      className={classes.descriptionBodyStyle}
-                      color="textSecondary"
-                    >
-                      {buildTagsComponent(classes, project.tags)}
-                    </Typography>
+                    <Box className={classes.tagsBoxStyle}>
+                      {buildTagsComponent(classes, project.tags, props.history)}
+                    </Box>
                   </Grid>
                 ) : null}
                 <Grid item xs={12} sm={12} md={12}>
@@ -414,22 +411,28 @@ function ProjectDetails(props) {
                     {buildMaterialsUsedComponent(classes, state)}
                   </Typography>
                 </Grid>
-                {project.category ? (
-                  <Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                      variant="h5"
-                      className={classes.descriptionHeadingStyle}
-                    >
-                      {t('projectDetails.project.category')}
-                    </Typography>
-                    <Typography
-                      className={classes.descriptionBodyStyle}
-                      color="textSecondary"
+                <Grid item xs={12} sm={12} md={12}>
+                  <Typography
+                    variant="h5"
+                    className={classes.descriptionHeadingStyle}
+                  >
+                    {t('projectDetails.project.category')}
+                  </Typography>
+                  {project.category ? (
+                    <CustomButton
+                      className={classes.categoryStyle}
+                      onClick={() =>
+                        props.history.push(`/search?q=${project.category}`)
+                      }
                     >
                       {project.category}
+                    </CustomButton>
+                  ) : (
+                    <Typography className={classes.categoryStyle}>
+                      {t('projectDetails.project.none')}
                     </Typography>
-                  </Grid>
-                ) : null}
+                  )}
+                </Grid>
               </Grid>
             </Container>
 

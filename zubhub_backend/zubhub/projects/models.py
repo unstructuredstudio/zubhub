@@ -16,11 +16,13 @@ class Category(MP_Node):
     name = models.CharField(max_length=100, unique=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
     slug = models.SlugField(unique=True, max_length=1000)
+    search_vector = SearchVectorField(null=True)
 
     node_order_by = ['name']
 
     class Meta:
         verbose_name_plural = "categories"
+        indexes = (GinIndex(fields=["search_vector"]),)
 
     def __str__(self):
         return self.name
@@ -45,7 +47,7 @@ class Project(models.Model):
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, related_name="projects")
+        Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="projects")
     views = models.ManyToManyField(
         Creator, blank=True, related_name="projects_viewed")
     views_count = models.IntegerField(blank=True, default=0)
