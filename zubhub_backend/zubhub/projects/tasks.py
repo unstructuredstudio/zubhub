@@ -31,21 +31,21 @@ def update_search_index(self, model_name):
     from projects.utils import task_lock
 
     model_name_hexdigest = md5(model_name.encode("utf-8")).hexdigest()
-    lock_id = '{0}-lock-{1}'.format(self.name, model_name_hexdigest)
+    key = '{0}-lock-{1}'.format(self.name, model_name_hexdigest)
     try:
-        with task_lock(lock_id, self.app.oid) as acquired:
-            if acquired:
-                if model_name == "category":
-                    Category.objects.update(search_vector=SearchVector('name'))
-                if model_name == "tag":
-                    Tag.objects.update(search_vector=SearchVector('name'))
-                if model_name == "creator":
-                    Creator.objects.update(
-                        search_vector=SearchVector('username'))
-                if model_name == "project":
-                    search_vector = SearchVector(
-                        'title', weight='A') + SearchVector('description', weight='B')
-                    Project.objects.update(search_vector=search_vector)
+        is_false = task_lock(key)
+        if is_false:
+            if model_name == "category":
+                Category.objects.update(search_vector=SearchVector('name'))
+            if model_name == "tag":
+                Tag.objects.update(search_vector=SearchVector('name'))
+            if model_name == "creator":
+                Creator.objects.update(
+                    search_vector=SearchVector('username'))
+            if model_name == "project":
+                search_vector = SearchVector(
+                    'title', weight='A') + SearchVector('description', weight='B')
+                Project.objects.update(search_vector=search_vector)
 
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
