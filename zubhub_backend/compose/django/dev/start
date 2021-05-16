@@ -1,0 +1,22 @@
+#!/bin/bash
+
+. /docker_secrets_expand.sh
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+python /zubhub_backend/zubhub/manage.py collectstatic --noinput
+python /zubhub_backend/zubhub/manage.py makemigrations zubhub
+python /zubhub_backend/zubhub/manage.py makemigrations creators
+python /zubhub_backend/zubhub/manage.py makemigrations projects
+python /zubhub_backend/zubhub/manage.py migrate
+
+python /zubhub_backend/zubhub/manage.py createcachetable
+
+python /zubhub_backend/zubhub/manage.py populate_countries
+python /zubhub_backend/zubhub/manage.py populate_categories
+
+exec /usr/local/bin/gunicorn zubhub.wsgi --threads=3 --bind 0.0.0.0:8000 \
+--access-logfile - --error-logfile -   --chdir /zubhub_backend/zubhub

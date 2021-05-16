@@ -6,12 +6,12 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./compose/django/Dockerfile
+      dockerfile: ./compose/django/dev/Dockerfile
     restart: on-failure
     volumes:
       - ./zubhub:/zubhub
-      - ./compose/django/start:/start:ro
-      - ./compose/django/requirements.txt:/requirements.txt:ro
+      - ./compose/django/dev/start:/start:ro
+      - ./requirements.txt:/requirements.txt:ro
     ports:
       - 8000:8000
     depends_on:
@@ -50,7 +50,7 @@ services:
     volumes:
       - ./zubhub:/zubhub
       - ./compose/celery/start-celeryworker:/start-celeryworker:ro
-      - ./compose/celery/requirements.txt:/requirements.txt:ro
+      - ./requirements.txt:/requirements.txt:ro
     depends_on:
       - rabbitmq
       - db
@@ -68,7 +68,7 @@ services:
     volumes:
       - ./zubhub:/zubhub
       - ./compose/flower/start-flower:/start-flower:ro
-      - ./compose/flower/requirements.txt:/requirements.txt:ro
+      - ./requirements.txt:/requirements.txt:ro
     depends_on:
       - celery_worker
       - rabbitmq
