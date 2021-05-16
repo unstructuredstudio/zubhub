@@ -30,7 +30,7 @@ RUN pip install --upgrade pip wheel \
 COPY ./zubhub/ /zubhub_backend/zubhub/
 
 
-COPY ./compose/django/start /zubhub_backend/start
+COPY ./compose/django/prod/start /zubhub_backend/start
 RUN sed -i 's/\r$//g' /zubhub_backend/start
 RUN chmod +x /zubhub_backend/start
 
