@@ -8,7 +8,7 @@ set -o nounset
 
 
 python /zubhub_backend/zubhub/manage.py collectstatic --noinput
-python /zubhub_backend/zubhub/manage.py migrate
+# python /zubhub_backend/zubhub/manage.py migrate
 
 python /zubhub_backend/zubhub/manage.py createcachetable
 
