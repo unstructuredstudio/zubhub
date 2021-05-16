@@ -10,8 +10,6 @@ def project_saved(sender, instance, **kwargs):
     instance.creator.projects_count = instance.creator.projects.count()
     instance.creator.save()
     update_search_index.delay("project")
-
-
 # @receiver(post_save, sender=StaffPick)
 # def staff_pick_saved(sender, instance, **kwargs):
 

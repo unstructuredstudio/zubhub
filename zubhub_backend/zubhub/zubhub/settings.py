@@ -123,6 +123,13 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication'
     ],
+    'DEFAULT_THROTTLE_RATES': {
+        'post_anon': '20/min',
+        'get_anon': '25/min',
+        'post_user': '30/min',
+        'get_user': '40/min',
+        'sustained': '1500/day'
+    }
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {

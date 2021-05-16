@@ -10,7 +10,8 @@ from rest_framework.exceptions import NotFound
 from rest_framework.generics import (UpdateAPIView, CreateAPIView,
                                      ListAPIView, RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from projects.permissions import IsOwner, IsStaffOrModerator
+from projects.permissions import (IsOwner, IsStaffOrModerator, SustainedRateThrottle,
+                                  PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
 from .models import Project, Comment, StaffPick, Category, Tag
 from .utils import project_changed, detect_mentions, perform_project_search
 from creators.utils import activity_notification
@@ -23,6 +24,7 @@ class ProjectCreateAPIView(CreateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
@@ -33,6 +35,7 @@ class ProjectUpdateAPIView(UpdateAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def perform_update(self, serializer):
         try:
@@ -55,6 +58,7 @@ class ProjectDeleteAPIView(DestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def delete(self, request, *args, **kwargs):
         result = self.destroy(request, *args, **kwargs)
@@ -66,12 +70,14 @@ class ProjectListAPIView(ListAPIView):
     queryset = Project.objects.filter(published=True).order_by("-created_on")
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
 
 
 class ProjectTagSearchAPIView(ListAPIView):
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
     def get_queryset(self):
         query_string = self.request.GET.get('q')
@@ -83,6 +89,7 @@ class ProjectTagSearchAPIView(ListAPIView):
 class ProjectSearchAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
@@ -93,6 +100,7 @@ class ProjectDetailsAPIView(RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
     def get_queryset(self):
         return Project.objects.filter(published=True)
@@ -117,6 +125,7 @@ class ProjectDetailsAPIView(RetrieveAPIView):
 class SavedProjectsAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
@@ -126,6 +135,7 @@ class SavedProjectsAPIView(ListAPIView):
 class ToggleLikeAPIView(RetrieveAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
     def get_queryset(self):
         return Project.objects.filter(published=True)
@@ -147,6 +157,7 @@ class ToggleLikeAPIView(RetrieveAPIView):
 class ToggleSaveAPIView(RetrieveAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
     def get_queryset(self):
         return Project.objects.filter(published=True)
@@ -168,6 +179,7 @@ class ToggleSaveAPIView(RetrieveAPIView):
 class AddCommentAPIView(CreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [CustomUserRateThrottle,  SustainedRateThrottle]
 
     def get_queryset(self):
         return Project.objects.filter(published=True)
@@ -213,11 +225,13 @@ class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
 
 class StaffPickListAPIView(ListAPIView):
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
     def get_queryset(self):
         result = StaffPick.objects.filter(is_active=True)
@@ -230,6 +244,7 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
     queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
     def get_object(self):
         queryset = self.get_queryset()
@@ -243,6 +258,7 @@ class UnpublishCommentAPIView(UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
+    throttle_classes = [CustomUserRateThrottle,  SustainedRateThrottle]
 
     def perform_update(self, serializer):
         comment = serializer.save(published=False)
@@ -255,6 +271,7 @@ class DeleteCommentAPIView(DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
+    throttle_classes = [CustomUserRateThrottle,  SustainedRateThrottle]
 
     def delete(self, request, *args, **kwargs):
         project = self.get_object().project
