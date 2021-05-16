@@ -122,7 +122,7 @@ function PageWrapper(props) {
       });
     }
   };
-  
+
   const { anchorEl, loading, openSearchForm } = state;
   const { t } = props;
   const profileMenuOpen = Boolean(anchorEl);

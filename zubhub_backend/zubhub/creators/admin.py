@@ -51,10 +51,10 @@ def role(obj):
         if obj.role == Creator.STAFF:
             return "staff"
         if obj.role == Creator.GROUP:
-          return "group"
+            return "group"
     return None
-  
-  
+
+
 def group_projects(obj):
     if obj:
         count = obj.creator.projects.count()

@@ -1,6 +1,4 @@
 import re
-from contextlib import contextmanager
-from celery.five import monotonic
 from django.core.cache import cache
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import prefetch_related_objects
@@ -12,18 +10,17 @@ from creators.tasks import send_mass_email, send_mass_text
 from creators.models import Creator, Setting
 
 
-LOCK_EXPIRE = {"30mins": 60 * 30}
+LOCK_EXPIRE = {"30mins": 60 * 10}
 
 
-@contextmanager
-def task_lock(lock_id, oid):
-    timeout_at = monotonic() + LOCK_EXPIRE["30mins"] - 3
-    status = cache.add(lock_id, oid, LOCK_EXPIRE["30mins"])
-    try:
-        yield status
-    finally:
-        if monotonic() < timeout_at and status:
-            cache.delete(lock_id)
+def task_lock(key):
+    # locks task for a model for a particular length of time
+    value = cache.get(key)
+
+    if value:
+        return False
+
+    return cache.add(key, True, LOCK_EXPIRE["30mins"])
 
 
 def update_images(project, images_data):

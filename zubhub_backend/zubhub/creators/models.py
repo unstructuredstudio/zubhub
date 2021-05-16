@@ -64,7 +64,7 @@ class Creator(AbstractUser):
     following_count = models.IntegerField(blank=True, default=0)
     projects_count = models.IntegerField(blank=True, default=0)
     role = models.PositiveSmallIntegerField(
-                 choices=ROLE_CHOICES, blank=True, null=True, default=CREATOR)
+        choices=ROLE_CHOICES, blank=True, null=True, default=CREATOR)
     search_vector = SearchVectorField(null=True)
 
     class Meta:
