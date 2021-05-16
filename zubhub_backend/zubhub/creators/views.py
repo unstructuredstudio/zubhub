@@ -8,7 +8,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.views import APIView
 from rest_framework.generics import (UpdateAPIView, RetrieveAPIView,
                                      ListAPIView, DestroyAPIView, CreateAPIView, GenericAPIView)
@@ -21,6 +21,8 @@ from .serializers import (CreatorSerializer, LocationSerializer, VerifyPhoneSeri
                           CustomRegisterSerializer, ConfirmGroupInviteSerializer, AddGroupMembersSerializer)
 from projects.serializers import CommentSerializer
 from projects.models import Comment
+from projects.permissions import (SustainedRateThrottle,
+                                  PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
 from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
@@ -35,6 +37,7 @@ Creator = get_user_model()
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@throttle_classes([GetUserRateThrottle, SustainedRateThrottle])
 def auth_user_api_view(request):
     return Response(CreatorSerializer(request.user).data)
 
@@ -44,10 +47,12 @@ class UserProfileAPIView(RetrieveAPIView):
     serializer_class = CreatorSerializer
     lookup_field = "username"
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
 
 class RegisterCreatorAPIView(RegisterView):
     serializer_class = CustomRegisterSerializer
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def perform_create(self, serializer):
         creator = super().perform_create(serializer)
@@ -59,6 +64,7 @@ class RegisterCreatorAPIView(RegisterView):
 
 class VerifyPhoneView(APIView):
     permission_classes = (AllowAny,)
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
 
     def get_serializer(self, *args, **kwargs):
@@ -85,6 +91,7 @@ class CreatorSearchAPIView(ListAPIView):
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
     pagination_class = CreatorNumberPagination
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
         query_string = self.request.GET.get("q")
@@ -97,6 +104,7 @@ class EditCreatorAPIView(UpdateAPIView):
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def perform_update(self, serializer):
         response = super().perform_update(serializer)
@@ -121,6 +129,7 @@ class DeleteCreatorAPIView(DestroyAPIView):
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
     lookup_field = "pk"
 
     def get_object(self):
@@ -132,6 +141,7 @@ class DeleteCreatorAPIView(DestroyAPIView):
 class UserProjectsAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
@@ -154,6 +164,7 @@ class UserProjectsAPIView(ListAPIView):
 class UserFollowersAPIView(ListAPIView):
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
@@ -164,6 +175,7 @@ class UserFollowersAPIView(ListAPIView):
 class UserFollowingAPIView(ListAPIView):
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
@@ -175,6 +187,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
     serializer_class = CreatorSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
@@ -194,6 +207,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
 class ConfirmGroupInviteAPIView(APIView):
     permission_classes = (AllowAny,)
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_serializer(self, *args, **kwargs):
         return ConfirmGroupInviteSerializer(*args, **kwargs)
@@ -218,6 +232,7 @@ class ConfirmGroupInviteAPIView(APIView):
 class GroupMembersAPIView(ListAPIView):
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
@@ -228,6 +243,7 @@ class GroupMembersAPIView(ListAPIView):
 class AddGroupMembersAPIView(GenericAPIView):
     serializer_class = AddGroupMembersSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
 
     def get_queryset(self):
@@ -276,6 +292,7 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
     serializer_class = CreatorSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
@@ -293,11 +310,13 @@ class LocationListAPIView(ListAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
 
 class AddCommentAPIView(CreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
         return Creator.objects.all()

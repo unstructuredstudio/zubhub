@@ -138,6 +138,7 @@ export const get_projects = args => {
   };
 };
 
+
 export const get_categories = args => {
   return () => {
     return API.get_categories()
@@ -167,7 +168,7 @@ export const search_projects = args => {
     return API.search_projects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-          return { ...res, loading: false, type: args.type };        
+          return { ...res, loading: false, type: args.type };
         } else {
           res = Object.keys(res)
             .map(key => res[key])

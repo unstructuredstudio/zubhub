@@ -100,9 +100,11 @@ class StaffPickAdmin(admin.ModelAdmin):
             send_staff_pick_notification(obj)
 
 
-class categoryAdmin(admin.ModelAdmin):
+class categoryAdmin(TreeAdmin):
     search_fields = ["name", "description"]
     readonly_fields = ["id", "slug"]
+
+    form = movenodeform_factory(Category)
 
 
 class tagAdmin(admin.ModelAdmin):

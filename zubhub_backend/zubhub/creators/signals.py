@@ -14,9 +14,11 @@ def creator_to_be_deleted(sender, instance, **kwargs):
     delete_image_from_DO_space.delay(
         "zubhub", instance.avatar.split(".com/")[1])
 
+
 @receiver(post_save, sender=Creator)
 def creator_saved(sender, instance, **kwargs):
     update_search_index.delay("creator")
+
 
 @receiver(m2m_changed, sender=CreatorGroup.members.through)
 def creator_group_m2m_changed(instance, action, **kwargs):

@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 
 class IsOwner(BasePermission):
@@ -13,3 +14,51 @@ class IsStaffOrModerator(BasePermission):
 
     def has_object_permission(self, request, view, object):
         return request.user.is_staff == True or request.user.role == 2
+
+
+class PostAnonRateThrottle(AnonRateThrottle):
+    scope = 'post_anon'
+
+    def allow_request(self, request, view):
+        if request.method == "GET":
+            return True
+        return super().allow_request(request, view)
+
+
+class CustomAnonRateThrottle(AnonRateThrottle):
+    scope = 'post_anon'
+
+
+class CustomUserRateThrottle(UserRateThrottle):
+    scope = 'post_user'
+
+
+class GetAnonRateThrottle(AnonRateThrottle):
+    scope = 'get_anon'
+
+    def allow_request(self, request, view):
+        if request.method == "POST":
+            return True
+        return super().allow_request(request, view)
+
+
+class PostUserRateThrottle(UserRateThrottle):
+    scope = 'post_user'
+
+    def allow_request(self, request, view):
+        if request.method == "GET":
+            return True
+        return super().allow_request(request, view)
+
+
+class GetUserRateThrottle(UserRateThrottle):
+    scope = 'get_user'
+
+    def allow_request(self, request, view):
+        if request.method == "POST":
+            return True
+        return super().allow_request(request, view)
+
+
+class SustainedRateThrottle(UserRateThrottle):
+    scope = 'sustained'
