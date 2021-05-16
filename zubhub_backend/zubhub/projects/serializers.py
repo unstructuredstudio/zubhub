@@ -169,7 +169,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         images_data = validated_data.pop('images')
         tags_data = self.validate_tags(
             self.context['request'].data.get("tags", []))
-        category = validated_data.pop('category')
+        category = None
+        if validated_data.get('category', None):
+            category = validated_data.pop('category')
 
         project = Project.objects.create(**validated_data)
 
@@ -180,14 +182,17 @@ class ProjectSerializer(serializers.ModelSerializer):
             tag, created = Tag.objects.get_or_create(name=tag["name"])
             project.tags.add(tag)
 
-        category.projects.add(project)
+        if category:
+            category.projects.add(project)
 
         return project
 
     def update(self, project, validated_data):
         images_data = validated_data.pop('images')
         tags_data = self.validate_tags(self.initial_data["tags"])
-        category = validated_data.pop('category')
+        category = None
+        if validated_data.get('category', None):
+            category = validated_data.pop('category')
 
         project.title = validated_data.pop("title")
         project.description = validated_data.pop("description")
@@ -202,7 +207,8 @@ class ProjectSerializer(serializers.ModelSerializer):
         old_category = project.category
         if old_category:
             old_category.projects.remove(project)
-        category.projects.add(project)
+        if category:
+            category.projects.add(project)
 
         return project
 
