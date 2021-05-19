@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from django.conf import settings
 
 
 class IsOwner(BasePermission):
@@ -37,7 +38,7 @@ class GetAnonRateThrottle(AnonRateThrottle):
     scope = 'get_anon'
 
     def allow_request(self, request, view):
-        if request.method == "POST":
+        if request.method != "GET" or settings.DEBUG:
             return True
         return super().allow_request(request, view)
 
@@ -46,7 +47,7 @@ class PostUserRateThrottle(UserRateThrottle):
     scope = 'post_user'
 
     def allow_request(self, request, view):
-        if request.method == "GET":
+        if request.method != "POST" or settings.DEBUG:
             return True
         return super().allow_request(request, view)
 
@@ -55,10 +56,15 @@ class GetUserRateThrottle(UserRateThrottle):
     scope = 'get_user'
 
     def allow_request(self, request, view):
-        if request.method == "POST":
+        if request.method != "GET" or settings.DEBUG:
             return True
         return super().allow_request(request, view)
 
 
 class SustainedRateThrottle(UserRateThrottle):
     scope = 'sustained'
+
+    def allow_request(self, request, view):
+        if settings.DEBUG:
+            return True
+        return super().allow_request(request, view)
