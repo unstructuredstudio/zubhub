@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./zubhub_backend/
-          file: ./zubhub_backend/compose/django/Dockerfile
+          file: ./zubhub_backend/compose/django/prod/Dockerfile
           push: true
           tags: unstructuredstudio/zubhub-services_web:latest
       - name: Image digest
