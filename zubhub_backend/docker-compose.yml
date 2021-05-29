@@ -9,7 +9,7 @@ services:
       dockerfile: ./compose/django/dev/Dockerfile
     restart: on-failure
     volumes:
-      - ./zubhub:/zubhub
+      - ./zubhub:/zubhub_backend/zubhub
       - ./compose/django/dev/start:/start:ro
       - ./requirements.txt:/requirements.txt:ro
     ports:
@@ -48,7 +48,7 @@ services:
     command: /celery/start-celeryworker
     restart: on-failure
     volumes:
-      - ./zubhub:/zubhub
+      - ./zubhub:/zubhub_backend/zubhub
       - ./compose/celery/start-celeryworker:/start-celeryworker:ro
       - ./requirements.txt:/requirements.txt:ro
     depends_on:
@@ -66,7 +66,7 @@ services:
     command: /flower/start-flower
     restart: on-failure
     volumes:
-      - ./zubhub:/zubhub
+      - ./zubhub:/zubhub_backend/zubhub
       - ./compose/flower/start-flower:/start-flower:ro
       - ./requirements.txt:/requirements.txt:ro
     depends_on:
