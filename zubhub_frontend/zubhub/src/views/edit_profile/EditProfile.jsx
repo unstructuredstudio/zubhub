@@ -55,13 +55,13 @@ const getProfile = (refs, props) => {
       if (refs.emailEl.current && obj.email) {
         props.setFieldValue('email', obj.email);
         refs.emailEl.current.firstChild.value = obj.email;
-        init_email_and_phone['init_email'] = obj.email; //this is a hack: we need to find a better way of setting knowing when phone and email exists. state doesn't seem to work
+        init_email_and_phone['init_email'] = obj.email; //this is a hack: we need to find a better way of knowing when phone and email exists. state doesn't seem to work
       }
 
       if (refs.phoneEl.current && obj.phone) {
         props.setFieldValue('phone', obj.phone);
         refs.phoneEl.current.firstChild.value = obj.phone;
-        init_email_and_phone['init_phone'] = obj.phone; //this is a hack: we need to find a better way of setting knowing when phone and email exists. state doesn't seem to work
+        init_email_and_phone['init_phone'] = obj.phone; //this is a hack: we need to find a better way of knowing when phone and email exists. state doesn't seem to work
       }
 
       if (obj.location) {
