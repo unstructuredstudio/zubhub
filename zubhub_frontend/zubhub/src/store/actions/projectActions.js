@@ -360,6 +360,7 @@ export const get_staff_picks = args => {
           dispatch(set_staff_picks(res));
           return { loading: false };
         }else if (res.detail === "not found"){
+          console.log("res.detail === not found");
           dispatch(set_staff_picks([]));
         } else {
           dispatch(set_staff_picks([]));

@@ -6,7 +6,6 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
 from rest_framework import status
-from rest_framework.exceptions import NotFound
 from rest_framework.generics import (UpdateAPIView, CreateAPIView,
                                      ListAPIView, RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
@@ -234,10 +233,7 @@ class StaffPickListAPIView(ListAPIView):
     throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
 
     def get_queryset(self):
-        result = StaffPick.objects.filter(is_active=True)
-        if result:
-            return result
-        raise NotFound(detail=_('page not found'), code=404)
+        return StaffPick.objects.filter(is_active=True)
 
 
 class StaffPickDetailsAPIView(RetrieveAPIView):
