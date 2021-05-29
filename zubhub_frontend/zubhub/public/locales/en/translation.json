@@ -27,6 +27,24 @@
       "savedProjects": "Bookmarks",
       "logout": "Logout"
     },
+
+    "footer": {
+      "privacy": "Privacy",
+      "guidelines": "Guidelines and policy",
+      "termsOfUse": "Terms of Use",
+      "about": "About",
+      "zubhub": "ZubHub",
+      "unstructuredStudio": "Unstructured Studio",
+      "help": "Help",
+      "resources": "Tinkering Resources",
+      "faqs": "FAQs",
+      "contactUs": "Contact Us"
+    },
+    "inputs": {
+      "search": {
+        "label": "Search"
+      }
+    },
     "errors": {
       "unexpected": "an error occured while getting user profile, please try again later",
       "logoutFailed": "An error occured while signing you out. please try again"
@@ -216,6 +234,7 @@
   },
 
   "projects": {
+    "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
     "ariaLabels": {
@@ -223,6 +242,22 @@
     },
     "errors": {
       "unexpected": "An error occured while performing this action, please try again later"
+    }
+  },
+
+  "staffPicks": {
+    "viewAll": "View all >>"
+  },
+
+  "staffPickDetails": {
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "errors": {
+      "noStaffPick": "this staff pick doesn't exist",
+      "unexpected": "An error occured while performing this action. Please try again later"
     }
   },
 
@@ -276,6 +311,22 @@
           "required": "this field is required"
         }
       },
+      "category": {
+        "label": "What is the category of your project?",
+        "topHelperText": "choose uncategorized if you are unsure",
+        "errors": {
+          "min": "your category name is too short"
+        }
+      },
+      "tags": {
+        "label": "What tags best describe your project?",
+        "topHelperText": "you can leave this blank if you are unsure",
+        "addTag": "Add a tag",
+        "errors": {
+          "limitReached": "Tag limit reached",
+          "unsupported": "tags support only letters, numbers, spaces, and dashes"
+        }
+      },
       "submit": "Create Project",
       "edit": "Edit Project",
       "image": "image added",
@@ -286,6 +337,26 @@
     "errors": {
       "notLoggedIn": "You are not logged in. Click on the signin button to get started",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "searchResults": {
+    "projects": "Projects",
+    "creators": "Creators",
+    "resultFound": "result found",
+    "resultsFound": "results found",
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "following": {
+      "follow": "Follow",
+      "unfollow": "Unfollow"
+    },
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later",
+      "noResult": "no result returned for your search term"
     }
   },
 
@@ -310,11 +381,9 @@
       },
       "description": "Description",
       "materials": "Materials used",
-      "comments": {
-        "label": "Comments",
-        "write": "write a comment",
-        "action": "Comment"
-      },
+      "category": "Category",
+      "tags": "Tags",
+      "none": "None",
       "edit": "Edit",
       "delete": {
         "label": "Delete",
@@ -327,7 +396,7 @@
       }
     },
     "comment": {
-      "delete":{
+      "delete": {
         "dialog": {
           "primary": "Delete Comment",
           "secondary": "Are you sure you want to delete this comment? you can't undo this action!!!",
@@ -352,16 +421,25 @@
       "deleteComment": "delete comment dialog"
     },
     "deleteProjectToastSuccess": "Your project was deleted successfully!!",
-    "deleteCommentToastSuccess": "comment was deleted successfully!!",
-    "unpublishCommentToastSuccess": "comment was unpublished successfully!!",
     "errors": {
       "unexpected": "An error occured while performing this action. Please try again later"
     }
   },
 
-  "comment": {
+  "comments": {
+    "label": "Comments",
+    "write": "write a comment",
+    "reply": "Reply",
+    "showReplies": "Show Replies",
+    "hideReplies": "Hide Replies",
+    "action": "Comment",
     "unpublish": "Unpublish",
-    "delete": "Delete"
+    "delete": "Delete",
+    "deleteCommentToastSuccess": "comment was deleted successfully!!",
+    "unpublishCommentToastSuccess": "comment was unpublished successfully!!",
+    "errors": {
+      "unexpected": "An error occured while performing this action. Please try again later"
+    }
   },
 
   "profile": {
@@ -571,6 +649,36 @@
     "errors": {
       "noFollowing": "Creator is not following anyone yet",
       "unexpected": "An error occured while performing this action. Please try again later"
+    }
+  },
+
+  "guidelines": {
+    "title": "Guidelines",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "termsOfUse": {
+    "title": "Terms Of Use",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "resources": {
+    "title": "Resources",
+    "errors": {
+      "page_empty": "This page is empty"
+    }
+  },
+
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "question": "Question",
+    "answer": "Answer",
+    "errors": {
+      "page_empty": "This page is empty"
     }
   }
 }

@@ -23,6 +23,9 @@ const styles = theme => ({
   positionAbsolute: {
     position: 'absolute',
   },
+  displayNone: {
+    display: 'none',
+  },
   displayInlineBlock: {
     display: 'inline-block',
   },
@@ -32,20 +35,16 @@ const styles = theme => ({
   displayFlex: {
     display: 'flex',
   },
-  displayNone: { display: 'none' },
-  positionAbsolute: {
-    position: 'absolute',
-  },
   alignCenter: {
     alignItems: 'center',
   },
   addOnSmallScreen: {
-    [theme.breakpoints.up('530')]: {
+    [theme.breakpoints.up('555')]: {
       display: 'none',
     },
   },
   removeOnSmallScreen: {
-    [theme.breakpoints.down('530')]: {
+    [theme.breakpoints.down('555')]: {
       display: 'none',
     },
   },

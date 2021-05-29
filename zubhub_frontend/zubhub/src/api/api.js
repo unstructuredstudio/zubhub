@@ -202,22 +202,31 @@ class API {
   };
   /*********************************************************************/
 
-  // /*************************** get group projects *********************************/
-  // get_group_projects = ({ username, page, limit }) => {
-  //   let url;
-  //   if (limit && page) {
-  //     url = `creators/${username}/group_projects/?limit=${limit}&&${page}`;
-  //   } else if (limit) {
-  //     url = `creators/${username}/group_projects/?limit=${limit}`;
-  //   } else if (page) {
-  //     url = `creators/${username}/group_projects/?${page}`;
-  //   } else {
-  //     url = `creators/${username}/group_projects/`;
-  //   }
+  /*************************** search projects *********************************/
+  search_projects = ({ page, query_string }) => {
+    let url;
+    if (page) {
+      url = `projects/search/?q=${query_string}&page=${page}`;
+    } else {
+      url = `projects/search/?q=${query_string}`;
+    }
 
-  //   return this.request({ url }).then(res => res.json());
-  // };
-  // /*********************************************************************/
+    return this.request({ url }).then(res => res.json());
+  };
+  /*********************************************************************/
+
+  /*************************** search creators *********************************/
+  search_creators = ({ page, query_string }) => {
+    let url;
+    if (page) {
+      url = `creators/search/?q=${query_string}&page=${page}`;
+    } else {
+      url = `creators/search/?q=${query_string}`;
+    }
+
+    return this.request({ url }).then(res => res.json());
+  };
+  /*********************************************************************/
 
   /********************** get followers *******************************/
   get_followers = ({ page, username }) => {
@@ -348,6 +357,8 @@ class API {
     video,
     images,
     materials_used,
+    category,
+    tags,
   }) => {
     const url = 'projects/create/';
     const method = 'POST';
@@ -357,6 +368,8 @@ class API {
       images,
       video,
       materials_used,
+      category,
+      tags,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
@@ -371,6 +384,8 @@ class API {
     video,
     images,
     materials_used,
+    category,
+    tags,
   }) => {
     const url = `projects/${id}/update/`;
     const method = 'PATCH';
@@ -381,6 +396,8 @@ class API {
       images,
       video,
       materials_used,
+      category,
+      tags,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
@@ -401,7 +418,9 @@ class API {
     const url = `projects/${id}/unpublish_comment/`;
     const method = 'PATCH';
     const body = JSON.stringify({});
-    return this.request({ url, method, token, body }).then(res => res.json());
+    return this.request({ url, method, token, body }).then(res =>
+      Promise.resolve(res.status === 200 ? res.json() : {"details": "unknown error"}),
+    );
   };
   /************************************************************************/
 
@@ -420,6 +439,39 @@ class API {
     const url = page ? `projects/?${page}` : `projects/`;
     return this.request({ url }).then(res => res.json());
   };
+  /*************************************************************/
+
+  /************************** get categories **************************/
+  get_categories = () => {
+    const url = 'projects/categories/';
+    return this.request({ url }).then(res => res.json());
+  };
+  /*************************************************************/
+
+  /************************** suggest tags **************************/
+  suggest_tags = value => {
+    const url = `projects/tags/search/?q=${value}`;
+    return this.request({ url }).then(res => res.json());
+  };
+  /*************************************************************/
+
+  /************************** get staff picks **************************/
+  get_staff_picks = () => {
+    const url = 'projects/staff_picks/';
+    return this.request({ url}).then(res =>
+      Promise.resolve(res.status === 200 ? { detail: 'ok' } :(res.status === 404 ? {detail: "not found"} : res.json())),
+    );
+  };
+  /******************************************************************/
+
+  get_staff_pick = ({ page, id }) => {
+    const url = page
+      ? `projects/staff_picks/${id}/?page=${page}`
+      : `projects/staff_picks/${id}`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+  /*****************************************************************/
 
   /************************** get project **************************/
   get_project = ({ id, token }) => {
@@ -448,12 +500,43 @@ class API {
   /******************************************************************/
 
   /************************** add comment **************************/
-  add_comment = ({ id, text, token }) => {
+  add_comment = ({ id, text, token, parent_id }) => {
     const url = `projects/${id}/add_comment/`;
     const method = 'POST';
-    const body = JSON.stringify({ text });
+    const body = JSON.stringify({ text, parent_id });
 
     return this.request({ url, method, body, token }).then(res => res.json());
+  };
+
+  /************************** add profile comment **************************/
+  add_profile_comment = ({ id, text, token, parent_id }) => {
+    const url = `creators/${id}/add_comment/`;
+    const method = 'POST';
+    const body = JSON.stringify({ text, parent_id });
+
+    return this.request({ url, method, body, token }).then(res => res.json());
+  };
+  /***********************************************************************/
+
+  /************************** get help **************************/
+  get_help = () => {
+    const url = `help/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
+  /************************** get privacy **************************/
+  get_privacy = () => {
+    const url = `privacy/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
+  /************************** get faqs **************************/
+  get_faqs = () => {
+    const url = `faqs/`;
+
+    return this.request({ url }).then(res => res.json());
   };
 }
 

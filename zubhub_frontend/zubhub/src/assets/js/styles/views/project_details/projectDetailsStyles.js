@@ -174,6 +174,29 @@ const styles = theme => ({
     marginRight: '0.5em',
     marginBottom: '0.5em',
   },
+  tagsBoxStyle: {
+    display:"flex",
+    flexWrap:"wrap"
+  },
+  tagsStyle: {
+    backgroundColor: "#E4E4E4",
+    textTransform: "lowercase",
+    color: "black",
+    border: "none",
+    padding: "0 0.6em",
+    fontSize: "1.2rem",
+    borderRadius: '15px',
+    marginRight: '0.5em',
+    marginBottom: '0.5em',
+  },
+  categoryStyle: {
+    fontSize: "1.5rem",
+    color: "rgba(0, 0, 0, 0.54)",
+    textTransform: "lowercase",
+    borderRadius:"50px",
+    padding: "0 0.6em",
+    marginBottom: "0.7em",
+},
   commentSectionStyle: {
     maxWidth: '1000px',
     display: 'flex',
@@ -229,7 +252,7 @@ const styles = theme => ({
 });
 
 export const sliderSettings = images_num => ({
-  className: 'center slider',
+  className: 'center slider detail-page-slider',
   centerMode: true,
   infinite: true,
   centerPadding: '60px',
@@ -270,7 +293,7 @@ export const sliderSettings = images_num => ({
   ],
 });
 
-function NextArrow(props) {
+export function NextArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div
@@ -297,7 +320,7 @@ function NextArrow(props) {
   );
 }
 
-function PrevArrow(props) {
+export function PrevArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div

@@ -4,23 +4,30 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import status
 from django.http import Http404
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView, GenericAPIView
+from rest_framework.generics import (UpdateAPIView, RetrieveAPIView,
+                                     ListAPIView, DestroyAPIView, CreateAPIView, GenericAPIView)
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_auth.registration.views import RegisterView
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
-
 from .serializers import (CreatorSerializer, LocationSerializer, VerifyPhoneSerializer,
                           CustomRegisterSerializer, ConfirmGroupInviteSerializer, AddGroupMembersSerializer)
+from projects.serializers import CommentSerializer
+from projects.models import Comment
+from projects.permissions import (SustainedRateThrottle,
+                                  PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
 from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
 from .utils import perform_send_phone_confirmation, perform_send_email_confirmation, process_avatar, send_group_invite_notification
+from projects.utils import detect_mentions
 
 from .models import CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC
 
@@ -30,6 +37,7 @@ Creator = get_user_model()
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@throttle_classes([GetUserRateThrottle, SustainedRateThrottle])
 def auth_user_api_view(request):
     return Response(CreatorSerializer(request.user).data)
 
@@ -39,10 +47,12 @@ class UserProfileAPIView(RetrieveAPIView):
     serializer_class = CreatorSerializer
     lookup_field = "username"
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
 
 class RegisterCreatorAPIView(RegisterView):
     serializer_class = CustomRegisterSerializer
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def perform_create(self, serializer):
         creator = super().perform_create(serializer)
@@ -54,6 +64,7 @@ class RegisterCreatorAPIView(RegisterView):
 
 class VerifyPhoneView(APIView):
     permission_classes = (AllowAny,)
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
 
     def get_serializer(self, *args, **kwargs):
@@ -76,10 +87,24 @@ class VerifyPhoneView(APIView):
         return Response({'detail': _('ok')}, status=status.HTTP_200_OK)
 
 
+class CreatorSearchAPIView(ListAPIView):
+    serializer_class = CreatorSerializer
+    permission_classes = [AllowAny]
+    pagination_class = CreatorNumberPagination
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        query_string = self.request.GET.get("q")
+        query = SearchQuery(query_string)
+        rank = SearchRank(F('search_vector'), query)
+        return Creator.objects.annotate(rank=rank).filter(search_vector=query, is_active=True).order_by('-rank')
+
+
 class EditCreatorAPIView(UpdateAPIView):
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def perform_update(self, serializer):
         response = super().perform_update(serializer)
@@ -104,6 +129,7 @@ class DeleteCreatorAPIView(DestroyAPIView):
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
     lookup_field = "pk"
 
     def get_object(self):
@@ -115,6 +141,7 @@ class DeleteCreatorAPIView(DestroyAPIView):
 class UserProjectsAPIView(ListAPIView):
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
@@ -137,6 +164,7 @@ class UserProjectsAPIView(ListAPIView):
 class UserFollowersAPIView(ListAPIView):
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
@@ -147,6 +175,7 @@ class UserFollowersAPIView(ListAPIView):
 class UserFollowingAPIView(ListAPIView):
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
@@ -158,6 +187,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
     serializer_class = CreatorSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
@@ -177,6 +207,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
 class ConfirmGroupInviteAPIView(APIView):
     permission_classes = (AllowAny,)
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_serializer(self, *args, **kwargs):
         return ConfirmGroupInviteSerializer(*args, **kwargs)
@@ -201,6 +232,7 @@ class ConfirmGroupInviteAPIView(APIView):
 class GroupMembersAPIView(ListAPIView):
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
@@ -211,6 +243,7 @@ class GroupMembersAPIView(ListAPIView):
 class AddGroupMembersAPIView(GenericAPIView):
     serializer_class = AddGroupMembersSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
 
     def get_queryset(self):
@@ -259,6 +292,7 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
     serializer_class = CreatorSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
@@ -276,3 +310,48 @@ class LocationListAPIView(ListAPIView):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+
+class AddCommentAPIView(CreateAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        return Creator.objects.all()
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(self.get_queryset(), pk=pk)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=self.request.data)
+
+        if not serializer.is_valid():
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        parent_id = self.request.data.get("parent_id", None)
+        text = serializer.validated_data.get("text", None)
+
+        if parent_id:
+
+            try:
+                parent_comment = Comment.objects.get(id=parent_id)
+            except Comment.DoesNotExist:
+                raise Http404(_("parent comment does not exist"))
+
+            parent_comment.add_child(
+                profile=self.get_object(), creator=self.request.user, text=text)
+        else:
+            Comment.add_root(profile=self.get_object(),
+                             creator=self.request.user, text=text)
+
+        result = self.get_object()
+        if result:
+            detect_mentions(
+                {"text": text, "profile_username": result.username, "creator": request.user.username})
+
+        return Response(CreatorSerializer(result).data, status=status.HTTP_201_CREATED)

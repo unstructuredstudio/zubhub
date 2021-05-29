@@ -25,5 +25,10 @@ def default_frontend_protocol():
 
 
 @register.simple_tag
+def default_backend_domain():
+    return settings.DEFAULT_BACKEND_DOMAIN
+
+
+@register.simple_tag
 def default_backend_protocol():
     return settings.DEFAULT_BACKEND_PROTOCOL

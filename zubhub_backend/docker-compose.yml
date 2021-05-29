@@ -6,24 +6,12 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
-    command: /start
+      dockerfile: ./compose/django/dev/Dockerfile
     restart: on-failure
-    environment:
-      - ENVIRONMENT=${ENVIRONMENT}
-      - SECRET_KEY:${SECRET_KEY}
-      - DEBUG:${DEBUG}
-      - POSTGRES_NAME=${POSTGRES_NAME}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - DEFAULT_FROM_PHONE=${DEFAULT_FROM_PHONE}
-      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
-      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
-      - TWILIO_NOTIFY_SERVICE_SID=${TWILIO_NOTIFY_SERVICE_SID}
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/zubhub_backend/zubhub
+      - ./compose/django/dev/start:/start:ro
+      - ./requirements.txt:/requirements.txt:ro
     ports:
       - 8000:8000
     depends_on:
@@ -56,11 +44,13 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
-    command: /start-celeryworker
+      dockerfile: ./compose/celery/Dockerfile
+    command: /celery/start-celeryworker
     restart: on-failure
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/zubhub_backend/zubhub
+      - ./compose/celery/start-celeryworker:/start-celeryworker:ro
+      - ./requirements.txt:/requirements.txt:ro
     depends_on:
       - rabbitmq
       - db
@@ -70,13 +60,15 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./compose/flower/Dockerfile
     ports:
       - 5555:5555
-    command: /start-flower
+    command: /flower/start-flower
     restart: on-failure
     volumes:
-      - .:/zubhub_backend
+      - ./zubhub:/zubhub_backend/zubhub
+      - ./compose/flower/start-flower:/start-flower:ro
+      - ./requirements.txt:/requirements.txt:ro
     depends_on:
       - celery_worker
       - rabbitmq
@@ -91,7 +83,7 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     restart: on-failure
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - cadvisor
 

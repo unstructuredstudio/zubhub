@@ -55,6 +55,57 @@ export const edit_user_profile = args => {
   };
 };
 
+export const suggest_creators = args => {
+  return () => {
+    return API.search_creators(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          return res.results.length > 0
+            ? { creator_suggestion: res.results }
+            : { creator_suggestion_open: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { creator_suggestion_open: false };
+      });
+  };
+};
+
+
+export const search_creators = args => {
+  return () => {
+    return API.search_creators(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          return { ...res, loading: false, type: args.type };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false, type: args.type };
+      });
+  };
+};
+
 export const toggle_follow = args => {
   return () => {
     return API.toggle_follow(args)
@@ -203,6 +254,31 @@ export const get_following = args => {
   };
 };
 
+
+export const add_comment = args => {
+  return () => {
+    return API.add_profile_comment(args)
+      .then(res => {
+        if (res.username) {
+          return { profile: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('comments.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+          
 export const send_group_invite_confirmation = args => {
   return () => {
     return API.send_group_invite_confirmation(args.key).then(res => {
@@ -213,7 +289,88 @@ export const send_group_invite_confirmation = args => {
         setTimeout(() => {
           args.history.push('/');
         }, 4000);
-      }
-    });
+       }
+     });
+  };
+};
+
+export const get_help = args => {
+  return () => {
+    return API.get_help()
+      .then(res => {
+        if (res) {
+          return { help: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return {
+            loading: false,
+          };
+        } else {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return { loading: false };
+        }
+      });
+  };
+};
+
+export const get_privacy = args => {
+  return () => {
+    return API.get_privacy()
+      .then(res => {
+        if (res) {
+          return { privacy: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return {
+            loading: false,
+          };
+        } else {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return { loading: false };
+        }
+      });
+  };
+};
+
+export const get_faqs = args => {
+  return () => {
+    return API.get_faqs()
+      .then(res => {
+        if (res) {
+          return { faqs: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return {
+            loading: false,
+          };
+        } else {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return { loading: false };
+        }
+      });
   };
 };

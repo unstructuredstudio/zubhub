@@ -28,14 +28,25 @@ jobs:
       - name: Checkout files
         uses: actions/checkout@v2
 
-      - name: Build and push
-        id: docker_build
+      - name: Build and push django api
+        id: docker_build_web
         uses: docker/build-push-action@v2
         with:
           context: ./zubhub_backend/
-          file: ./zubhub_backend/Dockerfile
+          file: ./zubhub_backend/compose/django/prod/Dockerfile
           push: true
-          tags: unstructuredstudio/zubhub-backend:latest
+          tags: unstructuredstudio/zubhub-services_web:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Build and push celery worker
+        id: docker_build_celery
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/compose/celery/Dockerfile
+          push: true
+          tags: unstructuredstudio/zubhub-services_celery:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
@@ -54,7 +65,7 @@ jobs:
           KEY: ${{ secrets.DO_SSHKEY }}
         with:
           source: "."
-          target: "/home/zubhub-backend/zubhub"
+          target: "/home/zubhub-services/zubhub"
 
       - name: Executing remote  command
         uses: appleboy/ssh-action@master
@@ -62,4 +73,10 @@ jobs:
           HOST: ${{ secrets.DO_BACKEND_HOST }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
           KEY: ${{ secrets.DO_SSHKEY }}
-          script: "cp /home/zubhub-backend/zubhub/zubhub_backend/deploy_backend.sh /home/zubhub-backend/ && sudo bash /home/zubhub-backend/deploy_backend.sh"
+          script: |
+            cp /home/zubhub-services/zubhub/zubhub_backend/compose/deploy_backend.sh /home/zubhub-services/
+            sudo bash /home/zubhub-services/deploy_backend.sh
+            doctl compute droplet list 'zubhub-services*' > droplets.txt
+            droplets_count=`wc -l < droplets.txt`
+            rm droplets.txt
+            docker service scale zubhub-services_web=$(($droplets_count - 1))
