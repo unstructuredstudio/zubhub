@@ -53,6 +53,9 @@ const handleToggleDeleteProjectModal = state => {
   return { openDeleteProjectModal };
 };
 
+const isVideoFromGdrive = link =>
+  link.search('https://drive.google.com') !== -1 ? true : false;
+
 const deleteProject = (props, state) => {
   if (props.auth.token && props.auth.id === state.project.creator.id) {
     return props
@@ -287,6 +290,18 @@ function ProjectDetails(props) {
                         src={project.images[0].image_url}
                         alt={project.title}
                       />
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    {project.video && isVideoFromGdrive(project.video) ? (
+                      <a
+                        className={commonClasses.floatRight}
+                        href={project.video}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Can't play video? click here
+                      </a>
                     ) : null}
                   </Grid>
                   <Box className={classes.actionBoxStyle}>
