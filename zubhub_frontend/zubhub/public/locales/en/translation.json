@@ -320,7 +320,7 @@
       },
       "tags": {
         "label": "What tags best describe your project?",
-        "topHelperText": "you can leave this blank if you are unsure",
+        "topHelperText": "i.e tinkering, competition, school work. you can leave this blank if you are unsure",
         "addTag": "Add a tag",
         "errors": {
           "limitReached": "Tag limit reached",

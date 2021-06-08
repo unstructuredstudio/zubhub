@@ -224,7 +224,9 @@ const removeTag = (e, props, value) => {
 };
 
 const handleAddTags = (e, props, addTagsEl) => {
-  const value = e.currentTarget.value.split(',');
+  props.setFieldTouched('tags', true, true);
+  let value = e.currentTarget.value.split(',');
+  value[0] = value[0].trim();
   let tags = props.values['tags'];
   tags = tags ? JSON.parse(tags) : [];
 
@@ -1303,7 +1305,7 @@ export default connect(
           }
           return unsupported ? false : true;
         } else {
-          return false;
+          return true;
         }
       }),
     }),
