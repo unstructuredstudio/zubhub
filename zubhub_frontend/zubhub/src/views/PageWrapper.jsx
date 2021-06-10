@@ -590,7 +590,7 @@ function PageWrapper(props) {
             </Typography>
 
             <Link
-              to={`/guidelines_and_policy`}
+              to={`/privacy_policy`}
               className={commonClasses.textDecorationNone}
             >
               <Typography
@@ -625,10 +625,7 @@ function PageWrapper(props) {
               {t('pageWrapper.footer.about')}
             </Typography>
 
-            <a
-              href="https://unstructured.studio/zub-app/"
-              className={commonClasses.textDecorationNone}
-            >
+            <Link to="/about" className={commonClasses.textDecorationNone}>
               <Typography
                 variant="subtitle2"
                 color="textPrimary"
@@ -636,20 +633,7 @@ function PageWrapper(props) {
               >
                 {t('pageWrapper.footer.zubhub')}
               </Typography>
-            </a>
-
-            <a
-              href="https://unstructured.studio/about/"
-              className={commonClasses.textDecorationNone}
-            >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
-                {t('pageWrapper.footer.unstructuredStudio')}
-              </Typography>
-            </a>
+            </Link>
           </Box>
 
           <Box className={classes.footerBoxStyle}>
@@ -661,8 +645,8 @@ function PageWrapper(props) {
               {t('pageWrapper.footer.help')}
             </Typography>
 
-            <Link
-              to={`/resources`}
+            <a
+              href="http://kriti.unstructured.studio/"
               className={commonClasses.textDecorationNone}
             >
               <Typography
@@ -672,7 +656,7 @@ function PageWrapper(props) {
               >
                 {t('pageWrapper.footer.resources')}
               </Typography>
-            </Link>
+            </a>
 
             <Link to={`/faqs`} className={commonClasses.textDecorationNone}>
               <Typography

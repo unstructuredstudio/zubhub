@@ -30,7 +30,7 @@
 
     "footer": {
       "privacy": "Privacy",
-      "guidelines": "Guidelines and policy",
+      "guidelines": "Privacy Policy",
       "termsOfUse": "Terms of Use",
       "about": "About",
       "zubhub": "ZubHub",
@@ -653,7 +653,7 @@
   },
 
   "guidelines": {
-    "title": "Guidelines",
+    "title": "Privacy Policy",
     "errors": {
       "page_empty": "This page is empty"
     }
@@ -666,8 +666,8 @@
     }
   },
 
-  "resources": {
-    "title": "Resources",
+  "about": {
+    "title": "About",
     "errors": {
       "page_empty": "This page is empty"
     }

@@ -6,7 +6,7 @@ from django_summernote.admin import SummernoteModelAdmin
 
 
 class PrivacyAdmin(SummernoteModelAdmin):
-    summernote_fields = ('guidelines_and_policies', 'terms_of_use',)
+    summernote_fields = ('privacy_policy', 'terms_of_use',)
     readonly_fields = ["edited_on"]
 
     class Media:
@@ -14,7 +14,7 @@ class PrivacyAdmin(SummernoteModelAdmin):
 
 
 class HelpAdmin(SummernoteModelAdmin):
-    summernote_fields = ('resources',)
+    summernote_fields = ('about',)
     readonly_fields = ["edited_on"]
 
     class Media:

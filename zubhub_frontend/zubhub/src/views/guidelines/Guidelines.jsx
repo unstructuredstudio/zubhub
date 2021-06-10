@@ -38,10 +38,7 @@ function Guidelines(props) {
 
   if (loading) {
     return <LoadingPage />;
-  } else if (
-    Object.keys(privacy).length > 0 &&
-    privacy.guidelines_and_policies
-  ) {
+  } else if (Object.keys(privacy).length > 0 && privacy.privacy_policy) {
     return (
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
@@ -52,7 +49,7 @@ function Guidelines(props) {
             <Box
               className={classes.guidelinesBodyStyle}
               dangerouslySetInnerHTML={{
-                __html: privacy.guidelines_and_policies,
+                __html: privacy.privacy_policy,
               }}
             ></Box>
           </Card>
