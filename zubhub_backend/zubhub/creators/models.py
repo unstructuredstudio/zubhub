@@ -140,7 +140,8 @@ class PhoneNumber(models.Model):
         on_delete=models.CASCADE,
     )
     phone = models.CharField(
-        unique=True,
+        blank=True,
+        null=True,
         max_length=16,
         verbose_name="phone number",
     )
