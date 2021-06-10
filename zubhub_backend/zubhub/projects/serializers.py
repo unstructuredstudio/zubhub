@@ -1,4 +1,5 @@
 import json
+import re
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -159,6 +160,12 @@ class ProjectSerializer(serializers.ModelSerializer):
                 _("tags format not supported")
             )
 
+        for tag in tags:
+            if (not re.fullmatch("[0-9A-Za-z\s\-]+", tag["name"])) or (tag["name"] == " "):
+                raise serializers.ValidationError(
+                    _("tags support only letters, numbers, spaces, and dashes")
+                )
+
         if len(tags) > 5:
             raise serializers.ValidationError(
                 _("tags must not be more than 5")
@@ -258,7 +265,7 @@ class StaffPickSerializer(serializers.ModelSerializer):
         page = paginator.paginate_queryset(
             projects, self.context['request'])
         serializer = ProjectSerializer(page, read_only=True, many=True, context={
-                                       'request': self.context['request']})
+            'request': self.context['request']})
         count = projects.count()
         num_pages = ceil(count/paginator.page_size)
         current_page = int(
