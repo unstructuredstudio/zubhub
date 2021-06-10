@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,11 +8,11 @@ import { Box, Container, Card, Typography } from '@material-ui/core';
 import * as UserActions from '../../store/actions/userActions';
 import LoadingPage from '../loading/LoadingPage';
 import ErrorPage from '../error/ErrorPage';
-import styles from '../../assets/js/styles/views/resources/resourcesStyles';
+import styles from '../../assets/js/styles/views/about/aboutStyles';
 
 const useStyles = makeStyles(styles);
 
-function Resources(props) {
+function About(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -38,28 +37,28 @@ function Resources(props) {
 
   if (loading) {
     return <LoadingPage />;
-  } else if (Object.keys(help).length > 0 && help.resources) {
+  } else if (Object.keys(help).length > 0 && help.about) {
     return (
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
-            <Typography className={classes.resourcesHeadingStyle}>
-              {t('resources.title')}
+            <Typography className={classes.aboutHeadingStyle}>
+              {t('about.title')}
             </Typography>
             <Box
-              className={classes.resourcesBodyStyle}
-              dangerouslySetInnerHTML={{ __html: help.resources }}
+              className={classes.aboutBodyStyle}
+              dangerouslySetInnerHTML={{ __html: help.about }}
             ></Box>
           </Card>
         </Container>
       </Box>
     );
   } else {
-    return <ErrorPage error={t('resources.errors.page_empty')} />;
+    return <ErrorPage error={t('about.errors.page_empty')} />;
   }
 }
 
-Resources.propTypes = {
+About.propTypes = {
   auth: PropTypes.object.isRequired,
   get_help: PropTypes.func.isRequired,
 };
@@ -78,4 +77,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Resources);
+export default connect(mapStateToProps, mapDispatchToProps)(About);

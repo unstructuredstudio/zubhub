@@ -30,7 +30,7 @@
 
     "footer": {
       "privacy": "एकांत",
-      "guidelines": "दिशानिर्देश और नीति",
+      "guidelines": "गोपनीयता नीति",
       "termsOfUse": "उपयोग की शर्तें",
       "about": "तकरीबन",
       "zubhub": "ZubHub",
@@ -653,7 +653,7 @@
   },
 
   "guidelines": {
-    "title": "दिशा-निर्देश",
+    "title": "गोपनीयता नीति",
     "errors": {
       "page_empty": "यह पेज खाली है"
     }
@@ -666,8 +666,8 @@
     }
   },
 
-  "resources": {
-    "title": "साधन",
+  "about": {
+    "title": "तकरीबन",
     "errors": {
       "page_empty": "यह पेज खाली है"
     }

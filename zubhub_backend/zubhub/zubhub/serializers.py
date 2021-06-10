@@ -7,7 +7,7 @@ class PrivacySerializer(serializers.ModelSerializer):
     class Meta:
         model = Privacy
         fields = [
-            "guidelines_and_policies",
+            "privacy_policy",
             "terms_of_use",
             "edited_on"
         ]
@@ -18,7 +18,7 @@ class HelpSerializer(serializers.ModelSerializer):
     class Meta:
         model = Help
         fields = [
-            "resources",
+            "about",
         ]
 
 

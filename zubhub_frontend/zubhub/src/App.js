@@ -27,7 +27,7 @@ import ProjectDetails from './views/project_details/ProjectDetails';
 import StaffPickDetails from './views/staff_pick_details/StaffPickDetails';
 import Guidelines from './views/guidelines/Guidelines';
 import TermsOfUse from './views/terms_of_use/TermsOfUse';
-import Resources from './views/resources/Resources';
+import About from './views/about/About';
 import FAQs from './views/faqs/FAQs';
 
 function App(props) {
@@ -233,7 +233,7 @@ function App(props) {
         />
 
         <Route
-          path="/guidelines_and_policy"
+          path="/privacy_policy"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <Guidelines {...routeProps} {...props} />
@@ -251,10 +251,10 @@ function App(props) {
         />
 
         <Route
-          path="/resources"
+          path="/about"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <Resources {...routeProps} {...props} />
+              <About {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
