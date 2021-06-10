@@ -26,7 +26,7 @@ const styles = theme => ({
     },
   },
   mainContainerStyle: {
-    maxWidth: '1500px',
+    maxWidth: '1190px',
     width: '100%',
   },
   projectGridStyle: {

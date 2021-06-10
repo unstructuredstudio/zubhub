@@ -159,7 +159,6 @@ function Projects(props) {
                 xs={12}
                 sm={6}
                 md={4}
-                lg={3}
                 align="center"
                 className={classes.projectGridStyle}
               >
