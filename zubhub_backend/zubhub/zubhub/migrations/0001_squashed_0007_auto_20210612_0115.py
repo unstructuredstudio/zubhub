@@ -5,8 +5,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    replaces = [('zubhub', '0001_initial'), ('zubhub', '0002_auto_20210610_1739'), ('zubhub', '0003_hero'), ('zubhub', '0004_auto_20210611_2047'), ('zubhub', '0005_auto_20210611_2255'), ('zubhub', '0006_auto_20210611_2354'), ('zubhub', '0007_auto_20210612_0115')]
-
     initial = True
 
     dependencies = [
@@ -16,7 +14,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FAQ',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('question', models.TextField(blank=True, null=True)),
                 ('answer', models.TextField(blank=True, null=True)),
             ],
@@ -28,7 +27,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Help',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('about', models.TextField(blank=True, null=True)),
                 ('edited_on', models.DateTimeField(blank=True, null=True)),
             ],
@@ -40,7 +40,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Privacy',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('privacy_policy', models.TextField(blank=True, null=True)),
                 ('terms_of_use', models.TextField(blank=True, null=True)),
                 ('edited_on', models.DateTimeField(blank=True, null=True)),
@@ -53,7 +54,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Hero',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50)),
                 ('description', models.CharField(max_length=100, null=True)),
                 ('image', models.ImageField(null=True, upload_to='')),
