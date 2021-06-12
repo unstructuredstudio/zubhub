@@ -8,7 +8,7 @@ from projects.tasks import delete_image_from_DO_space
 
 
 class HeroAdmin(admin.ModelAdmin):
-    list_display = ["title", "image_url", "image_project_id"]
+    list_display = ["title", "image_url", "activity_url"]
     search_fields = ["title", 'description']
 
     def get_readonly_fields(self, request, obj=None):
@@ -29,13 +29,13 @@ class HeroAdmin(admin.ModelAdmin):
             Hero.objects.filter(id=obj.id).update(title=form.cleaned_data['title'],
                                                   description=form.cleaned_data['description'],
                                                   image_url=form.cleaned_data['image_url'],
-                                                  image_project_id=form.cleaned_data['image_project_id'])
+                                                  activity_url=form.cleaned_data['activity_url'])
 
         else:
             Hero.objects.create(title=form.cleaned_data['title'],
                                 description=form.cleaned_data['description'],
                                 image_url=form.cleaned_data['image_url'],
-                                image_project_id=form.cleaned_data['image_project_id'])
+                                activity_url=form.cleaned_data['activity_url'])
 
 
 class PrivacyAdmin(SummernoteModelAdmin):

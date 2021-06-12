@@ -7,7 +7,7 @@ class Hero(models.Model):
     description = models.CharField(max_length=100, null=True)
     image = models.ImageField(blank=False, null=True)
     image_url = models.URLField(max_length=1000, blank=True, null=False)
-    image_project_id = models.CharField(max_length=36, null=True)
+    activity_url = models.URLField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Hero"

@@ -28,16 +28,18 @@ const styles = theme => ({
   heroSectionStyle: {
     backgroundColor: '#DC3545',
     boxShadow: "-2px 25px 13px -18px rgba(220,53,69,0.7)",
-// -webkit-box-shadow: -2px 27px 20px -26px rgba(220,53,69,0.75);
-// -moz-box-shadow: -2px 27px 20px -26px rgba(220,53,69,0.75);
-    width: "100%",
+    WebkitBoxShadow: "-2px 25px 13px -18px rgba(220,53,69,0.7)",
+    MozBoxShadow: "-2px 25px 13px -18px rgba(220,53,69,0.7)",
     display:"flex",
+    paddingTop: "2.3em",
+    paddingBottom: "2.85em",
     justifyContent:"center",
+    width: "100%"
   },
   heroContainerStyle: {
     width: "100%",
     maxWidth: "1190px",
-    padding:"1rem 1rem",
+    padding:"1.15em 1.15em",
     display: "flex",
     [theme.breakpoints.down('1000')]:{
       flexDirection:"column-reverse"
@@ -81,15 +83,16 @@ const styles = theme => ({
       display:"none"
     }
   },
+  heroImageLinkStyle: {
+    alignSelf: "flex-end",
+  },
   heroImageStyle: {
-    cursor: "pointer",
     marginLeft: "2em",
     marginRight: "2em",
     border: '0.3em solid #FFCE0C',
     borderRadius: '5px',
     height:"10em",
     width: "16em",
-    alignSelf: "flex-end",
     [theme.breakpoints.down('500')]:{
       marginLeft: "0",
       marginRight: "0",
@@ -97,6 +100,7 @@ const styles = theme => ({
   },
 
   mainContainerStyle: {
+    marginTop: "3em",
     maxWidth: '1190px',
     width: '100%',
   },
@@ -107,8 +111,8 @@ const styles = theme => ({
     fontWeight: 900,
     fontSize: '1.5rem',
     marginTop: '2em',
-    marginLeft: '1rem',
-    marginRight: '1rem',
+    marginLeft: '0.67em',
+    marginRight: '0.67em',
   },
   buttonGroupStyle: {
     paddingLeft: '2em',
