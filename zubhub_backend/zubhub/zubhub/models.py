@@ -2,6 +2,21 @@ from django.utils import timezone
 from django.db import models
 
 
+class Hero(models.Model):
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=100, null=True)
+    image = models.ImageField(blank=False, null=True)
+    image_url = models.URLField(max_length=1000, blank=True, null=False)
+    image_project_id = models.CharField(max_length=36, null=True)
+
+    class Meta:
+        verbose_name = "Hero"
+        verbose_name_plural = "Heroes"
+
+    def __str__(self):
+        return self.title
+
+
 class Privacy(models.Model):
     privacy_policy = models.TextField(blank=True, null=True)
     terms_of_use = models.TextField(blank=True, null=True)
