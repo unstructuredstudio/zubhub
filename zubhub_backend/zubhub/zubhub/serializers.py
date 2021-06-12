@@ -1,5 +1,17 @@
 from rest_framework import serializers
-from .models import FAQ, Help, Privacy
+from .models import Hero, FAQ, Help, Privacy
+
+
+class HeroSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hero
+        fields = [
+            "id",
+            "title",
+            "description",
+            "image_url",
+            "image_project_id"
+        ]
 
 
 class PrivacySerializer(serializers.ModelSerializer):
@@ -7,7 +19,7 @@ class PrivacySerializer(serializers.ModelSerializer):
     class Meta:
         model = Privacy
         fields = [
-            "guidelines_and_policies",
+            "privacy_policy",
             "terms_of_use",
             "edited_on"
         ]
@@ -18,7 +30,7 @@ class HelpSerializer(serializers.ModelSerializer):
     class Meta:
         model = Help
         fields = [
-            "resources",
+            "about",
         ]
 
 

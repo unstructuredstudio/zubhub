@@ -30,7 +30,7 @@
 
     "footer": {
       "privacy": "Privacy",
-      "guidelines": "Guidelines and policy",
+      "guidelines": "Privacy Policy",
       "termsOfUse": "Terms of Use",
       "about": "About",
       "zubhub": "ZubHub",
@@ -234,6 +234,8 @@
   },
 
   "projects": {
+    "shareProject": "Share A Project",
+    "exploreIdeas": "Explore Ideas",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
@@ -320,7 +322,7 @@
       },
       "tags": {
         "label": "What tags best describe your project?",
-        "topHelperText": "you can leave this blank if you are unsure",
+        "topHelperText": "i.e tinkering, competition, school work. you can leave this blank if you are unsure",
         "addTag": "Add a tag",
         "errors": {
           "limitReached": "Tag limit reached",
@@ -653,7 +655,7 @@
   },
 
   "guidelines": {
-    "title": "Guidelines",
+    "title": "Privacy Policy",
     "errors": {
       "page_empty": "This page is empty"
     }
@@ -666,8 +668,8 @@
     }
   },
 
-  "resources": {
-    "title": "Resources",
+  "about": {
+    "title": "About",
     "errors": {
       "page_empty": "This page is empty"
     }

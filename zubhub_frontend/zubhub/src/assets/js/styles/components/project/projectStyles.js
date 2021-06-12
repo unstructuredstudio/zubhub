@@ -1,7 +1,7 @@
 const styles = theme => ({
   root: {
     maxWidth: 345,
-    height: '100%',
+    height: '94%',
     paddingTop: 0,
     paddingBottom: '0!important',
     marginTop: '1em',
@@ -90,6 +90,7 @@ const styles = theme => ({
       display: '-webkit-box',
       WebkitLineClamp: 2,
       WebkitBoxOrient: 'vertical',
+      height: '90%',
     },
   },
   creatorBoxStyle: {

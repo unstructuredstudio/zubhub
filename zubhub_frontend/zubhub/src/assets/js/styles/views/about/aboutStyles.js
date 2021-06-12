@@ -22,14 +22,14 @@ const styles = theme => ({
     width: '100%',
   },
 
-  resourcesHeadingStyle: {
+  aboutHeadingStyle: {
     fontSize: '1.5rem',
     fontWeight: '900',
     color: 'black',
     margin: '2em 0',
   },
 
-  resourcesBodyStyle: {
+  aboutBodyStyle: {
     marginBottom: '5em',
   },
 });

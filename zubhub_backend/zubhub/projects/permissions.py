@@ -38,7 +38,7 @@ class GetAnonRateThrottle(AnonRateThrottle):
     scope = 'get_anon'
 
     def allow_request(self, request, view):
-        if request.method != "GET" or settings.DEBUG:
+        if request.method == "POST":
             return True
         return super().allow_request(request, view)
 
