@@ -1,5 +1,6 @@
 from django.urls import path, include
-from zubhub.views import UploadFileAPIView, DeleteFileAPIView, HelpAPIView, PrivacyAPIView, FAQAPIView
+from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
+                          HeroAPIView, HelpAPIView, PrivacyAPIView, FAQAPIView)
 
 
 urlpatterns = [
@@ -9,6 +10,7 @@ urlpatterns = [
     path('projects/', include('projects.urls', namespace="projects")),
     path('upload_file/', UploadFileAPIView, name="upload_file"),
     path('delete_file/', DeleteFileAPIView, name="delete_file"),
+    path('hero/', HeroAPIView.as_view(), name="hero"),
     path('help/', HelpAPIView.as_view(), name="help"),
     path('privacy/', PrivacyAPIView.as_view(), name="privacy"),
     path('faqs/', FAQAPIView.as_view(), name="faqs")

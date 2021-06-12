@@ -234,6 +234,8 @@
   },
 
   "projects": {
+    "shareProject": "Share A Project",
+    "exploreIdeas": "Explore Ideas",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
