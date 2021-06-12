@@ -10,7 +10,7 @@ class HeroSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "image_url",
-            "image_project_id"
+            "activity_url"
         ]
 
 

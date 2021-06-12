@@ -22,7 +22,7 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import StaffPick from '../../components/staff_pick/StaffPick';
-import project_of_the_month_svg from '../../assets/images/project_of_the_month.svg';
+import activity_of_the_month_svg from '../../assets/images/activity_of_the_month.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 
@@ -173,22 +173,26 @@ function Projects(props) {
               <Box className={classes.heroImageContainerStyle}>
                 <img
                   className={classes.heroImageTextStyle}
-                  src={project_of_the_month_svg}
-                  alt=""
+                  src={activity_of_the_month_svg}
+                  alt={t('projects.activityOfTheMonth')}
                 />
-                <img
-                  className={classes.heroImageStyle}
-                  src={hero.image_url}
-                  alt=""
-                  onClick={() =>
-                    props.history.push(`/projects/${hero.image_project_id}`)
-                  }
-                />
+                <a
+                  className={classes.heroImageLinkStyle}
+                  href={hero.activity_url}
+                  target="__blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    className={classes.heroImageStyle}
+                    src={hero.image_url}
+                    alt=""
+                  />
+                </a>
               </Box>
             </Box>
           </Box>
         ) : null}
-        <Container class={classes.mainContainerStyle}>
+        <Box className={classes.mainContainerStyle}>
           {staff_picks &&
             staff_picks.map(staff_pick => (
               <StaffPick
@@ -267,7 +271,7 @@ function Projects(props) {
               </CustomButton>
             ) : null}
           </ButtonGroup>
-        </Container>
+        </Box>
       </Box>
     );
   } else {
