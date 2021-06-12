@@ -1,4 +1,4 @@
-const defaultState = { all_projects: {}, staff_picks: [] };
+const defaultState = { all_projects: {}, staff_picks: [], hero: {} };
 
 const projects = (state = defaultState, action) => {
   switch (action.type) {

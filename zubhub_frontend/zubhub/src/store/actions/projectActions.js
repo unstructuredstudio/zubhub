@@ -352,6 +352,38 @@ export const set_staff_picks = staff_picks => {
   };
 };
 
+export const set_hero = hero => {
+  return dispatch => {
+    dispatch({
+      type: 'SET_PROJECTS',
+      payload: {hero},
+    });
+  };
+};
+
+export const get_hero = args => {
+  return dispatch => {
+    return API.get_hero()
+      .then(res => {
+        if (res.id) {
+          dispatch(set_hero(res));
+          return { loading: false };
+        } else {
+          dispatch(set_hero({}));
+          return { loading: false };
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
 export const get_staff_picks = args => {
   return dispatch => {
     return API.get_staff_picks()

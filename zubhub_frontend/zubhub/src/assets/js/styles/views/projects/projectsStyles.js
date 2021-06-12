@@ -25,6 +25,77 @@ const styles = theme => ({
       width: '100%',
     },
   },
+  heroSectionStyle: {
+    backgroundColor: '#DC3545',
+    boxShadow: "-2px 25px 13px -18px rgba(220,53,69,0.7)",
+// -webkit-box-shadow: -2px 27px 20px -26px rgba(220,53,69,0.75);
+// -moz-box-shadow: -2px 27px 20px -26px rgba(220,53,69,0.75);
+    width: "100%",
+    display:"flex",
+    justifyContent:"center",
+  },
+  heroContainerStyle: {
+    width: "100%",
+    maxWidth: "1190px",
+    padding:"1rem 1rem",
+    display: "flex",
+    [theme.breakpoints.down('1000')]:{
+      flexDirection:"column-reverse"
+    }
+  },
+  heroMessageContainerStyle: {
+    flexGrow: 1,
+    color: "white",
+  },
+  heroMessageSecondaryStyle: {
+    fontSize: "2.2rem",
+  },
+  heroMessagePrimaryStyle: {
+    fontSize: "2.2rem",
+    fontWeight: 1000
+  },
+
+  heroButtonStyle: {
+    textTransform: "capitalize",
+    padding:"0 1em",
+    fontSize:"1.2rem",
+    fontWeight: 700,
+    marginRight:"1em",
+    [theme.breakpoints.down('530')]: {
+      marginTop:"1em"
+    }
+  },
+  heroImageContainerStyle: {
+    display: "flex",
+    transform: "rotate(-12deg)",
+    [theme.breakpoints.down('1000')]:{
+      transform: "rotate(0deg)",
+    },
+    [theme.breakpoints.down('500')]: {
+    justifyContent:"center",
+    }
+  },
+  heroImageTextStyle: {
+    marginLeft: "2em",
+    [theme.breakpoints.down('500')]:{
+      display:"none"
+    }
+  },
+  heroImageStyle: {
+    cursor: "pointer",
+    marginLeft: "2em",
+    marginRight: "2em",
+    border: '0.3em solid #FFCE0C',
+    borderRadius: '5px',
+    height:"10em",
+    width: "16em",
+    alignSelf: "flex-end",
+    [theme.breakpoints.down('500')]:{
+      marginLeft: "0",
+      marginRight: "0",
+    }
+  },
+
   mainContainerStyle: {
     maxWidth: '1190px',
     width: '100%',

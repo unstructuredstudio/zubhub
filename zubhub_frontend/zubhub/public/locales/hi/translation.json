@@ -234,6 +234,8 @@
   },
 
   "projects": {
+    "shareProject": "एक परियोजना साझा करें",
+    "exploreIdeas": "विचारों का अन्वेषण करें",
     "allProjects": "सभी परियोजनाएं",
     "prev": "पिछला",
     "next": "आगे",
