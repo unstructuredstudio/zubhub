@@ -8,13 +8,7 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Container,
-  Typography,
-} from '@material-ui/core';
+import { Grid, Box, ButtonGroup, Typography } from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
