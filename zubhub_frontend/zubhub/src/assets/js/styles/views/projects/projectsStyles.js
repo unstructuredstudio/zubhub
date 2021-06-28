@@ -58,14 +58,12 @@ const styles = theme => ({
   },
 
   heroButtonStyle: {
-    textTransform: "capitalize",
+    textTransform: "none",
     padding:"0 1em",
     fontSize:"1.2rem",
     fontWeight: 700,
     marginRight:"1em",
-    [theme.breakpoints.down('530')]: {
-      marginTop:"1em"
-    }
+    marginTop:"1.2em"
   },
   heroImageContainerStyle: {
     display: "flex",
@@ -74,7 +72,15 @@ const styles = theme => ({
       transform: "rotate(0deg)",
     },
     [theme.breakpoints.down('500')]: {
-    justifyContent:"center",
+    flexDirection: "column",
+    alignItems:"center",
+    justifyContent:"center"
+    }
+  },
+  heroImageTextSmallStyle: {
+    display: "none",
+    [theme.breakpoints.down('500')]:{
+      display: "block"
     }
   },
   heroImageTextStyle: {
@@ -85,6 +91,9 @@ const styles = theme => ({
   },
   heroImageLinkStyle: {
     alignSelf: "flex-end",
+    [theme.breakpoints.down('500')]: {
+      alignSelf: "center"
+    }
   },
   heroImageStyle: {
     marginLeft: "2em",
