@@ -43,7 +43,7 @@ const toggle_follow = (e, props, state, id) => {
           const { following } = state;
           following.forEach((creator, index) => {
             if (creator.id === res.profile.id) {
-              following.splice(index, 1);
+              following.splice(index, 1, res.profile);
             }
           });
           return { following };
