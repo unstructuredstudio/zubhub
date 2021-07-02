@@ -658,7 +658,13 @@ function PageWrapper(props) {
               </Typography>
             </a>
 
-            <Link to={`/faqs`} className={commonClasses.textDecorationNone}>
+            <Link
+              to={`/faqs`}
+              className={clsx(
+                commonClasses.textDecorationNone,
+                commonClasses.displayNone,
+              )}
+            >
               <Typography
                 variant="subtitle2"
                 color="textPrimary"

@@ -49,6 +49,7 @@ const useCommonStyles = makeStyles(commonStyles);
 
 let image_field_touched = false;
 let video_field_touched = false;
+let upload_in_progress = false;
 const timer = { id: null };
 
 const get_categories = props => {
@@ -311,6 +312,7 @@ function CreateProject(props) {
       state.image_upload.images_to_upload.length ===
       state.image_upload.successful_uploads
     ) {
+      upload_in_progress = true;
       upload_project();
     }
   }, [state.image_upload.successful_uploads]);
@@ -356,7 +358,12 @@ function CreateProject(props) {
       ACL: 'public-read',
     };
 
-    DO.upload(params)
+    DO.upload(params, err => {
+      const { image_upload } = state;
+      image_upload.upload_dialog = false;
+      upload_in_progress = false;
+      handleSetState({ image_upload });
+    })
       .on('httpUploadProgress', e => {
         const progress = Math.round((e.loaded * 100.0) / e.total);
         const { image_upload } = state;
@@ -401,7 +408,7 @@ function CreateProject(props) {
       });
   };
 
-  const upload_project = () => {
+  const upload_project = async () => {
     const { image_upload } = state;
     image_upload.upload_dialog = false;
     handleSetState({ image_upload });
@@ -421,7 +428,7 @@ function CreateProject(props) {
       ? props.update_project
       : props.create_project;
 
-    return create_or_update({
+    await create_or_update({
       ...props.values,
       materials_used,
       tags,
@@ -449,6 +456,8 @@ function CreateProject(props) {
         });
       }
     });
+
+    upload_in_progress = false; //flag to prevent attempting to upload a project when an upload is already in progress
   };
 
   const init_project = e => {
@@ -477,6 +486,7 @@ function CreateProject(props) {
         ) {
           return;
         } else if (refs.imageEl.current.files.length === 0) {
+          upload_in_progress = true;
           upload_project();
         } else {
           const { image_upload } = state;
@@ -526,7 +536,7 @@ function CreateProject(props) {
                   className="project-create-form"
                   name="create_project"
                   noValidate="noValidate"
-                  onSubmit={init_project}
+                  onSubmit={e => (!upload_in_progress ? init_project(e) : null)}
                 >
                   <Typography
                     className={classes.titleStyle}
