@@ -8,13 +8,7 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Container,
-  Typography,
-} from '@material-ui/core';
+import { Grid, Box, ButtonGroup, Typography } from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -23,6 +17,7 @@ import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import StaffPick from '../../components/staff_pick/StaffPick';
 import activity_of_the_month_svg from '../../assets/images/activity_of_the_month.svg';
+import activity_of_the_month_small_svg from '../../assets/images/activity_of_the_month_small.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 
@@ -171,6 +166,11 @@ function Projects(props) {
                 </a>
               </Box>
               <Box className={classes.heroImageContainerStyle}>
+                <img
+                  className={classes.heroImageTextSmallStyle}
+                  src={activity_of_the_month_small_svg}
+                  alt={t('projects.activityOfTheMonth')}
+                />
                 <img
                   className={classes.heroImageTextStyle}
                   src={activity_of_the_month_svg}
