@@ -46,7 +46,7 @@ function StaffPick(props) {
           </Typography>
         </Grid>
         {staff_pick.projects.results.map((project, index) =>
-          index <= 3 ? (
+          index <= 2 ? (
             <Grid
               item
               xs={12}
