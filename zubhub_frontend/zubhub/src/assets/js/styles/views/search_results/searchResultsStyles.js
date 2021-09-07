@@ -13,7 +13,7 @@ const styles = theme => ({
     },
   },
   mainContainerStyle: {
-    maxWidth: '2000px',
+    maxWidth: '1190px',
     width: '100%',
   },
 

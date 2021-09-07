@@ -8,13 +8,7 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Container,
-  Typography,
-} from '@material-ui/core';
+import { Grid, Box, ButtonGroup, Typography } from '@material-ui/core';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -22,9 +16,17 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import StaffPick from '../../components/staff_pick/StaffPick';
+import activity_of_the_month_svg from '../../assets/images/activity_of_the_month.svg';
+import activity_of_the_month_small_svg from '../../assets/images/activity_of_the_month_small.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
+import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
+const useCommonStyles = makeStyles(commonStyles);
+
+const fetchHero = props => {
+  return props.get_hero({ t: props.t });
+};
 
 const fetchPage = (page, props) => {
   return props.get_projects({ page, t: props.t });
@@ -95,12 +97,14 @@ const updateStaffPicks = (res, staff_pick_id, props) => {
 
 function Projects(props) {
   const classes = useStyles();
+  const commonClasses = useCommonStyles();
 
   const [state, setState] = React.useState({
     loading: true,
   });
 
   React.useEffect(() => {
+    fetchHero(props);
     fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
   }, []);
@@ -119,6 +123,7 @@ function Projects(props) {
     previous: prevPage,
     next: nextPage,
   } = props.projects.all_projects;
+  const { hero } = props.projects;
   const staff_picks = props.projects.staff_picks;
   const { t } = props;
 
@@ -127,7 +132,67 @@ function Projects(props) {
   } else if (projects && projects.length > 0) {
     return (
       <Box className={classes.root}>
-        <Container class={classes.mainContainerStyle}>
+        {hero && hero.id ? (
+          <Box className={classes.heroSectionStyle}>
+            <Box className={classes.heroContainerStyle}>
+              <Box className={classes.heroMessageContainerStyle}>
+                <Typography className={classes.heroMessageSecondaryStyle}>
+                  {hero.description}
+                </Typography>
+                <Typography className={classes.heroMessagePrimaryStyle}>
+                  {hero.title}
+                </Typography>
+                <CustomButton
+                  className={classes.heroButtonStyle}
+                  size="small"
+                  primaryButtonStyle
+                  onClick={() => props.history.push('/projects/create')}
+                >
+                  {t('projects.shareProject')}
+                </CustomButton>
+                <a
+                  className={commonClasses.textDecorationNone}
+                  href="http://kriti.unstructured.studio/"
+                  target="__blank"
+                  rel="noreferrer"
+                >
+                  <CustomButton
+                    className={classes.heroButtonStyle}
+                    size="small"
+                    darkDangerButtonStyle
+                  >
+                    {t('projects.exploreIdeas')}
+                  </CustomButton>
+                </a>
+              </Box>
+              <Box className={classes.heroImageContainerStyle}>
+                <img
+                  className={classes.heroImageTextSmallStyle}
+                  src={activity_of_the_month_small_svg}
+                  alt={t('projects.activityOfTheMonth')}
+                />
+                <img
+                  className={classes.heroImageTextStyle}
+                  src={activity_of_the_month_svg}
+                  alt={t('projects.activityOfTheMonth')}
+                />
+                <a
+                  className={classes.heroImageLinkStyle}
+                  href={hero.activity_url}
+                  target="__blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    className={classes.heroImageStyle}
+                    src={hero.image_url}
+                    alt=""
+                  />
+                </a>
+              </Box>
+            </Box>
+          </Box>
+        ) : null}
+        <Box className={classes.mainContainerStyle}>
           {staff_picks &&
             staff_picks.map(staff_pick => (
               <StaffPick
@@ -159,7 +224,6 @@ function Projects(props) {
                 xs={12}
                 sm={6}
                 md={4}
-                lg={3}
                 align="center"
                 className={classes.projectGridStyle}
               >
@@ -207,7 +271,7 @@ function Projects(props) {
               </CustomButton>
             ) : null}
           </ButtonGroup>
-        </Container>
+        </Box>
       </Box>
     );
   } else {
@@ -243,6 +307,9 @@ const mapDispatchToProps = dispatch => {
     },
     toggle_save: args => {
       return dispatch(ProjectActions.toggle_save(args));
+    },
+    get_hero: args => {
+      return dispatch(ProjectActions.get_hero(args));
     },
     get_staff_picks: args => {
       return dispatch(ProjectActions.get_staff_picks(args));

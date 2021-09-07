@@ -14,7 +14,7 @@ const styles = theme => ({
     },
   },
   mainContainerStyle: {
-    maxWidth: '2000px',
+    maxWidth: '1190px',
     width: '100%',
   },
   pageHeaderStyle: {
@@ -25,6 +25,7 @@ const styles = theme => ({
   descriptionBodyStyle: {
     fontSize: '1.5rem',
     marginBottom: '0.7em',
+    textAlign: 'center'
   },
   projectGridStyle: {
     marginBottom: '2em',

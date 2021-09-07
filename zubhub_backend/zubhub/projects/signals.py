@@ -2,6 +2,8 @@ from django.db.models.signals import pre_delete, post_save, pre_save
 from django.dispatch import receiver
 from projects.tasks import delete_image_from_DO_space, update_search_index
 from .models import Project, Image, StaffPick, Tag, Category
+from zubhub.models import Hero
+
 from .utils import project_changed
 
 
@@ -27,3 +29,9 @@ def tag_saved(sender, instance, **kwargs):
 @receiver(post_save, sender=Category)
 def category_saved(sender, instance, **kwargs):
     update_search_index.delay("category")
+
+
+@receiver(pre_delete, sender=Hero)
+def hero_to_be_deleted(sender, instance, **kwargs):
+    delete_image_from_DO_space.delay(
+        "zubhub", instance.image_url.split(".com/")[1])
