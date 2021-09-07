@@ -46,8 +46,8 @@ class CreatorSerializer(serializers.ModelSerializer):
                 return "moderator"
             if obj.role == Creator.STAFF:
                 return "staff"
-            if obj.role == Creator.Group:
-                return 'group'
+            if obj.role == Creator.GROUP:
+                return "group"
         return None
 
     def get_members_count(self, obj):

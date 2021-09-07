@@ -279,7 +279,6 @@ export const add_comment = args => {
   };
 };
           
-            
 export const send_group_invite_confirmation = args => {
   return () => {
     return API.send_group_invite_confirmation(args.key).then(res => {
