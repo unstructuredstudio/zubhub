@@ -155,6 +155,7 @@ function CreateProject(props) {
     props.touched['video'],
   ]);
 
+
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
