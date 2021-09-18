@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+import cloudinary
 import socket
 import os
 
@@ -97,12 +98,20 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'treebeard',
     'django_summernote',
+    'cloudinary',
     'zubhub',
     'APIS',
     'creators',
     'projects',
 ]
 
+
+# cloudinary
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET')
+)
 
 # digitalocean spaces
 DOSPACE_ACCESS_KEY_ID = os.environ.get("DOSPACE_ACCESS_KEY_ID")

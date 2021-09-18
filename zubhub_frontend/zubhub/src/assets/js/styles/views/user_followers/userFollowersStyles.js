@@ -49,7 +49,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: "94%",
+    height: '94%',
     maxWidth: 345,
     paddingTop: 0,
     paddingBottom: '0 !important',

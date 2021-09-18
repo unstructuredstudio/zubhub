@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
-import * as Yup from 'yup';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,12 +19,22 @@ import {
   Dialog,
   Typography,
   CircularProgress,
-  OutlinedInput,
   FormHelperText,
   FormControl,
   FormControlLabel,
+  OutlinedInput,
   Switch,
 } from '@material-ui/core';
+
+import {
+  vars,
+  validationSchema,
+  handleBulkAddCheck,
+  handleAddCSV,
+  addGroupMembersNode,
+  handleSubmit,
+  handleAddGroupMembersFieldChange,
+} from './addGroupMemberScripts';
 
 import * as UserActions from '../../store/actions/userActions';
 import csvLogo from '../../assets/images/csv.png';
@@ -37,43 +46,12 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-let csv_not_added = true;
-
-const handleAddGroupMembersFieldChange = (e, props, refs) => {
-  const children = refs.addGroupMembersEl.current.children;
-  let arr = [];
-  for (let index = 0; index < children.length; index++) {
-    if (children[index].children[0].value) {
-      arr.push(children[index].children[0].value);
-    } else {
-      if (index >= 1) {
-        arr.push('');
-      }
-    }
-  }
-
-  props.setFieldValue('group_members', JSON.stringify(arr), true);
-};
-
-const handleBulkAddCheck = bulkAddChecked => ({
-  bulkAddChecked: !bulkAddChecked,
-});
-
-const handleAddCSV = (e, refs) => {
-  e.preventDefault();
-  if (e.dataTransfer.items[0].getAsFile() !== null) {
-    return { csv: e.dataTransfer.items[0].getAsFile() };
-  } else {
-    refs.dragDropEl.current.style.border = '1px dashed rgb(196, 194, 194)';
-  }
-};
-
-const buildGroupMembersNodes = ({ props, refs, classes, commonClasses }) => {
+const buildGroupMembersNodes = ({ props, refs, classes, common_classes }) => {
   if (props.values['group_members']) {
     return JSON.parse(props.values['group_members']).map((member, index) => (
       <OutlinedInput
         key={index}
-        className={clsx(classes.customInputStyle, commonClasses.marginTop1em)}
+        className={clsx(classes.customInputStyle, common_classes.marginTop1em)}
         type="text"
         onBlur={() => props.setFieldTouched('group_members', true)}
         onChange={e => handleAddGroupMembersFieldChange(e, props, refs)}
@@ -82,10 +60,10 @@ const buildGroupMembersNodes = ({ props, refs, classes, commonClasses }) => {
       />
     ));
   } else {
-    return ['', '', ''].map((member, index) => (
+    return ['', '', ''].map((_, index) => (
       <OutlinedInput
         key={index}
-        className={clsx(classes.customInputStyle, commonClasses.marginTop1em)}
+        className={clsx(classes.customInputStyle, common_classes.marginTop1em)}
         type="text"
         onBlur={() => props.setFieldTouched('group_members', true)}
         onChange={e => handleAddGroupMembersFieldChange(e, props, refs)}
@@ -95,101 +73,21 @@ const buildGroupMembersNodes = ({ props, refs, classes, commonClasses }) => {
   }
 };
 
-const addGroupMembersNode = (e, props) => {
-  e.preventDefault();
-  let group_members = props.values['group_members'];
-  if (!group_members) {
-    props.setFieldValue('group_members', '["","","",""]');
-  } else {
-    group_members = JSON.parse(group_members);
-    group_members.push('');
-    props.setFieldValue('group_members', JSON.stringify(group_members));
-  }
-};
-
 function AddGroupMembers(props) {
   const refs = {
-    addGroupMembersEl: React.useRef(null),
-    dragDropEl: React.useRef(null),
+    add_group_members_el: React.useRef(null),
+    drag_drop_el: React.useRef(null),
   };
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
     loading: true,
     error: null,
     csv: null,
     upload_dialog: false,
-    bulkAddChecked: false,
+    bulk_add_checked: false,
   });
-
-  const submit = () => {
-    let { upload_dialog, csv } = state;
-    upload_dialog = true;
-    handleSetState({ upload_dialog });
-    csv = csv ? csv : new File([''], 'empty');
-    let group_members = null;
-
-    if (props.values['group_members']) {
-      group_members = JSON.parse(props.values['group_members']).filter(value =>
-        value ? true : false,
-      );
-    } else {
-      group_members = [];
-    }
-
-    const data = new FormData();
-    data.append('csv', csv);
-    data.append('group_members', JSON.stringify(group_members));
-
-    props
-      .add_members({
-        data,
-        token: props.auth.token,
-        t: props.t,
-        history: props.history,
-      })
-      .catch(error => {
-        const messages = JSON.parse(error.message);
-        if (typeof messages === 'object') {
-          const server_errors = {};
-          Object.keys(messages).forEach(key => {
-            if (key === 'non_field_errors') {
-              server_errors['non_field_errors'] = messages[key][0];
-            } else {
-              server_errors[key] = messages[key][0];
-            }
-          });
-          props.setStatus({ ...server_errors });
-        } else {
-          props.setStatus({
-            non_field_errors: props.t('addGroupMembers.errors.unexpected'),
-          });
-        }
-      });
-
-    upload_dialog = !upload_dialog;
-
-    handleSetState({ upload_dialog });
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    if (!props.auth.token) {
-      props.history.push('/login');
-    } else {
-      props.setFieldTouched('group_members');
-
-      props.validateForm().then(errors => {
-        if (Object.keys(errors).length > 0) {
-          return;
-        } else {
-          submit();
-        }
-      });
-    }
-  };
 
   const handleSetState = obj => {
     if (obj) {
@@ -199,9 +97,9 @@ function AddGroupMembers(props) {
     }
   };
 
-  const { upload_dialog, bulkAddChecked, csv } = state;
+  const { upload_dialog, bulk_add_checked, csv } = state;
   const { t } = props;
-  csv_not_added = !csv;
+  vars.csv_not_added = !csv;
   if (!props.auth.token) {
     return <ErrorPage error={t('addGroupMembers.errors.notLoggedIn')} />;
   } else if (props.auth.members_count === null) {
@@ -217,7 +115,7 @@ function AddGroupMembers(props) {
                   className="project-create-form"
                   name="create_project"
                   noValidate="noValidate"
-                  onSubmit={handleSubmit}
+                  onSubmit={e => handleSubmit(e, state, handleSetState, props)}
                 >
                   <Typography
                     className={classes.titleStyle}
@@ -255,7 +153,7 @@ function AddGroupMembers(props) {
                       </Box>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
                         variant="outlined"
                         size="small"
@@ -272,7 +170,7 @@ function AddGroupMembers(props) {
                             color="textSecondary"
                             className={clsx(
                               classes.customLabelStyle,
-                              commonClasses.marginBottom1em,
+                              common_classes.marginBottom1em,
                             )}
                           >
                             {t('addGroupMembers.inputs.groupMembers.label')}
@@ -280,15 +178,15 @@ function AddGroupMembers(props) {
                         </label>
 
                         <Grid container spacing={1} alignItems="flex-end">
-                          {!bulkAddChecked ? (
+                          {!bulk_add_checked ? (
                             <>
                               <Grid item xs={12} sm={8}>
-                                <Box ref={refs.addGroupMembersEl}>
+                                <Box ref={refs.add_group_members_el}>
                                   {buildGroupMembersNodes({
                                     props,
                                     refs,
                                     classes,
-                                    commonClasses,
+                                    common_classes,
                                   })}
                                 </Box>
                               </Grid>
@@ -327,14 +225,14 @@ function AddGroupMembers(props) {
                             >
                               <Box
                                 className={classes.CSVBoxStyles}
-                                ref={refs.dragDropEl}
+                                ref={refs.drag_drop_el}
                                 onDragLeave={e => {
-                                  refs.dragDropEl.current.style.border =
+                                  refs.drag_drop_el.current.style.border =
                                     '1px dashed rgb(196, 194, 194)';
                                 }}
                                 onDragOver={e => {
                                   e.preventDefault();
-                                  refs.dragDropEl.current.style.border =
+                                  refs.drag_drop_el.current.style.border =
                                     '1px solid #878dcd';
                                 }}
                                 onDrop={e =>
@@ -388,13 +286,15 @@ function AddGroupMembers(props) {
                     </Grid>
                     <Grid item xs={12} sm={8}>
                       <FormControlLabel
-                        className={commonClasses.floatLeft}
+                        className={common_classes.floatLeft}
                         control={
                           <Switch
                             className={classes.bulkAddStyles}
-                            checked={bulkAddChecked}
+                            checked={bulk_add_checked}
                             onChange={e =>
-                              handleSetState(handleBulkAddCheck(bulkAddChecked))
+                              handleSetState(
+                                handleBulkAddCheck(bulk_add_checked),
+                              )
                             }
                           />
                         }
@@ -416,7 +316,7 @@ function AddGroupMembers(props) {
                         primaryButtonStyle
                         customButtonStyle
                         fullWidth
-                        className={commonClasses.floatRight}
+                        className={common_classes.floatRight}
                       >
                         {t('addGroupMembers.inputs.submit')}
                       </CustomButton>
@@ -453,7 +353,7 @@ function AddGroupMembers(props) {
 
 AddGroupMembers.propTypes = {
   auth: PropTypes.object.isRequired,
-  add_members: PropTypes.func.isRequired,
+  addMembers: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -464,8 +364,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    add_members: args => {
-      return dispatch(UserActions.add_members(args));
+    addMembers: args => {
+      return dispatch(UserActions.addMembers(args));
     },
   };
 };
@@ -478,21 +378,6 @@ export default connect(
     mapPropsToValue: () => ({
       group_members: '',
     }),
-    validationSchema: Yup.object().shape({
-      group_members: Yup.string().test('empty', 'required', value => {
-        let is_empty = true;
-
-        value &&
-          JSON.parse(value).forEach(member => {
-            if (member) {
-              is_empty = false;
-            }
-          });
-
-        is_empty &= csv_not_added;
-
-        return !is_empty;
-      }),
-    }),
+    validationSchema,
   })(AddGroupMembers),
 );

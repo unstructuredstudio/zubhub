@@ -31,7 +31,7 @@ function FAQs(props) {
   });
 
   React.useEffect(() => {
-    handleSetState(props.get_faqs({ t: props.t }));
+    handleSetState(props.getFaqs({ t: props.t }));
   }, []);
 
   const handleSetState = obj => {
@@ -89,7 +89,7 @@ function FAQs(props) {
 
 FAQs.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_faqs: PropTypes.func.isRequired,
+  getFaqs: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -100,8 +100,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_faqs: args => {
-      return dispatch(UserActions.get_faqs(args));
+    getFaqs: args => {
+      return dispatch(UserActions.getFaqs(args));
     },
   };
 };

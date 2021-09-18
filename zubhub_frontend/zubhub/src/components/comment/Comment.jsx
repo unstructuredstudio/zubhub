@@ -12,49 +12,41 @@ import { Avatar, Box, Typography, Menu, MenuItem } from '@material-ui/core';
 
 import CustomButton from '../../components/button/Button';
 import CommentInput from '../../components/comment_input/CommentInput';
-import dFormatter from '../../assets/js/dFormatter';
-import nFormatter from '../../assets/js/nFormatter';
-import countComments from '../../assets/js/countComments';
+import {
+  countComments,
+  nFormatter,
+  dFormatter,
+} from '../../assets/js/utils/scripts';
+
+import {
+  toggleRepliesCollapsed,
+  toggleReplyInputCollapsed,
+  handleCommentMenuOpen,
+  handleCommentMenuClose,
+} from './commentScripts';
+
 import styles from '../../assets/js/styles/components/comment/commentStyles';
 import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const toggleRepliesCollapsed = (e, { repliesCollapsed }) => {
-  e.preventDefault();
-  return { repliesCollapsed: !repliesCollapsed };
-};
-
-const toggleReplyInputCollapsed = (e, { replyInputCollapsed }) => {
-  e.preventDefault();
-  return { replyInputCollapsed: !replyInputCollapsed };
-};
-
-const handleCommentMenuOpen = e => {
-  return { commentMenuAnchorEl: e.currentTarget };
-};
-
-const handleCommentMenuClose = () => {
-  return { commentMenuAnchorEl: null };
-};
-
 function Comment(props) {
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
-    replyDepth: props.replyDepth !== undefined ? props.replyDepth + 1 : 0,
-    replyInputCollapsed: false,
-    repliesCollapsed: false,
-    commentMenuAnchorEl: null,
+    reply_depth: props.reply_depth !== undefined ? props.reply_depth + 1 : 0,
+    reply_input_collapsed: false,
+    replies_collapsed: false,
+    comment_menu_anchor_el: null,
   });
 
   React.useEffect(() => {
     handleSetState({
-      repliesCollapsed: state.replyDepth === 0 ? true : false,
+      replies_collapsed: state.reply_depth === 0 ? true : false,
     });
-  }, [state.replyDepth]);
+  }, [state.reply_depth]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -65,10 +57,10 @@ function Comment(props) {
   };
 
   const {
-    repliesCollapsed,
-    replyInputCollapsed,
-    replyDepth,
-    commentMenuAnchorEl,
+    replies_collapsed,
+    reply_input_collapsed,
+    reply_depth,
+    comment_menu_anchor_el,
   } = state;
   const {
     auth,
@@ -78,14 +70,14 @@ function Comment(props) {
     handleUnpublishComment,
     handleToggleDeleteCommentModal,
   } = props;
-  const commentMenuOpen = Boolean(commentMenuAnchorEl);
+  const commentMenuOpen = Boolean(comment_menu_anchor_el);
 
   return (
     <Box className={!parent ? classes.commentsStyle : classes.subCommentsStyle}>
-      <Box className={commonClasses.positionRelative}>
+      <Box className={common_classes.positionRelative}>
         <Link
           className={clsx(
-            commonClasses.textDecorationNone,
+            common_classes.textDecorationNone,
             !parent ? classes.commentMetaStyle : classes.subCommentMetaStyle,
           )}
           to={`/creators/${props.auth.username}`}
@@ -118,7 +110,7 @@ function Comment(props) {
           <>
             <CustomButton
               className={clsx(
-                commonClasses.positionAbsolute,
+                common_classes.positionAbsolute,
                 classes.commentMenuButtonStyle,
               )}
               onClick={e => handleSetState(handleCommentMenuOpen(e))}
@@ -128,7 +120,7 @@ function Comment(props) {
             <Menu
               className={classes.commentMenuStyle}
               id="comment_menu"
-              anchorEl={commentMenuAnchorEl}
+              anchorEl={comment_menu_anchor_el}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
@@ -153,7 +145,7 @@ function Comment(props) {
               <MenuItem>
                 <Typography
                   variant="subtitle2"
-                  className={commonClasses.colorRed}
+                  className={common_classes.colorRed}
                   component="span"
                   onClick={() => handleToggleDeleteCommentModal(comment.id)}
                 >
@@ -174,7 +166,7 @@ function Comment(props) {
 
         {Array.isArray(comment.replies) &&
         comment.replies.length > 0 &&
-        replyDepth < 3 ? (
+        reply_depth < 3 ? (
           <CustomButton
             className={
               !parent
@@ -182,18 +174,18 @@ function Comment(props) {
                 : classes.subShowRepliesButtonStyle
             }
             endIcon={
-              repliesCollapsed ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
+              replies_collapsed ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
             }
             onClick={e => handleSetState(toggleRepliesCollapsed(e, state))}
           >
-            {!repliesCollapsed
+            {!replies_collapsed
               ? t('comments.showReplies')
               : t('comments.hideReplies')}
             {` ( ${nFormatter(countComments(comment.replies))} )`}
           </CustomButton>
         ) : null}
 
-        {replyDepth < 3 ? (
+        {reply_depth < 3 ? (
           <CustomButton
             className={
               !parent
@@ -213,12 +205,12 @@ function Comment(props) {
             className={classes.commentThreadLineStyle}
             aria-hidden="true"
           ></a>
-          {replyInputCollapsed ? (
+          {reply_input_collapsed ? (
             <CommentInput parent_id={comment.id} {...props} />
           ) : null}
           {Array.isArray(comment.replies) &&
             comment.replies.length > 0 &&
-            repliesCollapsed &&
+            replies_collapsed &&
             comment.replies.map(comment => (
               <Comment
                 {...props}
@@ -227,7 +219,7 @@ function Comment(props) {
                 t={t}
                 comment={comment}
                 parent={comment.id}
-                replyDepth={replyDepth}
+                reply_depth={reply_depth}
               />
             ))}
         </Box>

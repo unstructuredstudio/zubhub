@@ -20,8 +20,13 @@ import {
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CommentIcon from '../../assets/js/icons/CommentIcon';
-import nFormatter from '../../assets/js/nFormatter';
-import dFormatter from '../../assets/js/dFormatter';
+import {
+  dFormatter,
+  nFormatter,
+  cloudinaryFactory,
+  getPlayerOptions,
+} from '../../assets/js/utils/scripts';
+import { toggleLike, toggleSave, isCloudinaryVideo } from './projectScripts';
 import styles from '../../assets/js/styles/components/project/projectStyles';
 
 const useStyles = makeStyles(styles);
@@ -29,32 +34,24 @@ const useStyles = makeStyles(styles);
 function Project(props) {
   const classes = useStyles();
 
-  const toggle_like = (e, id) => {
-    e.preventDefault();
-    if (!props.auth.token) {
-      props.history.push('/login');
-    } else {
-      const toggle_like_promise = props.toggle_like({
-        id,
-        token: props.auth.token,
-      });
-      props.updateProjects(toggle_like_promise);
-    }
-  };
+  React.useEffect(() => {
+    if (props.project.video && isCloudinaryVideo(props.project.video)) {
+      const cld = cloudinaryFactory(window);
 
-  const toggle_save = (e, id) => {
-    e.preventDefault();
-    if (!props.auth.token) {
-      props.history.push('/login');
-    } else {
-      const toggle_save_promise = props.toggle_save({
-        id,
-        token: props.auth.token,
-        t: props.t,
+      const player = cld.videoPlayer(
+        `${props.project.id}-small-cloudinary-video-player`,
+        {
+          ...getPlayerOptions(window, props.project.video),
+        },
+      );
+
+      player.source(props.project.video);
+      player.videojs.error(null);
+      player.videojs.error({
+        message: props.t('project.errors.videoPlayerError'),
       });
-      props.updateProjects(toggle_save_promise);
     }
-  };
+  }, [props.project.video]);
 
   const { project, t } = props;
   return (
@@ -62,11 +59,19 @@ function Project(props) {
       <Card className={classes.root}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
           {project.video ? (
-            <iframe
-              className={classes.mediaStyle}
-              title={project.title}
-              src={project.video}
-            ></iframe>
+            isCloudinaryVideo(project.video) ? (
+              <video
+                id={`${project.id}-small-cloudinary-video-player`}
+                controls
+                className={clsx('cld-video-player', classes.mediaStyle)}
+              ></video>
+            ) : (
+              <iframe
+                className={classes.mediaStyle}
+                title={project.title}
+                src={project.video}
+              ></iframe>
+            )
           ) : project.images.length > 0 ? (
             <img
               className={classes.mediaImageStyle}
@@ -83,7 +88,7 @@ function Project(props) {
               className={classes.fabButtonStyle}
               size="small"
               aria-label="save button"
-              onClick={(e, id = project.id) => toggle_save(e, id)}
+              onClick={(e, id = project.id) => toggleSave(e, id, props)}
             >
               {project.saved_by.includes(props.auth.id) ? (
                 <BookmarkIcon aria-label="unsave" />
@@ -96,7 +101,7 @@ function Project(props) {
               size="small"
               aria-label="like button"
               variant="extended"
-              onClick={(e, id = project.id) => toggle_like(e, id)}
+              onClick={(e, id = project.id) => toggleLike(e, id, props)}
             >
               {project.likes.includes(props.auth.id) ? (
                 <ClapIcon arial-label="unlike" />
@@ -182,8 +187,8 @@ function Project(props) {
 Project.propTypes = {
   auth: PropTypes.object.isRequired,
   updateProjects: PropTypes.func.isRequired,
-  toggle_like: PropTypes.func.isRequired,
-  toggle_save: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
 };
 

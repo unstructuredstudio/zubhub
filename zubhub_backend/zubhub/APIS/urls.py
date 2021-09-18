@@ -1,6 +1,6 @@
 from django.urls import path, include
 from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
-                          HeroAPIView, HelpAPIView, PrivacyAPIView, FAQAPIView)
+                          HeroAPIView, HelpAPIView, PrivacyAPIView, FAQAPIView, SigGenAPIView)
 
 
 urlpatterns = [
@@ -13,5 +13,7 @@ urlpatterns = [
     path('hero/', HeroAPIView.as_view(), name="hero"),
     path('help/', HelpAPIView.as_view(), name="help"),
     path('privacy/', PrivacyAPIView.as_view(), name="privacy"),
-    path('faqs/', FAQAPIView.as_view(), name="faqs")
+    path('faqs/', FAQAPIView.as_view(), name="faqs"),
+    path('signature/', SigGenAPIView,
+         name="signature_generator_api")
 ]

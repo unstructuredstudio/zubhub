@@ -1,4 +1,4 @@
-const defaultState = {
+const default_state = {
   token: null,
   username: null,
   id: null,
@@ -7,7 +7,7 @@ const defaultState = {
   role: null,
 };
 
-const auth = (state = defaultState, action) => {
+const auth = (state = default_state, action) => {
   switch (action.type) {
     case 'SET_AUTH_USER':
       return {
