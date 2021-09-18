@@ -31,7 +31,7 @@ export const login = args => {
 export const logout = args => {
   return dispatch => {
     API.logout(args.token)
-      .then(res => {
+      .then(_ => {
         dispatch({
           type: 'SET_AUTH_USER',
           payload: {
@@ -44,18 +44,18 @@ export const logout = args => {
           },
         });
       })
-      .then(res => {
+      .then(_ => {
         args.history.push('/');
       })
-      .catch(error => {
+      .catch(_ => {
         toast.warning(args.t('pageWrapper.errors.logoutFailed'));
       });
   };
 };
 
-export const get_auth_user = props => {
+export const getAuthUser = props => {
   return dispatch => {
-    return API.get_auth_user(props.auth.token)
+    return API.getAuthUser(props.auth.token)
       .then(res => {
         if (!res.id) {
           throw new Error(props.t('pageWrapper.errors.unexpected'));
@@ -95,9 +95,9 @@ export const signup = args => {
   };
 };
 
-export const send_email_confirmation = args => {
+export const sendEmailConfirmation = args => {
   return () => {
-    return API.send_email_confirmation(args.key).then(res => {
+    return API.sendEmailConfirmation(args.key).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
@@ -110,9 +110,9 @@ export const send_email_confirmation = args => {
   };
 };
 
-export const send_phone_confirmation = args => {
+export const sendPhoneConfirmation = args => {
   return () => {
-    return API.send_phone_confirmation(args.key).then(res => {
+    return API.sendPhoneConfirmation(args.key).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
@@ -125,9 +125,9 @@ export const send_phone_confirmation = args => {
   };
 };
 
-export const send_password_reset_link = args => {
+export const sendPasswordResetLink = args => {
   return () => {
-    return API.send_password_reset_link(args.email).then(res => {
+    return API.sendPasswordResetLink(args.email).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(JSON.stringify(res));
       } else {
@@ -140,9 +140,9 @@ export const send_password_reset_link = args => {
   };
 };
 
-export const password_reset_confirm = args => {
+export const passwordResetConfirm = args => {
   return () => {
-    return API.password_reset_confirm(args).then(res => {
+    return API.passwordResetConfirm(args).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(JSON.stringify(res));
       } else {
@@ -155,9 +155,9 @@ export const password_reset_confirm = args => {
   };
 };
 
-export const get_locations = args => {
+export const getLocations = args => {
   return () => {
-    return API.get_locations()
+    return API.getLocations()
       .then(res => {
         if (Array.isArray(res) && res.length > 0 && res[0].name) {
           return { locations: res };
@@ -180,9 +180,9 @@ export const get_locations = args => {
   };
 };
 
-export const delete_account = args => {
+export const deleteAccount = args => {
   return () => {
-    return API.delete_account(args)
+    return API.deleteAccount(args)
       .then(res => {
         if (res.detail !== 'ok') {
           throw new Error(res.detail);
@@ -194,11 +194,29 @@ export const delete_account = args => {
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           return {
-            dialogError: args.t('profile.delete.errors.unexpected'),
+            dialog_error: args.t('profile.delete.errors.unexpected'),
           };
         } else {
-          return { dialogError: error.message };
+          return { dialog_error: error.message };
         }
+      });
+  };
+};
+
+export const getSignature = args => {
+  return () => {
+    const t = args.t;
+    delete args.t;
+    return API.getSignature(args)
+      .then(res => {
+        if (!res.signature) {
+          throw new Error();
+        } else {
+          return res;
+        }
+      })
+      .catch(() => {
+        toast.warning(t('createProject.errors.unexpected'));
       });
   };
 };

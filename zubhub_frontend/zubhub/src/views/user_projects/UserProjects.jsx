@@ -16,6 +16,8 @@ import {
   Container,
 } from '@material-ui/core';
 
+import { fetchPage, updateProjects } from './userProjectsScripts';
+
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
@@ -25,43 +27,13 @@ import styles from '../../assets/js/styles/views/user_projects/userProjectsStyle
 
 const useStyles = makeStyles(styles);
 
-const fetchPage = (page, props) => {
-  const username = props.match.params.username;
-  return props.get_user_projects({ page, username, t: props.t });
-};
-
-const updateProjects = (res, { results: projects }, props) => {
-  return res
-    .then(res => {
-      if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
-        return { results: projects };
-      } else {
-        res = Object.keys(res)
-          .map(key => res[key])
-          .join('\n');
-        throw new Error(res);
-      }
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        toast.warning(props.t('savedProjects.errors.unexpected'));
-      } else {
-        toast.warning(error.message);
-      }
-      return { loading: false };
-    });
-};
-
 function UserProjects(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
     results: [],
-    prevPage: null,
-    nextPage: null,
+    prev_page: null,
+    next_page: null,
     loading: true,
   });
 
@@ -77,7 +49,7 @@ function UserProjects(props) {
     }
   };
 
-  const { results: projects, prevPage, nextPage, loading } = state;
+  const { results: projects, prev_page, next_page, loading } = state;
   const { t } = props;
   const username = props.match.params.username;
   if (loading) {
@@ -109,7 +81,7 @@ function UserProjects(props) {
                   project={project}
                   key={project.id}
                   updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props))
+                    handleSetState(updateProjects(res, state, props, toast))
                   }
                   {...props}
                 />
@@ -120,12 +92,12 @@ function UserProjects(props) {
             aria-label={t('userProjects.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
-            {prevPage ? (
+            {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split('?')[1]) =>
+                onClick={(e, page = prev_page.split('?')[1]) =>
                   handleSetState(fetchPage(page, props))
                 }
                 primaryButtonStyle
@@ -133,12 +105,12 @@ function UserProjects(props) {
                 {t('userProjects.prev')}
               </CustomButton>
             ) : null}
-            {nextPage ? (
+            {next_page ? (
               <CustomButton
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split('?')[1]) =>
+                onClick={(e, page = next_page.split('?')[1]) =>
                   handleSetState(fetchPage(page, props))
                 }
                 primaryButtonStyle
@@ -157,9 +129,9 @@ function UserProjects(props) {
 
 UserProjects.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_user_projects: PropTypes.func.isRequired,
-  toggle_like: PropTypes.func.isRequired,
-  toggle_save: PropTypes.func.isRequired,
+  getUserProjects: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -170,14 +142,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_user_projects: args => {
-      return dispatch(ProjectActions.get_user_projects(args));
+    getUserProjects: args => {
+      return dispatch(ProjectActions.getUserProjects(args));
     },
-    toggle_like: args => {
-      return dispatch(ProjectActions.toggle_like(args));
+    toggleLike: args => {
+      return dispatch(ProjectActions.toggleLike(args));
     },
-    toggle_save: args => {
-      return dispatch(ProjectActions.toggle_save(args));
+    toggleSave: args => {
+      return dispatch(ProjectActions.toggleSave(args));
     },
   };
 };

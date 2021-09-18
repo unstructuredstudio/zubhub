@@ -9,6 +9,7 @@ from .models import Project, Comment, Image, StaffPick, Category, Tag
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
 from .utils import update_images, update_tags, parse_comment_trees
+from .tasks import delete_video_from_cloudinary, update_video_url_if_transform_ready
 import time
 from math import ceil
 
@@ -136,13 +137,13 @@ class ProjectSerializer(serializers.ModelSerializer):
     def validate_video(self, video):
         if(video == "" and len(self.initial_data.get("images")) == 0):
             raise serializers.ValidationError(
-                _("you must provide either image(s) or video url"))
+                _("You must provide either image(s), video file, or video URL to create your project!"))
         return video
 
     def validate_images(self, images):
         if(len(images) == 0 and len(self.initial_data["video"]) == 0):
             raise serializers.ValidationError(
-                _("you must provide either image(s) or video url"))
+                _("You must provide either image(s), video file, or video URL to create your project!"))
         return images
 
     def validate_tags(self, tags):
@@ -186,11 +187,15 @@ class ProjectSerializer(serializers.ModelSerializer):
             Image.objects.create(project=project, **image)
 
         for tag in tags_data:
-            tag, created = Tag.objects.get_or_create(name=tag["name"])
+            tag, _ = Tag.objects.get_or_create(name=tag["name"])
             project.tags.add(tag)
 
         if category:
             category.projects.add(project)
+
+        if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
+            update_video_url_if_transform_ready.delay(
+                {"url": project.video, "project_id": project.id})
 
         return project
 
@@ -201,9 +206,14 @@ class ProjectSerializer(serializers.ModelSerializer):
         if validated_data.get('category', None):
             category = validated_data.pop('category')
 
+        video_data = validated_data.pop("video")
+
+        if project.video.find("cloudinary.com") > -1 and project.video != video_data:
+            delete_video_from_cloudinary.delay(project.video)
+
         project.title = validated_data.pop("title")
         project.description = validated_data.pop("description")
-        project.video = validated_data.pop("video")
+        project.video = video_data
         project.materials_used = validated_data.pop("materials_used")
 
         project.save()
@@ -216,6 +226,10 @@ class ProjectSerializer(serializers.ModelSerializer):
             old_category.projects.remove(project)
         if category:
             category.projects.add(project)
+
+        if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
+            update_video_url_if_transform_ready.delay(
+                {"url": project.video, "project_id": project.id})
 
         return project
 

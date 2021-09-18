@@ -19,32 +19,12 @@ import {
 import * as UserActions from '../../store/actions/userActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/email_confirm/emailConfirmStyles';
+import {
+  getUsernameAndKey,
+  confirmGroupInvite,
+} from './groupInviteConfirmScripts';
 
 const useStyles = makeStyles(styles);
-
-const getUsernameAndKey = queryString => {
-  let username = queryString.split('&&');
-  const key = username[1].split('=')[1];
-  username = username[0].split('=')[1];
-  return { username, key };
-};
-
-const confirmGroupInvite = (e, props, state) => {
-  e.preventDefault();
-  return props
-    .send_group_invite_confirmation({
-      key: state.key,
-      t: props.t,
-      history: props.history,
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        return { errors: props.t('groupInviteConfirm.errors.unexpected') };
-      } else {
-        return { errors: error.message };
-      }
-    });
-};
 
 function GroupInviteConfirm(props) {
   const classes = useStyles();
@@ -144,7 +124,7 @@ function GroupInviteConfirm(props) {
 
 GroupInviteConfirm.propTypes = {
   auth: PropTypes.object.isRequired,
-  send_group_invite_confirmation: PropTypes.func.isRequired,
+  sendGroupInviteConfirmation: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -155,8 +135,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    send_group_invite_confirmation: args => {
-      return dispatch(UserActions.send_group_invite_confirmation(args));
+    sendGroupInviteConfirmation: args => {
+      return dispatch(UserActions.sendGroupInviteConfirmation(args));
     },
   };
 };

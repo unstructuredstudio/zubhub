@@ -2,7 +2,7 @@ import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
 const API = new ZubhubAPI();
 
-export const set_projects = projects => {
+export const setProjects = projects => {
   return dispatch => {
     dispatch({
       type: 'SET_PROJECTS',
@@ -11,9 +11,9 @@ export const set_projects = projects => {
   };
 };
 
-export const create_project = props => {
+export const createProject = props => {
   return () => {
-    return API.create_project(props).then(res => {
+    return API.createProject(props).then(res => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
@@ -24,9 +24,9 @@ export const create_project = props => {
   };
 };
 
-export const update_project = props => {
+export const updateProject = props => {
   return () => {
-    return API.update_project(props).then(res => {
+    return API.updateProject(props).then(res => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
@@ -37,9 +37,9 @@ export const update_project = props => {
   };
 };
 
-export const delete_project = args => {
+export const deleteProject = args => {
   return () => {
-    return API.delete_project({ token: args.token, id: args.id }).then(res => {
+    return API.deleteProject({ token: args.token, id: args.id }).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
@@ -50,9 +50,9 @@ export const delete_project = args => {
   };
 };
 
-export const unpublish_comment = args => {
+export const unpublishComment = args => {
   return () => {
-    return API.unpublish_comment({ token: args.token, id: args.id })
+    return API.unpublishComment({ token: args.token, id: args.id })
       .then(res => {
         if (res.text) {
           toast.success(args.t('comments.unpublishCommentToastSuccess'));
@@ -74,9 +74,9 @@ export const unpublish_comment = args => {
   };
 };
 
-export const delete_comment = args => {
+export const deleteComment = args => {
   return () => {
-    return API.delete_comment({ token: args.token, id: args.id }).then(res => {
+    return API.deleteComment({ token: args.token, id: args.id }).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
@@ -86,9 +86,9 @@ export const delete_comment = args => {
   };
 };
 
-export const get_project = args => {
+export const getProject = args => {
   return () => {
-    return API.get_project(args)
+    return API.getProject(args)
       .then(res => {
         if (res.title) {
           return { project: res, loading: false };
@@ -110,9 +110,9 @@ export const get_project = args => {
   };
 };
 
-export const get_projects = args => {
+export const getProjects = args => {
   return dispatch => {
-    return API.get_projects(args)
+    return API.getProjects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           dispatch({
@@ -138,10 +138,9 @@ export const get_projects = args => {
   };
 };
 
-
-export const get_categories = args => {
+export const getCategories = args => {
   return () => {
-    return API.get_categories()
+    return API.getCategories()
       .then(res => {
         if (Array.isArray(res) && res.length > 0 && res[0].name) {
           return { categories: res, loading: false };
@@ -161,11 +160,11 @@ export const get_categories = args => {
         return { loading: false };
       });
   };
-};            
-                  
-export const search_projects = args => {
+};
+
+export const searchProjects = args => {
   return () => {
-    return API.search_projects(args)
+    return API.searchProjects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return { ...res, loading: false, type: args.type };
@@ -186,10 +185,10 @@ export const search_projects = args => {
       });
   };
 };
-            
-export const suggest_tags = args => {
+
+export const suggestTags = args => {
   return () => {
-    return API.suggest_tags(args.value)
+    return API.suggestTags(args.value)
       .then(res => {
         if (Array.isArray(res)) {
           return res.length > 0
@@ -209,20 +208,19 @@ export const suggest_tags = args => {
           toast.warning(error.message);
         }
         return { tag_suggestion_open: false };
-     });
+      });
   };
 };
-   
 
-export const get_user_projects = args => {
+export const getUserProjects = args => {
   return () => {
-    return API.get_user_projects(args)
+    return API.getUserProjects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
             results: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
+            prev_page: res.previous,
+            next_page: res.next,
             loading: false,
           };
         } else {
@@ -243,9 +241,9 @@ export const get_user_projects = args => {
   };
 };
 
-export const get_saved = args => {
+export const getSaved = args => {
   return () => {
-    return API.get_saved(args)
+    return API.getSaved(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
@@ -270,9 +268,9 @@ export const get_saved = args => {
   };
 };
 
-export const toggle_like = args => {
+export const toggleLike = args => {
   return () => {
-    return API.toggle_like(args)
+    return API.toggleLike(args)
       .then(res => {
         if (res.title) {
           return { project: res };
@@ -295,9 +293,9 @@ export const toggle_like = args => {
   };
 };
 
-export const toggle_save = args => {
+export const toggleSave = args => {
   return () => {
-    return API.toggle_save(args)
+    return API.toggleSave(args)
       .then(res => {
         if (res.title) {
           return { project: res };
@@ -319,9 +317,9 @@ export const toggle_save = args => {
   };
 };
 
-export const add_comment = args => {
+export const addComment = args => {
   return () => {
-    return API.add_comment(args)
+    return API.addComment(args)
       .then(res => {
         if (res.title) {
           return { project: res, loading: false };
@@ -343,7 +341,7 @@ export const add_comment = args => {
   };
 };
 
-export const set_staff_picks = staff_picks => {
+export const setStaffPicks = staff_picks => {
   return dispatch => {
     dispatch({
       type: 'SET_PROJECTS',
@@ -352,24 +350,24 @@ export const set_staff_picks = staff_picks => {
   };
 };
 
-export const set_hero = hero => {
+export const setHero = hero => {
   return dispatch => {
     dispatch({
       type: 'SET_PROJECTS',
-      payload: {hero},
+      payload: { hero },
     });
   };
 };
 
-export const get_hero = args => {
+export const getHero = args => {
   return dispatch => {
-    return API.get_hero()
+    return API.getHero()
       .then(res => {
         if (res.id) {
-          dispatch(set_hero(res));
+          dispatch(setHero(res));
           return { loading: false };
         } else {
-          dispatch(set_hero({}));
+          dispatch(setHero({}));
           return { loading: false };
         }
       })
@@ -384,18 +382,17 @@ export const get_hero = args => {
   };
 };
 
-export const get_staff_picks = args => {
+export const getStaffPicks = args => {
   return dispatch => {
-    return API.get_staff_picks()
+    return API.getStaffPicks()
       .then(res => {
         if (Array.isArray(res)) {
-          dispatch(set_staff_picks(res));
+          dispatch(setStaffPicks(res));
           return { loading: false };
-        }else if (res.detail === "not found"){
-          console.log("res.detail === not found");
-          dispatch(set_staff_picks([]));
+        } else if (res.detail === 'not found') {
+          dispatch(setStaffPicks([]));
         } else {
-          dispatch(set_staff_picks([]));
+          dispatch(setStaffPicks([]));
           res = Object.keys(res)
             .map(key => res[key])
             .join('\n');
@@ -413,9 +410,9 @@ export const get_staff_picks = args => {
   };
 };
 
-export const get_staff_pick = args => {
+export const getStaffPick = args => {
   return () => {
-    return API.get_staff_pick(args)
+    return API.getStaffPick(args)
       .then(res => {
         if (res.id) {
           return {

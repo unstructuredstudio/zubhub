@@ -6,9 +6,9 @@ const styles = theme => ({
   },
   titleStyle: {
     fontWeight: 900,
-    fontSize: '1.5rem',    
+    fontSize: '1.5rem',
     marginLeft: '0.67em',
-    marginRight: '0.67em'
+    marginRight: '0.67em',
   },
   projectGridStyle: {
     marginBottom: '2em',

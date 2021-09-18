@@ -34,14 +34,11 @@ const styles = theme => ({
       backgroundColor: '#9A0036',
     },
   },
-  imageUploadButtonStyle: {
+  mediaUploadButtonStyle: {
     '& MuiButton-label': {
       width: '100%',
       display: 'flex',
       justifyContent: 'flex-end',
-      '& imageCountStyle': {
-        flexGrow: 1,
-      },
     },
   },
   customButtonStyle: {

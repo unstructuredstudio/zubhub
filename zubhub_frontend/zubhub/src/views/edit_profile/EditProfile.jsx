@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
-import * as Yup from 'yup';
 
 import { toast } from 'react-toastify';
 
@@ -30,6 +29,14 @@ import {
   FormControl,
 } from '@material-ui/core';
 
+import {
+  validationSchema,
+  getLocations,
+  getProfile,
+  editProfile,
+  handleTooltipToggle,
+} from './editProfileScripts';
+
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
@@ -37,107 +44,23 @@ import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles'
 
 const useStyles = makeStyles(styles);
 
-const get_locations = props => {
-  return props.get_locations({ t: props.t });
-};
-
-const getProfile = (refs, props) => {
-  return props.get_auth_user(props).then(obj => {
-    if (!obj.id) {
-      return;
-    } else {
-      let init_email_and_phone = {};
-      if (refs.usernameEl.current && obj.username) {
-        props.setFieldValue('username', obj.username);
-        refs.usernameEl.current.firstChild.value = obj.username;
-      }
-
-      if (refs.emailEl.current && obj.email) {
-        props.setFieldValue('email', obj.email);
-        refs.emailEl.current.firstChild.value = obj.email;
-        init_email_and_phone['init_email'] = obj.email; //this is a hack: we need to find a better way of knowing when phone and email exists. state doesn't seem to work
-      }
-
-      if (refs.phoneEl.current && obj.phone) {
-        props.setFieldValue('phone', obj.phone);
-        refs.phoneEl.current.firstChild.value = obj.phone;
-        init_email_and_phone['init_phone'] = obj.phone; //this is a hack: we need to find a better way of knowing when phone and email exists. state doesn't seem to work
-      }
-
-      if (obj.location) {
-        props.setFieldValue('user_location', obj.location);
-      }
-
-      if (refs.bioEl.current && obj.bio) {
-        props.setFieldValue('bio', obj.bio);
-        refs.bioEl.current.firstChild.value = obj.bio;
-      }
-
-      props.setStatus(init_email_and_phone); //the hack continues
-    }
-  });
-};
-
-const editProfile = (e, props) => {
-  e.preventDefault();
-  if (props.values.user_location.length < 1) {
-    props.validateField('user_location');
-  } else {
-    return props
-      .edit_user_profile({ ...props.values, token: props.auth.token })
-      .then(res => {
-        toast.success(props.t('editProfile.toastSuccess'));
-        props.history.push('/profile');
-      })
-      .catch(error => {
-        const messages = JSON.parse(error.message);
-        if (typeof messages === 'object') {
-          const server_errors = {};
-          Object.keys(messages).forEach(key => {
-            if (key === 'non_field_errors') {
-              server_errors['non_field_errors'] = messages[key][0];
-            } else if (key === 'location') {
-              server_errors['user_location'] = messages[key][0];
-            } else {
-              server_errors[key] = messages[key][0];
-            }
-          });
-          props.setStatus({
-            //this is a hack. we need to find a more react way of maintaining initial state for email and phone.
-            init_email: props.status && props.status.init_email,
-            init_phone: props.status && props.status.init_phone,
-            ...server_errors,
-          });
-        } else {
-          props.setStatus({
-            non_field_errors: props.t('editProfile.errors.unexpected'),
-          });
-        }
-      });
-  }
-};
-
-const handleTooltipToggle = ({ toolTipOpen }) => {
-  return { toolTipOpen: !toolTipOpen };
-};
-
 function EditProfile(props) {
   const refs = {
-    usernameEl: React.useRef(null),
-    locationEl: React.useRef(null),
-    emailEl: React.useRef(null),
-    phoneEl: React.useRef(null),
-    bioEl: React.useRef(null),
+    username_el: React.useRef(null),
+    location_el: React.useRef(null),
+    email_el: React.useRef(null),
+    phone_el: React.useRef(null),
+    bio_el: React.useRef(null),
   };
 
   const [state, setState] = React.useState({
     locations: [],
-    toolTipOpen: false,
+    tool_tip_open: false,
   });
 
   React.useEffect(() => {
     getProfile(refs, props);
-    handleSetState(get_locations(props));
+    handleSetState(getLocations(props));
   }, []);
 
   const classes = useStyles();
@@ -150,7 +73,7 @@ function EditProfile(props) {
     }
   };
 
-  const { locations, toolTipOpen } = state;
+  const { locations, tool_tip_open } = state;
   const { t } = props;
 
   return (
@@ -163,7 +86,7 @@ function EditProfile(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => editProfile(e, props)}
+                onSubmit={e => editProfile(e, props, toast)}
               >
                 <Typography
                   gutterBottom
@@ -233,13 +156,13 @@ function EditProfile(props) {
                           PopperProps={{
                             disablePortal: true,
                           }}
-                          open={toolTipOpen}
+                          open={tool_tip_open}
                           disableFocusListener
                           disableHoverListener
                           disableTouchListener
                         >
                           <OutlinedInput
-                            ref={refs.usernameEl}
+                            ref={refs.username_el}
                             className={clsx(
                               classes.customInputStyle,
                               classes.staticLabelInputStyle,
@@ -272,7 +195,7 @@ function EditProfile(props) {
 
                   <Grid item xs={12} sm={6} md={6}>
                     <FormControl
-                      ref={refs.locationEl}
+                      ref={refs.location_el}
                       className={clsx(classes.margin, classes.textField)}
                       variant="outlined"
                       size="small"
@@ -352,7 +275,7 @@ function EditProfile(props) {
                         {t('editProfile.inputs.email.label')}
                       </InputLabel>
                       <OutlinedInput
-                        ref={refs.emailEl}
+                        ref={refs.email_el}
                         disabled={
                           props.status && props.status['init_email']
                             ? true
@@ -414,7 +337,7 @@ function EditProfile(props) {
                         {t('editProfile.inputs.phone.label')}
                       </InputLabel>
                       <OutlinedInput
-                        ref={refs.phoneEl}
+                        ref={refs.phone_el}
                         disabled={
                           props.status && props.status['init_phone']
                             ? true
@@ -476,7 +399,7 @@ function EditProfile(props) {
                         {t('editProfile.inputs.bio.label')}
                       </InputLabel>
                       <OutlinedInput
-                        ref={refs.bioEl}
+                        ref={refs.bio_el}
                         className={clsx(
                           classes.customInputStyle,
                           classes.staticLabelInputStyle,
@@ -566,10 +489,10 @@ function EditProfile(props) {
 
 EditProfile.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_auth_user: PropTypes.func.isRequired,
-  set_auth_user: PropTypes.func.isRequired,
-  edit_user_profile: PropTypes.func.isRequired,
-  get_locations: PropTypes.func.isRequired,
+  getAuthUser: PropTypes.func.isRequired,
+  setAuthUser: PropTypes.func.isRequired,
+  editUserProfile: PropTypes.func.isRequired,
+  getLocations: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -580,14 +503,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_auth_user: props => {
-      return dispatch(AuthActions.get_auth_user(props));
+    getAuthUser: props => {
+      return dispatch(AuthActions.getAuthUser(props));
     },
-    edit_user_profile: props => {
-      return dispatch(UserActions.edit_user_profile(props));
+    editUserProfile: props => {
+      return dispatch(UserActions.editUserProfile(props));
     },
-    get_locations: props => {
-      return dispatch(AuthActions.get_locations());
+    getLocations: _ => {
+      return dispatch(AuthActions.getLocations());
     },
   };
 };
@@ -602,14 +525,6 @@ export default connect(
       user_location: '',
       bio: '',
     }),
-    validationSchema: Yup.object().shape({
-      username: Yup.string().required('required'),
-      user_location: Yup.string().min(1, 'min').required('required'),
-      email: Yup.string().email('invalid'),
-      phone: Yup.string().test('phone_is_invalid', 'invalid', function (value) {
-        return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
-      }),
-      bio: Yup.string().max(255, 'tooLong'),
-    }),
+    validationSchema,
   })(EditProfile),
 );
