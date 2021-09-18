@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
-import * as Yup from 'yup';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Visibility from '@material-ui/icons/Visibility';
@@ -34,98 +33,46 @@ import {
   Checkbox,
 } from '@material-ui/core';
 
+import {
+  vars,
+  validationSchema,
+  handleMouseDownPassword,
+  getLocations,
+  signup,
+  handleTooltipToggle,
+  handleToggleSubscribeBox,
+} from './signupScripts';
+
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import styles from '../../assets/js/styles/views/signup/signupStyles';
 
 const useStyles = makeStyles(styles);
 
-let phone_field_touched;
-let email_field_touched;
-
-const handleMouseDownPassword = e => {
-  e.preventDefault();
-};
-
-const get_locations = props => {
-  return props.get_locations({ t: props.t });
-};
-
-const signup = (e, props) => {
-  e.preventDefault();
-  if (!props.values.user_location || props.values.user_location.length < 1) {
-    props.setFieldTouched('username', true);
-    props.setFieldTouched('email', true);
-    props.setFieldTouched('phone', true);
-    props.setFieldTouched('dateOfBirth', true);
-    props.setFieldTouched('user_location', true);
-    props.setFieldTouched('password1', true);
-    props.setFieldTouched('password2', true);
-    phone_field_touched = true;
-    email_field_touched = true;
-  } else {
-    return props
-      .signup({
-        values: { ...props.values, subscribe: !props.values.subscribe },
-        history: props.history,
-      })
-      .catch(error => {
-        const messages = JSON.parse(error.message);
-        if (typeof messages === 'object') {
-          const server_errors = {};
-          Object.keys(messages).forEach(key => {
-            if (key === 'non_field_errors') {
-              server_errors['non_field_errors'] = messages[key][0];
-            } else if (key === 'location') {
-              server_errors['user_location'] = messages[key][0];
-            } else {
-              server_errors[key] = messages[key][0];
-            }
-          });
-          props.setStatus({ ...server_errors });
-        } else {
-          props.setStatus({
-            non_field_errors: props.t('signup.errors.unexpected'),
-          });
-        }
-      });
-  }
-};
-
-const handleTooltipToggle = ({ toolTipOpen }) => {
-  return { toolTipOpen: !toolTipOpen };
-};
-
-const handleToggleSubscribeBox = (e, props, state) => {
-  let subscribeBoxChecked = !state.subscribeBoxChecked;
-  props.setFieldValue('subscribe', subscribeBoxChecked);
-  return { subscribeBoxChecked };
-};
-
 function Signup(props) {
   const [state, setState] = React.useState({
     locations: [],
-    showPassword1: false,
-    showPassword2: false,
-    toolTipOpen: false,
-    subscribeBoxChecked: false,
+    show_password1: false,
+    show_password2: false,
+    tool_tip_open: false,
+    subscribe_box_checked: false,
   });
 
   React.useEffect(() => {
-    handleSetState(get_locations(props));
+    handleSetState(getLocations(props));
   }, []);
 
   React.useEffect(() => {
     if (props.touched['email']) {
-      email_field_touched = true;
+      vars.email_field_touched = true;
     } else {
-      email_field_touched = false;
+      vars.email_field_touched = false;
     }
 
     if (props.touched['phone']) {
-      phone_field_touched = true;
+      vars.phone_field_touched = true;
     } else {
-      phone_field_touched = false;
+      vars.phone_field_touched = false;
     }
   }, [props.touched['email'], props.touched['phone']]);
 
@@ -141,10 +88,10 @@ function Signup(props) {
 
   const {
     locations,
-    toolTipOpen,
-    showPassword1,
-    showPassword2,
-    subscribeBoxChecked,
+    tool_tip_open,
+    show_password1,
+    show_password2,
+    subscribe_box_checked,
   } = state;
   const { t } = props;
 
@@ -227,7 +174,7 @@ function Signup(props) {
                           PopperProps={{
                             disablePortal: true,
                           }}
-                          open={toolTipOpen}
+                          open={tool_tip_open}
                           disableFocusListener
                           disableHoverListener
                           disableTouchListener
@@ -465,7 +412,7 @@ function Signup(props) {
                         className={classes.customInputStyle}
                         id="password1"
                         name="password1"
-                        type={showPassword1 ? 'text' : 'password'}
+                        type={show_password1 ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
@@ -477,13 +424,13 @@ function Signup(props) {
                               onClick={() =>
                                 setState({
                                   ...state,
-                                  showPassword1: !showPassword1,
+                                  show_password1: !show_password1,
                                 })
                               }
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {showPassword1 ? (
+                              {show_password1 ? (
                                 <Visibility />
                               ) : (
                                 <VisibilityOff />
@@ -530,7 +477,7 @@ function Signup(props) {
                         className={classes.customInputStyle}
                         id="password2"
                         name="password2"
-                        type={showPassword2 ? 'text' : 'password'}
+                        type={show_password2 ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
@@ -542,13 +489,13 @@ function Signup(props) {
                               onClick={() =>
                                 setState({
                                   ...state,
-                                  showPassword2: !showPassword2,
+                                  show_password2: !show_password2,
                                 })
                               }
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {showPassword2 ? (
+                              {show_password2 ? (
                                 <Visibility />
                               ) : (
                                 <VisibilityOff />
@@ -626,7 +573,7 @@ function Signup(props) {
                   </Grid>
                   <Grid item xs={12}>
                     <FormControlLabel
-                      value={subscribeBoxChecked}
+                      value={subscribe_box_checked}
                       onChange={e =>
                         handleSetState(
                           handleToggleSubscribeBox(e, props, state),
@@ -705,9 +652,9 @@ function Signup(props) {
 
 Signup.propTypes = {
   auth: PropTypes.object.isRequired,
-  set_auth_user: PropTypes.func.isRequired,
+  setAuthUser: PropTypes.func.isRequired,
   signup: PropTypes.func.isRequired,
-  get_locations: PropTypes.func.isRequired,
+  getLocations: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -718,14 +665,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: auth_user => {
+    setAuthUser: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
     signup: args => {
       return dispatch(AuthActions.signup(args));
     },
-    get_locations: args => {
-      return dispatch(AuthActions.get_locations(args));
+    getLocations: args => {
+      return dispatch(AuthActions.getLocations(args));
     },
   };
 };
@@ -742,32 +689,8 @@ export default connect(
       user_location: '',
       password1: '',
       password2: '',
+      bio: '',
     }),
-    validationSchema: Yup.object().shape({
-      username: Yup.string().required('required'),
-      email: Yup.string()
-        .email('invalid')
-        .test('email_is_empty', 'phoneOrEmail', function (value) {
-          return email_field_touched && !value && !this.parent.phone
-            ? false
-            : true;
-        }),
-      phone: Yup.string()
-        .test('phone_is_invalid', 'invalid', function (value) {
-          return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
-        })
-        .test('phone_is_empty', 'phoneOrEmail', function (value) {
-          return phone_field_touched && !value && !this.parent.email
-            ? false
-            : true;
-        }),
-      dateOfBirth: Yup.date().max(new Date(), 'max').required('required'),
-      user_location: Yup.string().min(1, 'min').required('required'),
-      password1: Yup.string().min(8, 'min').required('required'),
-      password2: Yup.string()
-        .oneOf([Yup.ref('password1'), null], 'noMatch')
-        .required('required'),
-    }),
-    bio: Yup.string().max(255, 'tooLong'),
+    validationSchema,
   })(Signup),
 );

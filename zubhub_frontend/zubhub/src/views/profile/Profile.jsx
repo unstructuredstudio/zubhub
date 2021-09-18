@@ -32,6 +32,17 @@ import {
   Divider,
 } from '@material-ui/core';
 
+import {
+  getUserProfile,
+  copyProfileUrl,
+  updateProjects,
+  toggleFollow,
+  handleMoreMenuOpen,
+  handleMoreMenuClose,
+  handleToggleDeleteAccountModal,
+  deleteAccount,
+} from './profileScripts';
+
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
@@ -40,119 +51,32 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import Comments from '../../components/comments/Comments';
-import parse_comments from '../../assets/js/parseComments';
+
+import { parseComments } from '../../assets/js/utils/scripts';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const getUserProfile = props => {
-  let username = props.match.params.username;
-
-  if (!username) {
-    username = props.auth.username;
-  } else if (props.auth.username === username) props.history.push('/profile');
-  return props.get_user_profile({
-    username,
-    token: props.auth.token,
-    t: props.t,
-  });
-};
-
-const copyProfileUrl = ({ profile, props }) => {
-  const tempInput = document.createElement('textarea');
-  tempInput.value = `${document.location.origin}/creators/${profile.username}`;
-  tempInput.style.top = '0';
-  tempInput.style.top = '0';
-  tempInput.style.position = 'fixed';
-  const rootElem = document.querySelector('#root');
-  rootElem.appendChild(tempInput);
-  tempInput.focus();
-  tempInput.select();
-  if (document.execCommand('copy')) {
-    toast.success(props.t('profile.toastSuccess'));
-    rootElem.removeChild(tempInput);
-  }
-};
-
-const updateProjects = (res, { results: projects }, props) => {
-  return res
-    .then(res => {
-      if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
-        return { results: projects };
-      } else {
-        res = Object.keys(res)
-          .map(key => res[key])
-          .join('\n');
-        throw new Error(res);
-      }
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        toast.warning(props.t('profile.errors.unexpected'));
-      } else {
-        toast.warning(error.message);
-      }
-      return { loading: false };
-    });
-};
-
-const toggle_follow = (id, props) => {
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props.toggle_follow({ id, token: props.auth.token, t: props.t });
-  }
-};
-
-const handleMoreMenuOpen = e => {
-  return { moreAnchorEl: e.currentTarget };
-};
-
-const handleMoreMenuClose = () => {
-  return { moreAnchorEl: null };
-};
-
-const handleToggleDeleteAccountModal = state => {
-  const openDeleteAccountModal = !state.openDeleteAccountModal;
-  return { openDeleteAccountModal, moreAnchorEl: null };
-};
-
-const deleteAccount = (usernameEl, props) => {
-  if (usernameEl.current.firstChild.value !== props.auth.username) {
-    return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
-  } else {
-    return props.delete_account({
-      token: props.auth.token,
-      history: props.history,
-      logout: props.logout,
-      t: props.t,
-    });
-  }
-};
-
 function Profile(props) {
-  const usernameEl = React.useRef(null);
+  const username_el = React.useRef(null);
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
     results: [],
     loading: true,
     profile: {},
-    openDeleteAccountModal: false,
-    dialogError: null,
-    moreAnchorEl: null,
+    open_delete_account_modal: false,
+    dialog_error: null,
+    more_anchor_el: null,
   });
 
   React.useEffect(() => {
     Promise.resolve(getUserProfile(props)).then(obj => {
       if (obj.profile) {
-        parse_comments(obj.profile.comments);
+        parseComments(obj.profile.comments);
       }
       handleSetState(obj);
     });
@@ -170,12 +94,12 @@ function Profile(props) {
     results: projects,
     profile,
     loading,
-    openDeleteAccountModal,
-    dialogError,
-    moreAnchorEl,
+    open_delete_account_modal,
+    dialog_error,
+    more_anchor_el,
   } = state;
 
-  const moreMenuOpen = Boolean(moreAnchorEl);
+  const more_menu_open = Boolean(more_anchor_el);
   const { t } = props;
 
   if (loading) {
@@ -206,7 +130,7 @@ function Profile(props) {
                   <Menu
                     className={classes.moreMenuStyle}
                     id="profile_menu"
-                    anchorEl={moreAnchorEl}
+                    anchorEl={more_anchor_el}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
@@ -216,13 +140,13 @@ function Profile(props) {
                       vertical: 'top',
                       horizontal: 'right',
                     }}
-                    open={moreMenuOpen}
+                    open={more_menu_open}
                     onClose={e => handleSetState(handleMoreMenuClose(e))}
                   >
                     <MenuItem>
                       <Typography
                         variant="subtitle2"
-                        className={commonClasses.colorRed}
+                        className={common_classes.colorRed}
                         component="span"
                         onClick={() =>
                           handleSetState(handleToggleDeleteAccountModal(state))
@@ -240,7 +164,7 @@ function Profile(props) {
                   margin="normal"
                   secondaryButtonStyle
                   onClick={() =>
-                    handleSetState(toggle_follow(profile.id, props))
+                    handleSetState(toggleFollow(profile.id, props))
                   }
                 >
                   {profile.followers.includes(props.auth.id)
@@ -268,7 +192,7 @@ function Profile(props) {
                             classes.profileShareButtonStyle,
                           )}
                           aria-label={t('profile.ariaLabels.shareProfile')}
-                          onClick={() => copyProfileUrl({ profile, props })}
+                          onClick={() => copyProfileUrl(profile, props, toast)}
                         >
                           <ShareIcon />
                         </Fab>
@@ -419,7 +343,9 @@ function Profile(props) {
                           project={project}
                           key={project.id}
                           updateProjects={res =>
-                            handleSetState(updateProjects(res, state, props))
+                            handleSetState(
+                              updateProjects(res, state, props, toast),
+                            )
                           }
                           {...props}
                         />
@@ -436,7 +362,7 @@ function Profile(props) {
           </Container>
         </Box>
         <Dialog
-          open={openDeleteAccountModal}
+          open={open_delete_account_modal}
           onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
           aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
         >
@@ -445,11 +371,11 @@ function Profile(props) {
           </DialogTitle>
           <Box
             component="p"
-            className={dialogError !== null && classes.errorBox}
+            className={dialog_error !== null && classes.errorBox}
           >
-            {dialogError !== null && (
+            {dialog_error !== null && (
               <Box component="span" className={classes.error}>
-                {dialogError}
+                {dialog_error}
               </Box>
             )}
           </Box>{' '}
@@ -470,7 +396,7 @@ function Profile(props) {
               </InputLabel>
               <OutlinedInput
                 className={classes.customInputStyle}
-                ref={usernameEl}
+                ref={username_el}
                 name="username"
                 type="text"
                 labelWidth={90}
@@ -491,7 +417,7 @@ function Profile(props) {
             <CustomButton
               variant="contained"
               onClick={e =>
-                handleSetState(deleteAccount(usernameEl, props, state))
+                handleSetState(deleteAccount(username_el, props, state))
               }
               dangerButtonStyle
               customButtonStyle
@@ -509,15 +435,15 @@ function Profile(props) {
 
 Profile.propTypes = {
   auth: PropTypes.object.isRequired,
-  set_auth_user: PropTypes.func.isRequired,
-  get_user_profile: PropTypes.func.isRequired,
-  suggest_creators: PropTypes.func.isRequired,
-  add_comment: PropTypes.func.isRequired,
-  delete_account: PropTypes.func.isRequired,
+  setAuthUser: PropTypes.func.isRequired,
+  getUserProfile: PropTypes.func.isRequired,
+  suggestCreators: PropTypes.func.isRequired,
+  addComment: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
-  toggle_follow: PropTypes.func.isRequired,
-  toggle_like: PropTypes.func.isRequired,
-  toggle_save: PropTypes.func.isRequired,
+  toggleFollow: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -528,38 +454,38 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: auth_user => {
+    setAuthUser: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    get_user_profile: args => {
-      return dispatch(UserActions.get_user_profile(args));
+    getUserProfile: args => {
+      return dispatch(UserActions.getUserProfile(args));
     },
-    suggest_creators: args => {
-      return dispatch(UserActions.suggest_creators(args));
+    suggestCreators: args => {
+      return dispatch(UserActions.suggestCreators(args));
     },
-    add_comment: args => {
-      return dispatch(UserActions.add_comment(args));
+    addComment: args => {
+      return dispatch(UserActions.addComment(args));
     },
-    unpublish_comment: args => {
-      return dispatch(ProjectActions.unpublish_comment(args));
+    unpublishComment: args => {
+      return dispatch(ProjectActions.unpublishComment(args));
     },
-    delete_comment: args => {
-      return dispatch(ProjectActions.delete_comment(args));
+    deleteComment: args => {
+      return dispatch(ProjectActions.deleteComment(args));
     },
-    delete_account: args => {
-      return dispatch(AuthActions.delete_account(args));
+    deleteAccount: args => {
+      return dispatch(AuthActions.deleteAccount(args));
     },
     logout: args => {
       return dispatch(AuthActions.logout(args));
     },
-    toggle_follow: args => {
-      return dispatch(UserActions.toggle_follow(args));
+    toggleFollow: args => {
+      return dispatch(UserActions.toggleFollow(args));
     },
-    toggle_like: args => {
-      return dispatch(ProjectActions.toggle_like(args));
+    toggleLike: args => {
+      return dispatch(ProjectActions.toggleLike(args));
     },
-    toggle_save: args => {
-      return dispatch(ProjectActions.toggle_save(args));
+    toggleSave: args => {
+      return dispatch(ProjectActions.toggleSave(args));
     },
   };
 };

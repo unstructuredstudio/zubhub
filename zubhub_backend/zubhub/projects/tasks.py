@@ -1,6 +1,8 @@
 from random import uniform
 from hashlib import md5
 import boto3
+import cloudinary
+from cloudinary import api
 from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from celery import shared_task
@@ -20,6 +22,48 @@ def delete_image_from_DO_space(self, bucket, key):
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
+
+
+@shared_task(bind=True, acks_late=True, max_retries=10)
+def update_video_url_if_transform_ready(self, dict):
+    from projects.models import Project
+
+    name = dict["url"].split("/")
+    folder = name[-2]
+    name = name[-1]
+    if name.find(".") > -1:
+        name = name.split(".")[0]
+
+    try:
+        result = api.resource(
+            public_id=folder + "/" + name, resource_type="video", type="upload", max_results=500)
+        result = list(filter(
+            lambda each: each["transformation"] == "sp_hd/mpd", result["derived"]))
+        if(len(result) > 0):
+            Project.objects.filter(id=dict["project_id"]).update(
+                video=result[0]["secure_url"])
+        else:
+            raise Exception("retry update_video_url_if_transform_ready")
+    except Exception as e:
+        raise self.retry(exc=e, countdown=180)
+
+
+@shared_task(bind=True, acks_late=True, max_retries=10)
+def delete_video_from_cloudinary(self, url):
+    name = url.split("/")
+    folder = name[-2]
+    name = name[-1]
+
+    if name.find(".") > -1:
+        name = name.split(".")[0]
+    try:
+        result = cloudinary.uploader.destroy(
+            public_id=folder+"/" + name, resource_type="video", invalidate=True)
+
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries
+        ))
 
 
 @shared_task(name="projects.tasks.update_search_index", bind=True, acks_late=True, max_retries=10)

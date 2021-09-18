@@ -16,35 +16,13 @@ import {
   Typography,
 } from '@material-ui/core';
 
+import { getUsernameAndKey, confirmEmail } from './emailConfirmScripts';
+
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/email_confirm/emailConfirmStyles';
 
 const useStyles = makeStyles(styles);
-
-const getUsernameAndKey = queryString => {
-  let username = queryString.split('&&');
-  const key = username[1].split('=')[1];
-  username = username[0].split('=')[1];
-  return { username, key };
-};
-
-const confirmEmail = (e, props, state) => {
-  e.preventDefault();
-  return props
-    .send_email_confirmation({
-      key: state.key,
-      t: props.t,
-      history: props.history,
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        return { errors: props.t('emailConfirm.errors.unexpected') };
-      } else {
-        return { errors: error.message };
-      }
-    });
-};
 
 function EmailConfirm(props) {
   const classes = useStyles();
@@ -142,7 +120,7 @@ function EmailConfirm(props) {
 
 EmailConfirm.propTypes = {
   auth: PropTypes.object.isRequired,
-  send_email_confirmation: PropTypes.func.isRequired,
+  sendEmailConfirmation: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -153,8 +131,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    send_email_confirmation: args => {
-      return dispatch(AuthActions.send_email_confirmation(args));
+    sendEmailConfirmation: args => {
+      return dispatch(AuthActions.sendEmailConfirmation(args));
     },
   };
 };

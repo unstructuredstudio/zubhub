@@ -27,8 +27,8 @@ msgid "Location is required"
 msgstr "स्थान की आवश्यकता है"
 
 #: zubhub/projects/serializers.py:68 zubhub/projects/serializers.py:74
-msgid "you must provide either image(s) or video url"
-msgstr "आपको छवि या वीडियो url प्रदान करना चाहिए"
+msgid "You must provide either image(s), video file, or video URL to create your project!"
+msgstr "अपना प्रोजेक्ट बनाने के लिए आपको या तो छवि (छवियों), वीडियो फ़ाइल, या वीडियो URL प्रदान करना होगा!"
 
 #: zubhub/templates/account/email/email_confirmation_message.txt:6
 msgid "Hello from "

@@ -16,37 +16,13 @@ import {
   Typography,
 } from '@material-ui/core';
 
+import { getUsernameAndKey, confirmPhone } from './phoneConfirmScripts';
+
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/email_confirm/emailConfirmStyles';
 
 const useStyles = makeStyles(styles);
-
-const getUsernameAndKey = queryString => {
-  let username = queryString.split('&&');
-  const key = username[1].split('=')[1];
-  username = username[0].split('=')[1];
-  return { username, key };
-};
-
-const confirmPhone = (e, props, state) => {
-  e.preventDefault();
-  return props
-    .send_phone_confirmation({
-      key: state.key,
-      t: props.t,
-      history: props.history,
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        return {
-          errors: props.t('phoneConfirm.errors.unexpected'),
-        };
-      } else {
-        return { errors: error.message };
-      }
-    });
-};
 
 function PhoneConfirm(props) {
   const classes = useStyles();
@@ -138,7 +114,7 @@ function PhoneConfirm(props) {
 
 PhoneConfirm.propTypes = {
   auth: PropTypes.object.isRequired,
-  send_email_confirmation: PropTypes.func.isRequired,
+  sendPhoneConfirmation: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -149,8 +125,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    send_phone_confirmation: args => {
-      return dispatch(AuthActions.send_phone_confirmation(args));
+    sendPhoneConfirmation: args => {
+      return dispatch(AuthActions.sendPhoneConfirmation(args));
     },
   };
 };

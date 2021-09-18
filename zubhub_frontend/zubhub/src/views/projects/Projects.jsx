@@ -10,6 +10,14 @@ import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { Grid, Box, ButtonGroup, Typography } from '@material-ui/core';
 
+import {
+  fetchHero,
+  fetchPage,
+  fetchStaffPicks,
+  updateProjects,
+  updateStaffPicks,
+} from './projectsScripts';
+
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
@@ -24,80 +32,9 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const fetchHero = props => {
-  return props.get_hero({ t: props.t });
-};
-
-const fetchPage = (page, props) => {
-  return props.get_projects({ page, t: props.t });
-};
-
-const fetchStaffPicks = props => {
-  return props.get_staff_picks({ t: props.t });
-};
-
-const updateProjects = (res, props) => {
-  return res
-    .then(res => {
-      if (res.project && res.project.title) {
-        const results = props.projects.all_projects.results.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
-        props.set_projects({ ...props.projects, results });
-        return { loading: false };
-      } else {
-        res = Object.keys(res)
-          .map(key => res[key])
-          .join('\n');
-        throw new Error(res);
-      }
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        toast.warning(props.t('projects.errors.unexpected'));
-      } else {
-        toast.warning(error.message);
-      }
-      return { loading: false };
-    });
-};
-
-const updateStaffPicks = (res, staff_pick_id, props) => {
-  return res
-    .then(res => {
-      if (res.project && res.project.title) {
-        const staff_picks = props.projects.staff_picks.map(staff_pick =>
-          staff_pick.id === staff_pick_id
-            ? {
-                ...staff_pick,
-                projects: staff_pick.projects.map(project =>
-                  project.id === res.project.id ? res.project : project,
-                ),
-              }
-            : staff_pick,
-        );
-
-        return props.set_staff_picks(staff_picks);
-      } else {
-        res = Object.keys(res)
-          .map(key => res[key])
-          .join('\n');
-        throw new Error(res);
-      }
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        toast.warning(props.t('projects.errors.unexpected'));
-      } else {
-        toast.warning(error.message);
-      }
-      return { loading: false };
-    });
-};
-
 function Projects(props) {
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
     loading: true,
@@ -120,8 +57,8 @@ function Projects(props) {
   const { loading } = state;
   const {
     results: projects,
-    previous: prevPage,
-    next: nextPage,
+    previous: prev_page,
+    next: next_page,
   } = props.projects.all_projects;
   const { hero } = props.projects;
   const staff_picks = props.projects.staff_picks;
@@ -151,7 +88,7 @@ function Projects(props) {
                   {t('projects.shareProject')}
                 </CustomButton>
                 <a
-                  className={commonClasses.textDecorationNone}
+                  className={common_classes.textDecorationNone}
                   href="http://kriti.unstructured.studio/"
                   target="__blank"
                   rel="noreferrer"
@@ -199,7 +136,9 @@ function Projects(props) {
                 key={staff_pick.id}
                 staff_pick={staff_pick}
                 updateProjects={res =>
-                  handleSetState(updateStaffPicks(res, staff_pick.id, props))
+                  handleSetState(
+                    updateStaffPicks(res, staff_pick.id, props, toast),
+                  )
                 }
                 {...props}
               />
@@ -231,7 +170,7 @@ function Projects(props) {
                   project={project}
                   key={project.id}
                   updateProjects={res =>
-                    handleSetState(updateProjects(res, props))
+                    handleSetState(updateProjects(res, props, toast))
                   }
                   {...props}
                 />
@@ -242,12 +181,12 @@ function Projects(props) {
             aria-label={t('projects.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
-            {prevPage ? (
+            {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split('?')[1]) => {
+                onClick={(e, page = prev_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -256,12 +195,12 @@ function Projects(props) {
                 {t('projects.prev')}
               </CustomButton>
             ) : null}
-            {nextPage ? (
+            {next_page ? (
               <CustomButton
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split('?')[1]) => {
+                onClick={(e, page = next_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -281,10 +220,10 @@ function Projects(props) {
 
 Projects.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_projects: PropTypes.func.isRequired,
-  set_projects: PropTypes.func.isRequired,
-  toggle_like: PropTypes.func.isRequired,
-  toggle_save: PropTypes.func.isRequired,
+  getProjects: PropTypes.func.isRequired,
+  setProjects: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -296,26 +235,26 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_projects: page => {
-      return dispatch(ProjectActions.get_projects(page));
+    getProjects: page => {
+      return dispatch(ProjectActions.getProjects(page));
     },
-    set_projects: args => {
-      return dispatch(ProjectActions.set_projects(args));
+    setProjects: args => {
+      return dispatch(ProjectActions.setProjects(args));
     },
-    toggle_like: args => {
-      return dispatch(ProjectActions.toggle_like(args));
+    toggleLike: args => {
+      return dispatch(ProjectActions.toggleLike(args));
     },
-    toggle_save: args => {
-      return dispatch(ProjectActions.toggle_save(args));
+    toggleSave: args => {
+      return dispatch(ProjectActions.toggleSave(args));
     },
-    get_hero: args => {
-      return dispatch(ProjectActions.get_hero(args));
+    getHero: args => {
+      return dispatch(ProjectActions.getHero(args));
     },
-    get_staff_picks: args => {
-      return dispatch(ProjectActions.get_staff_picks(args));
+    getStaffPicks: args => {
+      return dispatch(ProjectActions.getStaffPicks(args));
     },
-    set_staff_picks: args => {
-      return dispatch(ProjectActions.set_staff_picks(args));
+    setStaffPicks: args => {
+      return dispatch(ProjectActions.setStaffPicks(args));
     },
   };
 };

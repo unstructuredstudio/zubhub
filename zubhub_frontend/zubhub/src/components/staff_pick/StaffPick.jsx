@@ -15,7 +15,7 @@ const useCommonStyles = makeStyles(commonStyles);
 
 function StaffPick(props) {
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const { staff_pick, ...rest } = props;
   return staff_pick.projects &&
@@ -33,7 +33,7 @@ function StaffPick(props) {
           >
             {staff_pick.title}
             <CustomButton
-              className={clsx(commonClasses.floatRight)}
+              className={clsx(common_classes.floatRight)}
               variant="outlined"
               margin="normal"
               secondaryButtonStyle
