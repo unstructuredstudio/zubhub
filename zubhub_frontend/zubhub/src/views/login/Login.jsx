@@ -25,8 +25,14 @@ import {
   FormControl,
 } from '@material-ui/core';
 
+import {
+  validationSchema,
+  handleClickShowPassword,
+  handleMouseDownPassword,
+  login,
+} from './loginScripts';
+
 import { withFormik } from 'formik';
-import * as Yup from 'yup';
 
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
@@ -34,44 +40,11 @@ import styles from '../../assets/js/styles/views/login/loginStyles';
 
 const useStyles = makeStyles(styles);
 
-const handleClickShowPassword = state => {
-  const { showPassword } = state;
-  return { showPassword: !showPassword };
-};
-
-const handleMouseDownPassword = e => {
-  e.preventDefault();
-};
-
-const login = (e, props) => {
-  e.preventDefault();
-  return props
-    .login({ values: props.values, history: props.history })
-    .catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        const server_errors = {};
-        Object.keys(messages).forEach(key => {
-          if (key === 'non_field_errors') {
-            server_errors['non_field_errors'] = messages[key][0];
-          } else {
-            server_errors[key] = messages[key][0];
-          }
-        });
-        props.setStatus({ ...server_errors });
-      } else {
-        props.setStatus({
-          non_field_errors: props.t('login.errors.unexpected'),
-        });
-      }
-    });
-};
-
 function Login(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    showPassword: false,
+    show_password: false,
   });
 
   const handleSetState = obj => {
@@ -82,7 +55,7 @@ function Login(props) {
     }
   };
 
-  const { showPassword } = state;
+  const { show_password } = state;
   const { t } = props;
 
   return (
@@ -194,7 +167,7 @@ function Login(props) {
                         className={classes.customInputStyle}
                         id="password"
                         name="password"
-                        type={showPassword ? 'text' : 'password'}
+                        type={show_password ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
@@ -207,7 +180,7 @@ function Login(props) {
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {showPassword ? (
+                              {show_password ? (
                                 <Visibility />
                               ) : (
                                 <VisibilityOff />
@@ -293,7 +266,7 @@ function Login(props) {
 
 Login.propTypes = {
   auth: PropTypes.object.isRequired,
-  set_auth_user: PropTypes.object.isRequired,
+  setAuthUser: PropTypes.object.isRequired,
   login: PropTypes.func.isRequired,
 };
 
@@ -305,7 +278,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: auth_user => {
+    setAuthUser: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
     login: args => {
@@ -322,9 +295,6 @@ export default connect(
     mapPropsToValue: () => ({
       password: '',
     }),
-    validationSchema: Yup.object().shape({
-      username: Yup.string().required('required'),
-      password: Yup.string().min(8, 'min').required('required'),
-    }),
+    validationSchema,
   })(Login),
 );

@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -22,7 +21,7 @@ function Guidelines(props) {
   });
 
   React.useEffect(() => {
-    handleSetState(props.get_privacy({ t: props.t }));
+    handleSetState(props.getPrivacy({ t: props.t }));
   }, []);
 
   const handleSetState = obj => {
@@ -63,7 +62,7 @@ function Guidelines(props) {
 
 Guidelines.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_privacy: PropTypes.func.isRequired,
+  getPrivacy: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -74,8 +73,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_privacy: args => {
-      return dispatch(UserActions.get_privacy(args));
+    getPrivacy: args => {
+      return dispatch(UserActions.getPrivacy(args));
     },
   };
 };

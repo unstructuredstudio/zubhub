@@ -248,6 +248,12 @@
     }
   },
 
+  "project": {
+    "errors": {
+      "videoPlayerError": "An error occured while trying to play this video"
+    }
+  },
+
   "staffPicks": {
     "viewAll": "View all >>"
   },
@@ -291,19 +297,30 @@
         "topHelperText": "Don't have them? Add a video instead!",
         "errors": {
           "onlyImages": "Only images are allowed for now",
-          "imageOrVideo": "You must provide either image(s) or video link",
+          "imageOrVideo": "You must provide either image(s), video file, or video url to create your project!",
           "imageSizeTooLarge": "One or more of your images is larger than 10 MB in size! Upload smaller images",
           "tooManyImages": "Too many images uploaded! We only support 10 images per project :("
         }
       },
       "video": {
         "label": "Let's add a video",
+        "label2": "Add Video",
+        "dialogPrimary": "Select Video",
+        "dialogSecondary": "You can paste a video URL in the input box below or select a video file from your device",
+        "dialogURLFieldLabel": "Video URL",
+        "dialogFileFieldLabel": "Drag and Drop Video Here",
+        "dialogURLToggleLabel": "URL",
+        "dialogFileToggleLabel": "File",
+        "dialogCancel": "Cancel",
+        "dialogDone": "Done",
         "topHelperText": "It's ok if you don't have a video, you can add images instead!",
-        "bottomHelperText": "YouTube, Vimeo, Google Drive links are supported. Mayke sure they are publicly visible!",
+        "bottomHelperText": "You can provide video URL (Youtube, vimeo and Google Drive are supported) or a video file",
         "errors": {
-          "shouldBeVideoUrl": "Make sure the link you provided is a Video link from YouTube, Vimeo and Google Drive",
-          "max": "We need a video link here",
-          "imageOrVideo": "You must provide either image(s) or video link to create your project!"
+          "shouldBeURL": "Select a valid video URL from YouTube, Vimeo, and Google Drive",
+          "shouldBeVideoFile": "Select a valid video file",
+          "maxVideoFileSize": "video file is more than 60MB",
+          "maxVideoURLLength": "video URL is too long",
+          "imageOrVideo": "You must provide either image(s), video file, or video url to create your project!"
         }
       },
       "materialsUsed": {
@@ -333,7 +350,9 @@
       "submit": "Create Project",
       "edit": "Edit Project",
       "image": "Image added",
-      "images": "Images added"
+      "images": "Images added",
+      "videoFile": "Video file added",
+      "videoURL": "Video URL added"
     },
     "createToastSuccess": "Your project was created successfully!",
     "updateToastSuccess": "Your project was updated successfully!",

@@ -21,7 +21,7 @@ function About(props) {
   });
 
   React.useEffect(() => {
-    handleSetState(props.get_help({ t: props.t }));
+    handleSetState(props.getHelp({ t: props.t }));
   }, []);
 
   const handleSetState = obj => {
@@ -60,7 +60,7 @@ function About(props) {
 
 About.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_help: PropTypes.func.isRequired,
+  getHelp: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -71,8 +71,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_help: args => {
-      return dispatch(UserActions.get_help(args));
+    getHelp: args => {
+      return dispatch(UserActions.getHelp(args));
     },
   };
 };

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
-import * as Yup from 'yup';
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -22,40 +21,16 @@ import {
   FormControl,
 } from '@material-ui/core';
 
+import {
+  sendPasswordResetLink,
+  validationSchema,
+} from './passwordResetScripts';
+
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/password_reset/passwordResetStyles';
 
 const useStyles = makeStyles(styles);
-
-const sendPasswordResetLink = (e, props) => {
-  e.preventDefault();
-  return props
-    .send_password_reset_link({
-      email: props.values.email,
-      t: props.t,
-      history: props.history,
-    })
-    .catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        const server_errors = {};
-        Object.keys(messages).forEach(key => {
-          if (key !== 'email') {
-            server_errors['non_field_errors'] = messages[key][0];
-          } else {
-            server_errors[key] = messages[key][0];
-          }
-        });
-        props.setStatus({ ...server_errors });
-      } else {
-        props.setStatus({
-          non_field_errors: props.t('passwordResetConfirm.errors.unexpected'),
-        });
-      }
-    });
-};
-
 function PasswordReset(props) {
   const classes = useStyles();
   const { t } = props;
@@ -173,7 +148,7 @@ function PasswordReset(props) {
 
 PasswordReset.propTypes = {
   auth: PropTypes.object.isRequired,
-  send_password_reset_link: PropTypes.func.isRequired,
+  sendPasswordResetLink: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -184,8 +159,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    send_password_reset_link: props => {
-      return dispatch(AuthActions.send_password_reset_link(props));
+    sendPasswordResetLink: props => {
+      return dispatch(AuthActions.sendPasswordResetLink(props));
     },
   };
 };
@@ -198,8 +173,6 @@ export default connect(
     mapPropsToValue: () => ({
       email: '',
     }),
-    validationSchema: Yup.object().shape({
-      email: Yup.string().email('invalid').required('required'),
-    }),
+    validationSchema,
   })(PasswordReset),
 );
