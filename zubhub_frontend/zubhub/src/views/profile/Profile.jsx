@@ -56,6 +56,7 @@ import {
   calculateLabelWidth,
   parseComments,
 } from '../../assets/js/utils/scripts';
+
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 

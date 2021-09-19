@@ -177,9 +177,6 @@ export const tempDeleteComment = (comments, comment_id) => {
   }
 };
 
-
-
-
 export const calculateLabelWidth=(text, document)=>{
   if(text?.length){
   let label = document.evaluate(`//label[text()='${text}']`, document, null, 0, null );

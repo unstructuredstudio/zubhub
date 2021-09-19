@@ -64,7 +64,6 @@ export const signup = (e, props) => {
         }
       });
 
-
     }
   })
 };
@@ -82,6 +81,7 @@ export const handleToggleSubscribeBox = (e, props, state) => {
   props.setFieldValue('subscribe', subscribe_box_checked);
   return { subscribe_box_checked };
 };
+
 
 export const handleLocationChange = (e, props) => {
   if(vars.iti?.setCountry && e.target.value && 
@@ -128,6 +128,7 @@ export const setLabelWidthOfStaticFields = (refs, document, props)=>{
    refs.date_of_birth_el.current.childNodes[1].childNodes[0].style.width = `${calculateLabelWidth(props.t('signup.inputs.dateOfBirth.label'), document)}px`;
    refs.phone_el.current.childNodes[1].childNodes[0].style.width = `${calculateLabelWidth(props.t('signup.inputs.phone.label'), document)}px`;
 };
+
 
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),

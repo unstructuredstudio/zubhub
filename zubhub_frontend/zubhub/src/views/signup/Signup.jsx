@@ -58,7 +58,7 @@ import styles from '../../assets/js/styles/views/signup/signupStyles';
 const useStyles = makeStyles(styles);
 
 function Signup(props) {
-  const classes = useStyles({ props, document });
+  const classes = useStyles();
 
   const refs = {
     phone_el: React.useRef(null),
