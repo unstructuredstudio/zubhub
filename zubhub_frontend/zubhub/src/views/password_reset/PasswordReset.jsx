@@ -29,6 +29,7 @@ import {
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/password_reset/passwordResetStyles';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 function PasswordReset(props) {
@@ -87,9 +88,6 @@ function PasswordReset(props) {
                       variant="outlined"
                       size="small"
                       fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
                       margin="normal"
                       error={
                         (props.status && props.status['email']) ||
@@ -109,7 +107,10 @@ function PasswordReset(props) {
                         type="text"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={70}
+                        labelWidth={calculateLabelWidth(
+                          t('passwordReset.inputs.email.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}

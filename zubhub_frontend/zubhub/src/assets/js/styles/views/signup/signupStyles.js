@@ -1,4 +1,5 @@
 import { fade } from '@material-ui/core/styles';
+import { calculateLabelWidth } from '../../../utils/scripts';
 
 const styles = theme => ({
   root: {
@@ -64,11 +65,6 @@ const styles = theme => ({
       },
     },
   },
-  DOBInputStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '75.5px !important',
-    },
-  },
   secondaryLink: {
     color: '#00B8C4',
     '&:hover': {
@@ -128,3 +124,5 @@ const styles = theme => ({
 });
 
 export default styles;
+
+// ${calculateLabelWidth(props.t('signup.inputs.dateOfBirth.label'), document)}

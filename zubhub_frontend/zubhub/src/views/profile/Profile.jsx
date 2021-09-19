@@ -52,7 +52,10 @@ import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import Comments from '../../components/comments/Comments';
 
-import { parseComments } from '../../assets/js/utils/scripts';
+import {
+  calculateLabelWidth,
+  parseComments,
+} from '../../assets/js/utils/scripts';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 
@@ -399,7 +402,7 @@ function Profile(props) {
                 ref={username_el}
                 name="username"
                 type="text"
-                labelWidth={90}
+                labelWidth={120}
               />
             </FormControl>
           </DialogContent>

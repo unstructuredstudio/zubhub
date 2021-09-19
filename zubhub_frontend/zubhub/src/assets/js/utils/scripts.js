@@ -176,3 +176,18 @@ export const tempDeleteComment = (comments, comment_id) => {
     }
   }
 };
+
+
+
+
+export const calculateLabelWidth=(text, document)=>{
+  if(text?.length){
+  let label = document.evaluate(`//label[text()='${text}']`, document, null, 0, null );
+  label = label?.iterateNext();
+  
+  let label_width = label?.offsetWidth;
+  return label_width ? label_width : text?.length;
+  }else{
+      return;
+  }
+}

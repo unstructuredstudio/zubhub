@@ -34,13 +34,15 @@ import {
   getLocations,
   getProfile,
   editProfile,
-  handleTooltipToggle,
+  handleTooltipOpen,
+  handleTooltipClose,
 } from './editProfileScripts';
 
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
 import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
@@ -137,22 +139,17 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="username"
-                        shrink
                       >
                         {t('editProfile.inputs.username.label')}
                       </InputLabel>
                       <ClickAwayListener
-                        onClickAway={() =>
-                          handleSetState(handleTooltipToggle(state))
-                        }
+                        onClickAway={() => handleSetState(handleTooltipClose())}
                       >
                         <Tooltip
                           title={t('editProfile.tooltips.noRealName')}
                           placement="top-start"
                           arrow
-                          onClose={() =>
-                            handleSetState(handleTooltipToggle(state))
-                          }
+                          onClose={() => handleSetState(handleTooltipClose())}
                           PopperProps={{
                             disablePortal: true,
                           }}
@@ -163,19 +160,20 @@ function EditProfile(props) {
                         >
                           <OutlinedInput
                             ref={refs.username_el}
-                            className={clsx(
-                              classes.customInputStyle,
-                              classes.staticLabelInputStyle,
-                            )}
+                            className={clsx(classes.customInputStyle)}
                             id="username"
                             name="username"
                             type="text"
-                            onClick={() =>
-                              handleSetState(handleTooltipToggle(state))
+                            value={
+                              props.values.username ? props.values.username : ''
                             }
+                            onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            labelWidth={90}
+                            labelWidth={calculateLabelWidth(
+                              t('editProfile.inputs.username.label'),
+                              document,
+                            )}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -210,7 +208,6 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         id="user_location"
-                        shrink
                       >
                         {t('editProfile.inputs.location.label')}
                       </InputLabel>
@@ -218,10 +215,7 @@ function EditProfile(props) {
                         labelId="user_location"
                         id="user_location"
                         name="user_location"
-                        className={clsx(
-                          classes.customInputStyle,
-                          classes.staticLabelInputStyle,
-                        )}
+                        className={clsx(classes.customInputStyle)}
                         value={
                           props.values.user_location
                             ? props.values.user_location
@@ -270,7 +264,6 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="email"
-                        shrink
                       >
                         {t('editProfile.inputs.email.label')}
                       </InputLabel>
@@ -281,16 +274,17 @@ function EditProfile(props) {
                             ? true
                             : false
                         }
-                        className={clsx(
-                          classes.customInputStyle,
-                          classes.staticLabelInputStyle,
-                        )}
+                        className={clsx(classes.customInputStyle)}
                         id="email"
                         name="email"
                         type="text"
+                        value={props.values.email ? props.values.email : ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={70}
+                        labelWidth={calculateLabelWidth(
+                          t('editProfile.inputs.email.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -332,7 +326,6 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="phone"
-                        shrink
                       >
                         {t('editProfile.inputs.phone.label')}
                       </InputLabel>
@@ -343,16 +336,17 @@ function EditProfile(props) {
                             ? true
                             : false
                         }
-                        className={clsx(
-                          classes.customInputStyle,
-                          classes.staticLabelInputStyle,
-                        )}
+                        className={clsx(classes.customInputStyle)}
                         id="phone"
                         name="phone"
                         type="phone"
+                        value={props.values.phone ? props.values.phone : ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={70}
+                        labelWidth={calculateLabelWidth(
+                          t('editProfile.inputs.phone.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -394,25 +388,25 @@ function EditProfile(props) {
                       <InputLabel
                         className={classes.customLabelStyle}
                         htmlFor="bio"
-                        shrink
                       >
                         {t('editProfile.inputs.bio.label')}
                       </InputLabel>
                       <OutlinedInput
                         ref={refs.bio_el}
-                        className={clsx(
-                          classes.customInputStyle,
-                          classes.staticLabelInputStyle,
-                        )}
+                        className={clsx(classes.customInputStyle)}
                         id="bio"
                         name="bio"
                         type="text"
                         multiline
                         rows={6}
                         rowsMax={6}
+                        value={props.values.bio ? props.values.bio : ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={50}
+                        labelWidth={calculateLabelWidth(
+                          t('editProfile.inputs.bio.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
