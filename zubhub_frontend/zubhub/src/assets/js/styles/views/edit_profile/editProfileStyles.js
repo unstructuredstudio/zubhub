@@ -64,11 +64,6 @@ const styles = theme => ({
       },
     },
   },
-  staticLabelInputStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '75.5px !important',
-    },
-  },
   staticLabelInputSmallStyle: {
     '&.MuiOutlinedInput-root fieldset legend': {
       width: '40px !important',

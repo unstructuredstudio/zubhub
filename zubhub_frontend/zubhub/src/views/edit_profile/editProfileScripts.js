@@ -12,18 +12,15 @@ export const getProfile = (refs, props) => {
       let init_email_and_phone = {};
       if (refs.username_el.current && obj.username) {
         props.setFieldValue('username', obj.username);
-        refs.username_el.current.firstChild.value = obj.username;
       }
 
       if (refs.email_el.current && obj.email) {
         props.setFieldValue('email', obj.email);
-        refs.email_el.current.firstChild.value = obj.email;
         init_email_and_phone['init_email'] = obj.email; //this is a hack: we need to find a better way of knowing when phone and email exists. state doesn't seem to work
       }
 
       if (refs.phone_el.current && obj.phone) {
         props.setFieldValue('phone', obj.phone);
-        refs.phone_el.current.firstChild.value = obj.phone;
         init_email_and_phone['init_phone'] = obj.phone; //this is a hack: we need to find a better way of knowing when phone and email exists. state doesn't seem to work
       }
 
@@ -33,7 +30,6 @@ export const getProfile = (refs, props) => {
 
       if (refs.bio_el.current && obj.bio) {
         props.setFieldValue('bio', obj.bio);
-        refs.bio_el.current.firstChild.value = obj.bio;
       }
 
       props.setStatus(init_email_and_phone); //the hack continues
@@ -80,8 +76,12 @@ export const editProfile = (e, props, toast) => {
   }
 };
 
-export const handleTooltipToggle = ({ tool_tip_open }) => {
-  return { tool_tip_open: !tool_tip_open };
+export const handleTooltipOpen = () => {
+  return { tool_tip_open: true };
+};
+
+export const handleTooltipClose = () => {
+  return { tool_tip_open: false };
 };
 
 export const validationSchema = Yup.object().shape({

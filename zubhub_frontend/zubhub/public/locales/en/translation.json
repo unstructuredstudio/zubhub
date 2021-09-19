@@ -99,7 +99,7 @@
         }
       },
       "password2": {
-        "label": "Confirm Password",
+        "label": "Type Password Again",
         "errors": {
           "noMatch": "Seems like passwords don't match",
           "required": "Seems like you forgot this!"
