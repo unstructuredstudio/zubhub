@@ -35,6 +35,7 @@ import {
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/password_reset_confirm/passwordResetConfirmStyles';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
@@ -142,7 +143,10 @@ function PasswordResetConfirm(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={70}
+                        labelWidth={calculateLabelWidth(
+                          t('passwordResetConfirm.inputs.newPassword1.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -188,7 +192,7 @@ function PasswordResetConfirm(props) {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={(e, field = 2) =>
+                              onClick={(_, field = 2) =>
                                 handleSetState(
                                   handleClickShowPassword(field, state),
                                 )
@@ -204,7 +208,10 @@ function PasswordResetConfirm(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={150}
+                        labelWidth={calculateLabelWidth(
+                          t('passwordResetConfirm.inputs.newPassword2.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
