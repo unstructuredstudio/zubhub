@@ -50,7 +50,6 @@ import {
 } from './signupScripts';
 
 import { calculateLabelWidth } from '../../assets/js/utils/scripts';
-
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import styles from '../../assets/js/styles/views/signup/signupStyles';

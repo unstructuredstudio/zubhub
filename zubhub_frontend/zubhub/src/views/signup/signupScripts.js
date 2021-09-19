@@ -63,7 +63,6 @@ export const signup = (e, props) => {
           });
         }
       });
-
     }
   })
 };
