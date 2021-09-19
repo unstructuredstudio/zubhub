@@ -37,6 +37,7 @@ import { withFormik } from 'formik';
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import styles from '../../assets/js/styles/views/login/loginStyles';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
@@ -129,7 +130,10 @@ function Login(props) {
                         type="text"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={150}
+                        labelWidth={calculateLabelWidth(
+                          t('login.inputs.username.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -188,7 +192,10 @@ function Login(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={70}
+                        labelWidth={calculateLabelWidth(
+                          t('login.inputs.password.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}

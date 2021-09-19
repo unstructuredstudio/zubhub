@@ -1,8 +1,14 @@
 import * as Yup from 'yup';
+import countryMap from '../../assets/js/countryMap.json';
+import intlTelInput from 'intl-tel-input';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 export const vars = {
   phone_field_touched: undefined,
   email_field_touched: undefined,
+  iti: undefined,
+  utils_scripts_url: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.min.js',
+  preferred_countries: ['in', 'us']
 };
 
 export const handleMouseDownPassword = e => {
@@ -15,20 +21,26 @@ export const getLocations = props => {
 
 export const signup = (e, props) => {
   e.preventDefault();
-  if (!props.values.user_location || props.values.user_location.length < 1) {
-    props.setFieldTouched('username', true);
-    props.setFieldTouched('email', true);
-    props.setFieldTouched('phone', true);
-    props.setFieldTouched('dateOfBirth', true);
-    props.setFieldTouched('user_location', true);
-    props.setFieldTouched('password1', true);
-    props.setFieldTouched('password2', true);
-    vars.phone_field_touched = true;
-    vars.email_field_touched = true;
-  } else {
-    return props
-      .signup({
-        values: { ...props.values, subscribe: !props.values.subscribe },
+  props.setFieldTouched('username', true);
+  props.setFieldTouched('email', true);
+  props.setFieldTouched('phone', true);
+  props.setFieldTouched('dateOfBirth', true);
+  props.setFieldTouched('user_location', true);
+  props.setFieldTouched('password1', true);
+  props.setFieldTouched('password2', true);
+  vars.phone_field_touched = true;
+  vars.email_field_touched = true;
+
+
+  props.validateForm().then(errors => {
+    if (
+      Object.keys(errors).length < 1 &&
+      typeof props.values.user_location === "string" && 
+      props.values.user_location.length > 0
+    ) {
+
+     props.signup({
+        values: { ...props.values, subscribe: !props.values.subscribe, phone: vars.iti.getNumber()  },
         history: props.history,
       })
       .catch(error => {
@@ -51,11 +63,17 @@ export const signup = (e, props) => {
           });
         }
       });
-  }
+
+    }
+  })
 };
 
-export const handleTooltipToggle = ({ tool_tip_open }) => {
-  return { tool_tip_open: !tool_tip_open };
+export const handleTooltipOpen = () => {
+  return { tool_tip_open: true };
+};
+
+export const handleTooltipClose = () => {
+  return { tool_tip_open: false };
 };
 
 export const handleToggleSubscribeBox = (e, props, state) => {
@@ -63,6 +81,54 @@ export const handleToggleSubscribeBox = (e, props, state) => {
   props.setFieldValue('subscribe', subscribe_box_checked);
   return { subscribe_box_checked };
 };
+
+
+export const handleLocationChange = (e, props) => {
+  if(vars.iti?.setCountry && e.target.value && 
+    vars.iti.getSelectedCountryData().iso2 !== countryMap[e.target.value]){
+    vars.iti.setCountry(countryMap[e.target.value])
+  };
+   props.handleChange(e);
+};
+
+export const setLocationWithTelCountry = (props) => {
+  if(vars.iti?.getSelectedCountryData){
+    let country_name;
+    let keys = Object.keys(countryMap);
+    for(let i=0; i < keys.length ; i++){
+       if(countryMap[keys[i]] === vars.iti.getSelectedCountryData().iso2){
+         country_name = keys[i];
+         break;
+       };
+    };
+
+    if(country_name &&
+     props.values.user_location !== country_name){
+      props.setFieldValue('user_location', country_name);
+    };
+
+  };
+
+};
+
+export const initIntlTelInput = (props, refs) => {
+  if (refs.phone_el.current?.firstChild) {
+    vars.iti = intlTelInput(refs.phone_el.current.firstChild, {
+      preferredCountries: vars.preferred_countries,
+      utilsScript: vars.utils_scripts_url,
+    });
+    refs.phone_el.current.firstChild.addEventListener("countrychange", ()=>setLocationWithTelCountry(props));
+
+    setTimeout(()=>setLocationWithTelCountry(props), 1000);
+  }
+};
+
+
+export const setLabelWidthOfStaticFields = (refs, document, props)=>{
+   refs.date_of_birth_el.current.childNodes[1].childNodes[0].style.width = `${calculateLabelWidth(props.t('signup.inputs.dateOfBirth.label'), document)}px`;
+   refs.phone_el.current.childNodes[1].childNodes[0].style.width = `${calculateLabelWidth(props.t('signup.inputs.phone.label'), document)}px`;
+};
+
 
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
@@ -74,11 +140,11 @@ export const validationSchema = Yup.object().shape({
         : true;
     }),
   phone: Yup.string()
-    .test('phone_is_invalid', 'invalid', function (value) {
-      return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
+    .test('phone_is_invalid', 'invalid', function () {
+      return vars.iti.isValidNumber() || !vars.iti.getNumber() ? true : false;
     })
-    .test('phone_is_empty', 'phoneOrEmail', function (value) {
-      return vars.phone_field_touched && !value && !this.parent.email
+    .test('phone_is_empty', 'phoneOrEmail', function () {
+      return vars.phone_field_touched && !vars.iti.getNumber() && !this.parent.email
         ? false
         : true;
     }),
@@ -90,3 +156,5 @@ export const validationSchema = Yup.object().shape({
     .required('required'),
   bio: Yup.string().max(255, 'tooLong'),
 });
+
+// /^[+][0-9]{9,15}$/g.test(value)
