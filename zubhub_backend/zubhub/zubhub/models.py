@@ -1,5 +1,22 @@
 from django.utils import timezone
 from django.db import models
+from django.core.validators import FileExtensionValidator
+
+
+class StaticAssets(models.Model):
+    header_logo = models.FileField(blank=False, null=True, validators=[
+                                   FileExtensionValidator(["jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
+    header_logo_url = models.URLField(max_length=1000, blank=True, null=False)
+    footer_logo = models.FileField(blank=False, null=True, validators=[
+                                   FileExtensionValidator(["jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
+    footer_logo_url = models.URLField(max_length=1000, blank=True, null=False)
+
+    class Meta:
+        verbose_name = "StaticAssets"
+        verbose_name_plural = "StaticAssets"
+
+    def __str__(self):
+        return self.header_logo_url
 
 
 class Hero(models.Model):
@@ -8,6 +25,7 @@ class Hero(models.Model):
     image = models.ImageField(blank=False, null=True)
     image_url = models.URLField(max_length=1000, blank=True, null=False)
     activity_url = models.URLField(max_length=1000, null=True)
+    explore_ideas_url = models.URLField(max_length=1000, null=True)
 
     class Meta:
         verbose_name = "Hero"

@@ -1,3 +1,9 @@
+
+
+export const fetchHero = props => {
+  return props.getHero({ t: props.t });
+};
+
 export const logout = (e, props) => {
   e.preventDefault();
   return props.logout({

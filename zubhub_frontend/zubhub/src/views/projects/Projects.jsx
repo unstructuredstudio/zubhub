@@ -11,7 +11,6 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { Grid, Box, ButtonGroup, Typography } from '@material-ui/core';
 
 import {
-  fetchHero,
   fetchPage,
   fetchStaffPicks,
   updateProjects,
@@ -41,7 +40,6 @@ function Projects(props) {
   });
 
   React.useEffect(() => {
-    fetchHero(props);
     fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
   }, []);
@@ -89,7 +87,11 @@ function Projects(props) {
                 </CustomButton>
                 <a
                   className={common_classes.textDecorationNone}
-                  href="http://kriti.unstructured.studio/"
+                  href={
+                    hero.explore_ideas_url
+                      ? hero.explore_ideas_url
+                      : 'https://kriti.unstructured.studio/'
+                  }
                   target="__blank"
                   rel="noreferrer"
                 >
@@ -246,9 +248,6 @@ const mapDispatchToProps = dispatch => {
     },
     toggleSave: args => {
       return dispatch(ProjectActions.toggleSave(args));
-    },
-    getHero: args => {
-      return dispatch(ProjectActions.getHero(args));
     },
     getStaffPicks: args => {
       return dispatch(ProjectActions.getStaffPicks(args));

@@ -15,9 +15,9 @@ def creator_to_be_deleted(sender, instance, **kwargs):
         "zubhub", instance.avatar.split(".com/")[1])
 
 
-@receiver(post_save, sender=Creator)
-def creator_saved(sender, instance, **kwargs):
-    update_search_index.delay("creator")
+# @receiver(post_save, sender=Creator)
+# def creator_saved(sender, instance, **kwargs):
+#     update_search_index.delay("creator")
 
 
 @receiver(m2m_changed, sender=CreatorGroup.members.through)

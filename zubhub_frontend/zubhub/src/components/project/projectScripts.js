@@ -24,6 +24,3 @@ export const toggleSave = (e, id, props) => {
     props.updateProjects(toggle_save_promise);
   }
 };
-
-export const isCloudinaryVideo = url =>
-  url.search('cloudinary.com') > -1 ? true : false;
