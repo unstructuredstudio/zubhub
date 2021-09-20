@@ -8,7 +8,7 @@ from zubhub.models import Hero, StaticAssets
 
 
 @receiver(post_save, sender=Project)
-def project_saved(sender, instance, **kwargs):
+def project_saved(_, instance, **__):
     instance.creator.projects_count = instance.creator.projects.count()
     instance.creator.save()
     # update_search_index.delay("project")
@@ -23,7 +23,7 @@ def project_to_be_deleted(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=Image)
-def image_to_be_deleted(sender, instance, **kwargs):
+def image_to_be_deleted(_, instance, **__):
     delete_image_from_DO_space.delay("zubhub", instance.public_id)
 
 
@@ -38,7 +38,7 @@ def image_to_be_deleted(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=Hero)
-def hero_to_be_deleted(sender, instance, **kwargs):
+def hero_to_be_deleted(_, instance, **__):
     delete_image_from_DO_space.delay(
         "zubhub", instance.image_url.split(".com/")[1])
 

@@ -42,7 +42,7 @@ class CommentAdmin(TreeAdmin):
             return obj.creator.username
         return None
 
-    def get_readonly_fields(self, request, obj=None):
+    def get_readonly_fields(self, _, __=None):
         return ["created_on"]
 
 
@@ -55,7 +55,7 @@ class ProjectAdmin(admin.ModelAdmin):
     inlines = [InlineProjectImages, InlineProjectComments]
     exclude = ["search_vector"]
 
-    def get_readonly_fields(self, request, obj=None):
+    def get_readonly_fields(self, _, __=None):
         return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]
 
     def save_model(self, request, obj, form, change):
