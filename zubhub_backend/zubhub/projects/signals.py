@@ -8,7 +8,7 @@ from zubhub.models import Hero, StaticAssets
 
 
 @receiver(post_save, sender=Project)
-def project_saved(_, instance, **__):
+def project_saved(sender, instance, **kwargs):
     instance.creator.projects_count = instance.creator.projects.count()
     instance.creator.save()
     # update_search_index.delay("project")
@@ -17,34 +17,34 @@ def project_saved(_, instance, **__):
 
 
 @receiver(pre_delete, sender=Project)
-def project_to_be_deleted(_, instance, **__):
+def project_to_be_deleted(sender, instance, **kwargs):
     if instance.video.find("cloudinary.com") > -1:
         delete_video_from_cloudinary.delay(instance.video)
 
 
 @receiver(pre_delete, sender=Image)
-def image_to_be_deleted(_, instance, **__):
+def image_to_be_deleted(sender, instance, **kwargs):
     delete_image_from_DO_space.delay("zubhub", instance.public_id)
 
 
 # @receiver(post_save, sender=Tag)
-# def tag_saved(_, __, **___):
+# def tag_saved(sender, instance, **kwargs):
 #     update_search_index.delay("tag")
 
 
 # @receiver(post_save, sender=Category)
-# def category_saved(_, __, **___):
+# def category_saved(sender, instance, **kwargs):
 #     update_search_index.delay("category")
 
 
 @receiver(pre_delete, sender=Hero)
-def hero_to_be_deleted(_, instance, **__):
+def hero_to_be_deleted(sender, instance, **kwargs):
     delete_image_from_DO_space.delay(
         "zubhub", instance.image_url.split(".com/")[1])
 
 
 @receiver(pre_delete, sender=StaticAssets)
-def static_assets_to_be_deleted(_, instance, **__):
+def static_assets_to_be_deleted(sender, instance, **kwargs):
     delete_image_from_DO_space.delay(
         "zubhub", instance.header_logo_url.split(".com/")[1])
     delete_image_from_DO_space.delay(
