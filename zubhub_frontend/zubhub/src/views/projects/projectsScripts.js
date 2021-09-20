@@ -1,6 +1,3 @@
-export const fetchHero = props => {
-  return props.getHero({ t: props.t });
-};
 
 export const fetchPage = (page, props) => {
   return props.getProjects({ page, t: props.t });

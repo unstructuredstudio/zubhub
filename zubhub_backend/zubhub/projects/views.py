@@ -63,8 +63,6 @@ class ProjectDeleteAPIView(DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         project = self.get_object()
         if project:
-            if project.video.find("cloudinary.com") > -1:
-                delete_video_from_cloudinary.delay(project.video)
             result = self.destroy(request, *args, **kwargs)
             request.user.save()
             return result
