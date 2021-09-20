@@ -15,14 +15,34 @@ export const cloudinaryFactory = window => {
   });
 };
 
-export var buildVideoThumbnailURL = video_url => {
-  if (video_url.search('upload/sp_hd') > -1) {
-    return video_url.replace('upload/sp_hd', 'upload/f_jpg');
-  } else if (video_url.search('upload') > -1) {
-    return video_url.replace('upload', 'upload/f_jpg');
-  } else {
-    return video_url;
-  }
+export const buildVideoThumbnailURL = video_url => {
+  if(video_url.search("youtube.com/embed/") > -1){
+
+     const id = video_url.split("youtube.com/embed/")[1];
+     return `https://img.youtube.com/vi/${id}/0.jpg`;
+
+  } else if(video_url.search("player.vimeo.com/video/") > -1){
+
+    const id = video_url.split("player.vimeo.com/video/")[1];
+    return `https://vumbnail.com/${id}.jpg`;
+
+  }else if(video_url.search("drive.google.com") > -1){ 
+
+      let id = video_url.split("/");
+      id = id[id.length - 2]
+      return `https://lh3.googleusercontent.com/d/${id}=s300`;
+
+  }else if(video_url.search("cloudinary.com") > -1){
+
+    if (video_url.search('upload/sp_hd') > -1) {
+      return video_url.replace('upload/sp_hd', 'upload/f_jpg');
+    } else if (video_url.search('upload') > -1) {
+      return video_url.replace('upload', 'upload/f_jpg');
+    } else {
+      return video_url;
+    } 
+
+  };
 };
 
 export const getPlayerOptions = (window, video_url) => {

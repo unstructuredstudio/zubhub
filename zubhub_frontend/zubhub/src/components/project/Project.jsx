@@ -20,13 +20,13 @@ import {
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CommentIcon from '../../assets/js/icons/CommentIcon';
+import playIcon from '../../assets/images/play-icon.png';
 import {
   dFormatter,
   nFormatter,
-  cloudinaryFactory,
-  getPlayerOptions,
+  buildVideoThumbnailURL,
 } from '../../assets/js/utils/scripts';
-import { toggleLike, toggleSave, isCloudinaryVideo } from './projectScripts';
+import { toggleLike, toggleSave } from './projectScripts';
 import styles from '../../assets/js/styles/components/project/projectStyles';
 
 const useStyles = makeStyles(styles);
@@ -34,44 +34,20 @@ const useStyles = makeStyles(styles);
 function Project(props) {
   const classes = useStyles();
 
-  React.useEffect(() => {
-    if (props.project.video && isCloudinaryVideo(props.project.video)) {
-      const cld = cloudinaryFactory(window);
-
-      const player = cld.videoPlayer(
-        `${props.project.id}-small-cloudinary-video-player`,
-        {
-          ...getPlayerOptions(window, props.project.video),
-        },
-      );
-
-      player.source(props.project.video);
-      player.videojs.error(null);
-      player.videojs.error({
-        message: props.t('project.errors.videoPlayerError'),
-      });
-    }
-  }, [props.project.video]);
-
   const { project, t } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
           {project.video ? (
-            isCloudinaryVideo(project.video) ? (
-              <video
-                id={`${project.id}-small-cloudinary-video-player`}
-                controls
-                className={clsx('cld-video-player', classes.mediaStyle)}
-              ></video>
-            ) : (
-              <iframe
-                className={classes.mediaStyle}
-                title={project.title}
-                src={project.video}
-              ></iframe>
-            )
+            <>
+              <img
+                className={classes.mediaImageStyle}
+                src={buildVideoThumbnailURL(project.video)}
+                alt={project.title}
+              />
+              <img className={classes.playIconStyle} src={playIcon} alt="" />
+            </>
           ) : project.images.length > 0 ? (
             <img
               className={classes.mediaImageStyle}
