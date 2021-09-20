@@ -1,34 +1,76 @@
 import React from 'react';
-
+import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import { withTranslation } from 'react-i18next';
+import LoadingPage from './views/loading/LoadingPage';
 
-import PageWrapper from './views/PageWrapper';
-import SearchResults from './views/search_results/SearchResults';
-import Signup from './views/signup/Signup';
-import Login from './views/login/Login';
-import PasswordReset from './views/password_reset/PasswordReset';
-import PasswordResetConfirm from './views/password_reset_confirm/PasswordResetConfirm';
-import EmailConfirm from './views/email_confirm/EmailConfirm';
-import PhoneConfirm from './views/phone_confirm/PhoneConfirm';
-import Profile from './views/profile/Profile';
-import EditProfile from './views/edit_profile/EditProfile';
-import UserProjects from './views/user_projects/UserProjects';
-import UserFollowers from './views/user_followers/UserFollowers';
-import UserFollowing from './views/user_following/UserFollowing';
-import GroupMembers from './views/group_members/GroupMembers';
-import AddGroupMembers from './views/add_group_members/AddGroupMembers';
-import GroupInviteConfirm from './views/group_invite_confirm/GroupInviteConfirm';
-import Projects from './views/projects/Projects';
-import SavedProjects from './views/saved_projects/SavedProjects';
-import CreateProject from './views/create_project/CreateProject';
-import ProjectDetails from './views/project_details/ProjectDetails';
-import StaffPickDetails from './views/staff_pick_details/StaffPickDetails';
-import Guidelines from './views/guidelines/Guidelines';
-import TermsOfUse from './views/terms_of_use/TermsOfUse';
-import About from './views/about/About';
-import FAQs from './views/faqs/FAQs';
+
+const PageWrapper = React.lazy(() => import('./views/PageWrapper'));
+const SearchResults = React.lazy(() =>
+  import('./views/search_results/SearchResults'),
+);
+const Signup = React.lazy(() => import('./views/signup/Signup'));
+const Login = React.lazy(() => import('./views/login/Login'));
+const PasswordReset = React.lazy(() =>
+  import('./views/password_reset/PasswordReset'),
+);
+const PasswordResetConfirm = React.lazy(() =>
+  import('./views/password_reset_confirm/PasswordResetConfirm'),
+);
+const EmailConfirm = React.lazy(() =>
+  import('./views/email_confirm/EmailConfirm'),
+);
+const PhoneConfirm = React.lazy(() =>
+  import('./views/phone_confirm/PhoneConfirm'),
+);
+const Profile = React.lazy(() => import('./views/profile/Profile'));
+const EditProfile = React.lazy(() =>
+  import('./views/edit_profile/EditProfile'),
+);
+const UserProjects = React.lazy(() =>
+  import('./views/user_projects/UserProjects'),
+);
+const UserFollowers = React.lazy(() =>
+  import('./views/user_followers/UserFollowers'),
+);
+const UserFollowing = React.lazy(() =>
+  import('./views/user_following/UserFollowing'),
+);
+const GroupMembers = React.lazy(() =>
+  import('./views/group_members/GroupMembers'),
+);
+const AddGroupMembers = React.lazy(() =>
+  import('./views/add_group_members/AddGroupMembers'),
+);
+const GroupInviteConfirm = React.lazy(() =>
+  import('./views/group_invite_confirm/GroupInviteConfirm'),
+);
+const Projects = React.lazy(() => import('./views/projects/Projects'));
+const SavedProjects = React.lazy(() =>
+  import('./views/saved_projects/SavedProjects'),
+);
+const CreateProject = React.lazy(() =>
+  import('./views/create_project/CreateProject'),
+);
+const ProjectDetails = React.lazy(() =>
+  import('./views/project_details/ProjectDetails'),
+);
+const StaffPickDetails = React.lazy(() =>
+  import('./views/staff_pick_details/StaffPickDetails'),
+);
+const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
+const TermsOfUse = React.lazy(() => import('./views/terms_of_use/TermsOfUse'));
+const About = React.lazy(() => import('./views/about/About'));
+const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
+
+const LazyImport = props => {
+  const { LazyComponent, restOfProps } = props;
+  return (
+    <React.Suspense fallback={<LoadingPage />}>
+      <LazyComponent {...restOfProps} />
+    </React.Suspense>
+  );
+};
 
 function App(props) {
   return (
@@ -39,7 +81,7 @@ function App(props) {
           path="/"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <Projects {...routeProps} {...props} />
+              <LazyImport  LazyComponent={Projects} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -48,7 +90,7 @@ function App(props) {
           path="/search"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <SearchResults {...routeProps} {...props} />
+              <LazyImport  LazyComponent={SearchResults} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -57,7 +99,7 @@ function App(props) {
           path="/signup"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <Signup {...routeProps} {...props} />
+              <LazyImport  LazyComponent={Signup} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -66,7 +108,7 @@ function App(props) {
           path="/login"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <Login {...routeProps} {...props} />
+              <LazyImport  LazyComponent={Login} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -75,7 +117,7 @@ function App(props) {
           path="/password-reset"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <PasswordReset {...routeProps} {...props} />
+              <LazyImport  LazyComponent={PasswordReset} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -84,7 +126,7 @@ function App(props) {
           path="/password-reset-confirm"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <PasswordResetConfirm {...routeProps} {...props} />
+              <LazyImport  LazyComponent={PasswordResetConfirm} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -93,7 +135,7 @@ function App(props) {
           path="/email-confirm"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <EmailConfirm {...routeProps} {...props} />
+              <LazyImport  LazyComponent={EmailConfirm} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -102,7 +144,7 @@ function App(props) {
           path="/phone-confirm"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <PhoneConfirm {...routeProps} {...props} />
+              <LazyImport  LazyComponent={PhoneConfirm} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -111,7 +153,7 @@ function App(props) {
           path="/group-invite-confirm"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <GroupInviteConfirm {...routeProps} {...props} />
+              <LazyImport  LazyComponent={GroupInviteConfirm} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -120,7 +162,7 @@ function App(props) {
           path="/creators/:username/projects"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <UserProjects {...routeProps} {...props} />
+              <LazyImport  LazyComponent={UserProjects} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -129,7 +171,7 @@ function App(props) {
           path="/creators/:username/followers"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <UserFollowers {...routeProps} {...props} />
+              <LazyImport  LazyComponent={UserFollowers} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -138,7 +180,7 @@ function App(props) {
           path="/creators/:username/following"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <UserFollowing {...routeProps} {...props} />
+              <LazyImport  LazyComponent={UserFollowing} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -147,7 +189,7 @@ function App(props) {
           path="/creators/:username/members"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <GroupMembers {...routeProps} {...props} />
+              <LazyImport  LazyComponent={GroupMembers} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -156,7 +198,7 @@ function App(props) {
           path="/creators/:username/add-members"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <AddGroupMembers {...routeProps} {...props} />
+              <LazyImport  LazyComponent={AddGroupMembers} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -165,7 +207,7 @@ function App(props) {
           path="/creators/:username"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <Profile {...routeProps} {...props} />
+              <LazyImport  LazyComponent={Profile} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -183,7 +225,7 @@ function App(props) {
           path="/edit-profile"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <EditProfile {...routeProps} {...props} />
+              <LazyImport  LazyComponent={EditProfile} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -192,7 +234,7 @@ function App(props) {
           path="/projects/staff_picks/:id"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <StaffPickDetails {...routeProps} {...props} />
+              <LazyImport  LazyComponent={StaffPickDetails} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -201,7 +243,7 @@ function App(props) {
           path="/projects/create"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <CreateProject {...routeProps} {...props} />
+              <LazyImport  LazyComponent={CreateProject} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -210,7 +252,7 @@ function App(props) {
           path="/projects/saved"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <SavedProjects {...routeProps} {...props} />
+              <LazyImport  LazyComponent={SavedProjects} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -218,7 +260,7 @@ function App(props) {
           path="/projects/:id/edit"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <CreateProject {...routeProps} {...props} />
+              <LazyImport  LazyComponent={CreateProject} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -227,7 +269,7 @@ function App(props) {
           path="/projects/:id"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <ProjectDetails {...routeProps} {...props} />
+              <LazyImport  LazyComponent={ProjectDetails} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -236,7 +278,7 @@ function App(props) {
           path="/privacy_policy"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <Guidelines {...routeProps} {...props} />
+              <LazyImport  LazyComponent={Guidelines} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -245,7 +287,7 @@ function App(props) {
           path="/terms_of_use"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <TermsOfUse {...routeProps} {...props} />
+              <LazyImport  LazyComponent={TermsOfUse} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -254,7 +296,7 @@ function App(props) {
           path="/about"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <About {...routeProps} {...props} />
+              <LazyImport  LazyComponent={About} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -263,7 +305,7 @@ function App(props) {
           path="/faqs"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <FAQs {...routeProps} {...props} />
+              <LazyImport  LazyComponent={FAQs} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
