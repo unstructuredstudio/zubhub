@@ -1,5 +1,4 @@
 
-
 export const fetchHero = props => {
   return props.getHero({ t: props.t });
 };

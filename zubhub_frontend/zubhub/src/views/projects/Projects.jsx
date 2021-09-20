@@ -11,6 +11,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { Grid, Box, ButtonGroup, Typography } from '@material-ui/core';
 
 import {
+  fetchHero,
   fetchPage,
   fetchStaffPicks,
   updateProjects,
