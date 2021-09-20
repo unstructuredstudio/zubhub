@@ -6,8 +6,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    replaces = [('zubhub', '0001_squashed_0003_auto_20210612_1518'), ('zubhub', '0002_auto_20210919_2312'), ('zubhub', '0003_auto_20210919_2320'), ('zubhub', '0004_auto_20210920_0021'), ('zubhub', '0005_auto_20210920_0110')]
-
     initial = True
 
     dependencies = [
