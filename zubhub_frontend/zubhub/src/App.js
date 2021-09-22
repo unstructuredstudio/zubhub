@@ -63,7 +63,7 @@ const About = React.lazy(() => import('./views/about/About'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 
 const LazyImport = props => {
-  const { LazyComponent, restOfProps } = props;
+  const { LazyComponent, ...restOfProps } = props;
   return (
     <React.Suspense fallback={<LoadingPage />}>
       <LazyComponent {...restOfProps} />
