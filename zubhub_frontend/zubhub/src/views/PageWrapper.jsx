@@ -77,7 +77,7 @@ function PageWrapper(props) {
     fetchHero(props)
       .then(() => {
         if (props.auth.token) {
-          props.getAuthUser(props);
+          return props.getAuthUser(props);
         }
       })
       .finally(() => {

@@ -41,9 +41,11 @@ export const updateStaffPicks = (res, staff_pick_id, props, toast) => {
           staff_pick.id === staff_pick_id
             ? {
                 ...staff_pick,
-                projects: staff_pick.projects.map(project =>
-                  project.id === res.project.id ? res.project : project,
-                ),
+                projects: {
+                  ...staff_pick.projects,
+                  results: staff_pick.projects.results.map(project =>
+                    project.id === res.project.id ? res.project : project)
+                }
               }
             : staff_pick,
         );
