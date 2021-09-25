@@ -36,6 +36,9 @@ const styles = theme => ({
     width: '100%',
     height: '13em',
     position: 'relative',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   },
   mediaStyle: {
     width: '100%',
@@ -47,6 +50,9 @@ const styles = theme => ({
     width: '100%',
     height: '13em',
     position: 'absolute',
+  },
+  playIconStyle: {
+    zIndex: 0
   },
   actionAreaStyle: {
     flexGrow: 100,

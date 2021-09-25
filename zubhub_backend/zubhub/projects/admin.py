@@ -3,6 +3,7 @@ from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 from .models import Project, Comment, Image, StaffPick, Category, Tag
 from .utils import project_changed, send_staff_pick_notification
+from projects.tasks import delete_video_from_cloudinary
 from creators.utils import activity_notification
 # Register your models here.
 
@@ -65,6 +66,8 @@ class ProjectAdmin(admin.ModelAdmin):
 
         if change:
             new = Project.objects.get(pk=obj.pk)
+            if old.video.find("cloudinary.com") > -1 and old.video != new.video:
+                delete_video_from_cloudinary.delay(old.video)
             if project_changed(old, new):
                 info = {
                     "project_id": str(new.pk),
