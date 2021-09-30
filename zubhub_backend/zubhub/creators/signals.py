@@ -1,9 +1,8 @@
-from django.db.models.signals import pre_delete,  m2m_changed
+from django.db.models.signals import pre_delete, pre_save, post_save, m2m_changed
 from django.dispatch import Signal, receiver
 from .models import Creator, CreatorGroup
-from projects.tasks import delete_file_task
-
-
+from .utils import send_group_invite_notification
+from projects.tasks import delete_image_from_DO_space, update_search_index
 # Provides the arguments "request", "phone_number"
 phone_confirmed = Signal()
 # Provides the arguments "request", "confirmation", "signup"
@@ -12,8 +11,13 @@ phone_confirmation_sent = Signal()
 
 @receiver(pre_delete, sender=Creator)
 def creator_to_be_deleted(sender, instance, **kwargs):
-    if instance.avatar.find("robohash.org") == -1:
-        delete_file_task.delay(instance.avatar)
+    delete_image_from_DO_space.delay(
+        "zubhub", instance.avatar.split(".com/")[1])
+
+
+# @receiver(post_save, sender=Creator)
+# def creator_saved(sender, instance, **kwargs):
+#     update_search_index.delay("creator")
 
 
 @receiver(m2m_changed, sender=CreatorGroup.members.through)

@@ -70,7 +70,6 @@ export const toggleFollow = (e, props, id, state) => {
 export const isCloudinaryVideo = url =>
   url.search('cloudinary.com') > -1 ? true : false;
 
-
 export const isGdriveORVimeoORYoutube = url => {
     if(url.search("youtube.com/embed/") > -1 || 
        url.search("player.vimeo.com/video/") > -1 || 

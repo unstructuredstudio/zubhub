@@ -2,6 +2,7 @@ import i18next from 'i18next';
 
 class API {
   constructor() {
+    // this.domain = "dksldkslkdks"
     this.domain =
       process.env.REACT_APP_NODE_ENV === 'production'
         ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
@@ -405,14 +406,6 @@ class API {
     );
   };
   /************************************************************************/
-
-
-  /*********************** should image be uploaded to local backend or an image service *********************************/
-  shouldUploadToLocal = ({token}) => {
-   const url = "upload_file_to_local/";
-   return this.request({url, token}).then(res=> res.json())
-  };
-  /********************************************************************/
 
   /************************** unpublish comment **************************/
   unpublishComment = ({ token, id }) => {

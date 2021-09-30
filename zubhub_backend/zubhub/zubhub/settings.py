@@ -28,8 +28,6 @@ DEFAULT_FRONTEND_PROTOCOL = os.environ.get(
 DEFAULT_BACKEND_PROTOCOL = os.environ.get(
     "DEFAULT_BACKEND_PROTOCOL", default="https")
 DEBUG = int(os.environ.get("DEBUG", default=0))
-STORE_MEDIA_LOCALLY = bool(
-    int(os.environ.get("STORE_MEDIA_LOCALLY", default=1)))
 
 if DEFAULT_FRONTEND_DOMAIN.startswith("localhost"):
     FRONTEND_HOST = DEFAULT_FRONTEND_DOMAIN.split(":")[0]
@@ -63,7 +61,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
-                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST, "web"]
+                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST]
 # ALLOWED_HOSTS = ['*']
 
 # CORS_ORIGIN_ALLOW_ALL = True

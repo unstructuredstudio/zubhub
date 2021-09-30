@@ -41,7 +41,6 @@ import {
   toggleLike,
   toggleFollow,
   isCloudinaryVideo,
-  isGdriveORVimeoORYoutube,
 } from './projectDetailsScripts';
 
 import {
@@ -251,20 +250,12 @@ function ProjectDetails(props) {
                             classes.iframeStyle,
                           )}
                         ></video>
-                      ) : isGdriveORVimeoORYoutube(project.video) ? (
+                      ) : (
                         <iframe
                           title={project.title}
                           className={classes.iframeStyle}
                           src={project.video}
                         ></iframe>
-                      ) : (
-                        <video
-                          src={project.video}
-                          className={classes.iframeStyle}
-                          controls
-                        >
-                          {t('projectDetails.errors.noBrowserSupport')}
-                        </video>
                       )
                     ) : project.images.length > 0 ? (
                       <img

@@ -5,7 +5,7 @@ from django.core import signing
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.db import models, transaction
 from django.dispatch import Signal
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
