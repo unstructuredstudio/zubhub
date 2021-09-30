@@ -70,6 +70,10 @@ const shouldSetImages = (compressed, images, state, handleSetState) => {
   }
 };
 
+export const slugify = str=> {
+  return str.replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+};
+
 const recursiveCountComments = (comments, countArr) => {
   for (let comment of comments) {
     countArr['count'] += 1;

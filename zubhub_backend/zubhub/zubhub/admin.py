@@ -1,8 +1,11 @@
-from .utils import upload_local_file
+import uuid
+from math import floor
+from django.utils.text import slugify
+from .utils import upload_file
 from django.contrib import admin
 from .models import StaticAssets, Hero, Privacy, FAQ, Help
 from django_summernote.admin import SummernoteModelAdmin
-from projects.tasks import delete_image_from_DO_space
+from projects.tasks import delete_file_task
 
 # Register your models here.
 
@@ -18,20 +21,26 @@ class StaticAssetsAdmin(admin.ModelAdmin):
         submitted_footer_logo = form.cleaned_data.pop("footer_logo")
 
         if obj.header_logo_url:
-            delete_image_from_DO_space.delay(
-                "zubhub", obj.header_logo_url.split(".com/")[1]
-            )
+            delete_file_task.delay(obj.header_logo_url)
 
         if obj.footer_logo_url:
-            delete_image_from_DO_space.delay(
-                "zubhub", obj.footer_logo_url.split(".com/")[1]
-            )
+            delete_file_task.delay(obj.footer_logo_url)
 
-        header_logo_url = upload_local_file(
-            file=submitted_header_logo, folder='static')
+        key = str(uuid.uuid4())
+        key = key[0: floor(len(key)/6)]
+        key = '{0}/{1}-{2}'.format("zubhub",
+                                   slugify(submitted_header_logo.name), key)
 
-        footer_logo_url = upload_local_file(
-            file=submitted_footer_logo, folder="static"
+        header_logo_url = upload_file(
+            file=submitted_header_logo, key=key)
+
+        key = str(uuid.uuid4())
+        key = key[0: floor(len(key)/6)]
+        key = '{0}/{1}-{2}'.format("zubhub",
+                                   slugify(submitted_footer_logo.name), key)
+
+        footer_logo_url = upload_file(
+            file=submitted_footer_logo, key=key
         )
 
         form.cleaned_data["header_logo_url"] = header_logo_url
@@ -56,11 +65,15 @@ class HeroAdmin(admin.ModelAdmin):
         submitted_image = form.cleaned_data.pop("image")
 
         if obj.image_url:
-            delete_image_from_DO_space.delay(
-                "zubhub", obj.image_url.split(".com/")[1])
+            delete_file_task.delay(obj.image_url)
 
-        image_url = upload_local_file(
-            file=submitted_image, folder='hero_images')
+        key = str(uuid.uuid4())
+        key = key[0: floor(len(key)/6)]
+        key = '{0}/{1}-{2}'.format("hero_images",
+                                   slugify(submitted_image.name), key)
+
+        image_url = upload_file(
+            file=submitted_image, key=key)
 
         form.cleaned_data["image_url"] = image_url
         if obj.id:

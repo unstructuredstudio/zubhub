@@ -444,7 +444,8 @@
     },
     "deleteProjectToastSuccess": "Your project was deleted successfully!",
     "errors": {
-      "unexpected": "Hmmm..seems like we could not delete the project :( Maybe try again later?"
+      "unexpected": "Hmmm..seems like we could not delete the project :( Maybe try again later?",
+      "noBrowserSupport": "Your browser does not support the video tag"
     }
   },
 
