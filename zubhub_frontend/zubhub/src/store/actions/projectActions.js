@@ -24,21 +24,6 @@ export const createProject = props => {
   };
 };
 
-export const shouldUploadToLocal = args => {
-   return ()=> {
-     return API.shouldUploadToLocal(args).then(res=> {
-       if(res.local === undefined){
-          throw new Error();
-       }else{
-         return res;
-       }
-     })
-     .catch(()=>{
-         toast.warning(args.t('createProject.errors.unexpected'))
-     })
-   }
-};
-
 export const updateProject = props => {
   return () => {
     return API.updateProject(props).then(res => {
