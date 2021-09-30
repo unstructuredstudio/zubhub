@@ -13,7 +13,6 @@ from projects.permissions import (IsOwner, IsStaffOrModerator, SustainedRateThro
                                   PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
 from .models import Project, Comment, StaffPick, Category, Tag
 from .utils import project_changed, detect_mentions, perform_project_search
-from .tasks import delete_video_from_cloudinary
 from creators.utils import activity_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)

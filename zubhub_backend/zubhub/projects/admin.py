@@ -1,9 +1,10 @@
 from django.contrib import admin
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
+from django.conf import settings
 from .models import Project, Comment, Image, StaffPick, Category, Tag
 from .utils import project_changed, send_staff_pick_notification
-from projects.tasks import delete_video_from_cloudinary
+from projects.tasks import delete_video_from_cloudinary, delete_file_task
 from creators.utils import activity_notification
 # Register your models here.
 
@@ -68,6 +69,9 @@ class ProjectAdmin(admin.ModelAdmin):
             new = Project.objects.get(pk=obj.pk)
             if old.video.find("cloudinary.com") > -1 and old.video != new.video:
                 delete_video_from_cloudinary.delay(old.video)
+            elif old.video.startswith("{0}://{1}".format(settings.DEFAULT_BACKEND_PROTOCOL,
+                                                         settings.DEFAULT_BACKEND_DOMAIN)) and old.video != new.video:
+                delete_file_task.delay(old.video)
             if project_changed(old, new):
                 info = {
                     "project_id": str(new.pk),
