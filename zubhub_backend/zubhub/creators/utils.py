@@ -1,16 +1,9 @@
-import unicodedata
 from datetime import timedelta
-from django.conf import settings
-from django.contrib.auth import update_session_auth_hash
-from django.core.exceptions import FieldDoesNotExist, ValidationError
-from django.db import models
-from django.db.models import Q
+from django.core.exceptions import FieldDoesNotExist
 from django.utils import timezone
-from django.utils.encoding import force_str
-from django.utils.http import base36_to_int, int_to_base36, urlencode
 from django.contrib.auth import get_user_model
-from projects.tasks import delete_image_from_DO_space
-from creators.tasks import upload_image_to_DO_space, send_mass_email, send_mass_text
+from projects.tasks import delete_file_task
+from creators.tasks import upload_file_task, send_mass_email, send_mass_text
 
 try:
     from allauth.account.adapter import get_adapter
@@ -155,25 +148,19 @@ def send_group_invite_notification(creatorgroup, new_members):
 
 def process_avatar(oldInstance, newInstance):
 
-    key = 'avatar/{0}'.format(newInstance.username)
-
     if oldInstance and oldInstance.username != newInstance.username:
         newInstance.avatar = 'https://robohash.org/{0}'.format(
             newInstance.username)
         newInstance.save()
 
-        if(oldInstance.avatar.find(".com") > 0):
+        if oldInstance.avatar.find("robohash.org") == -1:
+            delete_file_task.delay(oldInstance.avatar)
 
-            delete_image_from_DO_space.delay(
-                "zubhub", oldInstance.avatar.split(".com/")[1])
-
-        upload_image_to_DO_space.delay(
-            'zubhub', key, newInstance.id)
+        upload_file_task.delay(newInstance.id, newInstance.username)
 
     elif not oldInstance:
 
-        upload_image_to_DO_space.delay(
-            'zubhub', key, newInstance.id)
+        upload_file_task.delay(newInstance.id, newInstance.username)
 
 
 def activity_notification(activities, **kwargs):
