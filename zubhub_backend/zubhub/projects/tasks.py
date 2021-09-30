@@ -1,25 +1,26 @@
 from random import uniform
+from hashlib import md5
+import boto3
 import cloudinary
 from cloudinary import api
+from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from celery import shared_task
 from celery.decorators import periodic_task
 from celery.task.schedules import crontab
-from zubhub.utils import delete_file_async
 
 
 @shared_task(bind=True, acks_late=True, max_retries=10)
-def delete_file_task(self, url):
-    try:
-        res = delete_file_async(url, self.request.id.__str__())
-        try:
-            if res['ResponseMetadata']['HTTPStatusCode'] != 204:
-                raise Exception()
-        except Exception:
-            res = res.json()
-            if res["result"] != "ok":
-                raise Exception()
+def delete_image_from_DO_space(self, bucket, key):
+    session = boto3.session.Session()
+    client = session.client('s3',
+                            region_name=settings.DOSPACE_REGION,
+                            endpoint_url=settings.DOSPACE_ENDPOINT_URL,
+                            aws_access_key_id=settings.DOSPACE_ACCESS_KEY_ID,
+                            aws_secret_access_key=settings.DOSPACE_ACCESS_SECRET_KEY)
 
+    try:
+        client.delete_object(Bucket=bucket, Key=key)
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
