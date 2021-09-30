@@ -352,12 +352,8 @@ export const uploadVideo = async(video, state, props, handleSetState) => {
       const res = await props.shouldUploadToLocal(args);
 
       if(res && res.local === true){
-        console.log("should upload video to local true");
-        console.log("res.local----------------------------------------------------------------++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++: ", res.local);
         uploadVideoToLocal(video, state, props, handleSetState);
       }else if(res && res.local === false){
-        console.log("should upload video to local true");
-        console.log("res.local----------------------------------------------------------------++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++: ", res.local);
         uploadVideoToCloudinary(video, state, props, handleSetState);
       };
   }
@@ -433,10 +429,8 @@ export const uploadImage = async(image, state, props, handleSetState) => {
    const res  = await props.shouldUploadToLocal(args);
 
    if(res && res.local === true){
-    console.log("should upload image to local true");
     uploadImageToLocal(image, state, props, handleSetState);
    }else if(res && res.local === false){
-    console.log("should upload image to local false");
     uploadImageToDO(image, state, props, handleSetState);
    }
 
@@ -892,7 +886,6 @@ export class UploadMedia {
           const progress = Math.round((e.loaded * 100.0) / e.total);
           const { media_upload } = this.state;
           media_upload.upload_info[this.formData.get("file").name] = progress;
-          console.log(`${this.formData.get("file")} progress: ${progress}%`);
   
           let total = 0;
           Object.keys(media_upload.upload_info).forEach(each => {
