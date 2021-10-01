@@ -72,8 +72,8 @@ export const isCloudinaryVideo = url =>
 
 
 export const isGdriveORVimeoORYoutube = url => {
-    if(url.search("youtube.com/embed/") > -1 && 
-       url.search("player.vimeo.com/video/") > -1 && 
+    if(url.search("youtube.com/embed/") > -1 || 
+       url.search("player.vimeo.com/video/") > -1 || 
        url.search("drive.google.com") > -1){
       return true;
     } else {
