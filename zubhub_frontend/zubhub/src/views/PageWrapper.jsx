@@ -37,6 +37,7 @@ import {
 
 import {
   logout,
+  fetchHero,
   handleScrollTopClick,
   handleProfileMenuOpen,
   handleProfileMenuClose,
@@ -48,6 +49,7 @@ import {
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
+import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
 import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
@@ -71,12 +73,16 @@ function PageWrapper(props) {
   });
 
   React.useEffect(() => {
-    if (props.auth.token) {
-      handleSetState({ loading: true });
-      props.getAuthUser(props).finally(() => {
+    handleSetState({ loading: true });
+    fetchHero(props)
+      .then(() => {
+        if (props.auth.token) {
+          return props.getAuthUser(props);
+        }
+      })
+      .finally(() => {
         handleSetState({ loading: false });
       });
-    }
   }, [props.auth.token]);
 
   const handleSetState = obj => {
@@ -89,6 +95,7 @@ function PageWrapper(props) {
 
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
+  const { hero } = props.projects;
   const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
@@ -99,7 +106,10 @@ function PageWrapper(props) {
           <Toolbar className={classes.toolBarStyle}>
             <Box className={classes.logoStyle}>
               <Link to="/">
-                <img src={logo} alt="logo" />
+                <img
+                  src={hero.header_logo_url ? hero.header_logo_url : logo}
+                  alt="logo"
+                />
               </Link>
               <Box
                 className={clsx(
@@ -492,7 +502,9 @@ function PageWrapper(props) {
         <Box>
           <a href="https://unstructured.studio">
             <img
-              src={unstructuredLogo}
+              src={
+                hero.footer_logo_url ? hero.footer_logo_url : unstructuredLogo
+              }
               className={classes.footerLogoStyle}
               alt="unstructured-studio-logo"
             />
@@ -681,6 +693,7 @@ PageWrapper.propTypes = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    projects: state.projects,
   };
 };
 
@@ -694,6 +707,9 @@ const mapDispatchToProps = dispatch => {
     },
     getAuthUser: props => {
       return dispatch(AuthActions.getAuthUser(props));
+    },
+    getHero: args => {
+      return dispatch(ProjectActions.getHero(args));
     },
   };
 };

@@ -13,7 +13,6 @@ from projects.permissions import (IsOwner, IsStaffOrModerator, SustainedRateThro
                                   PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
 from .models import Project, Comment, StaffPick, Category, Tag
 from .utils import project_changed, detect_mentions, perform_project_search
-from .tasks import delete_video_from_cloudinary
 from creators.utils import activity_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)
@@ -63,8 +62,6 @@ class ProjectDeleteAPIView(DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         project = self.get_object()
         if project:
-            if project.video.find("cloudinary.com") > -1:
-                delete_video_from_cloudinary.delay(project.video)
             result = self.destroy(request, *args, **kwargs)
             request.user.save()
             return result

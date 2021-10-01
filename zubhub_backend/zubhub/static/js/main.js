@@ -133,9 +133,6 @@
       public_id = public_id[public_id.length - 1]
   
       if(url){
-        url = url.split("/");
-        let folder = url[url.length - 2];
-        let public_id = url[url.length - 1];
   
         const iframe = document.querySelector(`iframe#${iframe_id}_iframe`);
         const iframe_inner_doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -143,7 +140,7 @@
   
             url = `${document.location.origin}/api/delete_file/`;
             data = new FormData();
-            data.append("key", `${folder}/${public_id}`);
+            data.append("url", url);
   
             return fetch(url, 
               {method: 'POST',

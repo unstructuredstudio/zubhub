@@ -139,9 +139,9 @@ function CreateProject(props) {
     if (
       state.media_upload.images_to_upload.length +
         state.media_upload.videos_to_upload.length ===
-      state.media_upload.successful_uploads
+        state.media_upload.successful_uploads &&
+      vars.upload_in_progress
     ) {
-      vars.upload_in_progress = true;
       uploadProject(state, props, handleSetState);
     }
   }, [state.media_upload.successful_uploads]);
@@ -1129,6 +1129,9 @@ const mapDispatchToProps = dispatch => {
     },
     updateProject: props => {
       return dispatch(ProjectActions.updateProject(props));
+    },
+    shouldUploadToLocal: args => {
+      return dispatch(ProjectActions.shouldUploadToLocal(args));
     },
   };
 };
