@@ -42,7 +42,9 @@ export const buildVideoThumbnailURL = video_url => {
       return video_url;
     } 
 
-  };
+  }else{
+      return video_url + ".jpg";
+  }
 };
 
 export const getPlayerOptions = (window, video_url) => {

@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import cloudinary
 import socket
 import os
 
@@ -30,6 +29,11 @@ DEFAULT_BACKEND_PROTOCOL = os.environ.get(
 DEBUG = int(os.environ.get("DEBUG", default=0))
 STORE_MEDIA_LOCALLY = bool(
     int(os.environ.get("STORE_MEDIA_LOCALLY", default=1)))
+MEDIA_SECRET = os.environ.get("MEDIA_SECRET", default="")
+DEFAULT_MEDIA_SERVER_PROTOCOL = os.environ.get(
+    "DEFAULT_MEDIA_SERVER_PROTOCOL", default="http")
+DEFAULT_MEDIA_SERVER_DOMAIN = os.environ.get(
+    "DEFAULT_MEDIA_SERVER_DOMAIN", default="localhost:8001")
 
 if DEFAULT_FRONTEND_DOMAIN.startswith("localhost"):
     FRONTEND_HOST = DEFAULT_FRONTEND_DOMAIN.split(":")[0]
@@ -100,27 +104,11 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'treebeard',
     'django_summernote',
-    'cloudinary',
     'zubhub',
     'APIS',
     'creators',
     'projects',
 ]
-
-
-# cloudinary
-cloudinary.config(
-    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key=os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret=os.environ.get('CLOUDINARY_API_SECRET')
-)
-
-# digitalocean spaces
-DOSPACE_ACCESS_KEY_ID = os.environ.get("DOSPACE_ACCESS_KEY_ID")
-DOSPACE_ACCESS_SECRET_KEY = os.environ.get("DOSPACE_ACCESS_SECRET_KEY")
-DOSPACE_REGION = os.environ.get("DOSPACE_REGION")
-DOSPACE_ENDPOINT_URL = os.environ.get("DOSPACE_ENDPOINT_URL")
-DOSPACE_BUCKETNAME = os.environ.get("DOSPACE_BUCKETNAME")
 
 # askimet
 AKISMET_API_KEY = os.environ.get("AKISMET_API_KEY")
@@ -277,9 +265,6 @@ STATICFILES_FINDER = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 ]
-
-MEDIA_URL = '/api/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # django-debug-toolbar
 if ENVIRONMENT != 'production':
