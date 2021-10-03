@@ -245,6 +245,7 @@ export const initUpload = (e, state, props, handleSetState) => {
         const { media_upload } = state;
         media_upload.upload_dialog = true;
         media_upload.upload_percent = 0;
+        vars.upload_in_progress = true;
         handleSetState({ media_upload });
 
         for (
@@ -463,7 +464,6 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
   DO.upload(params, err => {
     const { media_upload } = state;
     media_upload.upload_dialog = false;
-    vars.upload_in_progress = false;
     handleSetState({ media_upload });
   })
     .on('httpUploadProgress', e => {

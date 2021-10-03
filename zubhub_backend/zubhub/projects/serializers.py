@@ -8,7 +8,7 @@ from .models import Project, Comment, Image, StaffPick, Category, Tag
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
 from .utils import update_images, update_tags, parse_comment_trees
-from .tasks import delete_video_from_cloudinary, update_video_url_if_transform_ready, delete_file_task
+from .tasks import update_video_url_if_transform_ready, delete_file_task
 from math import ceil
 
 
@@ -206,10 +206,9 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         video_data = validated_data.pop("video")
 
-        if project.video.find("cloudinary.com") > -1 and project.video != video_data:
-            delete_video_from_cloudinary.delay(project.video)
-        elif project.video.startswith("{0}://{1}".format(settings.DEFAULT_BACKEND_PROTOCOL,
-                                                         settings.DEFAULT_BACKEND_DOMAIN)) and project.video != video_data:
+        if (project.video.find("cloudinary.com") > -1 or
+            project.video.startswith("{0}://{1}".format(
+                settings.DEFAULT_MEDIA_SERVER_PROTOCOL, settings.DEFAULT_MEDIA_SERVER_DOMAIN))) and project.video != video_data:
             delete_file_task.delay(project.video)
 
         project.title = validated_data.pop("title")

@@ -19,7 +19,7 @@ RUN apt-get update \
 WORKDIR /zubhub_backend
 
 # copying neccessary files to work directory
-COPY ./requirements.txt /zubhub_backend/
+COPY ./compose/web/requirements.txt /zubhub_backend/
 
 RUN pip install --upgrade pip wheel \
   # Requirements are installed here to ensure they will be cached.
@@ -30,7 +30,7 @@ RUN pip install --upgrade pip wheel \
 COPY ./zubhub/ /zubhub_backend/zubhub/
 
 
-COPY ./compose/django/prod/start /zubhub_backend/start
+COPY ./compose/web/prod/start /zubhub_backend/start
 RUN sed -i 's/\r$//g' /zubhub_backend/start
 RUN chmod +x /zubhub_backend/start
 

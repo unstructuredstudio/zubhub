@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /docker_secrets_expand.sh
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+exec /usr/local/bin/gunicorn media.wsgi --threads=3 --bind 0.0.0.0:8001 \
+--access-logfile - --error-logfile -   --chdir /home/media

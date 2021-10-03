@@ -16,20 +16,26 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 
-WORKDIR /flower
+WORKDIR /zubhub_backend
 
 # copying neccessary files to work directory
-COPY ./compose/flower/requirements.txt /flower/
+COPY ./compose/web/requirements.txt /zubhub_backend/
 
 RUN pip install --upgrade pip wheel \
   # Requirements are installed here to ensure they will be cached.
-  && pip install -r /flower/requirements.txt
+  && pip install -r /zubhub_backend/requirements.txt
+
 
 # copy project
-COPY ./zubhub/ /flower/zubhub/
+COPY ./zubhub/ /zubhub_backend/zubhub/
 
-COPY ./compose/flower/start-flower /flower/start-flower
-RUN sed -i 's/\r$//g' /flower/start-flower
-RUN chmod +x /flower/start-flower
 
-ENTRYPOINT [ "/flower/start-flower" ]
+COPY ./compose/web/dev/start /zubhub_backend/start
+RUN sed -i 's/\r$//g' /zubhub_backend/start
+RUN chmod +x /zubhub_backend/start
+
+COPY ./compose/docker_secrets_expand.sh /docker_secrets_expand.sh
+RUN sed -i 's/\r$//g' /docker_secrets_expand.sh
+RUN chmod +x /docker_secrets_expand.sh
+
+ENTRYPOINT [ "/zubhub_backend/start" ]
