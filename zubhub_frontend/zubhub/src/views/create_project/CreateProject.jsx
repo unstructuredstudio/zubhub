@@ -4,15 +4,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
-import * as Yup from 'yup';
 
 import 'react-toastify/dist/ReactToastify.css';
-
-import { nanoid } from 'nanoid';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ImageIcon from '@material-ui/icons/Image';
+import VideoIcon from '@material-ui/icons/Movie';
 import HelpIcon from '@material-ui/icons/Help';
 import {
   Grid,
@@ -24,22 +22,50 @@ import {
   Chip,
   Dialog,
   Select,
+  Switch,
   MenuItem,
   Typography,
   CircularProgress,
   OutlinedInput,
   FormHelperText,
   FormControl,
+  InputLabel,
+  FormControlLabel,
   Tooltip,
   ClickAwayListener,
 } from '@material-ui/core';
 
+import {
+  vars,
+  validationSchema,
+  getCategories,
+  initUpload,
+  getProject,
+  handleImageFieldChange,
+  handleVideoSelectDone,
+  handleVideoFieldCancel,
+  handleVideoFieldChange,
+  handleTextFieldChange,
+  handleTextFieldBlur,
+  handleMaterialsUsedFieldBlur,
+  handleImageButtonClick,
+  handleVideoButtonClick,
+  handleDescTooltipOpen,
+  handleDescTooltipClose,
+  handleToggleSelectVideoFileChecked,
+  handleAddMaterialFieldChange,
+  addMaterialsUsedNode,
+  removeTag,
+  handleAddTags,
+  handleSuggestTags,
+  uploadProject,
+  checkMediaFilesErrorState,
+} from './createProjectScripts';
+
 import * as ProjectActions from '../../store/actions/projectActions';
+import * as AuthActions from '../../store/actions/authActions';
 import ErrorPage from '../error/ErrorPage';
-import DO, { doConfig } from '../../assets/js/DO';
-import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
-import Compress from '../../assets/js/Compress';
-import { useStateUpdateCallback } from '../../assets/js/customHooks';
+import { useStateUpdateCallback } from '../../assets/js/utils/hooks';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import commonStyles from '../../assets/js/styles';
@@ -47,156 +73,29 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-let image_field_touched = false;
-let video_field_touched = false;
-const timer = { id: null };
-
-const get_categories = props => {
-  return props.get_categories({ t: props.t });
-};
-
-const getProject = (refs, props, state) => {
-  return props
-    .get_project({
-      id: props.match.params.id,
-      token: props.auth.token,
-    })
-    .then(obj => {
-      if (!obj.project) {
-        return obj;
-      } else {
-        const { image_upload } = state;
-
-        if (refs.titleEl.current && obj.project.title) {
-          props.setFieldValue('title', obj.project.title);
-          refs.titleEl.current.firstChild.value = obj.project.title;
-        }
-
-        if (refs.descEl.current && obj.project.description) {
-          props.setFieldValue('description', obj.project.description);
-          refs.descEl.current.firstChild.value = obj.project.description;
-        }
-
-        if (refs.videoEl.current && obj.project.video) {
-          props.setFieldValue('video', obj.project.video);
-          refs.videoEl.current.firstChild.value = obj.project.video;
-        }
-
-        if (refs.imageCountEl.current && obj.project.images.length > 0) {
-          refs.imageCountEl.current.innerText = `${
-            obj.project.images.length
-          } ${props.t(
-            `createProject.inputs.${
-              obj.project.images.length < 2 ? 'image' : 'images'
-            }`,
-          )}`;
-        }
-
-        if (refs.addMaterialsUsedEl.current && obj.project.materials_used) {
-          props.setFieldValue(
-            'materials_used',
-            obj.project.materials_used,
-            true,
-          );
-        }
-
-        if (obj.project.category) {
-          props.setFieldValue('category', obj.project.category);
-        }
-
-        if (refs.addTagsEl.current && obj.project.tags) {
-          props.setFieldValue('tags', JSON.stringify(obj.project.tags), true);
-        }
-
-        image_upload.uploaded_images_url = obj.project.images;
-
-        return {
-          loading: false,
-          materials_used: obj.project.materials_used.split(','),
-          image_upload,
-        };
-      }
-    });
-};
-
-const handleImageFieldChange = (refs, props, state, handleSetState) => {
-  refs.imageCountEl.current.innerText = `${
-    refs.imageEl.current.files.length
-  } ${props.t(
-    `createProject.inputs.${
-      refs.imageEl.current.files.length < 2 ? 'image' : 'images'
-    }`,
-  )}`;
-
-  props.setFieldValue('project_images', refs.imageEl.current).then(errors => {
-    if (!errors['project_images']) {
-      removeMetaData(refs.imageEl.current.files, state, handleSetState);
-    }
-  });
-};
-
-const removeMetaData = (images, state, handleSetState) => {
-  const newWorker = worker();
-  newWorker.removeMetaData(images);
-  newWorker.addEventListener('message', e => {
-    Compress(e.data, state, handleSetState);
-  });
-};
-
-const handleImageButtonClick = (e, props, refs) => {
-  e.preventDefault();
-  refs.imageEl.current.click();
-  props.setFieldTouched('project_images');
-};
-
-const handleDescTooltipOpen = () => {
-  return { descToolTipOpen: true };
-};
-
-const handleDescTooltipClose = () => {
-  return { descToolTipOpen: false };
-};
-
-const handleAddMaterialFieldChange = (e, props, refs) => {
-  const children = refs.addMaterialsUsedEl.current.children;
-  let value = '';
-  for (let index = 0; index < children.length; index++) {
-    if (children[index].children[0].value) {
-      if (index < 1) {
-        value = value.concat(children[index].children[0].value);
-      } else {
-        value = value.concat(`,${children[index].children[0].value}`);
-      }
-    } else {
-      if (index >= 1) {
-        value = value.concat(',');
-      }
-    }
-  }
-
-  props.setFieldValue('materials_used', value, true);
-};
-
-const buildMaterialUsedNodes = ({ props, refs, classes, commonClasses }) => {
+const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
   if (props.values['materials_used']) {
     return props.values['materials_used']
       .split(',')
       .map((material, index) => (
         <OutlinedInput
           key={index}
-          className={clsx(classes.customInputStyle, commonClasses.marginTop1em)}
+          className={clsx(
+            classes.customInputStyle,
+            common_classes.marginTop1em,
+          )}
           type="text"
-          onBlur={() => props.setFieldTouched('materials_used', true)}
+          onBlur={() => handleMaterialsUsedFieldBlur(props)}
           onChange={e => handleAddMaterialFieldChange(e, props, refs)}
           value={material}
           placeholder={`${index + 1}.`}
         />
       ));
   } else {
-    return ['', '', ''].map((material, index) => (
+    return ['', '', ''].map((_, index) => (
       <OutlinedInput
         key={index}
-        className={clsx(classes.customInputStyle, commonClasses.marginTop1em)}
+        className={clsx(classes.customInputStyle, common_classes.marginTop1em)}
         type="text"
         onBlur={() => props.setFieldTouched('materials_used', true)}
         onChange={e => handleAddMaterialFieldChange(e, props, refs)}
@@ -206,293 +105,55 @@ const buildMaterialUsedNodes = ({ props, refs, classes, commonClasses }) => {
   }
 };
 
-const addMaterialsUsedNode = (e, props) => {
-  e.preventDefault();
-  let materials_used = props.values['materials_used'];
-  if (!materials_used) {
-    props.setFieldValue('materials_used', ',,,');
-  } else {
-    props.setFieldValue('materials_used', materials_used.concat(','));
-  }
-};
-
-const removeTag = (e, props, value) => {
-  let tags = props.values['tags'];
-  tags = tags ? JSON.parse(tags) : [];
-  tags = tags.filter(tag => tag.name !== value);
-  props.setFieldValue('tags', JSON.stringify(tags));
-};
-
-const handleAddTags = (e, props, addTagsEl) => {
-  const value = e.currentTarget.value.split(',');
-  let tags = props.values['tags'];
-  tags = tags ? JSON.parse(tags) : [];
-
-  const exists =
-    tags.filter(tag => tag.name === value[0]).length > 0 ? true : false;
-
-  if (!exists && value.length > 1 && value[0] && !(tags.length >= 5)) {
-    tags.push({ name: value[0] });
-    props.setFieldValue('tags', JSON.stringify(tags));
-    e.currentTarget.value = '';
-    if (e.currentTarget.focus) e.currentTarget.focus();
-    if (addTagsEl) {
-      addTagsEl.current.value = '';
-      addTagsEl.current.focus();
-    }
-  }
-
-  return { tag_suggestion_open: false, tag_suggestion: [] };
-};
-
-const handleSuggestTags = (e, props, state, handleSetState) => {
-  clearTimeout(timer.id);
-  const value = e.currentTarget.value;
-
-  if (value !== '' && value.search(',') === -1) {
-    timer.id = setTimeout(() => {
-      suggestTags(value, props, handleSetState, state);
-    }, 500);
-  }
-};
-
-const suggestTags = (value, props, handleSetState, state) => {
-  handleSetState({ tag_suggestion_open: true });
-  handleSetState(props.suggest_tags({ value, t: props.t }));
-};
-
 function CreateProject(props) {
-  const refs = {
-    titleEl: React.useRef(null),
-    descEl: React.useRef(null),
-    imageEl: React.useRef(null),
-    imageUploadButtonEl: React.useRef(null),
-    imageCountEl: React.useRef(null),
-    videoEl: React.useRef(null),
-    addMaterialsUsedEl: React.useRef(null),
-    addTagsEl: React.useRef(null),
-  };
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
-  const [state, setState] = React.useState({
-    desc_tool_tip_open: false,
-    loading: true,
-    error: null,
-    materials_used: [],
-    categories: [],
-    tag_suggestion: [],
-    tag_suggestion_open: false,
-    image_upload: {
-      upload_dialog: false,
-      images_to_upload: 0,
-      successful_uploads: 0,
-      upload_info: {},
-      upload_percent: 0,
-      uploaded_images_url: [],
-    },
-  });
+  const refs = {
+    title_el: React.useRef(null),
+    desc_el: React.useRef(null),
+    image_el: React.useRef(null),
+    image_upload_button_el: React.useRef(null),
+    video_upload_button_el: React.useRef(null),
+    image_count_el: React.useRef(null),
+    video_el: React.useRef(null),
+    video_file_el: React.useRef(null),
+    video_selection_feedback_el: React.useRef(null),
+    add_materials_used_el: React.useRef(null),
+    add_tags_el: React.useRef(null),
+  };
+
+  const [state, setState] = React.useState({ ...vars.default_state });
 
   React.useEffect(() => {
     if (props.match.params.id) {
-      Promise.all([
-        getProject(refs, props, state),
-        get_categories(props),
-      ]).then(result => handleSetState({ ...result[0], ...result[1] }));
+      Promise.all([getProject(refs, props, state), getCategories(props)]).then(
+        result => handleSetState({ ...result[0], ...result[1] }),
+      );
     } else {
-      handleSetState(get_categories(props));
+      handleSetState(getCategories(props));
     }
   }, []);
 
   useStateUpdateCallback(() => {
     if (
-      state.image_upload.images_to_upload.length ===
-      state.image_upload.successful_uploads
+      state.media_upload.images_to_upload.length +
+        state.media_upload.videos_to_upload.length ===
+        state.media_upload.successful_uploads &&
+      vars.upload_in_progress
     ) {
-      upload_project();
+      uploadProject(state, props, handleSetState);
     }
-  }, [state.image_upload.successful_uploads]);
+  }, [state.media_upload.successful_uploads]);
 
   React.useEffect(() => {
-    if (props.auth.token) {
-      if (props.touched['project_images'] && props.errors['project_images']) {
-        refs.imageUploadButtonEl.current.setAttribute(
-          'style',
-          'border-color:#F54336; color:#F54336',
-        );
-      } else {
-        refs.imageUploadButtonEl.current.setAttribute(
-          'style',
-          'border-color: #00B8C4; color:#00B8C4',
-        );
-      }
-
-      if (props.touched['project_images']) {
-        image_field_touched = true;
-      } else {
-        image_field_touched = false;
-      }
-
-      if (props.touched['video']) {
-        video_field_touched = true;
-      } else {
-        video_field_touched = false;
-      }
-    }
+    checkMediaFilesErrorState(refs, props);
   }, [
     props.errors['project_images'],
     props.touched['project_images'],
+    props.errors['video'],
     props.touched['video'],
   ]);
-
-  const upload = image => {
-    const params = {
-      Bucket: `${doConfig.bucketName}`,
-      Key: `${doConfig.project_images}/${nanoid()}`,
-      Body: image,
-      ContentType: image.type,
-      ACL: 'public-read',
-    };
-
-    DO.upload(params)
-      .on('httpUploadProgress', e => {
-        const progress = Math.round((e.loaded * 100.0) / e.total);
-        const { image_upload } = state;
-        image_upload.upload_info[image.name] = progress;
-
-        let total = 0;
-        Object.keys(image_upload.upload_info).forEach(each => {
-          total = total + image_upload.upload_info[each];
-        });
-
-        total = total / Object.keys(image_upload.upload_info).length;
-        image_upload.upload_percent = total;
-
-        handleSetState({ image_upload });
-      })
-      .send((err, data) => {
-        if (err) {
-          const { image_upload } = state;
-          image_upload.upload_dialog = false;
-
-          if (err.message.startsWith('Unexpected')) {
-            handleSetState({
-              error: props.t('createProject.errors.unexpected'),
-              image_upload,
-            });
-          } else {
-            handleSetState({ error: err.message, image_upload });
-          }
-        } else {
-          const secure_url = data.Location;
-          const public_id = data.Key;
-          const { image_upload } = state;
-
-          image_upload.uploaded_images_url.push({
-            image_url: secure_url,
-            public_id,
-          });
-          image_upload.successful_uploads = image_upload.successful_uploads + 1;
-
-          handleSetState({ image_upload });
-        }
-      });
-  };
-
-  const upload_project = () => {
-    const { image_upload } = state;
-    image_upload.upload_dialog = false;
-    handleSetState({ image_upload });
-
-    const materials_used = props.values['materials_used']
-      .split(',')
-      .filter(value => (value ? true : false))
-      .join(',');
-
-    const tags = props.values['tags']
-      ? JSON.parse(props.values['tags']).filter(tag =>
-          tag.name ? true : false,
-        )
-      : [];
-
-    const create_or_update = props.match.params.id
-      ? props.update_project
-      : props.create_project;
-
-    return create_or_update({
-      ...props.values,
-      materials_used,
-      tags,
-      id: props.match.params.id,
-      token: props.auth.token,
-      images: state.image_upload.uploaded_images_url,
-      video: props.values.video ? props.values.video : '',
-      category: props.values.category,
-      t: props.t,
-    }).catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        const server_errors = {};
-        Object.keys(messages).forEach(key => {
-          if (key === 'non_field_errors') {
-            server_errors['non_field_errors'] = messages[key][0];
-          } else {
-            server_errors[key] = messages[key][0];
-          }
-        });
-        props.setStatus({ ...server_errors });
-      } else {
-        props.setStatus({
-          non_field_errors: props.t('createProject.errors.unexpected'),
-        });
-      }
-    });
-  };
-
-  const init_project = e => {
-    e.preventDefault();
-
-    if (!props.auth.token) {
-      props.history.push('/login');
-    } else {
-      props.setFieldTouched('title');
-      props.setFieldTouched('description');
-      props.setFieldTouched('project_images');
-      props.setFieldTouched('video');
-      props.setFieldTouched('materials_used');
-      props.setFieldTouched('category');
-      props.setFieldTouched('tags');
-
-      image_field_touched = true;
-      video_field_touched = true;
-
-      props.validateForm().then(errors => {
-        if (
-          Object.keys(errors).length > 0 &&
-          !(Object.keys(errors).length === 2) &&
-          !(errors['project_images'] === 'imageOrVideo') &&
-          state.image_upload.uploaded_images_url.length === 0
-        ) {
-          return;
-        } else if (refs.imageEl.current.files.length === 0) {
-          upload_project();
-        } else {
-          const { image_upload } = state;
-          image_upload.upload_dialog = true;
-          image_upload.upload_percent = 0;
-          handleSetState({ image_upload });
-
-          for (
-            let index = 0;
-            index < image_upload.images_to_upload.length;
-            index++
-          ) {
-            upload(image_upload.images_to_upload[index]);
-          }
-        }
-      });
-    }
-  };
 
   const handleSetState = obj => {
     if (obj) {
@@ -504,10 +165,12 @@ function CreateProject(props) {
 
   const {
     desc_tool_tip_open,
-    image_upload,
+    video_upload_dialog_open,
+    media_upload,
     categories,
     tag_suggestion,
     tag_suggestion_open,
+    select_video_file,
   } = state;
   const { t } = props;
   const id = props.match.params.id;
@@ -524,7 +187,11 @@ function CreateProject(props) {
                   className="project-create-form"
                   name="create_project"
                   noValidate="noValidate"
-                  onSubmit={init_project}
+                  onSubmit={e =>
+                    !vars.upload_in_progress
+                      ? initUpload(e, state, props, handleSetState)
+                      : null
+                  }
                 >
                   <Typography
                     className={classes.titleStyle}
@@ -564,7 +231,7 @@ function CreateProject(props) {
                       </Box>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -581,7 +248,7 @@ function CreateProject(props) {
                             color="textSecondary"
                             className={clsx(
                               classes.customLabelStyle,
-                              commonClasses.marginBottom1em,
+                              common_classes.marginBottom1em,
                             )}
                           >
                             <Box className={classes.fieldNumberStyle}>1</Box>
@@ -589,13 +256,13 @@ function CreateProject(props) {
                           </Typography>
                         </label>
                         <OutlinedInput
-                          ref={refs.titleEl}
+                          ref={refs.title_el}
                           className={classes.customInputStyle}
                           id="title"
                           name="title"
                           type="text"
-                          onChange={props.handleChange}
-                          onBlur={props.handleBlur}
+                          onChange={e => handleTextFieldChange(e, props)}
+                          onBlur={e => handleTextFieldBlur(e, props)}
                         />
                         <FormHelperText
                           error
@@ -611,7 +278,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -629,7 +296,7 @@ function CreateProject(props) {
                             color="textSecondary"
                             className={clsx(
                               classes.customLabelStyle,
-                              commonClasses.marginBottom1em,
+                              common_classes.marginBottom1em,
                             )}
                           >
                             <Box className={classes.fieldNumberStyle}>2</Box>
@@ -665,7 +332,7 @@ function CreateProject(props) {
                           </Tooltip>
                         </ClickAwayListener>
                         <OutlinedInput
-                          ref={refs.descEl}
+                          ref={refs.desc_el}
                           className={classes.customInputStyle}
                           id="description"
                           name="description"
@@ -673,8 +340,8 @@ function CreateProject(props) {
                           multiline
                           rows={6}
                           rowsMax={6}
-                          onChange={props.handleChange}
-                          onBlur={props.handleBlur}
+                          onChange={e => handleTextFieldChange(e, props)}
+                          onBlur={e => handleTextFieldBlur(e, props)}
                         />
                         <FormHelperText
                           error
@@ -690,7 +357,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
                         fullWidth
                         error={
@@ -715,7 +382,7 @@ function CreateProject(props) {
                           component="span"
                           className={clsx(
                             classes.fieldHelperTextStyle,
-                            commonClasses.marginBottom1em,
+                            common_classes.marginBottom1em,
                           )}
                         >
                           {t(
@@ -725,7 +392,7 @@ function CreateProject(props) {
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={6} md={6}>
                             <CustomButton
-                              ref={refs.imageUploadButtonEl}
+                              ref={refs.image_upload_button_el}
                               variant="outlined"
                               size="large"
                               margin="normal"
@@ -735,7 +402,7 @@ function CreateProject(props) {
                                 handleImageButtonClick(e, props, refs)
                               }
                               secondaryButtonStyle
-                              imageUploadButtonStyle
+                              mediaUploadButtonStyle
                               customButtonStyle
                               fullWidth
                             >
@@ -745,12 +412,12 @@ function CreateProject(props) {
                               color="textSecondary"
                               variant="caption"
                               component="span"
-                              ref={refs.imageCountEl}
+                              ref={refs.image_count_el}
                             ></Typography>
                           </Grid>
                         </Grid>
                         <input
-                          ref={refs.imageEl}
+                          ref={refs.image_el}
                           className={classes.displayNone}
                           aria-hidden="true"
                           type="file"
@@ -758,7 +425,7 @@ function CreateProject(props) {
                           id="project_images"
                           name="project_images"
                           multiple
-                          onChange={e =>
+                          onChange={_ =>
                             handleImageFieldChange(
                               refs,
                               props,
@@ -772,7 +439,7 @@ function CreateProject(props) {
                           error
                           className={classes.fieldHelperTextStyle}
                         >
-                          {(props.status && props.status['project_images']) ||
+                          {(props.status && props.status['images']) ||
                             (props.errors['project_images'] &&
                               t(
                                 `createProject.inputs.projectImages.errors.${props.errors['project_images']}`,
@@ -781,13 +448,9 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
-                        className={clsx(classes.margin, classes.textField)}
-                        variant="outlined"
-                        size="small"
                         fullWidth
-                        margin="small"
                         error={
                           (props.status && props.status['video']) ||
                           (props.touched['video'] && props.errors['video'])
@@ -802,37 +465,57 @@ function CreateProject(props) {
                             {t('createProject.inputs.video.label')}
                           </Typography>
                         </label>
+
                         <Typography
                           color="textSecondary"
                           variant="caption"
                           component="span"
                           className={clsx(
                             classes.fieldHelperTextStyle,
-                            commonClasses.marginBottom1em,
+                            common_classes.marginBottom1em,
                           )}
                         >
                           {t('createProject.inputs.video.topHelperText')}
                         </Typography>
-                        <OutlinedInput
-                          ref={refs.videoEl}
-                          className={clsx(
-                            classes.customInputStyle,
-                            classes.staticLabelInputStyle,
-                          )}
-                          id="video"
-                          name="video"
-                          type="text"
-                          onChange={props.handleChange}
-                          onBlur={props.handleBlur}
-                          labelWidth={90}
-                        />
+                        <Grid container spacing={1}>
+                          <Grid item xs={12} sm={6} md={6}>
+                            <CustomButton
+                              ref={refs.video_upload_button_el}
+                              variant="outlined"
+                              size="large"
+                              margin="normal"
+                              id="video_upload_button"
+                              startIcon={<VideoIcon />}
+                              onClick={e =>
+                                handleSetState(
+                                  handleVideoButtonClick(
+                                    e,
+                                    props,
+                                    video_upload_dialog_open,
+                                  ),
+                                )
+                              }
+                              secondaryButtonStyle
+                              mediaUploadButtonStyle
+                              customButtonStyle
+                              fullWidth
+                            >
+                              {t('createProject.inputs.video.label2')}
+                            </CustomButton>
+                            <Typography
+                              color="textSecondary"
+                              variant="caption"
+                              component="span"
+                              ref={refs.video_selection_feedback_el}
+                            ></Typography>
+                          </Grid>
+                        </Grid>
                         <FormHelperText
                           error
                           className={classes.fieldHelperTextStyle}
                         >
                           {(props.status && props.status['video']) ||
-                            (props.touched['video'] &&
-                              props.errors['video'] &&
+                            (props.errors['video'] &&
                               t(
                                 `createProject.inputs.video.errors.${props.errors['video']}`,
                               ))}
@@ -848,7 +531,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -866,7 +549,7 @@ function CreateProject(props) {
                             color="textSecondary"
                             className={clsx(
                               classes.customLabelStyle,
-                              commonClasses.marginBottom1em,
+                              common_classes.marginBottom1em,
                             )}
                           >
                             <Box className={classes.fieldNumberStyle}>5</Box>
@@ -876,12 +559,12 @@ function CreateProject(props) {
 
                         <Grid container spacing={1} alignItems="flex-end">
                           <Grid item xs={12} sm={8}>
-                            <Box ref={refs.addMaterialsUsedEl}>
+                            <Box ref={refs.add_materials_used_el}>
                               {buildMaterialUsedNodes({
                                 props,
                                 refs,
                                 classes,
-                                commonClasses,
+                                common_classes,
                               })}
                             </Box>
                           </Grid>
@@ -913,7 +596,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -941,7 +624,7 @@ function CreateProject(props) {
                           component="span"
                           className={clsx(
                             classes.fieldHelperTextStyle,
-                            commonClasses.marginBottom1em,
+                            common_classes.marginBottom1em,
                           )}
                         >
                           {t('createProject.inputs.category.topHelperText')}
@@ -982,7 +665,7 @@ function CreateProject(props) {
                       </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} className={commonClasses.marginTop1em}>
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
                       <FormControl
                         className={clsx(classes.margin, classes.textField)}
                         variant="outlined"
@@ -1010,7 +693,7 @@ function CreateProject(props) {
                           component="span"
                           className={clsx(
                             classes.fieldHelperTextStyle,
-                            commonClasses.marginBottom1em,
+                            common_classes.marginBottom1em,
                           )}
                         >
                           {t('createProject.inputs.tags.topHelperText')}
@@ -1030,7 +713,7 @@ function CreateProject(props) {
                               ) : null,
                             )}
                           <input
-                            ref={refs.addTagsEl}
+                            ref={refs.add_tags_el}
                             className={classes.tagsInputStyle}
                             name="tags"
                             type="text"
@@ -1068,7 +751,7 @@ function CreateProject(props) {
                               className={clsx(
                                 classes.tagSuggestionStyle,
                                 !tag_suggestion_open
-                                  ? commonClasses.displayNone
+                                  ? common_classes.displayNone
                                   : null,
                               )}
                             >
@@ -1079,7 +762,7 @@ function CreateProject(props) {
                                     color="textPrimary"
                                     className={classes.tagSuggestionTextStyle}
                                     onClick={() => {
-                                      clearTimeout(timer.id);
+                                      clearTimeout(vars.timer.id);
                                       handleSetState(
                                         handleAddTags(
                                           {
@@ -1088,7 +771,7 @@ function CreateProject(props) {
                                             },
                                           },
                                           props,
-                                          refs.addTagsEl,
+                                          refs.add_tags_el,
                                         ),
                                       );
                                     }}
@@ -1131,6 +814,238 @@ function CreateProject(props) {
                       </CustomButton>
                     </Grid>
                   </Grid>
+
+                  <Dialog
+                    PaperProps={{
+                      style: {
+                        backgroundColor: 'transparent',
+                        boxShadow: 'none',
+                      },
+                    }}
+                    open={video_upload_dialog_open}
+                    onClose={async () =>
+                      handleSetState({
+                        ...(await handleVideoFieldCancel(refs, props, state)),
+                        video_upload_dialog_open: false,
+                      })
+                    }
+                    aria-labelledby="video upload dialog"
+                  >
+                    <Container className={classes.containerStyle}>
+                      <Card className={classes.cardStyle}>
+                        <CardActionArea>
+                          <CardContent>
+                            <Typography
+                              className={classes.titleStyle}
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                              color="textPrimary"
+                            >
+                              {t('createProject.inputs.video.dialogPrimary')}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="textSecondary"
+                              component="p"
+                              className={classes.descStyle}
+                            >
+                              {t('createProject.inputs.video.dialogSecondary')}
+                            </Typography>
+
+                            <Grid container spacing={3}>
+                              <Grid
+                                item
+                                xs={12}
+                                className={common_classes.marginTop1em}
+                              >
+                                <Grid
+                                  container
+                                  spacing={1}
+                                  alignItems="flex-end"
+                                >
+                                  {!select_video_file ? (
+                                    <Grid item xs={12} sm={12}>
+                                      <FormControl
+                                        className={clsx(
+                                          classes.margin,
+                                          classes.textField,
+                                        )}
+                                        variant="outlined"
+                                        size="small"
+                                        fullWidth
+                                        margin="normal"
+                                      >
+                                        <InputLabel
+                                          className={classes.customLabelStyle}
+                                          htmlFor="url-input"
+                                        >
+                                          {t(
+                                            'createProject.inputs.video.dialogURLFieldLabel',
+                                          )}
+                                        </InputLabel>
+                                        <OutlinedInput
+                                          ref={refs.video_el}
+                                          className={classes.customInputStyle}
+                                          type="text"
+                                          name="url-input"
+                                          labelWidth={80}
+                                          onChange={async e =>
+                                            handleSetState(
+                                              await handleVideoFieldChange(
+                                                e,
+                                                refs,
+                                                props,
+                                                state,
+                                                handleSetState,
+                                              ),
+                                            )
+                                          }
+                                        />
+                                      </FormControl>
+                                    </Grid>
+                                  ) : (
+                                    <Box
+                                      className={classes.videoFileDropBoxStyles}
+                                    >
+                                      <input
+                                        className={classes.videoFileInputStyle}
+                                        ref={refs.video_file_el}
+                                        type="file"
+                                        accept="video/*"
+                                        id="video"
+                                        name="video"
+                                        onChange={async e => {
+                                          handleSetState(
+                                            await handleVideoFieldChange(
+                                              e,
+                                              refs,
+                                              props,
+                                              state,
+                                              handleSetState,
+                                            ),
+                                          );
+                                        }}
+                                        onDragLeave={e => {
+                                          e.target.parentNode.classList.remove(
+                                            'videoFileDragOver',
+                                          );
+                                        }}
+                                        onDragOver={e => {
+                                          e.preventDefault();
+                                          e.target.parentNode.classList.add(
+                                            'videoFileDragOver',
+                                          );
+                                        }}
+                                        onBlur={props.handleBlur}
+                                      />
+
+                                      <p className={classes.videoFileName}>
+                                        {refs.video_file_el.current?.files?.[0]
+                                          ? refs.video_file_el.current
+                                              ?.files?.[0]?.name
+                                          : t(
+                                              'createProject.inputs.video.dialogFileFieldLabel',
+                                            )}
+                                      </p>
+                                    </Box>
+                                  )}
+                                </Grid>
+                              </Grid>
+                              <Grid
+                                item
+                                xs={12}
+                                sm={12}
+                                className={
+                                  classes.videoInputDialogActionSectionStyle
+                                }
+                              >
+                                <FormControlLabel
+                                  className={
+                                    classes.videoInputDialogSwitchContainerStyle
+                                  }
+                                  control={
+                                    <Switch
+                                      className={
+                                        classes.videoInputDialogToggleSwitchStyles
+                                      }
+                                      checked={select_video_file}
+                                      onChange={_ =>
+                                        handleSetState(
+                                          handleToggleSelectVideoFileChecked(
+                                            select_video_file,
+                                          ),
+                                        )
+                                      }
+                                    />
+                                  }
+                                  label={
+                                    <Typography
+                                      color="textSecondary"
+                                      className={classes.customLabelStyle}
+                                    >
+                                      {select_video_file
+                                        ? t(
+                                            'createProject.inputs.video.dialogURLToggleLabel',
+                                          )
+                                        : t(
+                                            'createProject.inputs.video.dialogFileToggleLabel',
+                                          )}
+                                    </Typography>
+                                  }
+                                />
+
+                                <CustomButton
+                                  variant="outlined"
+                                  size="large"
+                                  type="submit"
+                                  secondaryButtonStyle
+                                  customButtonStyle
+                                  className={
+                                    classes.videoInputDialogActionButtonStyle
+                                  }
+                                  onClick={async () =>
+                                    handleSetState({
+                                      ...(await handleVideoFieldCancel(
+                                        refs,
+                                        props,
+                                        state,
+                                      )),
+                                      video_upload_dialog_open: false,
+                                    })
+                                  }
+                                >
+                                  {t('createProject.inputs.video.dialogCancel')}
+                                </CustomButton>
+                                <CustomButton
+                                  variant="contained"
+                                  size="large"
+                                  type="submit"
+                                  primaryButtonStyle
+                                  customButtonStyle
+                                  className={
+                                    classes.videoInputDialogActionButtonStyle
+                                  }
+                                  onClick={async () =>
+                                    handleSetState({
+                                      ...(await handleVideoSelectDone(
+                                        refs,
+                                        props,
+                                        state,
+                                      )),
+                                      video_upload_dialog_open: false,
+                                    })
+                                  }
+                                >
+                                  {t('createProject.inputs.video.dialogDone')}
+                                </CustomButton>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Container>
+                  </Dialog>
                 </form>
                 <Dialog
                   PaperProps={{
@@ -1140,7 +1055,7 @@ function CreateProject(props) {
                     },
                   }}
                   className={classes.uploadProgressDialogStyle}
-                  open={image_upload.upload_dialog}
+                  open={media_upload.upload_dialog}
                   aria-labelledby="upload progress dialog"
                 >
                   <Box position="relative" display="inline-flex">
@@ -1149,7 +1064,7 @@ function CreateProject(props) {
                       variant="determinate"
                       size={70}
                       thickness={6}
-                      value={image_upload.upload_percent}
+                      value={media_upload.upload_percent}
                     />
                     <Box
                       top={0}
@@ -1166,7 +1081,7 @@ function CreateProject(props) {
                         variant="caption"
                         component="div"
                       >{`${Math.round(
-                        image_upload.upload_percent,
+                        media_upload.upload_percent,
                       )}%`}</Typography>
                     </Box>
                   </Box>
@@ -1182,11 +1097,11 @@ function CreateProject(props) {
 
 CreateProject.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_project: PropTypes.func.isRequired,
-  get_categories: PropTypes.func.isRequired,
-  suggest_tags: PropTypes.func.isRequired,
-  create_project: PropTypes.func.isRequired,
-  update_project: PropTypes.func.isRequired,
+  getProject: PropTypes.func.isRequired,
+  getCategories: PropTypes.func.isRequired,
+  suggestTags: PropTypes.func.isRequired,
+  createProject: PropTypes.func.isRequired,
+  updateProject: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -1197,20 +1112,26 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_project: values => {
-      return dispatch(ProjectActions.get_project(values));
+    getSignature: args => {
+      return dispatch(AuthActions.getSignature(args));
     },
-    get_categories: values => {
-      return dispatch(ProjectActions.get_categories(values));
+    getProject: values => {
+      return dispatch(ProjectActions.getProject(values));
     },
-    suggest_tags: args => {
-      return dispatch(ProjectActions.suggest_tags(args));
+    getCategories: values => {
+      return dispatch(ProjectActions.getCategories(values));
     },
-    create_project: props => {
-      return dispatch(ProjectActions.create_project(props));
+    suggestTags: args => {
+      return dispatch(ProjectActions.suggestTags(args));
     },
-    update_project: props => {
-      return dispatch(ProjectActions.update_project(props));
+    createProject: props => {
+      return dispatch(ProjectActions.createProject(props));
+    },
+    updateProject: props => {
+      return dispatch(ProjectActions.updateProject(props));
+    },
+    shouldUploadToLocal: args => {
+      return dispatch(ProjectActions.shouldUploadToLocal(args));
     },
   };
 };
@@ -1226,86 +1147,6 @@ export default connect(
       video: '',
       materials_used: '',
     }),
-    validationSchema: Yup.object().shape({
-      title: Yup.string().max(100, 'max').required('required'),
-      description: Yup.string().max(10000, 'max').required('required'),
-      project_images: Yup.mixed()
-        .test('image_is_empty', 'imageOrVideo', function (value) {
-          return image_field_touched && !value && !this.parent.video
-            ? false
-            : true;
-        })
-        .test('not_an_image', 'onlyImages', value => {
-          if (value) {
-            let not_an_image = false;
-            for (let index = 0; index < value.files.length; index++) {
-              if (value.files[index].type.split('/')[0] !== 'image') {
-                not_an_image = true;
-              }
-            }
-            return not_an_image ? false : true;
-          } else {
-            return true;
-          }
-        })
-        .test('too_many_images', 'tooManyImages', value => {
-          if (value) {
-            return value.files.length > 10 ? false : true;
-          } else {
-            return true;
-          }
-        })
-        .test('image_size_too_large', 'imageSizeTooLarge', value => {
-          if (value) {
-            let image_size_too_large = false;
-            for (let index = 0; index < value.files.length; index++) {
-              if (value.files[index].size / 1000 > 10240) {
-                image_size_too_large = true;
-              }
-            }
-            return image_size_too_large ? false : true;
-          } else {
-            return true;
-          }
-        }),
-      video: Yup.string()
-        .url('shouldBeVideoUrl')
-        .max(1000, 'max')
-        .test('video_is_empty', 'imageOrVideo', function (value) {
-          return video_field_touched && !value && !this.parent.project_images
-            ? false
-            : true;
-        }),
-      materials_used: Yup.string()
-        .max(10000, 'max')
-        .test('empty', 'required', value => {
-          let is_empty = true;
-
-          value &&
-            value.split(',').forEach(material => {
-              if (material) {
-                is_empty = false;
-              }
-            });
-
-          return !is_empty;
-        }),
-      category: Yup.string().min(1, 'min'),
-      tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
-        if (tags) {
-          tags = JSON.parse(tags);
-          const re = /^[0-9A-Za-z\s\-]+$/;
-          let unsupported = false;
-          for (let tag of tags) {
-            if (!re.test(tag.name)) {
-              unsupported = true;
-            }
-          }
-          return unsupported ? false : true;
-        } else {
-          return false;
-        }
-      }),
-    }),
+    validationSchema,
   })(CreateProject),
 );

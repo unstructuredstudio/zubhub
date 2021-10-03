@@ -1,7 +1,7 @@
 const styles = theme => ({
   root: {
     maxWidth: 345,
-    height: '100%',
+    height: '94%',
     paddingTop: 0,
     paddingBottom: '0!important',
     marginTop: '1em',
@@ -36,6 +36,9 @@ const styles = theme => ({
     width: '100%',
     height: '13em',
     position: 'relative',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
   },
   mediaStyle: {
     width: '100%',
@@ -47,6 +50,9 @@ const styles = theme => ({
     width: '100%',
     height: '13em',
     position: 'absolute',
+  },
+  playIconStyle: {
+    zIndex: 0
   },
   actionAreaStyle: {
     flexGrow: 100,
@@ -90,6 +96,7 @@ const styles = theme => ({
       display: '-webkit-box',
       WebkitLineClamp: 2,
       WebkitBoxOrient: 'vertical',
+      height: '90%',
     },
   },
   creatorBoxStyle: {

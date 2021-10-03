@@ -43,28 +43,28 @@ const styles = theme => ({
   userNameStyle: {
     fontWeight: 900,
     fontSize: '2rem',
-    position:"relative",
-    [theme.breakpoints.down('470')]:{
-       display: "flex",
-       flexDirection:"column",
-       justifyContent:"center",
-       alignItems:"center"
-    }
+    position: 'relative',
+    [theme.breakpoints.down('470')]: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   },
   roleStyle: {
-    backgroundColor:'#00B8C4',
-    borderRadius:"50px",
-    color:"white",
-    padding: "0 0.5em",
-    position:"absolute",
-    display: "inline-block",
-    top: "0.8em",
-    marginLeft: "0.4em",
-    [theme.breakpoints.down('470')]:{
-     marginLeft: 0,
-     position:"static",
-     marginBottom:"0.4em"
-    }
+    backgroundColor: '#00B8C4',
+    borderRadius: '50px',
+    color: 'white',
+    padding: '0 0.5em',
+    position: 'absolute',
+    display: 'inline-block',
+    top: '0.8em',
+    marginLeft: '0.4em',
+    [theme.breakpoints.down('470')]: {
+      marginLeft: 0,
+      position: 'static',
+      marginBottom: '0.4em',
+    },
   },
   emailStyle: { marginBottom: '0.5em' },
   dividerStyle: {
@@ -111,17 +111,17 @@ const styles = theme => ({
   customInputStyle: {
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '1px solid #00B8C4',
-      boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
     },
   },

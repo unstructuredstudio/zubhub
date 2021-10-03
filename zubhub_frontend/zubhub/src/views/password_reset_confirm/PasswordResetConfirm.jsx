@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
-import * as Yup from 'yup';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Visibility from '@material-ui/icons/Visibility';
@@ -26,71 +25,26 @@ import {
   FormControl,
 } from '@material-ui/core';
 
+import {
+  validationSchema,
+  resetPassword,
+  handleClickShowPassword,
+  handleMouseDownPassword,
+} from './passwordResetConfirmScripts';
+
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/password_reset_confirm/passwordResetConfirmStyles';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
-
-const getUidAndToken = queryString => {
-  let uid = queryString.split('&&');
-  const token = uid[1].split('=')[1];
-  uid = uid[0].split('=')[1];
-  return { uid, token };
-};
-
-const resetPassword = (e, props) => {
-  e.preventDefault();
-  const { uid, token } = getUidAndToken(props.location.search);
-  return props
-    .password_reset_confirm({
-      ...props.values,
-      uid,
-      token,
-      t: props.t,
-      history: props.history,
-    })
-    .catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        const server_errors = {};
-        Object.keys(messages).forEach(key => {
-          if (key !== 'new_password1' && key !== 'new_password2') {
-            server_errors['non_field_errors'] = messages[key][0];
-          } else {
-            server_errors[key] = messages[key][0];
-          }
-        });
-
-        props.setStatus({ ...server_errors });
-      } else {
-        props.setStatus({
-          non_field_errors: props.t('passwordResetConfirm.errors.unexpected'),
-        });
-      }
-    });
-};
-
-const handleClickShowPassword = (field, state) => {
-  if (field === 1) {
-    const { showPassword1 } = state;
-    return { showPassword1: !showPassword1 };
-  } else if (field === 2) {
-    const { showPassword2 } = state;
-    return { showPassword2: !showPassword2 };
-  }
-};
-
-const handleMouseDownPassword = e => {
-  e.preventDefault();
-};
 
 function PasswordResetConfirm(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    showPassword1: false,
-    showPassword2: false,
+    show_password1: false,
+    show_password2: false,
   });
 
   const handleSetState = obj => {
@@ -101,7 +55,7 @@ function PasswordResetConfirm(props) {
     }
   };
 
-  const { showPassword1, showPassword2 } = state;
+  const { show_password1, show_password2 } = state;
   const { t } = props;
 
   return (
@@ -166,14 +120,14 @@ function PasswordResetConfirm(props) {
                         className={classes.customInputStyle}
                         id="new_password1"
                         name="new_password1"
-                        type={showPassword1 ? 'text' : 'password'}
+                        type={show_password1 ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={(e, field = 1) =>
+                              onClick={(_, field = 1) =>
                                 handleSetState(
                                   handleClickShowPassword(field, state),
                                 )
@@ -181,7 +135,7 @@ function PasswordResetConfirm(props) {
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {showPassword1 ? (
+                              {show_password1 ? (
                                 <Visibility />
                               ) : (
                                 <VisibilityOff />
@@ -189,7 +143,10 @@ function PasswordResetConfirm(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={70}
+                        labelWidth={calculateLabelWidth(
+                          t('passwordResetConfirm.inputs.newPassword1.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -228,14 +185,14 @@ function PasswordResetConfirm(props) {
                         className={classes.customInputStyle}
                         id="new_password2"
                         name="new_password2"
-                        type={showPassword2 ? 'text' : 'password'}
+                        type={show_password2 ? 'text' : 'password'}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={(e, field = 2) =>
+                              onClick={(_, field = 2) =>
                                 handleSetState(
                                   handleClickShowPassword(field, state),
                                 )
@@ -243,7 +200,7 @@ function PasswordResetConfirm(props) {
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {showPassword2 ? (
+                              {show_password2 ? (
                                 <Visibility />
                               ) : (
                                 <VisibilityOff />
@@ -251,7 +208,10 @@ function PasswordResetConfirm(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={150}
+                        labelWidth={calculateLabelWidth(
+                          t('passwordResetConfirm.inputs.newPassword2.label'),
+                          document,
+                        )}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -290,7 +250,7 @@ function PasswordResetConfirm(props) {
 
 PasswordResetConfirm.propTypes = {
   auth: PropTypes.object.isRequired,
-  password_reset_confirm: PropTypes.func.isRequired,
+  passwordResetConfirm: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -301,8 +261,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    password_reset_confirm: args => {
-      return dispatch(AuthActions.password_reset_confirm(args));
+    passwordResetConfirm: args => {
+      return dispatch(AuthActions.passwordResetConfirm(args));
     },
   };
 };
@@ -316,11 +276,6 @@ export default connect(
       new_password1: '',
       new_password2: '',
     }),
-    validationSchema: Yup.object().shape({
-      new_password1: Yup.string().min(8, 'min').required('required'),
-      new_password2: Yup.string()
-        .oneOf([Yup.ref('new_password1'), null], 'noMatch')
-        .required('required'),
-    }),
+    validationSchema,
   })(PasswordResetConfirm),
 );

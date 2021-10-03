@@ -1,4 +1,5 @@
 import { fade } from '@material-ui/core/styles';
+import uploadIcon from '../../../../images/upload.svg';
 
 const styles = theme => ({
   root: {
@@ -49,21 +50,106 @@ const styles = theme => ({
     width: '100%',
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '1px solid #00B8C4',
-      boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       [theme.breakpoints.up('1600')]: {
         fontSize: '1.7rem',
       },
+    },
+  },
+  videoFileDropBoxStyles: {
+    position: 'relative',
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: '1em',
+    border: '1px solid rgb(191 191 191)',
+    '&.videoFileDragOver': {
+      border: '2px dashed #6a6a6a',
+      backgroundColor: '#e1e1e1',
+      '& > input::before': {
+        background: '#e1e1e1',
+      },
+    },
+    '&.videoFileDragDrop': {
+      border: '2px dashed #00B8C4',
+      backgroundColor: '#e1e1e1',
+      '& > input::before': {
+        background: '#e1e1e1',
+      },
+    },
+  },
+  videoFileInputStyle: {
+    width: '100%',
+    height: '150px',
+    padding: '4px',
+    position: 'relative',
+    cursor: 'pointer',
+
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      background: 'white',
+      fontSize: '20px',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '100%',
+      height: '100%',
+    },
+
+    '&:after': {
+      content: '""',
+      background: `transparent url(${uploadIcon}) no-repeat`,
+      backgroundSize: 'contain',
+      backgroundPosition: '50%',
+      position: 'absolute',
+      color: '#808080',
+      fontSize: '20px',
+      top: '50%',
+      left: '50%',
+      height: '100%',
+      width: '100%',
+      transform: 'translate(-50%, -50%)',
+    },
+  },
+  videoFileName: {
+    margin: '0.5em 0 0 0',
+    color: 'rgba(0, 0, 0, 0.54)',
+  },
+  videoInputDialogActionSectionStyle: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  videoInputDialogSwitchContainerStyle: {
+    flexGrow: 1,
+  },
+  videoInputDialogToggleSwitchStyles: {
+    '& .MuiSwitch-colorSecondary.Mui-checked': {
+      color: '#00B8C4',
+    },
+    '& .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track': {
+      backgroundColor: '#00B8C4',
+    },
+  },
+  videoInputDialogActionButtonStyle: {
+    marginLeft: '0.5em',
+    [theme.breakpoints.down('500')]: {
+      width: '100%',
+      marginLeft: 0,
+      marginTop: '0.5em',
     },
   },
   fieldNumberStyle: {
@@ -107,8 +193,8 @@ const styles = theme => ({
     border: '1px solid #c1c1c1',
     borderRadius: '20px',
     '&:hover': {
-      borderColor: '#00B8C4',
-      boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
   },
   tagsInputStyle: {

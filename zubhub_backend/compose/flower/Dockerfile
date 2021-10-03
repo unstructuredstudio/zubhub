@@ -19,7 +19,7 @@ RUN apt-get update \
 WORKDIR /flower
 
 # copying neccessary files to work directory
-COPY ./requirements.txt /flower/
+COPY ./compose/flower/requirements.txt /flower/
 
 RUN pip install --upgrade pip wheel \
   # Requirements are installed here to ensure they will be cached.

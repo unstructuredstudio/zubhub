@@ -16,6 +16,8 @@ import {
   Container,
 } from '@material-ui/core';
 
+import { fetchPage, updateProjects } from './savedProjectsScripts';
+
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
@@ -25,46 +27,13 @@ import styles from '../../assets/js/styles/views/saved_projects/savedProjectsSty
 
 const useStyles = makeStyles(styles);
 
-const fetchPage = (page, props) => {
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props.get_saved({ page, token: props.auth.token, t: props.t });
-  }
-};
-
-const updateProjects = (res, { results: projects }, props) => {
-  return res
-    .then(res => {
-      if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
-        return { results: projects };
-      } else {
-        res = Object.keys(res)
-          .map(key => res[key])
-          .join('\n');
-        throw new Error(res);
-      }
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        toast.warning(props.t('savedProjects.errors.unexpected'));
-      } else {
-        toast.warning(error.message);
-      }
-      return { loading: false };
-    });
-};
-
 function SavedProjects(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
     results: [],
-    prevPage: null,
-    nextPage: null,
+    prev_page: null,
+    next_page: null,
     loading: true,
   });
 
@@ -79,7 +48,7 @@ function SavedProjects(props) {
       });
     }
   };
-  const { results: projects, prevPage, nextPage, loading } = state;
+  const { results: projects, prev_page, next_page, loading } = state;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
@@ -103,7 +72,6 @@ function SavedProjects(props) {
                 xs={12}
                 sm={6}
                 md={4}
-                lg={3}
                 align="center"
                 className={classes.projectGridStyle}
               >
@@ -111,7 +79,7 @@ function SavedProjects(props) {
                   project={project}
                   key={project.id}
                   updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props))
+                    handleSetState(updateProjects(res, state, props, toast))
                   }
                   {...props}
                 />
@@ -122,12 +90,12 @@ function SavedProjects(props) {
             aria-label={t('savedProjects.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
-            {prevPage ? (
+            {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split('?')[1]) => {
+                onClick={(e, page = prev_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -136,12 +104,12 @@ function SavedProjects(props) {
                 {t('savedProjects.prev')}
               </CustomButton>
             ) : null}
-            {nextPage ? (
+            {next_page ? (
               <CustomButton
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split('?')[1]) => {
+                onClick={(e, page = next_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -161,9 +129,9 @@ function SavedProjects(props) {
 
 SavedProjects.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_saved: PropTypes.func.isRequired,
-  toggle_like: PropTypes.func.isRequired,
-  toggle_save: PropTypes.func.isRequired,
+  getSaved: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -174,14 +142,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_saved: props => {
-      return dispatch(ProjectActions.get_saved(props));
+    getSaved: props => {
+      return dispatch(ProjectActions.getSaved(props));
     },
-    toggle_like: props => {
-      return dispatch(ProjectActions.toggle_like(props));
+    toggleLike: props => {
+      return dispatch(ProjectActions.toggleLike(props));
     },
-    toggle_save: props => {
-      return dispatch(ProjectActions.toggle_save(props));
+    toggleSave: props => {
+      return dispatch(ProjectActions.toggleSave(props));
     },
   };
 };

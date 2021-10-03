@@ -15,7 +15,7 @@ const useCommonStyles = makeStyles(commonStyles);
 
 function StaffPick(props) {
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const { staff_pick, ...rest } = props;
   return staff_pick.projects &&
@@ -33,7 +33,7 @@ function StaffPick(props) {
           >
             {staff_pick.title}
             <CustomButton
-              className={clsx(commonClasses.floatRight)}
+              className={clsx(common_classes.floatRight)}
               variant="outlined"
               margin="normal"
               secondaryButtonStyle
@@ -46,13 +46,12 @@ function StaffPick(props) {
           </Typography>
         </Grid>
         {staff_pick.projects.results.map((project, index) =>
-          index <= 3 ? (
+          index <= 2 ? (
             <Grid
               item
               xs={12}
               sm={6}
               md={4}
-              lg={3}
               align="center"
               className={classes.projectGridStyle}
               key={project.id}

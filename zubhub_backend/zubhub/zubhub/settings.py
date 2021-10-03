@@ -27,6 +27,13 @@ DEFAULT_FRONTEND_PROTOCOL = os.environ.get(
 DEFAULT_BACKEND_PROTOCOL = os.environ.get(
     "DEFAULT_BACKEND_PROTOCOL", default="https")
 DEBUG = int(os.environ.get("DEBUG", default=0))
+STORE_MEDIA_LOCALLY = bool(
+    int(os.environ.get("STORE_MEDIA_LOCALLY", default=1)))
+MEDIA_SECRET = os.environ.get("MEDIA_SECRET", default="")
+DEFAULT_MEDIA_SERVER_PROTOCOL = os.environ.get(
+    "DEFAULT_MEDIA_SERVER_PROTOCOL", default="http")
+DEFAULT_MEDIA_SERVER_DOMAIN = os.environ.get(
+    "DEFAULT_MEDIA_SERVER_DOMAIN", default="localhost:8001")
 
 if DEFAULT_FRONTEND_DOMAIN.startswith("localhost"):
     FRONTEND_HOST = DEFAULT_FRONTEND_DOMAIN.split(":")[0]
@@ -60,7 +67,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
-                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST]
+                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST, "web"]
 # ALLOWED_HOSTS = ['*']
 
 # CORS_ORIGIN_ALLOW_ALL = True
@@ -102,14 +109,6 @@ INSTALLED_APPS = [
     'creators',
     'projects',
 ]
-
-
-# digitalocean spaces
-DOSPACE_ACCESS_KEY_ID = os.environ.get("DOSPACE_ACCESS_KEY_ID")
-DOSPACE_ACCESS_SECRET_KEY = os.environ.get("DOSPACE_ACCESS_SECRET_KEY")
-DOSPACE_REGION = os.environ.get("DOSPACE_REGION")
-DOSPACE_ENDPOINT_URL = os.environ.get("DOSPACE_ENDPOINT_URL")
-DOSPACE_BUCKETNAME = os.environ.get("DOSPACE_BUCKETNAME")
 
 # askimet
 AKISMET_API_KEY = os.environ.get("AKISMET_API_KEY")
@@ -266,9 +265,6 @@ STATICFILES_FINDER = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 ]
-
-MEDIA_URL = '/api/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # django-debug-toolbar
 if ENVIRONMENT != 'production':

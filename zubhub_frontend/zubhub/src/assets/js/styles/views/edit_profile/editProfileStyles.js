@@ -47,26 +47,21 @@ const styles = theme => ({
   customInputStyle: {
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '1px solid #00B8C4',
-      boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       [theme.breakpoints.up('1600')]: {
         fontSize: '1.7rem',
       },
-    },
-  },
-  staticLabelInputStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '75.5px !important',
     },
   },
   staticLabelInputSmallStyle: {

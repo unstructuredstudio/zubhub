@@ -18,6 +18,8 @@ import {
   Avatar,
 } from '@material-ui/core';
 
+import { fetchPage, toggleFollow } from './userFollowingScripts';
+
 import * as UserActions from '../../store/actions/userActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
@@ -25,45 +27,6 @@ import LoadingPage from '../loading/LoadingPage';
 import styles from '../../assets/js/styles/views/user_followers/userFollowersStyles';
 
 const useStyles = makeStyles(styles);
-
-const fetchPage = (page, props) => {
-  const username = props.match.params.username;
-  return props.get_following({ page, username, t: props.t });
-};
-
-const toggle_follow = (e, props, state, id) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props
-      .toggle_follow({ id, token: props.auth.token, t: props.t })
-      .then(res => {
-        if (res.profile && res.profile.username) {
-          const { following } = state;
-          following.forEach((creator, index) => {
-            if (creator.id === res.profile.id) {
-              following.splice(index, 1);
-            }
-          });
-          return { following };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(props.t('userFollowing.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  }
-};
 
 const buildFollowing = (following, classes, props, state, handleSetState) =>
   following.map(creator => (
@@ -91,7 +54,7 @@ const buildFollowing = (following, classes, props, state, handleSetState) =>
             <CustomButton
               variant="contained"
               onClick={(e, id = creator.id) =>
-                handleSetState(toggle_follow(e, props, state, id))
+                handleSetState(toggleFollow(e, props, state, id, toast))
               }
               primaryButtonStyle
             >
@@ -117,8 +80,8 @@ function UserFollowing(props) {
 
   const [state, setState] = React.useState({
     following: [],
-    prevPage: null,
-    nextPage: null,
+    prev_page: null,
+    next_page: null,
     loading: true,
   });
 
@@ -134,7 +97,7 @@ function UserFollowing(props) {
     }
   };
 
-  const { following, prevPage, nextPage, loading } = state;
+  const { following, prev_page, next_page, loading } = state;
   const { t } = props;
 
   const username = props.match.params.username;
@@ -160,12 +123,12 @@ function UserFollowing(props) {
             aria-label={t('userFollowing.ariaLabels.prevNextButtons')}
             className={classes.buttonGroupStyle}
           >
-            {prevPage ? (
+            {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split('?')[1]) => {
+                onClick={(e, page = prev_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -174,12 +137,12 @@ function UserFollowing(props) {
                 {t('userFollowing.prev')}
               </CustomButton>
             ) : null}
-            {nextPage ? (
+            {next_page ? (
               <CustomButton
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split('?')[1]) => {
+                onClick={(e, page = next_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -199,8 +162,8 @@ function UserFollowing(props) {
 
 UserFollowing.propTypes = {
   auth: PropTypes.object.isRequired,
-  toggle_follow: PropTypes.func.isRequired,
-  get_following: PropTypes.func.isRequired,
+  toggleFollow: PropTypes.func.isRequired,
+  getFollowing: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -211,11 +174,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggle_follow: args => {
-      return dispatch(UserActions.toggle_follow(args));
+    toggleFollow: args => {
+      return dispatch(UserActions.toggleFollow(args));
     },
-    get_following: args => {
-      return dispatch(UserActions.get_following(args));
+    getFollowing: args => {
+      return dispatch(UserActions.getFollowing(args));
     },
   };
 };

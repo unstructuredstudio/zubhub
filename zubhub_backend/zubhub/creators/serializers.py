@@ -4,7 +4,7 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Location, PhoneNumber, Setting, CreatorGroup
+from .models import Location, PhoneNumber
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.utils import setup_user_email
@@ -46,8 +46,8 @@ class CreatorSerializer(serializers.ModelSerializer):
                 return "moderator"
             if obj.role == Creator.STAFF:
                 return "staff"
-            if obj.role == Creator.Group:
-                return 'group'
+            if obj.role == Creator.GROUP:
+                return "group"
         return None
 
     def get_members_count(self, obj):

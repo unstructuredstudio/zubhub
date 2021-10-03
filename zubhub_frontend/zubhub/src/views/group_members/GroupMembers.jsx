@@ -20,6 +20,8 @@ import {
   Avatar,
 } from '@material-ui/core';
 
+import { fetchPage, toggleFollow, removeMember } from './groupMembersScripts';
+
 import * as UserActions from '../../store/actions/userActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
@@ -29,76 +31,6 @@ import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
-
-const fetchPage = (page, props) => {
-  const username = props.match.params.username;
-  return props.get_members({ page, username, t: props.t });
-};
-
-const toggle_follow = (e, props, state, id) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props
-      .toggle_follow({ id, token: props.auth.token, t: props.t })
-      .then(res => {
-        if (res.profile && res.profile.username) {
-          const members = state.members.map(member =>
-            member.id !== res.profile.id ? member : res.profile,
-          );
-          return { members };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(props.t('groupMembers.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  }
-};
-
-const remove_member = (e, props, state, id) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props
-      .remove_member({ id, token: props.auth.token, t: props.t })
-      .then(res => {
-        if (res.profile && res.profile.username) {
-          const { members } = state;
-          members.forEach((creator, index) => {
-            if (creator.id === res.profile.id) {
-              members.splice(index, 1);
-            }
-          });
-          return { members };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(props.t('groupMembers.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  }
-};
 
 const buildMembers = (members, style, props, state, handleSetState) =>
   members.map(member => (
@@ -113,7 +45,7 @@ const buildMembers = (members, style, props, state, handleSetState) =>
       key={member.id}
     >
       <Link
-        className={style.commonClasses.textDecorationNone}
+        className={style.common_classes.textDecorationNone}
         to={`/creators/${member.username}`}
       >
         <Card className={style.classes.cardStyle}>
@@ -125,9 +57,9 @@ const buildMembers = (members, style, props, state, handleSetState) =>
           {member.id !== props.auth.id ? (
             <CustomButton
               variant="outlined"
-              className={style.commonClasses.marginBottom1em}
+              className={style.common_classes.marginBottom1em}
               onClick={(e, id = member.id) =>
-                handleSetState(toggle_follow(e, props, state, id))
+                handleSetState(toggleFollow(e, props, state, id, toast))
               }
               secondaryButtonStyle
             >
@@ -136,11 +68,12 @@ const buildMembers = (members, style, props, state, handleSetState) =>
                 : props.t('userFollowers.follower.follow')}
             </CustomButton>
           ) : null}
-          {props.auth.members_count !== null && props.match.params.username === props.auth.username ? (
+          {props.auth.members_count !== null &&
+          props.match.params.username === props.auth.username ? (
             <CustomButton
               variant="outlined"
               onClick={(e, id = member.id) =>
-                handleSetState(remove_member(e, props, state, id))
+                handleSetState(removeMember(e, props, state, id, toast))
               }
               secondaryButtonStyle
             >
@@ -161,12 +94,12 @@ const buildMembers = (members, style, props, state, handleSetState) =>
 
 function GroupMembers(props) {
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
     members: [],
-    prevPage: null,
-    nextPage: null,
+    prev_page: null,
+    next_page: null,
     loading: true,
   });
 
@@ -182,7 +115,7 @@ function GroupMembers(props) {
     }
   };
 
-  const { members, prevPage, nextPage, loading } = state;
+  const { members, prev_page, next_page, loading } = state;
   const username = props.match.params.username;
   const { t } = props;
   if (loading) {
@@ -201,10 +134,11 @@ function GroupMembers(props) {
                 {username}'s {t('groupMembers.title')}
               </Typography>
 
-              {props.auth.members_count !== null && username === props.auth.username ? (
+              {props.auth.members_count !== null &&
+              username === props.auth.username ? (
                 <CustomButton
                   variant="contained"
-                  className={commonClasses.floatRight}
+                  className={common_classes.floatRight}
                   startIcon={<AddIcon />}
                   primaryButtonStyle
                   onClick={() =>
@@ -217,7 +151,7 @@ function GroupMembers(props) {
             </Grid>
             {buildMembers(
               members,
-              { classes, commonClasses },
+              { classes, common_classes },
               props,
               state,
               handleSetState,
@@ -227,12 +161,12 @@ function GroupMembers(props) {
             aria-label={t('groupMembers.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
-            {prevPage ? (
+            {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prevPage.split('?')[1]) => {
+                onClick={(e, page = prev_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -241,12 +175,12 @@ function GroupMembers(props) {
                 {t('groupMembers.prev')}
               </CustomButton>
             ) : null}
-            {nextPage ? (
+            {next_page ? (
               <CustomButton
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = nextPage.split('?')[1]) => {
+                onClick={(e, page = next_page.split('?')[1]) => {
                   handleSetState({ loading: true });
                   handleSetState(fetchPage(page, props));
                 }}
@@ -262,11 +196,12 @@ function GroupMembers(props) {
   } else {
     return (
       <>
-        {props.auth.members_count !== null && username === props.auth.username ? (
+        {props.auth.members_count !== null &&
+        username === props.auth.username ? (
           <CustomButton
             variant="contained"
             className={clsx(
-              commonClasses.positionAbsolute,
+              common_classes.positionAbsolute,
               classes.floatingButtonStyle,
             )}
             startIcon={<AddIcon />}
@@ -286,9 +221,9 @@ function GroupMembers(props) {
 
 GroupMembers.propTypes = {
   auth: PropTypes.object.isRequired,
-  toggle_follow: PropTypes.func.isRequired,
-  get_members: PropTypes.func.isRequired,
-  remove_member: PropTypes.func.isRequired,
+  toggleFollow: PropTypes.func.isRequired,
+  getMembers: PropTypes.func.isRequired,
+  removeMember: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -299,14 +234,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggle_follow: args => {
-      return dispatch(UserActions.toggle_follow(args));
+    toggleFollow: args => {
+      return dispatch(UserActions.toggleFollow(args));
     },
-    get_members: args => {
-      return dispatch(UserActions.get_members(args));
+    getMembers: args => {
+      return dispatch(UserActions.getMembers(args));
     },
-    remove_member: args => {
-      return dispatch(UserActions.remove_member(args));
+    removeMember: args => {
+      return dispatch(UserActions.removeMember(args));
     },
   };
 };

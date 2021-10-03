@@ -25,14 +25,20 @@ const styles = theme => ({
       backgroundColor: '#9A0036',
     },
   },
-  imageUploadButtonStyle: {
+  darkDangerButtonStyle: {
+    borderRadius: 30,
+    backgroundColor: '#9A0036',
+    color: 'white',
+    '&:hover': {
+      color: 'white',
+      backgroundColor: '#9A0036',
+    },
+  },
+  mediaUploadButtonStyle: {
     '& MuiButton-label': {
       width: '100%',
       display: 'flex',
       justifyContent: 'flex-end',
-      '& imageCountStyle': {
-        flexGrow: 1,
-      },
     },
   },
   customButtonStyle: {

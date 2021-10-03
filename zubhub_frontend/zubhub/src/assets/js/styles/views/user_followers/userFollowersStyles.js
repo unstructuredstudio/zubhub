@@ -49,6 +49,7 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    height: '94%',
     maxWidth: 345,
     paddingTop: 0,
     paddingBottom: '0 !important',
@@ -60,7 +61,7 @@ const styles = theme => ({
   },
   avatarStyle: {
     width: '100%',
-    height: '100%',
+    height: 'auto',
     paddingTop: '1.5em',
     paddingBottom: '1.5em',
     '& img': {
@@ -74,6 +75,7 @@ const styles = theme => ({
   userNameStyle: {
     margin: '0.5em',
     fontWeight: 'bold',
+    textAlign: 'center',
     fontSize: '1.5rem',
   },
   primaryButton: {

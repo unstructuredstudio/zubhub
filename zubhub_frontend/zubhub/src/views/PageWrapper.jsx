@@ -35,9 +35,21 @@ import {
   Select,
 } from '@material-ui/core';
 
+import {
+  logout,
+  fetchHero,
+  handleScrollTopClick,
+  handleProfileMenuOpen,
+  handleProfileMenuClose,
+  handleChangeLanguage,
+  handleToggleSearchForm,
+  closeSearchFormOrIgnore,
+} from './pageWrapperScripts';
+
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
+import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
 import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
@@ -48,71 +60,29 @@ import languageMap from '../assets/js/languageMap.json';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const logout = (e, props) => {
-  e.preventDefault();
-  return props.logout({
-    token: props.auth.token,
-    history: props.history,
-    t: props.t,
-  });
-};
-
-const handleScrollTopClick = (e, ref) => {
-  e.preventDefault();
-  if (ref.current) {
-    ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-};
-
-const handleProfileMenuOpen = e => {
-  return { anchorEl: e.currentTarget };
-};
-
-const handleProfileMenuClose = () => {
-  return { anchorEl: null };
-};
-
-const handleChangeLanguage = ({ e, props }) => {
-  props.i18n.changeLanguage(e.target.value);
-};
-
-const handleToggleSearchForm = ({ openSearchForm }) => {
-  return { openSearchForm: !openSearchForm };
-};
-
-const handleCloseSearchForm = () => {
-  return { openSearchForm: false };
-};
-
-const closeSearchFormOrIgnore = e => {
-  let isToggleSearchButton;
-  e.path.forEach(el => {
-    if (el.id === 'toggle-search') {
-      isToggleSearchButton = true;
-    }
-  });
-  if (!isToggleSearchButton) return handleCloseSearchForm();
-};
-
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
     username: null,
-    anchorEl: null,
+    anchor_el: null,
     loading: false,
-    openSearchForm: false,
+    open_search_form: false,
   });
 
   React.useEffect(() => {
-    if (props.auth.token) {
-      handleSetState({ loading: true });
-      props.get_auth_user(props).finally(() => {
+    handleSetState({ loading: true });
+    fetchHero(props)
+      .then(() => {
+        if (props.auth.token) {
+          return props.getAuthUser(props);
+        }
+      })
+      .finally(() => {
         handleSetState({ loading: false });
       });
-    }
   }, [props.auth.token]);
 
   const handleSetState = obj => {
@@ -123,9 +93,10 @@ function PageWrapper(props) {
     }
   };
 
-  const { anchorEl, loading, openSearchForm } = state;
+  const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
-  const profileMenuOpen = Boolean(anchorEl);
+  const { hero } = props.projects;
+  const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
       <ToastContainer />
@@ -135,14 +106,17 @@ function PageWrapper(props) {
           <Toolbar className={classes.toolBarStyle}>
             <Box className={classes.logoStyle}>
               <Link to="/">
-                <img src={logo} alt="logo" />
+                <img
+                  src={hero.header_logo_url ? hero.header_logo_url : logo}
+                  alt="logo"
+                />
               </Link>
               <Box
                 className={clsx(
                   classes.languageSelectBoxStyle,
-                  commonClasses.displayInlineFlex,
-                  commonClasses.alignCenter,
-                  commonClasses.addOnSmallScreen,
+                  common_classes.displayInlineFlex,
+                  common_classes.alignCenter,
+                  common_classes.addOnSmallScreen,
                 )}
               >
                 <TranslateIcon />
@@ -161,9 +135,9 @@ function PageWrapper(props) {
               <Box
                 className={clsx(
                   classes.languageSelectBoxStyle,
-                  commonClasses.displayInlineFlex,
-                  commonClasses.alignCenter,
-                  commonClasses.removeOnSmallScreen,
+                  common_classes.displayInlineFlex,
+                  common_classes.alignCenter,
+                  common_classes.removeOnSmallScreen,
                 )}
               >
                 <TranslateIcon />
@@ -235,7 +209,7 @@ function PageWrapper(props) {
                   <Link
                     className={clsx(
                       classes.textDecorationNone,
-                      commonClasses.removeOnSmallScreen,
+                      common_classes.removeOnSmallScreen,
                     )}
                     to="/login"
                   >
@@ -251,7 +225,7 @@ function PageWrapper(props) {
                   <Link
                     className={clsx(
                       classes.textDecorationNone,
-                      commonClasses.removeOnSmallScreen,
+                      common_classes.removeOnSmallScreen,
                     )}
                     to="/signup"
                   >
@@ -260,23 +234,23 @@ function PageWrapper(props) {
                       size="large"
                       primaryButtonStyle
                       customButtonStyle
-                      className={commonClasses.marginLeft1em}
+                      className={common_classes.marginLeft1em}
                     >
                       {t('pageWrapper.navbar.signup')}
                     </CustomButton>
                   </Link>
 
                   <MenuRoundedIcon
-                    className={commonClasses.addOnSmallScreen}
+                    className={common_classes.addOnSmallScreen}
                     aria-label={t('pageWrapper.navbar.menu')}
                     aria-controls="menu"
                     aria-haspopup="true"
                     onClick={e => handleSetState(handleProfileMenuOpen(e))}
                   />
                   <Menu
-                    className={commonClasses.addOnSmallScreen}
+                    className={common_classes.addOnSmallScreen}
                     id="menu"
-                    anchorEl={anchorEl}
+                    anchorEl={anchor_el}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
@@ -318,8 +292,8 @@ function PageWrapper(props) {
                   <Link
                     className={clsx(
                       classes.textDecorationNone,
-                      commonClasses.marginRight1em,
-                      commonClasses.removeOnSmallScreen,
+                      common_classes.marginRight1em,
+                      common_classes.removeOnSmallScreen,
                     )}
                     to="/projects/create"
                   >
@@ -357,7 +331,7 @@ function PageWrapper(props) {
                   <Menu
                     className={classes.profileMenuStyle}
                     id="profile_menu"
-                    anchorEl={anchorEl}
+                    anchorEl={anchor_el}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
@@ -391,7 +365,7 @@ function PageWrapper(props) {
                         </Typography>
                       </a>
                     </MenuItem>
-                    <MenuItem className={commonClasses.addOnSmallScreen}>
+                    <MenuItem className={common_classes.addOnSmallScreen}>
                       <Link
                         className={classes.textDecorationNone}
                         to="/projects/create"
@@ -463,7 +437,7 @@ function PageWrapper(props) {
                     </MenuItem>
                     <MenuItem className={classes.logOutStyle}>
                       <Typography
-                        className={commonClasses.colorRed}
+                        className={common_classes.colorRed}
                         variant="subtitle2"
                         component="span"
                         onClick={e => logout(e, props)}
@@ -476,7 +450,7 @@ function PageWrapper(props) {
               )}
             </div>
           </Toolbar>
-          {openSearchForm ? (
+          {open_search_form ? (
             <ClickAwayListener
               onClickAway={e => handleSetState(closeSearchFormOrIgnore(e))}
             >
@@ -528,7 +502,9 @@ function PageWrapper(props) {
         <Box>
           <a href="https://unstructured.studio">
             <img
-              src={unstructuredLogo}
+              src={
+                hero.footer_logo_url ? hero.footer_logo_url : unstructuredLogo
+              }
               className={classes.footerLogoStyle}
               alt="unstructured-studio-logo"
             />
@@ -537,9 +513,9 @@ function PageWrapper(props) {
             <Box
               className={clsx(
                 classes.languageSelectBoxStyle,
-                commonClasses.displayInlineFlex,
-                commonClasses.alignCenter,
-                commonClasses.addOnSmallScreen,
+                common_classes.displayInlineFlex,
+                common_classes.alignCenter,
+                common_classes.addOnSmallScreen,
               )}
             >
               <TranslateIcon />
@@ -558,9 +534,9 @@ function PageWrapper(props) {
             <Box
               className={clsx(
                 classes.languageSelectBoxStyle,
-                commonClasses.displayInlineFlex,
-                commonClasses.alignCenter,
-                commonClasses.removeOnSmallScreen,
+                common_classes.displayInlineFlex,
+                common_classes.alignCenter,
+                common_classes.removeOnSmallScreen,
               )}
             >
               <TranslateIcon />
@@ -590,8 +566,8 @@ function PageWrapper(props) {
             </Typography>
 
             <Link
-              to={`/guidelines_and_policy`}
-              className={commonClasses.textDecorationNone}
+              to={`/privacy_policy`}
+              className={common_classes.textDecorationNone}
             >
               <Typography
                 variant="subtitle2"
@@ -604,7 +580,7 @@ function PageWrapper(props) {
 
             <Link
               to={`/terms_of_use`}
-              className={commonClasses.textDecorationNone}
+              className={common_classes.textDecorationNone}
             >
               <Typography
                 variant="subtitle2"
@@ -625,10 +601,7 @@ function PageWrapper(props) {
               {t('pageWrapper.footer.about')}
             </Typography>
 
-            <a
-              href="https://unstructured.studio/zub-app/"
-              className={commonClasses.textDecorationNone}
-            >
+            <Link to="/about" className={common_classes.textDecorationNone}>
               <Typography
                 variant="subtitle2"
                 color="textPrimary"
@@ -636,20 +609,7 @@ function PageWrapper(props) {
               >
                 {t('pageWrapper.footer.zubhub')}
               </Typography>
-            </a>
-
-            <a
-              href="https://unstructured.studio/about/"
-              className={commonClasses.textDecorationNone}
-            >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
-                {t('pageWrapper.footer.unstructuredStudio')}
-              </Typography>
-            </a>
+            </Link>
           </Box>
 
           <Box className={classes.footerBoxStyle}>
@@ -661,9 +621,11 @@ function PageWrapper(props) {
               {t('pageWrapper.footer.help')}
             </Typography>
 
-            <Link
-              to={`/resources`}
-              className={commonClasses.textDecorationNone}
+            <a
+              target="__blank"
+              rel="noreferrer"
+              href="http://kriti.unstructured.studio/"
+              className={common_classes.textDecorationNone}
             >
               <Typography
                 variant="subtitle2"
@@ -672,9 +634,15 @@ function PageWrapper(props) {
               >
                 {t('pageWrapper.footer.resources')}
               </Typography>
-            </Link>
+            </a>
 
-            <Link to={`/faqs`} className={commonClasses.textDecorationNone}>
+            <Link
+              to={`/faqs`}
+              className={clsx(
+                common_classes.textDecorationNone,
+                common_classes.displayNone,
+              )}
+            >
               <Typography
                 variant="subtitle2"
                 color="textPrimary"
@@ -686,7 +654,7 @@ function PageWrapper(props) {
 
             <a
               href="mailto:hello@unstructured.studio"
-              className={commonClasses.textDecorationNone}
+              className={common_classes.textDecorationNone}
             >
               <Typography
                 variant="subtitle2"
@@ -717,27 +685,31 @@ function PageWrapper(props) {
 
 PageWrapper.propTypes = {
   auth: PropTypes.object.isRequired,
-  set_auth_user: PropTypes.func.isRequired,
+  setAuthUser: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
-  get_auth_user: PropTypes.func.isRequired,
+  getAuthUser: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    projects: state.projects,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    set_auth_user: auth_user => {
+    setAuthUser: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
     logout: args => {
       return dispatch(AuthActions.logout(args));
     },
-    get_auth_user: props => {
-      return dispatch(AuthActions.get_auth_user(props));
+    getAuthUser: props => {
+      return dispatch(AuthActions.getAuthUser(props));
+    },
+    getHero: args => {
+      return dispatch(ProjectActions.getHero(args));
     },
   };
 };

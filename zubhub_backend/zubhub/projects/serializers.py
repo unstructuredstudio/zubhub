@@ -1,14 +1,14 @@
-import json
-from django.core.serializers.json import DjangoJSONEncoder
+import re
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from creators.serializers import CreatorSerializer
 from .models import Project, Comment, Image, StaffPick, Category, Tag
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
 from .utils import update_images, update_tags, parse_comment_trees
-import time
+from .tasks import update_video_url_if_transform_ready, delete_file_task
 from math import ceil
 
 
@@ -135,13 +135,13 @@ class ProjectSerializer(serializers.ModelSerializer):
     def validate_video(self, video):
         if(video == "" and len(self.initial_data.get("images")) == 0):
             raise serializers.ValidationError(
-                _("you must provide either image(s) or video url"))
+                _("You must provide either image(s), video file, or video URL to create your project!"))
         return video
 
     def validate_images(self, images):
         if(len(images) == 0 and len(self.initial_data["video"]) == 0):
             raise serializers.ValidationError(
-                _("you must provide either image(s) or video url"))
+                _("You must provide either image(s), video file, or video URL to create your project!"))
         return images
 
     def validate_tags(self, tags):
@@ -158,6 +158,12 @@ class ProjectSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 _("tags format not supported")
             )
+
+        for tag in tags:
+            if (not re.fullmatch("[0-9A-Za-z\s\-]+", tag["name"])) or (tag["name"] == " "):
+                raise serializers.ValidationError(
+                    _("tags support only letters, numbers, spaces, and dashes")
+                )
 
         if len(tags) > 5:
             raise serializers.ValidationError(
@@ -179,11 +185,15 @@ class ProjectSerializer(serializers.ModelSerializer):
             Image.objects.create(project=project, **image)
 
         for tag in tags_data:
-            tag, created = Tag.objects.get_or_create(name=tag["name"])
+            tag, _ = Tag.objects.get_or_create(name=tag["name"])
             project.tags.add(tag)
 
         if category:
             category.projects.add(project)
+
+        if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
+            update_video_url_if_transform_ready.delay(
+                {"url": project.video, "project_id": project.id})
 
         return project
 
@@ -194,9 +204,16 @@ class ProjectSerializer(serializers.ModelSerializer):
         if validated_data.get('category', None):
             category = validated_data.pop('category')
 
+        video_data = validated_data.pop("video")
+
+        if (project.video.find("cloudinary.com") > -1 or
+            project.video.startswith("{0}://{1}".format(
+                settings.DEFAULT_MEDIA_SERVER_PROTOCOL, settings.DEFAULT_MEDIA_SERVER_DOMAIN))) and project.video != video_data:
+            delete_file_task.delay(project.video)
+
         project.title = validated_data.pop("title")
         project.description = validated_data.pop("description")
-        project.video = validated_data.pop("video")
+        project.video = video_data
         project.materials_used = validated_data.pop("materials_used")
 
         project.save()
@@ -209,6 +226,10 @@ class ProjectSerializer(serializers.ModelSerializer):
             old_category.projects.remove(project)
         if category:
             category.projects.add(project)
+
+        if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
+            update_video_url_if_transform_ready.delay(
+                {"url": project.video, "project_id": project.id})
 
         return project
 
@@ -258,7 +279,7 @@ class StaffPickSerializer(serializers.ModelSerializer):
         page = paginator.paginate_queryset(
             projects, self.context['request'])
         serializer = ProjectSerializer(page, read_only=True, many=True, context={
-                                       'request': self.context['request']})
+            'request': self.context['request']})
         count = projects.count()
         num_pages = ceil(count/paginator.page_size)
         current_page = int(

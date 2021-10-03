@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -22,7 +21,7 @@ function Guidelines(props) {
   });
 
   React.useEffect(() => {
-    handleSetState(props.get_privacy({ t: props.t }));
+    handleSetState(props.getPrivacy({ t: props.t }));
   }, []);
 
   const handleSetState = obj => {
@@ -38,10 +37,7 @@ function Guidelines(props) {
 
   if (loading) {
     return <LoadingPage />;
-  } else if (
-    Object.keys(privacy).length > 0 &&
-    privacy.guidelines_and_policies
-  ) {
+  } else if (Object.keys(privacy).length > 0 && privacy.privacy_policy) {
     return (
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
@@ -52,7 +48,7 @@ function Guidelines(props) {
             <Box
               className={classes.guidelinesBodyStyle}
               dangerouslySetInnerHTML={{
-                __html: privacy.guidelines_and_policies,
+                __html: privacy.privacy_policy,
               }}
             ></Box>
           </Card>
@@ -66,7 +62,7 @@ function Guidelines(props) {
 
 Guidelines.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_privacy: PropTypes.func.isRequired,
+  getPrivacy: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -77,8 +73,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_privacy: args => {
-      return dispatch(UserActions.get_privacy(args));
+    getPrivacy: args => {
+      return dispatch(UserActions.getPrivacy(args));
     },
   };
 };

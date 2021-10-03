@@ -19,7 +19,11 @@ RUN apt-get update \
 WORKDIR /zubhub_backend
 
 # copying neccessary files to work directory
+<<<<<<< HEAD:zubhub_backend/compose/django/Dockerfile
 COPY ./requirements.txt /zubhub_backend/
+=======
+COPY ./compose/web/requirements.txt /zubhub_backend/
+>>>>>>> ef3d01d6f755c24082ab4c2472016d64784233ae:zubhub_backend/compose/web/dev/Dockerfile
 
 RUN pip install --upgrade pip wheel \
   # Requirements are installed here to ensure they will be cached.
@@ -30,7 +34,11 @@ RUN pip install --upgrade pip wheel \
 COPY ./zubhub/ /zubhub_backend/zubhub/
 
 
+<<<<<<< HEAD:zubhub_backend/compose/django/Dockerfile
 COPY ./compose/django/start /zubhub_backend/start
+=======
+COPY ./compose/web/dev/start /zubhub_backend/start
+>>>>>>> ef3d01d6f755c24082ab4c2472016d64784233ae:zubhub_backend/compose/web/dev/Dockerfile
 RUN sed -i 's/\r$//g' /zubhub_backend/start
 RUN chmod +x /zubhub_backend/start
 

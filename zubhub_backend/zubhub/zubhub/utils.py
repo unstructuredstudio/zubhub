@@ -1,49 +1,36 @@
-import boto3
-import uuid
-from math import floor
-from django.utils.text import slugify
+import requests
+from hashlib import sha256
 from django.conf import settings
 
 
-def upload_file(request):
-
-    folder = request.data.get("folder")
-    file = request.data.get("file")
-    bucket = settings.DOSPACE_BUCKETNAME
-    key = str(uuid.uuid4())
-    key = key[0: floor(len(key)/6)]
-    key = '{0}/{1}-{2}'.format(folder, slugify(file.name), key)
-
-    session = boto3.session.Session()
-    client = session.client('s3',
-                            region_name=settings.DOSPACE_REGION,
-                            endpoint_url=settings.DOSPACE_ENDPOINT_URL,
-                            aws_access_key_id=settings.DOSPACE_ACCESS_KEY_ID,
-                            aws_secret_access_key=settings.DOSPACE_ACCESS_SECRET_KEY)
-
-    res = client.put_object(Bucket=bucket, Key=key,
-                            Body=file, ContentType=file.content_type, ACL="public-read")
-
-    if res.get("ResponseMetadata") and res["ResponseMetadata"]["HTTPStatusCode"] == 200:
-
-        image_url = 'https://{0}.{1}/{2}'.format(
-            bucket, settings.DOSPACE_ENDPOINT_URL.split("https://")[1], key)
-
-        return image_url
-    else:
-        raise Exception
+def get_hash(string):
+    return sha256(string.encode("utf-8")).hexdigest()
 
 
-def delete_file(request):
+def get_sig(username, filename, upload_preset):
+    secret_hash = get_hash(settings.MEDIA_SECRET)
+    url = "http://media:8001/sigen/"
+    return requests.post(url, data={"username": username,
+                                    "filename": filename, "upload_preset": upload_preset,
+                                    "secret_hash": secret_hash})
 
-    key = request.data.get("key")
-    bucket = settings.DOSPACE_BUCKETNAME
 
-    session = boto3.session.Session()
-    client = session.client('s3',
-                            region_name=settings.DOSPACE_REGION,
-                            endpoint_url=settings.DOSPACE_ENDPOINT_URL,
-                            aws_access_key_id=settings.DOSPACE_ACCESS_KEY_ID,
-                            aws_secret_access_key=settings.DOSPACE_ACCESS_SECRET_KEY)
+def get_cloudinary_resource_info(resource_url):
+    secret_hash = get_hash(settings.MEDIA_SECRET)
+    url = 'http://media:8001/get_cloudinary_resource_info/'
+    return requests.post(url, data={'url': resource_url, "secret_hash": secret_hash})
 
-    return client.delete_object(Bucket=bucket, Key=key)
+
+def upload_file_to_media_server(file, key):
+    secret_hash = get_hash(settings.MEDIA_SECRET)
+    url = 'http://media:8001/upload_file/'
+    _, name = key.split("/")
+    files = {}
+    files[name] = file
+    return requests.post(url, data={'key': key, "secret_hash": secret_hash}, files=files)
+
+
+def delete_file_from_media_server(file_url):
+    secret_hash = get_hash(settings.MEDIA_SECRET)
+    url = 'http://media:8001/delete_file/'
+    return requests.post(url, data={'url': file_url, "secret_hash": secret_hash})

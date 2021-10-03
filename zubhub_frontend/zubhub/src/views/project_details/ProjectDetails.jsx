@@ -32,81 +32,31 @@ import Comments from '../../components/comments/Comments';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
-import nFormatter from '../../assets/js/nFormatter';
+import {
+  handleOpenEnlargedImageDialog,
+  handleToggleDeleteProjectModal,
+  isVideoFromGdrive,
+  deleteProject,
+  toggleSave,
+  toggleLike,
+  toggleFollow,
+  isCloudinaryVideo,
+  isGdriveORVimeoORYoutube,
+} from './projectDetailsScripts';
+
+import {
+  nFormatter,
+  parseComments,
+  cloudinaryFactory,
+  getPlayerOptions,
+} from '../../assets/js/utils/scripts';
 import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
-import parse_comments from '../../assets/js/parseComments';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
-
-const handleOpenEnlargedImageDialog = (e, state) => {
-  const image_url = e.currentTarget.getAttribute('src');
-  const openEnlargedImageDialog = !state.openEnlargedImageDialog;
-  return { enlargedImageUrl: image_url, openEnlargedImageDialog };
-};
-
-const handleToggleDeleteProjectModal = state => {
-  const openDeleteProjectModal = !state.openDeleteProjectModal;
-  return { openDeleteProjectModal };
-};
-
-const deleteProject = (props, state) => {
-  if (props.auth.token && props.auth.id === state.project.creator.id) {
-    return props
-      .delete_project({
-        token: props.auth.token,
-        id: state.project.id,
-        t: props.t,
-        history: props.history,
-      })
-      .catch(error => ({ deleteProjectDialogError: error.message }));
-  } else {
-    return handleToggleDeleteProjectModal(state);
-  }
-};
-
-const toggle_save = (e, props, id) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props.toggle_save({
-      id,
-      token: props.auth.token,
-      t: props.t,
-    });
-  }
-};
-
-const toggle_like = (e, props, id) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    return props.history.push('/login');
-  } else {
-    return props.toggle_like({ id, token: props.auth.token, t: props.t });
-  }
-};
-
-const toggle_follow = (e, props, id, state) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props
-      .toggle_follow({ id, token: props.auth.token, t: props.t })
-      .then(({ profile }) => {
-        const { project } = state;
-        if (project.creator.id === profile.id) {
-          project.creator = profile;
-        }
-
-        return { project };
-      });
-  }
-};
 
 const buildMaterialsUsedComponent = (classes, state) => {
   const arr =
@@ -136,31 +86,47 @@ const buildTagsComponent = (classes, tags, history) => {
 
 function ProjectDetails(props) {
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
     project: {},
     loading: true,
-    enlargedImageUrl: '',
-    openEnlargedImageDialog: false,
-    openDeleteProjectModal: false,
-    deleteProjectDialogError: null,
+    enlarged_image_url: '',
+    open_enlarged_image_dialog: false,
+    open_delete_project_modal: false,
+    delete_project_dialog_error: null,
   });
 
   React.useEffect(() => {
     Promise.resolve(
-      props.get_project({
+      props.getProject({
         id: props.match.params.id,
         token: props.auth.token,
         t: props.t,
       }),
     ).then(obj => {
       if (obj.project) {
-        parse_comments(obj.project.comments);
+        parseComments(obj.project.comments);
       }
       handleSetState(obj);
     });
   }, []);
+
+  React.useEffect(() => {
+    if (state.project.video && isCloudinaryVideo(state.project.video)) {
+      const cld = cloudinaryFactory(window);
+
+      const player = cld.videoPlayer('cloudinary-video-player', {
+        ...getPlayerOptions(window, state.project.video),
+      });
+
+      player.source(state.project.video);
+      player.videojs.error(null);
+      player.videojs.error({
+        message: props.t('project.errors.videoPlayerError'),
+      });
+    }
+  }, [state.project.video]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -173,10 +139,10 @@ function ProjectDetails(props) {
   const {
     project,
     loading,
-    enlargedImageUrl,
-    openEnlargedImageDialog,
-    openDeleteProjectModal,
-    deleteProjectDialogError,
+    enlarged_image_url,
+    open_enlarged_image_dialog,
+    open_delete_project_modal,
+    delete_project_dialog_error,
   } = state;
   const { t } = props;
   if (loading) {
@@ -216,7 +182,7 @@ function ProjectDetails(props) {
                         to={`/projects/${project.id}/edit`}
                       >
                         <CustomButton
-                          className={commonClasses.marginLeft1em}
+                          className={common_classes.marginLeft1em}
                           variant="contained"
                           primaryButtonStyle
                         >
@@ -224,7 +190,7 @@ function ProjectDetails(props) {
                         </CustomButton>
                       </Link>
                       <CustomButton
-                        className={commonClasses.marginLeft1em}
+                        className={common_classes.marginLeft1em}
                         variant="contained"
                         dangerButtonStyle
                         onClick={() =>
@@ -236,11 +202,11 @@ function ProjectDetails(props) {
                     </>
                   ) : (
                     <CustomButton
-                      className={commonClasses.marginLeft1em}
+                      className={common_classes.marginLeft1em}
                       variant="contained"
                       onClick={e =>
                         handleSetState(
-                          toggle_follow(e, props, project.creator.id, state),
+                          toggleFollow(e, props, project.creator.id, state),
                         )
                       }
                       primaryButtonStyle
@@ -276,17 +242,48 @@ function ProjectDetails(props) {
                     )}
                   >
                     {project.video ? (
-                      <iframe
-                        title={project.title}
-                        className={classes.iframeStyle}
-                        src={project.video}
-                      ></iframe>
+                      isCloudinaryVideo(project.video) ? (
+                        <video
+                          id="cloudinary-video-player"
+                          controls
+                          className={clsx(
+                            'cld-video-player',
+                            classes.iframeStyle,
+                          )}
+                        ></video>
+                      ) : isGdriveORVimeoORYoutube(project.video) ? (
+                        <iframe
+                          title={project.title}
+                          className={classes.iframeStyle}
+                          src={project.video}
+                        ></iframe>
+                      ) : (
+                        <video
+                          src={project.video}
+                          className={classes.iframeStyle}
+                          controls
+                        >
+                          {t('projectDetails.errors.noBrowserSupport')}
+                        </video>
+                      )
                     ) : project.images.length > 0 ? (
                       <img
                         className={classes.iframeStyle}
                         src={project.images[0].image_url}
                         alt={project.title}
                       />
+                    ) : null}
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    {project.video && isVideoFromGdrive(project.video) ? (
+                      <a
+                        className={common_classes.floatRight}
+                        href={project.video}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Can't play video? click here
+                      </a>
                     ) : null}
                   </Grid>
                   <Box className={classes.actionBoxStyle}>
@@ -298,7 +295,7 @@ function ProjectDetails(props) {
                       )}
                       variant="extended"
                       onClick={e =>
-                        handleSetState(toggle_like(e, props, project.id))
+                        handleSetState(toggleLike(e, props, project.id))
                       }
                     >
                       {project.likes.includes(props.auth.id) ? (
@@ -325,7 +322,7 @@ function ProjectDetails(props) {
                         'projectDetails.ariaLabels.saveButton.label',
                       )}
                       onClick={e =>
-                        handleSetState(toggle_save(e, props, project.id))
+                        handleSetState(toggleSave(e, props, project.id))
                       }
                     >
                       {project.saved_by.includes(props.auth.id) ? (
@@ -452,24 +449,24 @@ function ProjectDetails(props) {
             },
           }}
           className={classes.enlargedImageDialogStyle}
-          open={openEnlargedImageDialog}
+          open={open_enlarged_image_dialog}
           onClose={() =>
             setState({
               ...state,
-              openEnlargedImageDialog: !openEnlargedImageDialog,
+              open_enlarged_image_dialog: !open_enlarged_image_dialog,
             })
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
           <img
             className={classes.enlargedImageStyle}
-            src={enlargedImageUrl}
+            src={enlarged_image_url}
             alt={`${project.title}`}
           />
         </Dialog>
 
         <Dialog
-          open={openDeleteProjectModal}
+          open={open_delete_project_modal}
           onClose={() => handleSetState(handleToggleDeleteProjectModal(state))}
           aria-labelledby={t('projectDetails.ariaLabels.deleteProject')}
         >
@@ -478,11 +475,11 @@ function ProjectDetails(props) {
           </DialogTitle>
           <Box
             component="p"
-            className={deleteProjectDialogError !== null && classes.errorBox}
+            className={delete_project_dialog_error !== null && classes.errorBox}
           >
-            {deleteProjectDialogError !== null && (
+            {delete_project_dialog_error !== null && (
               <Box component="span" className={classes.error}>
-                {deleteProjectDialogError}
+                {delete_project_dialog_error}
               </Box>
             )}
           </Box>{' '}
@@ -520,15 +517,15 @@ function ProjectDetails(props) {
 
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
-  get_project: PropTypes.func.isRequired,
-  suggest_creators: PropTypes.func.isRequired,
-  delete_project: PropTypes.func.isRequired,
-  unpublish_comment: PropTypes.func.isRequired,
-  delete_comment: PropTypes.func.isRequired,
-  toggle_follow: PropTypes.func.isRequired,
-  toggle_like: PropTypes.func.isRequired,
-  toggle_save: PropTypes.func.isRequired,
-  add_comment: PropTypes.func.isRequired,
+  getProject: PropTypes.func.isRequired,
+  suggestCreators: PropTypes.func.isRequired,
+  deleteProject: PropTypes.func.isRequired,
+  unpublishComment: PropTypes.func.isRequired,
+  deleteComment: PropTypes.func.isRequired,
+  toggleFollow: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired,
+  addComment: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -539,32 +536,32 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_project: args => {
-      return dispatch(ProjectActions.get_project(args));
+    getProject: args => {
+      return dispatch(ProjectActions.getProject(args));
     },
-    suggest_creators: args => {
-      return dispatch(UserActions.suggest_creators(args));
+    suggestCreators: args => {
+      return dispatch(UserActions.suggestCreators(args));
     },
-    delete_project: args => {
-      return dispatch(ProjectActions.delete_project(args));
+    deleteProject: args => {
+      return dispatch(ProjectActions.deleteProject(args));
     },
-    unpublish_comment: args => {
-      return dispatch(ProjectActions.unpublish_comment(args));
+    unpublishComment: args => {
+      return dispatch(ProjectActions.unpublishComment(args));
     },
-    delete_comment: args => {
-      return dispatch(ProjectActions.delete_comment(args));
+    deleteComment: args => {
+      return dispatch(ProjectActions.deleteComment(args));
     },
-    toggle_follow: args => {
-      return dispatch(UserActions.toggle_follow(args));
+    toggleFollow: args => {
+      return dispatch(UserActions.toggleFollow(args));
     },
-    toggle_like: args => {
-      return dispatch(ProjectActions.toggle_like(args));
+    toggleLike: args => {
+      return dispatch(ProjectActions.toggleLike(args));
     },
-    toggle_save: args => {
-      return dispatch(ProjectActions.toggle_save(args));
+    toggleSave: args => {
+      return dispatch(ProjectActions.toggleSave(args));
     },
-    add_comment: args => {
-      return dispatch(ProjectActions.add_comment(args));
+    addComment: args => {
+      return dispatch(ProjectActions.addComment(args));
     },
   };
 };

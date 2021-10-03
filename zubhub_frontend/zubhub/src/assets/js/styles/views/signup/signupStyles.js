@@ -1,4 +1,5 @@
 import { fade } from '@material-ui/core/styles';
+import { calculateLabelWidth } from '../../../utils/scripts';
 
 const styles = theme => ({
   root: {
@@ -47,26 +48,21 @@ const styles = theme => ({
   customInputStyle: {
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '1px solid #00B8C4',
-      boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '1px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0.25)} 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       [theme.breakpoints.up('1600')]: {
         fontSize: '1.7rem',
       },
-    },
-  },
-  DOBInputStyle: {
-    '&.MuiOutlinedInput-root fieldset legend': {
-      width: '75.5px !important',
     },
   },
   secondaryLink: {
@@ -128,3 +124,5 @@ const styles = theme => ({
 });
 
 export default styles;
+
+// ${calculateLabelWidth(props.t('signup.inputs.dateOfBirth.label'), document)}

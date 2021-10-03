@@ -1,6 +1,6 @@
-const defaultState = { all_projects: {}, staff_picks: [] };
+const default_state = { all_projects: {}, staff_picks: [], hero: {} };
 
-const projects = (state = defaultState, action) => {
+const projects = (state = default_state, action) => {
   switch (action.type) {
     case 'SET_PROJECTS':
       return {

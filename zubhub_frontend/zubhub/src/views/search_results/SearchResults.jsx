@@ -20,6 +20,13 @@ import {
   Avatar,
 } from '@material-ui/core';
 
+import {
+  getQueryParams,
+  fetchPage,
+  updateProjects,
+  toggleFollow,
+} from './searchResultsScripts';
+
 import * as ProjectActions from '../../store/actions/projectActions';
 import * as CreatorActions from '../../store/actions/userActions';
 import CustomButton from '../../components/button/Button';
@@ -32,85 +39,9 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const getQueryParams = url => {
-  const params = url.split('?')[1];
-  let [page, query] = params.split('q=');
-  if (page) {
-    page = page.split('=')[1];
-    page = page.split('&')[0];
-  } else {
-    page = null;
-  }
-  return { page, query };
-};
-
-const fetchPage = (page, props, query_string, type) => {
-  if (type === 'projects') {
-    return props.search_projects({ page, query_string, t: props.t, type });
-  } else if (type === 'creators') {
-    return props.search_creators({ page, query_string, t: props.t, type });
-  }
-};
-
-const updateProjects = (res, { results: projects }, props) => {
-  return res
-    .then(res => {
-      if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
-        return { results: projects };
-      } else {
-        res = Object.keys(res)
-          .map(key => res[key])
-          .join('\n');
-        throw new Error(res);
-      }
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        toast.warning(props.t('searchResults.errors.unexpected'));
-      } else {
-        toast.warning(error.message);
-      }
-      return { loading: false };
-    });
-};
-
-const toggle_follow = (e, props, state, id) => {
-  e.preventDefault();
-  if (!props.auth.token) {
-    props.history.push('/login');
-  } else {
-    return props
-      .toggle_follow({ id, token: props.auth.token, t: props.t })
-      .then(res => {
-        if (res.profile && res.profile.username) {
-          const results = state.results.map(creator =>
-            creator.id !== res.profile.id ? creator : res.profile,
-          );
-          return { results };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(props.t('searchResults.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  }
-};
-
 const buildCreatorProfiles = (
   results,
-  { classes, commonClasses },
+  { classes, common_classes },
   props,
   state,
   handleSetState,
@@ -127,7 +58,7 @@ const buildCreatorProfiles = (
       key={creator.id}
     >
       <Link
-        className={commonClasses.textDecorationNone}
+        className={common_classes.textDecorationNone}
         to={`/creators/${creator.username}`}
       >
         <Card className={classes.cardStyle}>
@@ -140,7 +71,7 @@ const buildCreatorProfiles = (
             <CustomButton
               variant="contained"
               onClick={(e, id = creator.id) =>
-                handleSetState(toggle_follow(e, props, state, id))
+                handleSetState(toggleFollow(e, props, state, id, toast))
               }
               primaryButtonStyle
             >
@@ -163,7 +94,7 @@ const buildCreatorProfiles = (
 
 function SearchResults(props) {
   const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
     results: [],
@@ -196,8 +127,8 @@ function SearchResults(props) {
   const {
     count,
     results,
-    previous: prevPage,
-    next: nextPage,
+    previous: prev_page,
+    next: next_page,
     loading,
     type,
   } = state;
@@ -268,7 +199,6 @@ function SearchResults(props) {
                     xs={12}
                     sm={6}
                     md={4}
-                    lg={3}
                     className={classes.projectGridStyle}
                     align="center"
                   >
@@ -276,7 +206,7 @@ function SearchResults(props) {
                       project={project}
                       key={project.id}
                       updateProjects={res =>
-                        handleSetState(updateProjects(res, state, props))
+                        handleSetState(updateProjects(res, state, props, toast))
                       }
                       {...props}
                     />
@@ -287,17 +217,17 @@ function SearchResults(props) {
                 aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
                 className={classes.buttonGroupStyle}
               >
-                {prevPage ? (
+                {prev_page ? (
                   <CustomButton
                     className={classes.floatLeft}
                     size="large"
                     startIcon={<NavigateBeforeIcon />}
-                    onClick={(e, page = getQueryParams(prevPage).page) =>
+                    onClick={(e, page = getQueryParams(prev_page).page) =>
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(prevPage).query,
+                          getQueryParams(prev_page).query,
                           'projects',
                         ),
                       )
@@ -307,17 +237,17 @@ function SearchResults(props) {
                     {t('searchResults.prev')}
                   </CustomButton>
                 ) : null}
-                {nextPage ? (
+                {next_page ? (
                   <CustomButton
                     className={classes.floatRight}
                     size="large"
                     endIcon={<NavigateNextIcon />}
-                    onClick={(e, page = getQueryParams(nextPage).page) =>
+                    onClick={(_, page = getQueryParams(next_page).page) =>
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(nextPage).query,
+                          getQueryParams(next_page).query,
                           'projects',
                         ),
                       )
@@ -346,7 +276,7 @@ function SearchResults(props) {
                 </Grid>
                 {buildCreatorProfiles(
                   results,
-                  { classes, commonClasses },
+                  { classes, common_classes },
                   props,
                   state,
                   handleSetState,
@@ -356,17 +286,17 @@ function SearchResults(props) {
                 aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
                 className={classes.buttonGroupStyle}
               >
-                {prevPage ? (
+                {prev_page ? (
                   <CustomButton
                     className={classes.floatLeft}
                     size="large"
                     startIcon={<NavigateBeforeIcon />}
-                    onClick={(e, page = getQueryParams(prevPage).page) =>
+                    onClick={(_, page = getQueryParams(prev_page).page) =>
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(prevPage).query,
+                          getQueryParams(prev_page).query,
                           'projects',
                         ),
                       )
@@ -376,17 +306,17 @@ function SearchResults(props) {
                     {t('searchResults.prev')}
                   </CustomButton>
                 ) : null}
-                {nextPage ? (
+                {next_page ? (
                   <CustomButton
                     className={classes.floatRight}
                     size="large"
                     endIcon={<NavigateNextIcon />}
-                    onClick={(e, page = getQueryParams(nextPage).page) =>
+                    onClick={(e, page = getQueryParams(next_page).page) =>
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(nextPage).query,
+                          getQueryParams(next_page).query,
                           'projects',
                         ),
                       )
@@ -412,11 +342,11 @@ function SearchResults(props) {
 
 SearchResults.propTypes = {
   auth: PropTypes.object.isRequired,
-  search_projects: PropTypes.func.isRequired,
-  search_creators: PropTypes.func.isRequired,
-  toggle_follow: PropTypes.func.isRequired,
-  toggle_like: PropTypes.func.isRequired,
-  toggle_save: PropTypes.func.isRequired,
+  searchProjects: PropTypes.func.isRequired,
+  searchCreators: PropTypes.func.isRequired,
+  toggleFollow: PropTypes.func.isRequired,
+  toggleLike: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -427,20 +357,20 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    search_projects: args => {
-      return dispatch(ProjectActions.search_projects(args));
+    searchProjects: args => {
+      return dispatch(ProjectActions.searchProjects(args));
     },
-    search_creators: args => {
-      return dispatch(CreatorActions.search_creators(args));
+    searchCreators: args => {
+      return dispatch(CreatorActions.searchCreators(args));
     },
-    toggle_follow: args => {
-      return dispatch(CreatorActions.toggle_follow(args));
+    toggleFollow: args => {
+      return dispatch(CreatorActions.toggleFollow(args));
     },
-    toggle_like: args => {
-      return dispatch(ProjectActions.toggle_like(args));
+    toggleLike: args => {
+      return dispatch(ProjectActions.toggleLike(args));
     },
-    toggle_save: args => {
-      return dispatch(ProjectActions.toggle_save(args));
+    toggleSave: args => {
+      return dispatch(ProjectActions.toggleSave(args));
     },
   };
 };

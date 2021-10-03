@@ -5,17 +5,17 @@ import { toast } from 'react-toastify';
 
 const API = new ZubhubAPI();
 
-export const get_user_profile = args => {
+export const getUserProfile = args => {
   return dispatch => {
     let profile;
-    return API.get_user_profile(args)
+    return API.getUserProfile(args)
       .then(res => {
         if (!res.username) {
           throw new Error(args.t('profile.errors.profileFetchError'));
         } else {
           profile = res;
           return dispatch(
-            ProjectActions.get_user_projects({
+            ProjectActions.getUserProjects({
               username: res.username,
               limit: 4,
             }),
@@ -36,9 +36,9 @@ export const get_user_profile = args => {
   };
 };
 
-export const edit_user_profile = args => {
+export const editUserProfile = args => {
   return dispatch => {
-    return API.edit_user_profile(args).then(res => {
+    return API.editUserProfile(args).then(res => {
       if (res.id) {
         dispatch(
           AuthActions.setAuthUser({
@@ -55,9 +55,9 @@ export const edit_user_profile = args => {
   };
 };
 
-export const suggest_creators = args => {
+export const suggestCreators = args => {
   return () => {
-    return API.search_creators(args)
+    return API.searchCreators(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return res.results.length > 0
@@ -81,10 +81,9 @@ export const suggest_creators = args => {
   };
 };
 
-
-export const search_creators = args => {
+export const searchCreators = args => {
   return () => {
-    return API.search_creators(args)
+    return API.searchCreators(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return { ...res, loading: false, type: args.type };
@@ -106,9 +105,9 @@ export const search_creators = args => {
   };
 };
 
-export const toggle_follow = args => {
+export const toggleFollow = args => {
   return () => {
-    return API.toggle_follow(args)
+    return API.toggleFollow(args)
       .then(res => {
         if (res.username) {
           return { profile: res };
@@ -130,9 +129,9 @@ export const toggle_follow = args => {
   };
 };
 
-export const remove_member = args => {
+export const removeMember = args => {
   return () => {
-    return API.remove_member(args)
+    return API.removeMember(args)
       .then(res => {
         if (res.username) {
           return { profile: res };
@@ -154,9 +153,9 @@ export const remove_member = args => {
   };
 };
 
-export const add_members = args => {
+export const addMembers = args => {
   return () => {
-    return API.add_members(args).then(res => {
+    return API.addMembers(args).then(res => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
@@ -167,15 +166,15 @@ export const add_members = args => {
   };
 };
 
-export const get_members = args => {
+export const getMembers = args => {
   return () => {
-    return API.get_members(args)
+    return API.getMembers(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
             members: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
+            prev_page: res.previous,
+            next_page: res.next,
             loading: false,
           };
         } else {
@@ -196,15 +195,15 @@ export const get_members = args => {
   };
 };
 
-export const get_followers = args => {
+export const getFollowers = args => {
   return () => {
-    return API.get_followers(args)
+    return API.getFollowers(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
             followers: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
+            prev_page: res.previous,
+            next_page: res.next,
             loading: false,
           };
         } else {
@@ -225,15 +224,15 @@ export const get_followers = args => {
   };
 };
 
-export const get_following = args => {
+export const getFollowing = args => {
   return () => {
-    return API.get_following(args)
+    return API.getFollowing(args)
       .then(res => {
         if (Array.isArray(res.results)) {
           return {
             following: res.results,
-            prevPage: res.previous,
-            nextPage: res.next,
+            prev_page: res.previous,
+            next_page: res.next,
             loading: false,
           };
         } else {
@@ -254,10 +253,9 @@ export const get_following = args => {
   };
 };
 
-
-export const add_comment = args => {
+export const addComment = args => {
   return () => {
-    return API.add_profile_comment(args)
+    return API.addProfileComment(args)
       .then(res => {
         if (res.username) {
           return { profile: res, loading: false };
@@ -278,11 +276,10 @@ export const add_comment = args => {
       });
   };
 };
-          
-            
-export const send_group_invite_confirmation = args => {
+
+export const sendGroupInviteConfirmation = args => {
   return () => {
-    return API.send_group_invite_confirmation(args.key).then(res => {
+    return API.sendGroupInviteConfirmation(args.key).then(res => {
       if (res.detail !== 'ok') {
         throw new Error(res.detail);
       } else {
@@ -290,14 +287,14 @@ export const send_group_invite_confirmation = args => {
         setTimeout(() => {
           args.history.push('/');
         }, 4000);
-       }
-     });
+      }
+    });
   };
 };
 
-export const get_help = args => {
+export const getHelp = args => {
   return () => {
-    return API.get_help()
+    return API.getHelp()
       .then(res => {
         if (res) {
           return { help: res, loading: false };
@@ -322,9 +319,9 @@ export const get_help = args => {
   };
 };
 
-export const get_privacy = args => {
+export const getPrivacy = args => {
   return () => {
-    return API.get_privacy()
+    return API.getPrivacy()
       .then(res => {
         if (res) {
           return { privacy: res, loading: false };
@@ -349,9 +346,9 @@ export const get_privacy = args => {
   };
 };
 
-export const get_faqs = args => {
+export const getFaqs = args => {
   return () => {
-    return API.get_faqs()
+    return API.getFaqs()
       .then(res => {
         if (res) {
           return { faqs: res, loading: false };

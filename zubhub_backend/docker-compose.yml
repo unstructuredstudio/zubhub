@@ -6,17 +6,31 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./compose/django/dev/Dockerfile
+      dockerfile: ./compose/web/dev/Dockerfile
     restart: on-failure
     volumes:
       - ./zubhub:/zubhub_backend/zubhub
-      - ./compose/django/dev/start:/start:ro
-      - ./requirements.txt:/requirements.txt:ro
+      - ./compose/web/requirements.txt:/zubhub_backend/requirements.txt:ro
     ports:
       - 8000:8000
     depends_on:
       - db
       - rabbitmq
+
+  media:
+    container_name: media
+    env_file: .env
+    build:
+      context: .
+      dockerfile: ./compose/media/dev/Dockerfile
+    restart: on-failure
+    volumes:
+      - media_data:/home/media/media_store
+      - ./compose/media/requirements.txt:/home/requirements.txt:ro
+    ports:
+      - 8001:8001
+    depends_on:
+      - web
 
   db:
     container_name: db
@@ -49,53 +63,54 @@ services:
     restart: on-failure
     volumes:
       - ./zubhub:/zubhub_backend/zubhub
-      - ./compose/celery/start-celeryworker:/start-celeryworker:ro
-      - ./requirements.txt:/requirements.txt:ro
+      - ./compose/celery/start-celeryworker:/zubhub_backend/start-celeryworker:ro
+      - ./compose/celery/requirements.txt:/zubhub_backend/requirements.txt:ro
     depends_on:
       - rabbitmq
       - db
 
-  flower:
-    container_name: flower
-    env_file: .env
-    build:
-      context: .
-      dockerfile: ./compose/flower/Dockerfile
-    ports:
-      - 5555:5555
-    command: /flower/start-flower
-    restart: on-failure
-    volumes:
-      - ./zubhub:/zubhub_backend/zubhub
-      - ./compose/flower/start-flower:/start-flower:ro
-      - ./requirements.txt:/requirements.txt:ro
-    depends_on:
-      - celery_worker
-      - rabbitmq
-      - db
+  # flower:
+  #   container_name: flower
+  #   env_file: .env
+  #   build:
+  #     context: .
+  #     dockerfile: ./compose/flower/Dockerfile
+  #   ports:
+  #     - 5555:5555
+  #   command: /flower/start-flower
+  #   restart: on-failure
+  #   volumes:
+  #     - ./zubhub:/zubhub_backend/zubhub
+  #     - ./compose/flower/start-flower:/start-flower:ro
+  #     - ./requirements.txt:/requirements.txt:ro
+  #   depends_on:
+  #     - celery_worker
+  #     - rabbitmq
+  #     - db
 
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus
-    ports:
-      - 9090:9090
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
-    restart: on-failure
-    volumes:
-      - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    depends_on:
-      - cadvisor
+  # prometheus:
+  #   container_name: prometheus
+  #   image: prom/prometheus
+  #   ports:
+  #     - 9090:9090
+  #   command:
+  #     - --config.file=/etc/prometheus/prometheus.yml
+  #   restart: on-failure
+  #   volumes:
+  #     - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   depends_on:
+  #     - cadvisor
 
-  cadvisor:
-    image: google/cadvisor
-    container_name: cadvisor
-    restart: on-failure
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+  # cadvisor:
+  #   image: google/cadvisor
+  #   container_name: cadvisor
+  #   restart: on-failure
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
 
 volumes:
   postgres_data:
+  media_data:

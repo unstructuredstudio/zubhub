@@ -120,7 +120,7 @@ class API {
   /****************************************************/
 
   /*****************send email confirmation ******************/
-  send_email_confirmation = key => {
+  sendEmailConfirmation = key => {
     const url = 'rest-auth/registration/verify-email/';
     const method = 'POST';
     const body = JSON.stringify({ key });
@@ -132,7 +132,7 @@ class API {
   /*******************************************************************/
 
   /*****************send phone confirmation ******************/
-  send_phone_confirmation = key => {
+  sendPhoneConfirmation = key => {
     const url = 'creators/verify-phone/';
     const method = 'POST';
     const body = JSON.stringify({ key });
@@ -144,7 +144,7 @@ class API {
   /*******************************************************************/
 
   /********************send password reset link********************************/
-  send_password_reset_link = email => {
+  sendPasswordResetLink = email => {
     const url = 'rest-auth/password/reset/';
     const method = 'POST';
     const body = JSON.stringify({ email });
@@ -156,7 +156,7 @@ class API {
   /********************************************************************/
 
   /********************password reset confirmation********************************/
-  password_reset_confirm = ({ new_password1, new_password2, uid, token }) => {
+  passwordResetConfirm = ({ new_password1, new_password2, uid, token }) => {
     const url = 'rest-auth/password/reset/confirm/';
     const method = 'POST';
     const body = JSON.stringify({ new_password1, new_password2, uid, token });
@@ -168,7 +168,7 @@ class API {
   /********************************************************************/
 
   /************************** get authenticated user's details **************************/
-  get_auth_user = token => {
+  getAuthUser = token => {
     const url = 'creators/authUser/';
     return this.request({ url, token }).then(res => res.json());
   };
@@ -176,7 +176,7 @@ class API {
   /********************************************************************/
 
   /************************** get user profile **************************/
-  get_user_profile = ({ username, token }) => {
+  getUserProfile = ({ username, token }) => {
     const url = `creators/${username}/`;
     if (token) {
       return this.request({ url, token }).then(res => res.json());
@@ -186,7 +186,7 @@ class API {
   };
 
   /*************************** get user projects *********************************/
-  get_user_projects = ({ username, page, limit }) => {
+  getUserProjects = ({ username, page, limit }) => {
     let url;
     if (limit && page) {
       url = `creators/${username}/projects/?limit=${limit}&&${page}`;
@@ -203,7 +203,7 @@ class API {
   /*********************************************************************/
 
   /*************************** search projects *********************************/
-  search_projects = ({ page, query_string }) => {
+  searchProjects = ({ page, query_string }) => {
     let url;
     if (page) {
       url = `projects/search/?q=${query_string}&page=${page}`;
@@ -216,7 +216,7 @@ class API {
   /*********************************************************************/
 
   /*************************** search creators *********************************/
-  search_creators = ({ page, query_string }) => {
+  searchCreators = ({ page, query_string }) => {
     let url;
     if (page) {
       url = `creators/search/?q=${query_string}&page=${page}`;
@@ -229,7 +229,7 @@ class API {
   /*********************************************************************/
 
   /********************** get followers *******************************/
-  get_followers = ({ page, username }) => {
+  getFollowers = ({ page, username }) => {
     const url = page
       ? `creators/${username}/followers/?${page}`
       : `creators/${username}/followers/`;
@@ -239,7 +239,7 @@ class API {
   /*****************************************************************/
 
   /********************** get following *******************************/
-  get_following = ({ page, username }) => {
+  getFollowing = ({ page, username }) => {
     const url = page
       ? `creators/${username}/following/?${page}`
       : `creators/${username}/following/`;
@@ -249,7 +249,7 @@ class API {
   /*****************************************************************/
 
   /********************** get saved *******************************/
-  get_saved = ({ page, token }) => {
+  getSaved = ({ page, token }) => {
     const url = page ? `projects/saved/?${page}` : `projects/saved/`;
 
     return this.request({ url, token }).then(res => res.json());
@@ -257,16 +257,9 @@ class API {
   /*****************************************************************/
 
   /************************** edit user profile **************************/
-  edit_user_profile = props => {
-    const {
-      token,
-      username,
-      email,
-      phone,
-      dateOfBirth,
-      bio,
-      user_location,
-    } = props;
+  editUserProfile = props => {
+    const { token, username, email, phone, dateOfBirth, bio, user_location } =
+      props;
 
     const url = 'creators/edit_creator/';
     const method = 'PUT';
@@ -283,7 +276,7 @@ class API {
   /********************************************************************/
 
   /************************** delete account **************************/
-  delete_account = ({ token }) => {
+  deleteAccount = ({ token }) => {
     const url = 'creators/delete/';
     const method = 'DELETE';
     return this.request({ url, method, token }).then(res =>
@@ -293,7 +286,7 @@ class API {
   /********************************************************************/
 
   /************************** follow creator **************************/
-  toggle_follow = ({ id, token }) => {
+  toggleFollow = ({ id, token }) => {
     const url = `creators/${id}/toggle_follow/`;
 
     return this.request({ url, token }).then(res => res.json());
@@ -301,7 +294,7 @@ class API {
   /******************************************************************/
 
   /********************** get following *******************************/
-  get_members = ({ page, username }) => {
+  getMembers = ({ page, username }) => {
     const url = page
       ? `creators/${username}/members/?${page}`
       : `creators/${username}/members/`;
@@ -311,7 +304,7 @@ class API {
   /*****************************************************************/
 
   /************************** add members **************************/
-  add_members = ({ token, data }) => {
+  addMembers = ({ token, data }) => {
     const url = 'creators/add_members/';
     const method = 'POST';
     const content_type = false;
@@ -323,7 +316,7 @@ class API {
   /************************************************************************/
 
   /************************** remove member from group **************************/
-  remove_member = ({ id, token }) => {
+  removeMember = ({ id, token }) => {
     const url = `creators/${id}/remove_member/`;
 
     return this.request({ url, token }).then(res => res.json());
@@ -331,7 +324,7 @@ class API {
   /******************************************************************/
 
   /*****************send phone confirmation ******************/
-  send_group_invite_confirmation = key => {
+  sendGroupInviteConfirmation = key => {
     const url = 'creators/confirm_group_invite/';
     const method = 'POST';
     const body = JSON.stringify({ key });
@@ -343,14 +336,14 @@ class API {
   /*******************************************************************/
 
   /************************** get all locations **************************/
-  get_locations = () => {
+  getLocations = () => {
     const url = 'creators/locations/';
     return this.request({ url }).then(res => res.json());
   };
   /********************************************************************/
 
   /************************** create project **************************/
-  create_project = ({
+  createProject = ({
     token,
     title,
     description,
@@ -376,7 +369,7 @@ class API {
   /************************************************************************/
 
   /************************** update project **************************/
-  update_project = ({
+  updateProject = ({
     token,
     id,
     title,
@@ -404,7 +397,7 @@ class API {
   /************************************************************************/
 
   /************************** delete project **************************/
-  delete_project = ({ token, id }) => {
+  deleteProject = ({ token, id }) => {
     const url = `projects/${id}/delete/`;
     const method = 'DELETE';
     return this.request({ url, method, token }).then(res =>
@@ -413,19 +406,29 @@ class API {
   };
   /************************************************************************/
 
+
+  /*********************** should image be uploaded to local backend or an image service *********************************/
+  shouldUploadToLocal = ({token}) => {
+   const url = "upload_file_to_local/";
+   return this.request({url, token}).then(res=> res.json())
+  };
+  /********************************************************************/
+
   /************************** unpublish comment **************************/
-  unpublish_comment = ({ token, id }) => {
+  unpublishComment = ({ token, id }) => {
     const url = `projects/${id}/unpublish_comment/`;
     const method = 'PATCH';
     const body = JSON.stringify({});
     return this.request({ url, method, token, body }).then(res =>
-      Promise.resolve(res.status === 200 ? res.json() : {"details": "unknown error"}),
+      Promise.resolve(
+        res.status === 200 ? res.json() : { details: 'unknown error' },
+      ),
     );
   };
   /************************************************************************/
 
   /************************** delete comment **************************/
-  delete_comment = ({ token, id }) => {
+  deleteComment = ({ token, id }) => {
     const url = `projects/${id}/delete_comment/`;
     const method = 'DELETE';
     return this.request({ url, method, token }).then(res =>
@@ -435,36 +438,34 @@ class API {
   /************************************************************************/
 
   /************************** get projects **************************/
-  get_projects = ({ page }) => {
+  getProjects = ({ page }) => {
     const url = page ? `projects/?${page}` : `projects/`;
     return this.request({ url }).then(res => res.json());
   };
   /*************************************************************/
 
   /************************** get categories **************************/
-  get_categories = () => {
+  getCategories = () => {
     const url = 'projects/categories/';
     return this.request({ url }).then(res => res.json());
   };
   /*************************************************************/
 
   /************************** suggest tags **************************/
-  suggest_tags = value => {
+  suggestTags = value => {
     const url = `projects/tags/search/?q=${value}`;
     return this.request({ url }).then(res => res.json());
   };
   /*************************************************************/
 
   /************************** get staff picks **************************/
-  get_staff_picks = () => {
+  getStaffPicks = () => {
     const url = 'projects/staff_picks/';
-    return this.request({ url}).then(res =>
-      Promise.resolve(res.status === 200 ? { detail: 'ok' } :(res.status === 404 ? {detail: "not found"} : res.json())),
-    );
+    return this.request({ url }).then(res => res.json());
   };
   /******************************************************************/
 
-  get_staff_pick = ({ page, id }) => {
+  getStaffPick = ({ page, id }) => {
     const url = page
       ? `projects/staff_picks/${id}/?page=${page}`
       : `projects/staff_picks/${id}`;
@@ -474,7 +475,7 @@ class API {
   /*****************************************************************/
 
   /************************** get project **************************/
-  get_project = ({ id, token }) => {
+  getProject = ({ id, token }) => {
     const url = `projects/${id}`;
     if (token) {
       return this.request({ url, token }).then(res => res.json());
@@ -484,7 +485,7 @@ class API {
   };
 
   /************************** like project **************************/
-  toggle_like = ({ id, token }) => {
+  toggleLike = ({ id, token }) => {
     const url = `projects/${id}/toggle_like/`;
 
     return this.request({ url, token }).then(res => res.json());
@@ -492,7 +493,7 @@ class API {
   /******************************************************************/
 
   /************************** save project for future viewing **************************/
-  toggle_save = ({ id, token }) => {
+  toggleSave = ({ id, token }) => {
     const url = `projects/${id}/toggle_save/`;
 
     return this.request({ url, token }).then(res => res.json());
@@ -500,7 +501,7 @@ class API {
   /******************************************************************/
 
   /************************** add comment **************************/
-  add_comment = ({ id, text, token, parent_id }) => {
+  addComment = ({ id, text, token, parent_id }) => {
     const url = `projects/${id}/add_comment/`;
     const method = 'POST';
     const body = JSON.stringify({ text, parent_id });
@@ -509,7 +510,7 @@ class API {
   };
 
   /************************** add profile comment **************************/
-  add_profile_comment = ({ id, text, token, parent_id }) => {
+  addProfileComment = ({ id, text, token, parent_id }) => {
     const url = `creators/${id}/add_comment/`;
     const method = 'POST';
     const body = JSON.stringify({ text, parent_id });
@@ -518,25 +519,41 @@ class API {
   };
   /***********************************************************************/
 
+  /************************** get hero **************************/
+  getHero = () => {
+    const url = `hero/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
   /************************** get help **************************/
-  get_help = () => {
+  getHelp = () => {
     const url = `help/`;
 
     return this.request({ url }).then(res => res.json());
   };
 
   /************************** get privacy **************************/
-  get_privacy = () => {
+  getPrivacy = () => {
     const url = `privacy/`;
 
     return this.request({ url }).then(res => res.json());
   };
 
   /************************** get faqs **************************/
-  get_faqs = () => {
+  getFaqs = () => {
     const url = `faqs/`;
 
     return this.request({ url }).then(res => res.json());
+  };
+
+  getSignature = args => {
+    const url = 'signature/';
+    const method = 'POST';
+    const token = args.token;
+    delete args.token;
+    const body = JSON.stringify({ ...args });
+    return this.request({ url, method, token, body }).then(res => res.json());
   };
 }
 
