@@ -33,7 +33,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./zubhub_backend/
-          file: ./zubhub_backend/compose/django/prod/Dockerfile
+          file: ./zubhub_backend/compose/web/prod/Dockerfile
           push: true
           tags: unstructuredstudio/zubhub-services_web:latest
       - name: Image digest
@@ -47,6 +47,17 @@ jobs:
           file: ./zubhub_backend/compose/celery/Dockerfile
           push: true
           tags: unstructuredstudio/zubhub-services_celery:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Build and push media service
+        id: docker_build_media
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/compose/media/prod/Dockerfile
+          push: true
+          tags: unstructuredstudio/zubhub-services_media:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 

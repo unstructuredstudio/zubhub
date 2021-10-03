@@ -1,7 +1,7 @@
 import uuid
 from math import floor
 from django.utils.text import slugify
-from .utils import upload_file
+from .utils import upload_file_to_media_server
 from django.contrib import admin
 from .models import StaticAssets, Hero, Privacy, FAQ, Help
 from django_summernote.admin import SummernoteModelAdmin
@@ -31,27 +31,36 @@ class StaticAssetsAdmin(admin.ModelAdmin):
         key = '{0}/{1}-{2}'.format("zubhub",
                                    slugify(submitted_header_logo.name), key)
 
-        header_logo_url = upload_file(
+        res = upload_file_to_media_server(
             file=submitted_header_logo, key=key)
+        res = res.json()
+        header_logo_url = res["url"]
 
         key = str(uuid.uuid4())
         key = key[0: floor(len(key)/6)]
         key = '{0}/{1}-{2}'.format("zubhub",
                                    slugify(submitted_footer_logo.name), key)
 
-        footer_logo_url = upload_file(
+        res = upload_file_to_media_server(
             file=submitted_footer_logo, key=key
         )
+        res = res.json()
+        footer_logo_url = res["url"]
 
-        form.cleaned_data["header_logo_url"] = header_logo_url
-        form.cleaned_data["footer_logo_url"] = footer_logo_url
-        if obj.id:
-            StaticAssets.objects.filter(id=obj.id).update(header_logo_url=form.cleaned_data['header_logo_url'],
-                                                          footer_logo_url=form.cleaned_data['footer_logo_url'])
+        if isinstance(header_logo_url, str) and isinstance(footer_logo_url, str):
+
+            form.cleaned_data["header_logo_url"] = header_logo_url
+            form.cleaned_data["footer_logo_url"] = footer_logo_url
+            if obj.id:
+                StaticAssets.objects.filter(id=obj.id).update(header_logo_url=form.cleaned_data['header_logo_url'],
+                                                              footer_logo_url=form.cleaned_data['footer_logo_url'])
+
+            else:
+                StaticAssets.objects.create(header_logo_url=form.cleaned_data['header_logo_url'],
+                                            footer_logo_url=form.cleaned_data['footer_logo_url'])
 
         else:
-            StaticAssets.objects.create(header_logo_url=form.cleaned_data['header_logo_url'],
-                                        footer_logo_url=form.cleaned_data['footer_logo_url'])
+            raise Exception("footer_logo_url or header_logo_url is not string")
 
 
 class HeroAdmin(admin.ModelAdmin):
@@ -72,23 +81,29 @@ class HeroAdmin(admin.ModelAdmin):
         key = '{0}/{1}-{2}'.format("hero_images",
                                    slugify(submitted_image.name), key)
 
-        image_url = upload_file(
+        res = upload_file_to_media_server(
             file=submitted_image, key=key)
 
-        form.cleaned_data["image_url"] = image_url
-        if obj.id:
-            Hero.objects.filter(id=obj.id).update(title=form.cleaned_data['title'],
-                                                  description=form.cleaned_data['description'],
-                                                  image_url=form.cleaned_data['image_url'],
-                                                  activity_url=form.cleaned_data['activity_url'],
-                                                  explore_ideas_url=form.cleaned_data['explore_ideas_url'])
+        res = res.json()
+        image_url = res["url"]
 
+        if isinstance(image_url, str):
+            form.cleaned_data["image_url"] = image_url
+            if obj.id:
+                Hero.objects.filter(id=obj.id).update(title=form.cleaned_data['title'],
+                                                      description=form.cleaned_data['description'],
+                                                      image_url=form.cleaned_data['image_url'],
+                                                      activity_url=form.cleaned_data['activity_url'],
+                                                      explore_ideas_url=form.cleaned_data['explore_ideas_url'])
+
+            else:
+                Hero.objects.create(title=form.cleaned_data['title'],
+                                    description=form.cleaned_data['description'],
+                                    image_url=form.cleaned_data['image_url'],
+                                    activity_url=form.cleaned_data['activity_url'],
+                                    explore_ideas_url=form.cleaned_data['explore_ideas_url'])
         else:
-            Hero.objects.create(title=form.cleaned_data['title'],
-                                description=form.cleaned_data['description'],
-                                image_url=form.cleaned_data['image_url'],
-                                activity_url=form.cleaned_data['activity_url'],
-                                explore_ideas_url=form.cleaned_data['explore_ideas_url'])
+            raise Exception("image_url is not string")
 
 
 class PrivacyAdmin(SummernoteModelAdmin):

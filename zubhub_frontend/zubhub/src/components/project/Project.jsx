@@ -44,25 +44,14 @@ function Project(props) {
       <Card className={classes.root}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
           {project.video ? (
-            isCloudinaryVideo(project.video) ||
-            isGdriveORVimeoORYoutube(project.video) ? (
-              <>
-                <img
-                  className={classes.mediaImageStyle}
-                  src={buildVideoThumbnailURL(project.video)}
-                  alt={project.title}
-                />
-                <img className={classes.playIconStyle} src={playIcon} alt="" />
-              </>
-            ) : (
-              <>
-                <video
-                  className={classes.mediaImageStyle}
-                  src={project.video}
-                ></video>
-                <img className={classes.playIconStyle} src={playIcon} alt="" />
-              </>
-            )
+            <>
+              <img
+                className={classes.mediaImageStyle}
+                src={buildVideoThumbnailURL(project.video)}
+                alt={project.title}
+              />
+              <img className={classes.playIconStyle} src={playIcon} alt="" />
+            </>
           ) : project.images.length > 0 ? (
             <img
               className={classes.mediaImageStyle}

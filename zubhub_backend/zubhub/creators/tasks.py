@@ -4,7 +4,7 @@ from celery.task.schedules import crontab
 from random import uniform
 from celery import shared_task
 import requests
-from zubhub.utils import upload_file_async
+from zubhub.utils import upload_file_to_media_server
 
 try:
     from allauth.account.adapter import get_adapter
@@ -49,14 +49,14 @@ def upload_file_task(self, user_id, username):
 
     try:
         res = requests.get(creator[0].avatar)
-        res = upload_file_async(
-            res.content, key, self.request.id.__str__())
+        res = upload_file_to_media_server(res.content, key)
+        res = res.json()
+        res = res["url"]
 
         if isinstance(res, str):
             creator.update(avatar=res)
         else:
-            res = res.json()
-            creator.update(avatar=res["url"])
+            raise Exception()
 
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
