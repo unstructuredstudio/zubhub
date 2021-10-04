@@ -64,9 +64,10 @@ services:
     volumes:
       - ./.ssl-data:/etc/resty-auto-ssl
     environment:
-      ALLOWED_DOMAINS: "(api|www.api|rabbitmq|prometheus).zubhub.unstructured.studio"
+      ALLOWED_DOMAINS: "(api|www.api|rabbitmq|prometheus|media).zubhub.unstructured.studio"
       SITES:
         "api.zubhub.unstructured.studio=web:8000;www.api.zubhub.unstructured.studio=web:8000;\
+        media.zubhub.unstructured.studio=media:8001;\
         rabbitmq.zubhub.unstructured.studio=rabbitmq:15672;prometheus.zubhub.unstructured.studio=prometheus:9090"
       FORCE_HTTPS: "true"
     depends_on:
