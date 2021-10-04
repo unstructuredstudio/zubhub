@@ -22,21 +22,22 @@ def delete_file_task(self, url):
 
 @shared_task(bind=True, acks_late=True, max_retries=10)
 def update_video_url_if_transform_ready(self, dict):
-    from projects.models import Project
+    pass
+    # from projects.models import Project
 
-    try:
-        result = get_cloudinary_resource_info(dict["url"])
-        result = result.json()
-        result = result["result"]
-        result = list(filter(
-            lambda each: each["transformation"] == "sp_hd/mpd", result["derived"]))
-        if(len(result) > 0):
-            Project.objects.filter(id=dict["project_id"]).update(
-                video=result[0]["secure_url"])
-        else:
-            raise Exception("retry update_video_url_if_transform_ready")
-    except Exception as e:
-        raise self.retry(exc=e, countdown=180)
+    # try:
+    #     result = get_cloudinary_resource_info(dict["url"])
+    #     result = result.json()
+    #     result = result["result"]
+    #     result = list(filter(
+    #         lambda each: each["transformation"] == "sp_hd/mpd", result["derived"]))
+    #     if(len(result) > 0):
+    #         Project.objects.filter(id=dict["project_id"]).update(
+    #             video=result[0]["secure_url"])
+    #     else:
+    #         raise Exception("retry update_video_url_if_transform_ready")
+    # except Exception as e:
+    #     raise self.retry(exc=e, countdown=180)
 
 
 @periodic_task(run_every=(crontab(hour="*/5")), name="projects.tasks.update_search_index",

@@ -64,7 +64,7 @@ services:
     volumes:
       - ./.ssl-data:/etc/resty-auto-ssl
     environment:
-      ALLOWED_DOMAINS: "(api|www.api|rabbitmq|prometheus).zubhub.unstructured.studio"
+      ALLOWED_DOMAINS: "(api|www.api|rabbitmq|prometheus|media).zubhub.unstructured.studio"
       SITES:
         "api.zubhub.unstructured.studio=web:8000;www.api.zubhub.unstructured.studio=web:8000;\
         media.zubhub.unstructured.studio=media:8001;\
