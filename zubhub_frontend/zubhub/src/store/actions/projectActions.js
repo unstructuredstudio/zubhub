@@ -378,13 +378,8 @@ export const getHero = args => {
   return dispatch => {
     return API.getHero()
       .then(res => {
-        if (res.id) {
           dispatch(setHero(res));
           return { loading: false };
-        } else {
-          dispatch(setHero({}));
-          return { loading: false };
-        }
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
