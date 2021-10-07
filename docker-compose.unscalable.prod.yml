@@ -96,7 +96,7 @@ services:
     volumes:
       - ./.ssl-data:/etc/resty-auto-ssl
     environment:
-      ALLOWED_DOMAINS: "(api.|www.api.|media.|)${DEFAULT_FRONTEND_DOMAIN}"
+      ALLOWED_DOMAINS: "(api.|www.api.|media.)${DEFAULT_FRONTEND_DOMAIN},www.${DEFAULT_FRONTEND_DOMAIN},${DEFAULT_FRONTEND_DOMAIN}"
       SITES:
         "${DEFAULT_FRONTEND_DOMAIN}=frontend;www.${DEFAULT_FRONTEND_DOMAIN}=frontend;\
         api.${DEFAULT_FRONTEND_DOMAIN}=web:8000;www.api.${DEFAULT_FRONTEND_DOMAIN}=web:8000;\
