@@ -1,6 +1,6 @@
-from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, PrivacySerializer
-from .models import Hero, FAQ, Privacy, Help
-from .utils import delete_file_from_media_server, upload_file_to_media_server, get_sig, get_cloudinary_resource_info
+from .serializers import FAQListSerializer, HelpSerializer, PrivacySerializer
+from .models import Hero, FAQ, Privacy, Help, StaticAssets
+from .utils import delete_file_from_media_server, upload_file_to_media_server, get_sig
 from projects.permissions import PostUserRateThrottle, GetUserRateThrottle, SustainedRateThrottle
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
@@ -13,7 +13,6 @@ from math import floor
 import uuid
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from os import stat
 
 
 @api_view(['POST'])
@@ -33,19 +32,6 @@ def SigGenAPIView(request):
     api_key = res["api_key"]
 
     return Response({"signature": signature, "timestamp": timestamp, "public_id": public_id, "api_key": api_key})
-
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@throttle_classes([PostUserRateThrottle, SustainedRateThrottle])
-def test(request):
-
-    url = request.data.get("resource_url")
-
-    res = get_cloudinary_resource_info(url)
-    res = res.json()
-
-    return Response({"result": res["result"]})
 
 
 @api_view(['POST'])
@@ -112,7 +98,6 @@ def UploadFileToLocalAPIView(request):
 
 class HeroAPIView(RetrieveAPIView):
     queryset = Hero.objects.all()
-    serializer_class = HeroSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
@@ -121,6 +106,39 @@ class HeroAPIView(RetrieveAPIView):
         if obj:
             return obj[0]
         return None
+
+    def get(self, _):
+        obj = self.get_object()
+        static_assets = StaticAssets.objects.all().last()
+        if static_assets:
+            header_logo_url = static_assets.header_logo_url
+            footer_logo_url = static_assets.footer_logo_url
+        else:
+            header_logo_url = ""
+            footer_logo_url = ""
+
+        if obj:
+            return Response({
+                "id": obj.id,
+                "title": obj.title,
+                "description": obj.description,
+                "image_url": obj.image_url,
+                "activity_url": obj.activity_url,
+                "explore_ideas_url": obj.explore_ideas_url,
+                "header_logo_url": header_logo_url,
+                "footer_logo_url": footer_logo_url
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "id": "",
+                "title": "",
+                "description": "",
+                "image_url": "",
+                "activity_url": "",
+                "explore_ideas_url": "",
+                "header_logo_url": header_logo_url,
+                "footer_logo_url": footer_logo_url
+            }, status=status.HTTP_200_OK)
 
 
 class HelpAPIView(RetrieveAPIView):
