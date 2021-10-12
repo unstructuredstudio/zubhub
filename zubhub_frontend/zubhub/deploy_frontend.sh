@@ -2,7 +2,7 @@
 
 echo "copying .env file and ssl folder"
 mv /home/zubhub-frontend/zubhub_frontend/zubhub/.env /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/.env
-mv /home/zubhub-frontend/zubhub_frontend/zubhub/.ssl-data /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/
+# mv /home/zubhub-frontend/zubhub_frontend/zubhub/.ssl-data /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/
 echo "done copying .env file and ssl folder"
 
 echo "removing old project folder"
@@ -13,9 +13,9 @@ echo "copying new project folder"
 cp -r /home/zubhub-frontend/zubhub/zubhub_frontend/ /home/zubhub-frontend/zubhub_frontend/
 echo "done copying new project folder"
 
-echo "changing permission of cert storage folder"
-sudo chown -R nobody:nogroup /home/zubhub-frontend/zubhub_frontend/zubhub/.ssl-data/storage
-echo "done changing permission of cert storage folder"
+# echo "changing permission of cert storage folder"
+# sudo chown -R nobody:nogroup /home/zubhub-frontend/zubhub_frontend/zubhub/.ssl-data/storage
+# echo "done changing permission of cert storage folder"
 
 echo "removing uneccessary files and folders"
 rm -rf /home/zubhub-frontend/zubhub
