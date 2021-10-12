@@ -69,3 +69,11 @@ Finally, repeat steps 2 and 3. once done, head over to your browser and try acce
 
 Note: It is extremely important that you take this step seriously. Don't forget to delete the dummy user.
 Only vetted accounts should have the is_staff and is_admin status.
+
+# DEBUG
+
+If you suddenly start getting ssl errors, it is possible that the ssl volume became corrupted. To fix this, just run the below command on the VM containing the nginx reverse-proxy container, then try re-deploying the project:
+
+```commandline
+docker volume rm ssl_data
+```

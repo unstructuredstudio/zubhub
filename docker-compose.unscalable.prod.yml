@@ -94,7 +94,7 @@ services:
       - 443:443
     restart: on-failure
     volumes:
-      - ./.ssl-data:/etc/resty-auto-ssl
+      - ssl_data:/etc/resty-auto-ssl
     environment:
       ALLOWED_DOMAINS: "(api.|www.api.|media.|)${DEFAULT_FRONTEND_DOMAIN}"
       SITES:
@@ -151,4 +151,4 @@ services:
 volumes:
   postgres_data:
   media_data:
-  .ssl-data:
+  ssl_data:
