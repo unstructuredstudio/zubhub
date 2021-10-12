@@ -95,7 +95,7 @@ services:
     restart: on-failure
     volumes:
       - ssl_data:/etc/resty-auto-ssl
-      - ./zubhub_backend/nginx/prod/server-proxy.conf:/etc/nginx/conf.d/server-proxy.conf
+      - ./zubhub_backend/nginx/prod/server-proxy.conf:/usr/local/openresty/nginx/conf/server-proxy.conf
     environment:
       ALLOWED_DOMAINS: "(api.|www.api.|media.|)${DEFAULT_FRONTEND_DOMAIN}"
       SITES:
