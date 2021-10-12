@@ -35,7 +35,7 @@ cp -r /home/zubhub/zubhub_backend/ /home/zubhub_backend/
 echo "done copying new backend folder"
 
 # echo "changing permission of cert storage folder if .ssl-data exists"
-# [-d "/home/.ssl-data" ] && sudo chown -R nobody:nogroup /home/.ssl-data/storage
+# [ -d "/home/.ssl-data" ] && sudo chown -R nobody:nogroup /home/.ssl-data/storage
 # echo "done changing permission of cert storage folder"
 
 echo "removing uneccessary files and folders"
