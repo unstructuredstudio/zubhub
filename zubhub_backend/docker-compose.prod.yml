@@ -75,6 +75,8 @@ services:
       - web
       - rabbitmq
       - prometheus
+      - media
+      - celery_worker
 
   celery_worker:
     image: unstructuredstudio/zubhub-services_celery:latest
