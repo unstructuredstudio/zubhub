@@ -63,6 +63,7 @@ services:
       - 443:443
     volumes:
       - ssl_data:/etc/resty-auto-ssl
+      - ./nginx/prod/server-proxy.conf:/etc/nginx/conf.d/server-proxy.conf
     environment:
       ALLOWED_DOMAINS: "(api|www.api|rabbitmq|prometheus|media).zubhub.unstructured.studio"
       SITES:
