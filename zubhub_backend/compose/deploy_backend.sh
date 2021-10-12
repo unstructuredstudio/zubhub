@@ -16,7 +16,7 @@ echo "done creating new project folder"
 echo "coping new project folder"
 cp /home/zubhub-services/zubhub/zubhub_backend/.env /home/zubhub-services/zubhub_services/
 cp /home/zubhub-services/zubhub/zubhub_backend/docker-compose.prod.yml /home/zubhub-services/zubhub_services/
-cp /home/zubhub-services/zubhub/zubhub_backend/nginx /home/zubhub-services/zubhub_services/
+cp -r /home/zubhub-services/zubhub/zubhub_backend/nginx /home/zubhub-services/zubhub_services/
 # cp -r /home/zubhub-services/zubhub/zubhub_backend/.ssl-data /home/zubhub-services/zubhub_services/
 cp -r /home/zubhub-services/zubhub/zubhub_backend/compose/prometheus.yml /home/zubhub-services/zubhub_services/compose/
 echo "done coping new project folder"
