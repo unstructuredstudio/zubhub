@@ -78,8 +78,9 @@ export const handleDescTooltipClose = () => {
   return { desc_tool_tip_open: false };
 };
 
-export const handleToggleSelectVideoFileChecked = bool => {
-  return { select_video_file: !bool };
+export const handleSelectVideoFileChecked = el => {
+  el.click();
+  return { select_video_file: true };
 };
 
 export const handleSuggestTags = (e, props, state, handleSetState) => {

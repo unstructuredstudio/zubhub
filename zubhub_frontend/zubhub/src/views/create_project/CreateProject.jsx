@@ -12,6 +12,10 @@ import AddIcon from '@material-ui/icons/Add';
 import ImageIcon from '@material-ui/icons/Image';
 import VideoIcon from '@material-ui/icons/Movie';
 import HelpIcon from '@material-ui/icons/Help';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
+import MovieIcon from '@material-ui/icons/Movie';
+import InsertLinkIcon from '@material-ui/icons/InsertLink';
 import {
   Grid,
   Box,
@@ -22,7 +26,6 @@ import {
   Chip,
   Dialog,
   Select,
-  Switch,
   MenuItem,
   Typography,
   CircularProgress,
@@ -30,7 +33,6 @@ import {
   FormHelperText,
   FormControl,
   InputLabel,
-  FormControlLabel,
   Tooltip,
   ClickAwayListener,
 } from '@material-ui/core';
@@ -52,7 +54,6 @@ import {
   handleVideoButtonClick,
   handleDescTooltipOpen,
   handleDescTooltipClose,
-  handleToggleSelectVideoFileChecked,
   handleAddMaterialFieldChange,
   addMaterialsUsedNode,
   removeTag,
@@ -60,12 +61,14 @@ import {
   handleSuggestTags,
   uploadProject,
   checkMediaFilesErrorState,
+  handleSelectVideoFileChecked,
 } from './createProjectScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import * as AuthActions from '../../store/actions/authActions';
 import ErrorPage from '../error/ErrorPage';
 import { useStateUpdateCallback } from '../../assets/js/utils/hooks';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import commonStyles from '../../assets/js/styles';
@@ -831,179 +834,153 @@ function CreateProject(props) {
                     }
                     aria-labelledby="video upload dialog"
                   >
-                    <Container className={classes.containerStyle}>
-                      <Card className={classes.cardStyle}>
+                    <Container
+                      className={clsx(
+                        classes.containerStyle,
+                        classes.videoInputDialogContainerStyle,
+                      )}
+                    >
+                      <Card
+                        className={clsx(
+                          classes.cardStyle,
+                          classes.videoInputDialogCardStyle,
+                        )}
+                      >
                         <CardActionArea>
                           <CardContent>
-                            <Typography
-                              className={classes.titleStyle}
-                              gutterBottom
-                              variant="h5"
-                              component="h2"
-                              color="textPrimary"
+                            <div
+                              className={
+                                classes.videoInputDialogControlSectionStyle
+                              }
                             >
-                              {t('createProject.inputs.video.dialogPrimary')}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="textSecondary"
-                              component="p"
-                              className={classes.descStyle}
-                            >
-                              {t('createProject.inputs.video.dialogSecondary')}
-                            </Typography>
-
-                            <Grid container spacing={3}>
-                              <Grid
-                                item
-                                xs={12}
-                                className={common_classes.marginTop1em}
+                              <CustomButton
+                                className={
+                                  classes.videoInputDialogControlButtonStyle
+                                }
+                                primaryButtonStyle={!select_video_file}
+                                secondaryButtonStyle={select_video_file}
+                                size="medium"
+                                onClick={_ =>
+                                  handleSetState({ select_video_file: false })
+                                }
                               >
-                                <Grid
-                                  container
-                                  spacing={1}
-                                  alignItems="flex-end"
+                                <div
+                                  className={
+                                    classes.videoInputDialogControlButtonUseTextDescStyle
+                                  }
                                 >
-                                  {!select_video_file ? (
-                                    <Grid item xs={12} sm={12}>
-                                      <FormControl
-                                        className={clsx(
-                                          classes.margin,
-                                          classes.textField,
-                                        )}
-                                        variant="outlined"
-                                        size="small"
-                                        fullWidth
-                                        margin="normal"
-                                      >
-                                        <InputLabel
-                                          className={classes.customLabelStyle}
-                                          htmlFor="url-input"
-                                        >
-                                          {t(
-                                            'createProject.inputs.video.dialogURLFieldLabel',
-                                          )}
-                                        </InputLabel>
-                                        <OutlinedInput
-                                          ref={refs.video_el}
-                                          className={classes.customInputStyle}
-                                          type="text"
-                                          name="url-input"
-                                          labelWidth={80}
-                                          onChange={async e =>
-                                            handleSetState(
-                                              await handleVideoFieldChange(
-                                                e,
-                                                refs,
-                                                props,
-                                                state,
-                                                handleSetState,
-                                              ),
-                                            )
-                                          }
-                                        />
-                                      </FormControl>
-                                    </Grid>
-                                  ) : (
-                                    <Box
-                                      className={classes.videoFileDropBoxStyles}
-                                    >
-                                      <input
-                                        className={classes.videoFileInputStyle}
-                                        ref={refs.video_file_el}
-                                        type="file"
-                                        accept="video/*"
-                                        id="video"
-                                        name="video"
-                                        onChange={async e => {
-                                          handleSetState(
-                                            await handleVideoFieldChange(
-                                              e,
-                                              refs,
-                                              props,
-                                              state,
-                                              handleSetState,
-                                            ),
-                                          );
-                                        }}
-                                        onDragLeave={e => {
-                                          e.target.parentNode.classList.remove(
-                                            'videoFileDragOver',
-                                          );
-                                        }}
-                                        onDragOver={e => {
-                                          e.preventDefault();
-                                          e.target.parentNode.classList.add(
-                                            'videoFileDragOver',
-                                          );
-                                        }}
-                                        onBlur={props.handleBlur}
-                                      />
-
-                                      <p className={classes.videoFileName}>
-                                        {refs.video_file_el.current?.files?.[0]
-                                          ? refs.video_file_el.current
-                                              ?.files?.[0]?.name
-                                          : t(
-                                              'createProject.inputs.video.dialogFileFieldLabel',
-                                            )}
-                                      </p>
-                                    </Box>
+                                  {t(
+                                    'createProject.inputs.video.dialogURLToggle',
                                   )}
-                                </Grid>
-                              </Grid>
+                                </div>
+                                <InsertLinkIcon
+                                  className={
+                                    classes.videoInputDialogControlButtonUseIconDescStyle
+                                  }
+                                />
+                              </CustomButton>
+                              <CustomButton
+                                className={
+                                  classes.videoInputDialogControlButtonStyle
+                                }
+                                primaryButtonStyle={select_video_file}
+                                secondaryButtonStyle={!select_video_file}
+                                size="medium"
+                                onClick={_ =>
+                                  handleSetState(
+                                    handleSelectVideoFileChecked(
+                                      refs.video_file_el.current,
+                                    ),
+                                  )
+                                }
+                              >
+                                <div
+                                  className={
+                                    classes.videoInputDialogControlButtonUseTextDescStyle
+                                  }
+                                >
+                                  {t(
+                                    'createProject.inputs.video.dialogFileToggle',
+                                  )}
+                                </div>
+                                <MovieIcon
+                                  className={
+                                    classes.videoInputDialogControlButtonUseIconDescStyle
+                                  }
+                                />
+                              </CustomButton>
+                            </div>
+                            <Grid container spacing={1} alignItems="flex-end">
                               <Grid
                                 item
                                 xs={12}
                                 sm={12}
-                                className={
-                                  classes.videoInputDialogActionSectionStyle
-                                }
+                                className={clsx(
+                                  common_classes.marginTop1em,
+                                  classes.videoInputDialogBodyGridStyle,
+                                )}
                               >
-                                <FormControlLabel
-                                  className={
-                                    classes.videoInputDialogSwitchContainerStyle
-                                  }
-                                  control={
-                                    <Switch
-                                      className={
-                                        classes.videoInputDialogToggleSwitchStyles
-                                      }
-                                      checked={select_video_file}
-                                      onChange={_ =>
+                                {!select_video_file ? (
+                                  <FormControl
+                                    className={clsx(
+                                      classes.margin,
+                                      classes.textField,
+                                      classes.videoInputDialogURLFormControlStyle,
+                                    )}
+                                    variant="outlined"
+                                    size="small"
+                                  >
+                                    <InputLabel
+                                      className={classes.customLabelStyle}
+                                      htmlFor="url-input"
+                                    >
+                                      {t(
+                                        'createProject.inputs.video.dialogURLFieldLabel',
+                                      )}
+                                    </InputLabel>
+                                    <OutlinedInput
+                                      ref={refs.video_el}
+                                      className={classes.customInputStyle}
+                                      type="text"
+                                      name="url-input"
+                                      labelWidth={calculateLabelWidth(
+                                        t(
+                                          'createProject.inputs.video.dialogURLFieldLabel',
+                                        ),
+                                        document,
+                                      )}
+                                      placeholder="https://youtube.com/..."
+                                      onChange={async e =>
                                         handleSetState(
-                                          handleToggleSelectVideoFileChecked(
-                                            select_video_file,
+                                          await handleVideoFieldChange(
+                                            e,
+                                            refs,
+                                            props,
+                                            state,
+                                            handleSetState,
                                           ),
                                         )
                                       }
                                     />
-                                  }
-                                  label={
-                                    <Typography
-                                      color="textSecondary"
-                                      className={classes.customLabelStyle}
-                                    >
-                                      {select_video_file
-                                        ? t(
-                                            'createProject.inputs.video.dialogURLToggleLabel',
-                                          )
-                                        : t(
-                                            'createProject.inputs.video.dialogFileToggleLabel',
-                                          )}
-                                    </Typography>
-                                  }
-                                />
-
+                                  </FormControl>
+                                ) : null}
+                                {select_video_file ? (
+                                  <p className={classes.videoFileName}>
+                                    {refs.video_file_el.current?.files?.[0]
+                                      ? refs.video_file_el.current?.files?.[0]
+                                          ?.name
+                                      : t(
+                                          'createProject.inputs.video.dialogFileToggle',
+                                        )}
+                                  </p>
+                                ) : null}
                                 <CustomButton
-                                  variant="outlined"
-                                  size="large"
-                                  type="submit"
-                                  secondaryButtonStyle
-                                  customButtonStyle
                                   className={
                                     classes.videoInputDialogActionButtonStyle
                                   }
+                                  secondaryButtonStyle
+                                  variant="outlined"
+                                  size="medium"
                                   onClick={async () =>
                                     handleSetState({
                                       ...(await handleVideoFieldCancel(
@@ -1015,17 +992,15 @@ function CreateProject(props) {
                                     })
                                   }
                                 >
-                                  {t('createProject.inputs.video.dialogCancel')}
+                                  <CloseIcon />
                                 </CustomButton>
+
                                 <CustomButton
-                                  variant="contained"
-                                  size="large"
-                                  type="submit"
-                                  primaryButtonStyle
-                                  customButtonStyle
                                   className={
                                     classes.videoInputDialogActionButtonStyle
                                   }
+                                  primaryButtonStyle
+                                  size="medium"
                                   onClick={async () =>
                                     handleSetState({
                                       ...(await handleVideoSelectDone(
@@ -1037,8 +1012,29 @@ function CreateProject(props) {
                                     })
                                   }
                                 >
-                                  {t('createProject.inputs.video.dialogDone')}
+                                  <CheckIcon />
                                 </CustomButton>
+
+                                <input
+                                  className={common_classes.displayNone}
+                                  ref={refs.video_file_el}
+                                  type="file"
+                                  accept="video/*"
+                                  id="video"
+                                  name="video"
+                                  onChange={async e => {
+                                    handleSetState(
+                                      await handleVideoFieldChange(
+                                        e,
+                                        refs,
+                                        props,
+                                        state,
+                                        handleSetState,
+                                      ),
+                                    );
+                                  }}
+                                  onBlur={props.handleBlur}
+                                />
                               </Grid>
                             </Grid>
                           </CardContent>
