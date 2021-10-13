@@ -17,7 +17,7 @@ RUN apt-get update \
 WORKDIR /celery
 
 # copying neccessary files to work directory
-COPY ./requirements.txt /celery/
+COPY ./compose/celery/requirements.txt /celery/
 
 RUN pip install --upgrade pip wheel \
   # Requirements are installed here to ensure they will be cached.

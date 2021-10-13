@@ -20,7 +20,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./.ssl-data:/etc/resty-auto-ssl
+      - ssl_data:/etc/resty-auto-ssl
     environment:
       ALLOWED_DOMAINS: '(zubhub|www.zubhub).unstructured.studio'
       SITES: 'zubhub.unstructured.studio=zubhub_frontend;www.zubhub.unstructured.studio=zubhub_frontend'
@@ -29,4 +29,4 @@ services:
       - zubhub_frontend
 
 volumes:
-  .ssl-data:
+  ssl_data:

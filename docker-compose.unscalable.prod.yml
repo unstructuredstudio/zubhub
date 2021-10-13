@@ -1,0 +1,159 @@
+version: "3.3"
+
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./zubhub_frontend/zubhub/
+      dockerfile: Dockerfile.prod
+    volumes:
+      - ./zubhub_frontend/zubhub/nginx/prod/default.conf:/etc/nginx/conf.d/default.conf
+    restart: on-failure
+    ports:
+      - "80"
+
+  web:
+    container_name: web
+    env_file:
+      - ./zubhub_backend/.env
+    build:
+      context: ./zubhub_backend/
+      dockerfile: compose/web/prod/Dockerfile
+    restart: on-failure
+    volumes:
+      - ./zubhub_backend/zubhub:/zubhub_backend/zubhub
+      - ./zubhub_backend/compose/web/requirements.txt:/zubhub_backend/requirements.txt:ro
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - rabbitmq
+
+  media:
+    container_name: media
+    env_file:
+      - ./zubhub_backend/.env
+    build:
+      context: ./zubhub_backend/
+      dockerfile: compose/media/prod/Dockerfile
+    restart: on-failure
+    volumes:
+      - media_data:/home/media/media_store
+      - ./zubhub_backend/compose/media/requirements.txt:/home/requirements.txt:ro
+    ports:
+      - 8001:8001
+    depends_on:
+      - web
+
+  db:
+    container_name: db
+    env_file:
+      - ./zubhub_backend/.env
+    image: postgres:11
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432
+
+  rabbitmq:
+    container_name: rabbitmq
+    env_file:
+      - ./zubhub_backend/.env
+    image: rabbitmq:3-management
+    restart: on-failure
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  celery_worker:
+    container_name: celery_worker
+    env_file:
+      - ./zubhub_backend/.env
+    build:
+      context: ./zubhub_backend/
+      dockerfile: compose/celery/Dockerfile
+    command: /celery/start-celeryworker
+    restart: on-failure
+    volumes:
+      - ./zubhub_backend/zubhub:/zubhub_backend/zubhub
+      - ./zubhub_backend/compose/celery/start-celeryworker:/zubhub_backend/start-celeryworker:ro
+      - ./zubhub_backend/compose/celery/requirements.txt:/zubhub_backend/requirements.txt:ro
+    depends_on:
+      - rabbitmq
+      - db
+
+  reverse-proxy:
+    env_file:
+      - ./zubhub_backend/.env
+    image: valian/docker-nginx-auto-ssl:1.0.0
+    ports:
+      - 80:80
+      - 443:443
+    restart: on-failure
+    volumes:
+      - ssl_data:/etc/resty-auto-ssl
+      - ./zubhub_backend/nginx/prod/server-proxy.conf:/usr/local/openresty/nginx/conf/server-proxy.conf
+    environment:
+      ALLOWED_DOMAINS: "(api.|www.api.|media.|)${DEFAULT_FRONTEND_DOMAIN}"
+      SITES:
+        "${DEFAULT_FRONTEND_DOMAIN}=frontend;www.${DEFAULT_FRONTEND_DOMAIN}=frontend;\
+        api.${DEFAULT_FRONTEND_DOMAIN}=web:8000;www.api.${DEFAULT_FRONTEND_DOMAIN}=web:8000;\
+        media.${DEFAULT_FRONTEND_DOMAIN}=media:8001"
+      FORCE_HTTPS: "true"
+    depends_on:
+      - web
+      - rabbitmq
+      - frontend
+      - media
+      - celery_worker
+      - db
+
+  # flower:
+  #   container_name: flower
+  #   env_file: .env
+  #   build:
+  #     context: .
+  #     dockerfile: ./compose/flower/Dockerfile
+  #   ports:
+  #     - 5555:5555
+  #   command: /flower/start-flower
+  #   restart: on-failure
+  #   volumes:
+  #     - ./zubhub:/zubhub_backend/zubhub
+  #     - ./compose/flower/start-flower:/start-flower:ro
+  #     - ./requirements.txt:/requirements.txt:ro
+  #   depends_on:
+  #     - celery_worker
+  #     - rabbitmq
+  #     - db
+
+  # prometheus:
+  #   container_name: prometheus
+  #   image: prom/prometheus
+  #   ports:
+  #     - 9090:9090
+  #   command:
+  #     - --config.file=/etc/prometheus/prometheus.yml
+  #   restart: on-failure
+  #   volumes:
+  #     - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   depends_on:
+  #     - cadvisor
+
+  # cadvisor:
+  #   image: google/cadvisor
+  #   container_name: cadvisor
+  #   restart: on-failure
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+
+volumes:
+  postgres_data:
+  media_data:
+  ssl_data:
