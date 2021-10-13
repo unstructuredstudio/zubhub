@@ -160,6 +160,11 @@ const styles = theme => ({
       top: '20px',
     },
   },
+  uploadProgressIndicatorContainerStyle: {
+    display: "inline-flex",
+    position: "relative",
+    overflow: "hidden"
+  },
   uploadProgressLabelStyle: {
     color: 'white',
   },

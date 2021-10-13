@@ -111,7 +111,6 @@ def delete_file_from_cloudinary(url):
 
 
 def delete_file_from_local(url):
-    print("--------------------------inside delete file from local: url is ", url)
     url = url.split("/")
     folder = url[-2]
     name = url[-1]
