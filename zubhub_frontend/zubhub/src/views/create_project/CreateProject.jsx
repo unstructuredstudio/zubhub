@@ -1059,35 +1059,29 @@ function CreateProject(props) {
                   >
                     <CircularProgress
                       className={classes.uploadProgressStyle}
-                      variant={
-                        media_upload.track_upload_percent
-                          ? 'determinate'
-                          : 'indeterminate'
-                      }
+                      variant="determinate"
                       size={70}
                       thickness={6}
                       value={media_upload.upload_percent}
                     />
-                    {media_upload.track_upload_percent ? (
-                      <Box
-                        top={0}
-                        left={0}
-                        bottom={0}
-                        right={0}
-                        position="absolute"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Typography
-                          className={classes.uploadProgressLabelStyle}
-                          variant="caption"
-                          component="div"
-                        >{`${Math.round(
-                          media_upload.upload_percent,
-                        )}%`}</Typography>
-                      </Box>
-                    ) : null}
+                    <Box
+                      top={0}
+                      left={0}
+                      bottom={0}
+                      right={0}
+                      position="absolute"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Typography
+                        className={classes.uploadProgressLabelStyle}
+                        variant="caption"
+                        component="div"
+                      >{`${Math.round(
+                        media_upload.upload_percent,
+                      )}%`}</Typography>
+                    </Box>
                   </Box>
                 </Dialog>
               </CardContent>
