@@ -65,6 +65,13 @@ const styles = theme => ({
       },
     },
   },
+
+  locationInputStyle: {
+    "& input": {
+      boxSizing: "content-box",
+    }
+  },
+
   secondaryLink: {
     color: '#00B8C4',
     '&:hover': {
@@ -124,5 +131,3 @@ const styles = theme => ({
 });
 
 export default styles;
-
-// ${calculateLabelWidth(props.t('signup.inputs.dateOfBirth.label'), document)}

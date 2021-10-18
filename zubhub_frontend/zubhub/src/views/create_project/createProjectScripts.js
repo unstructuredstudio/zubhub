@@ -833,8 +833,8 @@ export class UploadMedia {
        this.handleSetState = handleSetState;
        this.xhr.upload.onload = this.uploadOnLoad;
        this.xhr.onreadystatechange = this.onReadyStateChange;
-       this.upload.onerror = this.uploadOnerror;
-       this.upload.onprogress = this.uploadOnprogress;
+       this.xhr.upload.onerror = this.uploadOnerror;
+       this.xhr.upload.onprogress = this.uploadOnprogress;
     };
 
   

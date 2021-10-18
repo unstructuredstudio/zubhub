@@ -351,7 +351,10 @@ function Signup(props) {
                       </InputLabel>
                       <OutlinedInput
                         ref={refs.phone_el}
-                        className={classes.customInputStyle}
+                        className={clsx(
+                          classes.customInputStyle,
+                          classes.locationInputStyle,
+                        )}
                         id="phone"
                         name="phone"
                         type="phone"
