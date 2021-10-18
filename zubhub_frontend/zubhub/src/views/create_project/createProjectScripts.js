@@ -25,7 +25,6 @@ export const vars = {
       successful_uploads: 0,
       upload_info: {},
       upload_percent: 0,
-      track_upload_percent: false,
       uploaded_images_url: [],
       uploaded_videos_url: [],
     },
@@ -357,9 +356,6 @@ export const uploadVideo = async(video, state, props, handleSetState) => {
       if(res && res.local === true){
         uploadVideoToLocal(video, state, props, handleSetState);
       }else if(res && res.local === false){
-        const { media_upload } = state;
-        media_upload.track_upload_percent = true;
-        handleSetState({media_upload});
         uploadVideoToCloudinary(video, state, props, handleSetState);
       };
   }
@@ -437,9 +433,6 @@ export const uploadImage = async(image, state, props, handleSetState) => {
    if(res && res.local === true){
     uploadImageToLocal(image, state, props, handleSetState);
    }else if(res && res.local === false){
-    const { media_upload } = state;
-    media_upload.track_upload_percent = true;
-    handleSetState({media_upload});
     uploadImageToDO(image, state, props, handleSetState);
    }
 
