@@ -6,7 +6,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Location, PhoneNumber
 from allauth.account.models import EmailAddress
-from rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.utils import setup_user_email
 from .utils import setup_user_phone
 from projects.models import Comment
