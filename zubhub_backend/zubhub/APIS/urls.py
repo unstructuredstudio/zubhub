@@ -4,8 +4,8 @@ from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
 
 
 urlpatterns = [
-    path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('creators/', include('creators.urls', namespace="creators")),
     path('projects/', include('projects.urls', namespace="projects")),
     path('upload_file/', UploadFileAPIView, name="upload_file"),

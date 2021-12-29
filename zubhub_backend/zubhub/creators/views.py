@@ -14,7 +14,7 @@ from rest_framework.generics import (UpdateAPIView, RetrieveAPIView,
                                      ListAPIView, DestroyAPIView, CreateAPIView, GenericAPIView)
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from dj_rest_auth.registration.views import RegisterView
+from rest_auth.registration.views import RegisterView
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
 from .serializers import (CreatorSerializer, LocationSerializer, VerifyPhoneSerializer,
