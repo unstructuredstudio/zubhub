@@ -12,7 +12,7 @@ from django.utils.text import slugify
 from math import floor
 import uuid
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 
 
 @api_view(['POST'])
