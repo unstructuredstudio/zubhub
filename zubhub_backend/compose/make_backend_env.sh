@@ -1,25 +1,31 @@
+#!/usr/bin/env bash
+# Generate a .env file for backend local development
+mkpass() {
+    head /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c ${1:-20}
+}
+cat > ${1:?Missing target file} << _EOF
 ENVIRONMENT=production
 
-DEFAULT_FRONTEND_DOMAIN=<your frontend domain>
-DEFAULT_BACKEND_DOMAIN=<your backend domain>
+DEFAULT_FRONTEND_DOMAIN=localhost:3000
+DEFAULT_BACKEND_DOMAIN=localhost:8000
 DEFAULT_DISPLAY_NAME=ZubHub
-DEFAULT_FRONTEND_PROTOCOL=<frontend protocol i.e http or https>
-DEFAULT_BACKEND_PROTOCOL=<backend protocol>
+DEFAULT_FRONTEND_PROTOCOL=http
+DEFAULT_BACKEND_PROTOCOL=http
 
-SECRET_KEY=<django secret key here>
+SECRET_KEY=$(mkpass 48)
 DEBUG=1
 STORE_MEDIA_LOCALLY=1
-MEDIA_SECRET=random_string
-DEFAULT_MEDIA_SERVER_PROTOCOL=<media server protocol>
-DEFAULT_MEDIA_SERVER_DOMAIN=<media server domain>
+MEDIA_SECRET=$(mkpass 48)
+DEFAULT_MEDIA_SERVER_PROTOCOL=http
+DEFAULT_MEDIA_SERVER_DOMAIN=localhost:8001
 
 POSTGRES_NAME=postgres
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=<random password for postgres>
+POSTGRES_PASSWORD=$(mkpass)
 POSTGRES_HOST=db
 
-GF_ADMIN_USER=admin
-GF_ADMIN_PASSWORD=admin
+#GF_ADMIN_USER=admin
+#GF_ADMIN_PASSWORD=admin
 
 #CLOUDINARY_CLOUD_NAME=<cloudinary cloud name>
 #CLOUDINARY_API_KEY=<cloudinary api key>
@@ -54,4 +60,5 @@ PROXY_COUNT=0
 DETECT_MISCONFIG=0
 
 #DANGER: don't forget to delete this user after you have created a proper superuser!!!
-SUPERUSER_PASSWORD=<initial super user password>
+SUPERUSER_PASSWORD=$(mkpass)
+_EOF
