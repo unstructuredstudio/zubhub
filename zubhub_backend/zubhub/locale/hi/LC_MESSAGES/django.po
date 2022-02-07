@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-10 06:00+0000\n"
+"POT-Creation-Date: 2022-02-07 05:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FIRST Ndibe Raymond <ndiberaymond1@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,19 +18,85 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: zubhub/creators/serializers.py:46
+#: zubhub/creators/serializers.py:90 zubhub/creators/serializers.py:107
+#: zubhub/creators/serializers.py:157 zubhub/creators/serializers.py:168
+msgid "you must provide either email or phone number"
+msgstr ""
+
+#: zubhub/creators/serializers.py:96
+msgid "a user with that email address already exists"
+msgstr ""
+
+#: zubhub/creators/serializers.py:100 zubhub/creators/serializers.py:121
+msgid "to edit this field mail hello@unstructured.studio"
+msgstr ""
+
+#: zubhub/creators/serializers.py:111 zubhub/creators/serializers.py:172
+msgid ""
+"Phone number must be entered in the format: '+999999999'. Up to 15 digits "
+"allowed."
+msgstr ""
+
+#: zubhub/creators/serializers.py:117
+msgid "a user with that phone number already exists"
+msgstr ""
+
+#: zubhub/creators/serializers.py:161
+msgid "A user with that email address already exists"
+msgstr ""
+
+#: zubhub/creators/serializers.py:176
+msgid "A user with that phone number already exists"
+msgstr ""
+
+#: zubhub/creators/serializers.py:183
 msgid "Date of Birth must be less than today's date"
 msgstr "जन्म तिथि आज की तारीख से कम होनी चाहिए"
 
-#: zubhub/creators/serializers.py:51
+#: zubhub/creators/serializers.py:188
 msgid "Location is required"
 msgstr "स्थान की आवश्यकता है"
 
-#: zubhub/projects/serializers.py:68 zubhub/projects/serializers.py:74
-msgid "You must provide either image(s), video file, or video URL to create your project!"
-msgstr "अपना प्रोजेक्ट बनाने के लिए आपको या तो छवि (छवियों), वीडियो फ़ाइल, या वीडियो URL प्रदान करना होगा!"
+#: zubhub/creators/serializers.py:223 zubhub/creators/serializers.py:229
+msgid ""
+"you must submit group member usernames either through the form or as csv"
+msgstr ""
+
+#: zubhub/creators/views.py:87 zubhub/creators/views.py:229
+msgid "ok"
+msgstr ""
+
+#: zubhub/creators/views.py:344 zubhub/projects/views.py:208
+msgid "parent comment does not exist"
+msgstr ""
+
+#: zubhub/projects/serializers.py:138 zubhub/projects/serializers.py:144
+msgid ""
+"You must provide either image(s), video file, or video URL to create your "
+"project!"
+msgstr ""
+"अपना प्रोजेक्ट बनाने के लिए आपको या तो छवि (छवियों), वीडियो फ़ाइल, या वीडियो URL "
+"प्रदान करना होगा!"
+
+#: zubhub/projects/serializers.py:150 zubhub/projects/serializers.py:159
+msgid "tags format not supported"
+msgstr ""
+
+#: zubhub/projects/serializers.py:165
+msgid "tags support only letters, numbers, spaces, and dashes"
+msgstr ""
+
+#: zubhub/projects/serializers.py:170
+msgid "tags must not be more than 5"
+msgstr ""
 
 #: zubhub/templates/account/email/email_confirmation_message.txt:6
+#: zubhub/templates/account/email/group_invite_confirmation_message.txt:5
+#: zubhub/templates/account/phone/group_invite_confirmation_message.txt:5
+#: zubhub/templates/account/phone/phone_confirmation.txt:5
+#: zubhub/templates/projects/email/new_staff_pick_notification_message.html:6
+#: zubhub/templates/projects/phone/new_staff_pick_notification_message.txt:5
+#: zubhub/templates/projects/phone/spam_notification_message.txt:5
 msgid "Hello from "
 msgstr "से नमस्कार "
 
@@ -42,20 +108,203 @@ msgid ""
 "as an e-mail address to connect their account.\n"
 msgstr ""
 "\n"
-"आप यह ई-मेल प्राप्त कर रहे हैं क्योंकि उपयोगकर्ता %(user_display)s ने आपका दिया है"
-"उनके खाते को जोड़ने के लिए एक ई-मेल पते के रूप में। \n"
+"आप यह ई-मेल प्राप्त कर रहे हैं क्योंकि उपयोगकर्ता %(user_display)s ने आपका दिया हैउनके "
+"खाते को जोड़ने के लिए एक ई-मेल पते के रूप में। \n"
 
 #: zubhub/templates/account/email/email_confirmation_message.txt:10
+#: zubhub/templates/account/phone/phone_confirmation.txt:9
 msgid "To confirm this is correct, go to "
 msgstr "यह सही है, इसकी पुष्टि करने के लिए "
 
 #: zubhub/templates/account/email/email_confirmation_message.txt:12
+#: zubhub/templates/account/email/group_invite_confirmation_message.txt:11
+#: zubhub/templates/account/phone/group_invite_confirmation_message.txt:11
+#: zubhub/templates/account/phone/phone_confirmation.txt:11
+#: zubhub/templates/projects/email/activity_notification_message.html:50
+#: zubhub/templates/projects/email/mention_notification_message.html:44
+#: zubhub/templates/projects/email/new_staff_pick_notification_message.html:9
+#: zubhub/templates/projects/email/spam_notification_message.html:21
+#: zubhub/templates/projects/phone/activity_notification_message.txt:46
+#: zubhub/templates/projects/phone/mention_notification_message.txt:18
+#: zubhub/templates/projects/phone/new_staff_pick_notification_message.txt:8
+#: zubhub/templates/projects/phone/spam_notification_message.txt:8
 msgid "Thank you from"
 msgstr "से साभार"
 
 #: zubhub/templates/account/email/email_confirmation_subject.txt:3
 msgid "Please Confirm Your E-mail Address"
 msgstr "कृपया अपने ईमेल पते की पुष्टि करें"
+
+#: zubhub/templates/account/email/group_invite_confirmation_message.txt:6
+#: zubhub/templates/account/phone/group_invite_confirmation_message.txt:6
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "You're receiving this e-mail because user %(user_display)s has given "
+#| "yours as an e-mail address to connect their account.\n"
+msgid ""
+"\n"
+"You're receiving this e-mail because %(group_creator_username)s invited you "
+"to join their group.\n"
+msgstr ""
+"\n"
+"आप यह ई-मेल प्राप्त कर रहे हैं क्योंकि उपयोगकर्ता %(user_display)s ने आपका दिया हैउनके "
+"खाते को जोड़ने के लिए एक ई-मेल पते के रूप में। \n"
+
+#: zubhub/templates/account/email/group_invite_confirmation_message.txt:9
+#: zubhub/templates/account/phone/group_invite_confirmation_message.txt:9
+msgid "To accept the invitation, click this link "
+msgstr ""
+
+#: zubhub/templates/account/email/group_invite_confirmation_subject.txt:3
+#, python-format
+msgid " Group invite from %(group_creator_username)s"
+msgstr ""
+
+#: zubhub/templates/account/phone/phone_confirmation.txt:6
+#, fuzzy, python-format
+#| msgid ""
+#| "\n"
+#| "You're receiving this e-mail because user %(user_display)s has given "
+#| "yours as an e-mail address to connect their account.\n"
+msgid ""
+"\n"
+"You're receiving this text because user %(user)s has connected your phone "
+"number to their account.\n"
+msgstr ""
+"\n"
+"आप यह ई-मेल प्राप्त कर रहे हैं क्योंकि उपयोगकर्ता %(user_display)s ने आपका दिया हैउनके "
+"खाते को जोड़ने के लिए एक ई-मेल पते के रूप में। \n"
+
+#: zubhub/templates/projects/email/activity_notification_message.html:16
+#: zubhub/templates/projects/phone/activity_notification_message.txt:6
+msgid " Activity Notification"
+msgstr ""
+
+#: zubhub/templates/projects/email/activity_notification_message.html:20
+#: zubhub/templates/projects/email/mention_notification_message.html:20
+#: zubhub/templates/projects/email/mention_notification_message.html:32
+#: zubhub/templates/projects/phone/activity_notification_message.txt:10
+#: zubhub/templates/projects/phone/mention_notification_message.txt:10
+#: zubhub/templates/projects/phone/mention_notification_message.txt:14
+msgid "You are receiving this message because "
+msgstr ""
+
+#: zubhub/templates/projects/email/activity_notification_message.html:20
+#: zubhub/templates/projects/phone/activity_notification_message.txt:10
+msgid ""
+" recently edited a project on Zubhub. To see the details of the edit, click "
+msgstr ""
+
+#: zubhub/templates/projects/email/activity_notification_message.html:20
+#: zubhub/templates/projects/email/mention_notification_message.html:26
+#: zubhub/templates/projects/email/mention_notification_message.html:38
+#: zubhub/templates/projects/email/spam_notification_message.html:18
+msgid "HERE"
+msgstr ""
+
+#: zubhub/templates/projects/email/activity_notification_message.html:24
+msgid ""
+"\n"
+"<h2>New Creators added in the past 24hrs</h2>\n"
+msgstr ""
+
+#: zubhub/templates/projects/email/activity_notification_message.html:32
+msgid ""
+"\n"
+"<h2>New Projects added in the past 24hrs</h2>\n"
+msgstr ""
+
+#: zubhub/templates/projects/email/activity_notification_message.html:40
+msgid ""
+"\n"
+"<h2>New Comments added in the past 24hrs</h2>\n"
+msgstr ""
+
+#: zubhub/templates/projects/email/activity_notification_subject.txt:3
+msgid "Activity Notification"
+msgstr ""
+
+#: zubhub/templates/projects/email/mention_notification_message.html:16
+#: zubhub/templates/projects/phone/mention_notification_message.txt:6
+msgid " Mention Notification"
+msgstr ""
+
+#: zubhub/templates/projects/email/mention_notification_message.html:24
+msgid " mentioned you on a project's comment. To view project details, click "
+msgstr ""
+
+#: zubhub/templates/projects/email/mention_notification_message.html:36
+#: zubhub/templates/projects/phone/mention_notification_message.txt:14
+msgid " mentioned you on "
+msgstr ""
+
+#: zubhub/templates/projects/email/mention_notification_message.html:36
+msgid " profile. To view details, click "
+msgstr ""
+
+#: zubhub/templates/projects/email/mention_notification_subject.txt:3
+msgid "Mention Notification"
+msgstr ""
+
+#: zubhub/templates/projects/email/new_staff_pick_notification_message.html:7
+#: zubhub/templates/projects/phone/new_staff_pick_notification_message.txt:6
+msgid "Check out our latest staff pick by clicking on this url "
+msgstr ""
+
+#: zubhub/templates/projects/email/new_staff_pick_notification_subject.txt:3
+#, python-format
+msgid "%(title)s"
+msgstr ""
+
+#: zubhub/templates/projects/email/spam_notification_message.html:16
+#, fuzzy
+#| msgid "Hello from "
+msgid "Hello "
+msgstr "से नमस्कार "
+
+#: zubhub/templates/projects/email/spam_notification_message.html:18
+msgid ""
+"Our system just detected a potential spam comment on Zubhub platform, you "
+"can inspect it "
+msgstr ""
+
+#: zubhub/templates/projects/email/spam_notification_subject.txt:3
+msgid "Spam Alert"
+msgstr ""
+
+#: zubhub/templates/projects/phone/activity_notification_message.txt:14
+msgid ""
+"\n"
+"New Creators added in the past 24hrs\n"
+msgstr ""
+
+#: zubhub/templates/projects/phone/activity_notification_message.txt:24
+msgid ""
+"\n"
+"New Projects added in the past 24hrs\n"
+msgstr ""
+
+#: zubhub/templates/projects/phone/activity_notification_message.txt:34
+msgid ""
+"\n"
+"New Comments added in the past 24hrs\n"
+msgstr ""
+
+#: zubhub/templates/projects/phone/mention_notification_message.txt:10
+msgid ""
+" mentioned you on a project's comment. To view project details, click here"
+msgstr ""
+
+#: zubhub/templates/projects/phone/mention_notification_message.txt:14
+msgid " profile. To view details, click here"
+msgstr ""
+
+#: zubhub/templates/projects/phone/spam_notification_message.txt:6
+msgid ""
+"Our system just detected a potential spam comment on Zubhub platform, you "
+"can inspect it here: "
+msgstr ""
 
 #: zubhub/templates/registration/password_reset_email.html:4
 msgid ""
@@ -84,3 +333,11 @@ msgstr "यह "
 #: zubhub/templates/registration/password_reset_email.html:12
 msgid " Team"
 msgstr "टीम"
+
+#: zubhub/zubhub/views.py:58 zubhub/zubhub/views.py:94
+msgid "failed to upload file to storage backend"
+msgstr ""
+
+#: zubhub/zubhub/views.py:70
+msgid "failed to delete file to storage backend"
+msgstr ""
