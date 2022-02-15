@@ -20,6 +20,14 @@ def send_text(self, phone, template_name, ctx):
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
 
+@shared_task(name="creators.tasks.send_whatsapp", bind=True, acks_late=True, max_retries=10)
+def send_whatsapp(self, phone, template_name, ctx):
+    try:
+        get_adapter().send_whatsapp(template_name, phone, ctx)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
 
 @shared_task(name="creators.tasks.send_mass_email", bind=True, acks_late=True, max_retries=10)
 def send_mass_email(self, template_name, ctxs):

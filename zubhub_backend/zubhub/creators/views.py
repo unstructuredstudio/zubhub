@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from rest_auth.registration.views import RegisterView
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
+from creators.tasks import send_whatsapp
 from .serializers import (CreatorSerializer, LocationSerializer, VerifyPhoneSerializer,
                           CustomRegisterSerializer, ConfirmGroupInviteSerializer, AddGroupMembersSerializer)
 from projects.serializers import CommentSerializer
@@ -355,3 +356,8 @@ class AddCommentAPIView(CreateAPIView):
                 {"text": text, "profile_username": result.username, "creator": request.user.username})
 
         return Response(CreatorSerializer(result).data, status=status.HTTP_201_CREATED)
+
+class SendNotificationAPIView(APIView):
+    def get(self, request, format=None):
+        send_whatsapp("8472079456", "creators/phone/notification.txt", {})
+

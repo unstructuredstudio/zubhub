@@ -44,6 +44,9 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         """
         creatorgroup.members.add(creator)
         creatorgroup.save()
+    
+    def get_whatsapp_from_phone(self):
+        return settings.DEFAUL_WHATSAPP_FROM_PHONE
 
     def get_from_phone(self):
         """
@@ -52,13 +55,13 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         """
         return settings.DEFAULT_FROM_PHONE
 
-    def render_text(self, template_name, phone, context):
+    def render_text(self, template_name, phone, context, from_phone=None):
         """
         Renders a text to `text`.  `template_prefix` identifies the
         text that is to be sent, e.g. "account/phone/phone_confirmation"
         """
-
-        from_phone = self.get_from_phone()
+        if from_phone is None:
+            from_phone = self.get_from_phone()
 
         try:
             body = render_to_string(
@@ -77,6 +80,15 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             client = Client(settings.TWILIO_ACCOUNT_SID,
                             settings.TWILIO_AUTH_TOKEN)
             text = self.render_text(template_name, phone, context)
+            client.messages.create(**text)
+
+    def send_whatsapp(self, template_name, phone, context):
+        if settings.ENVIRONMENT == "production" and not settings.DEBUG:
+            whatsapp_phone = "whatsapp:" + phone
+            client = Client(settings.TWILIO_ACCOUNT_SID,
+                            settings.TWILIO_AUTH_TOKEN)
+            text = self.render_text(template_name, phone, context, 
+                                       from_phone=self.get_whatsapp_from_phone())
             client.messages.create(**text)
 
     def send_confirmation_text(self, request, phoneconfirmation, signup):
