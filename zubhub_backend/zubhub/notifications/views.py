@@ -18,8 +18,22 @@ from rest_framework.generics import (UpdateAPIView, RetrieveAPIView,
                                      ListAPIView, DestroyAPIView, CreateAPIView, GenericAPIView)
 
 class NoticationListAPIView(ListAPIView):
+    queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [AllowAny]
+
+
+class UpdateNotificationAPIView(UpdateAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+
+    def perform_update(self, serializer):
+        serializer.save(viewed=True)
+        
+
+class DeleteNotificationAPIView(DestroyAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer 
 
     
         
