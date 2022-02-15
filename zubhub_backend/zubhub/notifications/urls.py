@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import *
 
+app_name = "notifications"
+
 urlpatterns = [
-    path('', NoticationAPIView.as_view(), name='list_notifications')
+    path('', NoticationListAPIView.as_view(), name='list_notifications')
 ]
