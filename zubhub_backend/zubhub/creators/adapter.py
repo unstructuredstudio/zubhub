@@ -46,7 +46,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         creatorgroup.save()
 
     def get_whatsapp_from_phone(self):
-        return settings.DEFAUL_WHATSAPP_FROM_PHONE
+        return settings.DEFAULT_WHATSAPP_FROM_PHONE
 
     def get_from_phone(self):
         """

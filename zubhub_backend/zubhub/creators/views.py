@@ -357,7 +357,9 @@ class AddCommentAPIView(CreateAPIView):
 
         return Response(CreatorSerializer(result).data, status=status.HTTP_201_CREATED)
 
-class SendNotificationAPIView(APIView):
-    def get(self, request, format=None):
-        send_whatsapp("8472079456", "creators/phone/notification.txt", {})
 
+class SendNotificationAPIView(APIView):
+    def get(self, request, format=None, **kwargs):
+        send_whatsapp.delay(
+            phone="+15714580104", template_name="creators/phone/notification.txt", ctx={})
+        return Response('oof')
