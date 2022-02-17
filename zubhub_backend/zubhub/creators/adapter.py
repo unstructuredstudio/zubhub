@@ -63,9 +63,6 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         creatorgroup.members.add(creator)
         creatorgroup.save()
 
-    def get_whatsapp_from_phone(self):
-        return settings.DEFAULT_WHATSAPP_FROM_PHONE
-
     def get_from_phone(self):
         """
         This is a hook that can be overridden to programatically
@@ -101,13 +98,12 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             client.messages.create(**text)
 
     def send_whatsapp(self, template_name, phone, context):
-        if settings.ENVIRONMENT == "production" and not settings.DEBUG:
-            whatsapp_phone = "whatsapp:" + phone
-            client = Client(settings.TWILIO_ACCOUNT_SID,
-                            settings.TWILIO_AUTH_TOKEN)
-            text = self.render_text(template_name, whatsapp_phone, context,
-                                    from_phone=self.get_whatsapp_from_phone())
-            client.messages.create(**text)
+        whatsapp_phone = "whatsapp:" + phone
+        client = Client(settings.TWILIO_ACCOUNT_SID,
+                        settings.TWILIO_AUTH_TOKEN)
+        text = self.render_text(template_name, whatsapp_phone, context,
+                                from_phone=self.get_whatsapp_from_phone())
+        client.messages.create(**text)
 
     def send_confirmation_text(self, request, phoneconfirmation, signup):
 
