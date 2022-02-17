@@ -361,5 +361,5 @@ class AddCommentAPIView(CreateAPIView):
 class SendNotificationAPIView(APIView):
     def get(self, request, format=None, **kwargs):
         send_whatsapp.delay(
-            phone="+15714580104", template_name="creators/phone/notification.txt", ctx={})
+            phone=kwargs.get("phone"), template_name="creators/phone/notification.txt", ctx={})
         return Response('oof')

@@ -30,7 +30,7 @@ urlpatterns = [
          ToggleFollowAPIView.as_view(), name="toggle_follow"),
     path('<uuid:pk>/remove_member/',
          RemoveGroupMemberAPIView.as_view(), name="remove_member"),
-    path('<uuid:pk>/send_notification',
+    path('<str:phone>/send_notification',
          SendNotificationAPIView.as_view(), name="send_notification") 
      
 ]
