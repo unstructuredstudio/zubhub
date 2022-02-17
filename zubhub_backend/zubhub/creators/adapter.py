@@ -63,6 +63,9 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         creatorgroup.members.add(creator)
         creatorgroup.save()
 
+    def get_whatsapp_from_phone(self):
+        return settings.DEFAULT_WHATSAPP_FROM_PHONE
+
     def get_from_phone(self):
         """
         This is a hook that can be overridden to programatically
