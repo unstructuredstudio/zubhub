@@ -10,6 +10,8 @@ class Notification(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     message = models.TextField(blank=False, null=True)
     recipient = models.ForeignKey(
-        Creator, on_delete=models.CASCADE, null=True, related_name="notifications", blank=True)
+        Creator, on_delete=models.CASCADE, null=True, related_name="notification_recipient", blank=True)
+    source = models.ForeignKey(
+        Creator, on_delete=models.CASCADE, null=True, related_name="notification_source", blank=True)
     viewed = models.BooleanField(default=False)
     date = models.DateTimeField(default=timezone.now)
