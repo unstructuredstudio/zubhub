@@ -5,6 +5,13 @@ import { toast } from 'react-toastify';
 
 const API = new ZubhubAPI();
 
+
+/**
+* @function getUserProfile
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getUserProfile = args => {
   return dispatch => {
     let profile;
@@ -36,6 +43,13 @@ export const getUserProfile = args => {
   };
 };
 
+
+/**
+* @function editUserProfile
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const editUserProfile = args => {
   return dispatch => {
     return API.editUserProfile(args).then(res => {
@@ -55,6 +69,13 @@ export const editUserProfile = args => {
   };
 };
 
+
+/**
+* @function suggestCreators
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const suggestCreators = args => {
   return () => {
     return API.searchCreators(args)
@@ -81,6 +102,13 @@ export const suggestCreators = args => {
   };
 };
 
+
+/**
+* @function searchCreators
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const searchCreators = args => {
   return () => {
     return API.searchCreators(args)
@@ -105,6 +133,13 @@ export const searchCreators = args => {
   };
 };
 
+
+/**
+* @function toggleFollow
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleFollow = args => {
   return () => {
     return API.toggleFollow(args)
@@ -129,6 +164,14 @@ export const toggleFollow = args => {
   };
 };
 
+
+
+/**
+* @function removeMember
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const removeMember = args => {
   return () => {
     return API.removeMember(args)
@@ -153,6 +196,13 @@ export const removeMember = args => {
   };
 };
 
+
+/**
+* @function addMembers
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const addMembers = args => {
   return () => {
     return API.addMembers(args).then(res => {
@@ -166,6 +216,13 @@ export const addMembers = args => {
   };
 };
 
+
+/**
+* @function getMembers
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getMembers = args => {
   return () => {
     return API.getMembers(args)
@@ -195,6 +252,14 @@ export const getMembers = args => {
   };
 };
 
+
+
+/**
+* @function getFollowers
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getFollowers = args => {
   return () => {
     return API.getFollowers(args)
@@ -224,6 +289,14 @@ export const getFollowers = args => {
   };
 };
 
+
+
+/**
+* @function getFollowing
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getFollowing = args => {
   return () => {
     return API.getFollowing(args)
@@ -253,6 +326,13 @@ export const getFollowing = args => {
   };
 };
 
+
+/**
+* @function addComment
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const addComment = args => {
   return () => {
     return API.addProfileComment(args)
@@ -277,6 +357,13 @@ export const addComment = args => {
   };
 };
 
+
+/**
+* @function sendGroupInviteConfirmation
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const sendGroupInviteConfirmation = args => {
   return () => {
     return API.sendGroupInviteConfirmation(args.key).then(res => {
@@ -292,6 +379,13 @@ export const sendGroupInviteConfirmation = args => {
   };
 };
 
+
+/**
+* @function getHelp
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getHelp = args => {
   return () => {
     return API.getHelp()
@@ -319,6 +413,13 @@ export const getHelp = args => {
   };
 };
 
+
+/**
+* @function getPrivacy
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getPrivacy = args => {
   return () => {
     return API.getPrivacy()
@@ -346,6 +447,13 @@ export const getPrivacy = args => {
   };
 };
 
+
+/**
+* @function getFaqs
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getFaqs = args => {
   return () => {
     return API.getFaqs()

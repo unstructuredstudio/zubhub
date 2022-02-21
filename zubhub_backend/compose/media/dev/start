@@ -6,5 +6,5 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-exec /usr/local/bin/gunicorn media.wsgi --threads=3 --timeout 155 --bind 0.0.0.0:8001 \
+exec /usr/local/bin/gunicorn media.wsgi --reload --threads=3 --timeout 155 --bind 0.0.0.0:8001 \
 --access-logfile - --error-logfile -   --chdir /home/media

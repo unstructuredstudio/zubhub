@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Swagger</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="//unpkg.com/swagger-ui-dist@3/swagger-ui.css" />
+    <style>
+      .title {
+        font-size: 26px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="swagger-ui">
+        <div class="wrapper" id="overview" style="font-size:20px"></div>
+        <div class="wrapper" id="web-intro" style="font-size:20px"></div>
+        <div id="web-swagger-ui"></div>
+        <div class="wrapper" id="media-intro" style="font-size:20px"></div>
+        <div id="media-swagger-ui"></div>
+        <div class="wrapper" id="others" style="font-size:20px"></div>
+    </div>
+    <script src="//unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+    <script>
+    const web_ui = SwaggerUIBundle({
+        url: "{% url web_schema_url %}",
+        dom_id: '#web-swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout",
+        requestInterceptor: (request) => {
+          request.headers['X-CSRFToken'] = "{{ csrf_token }}"
+          return request;
+        }
+      });
+
+      const media_ui = SwaggerUIBundle({
+        url: "{% url media_schema_url %}",
+        dom_id: '#media-swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout",
+        requestInterceptor: (request) => {
+          request.headers['X-CSRFToken'] = "{{ csrf_token }}"
+          return request;
+        }
+      })
+
+
+
+
+
+      // ====fetch html strings generated from doc markdown====
+      fetch(document.location.origin + "/markdown-to-html/")
+      .then(res=>res.json())
+      .then(obj=>{
+        if(obj.overview){
+          const overview = document.querySelector("#overview");
+          overview.innerHTML = obj.overview;
+        };
+
+        if(obj.web_container){
+          const web_container = document.querySelector("#web-intro");
+          web_container.innerHTML = obj.web_container;
+        };
+
+        if(obj.media_container){
+          const media_container = document.querySelector("#media-intro");
+          media_container.innerHTML = obj.media_container;
+        };
+        
+        if(obj.others){
+          const others = document.querySelector("#others");
+          others.innerHTML = obj.others;
+        };
+      })
+    </script>
+  </body>
+</html>

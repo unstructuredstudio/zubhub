@@ -9,6 +9,13 @@ import styles from '../../assets/js/styles/views/error/errorPageStyles';
 
 const useStyles = makeStyles(styles);
 
+
+/**
+* @function ErrorPage
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function ErrorPage(props) {
   const classes = useStyles();
   const propStyle = props.style;

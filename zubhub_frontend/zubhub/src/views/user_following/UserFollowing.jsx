@@ -28,6 +28,12 @@ import styles from '../../assets/js/styles/views/user_followers/userFollowersSty
 
 const useStyles = makeStyles(styles);
 
+/**
+* @function buildFollowing Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 const buildFollowing = (following, classes, props, state, handleSetState) =>
   following.map(creator => (
     <Grid
@@ -75,7 +81,14 @@ const buildFollowing = (following, classes, props, state, handleSetState) =>
     </Grid>
   ));
 
-function UserFollowing(props) {
+
+/**
+* @function UserFollowing View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
+  function UserFollowing(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({

@@ -1,5 +1,12 @@
 export const timer = { id: null };
 
+
+/**
+* @function constructCommentBox
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const constructCommentBox = refs => {
   refs.comment_text.current.addEventListener('focus', e =>
     handleCommentTextFocus(refs),
@@ -10,6 +17,13 @@ export const constructCommentBox = refs => {
   );
 };
 
+
+/**
+* @function handleCommentTextFocus
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleCommentTextFocus = refs => {
   refs.comment_box.current.classList.remove('comment-collapsed');
   refs.comment_box.current.classList.add('comment');
@@ -17,6 +31,13 @@ export const handleCommentTextFocus = refs => {
   refs.comment_publish_button.current.classList.remove('display-none');
 };
 
+
+/**
+* @function handleDocumentClick
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleDocumentClick = (e, refs) => {
   try {
     if (
@@ -34,11 +55,27 @@ export const handleDocumentClick = (e, refs) => {
   } catch {}
 };
 
+
+
+/**
+* @function handleAddComment
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleAddComment = (e, props, comment_text) => {
   e.preventDefault();
   props.handleAddComment(comment_text, props.parent_id);
 };
 
+
+
+/**
+* @function handleSuggestCreators
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleSuggestCreators = (e, props, timer, handleSetState) => {
   clearTimeout(timer.id);
   const value = e.currentTarget.value;
@@ -58,6 +95,13 @@ export const handleSuggestCreators = (e, props, timer, handleSetState) => {
   }
 };
 
+
+/**
+* @function suggestCreators
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 const suggestCreators = (query_string, props, handleSetState) => {
   handleSetState({ creator_suggestion_open: true });
   handleSetState(
@@ -65,6 +109,13 @@ const suggestCreators = (query_string, props, handleSetState) => {
   );
 };
 
+
+/**
+* @function handleInsertCreatorName
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleInsertCreatorName = (value, comment_text_el) => {
   const comment_text = comment_text_el.current.value;
   const comment_text_arr = comment_text.split('@');

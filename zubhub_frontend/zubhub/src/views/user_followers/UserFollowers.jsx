@@ -28,6 +28,12 @@ import styles from '../../assets/js/styles/views/user_followers/userFollowersSty
 
 const useStyles = makeStyles(styles);
 
+/**
+* @function buildFollowers Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 const buildFollowers = (followers, classes, props, state, handleSetState) =>
   followers.map(follower => (
     <Grid
@@ -75,6 +81,13 @@ const buildFollowers = (followers, classes, props, state, handleSetState) =>
     </Grid>
   ));
 
+
+/**
+* @function UserFollowers View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function UserFollowers(props) {
   const classes = useStyles();
 

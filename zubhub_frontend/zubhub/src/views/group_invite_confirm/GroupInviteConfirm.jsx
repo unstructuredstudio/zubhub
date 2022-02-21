@@ -26,6 +26,12 @@ import {
 
 const useStyles = makeStyles(styles);
 
+/**
+* @function GroupInviteConfirm
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function GroupInviteConfirm(props) {
   const classes = useStyles();
 
