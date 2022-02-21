@@ -10,6 +10,13 @@ import styles from '../../assets/js/styles/components/button/buttonStyles';
 
 const useStyles = makeStyles(styles);
 
+
+/**
+* @function CustomButton Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 const CustomButton = React.forwardRef((props, ref) => {
   const classes = useStyles();
 

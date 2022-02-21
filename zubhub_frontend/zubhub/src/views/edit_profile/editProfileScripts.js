@@ -1,9 +1,23 @@
 import * as Yup from 'yup';
 
+
+/**
+* @function getLocations
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getLocations = props => {
   return props.getLocations({ t: props.t });
 };
 
+
+/**
+* @function getProfile
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getProfile = (refs, props) => {
   return props.getAuthUser(props).then(obj => {
     if (!obj.id) {
@@ -37,6 +51,13 @@ export const getProfile = (refs, props) => {
   });
 };
 
+
+/**
+* @function editProfile
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const editProfile = (e, props, toast) => {
   e.preventDefault();
   if (props.values.user_location.length < 1) {
@@ -76,14 +97,35 @@ export const editProfile = (e, props, toast) => {
   }
 };
 
+
+/**
+* @function handleTooltipOpen
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleTooltipOpen = () => {
   return { tool_tip_open: true };
 };
 
+
+/**
+* @function handleTooltipClose
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleTooltipClose = () => {
   return { tool_tip_open: false };
 };
 
+
+/**
+* @object validationSchema
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe object's function
+*/
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   user_location: Yup.string().min(1, 'min').required('required'),

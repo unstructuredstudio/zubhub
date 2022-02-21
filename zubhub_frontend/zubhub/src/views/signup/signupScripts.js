@@ -3,6 +3,13 @@ import countryMap from '../../assets/js/countryMap.json';
 import intlTelInput from 'intl-tel-input';
 import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
+
+/**
+* @constant vars
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe constant's function
+*/
 export const vars = {
   phone_field_touched: undefined,
   email_field_touched: undefined,
@@ -11,14 +18,35 @@ export const vars = {
   preferred_countries: ['in', 'us']
 };
 
+
+/**
+* @function handleMouseDownPassword
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleMouseDownPassword = e => {
   e.preventDefault();
 };
 
+
+/**
+* @function getLocations
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getLocations = props => {
   return props.getLocations({ t: props.t });
 };
 
+
+/**
+* @function signup
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const signup = (e, props) => {
   e.preventDefault();
   props.setFieldTouched('username', true);
@@ -67,14 +95,35 @@ export const signup = (e, props) => {
   })
 };
 
+
+/**
+* @function handleTooltipOpen
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleTooltipOpen = () => {
   return { tool_tip_open: true };
 };
 
+
+/**
+* @function handleTooltipClose
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleTooltipClose = () => {
   return { tool_tip_open: false };
 };
 
+
+/**
+* @function handleToggleSubscribeBox
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleToggleSubscribeBox = (e, props, state) => {
   let subscribe_box_checked = !state.subscribe_box_checked;
   props.setFieldValue('subscribe', subscribe_box_checked);
@@ -82,6 +131,13 @@ export const handleToggleSubscribeBox = (e, props, state) => {
 };
 
 
+
+/**
+* @function handleLocationChange
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleLocationChange = (e, props) => {
   if(vars.iti?.setCountry && e.target.value && 
     vars.iti.getSelectedCountryData().iso2 !== countryMap[e.target.value]){
@@ -90,6 +146,13 @@ export const handleLocationChange = (e, props) => {
    props.handleChange(e);
 };
 
+
+/**
+* @function setLocationWithTelCountry
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const setLocationWithTelCountry = (props) => {
   if(vars.iti?.getSelectedCountryData){
     let country_name;
@@ -110,6 +173,13 @@ export const setLocationWithTelCountry = (props) => {
 
 };
 
+
+/**
+* @function initIntlTelInput
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const initIntlTelInput = (props, refs) => {
   if (refs.phone_el.current?.firstChild) {
     vars.iti = intlTelInput(refs.phone_el.current.firstChild, {
@@ -123,12 +193,28 @@ export const initIntlTelInput = (props, refs) => {
 };
 
 
+
+/**
+* @function setLabelWidthOfStaticFields
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const setLabelWidthOfStaticFields = (refs, document, props)=>{
-   refs.date_of_birth_el.current.childNodes[1].childNodes[0].style.width = `${calculateLabelWidth(props.t('signup.inputs.dateOfBirth.label'), document)}px`;
-   refs.phone_el.current.childNodes[1].childNodes[0].style.width = `${calculateLabelWidth(props.t('signup.inputs.phone.label'), document)}px`;
+   refs.date_of_birth_el.current.childNodes[1].childNodes[0].style.width = 
+   `${calculateLabelWidth(props.t('signup.inputs.dateOfBirth.label'), document)}px`;
+   refs.phone_el.current.childNodes[1].childNodes[0].style.width = 
+   `${calculateLabelWidth(props.t('signup.inputs.phone.label'), document)}px`;
 };
 
 
+
+/**
+* @object validationSchema
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe object's function
+*/
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   email: Yup.string()

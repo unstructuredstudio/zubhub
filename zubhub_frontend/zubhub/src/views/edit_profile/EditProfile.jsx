@@ -46,6 +46,13 @@ import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
+
+/**
+* @function EditProfile View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function EditProfile(props) {
   const refs = {
     username_el: React.useRef(null),

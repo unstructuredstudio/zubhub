@@ -11,6 +11,13 @@ import ErrorPage from '../error/ErrorPage';
 import styles from '../../assets/js/styles/views/terms_of_use/termsOfUseStyles';
 
 const useStyles = makeStyles(styles);
+
+/**
+* @function TermsOfUse View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function TermsOfUse(props) {
   const classes = useStyles();
 

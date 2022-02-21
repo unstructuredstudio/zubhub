@@ -60,6 +60,12 @@ import languageMap from '../assets/js/languageMap.json';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
+/**
+* @function PageWrapper View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();

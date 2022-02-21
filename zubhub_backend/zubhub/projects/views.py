@@ -20,6 +20,25 @@ from .pagination import ProjectNumberPagination
 
 
 class ProjectCreateAPIView(CreateAPIView):
+    """
+    Create new Project.\n
+
+    Requires authentication. Returns project details.\n
+    Request body format:\n
+        {\n
+            "title": "string",\n
+            "description": "string",\n
+            "images": [\n
+                {\n
+                "image_url": "string",\n
+                "public_id": "string"\n
+                }\n
+            ],\n
+            "video": "string",\n
+            "materials_used": "string",\n
+            "category": "string"\n
+        }\n
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -31,6 +50,27 @@ class ProjectCreateAPIView(CreateAPIView):
 
 
 class ProjectUpdateAPIView(UpdateAPIView):
+    """
+    Update project.
+
+    Requires authentication.\n
+    Requires project id.\n
+    Returns project details.\n
+    request body format:\n
+        {\n
+            "title": "string",\n
+            "description": "string",\n
+            "images": [\n
+                {\n
+                "image_url": "string",\n
+                "public_id": "string"\n
+                }\n
+            ],\n
+            "video": "string",\n
+            "materials_used": "string",\n
+            "category": "string"\n
+        }\n
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -54,6 +94,13 @@ class ProjectUpdateAPIView(UpdateAPIView):
 
 
 class ProjectDeleteAPIView(DestroyAPIView):
+    """
+    Delete a project from database.
+
+    Requires authentication.
+    Requires project id.
+    Returns {details: "ok"}
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -68,6 +115,12 @@ class ProjectDeleteAPIView(DestroyAPIView):
 
 
 class ProjectListAPIView(ListAPIView):
+    """
+    Fetch paginated list of projects.
+
+    Returns paginated list of projects
+    """
+
     queryset = Project.objects.filter(published=True).order_by("-created_on")
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
@@ -76,6 +129,13 @@ class ProjectListAPIView(ListAPIView):
 
 
 class ProjectTagSearchAPIView(ListAPIView):
+    """
+    Fulltext search of project tags.
+
+    Requires query string.
+    Returns list of matching tags
+    """
+
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
@@ -88,6 +148,13 @@ class ProjectTagSearchAPIView(ListAPIView):
 
 
 class ProjectSearchAPIView(ListAPIView):
+    """
+    Fulltext search of projects.
+
+    Requires query string.
+    Returns paginated list of matching projects.
+    """
+
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
@@ -98,6 +165,13 @@ class ProjectSearchAPIView(ListAPIView):
 
 
 class ProjectDetailsAPIView(RetrieveAPIView):
+    """
+    Fetch Project details.
+
+    Rquires project id.
+    Returns project details.
+    """
+
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [AllowAny]
@@ -124,6 +198,13 @@ class ProjectDetailsAPIView(RetrieveAPIView):
 
 
 class SavedProjectsAPIView(ListAPIView):
+    """
+    Fetch paginated list of projects saved by authenticated user.
+
+    Requires authentication.
+    Returns paginated list of projects.
+    """
+
     serializer_class = ProjectListSerializer
     permission_classes = [IsAuthenticated, IsOwner]
     throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
@@ -134,6 +215,14 @@ class SavedProjectsAPIView(ListAPIView):
 
 
 class ToggleLikeAPIView(RetrieveAPIView):
+    """
+    Like/Unlike a project.
+
+    Requires authentication.
+    Rquires project id.
+    Returns project details.
+    """
+
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
     throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
@@ -156,6 +245,13 @@ class ToggleLikeAPIView(RetrieveAPIView):
 
 
 class ToggleSaveAPIView(RetrieveAPIView):
+    """
+    Add/Remove a project from authenticated user's bookmark.
+
+    Requires authentication.
+    Rquires project id.
+    Returns project details.
+    """
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
     throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
@@ -178,6 +274,18 @@ class ToggleSaveAPIView(RetrieveAPIView):
 
 
 class AddCommentAPIView(CreateAPIView):
+    """
+    Comment on project.
+
+    Requires authentication.\n
+    Requires project id.\n
+    Returns project details.\n
+    request body format:\n
+        {\n
+            text: "comment text",\n
+            parent_id: "id of parent comment or None"\n
+        }\n
+    """
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     throttle_classes = [CustomUserRateThrottle,  SustainedRateThrottle]
@@ -223,6 +331,12 @@ class AddCommentAPIView(CreateAPIView):
 
 
 class CategoryListAPIView(ListAPIView):
+    """
+    Fetch list of project categories.
+
+    Returns list of categories.
+    """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
@@ -230,6 +344,23 @@ class CategoryListAPIView(ListAPIView):
 
 
 class StaffPickListAPIView(ListAPIView):
+    """
+    Get List of staff-picks.
+
+    A staff-pick is a list of projects curated by zubhub staffs.\n
+    Returns list of staff-picks.\n
+    response data format:\n
+        [\n
+            {\n
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n
+                "title": "string",\n
+                "description": "string",\n
+                "projects": [paginated list of projects],\n
+                "created_on": "2022-02-20T11:58:30.082Z"\n
+            }\n
+        ]\n
+    """
+
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
@@ -239,6 +370,22 @@ class StaffPickListAPIView(ListAPIView):
 
 
 class StaffPickDetailsAPIView(RetrieveAPIView):
+    """
+    Get staff-pick details.
+
+    A staff-pick is a list of projects curated by zubhub staffs.\n
+    Requires staff-pick id.\n
+    Returns a single staff-pick.\n
+    response data format:\n
+        {\n
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",\n
+            "title": "string",\n
+            "description": "string",\n
+            "projects": [paginated list of projects],\n
+            "created_on": "2022-02-20T11:58:30.082Z"\n
+        }\n
+    """
+
     queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
@@ -253,6 +400,12 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
 
 
 class UnpublishCommentAPIView(UpdateAPIView):
+    """
+    Unpublish a comment.
+
+    Requires comment id.
+    Returns unpublished comment.
+    """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
@@ -266,6 +419,14 @@ class UnpublishCommentAPIView(UpdateAPIView):
 
 
 class DeleteCommentAPIView(DestroyAPIView):
+    """
+    Delete a comment from database.
+
+    Requires authentication.
+    Requires comment id.
+    Returns {details: "ok"}
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]

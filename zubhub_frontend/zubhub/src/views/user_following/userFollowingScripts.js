@@ -1,8 +1,21 @@
+/**
+* @function fetchPage
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const fetchPage = (page, props) => {
   const username = props.match.params.username;
   return props.getFollowing({ page, username, t: props.t });
 };
 
+
+/**
+* @function toggleFollow
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleFollow = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {

@@ -1,4 +1,6 @@
-from .serializers import FAQListSerializer, HelpSerializer, PrivacySerializer
+from math import floor
+import uuid
+from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, PrivacySerializer
 from .models import Hero, FAQ, Privacy, Help, StaticAssets
 from .utils import delete_file_from_media_server, upload_file_to_media_server, get_sig
 from projects.permissions import PostUserRateThrottle, GetUserRateThrottle, SustainedRateThrottle
@@ -9,16 +11,34 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from django.utils.text import slugify
-from math import floor
-import uuid
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @throttle_classes([PostUserRateThrottle, SustainedRateThrottle])
 def SigGenAPIView(request):
+    """
+    Make api request to media server to generate Cloudinary Upload Signature.\n
+    Requires Authentication.\n
+    ------------------------\n
+    request body format:\n
+    {\n
+        "username":"",\n
+        "filename":"",\n
+        "upload_preset":""\n
+    }\n
+    -------------------------\n
+    response format:\n
+    {\n
+        "signature":"",\n
+        "timestamp":"",\n
+        "public_id":""\n,
+        "api_key":""\n
+    }\n
+    """
 
     username = request.data.get("username")
     filename = request.data.get("filename")
@@ -38,6 +58,18 @@ def SigGenAPIView(request):
 @permission_classes([IsAuthenticated])
 @throttle_classes([GetUserRateThrottle, SustainedRateThrottle])
 def UploadFileAPIView(request):
+    """
+    Upload Image To Storage Backend.\n
+
+    Requires Authentication.\n
+    Returns {"image_url":"url of uploaded image"}\n
+    Request body format:\n
+        {\n
+            file: <image>,\n
+            folder: <storage folder>\n
+        }\n
+    """
+
     try:
         file = request.data.get("file")
         folder = request.data.get("folder")
@@ -62,6 +94,16 @@ def UploadFileAPIView(request):
 @permission_classes([IsAuthenticated])
 @throttle_classes([GetUserRateThrottle, SustainedRateThrottle])
 def DeleteFileAPIView(request):
+    """
+    Delete File from Storage Backend.\n
+
+    Requires authentication.\n
+    request body format:\n
+        {\n
+            url: <url of file to delete>\n
+        }\n
+    """
+
     try:
         delete_file_from_media_server(request.data.get("url"))
         return Response({"result": "ok"}, status=status.HTTP_200_OK)
@@ -74,6 +116,24 @@ def DeleteFileAPIView(request):
 @permission_classes([IsAuthenticated])
 @throttle_classes([GetUserRateThrottle, SustainedRateThrottle])
 def UploadFileToLocalAPIView(request):
+    """
+    Upload File To Storage backend.\n
+
+    Requires Authentication.\n
+    ------------------------\n
+    "GET":\n
+    Returns {"local":True|False} indicating if we are to store \n
+    media files on our custom media server or not.\n
+    ------------------------\n
+    "POST":\n
+    Returns {"secure_url":"url of uploaded file"}\n
+    Request body format:\n
+        {\n
+            file: <media file>,\n
+            key: <file storage path str>\n
+        }\n
+    """
+
     if request.method == "POST":
         try:
             file = request.data.get("file")
@@ -97,7 +157,22 @@ def UploadFileToLocalAPIView(request):
 
 
 class HeroAPIView(RetrieveAPIView):
+    """
+    Get site Hero content. To be displayed on the home page of the frontend.\n
+    Returns modified hero object (with additional header_logo_url and footer_logo_url):\n
+        {
+            "title": "string",
+            "description": "string",
+            "image_url": "string",
+            "activity_url": "string",
+            "explore_ideas_url": "string",
+            "header_logo_url": "string",
+            "footer_logo_url": "string"
+        }
+    """
+
     queryset = Hero.objects.all()
+    serializer_class = HeroSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
@@ -108,40 +183,22 @@ class HeroAPIView(RetrieveAPIView):
         return None
 
     def get(self, _):
-        obj = self.get_object()
+        serializer = self.get_serializer()
         static_assets = StaticAssets.objects.all().last()
-        if static_assets:
-            header_logo_url = static_assets.header_logo_url
-            footer_logo_url = static_assets.footer_logo_url
-        else:
-            header_logo_url = ""
-            footer_logo_url = ""
 
-        if obj:
-            return Response({
-                "id": obj.id,
-                "title": obj.title,
-                "description": obj.description,
-                "image_url": obj.image_url,
-                "activity_url": obj.activity_url,
-                "explore_ideas_url": obj.explore_ideas_url,
-                "header_logo_url": header_logo_url,
-                "footer_logo_url": footer_logo_url
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({
-                "id": "",
-                "title": "",
-                "description": "",
-                "image_url": "",
-                "activity_url": "",
-                "explore_ideas_url": "",
-                "header_logo_url": header_logo_url,
-                "footer_logo_url": footer_logo_url
-            }, status=status.HTTP_200_OK)
+        data = {
+            **serializer.data,
+            "header_logo_url": getattr(static_assets, "header_logo_url", ""),
+            "fooer_logo_url": getattr(static_assets, "footer_logo_url", "")
+        }
+        return Response(data)
 
 
 class HelpAPIView(RetrieveAPIView):
+    """
+    Get "About Zubhub". Team, projects, etc.\n
+    """
+
     queryset = Help.objects.all()
     serializer_class = HelpSerializer
     permission_classes = [AllowAny]
@@ -155,6 +212,10 @@ class HelpAPIView(RetrieveAPIView):
 
 
 class PrivacyAPIView(RetrieveAPIView):
+    """
+    Get Zubhub Privacy Policy.
+    """
+
     queryset = Privacy.objects.all()
     serializer_class = PrivacySerializer
     permission_classes = [AllowAny]
@@ -168,7 +229,95 @@ class PrivacyAPIView(RetrieveAPIView):
 
 
 class FAQAPIView(ListAPIView):
+    """
+    Get Frequently Asked Questions.
+    """
+
     queryset = FAQ.objects.all()
     serializer_class = FAQListSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def MarkdownToHtmlAPIView(request):
+    """
+    Get html snippets for the documentation.\n
+
+    Here markdown files are read and converted html, 
+    then formatted further (image paths are replaced with the image's base64 string).\n
+    Returns {\n
+            "overview": "",\n
+            "web_container": "",\n
+            "media_container": "",\n
+            "others": ""\n
+            }\n
+    """
+
+    from markdown import markdown
+    from os import path
+    from .utils import images_to_base64, get_image_paths
+
+    paths = {
+        "overview": path.join(settings.BASE_DIR, 'docs', 'overview.md'),
+        "web_container": path.join(settings.BASE_DIR, 'docs', 'web_container.md'),
+        "media_container": path.join(settings.BASE_DIR, 'docs', 'media_container.md'),
+        "others": path.join(settings.BASE_DIR, 'docs', 'others.md')
+    }
+
+    html_files = {
+        "overview": "",
+        "web_container": "",
+        "media_container": "",
+        "others": ""
+    }
+
+    for key in paths:
+        try:
+            with open(paths[key], "r") as file:
+                html_files[key] = markdown(file.read())
+
+                # replace all image paths with the image's base64 string. 
+                # This is so we don't have to permanently put our infra 
+                # diagrams in staticfiles where it's discoverable to anyone with the url
+                html_files[key] = images_to_base64(get_image_paths(html_files[key]), html_files[key])
+
+        except Exception as e:
+            pass
+
+    return Response({**html_files}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def WebSchemaAPIView(request):
+    """
+    Use SchemaGenerator to generate Zubhub Web API Schema instead of get_schema_view.
+
+    this is neccessary because `get_schema_view` somehow ignores 
+    some api endpoints even when told to generate schema for those.
+    Returns Web API schema.
+    """
+
+    from rest_framework.schemas.openapi import SchemaGenerator
+    from .urls import schema_url_patterns
+
+    generator = SchemaGenerator(title='Zubhub Web Server API', patterns=schema_url_patterns)
+
+    return Response(generator.get_schema())
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def MediaSchemaAPIView(request):
+    """
+    Makes API request to media service to get media server API Schema.
+    
+    Returns Media Server API Schema.
+    """
+
+    from .utils import get_media_schema
+    res = get_media_schema()
+    return Response(res.json())

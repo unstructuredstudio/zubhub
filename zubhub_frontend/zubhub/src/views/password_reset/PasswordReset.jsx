@@ -32,6 +32,13 @@ import styles from '../../assets/js/styles/views/password_reset/passwordResetSty
 import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
+
+/**
+* @function PasswordReset View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function PasswordReset(props) {
   const classes = useStyles();
   const { t } = props;

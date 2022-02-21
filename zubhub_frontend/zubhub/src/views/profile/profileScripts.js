@@ -1,4 +1,10 @@
-export const getUserProfile = props => {
+
+/**
+* @function getUserProfile
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/export const getUserProfile = props => {
   let username = props.match.params.username;
 
   if (!username) {
@@ -11,6 +17,13 @@ export const getUserProfile = props => {
   });
 };
 
+
+/**
+* @function copyProfileUrl
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const copyProfileUrl = (profile, props, toast) => {
   const tempInput = document.createElement('textarea');
   tempInput.value = `${document.location.origin}/creators/${profile.username}`;
@@ -27,6 +40,13 @@ export const copyProfileUrl = (profile, props, toast) => {
   }
 };
 
+
+/**
+* @function updateProjects
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const updateProjects = (res, { results: projects }, props, toast) => {
   return res
     .then(res => {
@@ -52,6 +72,13 @@ export const updateProjects = (res, { results: projects }, props, toast) => {
     });
 };
 
+
+/**
+* @function toggleFollow
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleFollow = (id, props) => {
   if (!props.auth.token) {
     props.history.push('/login');
@@ -60,19 +87,47 @@ export const toggleFollow = (id, props) => {
   }
 };
 
+
+/**
+* @function handleMoreMenuOpen
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleMoreMenuOpen = e => {
   return { more_anchor_el: e.currentTarget };
 };
 
+
+/**
+* @function handleMoreMenuClose
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleMoreMenuClose = () => {
   return { more_anchor_el: null };
 };
 
+
+/**
+* @function handleToggleDeleteAccountModal
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleToggleDeleteAccountModal = state => {
   const open_delete_account_modal = !state.open_delete_account_modal;
   return { open_delete_account_modal, more_anchor_el: null };
 };
 
+
+/**
+* @function deleteAccount
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const deleteAccount = (username_el, props) => {
   if (username_el.current.firstChild.value !== props.auth.username) {
     return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
