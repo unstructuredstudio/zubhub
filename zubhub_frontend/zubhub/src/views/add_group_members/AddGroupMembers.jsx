@@ -46,6 +46,13 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
+
+/**
+* @function buildGroupMembersNodes Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 const buildGroupMembersNodes = ({ props, refs, classes, common_classes }) => {
   if (props.values['group_members']) {
     return JSON.parse(props.values['group_members']).map((member, index) => (
@@ -73,6 +80,13 @@ const buildGroupMembersNodes = ({ props, refs, classes, common_classes }) => {
   }
 };
 
+
+/**
+* @function AddGroupMembers
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function AddGroupMembers(props) {
   const refs = {
     add_group_members_el: React.useRef(null),

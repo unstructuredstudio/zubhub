@@ -1,7 +1,19 @@
+/**
+* @function fetchPage
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const fetchPage = (page, props) => {
   return props.getStaffPick({ page, id: props.match.params.id, t: props.t });
 };
 
+/**
+* @function updateProjects
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const updateProjects = (res, { staff_pick }, props, toast) => {
   return res
     .then(res => {

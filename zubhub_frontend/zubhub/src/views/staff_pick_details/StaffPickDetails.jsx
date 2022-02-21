@@ -27,6 +27,12 @@ import styles from '../../assets/js/styles/views/staff_pick_details/staffPickDet
 
 const useStyles = makeStyles(styles);
 
+/**
+* @function StaffPickDetails View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function StaffPickDetails(props) {
   const classes = useStyles();
 

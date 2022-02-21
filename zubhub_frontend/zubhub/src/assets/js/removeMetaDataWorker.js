@@ -1,3 +1,10 @@
+
+/**
+* @function removeMetaData
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const removeMetaData = imageArr => {
   let newImageArr = [];
 

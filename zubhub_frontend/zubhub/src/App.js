@@ -278,7 +278,7 @@ function App(props) {
         />
 
         <Route
-          path="/projects/staff_picks/:id"
+          path="/projects/staff-picks/:id"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport

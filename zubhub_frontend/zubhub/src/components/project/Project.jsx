@@ -28,13 +28,17 @@ import {
 } from '../../assets/js/utils/scripts';
 import { toggleLike, toggleSave } from './projectScripts';
 import styles from '../../assets/js/styles/components/project/projectStyles';
-import {
-  isCloudinaryVideo,
-  isGdriveORVimeoORYoutube,
-} from '../../views/project_details/projectDetailsScripts';
 
 const useStyles = makeStyles(styles);
 
+
+
+/**
+* @function Project Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function Project(props) {
   const classes = useStyles();
 

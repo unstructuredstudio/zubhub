@@ -27,6 +27,12 @@ import styles from '../../assets/js/styles/views/saved_projects/savedProjectsSty
 
 const useStyles = makeStyles(styles);
 
+/**
+* @function SavedProjects View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function SavedProjects(props) {
   const classes = useStyles();
 
