@@ -1,4 +1,4 @@
-![CI/CD](https://github.com/unstructuredstudio/zubhub/workflows/build_deploy_backend.yml/badge.svg)
+![CI/CD](https://github.com/unstructuredstudio/zubhub/actions/workflows/build_deploy_backend.yml/badge.svg)
 
 <img src="logo.png" width="350">
 
@@ -33,8 +33,7 @@ Follow the instructions below to set up your local development environment
 ## Deployment
 ZubHub is currently deployed on its main website using Github Actions that act as our build and deployment tooling. If you are interested in deploying Zubhub on your own VM for testing and hosting purposes, follow the [Single VM Deployment](single_vm_deployment) instructions.  
 
-## Documentation:
-Various components of Zubhub are presnr
+## Documentation
 - [Architecture Overview](./zubhub_backend/zubhub/docs/overview.md)
 - [Web Server](./zubhub_backend/zubhub/docs/web_container.md)
 - [Media Server](./zubhub_backend/zubhub/docs/media_container.md)
