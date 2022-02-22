@@ -43,21 +43,11 @@ class Creator(AbstractUser):
     STAFF = 3
     GROUP = 4
 
-    WHATSAPP = 1
-    EMAIL = 2
-    SMS = 3
-
     ROLE_CHOICES = (
         (CREATOR, 'CREATOR'),
         (MODERATOR, 'MODERATOR'),
         (STAFF, 'STAFF'),
         (GROUP, 'GROUP')
-    )
-
-    CONTACT_CHOICES = (
-        (WHATSAPP, 'WHATSAPP'),
-        (EMAIL, 'EMAIL'),
-        (SMS, 'SMS')
     )
 
     id = models.UUIDField(
@@ -76,9 +66,6 @@ class Creator(AbstractUser):
     role = models.PositiveSmallIntegerField(
         choices=ROLE_CHOICES, blank=True, null=True, default=CREATOR)
     search_vector = SearchVectorField(null=True)
-    contact = models.PositiveSmallIntegerField(
-        choices=CONTACT_CHOICES, blank=True, null=True, default=SMS
-    )
 
     class Meta:
         indexes = (GinIndex(fields=["search_vector"]),)
@@ -95,9 +82,22 @@ class Creator(AbstractUser):
 
 
 class Setting(models.Model):
+    WHATSAPP = 1
+    EMAIL = 2
+    SMS = 3
+
+    CONTACT_CHOICES = (
+        (WHATSAPP, 'WHATSAPP'),
+        (EMAIL, 'EMAIL'),
+        (SMS, 'SMS')
+    )
+
     creator = models.OneToOneField(
         Creator, on_delete=models.CASCADE, primary_key=True)
     subscribe = models.BooleanField(blank=True, default=False)
+    contact = models.PositiveSmallIntegerField(
+        choices=CONTACT_CHOICES, blank=True, null=True, default=SMS
+    )
 
     def __str__(self):
         return self.creator.username

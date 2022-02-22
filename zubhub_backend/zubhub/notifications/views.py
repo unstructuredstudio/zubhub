@@ -1,6 +1,9 @@
 
-from .utils import notification_changed
+from urllib import request
 from .serializers import NotificationSerializer
+from .pagination import NotificationNumberPagination
+from .permissions import SustainedRateThrottle
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 
 from .models import Notification
 
@@ -12,45 +15,27 @@ from rest_framework.generics import (
     UpdateAPIView, ListAPIView, DestroyAPIView)
 
 
-class NoticationListAPIView(ListAPIView):
+class MarkNotificationAsViewedAPIView(UpdateAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
-    permission_classes = [AllowAny]
-
-
-class UpdateNotificationAPIView(UpdateAPIView):
-    queryset = Notification.objects.all()
-    serializer_class = NotificationSerializer
+    throttle_classes = [SustainedRateThrottle]
 
     def perform_update(self, serializer):
-        # serializer.save(viewed=True)
-        try:
-            old = Notification.objects.get(pk=self.kwargs.get("pk"))
-        except Notification.DoesNotExist:
-            pass
-        new = serializer.save(creator=self.request.user)
-        if notification_changed(old, new):
-            result = self.request.user.save()
-            return result
+        serializer.save(viewed=True)
 
 
 class DeleteNotificationAPIView(DestroyAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
-
-    def delete(self, request, *args, **kwargs):
-        notification = self.get_object()
-        if notification:
-            result = self.destroy(request, *args, **kwargs)
-            request.user.save()
-            return result
+    throttle_classes = [SustainedRateThrottle]
 
 
 class UserNotificationsAPIView(ListAPIView):
     serializer_class = NotificationSerializer
     permission_classes = [AllowAny]
+    pagination_class = NotificationNumberPagination
 
     def get_queryset(self):
         queryset = Notification.objects.all().filter(
-            recipient=self.kwargs.get("pk")).order_by("date")
+            recipient=self.request.user.pk).order_by("date")
         return queryset
