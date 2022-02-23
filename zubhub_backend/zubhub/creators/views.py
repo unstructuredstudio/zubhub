@@ -50,7 +50,7 @@ class AuthUserAPIView(RetrieveAPIView):
 
     def get_object(self):
         queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, user=self.request.user)
+        obj = get_object_or_404(queryset, pk=self.request.user.pk)
         return obj
 
 

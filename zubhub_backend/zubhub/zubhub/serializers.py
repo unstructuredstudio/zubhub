@@ -7,6 +7,7 @@ class HeroSerializer(serializers.ModelSerializer):
     class Meta:
         model = Hero
         fields  = [
+            "id",
             "title",
             "description",
             "image_url",
