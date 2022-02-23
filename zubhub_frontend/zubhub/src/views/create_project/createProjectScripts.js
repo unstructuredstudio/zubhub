@@ -613,6 +613,7 @@ export const uploadVideoToCloudinary = async (video, state, props, handleSetStat
 * @todo - describe function's signature
 */
 export const uploadImage = async(image, state, props, handleSetState) => {
+  debugger;
   const args = {
     t: props.t,
     token: props.auth.token
@@ -640,7 +641,7 @@ export const uploadImageToLocal = (image, state, props, handleSetState) => {
   let url = process.env.REACT_APP_NODE_ENV === 'production'
             ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
             : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
-  url = url + "upload_file_to_local/";
+  url = url + "upload-file-to-local/";
 
   const formData = new FormData();
   formData.append('file', image);

@@ -160,7 +160,8 @@ class HeroAPIView(RetrieveAPIView):
     """
     Get site Hero content. To be displayed on the home page of the frontend.\n
     Returns modified hero object (with additional header_logo_url and footer_logo_url):\n
-        {
+        {   
+            "id": <hero id>,
             "title": "string",
             "description": "string",
             "image_url": "string",
@@ -177,13 +178,10 @@ class HeroAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
-        obj = self.get_queryset().order_by("-id")[:1]
-        if obj:
-            return obj[0]
-        return None
+        return self.get_queryset().last()
 
     def get(self, _):
-        serializer = self.get_serializer()
+        serializer = self.get_serializer(self.get_object())
         static_assets = StaticAssets.objects.all().last()
 
         data = {
