@@ -8,6 +8,6 @@ urlpatterns = [
          name='update_notification'),
     path('<uuid:pk>/delete/', DeleteNotificationAPIView.as_view(),
          name='delete_notification'),
-    path('notifications/',
+    path('',
          UserNotificationsAPIView.as_view(), name='user_notifications')
 ]
