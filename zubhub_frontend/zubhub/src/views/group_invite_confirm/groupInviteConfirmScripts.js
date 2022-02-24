@@ -1,3 +1,9 @@
+/**
+* @function getUsernameAndKey
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getUsernameAndKey = queryString => {
   let username = queryString.split('&&');
   const key = username[1].split('=')[1];
@@ -5,6 +11,12 @@ export const getUsernameAndKey = queryString => {
   return { username, key };
 };
 
+/**
+* @function confirmGroupInvite
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const confirmGroupInvite = (e, props, state) => {
   e.preventDefault();
   return props

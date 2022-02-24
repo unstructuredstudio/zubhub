@@ -53,7 +53,6 @@ import Project from '../../components/project/Project';
 import Comments from '../../components/comments/Comments';
 
 import {
-  calculateLabelWidth,
   parseComments,
 } from '../../assets/js/utils/scripts';
 
@@ -63,6 +62,13 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
+
+/**
+* @function Profile View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function Profile(props) {
   const username_el = React.useRef(null);
   const classes = useStyles();

@@ -1,17 +1,44 @@
+/**
+* @function handleOpenEnlargedImageDialog
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleOpenEnlargedImageDialog = (e, state) => {
   const image_url = e.currentTarget.getAttribute('src');
   const open_enlarged_image_dialog = !state.open_enlarged_image_dialog;
   return { enlarged_image_url: image_url, open_enlarged_image_dialog };
 };
 
+
+/**
+* @function handleToogleDeleteProjectModal
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleToggleDeleteProjectModal = state => {
   const open_delete_project_modal = !state.open_delete_project_modal;
   return { open_delete_project_modal };
 };
 
+
+/**
+* @function isVideoFromGdrive
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const isVideoFromGdrive = link =>
   link.search('https://drive.google.com') !== -1 ? true : false;
 
+
+  /**
+* @function deleteProject
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const deleteProject = (props, state) => {
   if (props.auth.token && props.auth.id === state.project.creator.id) {
     return props
@@ -27,6 +54,13 @@ export const deleteProject = (props, state) => {
   }
 };
 
+
+/**
+* @function toggleSave
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleSave = (e, props, id) => {
   e.preventDefault();
   if (!props.auth.token) {
@@ -40,6 +74,13 @@ export const toggleSave = (e, props, id) => {
   }
 };
 
+
+/**
+* @function toggleLike
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleLike = (e, props, id) => {
   e.preventDefault();
   if (!props.auth.token) {
@@ -49,6 +90,13 @@ export const toggleLike = (e, props, id) => {
   }
 };
 
+
+/**
+* @function handleFollow
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleFollow = (e, props, id, state) => {
   e.preventDefault();
   if (!props.auth.token) {
@@ -67,10 +115,24 @@ export const toggleFollow = (e, props, id, state) => {
   }
 };
 
+
+/**
+* @function isCloudinaryVideo
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const isCloudinaryVideo = url =>
   url.search('cloudinary.com') > -1 ? true : false;
 
 
+
+/**
+* @function isGdriveORVimeoORYoutube
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const isGdriveORVimeoORYoutube = url => {
     if(url.search("youtube.com/embed/") > -1 || 
        url.search("player.vimeo.com/video/") > -1 || 

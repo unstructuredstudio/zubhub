@@ -31,6 +31,13 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
+
+/**
+* @function Comment Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function Comment(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();

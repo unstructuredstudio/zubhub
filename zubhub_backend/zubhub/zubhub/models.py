@@ -23,7 +23,7 @@ class Hero(models.Model):
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=100, null=True)
     image = models.ImageField(blank=False, null=True)
-    image_url = models.URLField(max_length=1000, blank=True, null=False)
+    image_url = models.URLField(max_length=1000, blank=True, null=False, default='')
     activity_url = models.URLField(max_length=1000, null=True)
     explore_ideas_url = models.URLField(max_length=1000, null=True)
 

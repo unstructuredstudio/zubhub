@@ -3,6 +3,12 @@ import { toast } from 'react-toastify';
 
 const API = new ZubhubAPI();
 
+/**
+* @function setAuthUser
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const setAuthUser = auth_user => {
   return dispatch => {
     dispatch({
@@ -12,6 +18,13 @@ export const setAuthUser = auth_user => {
   };
 };
 
+
+/**
+* @function login
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const login = args => {
   return dispatch => {
     return API.login(args.values)
@@ -28,6 +41,13 @@ export const login = args => {
   };
 };
 
+
+/**
+* @function logout
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const logout = args => {
   return dispatch => {
     API.logout(args.token)
@@ -53,6 +73,13 @@ export const logout = args => {
   };
 };
 
+
+/**
+* @function getAuthUser
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getAuthUser = props => {
   return dispatch => {
     return API.getAuthUser(props.auth.token)
@@ -79,6 +106,14 @@ export const getAuthUser = props => {
   };
 };
 
+
+
+/**
+* @function signup
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const signup = args => {
   return dispatch => {
     return API.signup(args.values)
@@ -95,6 +130,13 @@ export const signup = args => {
   };
 };
 
+
+/**
+* @function sendEmailConfirmation
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const sendEmailConfirmation = args => {
   return () => {
     return API.sendEmailConfirmation(args.key).then(res => {
@@ -110,6 +152,13 @@ export const sendEmailConfirmation = args => {
   };
 };
 
+
+/**
+* @function sendPhoneConfirmation
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const sendPhoneConfirmation = args => {
   return () => {
     return API.sendPhoneConfirmation(args.key).then(res => {
@@ -125,6 +174,13 @@ export const sendPhoneConfirmation = args => {
   };
 };
 
+
+/**
+* @function sendPasswordResetLink
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const sendPasswordResetLink = args => {
   return () => {
     return API.sendPasswordResetLink(args.email).then(res => {
@@ -140,6 +196,13 @@ export const sendPasswordResetLink = args => {
   };
 };
 
+
+/**
+* @function passwordResetConfirm
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const passwordResetConfirm = args => {
   return () => {
     return API.passwordResetConfirm(args).then(res => {
@@ -155,6 +218,13 @@ export const passwordResetConfirm = args => {
   };
 };
 
+
+/**
+* @function getLocations
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getLocations = args => {
   return () => {
     return API.getLocations()
@@ -180,6 +250,13 @@ export const getLocations = args => {
   };
 };
 
+
+/**
+* @function deleteAccount
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const deleteAccount = args => {
   return () => {
     return API.deleteAccount(args)
@@ -203,6 +280,13 @@ export const deleteAccount = args => {
   };
 };
 
+
+/**
+* @function getSignature
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getSignature = args => {
   return () => {
     const t = args.t;

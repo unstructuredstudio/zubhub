@@ -16,6 +16,26 @@ from cloudinary import config
 @authentication_required
 @throttle_classes([PostUserRateThrottle, SustainedRateThrottle])
 def SigGenAPIView(request):
+    """
+    generate Cloudinary Upload Signature.\n
+    Requires Authentication.\n
+    ------------------------\n
+    request body format:\n
+    {\n
+        "username":"",\n
+        "filename":"",\n
+        "upload_preset":""\n
+    }\n
+    -------------------------\n
+    response format:\n
+    {\n
+        "signature":"",\n
+        "timestamp":"",\n
+        "public_id":"",\n
+        "api_key":""\n
+    }\n
+    """
+
     timestamp = time()
     secret = config().api_secret
     api_key = config().api_key
@@ -38,18 +58,51 @@ def SigGenAPIView(request):
 @authentication_required
 @throttle_classes([PostUserRateThrottle, SustainedRateThrottle])
 def GetCloudinaryResourceInfoAPIView(request):
+    """
+    This gets the resource information about a video uploaded to cloudinary.\n
+    This view is used when a transform is applied to video. 
+    to know if the transformation is ready so we can update the video url 
+    to take advantage of the transformation, we make a call to this endpoint.\n
+    Requires Authentication.\n
+    ------------------------\n
+    request body format:\n
+    {\n
+        "url":"string",\n
+    }\n
+    -------------------------\n
+    response format:\n
+    {\n
+        "result":{video resource json},\n
+    }\n
+    """
+
     try:
         res = get_cloudinary_resource_info(request.data.get("url"))
         return Response({"result": res}, status=status.HTTP_200_OK)
 
     except Exception:
-        return Response({'result': 'failed to delete file from media server'}, status=status.HTTP_502_BAD_GATEWAY)
+        return Response({'result': 'failed to get cloudinary resource info'}, status=status.HTTP_502_BAD_GATEWAY)
 
 
 @api_view(['POST'])
 @authentication_required
 @throttle_classes([PostUserRateThrottle, SustainedRateThrottle])
 def DeleteFileAPIView(request):
+    """
+    Delete the file with the provided url.\n
+    Requires Authentication.\n
+    ------------------------\n
+    request body format:\n
+    {\n
+        "url":"string",\n
+    }\n
+    -------------------------\n
+    response format:\n
+    {\n
+        "result":"ok"},\n
+    }\n
+    """
+
     try:
         res = delete_file(request.data.get("url"))
         return Response({"result": res}, status=status.HTTP_200_OK)
@@ -62,6 +115,22 @@ def DeleteFileAPIView(request):
 @authentication_required
 @throttle_classes([PostUserRateThrottle, SustainedRateThrottle])
 def UploadFileAPIView(request):
+    """
+    Delete the file with the provided url.\n
+    Requires Authentication.\n
+    ------------------------\n
+    request body format:\n
+    {\n
+        "key":"string concatenation of folder and filename",\n
+        "<filename>":<file being uploaded>,\n
+    }\n
+    -------------------------\n
+    response format:\n
+    {\n
+        "url":"url of uploaded file"},\n
+    }\n
+    """
+
     try:
         key = request.data.get("key")
         __, name = key.split("/")
@@ -71,3 +140,29 @@ def UploadFileAPIView(request):
 
     except Exception:
         return Response({'result': 'failed to delete file from media server'}, status=status.HTTP_502_BAD_GATEWAY)
+
+@api_view(['POST'])
+@authentication_required
+def MediaSchemaAPIView(request):
+    """
+    Use SchemaGenerator to generate Zubhub Media Server API Schema instead of get_schema_view.
+
+    this is neccessary because `get_schema_view` somehow ignores 
+    some api endpoints even when told to generate schema for those.
+    Returns Media Server API schema.
+    """
+
+    from rest_framework.schemas.openapi import SchemaGenerator
+    from django.urls import path
+
+    schema_url_patterns = [
+        path('upload-file/', UploadFileAPIView),
+        path('delete-file/', DeleteFileAPIView),
+        path('sigen/', SigGenAPIView),
+        path('get-cloudinary-resource-info/', GetCloudinaryResourceInfoAPIView),
+        path('media-schema/', MediaSchemaAPIView)
+    ]
+
+    generator = SchemaGenerator(title='Zubhub Media Server API', patterns=schema_url_patterns)
+
+    return Response(generator.get_schema())

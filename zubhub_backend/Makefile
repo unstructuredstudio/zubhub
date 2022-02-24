@@ -31,7 +31,7 @@ web-shell:  ## Get an interactive shell inside the web container
 .PHONY: web-shell
 
 web-django-shell: ## Get a django Ipython shell inside the web container
-	docker-compose exec web bash -c "python zubhub/manage.py shell"
+	docker-compose exec web bash -c "python zubhub/manage.py shell_plus"
 .PHONY: web-django-shell
 
 media-shell:  ## Get an interactive shell inside the media container
@@ -58,6 +58,10 @@ tail:  ## Tail logs from the docker-compose containers
 	docker-compose -f docker-compose.yml logs --follow
 .PHONY: tail
 
+migrations: ## Run `manage.py makemigrations`
+	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py makemigrations"
+.PHONY: migrations
+
 migrate: ## Run `manage.py migrate`
 	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py migrate"
 .PHONY: migrate
@@ -71,7 +75,7 @@ admin-user:
 	docker-compose -f docker-compose.yml exec web bash -c "rm /dummy.sh"
 .PHONY: admin-user
 
-init: start migrate admin-user  ## Initialize docker-compose containers
+init: .env start migrate admin-user  ## Initialize docker-compose containers
 .PHONY: init
 
 messages:  ## Create/update translatable messages
@@ -81,6 +85,19 @@ messages:  ## Create/update translatable messages
 		&& python zubhub/manage.py compilemessages \
 	"
 .PHONY: messages
+
+erd: ## Draw Entity Relationship Diagram Of the Data Model In PNG format
+	docker-compose -f docker-compose.yml exec web bash -c " \
+	python zubhub/manage.py graph_models --rankdir LR -a -g -o zubhub/docs/erd.png \
+	"
+.PHONY: erd
+
+schema: ## Generate Web Server OpenAPI Schema
+	docker-compose -f docker-compose.yml exec web bash -c " \
+	python zubhub/manage.py generateschema > zubhub/docs/zubhub-openapi-schema.yml \
+	"
+.PHONY: schema
+
 
 
 clean: ## Remove stopped containers, networks not currently in use, images not currently in use, build caches

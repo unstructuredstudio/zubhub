@@ -56,6 +56,12 @@ import styles from '../../assets/js/styles/views/signup/signupStyles';
 
 const useStyles = makeStyles(styles);
 
+/**
+* @function Signup View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function Signup(props) {
   const classes = useStyles();
 

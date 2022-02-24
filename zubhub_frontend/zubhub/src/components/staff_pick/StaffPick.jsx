@@ -13,6 +13,13 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
+
+/**
+* @function StaffPick
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function StaffPick(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -38,7 +45,7 @@ function StaffPick(props) {
               margin="normal"
               secondaryButtonStyle
               onClick={() =>
-                props.history.push(`/projects/staff_picks/${staff_pick.id}`)
+                props.history.push(`/projects/staff-picks/${staff_pick.id}`)
               }
             >
               {rest.t('staffPicks.viewAll')}
