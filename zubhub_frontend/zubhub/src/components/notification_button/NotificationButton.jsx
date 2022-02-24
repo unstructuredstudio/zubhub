@@ -1,19 +1,16 @@
 import React, { useRef, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import NotificationPanel from '../notification_panel/NotificationPanel';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import CustomButton from '../button/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import cn from 'classnames';
+import styles from '../../assets/js/styles/components/notification_button/notificationButtonStyles';
+import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    border: '1px solid',
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
+const useStyles = makeStyles(styles);
 
 const NotificationButton = ({ className }) => {
+  const classes = useStyles();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const buttonRef = useRef();
 
@@ -21,7 +18,7 @@ const NotificationButton = ({ className }) => {
     <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
       <div>
         <CustomButton
-          className={className}
+          className={cn(className, classes.notificationButtonStyle)}
           variant="contained"
           primaryButtonStyle
           customButtonStyle
