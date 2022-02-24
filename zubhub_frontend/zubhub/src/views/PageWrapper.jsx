@@ -56,16 +56,17 @@ import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
+import NotificationButton from '../components/notification_button/NotificationButton';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 /**
-* @function PageWrapper View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function PageWrapper View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
@@ -325,6 +326,7 @@ function PageWrapper(props) {
                   >
                     <SearchIcon />
                   </IconButton>
+                  <NotificationButton />
                   <Avatar
                     className={classes.avatarStyle}
                     aria-label={`${props.auth.username}' Avatar`}
