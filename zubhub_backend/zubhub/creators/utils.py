@@ -235,6 +235,23 @@ def activity_notification(activities, **kwargs):
             template_name=template_name,
             ctxs=phone_contexts
         )
+    
+def send_notification(users, context, template_name):
+    for user in users:
+        if (user.contact == 'EMAIL'):
+            context.append({"email": user.email})
+            send_mass_email.delay(
+                template_name=template_name,
+                ctxs=context
+            )
+        if (user.contact == 'SMS'):
+            context.append({"phone": user.phone})
+            send_mass_text.delay(
+                template_name=template_name,
+                ctxs=context
+            )
+        if (user.contact == 'WHATSAPP'):
+            # Todo: Send Whatsapp
 
 
 # def sync_user_email_addresses(user):
