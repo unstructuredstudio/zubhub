@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import Popper from '@material-ui/core/Popper';
 import styles from '../../assets/js/styles/components/notification_panel/notificationPanelStyles';
 import { makeStyles } from '@material-ui/core/styles';
 import NotificationPanelButton from './NotificationPanelButton';
+import cn from 'classnames';
+import NotificationPanelPopper from './NotificationPanelPopper';
+import { useMediaQuery } from '@material-ui/core';
 
 const useStyles = makeStyles(styles);
 
@@ -11,18 +13,9 @@ const NOTIFICATION_VIEW_TYPE = {
   UNREAD: 'UNREAD',
 };
 
-const modifiers = {
-  offset: {
-    enabled: true,
-    offset: '20px, 30px',
-  },
-  arrow: {
-    enabled: true,
-  },
-};
-
 const NotificationPanel = ({ open, anchorEl }) => {
   const classes = useStyles();
+  const mediaQuery = useMediaQuery('(max-width: 600px)');
   const [notificationViewType, setNotificationViewType] = useState(
     NOTIFICATION_VIEW_TYPE.ALL,
   );
@@ -48,16 +41,13 @@ const NotificationPanel = ({ open, anchorEl }) => {
   );
 
   return (
-    <Popper
-      open={open}
-      anchorEl={anchorEl.current}
-      disablePortal
-      modifiers={modifiers}
-      placement="bottom-end"
-    >
-      <div x-arrow="true" className={classes.popperArrowStyle}></div>
-
-      <div className={classes.popperStyle}>
+    <NotificationPanelPopper open={open} anchorEl={anchorEl}>
+      <div
+        className={cn(
+          classes.popperStyle,
+          mediaQuery ? classes.fullscreenPopperStyle : '',
+        )}
+      >
         <div className={classes.panelHeaderStyle}>
           <h1 className={classes.panelHeaderTextStyle}>Notifications</h1>
           <NotificationPanelButton
@@ -79,7 +69,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
           ? getAllNotificationView()
           : getUnreadNotificationView()}
       </div>
-    </Popper>
+    </NotificationPanelPopper>
   );
 };
 

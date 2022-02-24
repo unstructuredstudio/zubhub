@@ -7,6 +7,7 @@ const styles = theme => ({
     outline: 'none',
     border: 'none',
     cursor: 'pointer',
+    fontSize: '15px',
   },
   selectedButtonStyle: {
     backgroundColor: '#00B8C4',

@@ -1,4 +1,7 @@
 const styles = theme => ({
+  popperContainerStyle: {
+    top: '48px !important',
+  },
   popperStyle: {
     backgroundColor: 'white',
     zIndex: 20,
@@ -6,16 +9,10 @@ const styles = theme => ({
     borderRadius: '20px',
     boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
   },
-  popperArrowStyle: {
-    width: '50px',
-    height: '50px',
-    top: '-20px',
-    background: 'white',
-    position: 'absolute',
-    transform: 'scaleX(0.7) rotate(45deg)',
-    transformOrigin: 'center',
-    borderRadius: '10px',
-    zIndex: '-1',
+  fullscreenPopperStyle: {
+    width: '100vw',
+    height: '100vh',
+    borderRadius: '0px',
   },
   panelHeaderStyle: {
     display: 'flex',
