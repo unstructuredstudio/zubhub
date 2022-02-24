@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import NotificationPanel from '../notification_panel/NotificationPanel';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import CustomButton from '../button/Button';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -12,20 +13,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const NotificationButton = () => {
+const NotificationButton = ({ className }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const buttonRef = useRef();
 
   return (
-    <>
-      <CustomButton
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        ref={buttonRef}
-      >
-        <NotificationsIcon />
-      </CustomButton>
-      <NotificationPanel open={dropdownOpen} anchorEl={buttonRef} />
-    </>
+    <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
+      <div>
+        <CustomButton
+          className={className}
+          variant="contained"
+          primaryButtonStyle
+          customButtonStyle
+          size="small"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          ref={buttonRef}
+        >
+          <NotificationsIcon />
+        </CustomButton>
+        <NotificationPanel open={dropdownOpen} anchorEl={buttonRef} />
+      </div>
+    </ClickAwayListener>
   );
 };
 

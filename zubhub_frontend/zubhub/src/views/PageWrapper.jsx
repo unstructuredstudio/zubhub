@@ -326,7 +326,9 @@ function PageWrapper(props) {
                   >
                     <SearchIcon />
                   </IconButton>
-                  <NotificationButton />
+                  <NotificationButton
+                    className={clsx(common_classes.marginRight1em)}
+                  />
                   <Avatar
                     className={classes.avatarStyle}
                     aria-label={`${props.auth.username}' Avatar`}
