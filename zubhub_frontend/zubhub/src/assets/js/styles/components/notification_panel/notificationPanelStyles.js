@@ -4,6 +4,7 @@ const styles = theme => ({
     zIndex: 20,
     padding: '20px',
     borderRadius: '20px',
+    boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
   },
   popperArrowStyle: {
     width: '50px',
