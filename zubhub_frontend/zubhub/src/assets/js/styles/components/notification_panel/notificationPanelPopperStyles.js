@@ -5,13 +5,13 @@ const styles = theme => ({
   popperArrowStyle: {
     width: '50px',
     height: '50px',
-    top: '-20px',
+    top: '-19px',
     background: 'white',
     position: 'absolute',
     transform: 'scaleX(0.7) rotate(45deg)',
     transformOrigin: 'center',
-    borderRadius: '10px',
-    zIndex: '-1',
+    borderRadius: '200px 0px 1000px 0px',
+    zIndex: '2000',
   },
 });
 
