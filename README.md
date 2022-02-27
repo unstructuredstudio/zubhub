@@ -2,10 +2,14 @@
 
 <img src="logo.png" width="350">
 
-Zubhub, is a creative education and collaboration platform for young tinkerers, makers & creators. It can be hosted in low or no internet bandwidth locations to create a small virtual creative education Hub where makers creators can showcase and document what they have created, discuss, form workgroups and take part in workshops and events. These hubs can be inter-connected to form a large distributed creative education network.
+ZubHub is a free web platform that expands access to low-cost creative learning and collaboration opportunities globally to children in underserved communities.
 
-|  **A live instance of ZubHub is available at https://zubhub.unstructured.studio**  | 
-| --- | 
+It is available for custom use for your school, library, hackerspace, or educational organization. It can be hosted in low or no internet bandwidth locations to create a small virtual hub. These hubs can be interconnected to form an extensive distributed creative education network. You can think of it like [Mastodon](https://en.wikipedia.org/wiki/Mastodon_(software)) social-network but specifically intended for showcasing and collaborating on creative educational projects. Or maybe like [Hackaday.io](https://hackaday.io/), but for children :smiley:  
+
+| ZubHub is currently in public beta. A public ZubHub instance is hosted here: https://zubhub.unstructured.studio |
+| --- |
+
+Zubhub is designed and developed by [Unstructured Studio](https://unstructured.studio), an educational non-profit organization incorporated in Canada and India. Want to know more about ZubHub and our feature roadmap? Head to 👉 [ZubHub Wiki](https://github.com/unstructuredstudio/zubhub/wiki)!
 
 <img src="screenshot.png">
 
