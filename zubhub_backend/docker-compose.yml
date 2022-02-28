@@ -69,48 +69,6 @@ services:
       - rabbitmq
       - db
 
-  # flower:
-  #   container_name: flower
-  #   env_file: .env
-  #   build:
-  #     context: .
-  #     dockerfile: ./compose/flower/Dockerfile
-  #   ports:
-  #     - 5555:5555
-  #   command: /flower/start-flower
-  #   restart: on-failure
-  #   volumes:
-  #     - ./zubhub:/zubhub_backend/zubhub
-  #     - ./compose/flower/start-flower:/start-flower:ro
-  #     - ./requirements.txt:/requirements.txt:ro
-  #   depends_on:
-  #     - celery_worker
-  #     - rabbitmq
-  #     - db
-
-  # prometheus:
-  #   container_name: prometheus
-  #   image: prom/prometheus
-  #   ports:
-  #     - 9090:9090
-  #   command:
-  #     - --config.file=/etc/prometheus/prometheus.yml
-  #   restart: on-failure
-  #   volumes:
-  #     - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-  #   depends_on:
-  #     - cadvisor
-
-  # cadvisor:
-  #   image: google/cadvisor
-  #   container_name: cadvisor
-  #   restart: on-failure
-  #   volumes:
-  #     - /:/rootfs:ro
-  #     - /var/run:/var/run:rw
-  #     - /sys:/sys:ro
-  #     - /var/lib/docker/:/var/lib/docker:ro
-
 volumes:
   postgres_data:
   media_data:

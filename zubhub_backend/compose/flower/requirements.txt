@@ -12,7 +12,7 @@ coreschema>=0.0.4
 coverage>=5.1
 decorator>=4.4.2
 defusedxml>=0.6.0
-Django>=2.2.7
+Django>=2.2.7,<=3.2
 django-allauth>=0.40.0
 django-appconf>=1.0.4
 django-capture-on-commit-callbacks>=1.2.0

@@ -35,14 +35,33 @@ from .models import CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmation
 Creator = get_user_model()
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-@throttle_classes([GetUserRateThrottle, SustainedRateThrottle])
-def auth_user_api_view(request):
-    return Response(CreatorSerializer(request.user).data)
+class AuthUserAPIView(RetrieveAPIView):
+    """
+    Fetch the profile of the authenticated user. 
+
+    Requires authentication.
+    Returns user profile object.
+    """
+
+    queryset = Creator.objects.all()
+    serializer_class = CreatorSerializer
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, pk=self.request.user.pk)
+        return obj
 
 
 class UserProfileAPIView(RetrieveAPIView):
+    """
+    Fetch Profile of user with given username.
+
+    Requires username of user.
+    Returns user profile.
+    """
+
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     lookup_field = "username"
@@ -51,6 +70,24 @@ class UserProfileAPIView(RetrieveAPIView):
 
 
 class RegisterCreatorAPIView(RegisterView):
+    """
+    Register a user.\n
+    
+    Returns basic user profile.\n
+    request body format:\n
+        {\n
+            "username": "string",\n
+            "email": "",\n
+            "password1": "string",\n
+            "password2": "string",\n
+            "phone": "",\n
+            "dateOfBirth": "2022-02-20",\n
+            "location": "string",\n
+            "bio": "",\n
+            "subscribe": false\n
+        }\n
+    """
+
     serializer_class = CustomRegisterSerializer
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
@@ -63,12 +100,20 @@ class RegisterCreatorAPIView(RegisterView):
 
 
 class VerifyPhoneView(APIView):
-    permission_classes = (AllowAny,)
+    """
+    Verify user's phone number.\n
+
+    Returns {"details": "ok"}.\n
+    request body format:\n
+        {\n
+            key: "dksledfjklskdjlskdjlsjkdlkslekdjsldk"\n
+        }\n
+    """
+
+    permission_classes = [AllowAny]
+    serializer_class = VerifyPhoneSerializer
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
-
-    def get_serializer(self, *args, **kwargs):
-        return VerifyPhoneSerializer(*args, **kwargs)
 
     def get_object(self, queryset=None):
         key = self.kwargs["key"]
@@ -88,6 +133,13 @@ class VerifyPhoneView(APIView):
 
 
 class CreatorSearchAPIView(ListAPIView):
+    """
+    Fulltext search of users.
+
+    Requires search term.
+    Returns paginated list of users that match the search term
+    """
+
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
     pagination_class = CreatorNumberPagination
@@ -101,6 +153,22 @@ class CreatorSearchAPIView(ListAPIView):
 
 
 class EditCreatorAPIView(UpdateAPIView):
+    """
+    Edit user profile.\n
+
+    Requires authentication.\n
+    Returns user profile\n
+    request body format:\n
+        {\n
+            "username": "string",\n
+            "email": "",\n
+            "phone": "",\n
+            "avatar": "string",\n
+            "location": "string",\n
+            "bio": "string"\n
+        }\n
+    """
+
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -126,6 +194,12 @@ class EditCreatorAPIView(UpdateAPIView):
 
 
 class DeleteCreatorAPIView(DestroyAPIView):
+    """
+    Delete user from database.\n
+
+    Requires authentication.\n
+    Returns {details: "ok"}\n
+    """
     queryset = Creator.objects.all()
     serializer_class = CreatorSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -139,6 +213,13 @@ class DeleteCreatorAPIView(DestroyAPIView):
 
 
 class UserProjectsAPIView(ListAPIView):
+    """
+    Get paginated list of all projects created by user with provided username.
+
+    Requires username.
+    Returns paginated list projects
+    """
+
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
@@ -162,6 +243,13 @@ class UserProjectsAPIView(ListAPIView):
 
 
 class UserFollowersAPIView(ListAPIView):
+    """
+    Fetch paginated user follower's list.
+
+    Requires username of user.
+    Returns list of users.
+    """
+
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
@@ -173,6 +261,13 @@ class UserFollowersAPIView(ListAPIView):
 
 
 class UserFollowingAPIView(ListAPIView):
+    """
+    Fetch paginated list of users being followed by the user with the provided username.
+
+    Requires username of user.
+    Returns list of users.
+    """
+
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
@@ -184,6 +279,14 @@ class UserFollowingAPIView(ListAPIView):
 
 
 class ToggleFollowAPIView(RetrieveAPIView):
+    """
+    Remove/Add authenticated user from/to followers list of user with provided id.
+
+    Requires authentication.
+    Requires user id.
+    Returns user profile of user with provided id.
+    """
+
     serializer_class = CreatorSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -205,12 +308,20 @@ class ToggleFollowAPIView(RetrieveAPIView):
 
 
 class ConfirmGroupInviteAPIView(APIView):
-    permission_classes = (AllowAny,)
-    allowed_methods = ('POST', 'OPTIONS', 'HEAD')
-    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+    """
+    Confirms user's group invite.\n
 
-    def get_serializer(self, *args, **kwargs):
-        return ConfirmGroupInviteSerializer(*args, **kwargs)
+    Requires verification key. Returns {"details": "ok"}.\n
+    request body format:\n
+        {\n
+            key: "dksledfjklskdjlskdjlsjkdlkslekdjsldk"\n
+        }\n
+    """
+
+    permission_classes = [AllowAny]
+    allowed_methods = ('POST', 'OPTIONS', 'HEAD')
+    serializer_class = ConfirmGroupInviteSerializer
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self, queryset=None):
         key = self.kwargs["key"]
@@ -230,6 +341,12 @@ class ConfirmGroupInviteAPIView(APIView):
 
 
 class GroupMembersAPIView(ListAPIView):
+    """
+    Fetch paginated list of users in a group.
+
+    Requires username of group. Returns list of users.
+    """
+
     serializer_class = CreatorSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
@@ -241,6 +358,20 @@ class GroupMembersAPIView(ListAPIView):
 
 
 class AddGroupMembersAPIView(GenericAPIView):
+    """
+    Add new members to group.
+
+    Requires authentication.\n
+    Requires body of group_members and/or csv string.\n
+    Returns group profile.\n
+    contenttype might need to be set to false.\n
+    request body format:\n
+        {\n
+            group_members: ["username1","username2"],\n
+            csv: "stringified csv"\n
+        }\n
+    """
+
     serializer_class = AddGroupMembersSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
@@ -289,6 +420,14 @@ class AddGroupMembersAPIView(GenericAPIView):
 
 
 class RemoveGroupMemberAPIView(RetrieveAPIView):
+    """
+    Remove user from group.
+
+    Requires authentication.
+    id of user to be removed from group. 
+    Returns profile of user removed from group.
+    """
+
     serializer_class = CreatorSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -307,6 +446,13 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
 
 
 class LocationListAPIView(ListAPIView):
+    """
+    Fetch all countries from the database.
+
+    Takes no input.
+    Returns list of all countries.
+    """
+
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     permission_classes = [AllowAny]
@@ -314,6 +460,19 @@ class LocationListAPIView(ListAPIView):
 
 
 class AddCommentAPIView(CreateAPIView):
+    """
+    Comment on user's profile.
+
+    Requires authentication.\n
+    Requires user id.\n
+    Returns user profile.\n
+    request body format:\n
+        {\n
+            text: "comment text",\n
+            parent_id: "id of parent comment or None"\n
+        }\n
+    """
+    
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]

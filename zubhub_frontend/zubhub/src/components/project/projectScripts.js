@@ -1,3 +1,9 @@
+/**
+* @function toggleLike
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleLike = (e, id, props) => {
   e.preventDefault();
   if (!props.auth.token) {
@@ -11,6 +17,13 @@ export const toggleLike = (e, id, props) => {
   }
 };
 
+
+/**
+* @function toggleSave
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleSave = (e, id, props) => {
   e.preventDefault();
   if (!props.auth.token) {
