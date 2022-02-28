@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text
 
+# from .models import Setting
+
 try:
     from allauth.account.adapter import get_adapter
     from allauth.account.utils import send_email_confirmation
@@ -238,43 +240,18 @@ def activity_notification(activities, **kwargs):
     
 def send_notification(users, context, template_name):
     for user in users:
-        if (user.contact == 'EMAIL'):
+        if (Setting.contact == 2):
             context.append({"email": user.email})
             send_mass_email.delay(
                 template_name=template_name,
                 ctxs=context
             )
-        if (user.contact == 'SMS'):
+        if (Setting.contact == 3):
             context.append({"phone": user.phone})
             send_mass_text.delay(
                 template_name=template_name,
                 ctxs=context
             )
-        if (user.contact == 'WHATSAPP'):
+        # if (Setting.contact == 1):
             # Todo: Send Whatsapp
 
-
-# def sync_user_email_addresses(user):
-#     """
-#     Keep user.email in sync with user.emailaddress_set.
-
-#     Under some circumstances the user.email may not have ended up as
-#     an EmailAddress record, e.g. in the case of manually created admin
-#     users.
-#     """
-#     from .models import EmailAddress
-
-#     email=user_email(user)
-#     if (
-#         email
-#         and not EmailAddress.objects.filter(user=user, email__iexact=email).exists()
-#     ):
-#         if (
-#             app_settings.UNIQUE_EMAIL
-#             and EmailAddress.objects.filter(email__iexact=email).exists()
-#         ):
-#             # Bail out
-#             return
-#         EmailAddress.objects.create(
-#             user=user, email=email, primary=False, verified=False
-#         )
