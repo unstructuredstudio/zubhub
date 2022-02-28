@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text
 
-# from .models import Setting
+from .models import Setting
 
 try:
     from allauth.account.adapter import get_adapter
@@ -240,18 +240,18 @@ def activity_notification(activities, **kwargs):
     
 def send_notification(users, context, template_name):
     for user in users:
-        if (Setting.contact == 2):
+        user_setting = Setting.objects.get(contact=user)
+        if (user_setting.contact == 2):
             context.append({"email": user.email})
             send_mass_email.delay(
                 template_name=template_name,
                 ctxs=context
             )
-        if (Setting.contact == 3):
+        if (user_setting.contact == 3):
             context.append({"phone": user.phone})
             send_mass_text.delay(
                 template_name=template_name,
                 ctxs=context
             )
-        # if (Setting.contact == 1):
-            # Todo: Send Whatsapp
+        # Todo: Send Whatsapp
 

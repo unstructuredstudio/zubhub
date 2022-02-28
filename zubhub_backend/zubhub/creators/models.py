@@ -11,7 +11,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
 
 from .managers import PhoneNumberManager
-from .utils import user_phone
+# from .utils import user_phone
 
 try:
     from allauth.account import app_settings as allauth_settings
