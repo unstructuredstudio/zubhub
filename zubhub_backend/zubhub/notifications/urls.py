@@ -5,9 +5,9 @@ app_name = "notifications"
 
 urlpatterns = [
     path('<uuid:pk>/update/', MarkNotificationAsViewedAPIView.as_view(),
-         name='update_notification'),
+         name='update-notification'),
     path('<uuid:pk>/delete/', DeleteNotificationAPIView.as_view(),
-         name='delete_notification'),
+         name='delete-notification'),
     path('',
-         UserNotificationsAPIView.as_view(), name='user_notifications')
+         UserNotificationsAPIView.as_view(), name='user-notifications')
 ]
