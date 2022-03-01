@@ -3,7 +3,7 @@ from django.core.exceptions import FieldDoesNotExist
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
-from creators.tasks import upload_file_task, send_mass_email, send_mass_text
+from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp
 
 try:
     from allauth.account.adapter import get_adapter
@@ -235,22 +235,28 @@ def activity_notification(activities, **kwargs):
             template_name=template_name,
             ctxs=phone_contexts
         )
-    
+
+
 def send_notification(users, context, template_name):
     from .models import Setting
+
     for user in users:
-        user_setting = Setting.objects.get(contact=user)
-        if (user_setting.contact == 2):
-            context.append({"email": user.email})
+        user_setting = Setting.objects.get(creator=user)
+        if user_setting.contact == Setting.WHATSAPP:
+            context.update({"phone": user.phone})
+            send_whatsapp(
+                phone=user.phone,
+                template_name=template_name,
+                ctx=context)
+        if user_setting.contact == Setting.EMAIL:
+            context.update({"email": user.email})
             send_mass_email.delay(
                 template_name=template_name,
                 ctxs=context
             )
-        if (user_setting.contact == 3):
-            context.append({"phone": user.phone})
+        if user_setting.contact == Setting.SMS:
+            context.update({"phone": user.phone})
             send_mass_text.delay(
                 template_name=template_name,
                 ctxs=context
             )
-        # Todo: Send Whatsapp
-
