@@ -95,7 +95,9 @@ class Setting(models.Model):
     creator = models.OneToOneField(
         Creator, on_delete=models.CASCADE, primary_key=True)
     subscribe = models.BooleanField(blank=True, default=False)
-    contact = models.PositiveSmallIntegerField(choices=CONTACT_CHOICES, blank=True, null=True, default=SMS)
+    contact = models.PositiveSmallIntegerField(
+        choices=CONTACT_CHOICES, blank=True, null=True, default=SMS
+    )
 
     def __str__(self):
         return self.creator.username

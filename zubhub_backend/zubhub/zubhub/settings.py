@@ -113,6 +113,7 @@ INSTALLED_APPS = [
     'APIS',
     'creators',
     'projects',
+    'notifications'
 ]
 
 # askimet
@@ -301,6 +302,7 @@ EMAIL_USE_SSL = True
 
 
 DEFAULT_FROM_PHONE = os.environ.get("DEFAULT_FROM_PHONE")
+DEFAULT_WHATSAPP_FROM_PHONE = os.environ.get("DEFAULT_WHATSAPP_FROM_PHONE")
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_NOTIFY_SERVICE_SID = os.environ.get("TWILIO_NOTIFY_SERVICE_SID")
