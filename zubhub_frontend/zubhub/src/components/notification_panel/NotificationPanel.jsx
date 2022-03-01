@@ -37,7 +37,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
   };
 
   const getUnreadNotificationView = () => (
-    <div>Unread notifications here...</div>
+    <div style={{ color: 'black' }}>Unread notifications here...</div>
   );
 
   return (
