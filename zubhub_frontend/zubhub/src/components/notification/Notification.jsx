@@ -19,12 +19,16 @@ const Notification = ({ notification }) => {
   return (
     <>
       {notification.type == NOTIFICATION_TYPE.FOLLOW && (
-        <div className={classes.notificationStyle} display="flex">
-          <img src={notification.picture} alt="user-profile" />
+        <div
+          className={classes.notificationStyle}
+          display="flex"
+          onClick={() => history.push(notification.user)}
+        >
+          <img className={classes.image} src={notification.picture} alt="user- profile" />
 
-          <p>{notification.message}</p>
+          <p className={classes.message}>{notification.message}</p>
 
-          {!notification.viewed && <div className="viewDot"></div>}
+          {!notification.viewed && <div className={classes.viewDot}></div>}
         </div>
       )}
 
@@ -34,11 +38,14 @@ const Notification = ({ notification }) => {
           display="flex"
           onClick={() => history.push(notification.project)}
         >
-          <img src={notification.picture} alt="user-profile" />
+          <img className={classes.image} src={notification.picture} alt="user-profile" />
 
-          <p>{notification.message}</p>
+          <div className={classes.text}>
+            <p className={classes.message}>{notification.message}</p>
+            <p className={classes.time}>{notification.time}</p>
+          </div>
 
-          {!notification.viewed && <div className="viewDot"></div>}
+          {!notification.viewed && <div className={classes.viewDot}></div>}
         </div>
       )}
     </>

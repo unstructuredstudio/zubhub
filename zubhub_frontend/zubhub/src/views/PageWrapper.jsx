@@ -62,11 +62,11 @@ const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 /**
-* @function PageWrapper View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function PageWrapper View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
@@ -107,10 +107,11 @@ function PageWrapper(props) {
 
   const notif = {
     type: 'CLAP',
-    message: 'Hello Andrew QWERTYUI',
+    message: 'user120 commented on "Post"',
     picture: 'https://ca.slack-edge.com/T6VL1BSEA-UCY2PD70S-1e0733637986-512',
     project: 'https://youtube.com',
     viewed: false,
+    time: '5 minutes ago',
   };
 
   return (
