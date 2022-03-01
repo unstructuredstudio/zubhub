@@ -15,9 +15,12 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 ENVIRONMENT = os.environ.get('ENVIRONMENT', default='production')
 
+# For doing stuffs that require The use of an official name, like sending notifications
 DEFAULT_DISPLAY_NAME = os.environ.get("DEFAULT_DISPLAY_NAME", default="ZubHub")
+
 DEFAULT_FRONTEND_DOMAIN = os.environ.get(
     "DEFAULT_FRONTEND_DOMAIN", default="localhost:3000")
 DEFAULT_BACKEND_DOMAIN = os.environ.get(
@@ -27,6 +30,8 @@ DEFAULT_FRONTEND_PROTOCOL = os.environ.get(
 DEFAULT_BACKEND_PROTOCOL = os.environ.get(
     "DEFAULT_BACKEND_PROTOCOL", default="https")
 DEBUG = int(os.environ.get("DEBUG", default=0))
+
+# This is used to determine whether to store media files in a custom media server or in the cloud
 STORE_MEDIA_LOCALLY = bool(
     int(os.environ.get("STORE_MEDIA_LOCALLY", default=1)))
 MEDIA_SECRET = os.environ.get("MEDIA_SECRET", default="")
@@ -45,7 +50,7 @@ if DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
 else:
     BACKEND_HOST = DEFAULT_BACKEND_DOMAIN
 
-
+# harding security in production environments
 if ENVIRONMENT == 'production':
     SECURE_BROWSER_XSS_FILTER = True
     # SECURE_SSL_REDIRECT = True
@@ -63,8 +68,6 @@ if ENVIRONMENT == 'production':
 
     # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
                  FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST, "web"]
@@ -105,10 +108,12 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'treebeard',
     'django_summernote',
+    'django_extensions',
     'zubhub',
     'APIS',
     'creators',
     'projects',
+    'notifications'
 ]
 
 # askimet
@@ -139,6 +144,8 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 ACCOUNT_ADAPTER = 'creators.adapter.CustomAccountAdapter'
 
 AUTH_USER_MODEL = 'creators.Creator'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 # django-allauth config
@@ -295,6 +302,7 @@ EMAIL_USE_SSL = True
 
 
 DEFAULT_FROM_PHONE = os.environ.get("DEFAULT_FROM_PHONE")
+DEFAULT_WHATSAPP_FROM_PHONE = os.environ.get("DEFAULT_WHATSAPP_FROM_PHONE")
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_NOTIFY_SERVICE_SID = os.environ.get("TWILIO_NOTIFY_SERVICE_SID")
@@ -330,4 +338,11 @@ SUMMERNOTE_CONFIG = {
     },
     "css": ("/static/css/summernote_plugin.css",),
     "js": ("/static/js/summernote_plugin.js",)
+}
+
+
+#for auto-generating the database schema
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
 }

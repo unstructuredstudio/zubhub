@@ -1,13 +1,32 @@
 import i18next from 'i18next';
 
+/**
+ * API class containing all the calls to the backend api endpoints
+ */
 class API {
   constructor() {
+    /** 
+    * @property {string}  this.domain - url string of the domain + root url path.
+    * Is used as base url to be extended while making API requests
+    */
     this.domain =
       process.env.REACT_APP_NODE_ENV === 'production'
         ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
         : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
   }
 
+
+  /**
+  * @method request - Constructs the request object and sends it to the backend
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @param {string} url - the api endpoint
+  * @param {string} method - the http method of the request to be constructed
+  * @param {string} token - the user auth token if provided
+  * @param {string} body - request body
+  * @param {string} content_type - content type to be used for the request
+  * @returns {Promise<>}
+  */
   request = ({
     url = '/',
     method = 'GET',
@@ -71,7 +90,12 @@ class API {
     }
   };
 
-  /**********************login with email and password******************************/
+  /**
+  * @method login - login with email and password
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   login = ({ username, password }) => {
     const url = 'rest-auth/login/';
     const method = 'POST';
@@ -79,17 +103,27 @@ class API {
 
     return this.request({ url, method, body }).then(res => res.json());
   };
-  /****************************************************/
 
-  /**********************logout******************************/
+
+  /**
+  * @method logout - logout a user with the user's token
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   logout = token => {
     const url = 'rest-auth/logout/';
     const method = 'POST';
     return this.request({ url, method, token }).then(res => res.json());
   };
-  /****************************************************/
 
-  /**********************signup******************************/
+
+  /**
+  * @method signup - create an account for a user with the user's details
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   signup = ({
     username,
     email,
@@ -117,9 +151,15 @@ class API {
 
     return this.request({ url, method, body }).then(res => res.json());
   };
-  /****************************************************/
 
-  /*****************send email confirmation ******************/
+
+  /**
+  * @method sendEmailConfirmation - verify a user's email by making api call
+  *         to this endpoint with the provided key
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   sendEmailConfirmation = key => {
     const url = 'rest-auth/registration/verify-email/';
     const method = 'POST';
@@ -129,9 +169,15 @@ class API {
       Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
     );
   };
-  /*******************************************************************/
 
-  /*****************send phone confirmation ******************/
+
+  /**
+  * @method sendPhoneConfirmation - verify a user's phone number by making api call
+  *         to this endpoint with the provided key
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   sendPhoneConfirmation = key => {
     const url = 'creators/verify-phone/';
     const method = 'POST';
@@ -141,9 +187,14 @@ class API {
       Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
     );
   };
-  /*******************************************************************/
 
-  /********************send password reset link********************************/
+
+  /**
+  * @method sendPasswordResetLink
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   sendPasswordResetLink = email => {
     const url = 'rest-auth/password/reset/';
     const method = 'POST';
@@ -153,9 +204,14 @@ class API {
       Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
     );
   };
-  /********************************************************************/
 
-  /********************password reset confirmation********************************/
+
+  /**
+  * @method passwordResetConfirm
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   passwordResetConfirm = ({ new_password1, new_password2, uid, token }) => {
     const url = 'rest-auth/password/reset/confirm/';
     const method = 'POST';
@@ -165,17 +221,26 @@ class API {
       Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
     );
   };
-  /********************************************************************/
 
-  /************************** get authenticated user's details **************************/
+
+  /**
+  * @method getAuthUser - make api request to this endpoint providing a valid user token to 
+  *         get the user profile of the user with the provided token
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getAuthUser = token => {
-    const url = 'creators/authUser/';
+    const url = 'creators/auth-user/';
     return this.request({ url, token }).then(res => res.json());
   };
 
-  /********************************************************************/
-
-  /************************** get user profile **************************/
+  /**
+  * @method getUserProfile - get the user profile of the user that the username belongs to
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getUserProfile = ({ username, token }) => {
     const url = `creators/${username}/`;
     if (token) {
@@ -185,7 +250,14 @@ class API {
     }
   };
 
-  /*************************** get user projects *********************************/
+
+  /**
+  * @method getUserProjects - get a paginated list of projects 
+  *         created by the user with the provided username
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getUserProjects = ({ username, page, limit }) => {
     let url;
     if (limit && page) {
@@ -200,9 +272,14 @@ class API {
 
     return this.request({ url }).then(res => res.json());
   };
-  /*********************************************************************/
 
-  /*************************** search projects *********************************/
+
+  /**
+  * @method searchProjects - perform full-text search of projects
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   searchProjects = ({ page, query_string }) => {
     let url;
     if (page) {
@@ -213,9 +290,14 @@ class API {
 
     return this.request({ url }).then(res => res.json());
   };
-  /*********************************************************************/
 
-  /*************************** search creators *********************************/
+
+  /**
+  * @method searchCreators
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   searchCreators = ({ page, query_string }) => {
     let url;
     if (page) {
@@ -226,9 +308,14 @@ class API {
 
     return this.request({ url }).then(res => res.json());
   };
-  /*********************************************************************/
 
-  /********************** get followers *******************************/
+  
+  /**
+  * @method getFollowers - get a list of users that a username is following
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getFollowers = ({ page, username }) => {
     const url = page
       ? `creators/${username}/followers/?${page}`
@@ -236,9 +323,14 @@ class API {
 
     return this.request({ url }).then(res => res.json());
   };
-  /*****************************************************************/
 
-  /********************** get following *******************************/
+
+  /**
+  * @method getFollowing
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getFollowing = ({ page, username }) => {
     const url = page
       ? `creators/${username}/following/?${page}`
@@ -246,22 +338,34 @@ class API {
 
     return this.request({ url }).then(res => res.json());
   };
-  /*****************************************************************/
 
-  /********************** get saved *******************************/
+
+
+  /**
+  * @method getSaved - get a list of projects bookmarked by the user with the given token
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getSaved = ({ page, token }) => {
     const url = page ? `projects/saved/?${page}` : `projects/saved/`;
 
     return this.request({ url, token }).then(res => res.json());
   };
-  /*****************************************************************/
 
-  /************************** edit user profile **************************/
+
+
+   /**
+  * @method editUserProfile
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   editUserProfile = props => {
     const { token, username, email, phone, dateOfBirth, bio, user_location } =
       props;
 
-    const url = 'creators/edit_creator/';
+    const url = 'creators/edit-creator/';
     const method = 'PUT';
     const body = JSON.stringify({
       username,
@@ -273,9 +377,14 @@ class API {
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
-  /********************************************************************/
+  
 
-  /************************** delete account **************************/
+  /**
+  * @method deleteAccount
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   deleteAccount = ({ token }) => {
     const url = 'creators/delete/';
     const method = 'DELETE';
@@ -283,17 +392,27 @@ class API {
       Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
     );
   };
-  /********************************************************************/
 
-  /************************** follow creator **************************/
+  
+  /**
+  * @method toggleFollow
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   toggleFollow = ({ id, token }) => {
-    const url = `creators/${id}/toggle_follow/`;
+    const url = `creators/${id}/toggle-follow/`;
 
     return this.request({ url, token }).then(res => res.json());
   };
-  /******************************************************************/
 
-  /********************** get following *******************************/
+  
+  /**
+  * @method getMembers
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getMembers = ({ page, username }) => {
     const url = page
       ? `creators/${username}/members/?${page}`
@@ -301,11 +420,16 @@ class API {
 
     return this.request({ url }).then(res => res.json());
   };
-  /*****************************************************************/
 
-  /************************** add members **************************/
+
+  /**
+  * @method addMembers
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   addMembers = ({ token, data }) => {
-    const url = 'creators/add_members/';
+    const url = 'creators/add-members/';
     const method = 'POST';
     const content_type = false;
     const body = data;
@@ -313,19 +437,29 @@ class API {
       res.json(),
     );
   };
-  /************************************************************************/
 
-  /************************** remove member from group **************************/
+
+  /**
+  * @method removeMember
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   removeMember = ({ id, token }) => {
-    const url = `creators/${id}/remove_member/`;
+    const url = `creators/${id}/remove-member/`;
 
     return this.request({ url, token }).then(res => res.json());
   };
-  /******************************************************************/
 
-  /*****************send phone confirmation ******************/
+
+  /**
+  * @method sendGroupInviteConfirmation
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   sendGroupInviteConfirmation = key => {
-    const url = 'creators/confirm_group_invite/';
+    const url = 'creators/confirm-group-invite/';
     const method = 'POST';
     const body = JSON.stringify({ key });
 
@@ -333,16 +467,26 @@ class API {
       Promise.resolve(res.status === 200 ? { detail: 'ok' } : res.json()),
     );
   };
-  /*******************************************************************/
 
-  /************************** get all locations **************************/
+
+  /**
+  * @method getLocations
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getLocations = () => {
     const url = 'creators/locations/';
     return this.request({ url }).then(res => res.json());
   };
-  /********************************************************************/
 
-  /************************** create project **************************/
+  
+  /**
+  * @method createProject
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   createProject = ({
     token,
     title,
@@ -366,9 +510,14 @@ class API {
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
-  /************************************************************************/
 
-  /************************** update project **************************/
+
+  /**
+  * @method updateProject
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   updateProject = ({
     token,
     id,
@@ -394,9 +543,14 @@ class API {
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
-  /************************************************************************/
 
-  /************************** delete project **************************/
+
+  /**
+  * @method deleteProject
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   deleteProject = ({ token, id }) => {
     const url = `projects/${id}/delete/`;
     const method = 'DELETE';
@@ -404,19 +558,28 @@ class API {
       Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
     );
   };
-  /************************************************************************/
+  
 
-
-  /*********************** should image be uploaded to local backend or an image service *********************************/
+  /**
+  * @method shouldUploadToLocal
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   shouldUploadToLocal = ({token}) => {
-   const url = "upload_file_to_local/";
+   const url = "upload-file-to-local/";
    return this.request({url, token}).then(res=> res.json())
   };
-  /********************************************************************/
 
-  /************************** unpublish comment **************************/
+
+  /**
+  * @method unpublishComment
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   unpublishComment = ({ token, id }) => {
-    const url = `projects/${id}/unpublish_comment/`;
+    const url = `projects/${id}/unpublish-comment/`;
     const method = 'PATCH';
     const body = JSON.stringify({});
     return this.request({ url, method, token, body }).then(res =>
@@ -425,56 +588,93 @@ class API {
       ),
     );
   };
-  /************************************************************************/
 
-  /************************** delete comment **************************/
+
+  /**
+  * @method deleteComment
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   deleteComment = ({ token, id }) => {
-    const url = `projects/${id}/delete_comment/`;
+    const url = `projects/${id}/delete-comment/`;
     const method = 'DELETE';
     return this.request({ url, method, token }).then(res =>
       Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
     );
   };
-  /************************************************************************/
 
-  /************************** get projects **************************/
+
+  /**
+  * @method getProjects
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getProjects = ({ page }) => {
     const url = page ? `projects/?${page}` : `projects/`;
     return this.request({ url }).then(res => res.json());
   };
-  /*************************************************************/
 
-  /************************** get categories **************************/
+
+
+  /**
+  * @method getCategories
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getCategories = () => {
     const url = 'projects/categories/';
     return this.request({ url }).then(res => res.json());
   };
-  /*************************************************************/
+ 
 
-  /************************** suggest tags **************************/
+  /**
+  * @method suggestTags
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   suggestTags = value => {
     const url = `projects/tags/search/?q=${value}`;
     return this.request({ url }).then(res => res.json());
   };
-  /*************************************************************/
 
-  /************************** get staff picks **************************/
+
+  /**
+  * @method getStaffPicks
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getStaffPicks = () => {
-    const url = 'projects/staff_picks/';
+    const url = 'projects/staff-picks/';
     return this.request({ url }).then(res => res.json());
   };
-  /******************************************************************/
 
+
+  /**
+  * @method getStaffPick
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getStaffPick = ({ page, id }) => {
     const url = page
-      ? `projects/staff_picks/${id}/?page=${page}`
-      : `projects/staff_picks/${id}`;
+      ? `projects/staff-picks/${id}/?page=${page}`
+      : `projects/staff-picks/${id}`;
 
     return this.request({ url }).then(res => res.json());
   };
-  /*****************************************************************/
 
-  /************************** get project **************************/
+
+  /**
+  * @method getProject
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getProject = ({ id, token }) => {
     const url = `projects/${id}`;
     if (token) {
@@ -484,69 +684,121 @@ class API {
     }
   };
 
-  /************************** like project **************************/
+
+  /**
+  * @method toggleLike
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   toggleLike = ({ id, token }) => {
-    const url = `projects/${id}/toggle_like/`;
+    const url = `projects/${id}/toggle-like/`;
 
     return this.request({ url, token }).then(res => res.json());
   };
-  /******************************************************************/
 
-  /************************** save project for future viewing **************************/
+
+  /**
+  * @method toggleSave
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   toggleSave = ({ id, token }) => {
-    const url = `projects/${id}/toggle_save/`;
+    const url = `projects/${id}/toggle-save/`;
 
     return this.request({ url, token }).then(res => res.json());
   };
-  /******************************************************************/
 
-  /************************** add comment **************************/
+
+  /**
+  * @method addComment
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   addComment = ({ id, text, token, parent_id }) => {
-    const url = `projects/${id}/add_comment/`;
+    const url = `projects/${id}/add-comment/`;
     const method = 'POST';
     const body = JSON.stringify({ text, parent_id });
 
     return this.request({ url, method, body, token }).then(res => res.json());
   };
 
-  /************************** add profile comment **************************/
+
+  /**
+  * @method addProfileComment
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   addProfileComment = ({ id, text, token, parent_id }) => {
-    const url = `creators/${id}/add_comment/`;
+    const url = `creators/${id}/add-comment/`;
     const method = 'POST';
     const body = JSON.stringify({ text, parent_id });
 
     return this.request({ url, method, body, token }).then(res => res.json());
   };
-  /***********************************************************************/
 
-  /************************** get hero **************************/
+
+  /**
+  * @method getHero
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getHero = () => {
     const url = `hero/`;
 
     return this.request({ url }).then(res => res.json());
   };
 
-  /************************** get help **************************/
+
+  /**
+  * @method getHelp
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getHelp = () => {
     const url = `help/`;
 
     return this.request({ url }).then(res => res.json());
   };
 
-  /************************** get privacy **************************/
+  
+  /**
+  * @method getPrivacy
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getPrivacy = () => {
     const url = `privacy/`;
 
     return this.request({ url }).then(res => res.json());
   };
 
-  /************************** get faqs **************************/
+
+  /**
+  * @method getFaqs
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getFaqs = () => {
     const url = `faqs/`;
 
     return this.request({ url }).then(res => res.json());
   };
 
+
+  /**
+  * @method getSignature
+  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+  * 
+  * @todo - describe method's signature
+  */
   getSignature = args => {
     const url = 'signature/';
     const method = 'POST';

@@ -1,3 +1,9 @@
+/**
+* @function getQueryParams
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getQueryParams = url => {
   const params = url.split('?')[1];
   let [page, query] = params.split('q=');
@@ -10,6 +16,13 @@ export const getQueryParams = url => {
   return { page, query };
 };
 
+
+/**
+* @function fetchPage
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const fetchPage = (page, props, query_string, type) => {
   if (type === 'projects') {
     return props.searchProjects({ page, query_string, t: props.t, type });
@@ -18,6 +31,13 @@ export const fetchPage = (page, props, query_string, type) => {
   }
 };
 
+
+/**
+* @function updateProjects
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const updateProjects = (res, { results: projects }, props, toast) => {
   return res
     .then(res => {
@@ -43,6 +63,13 @@ export const updateProjects = (res, { results: projects }, props, toast) => {
     });
 };
 
+
+/**
+* @function toggleFollow
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const toggleFollow = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {

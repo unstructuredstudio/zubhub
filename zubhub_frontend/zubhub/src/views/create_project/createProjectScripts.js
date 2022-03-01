@@ -3,6 +3,13 @@ import * as Yup from 'yup';
 import { s3 as DO, doConfig, Compress, slugify} from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 
+
+/**
+* @constant vars
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe constant's function
+*/
 export const vars = {
   image_field_touched: false,
   video_field_touched: false,
@@ -31,25 +38,61 @@ export const vars = {
   },
 };
 
+
+/**
+* @function getCategories
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getCategories = props => {
   return props.getCategories({ t: props.t });
 };
 
+
+/**
+* @function handleTextFieldChange
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleTextFieldChange = (e, props) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
 };
 
+
+
+/**
+* @function handleTextFieldBlur
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleTextFieldBlur = (e, props) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleBlur(e);
 };
 
+
+/**
+* @function handleMaterialsUsedFieldBlur
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleMaterialsUsedFieldBlur = props => {
   props.setStatus({ ...props.status, materials_used: '' });
   props.setFieldTouched('materials_used', true);
 };
 
+
+/**
+* @function removeMetaData
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const removeMetaData = (images, state, handleSetState) => {
   const newWorker = worker();
   newWorker.removeMetaData(images);
@@ -58,31 +101,76 @@ export const removeMetaData = (images, state, handleSetState) => {
   });
 };
 
+
+/**
+* @function handleImageButtonClick
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleImageButtonClick = (e, props, refs) => {
   e.preventDefault();
   refs.image_el.current.click();
   props.setFieldTouched('project_images');
 };
 
+
+/**
+* @function handleVideoButtonClick
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleVideoButtonClick = (e, props, bool) => {
   e.preventDefault();
   props.setFieldTouched('video');
   return { video_upload_dialog_open: !bool };
 };
 
+
+
+/**
+* @function handleDescTooltipOpen
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleDescTooltipOpen = () => {
   return { desc_tool_tip_open: true };
 };
 
+
+/**
+* @function handleDescTooltipClose
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleDescTooltipClose = () => {
   return { desc_tool_tip_open: false };
 };
 
+
+
+/**
+* @function handleSelectVideoFileChecked
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleSelectVideoFileChecked = el => {
   el.click();
   return { select_video_file: true };
 };
 
+
+
+/**
+* @function handleSuggestTags
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleSuggestTags = (e, props, state, handleSetState) => {
   clearTimeout(vars.timer.id);
   const value = e.currentTarget.value;
@@ -94,11 +182,26 @@ export const handleSuggestTags = (e, props, state, handleSetState) => {
   }
 };
 
+
+
+/**
+* @function suggestTags
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const suggestTags = (value, props, handleSetState, _) => {
   handleSetState({ tag_suggestion_open: true });
   handleSetState(props.suggestTags({ value, t: props.t }));
 };
 
+
+/**
+* @function addMaterialsUsedNode
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const addMaterialsUsedNode = (e, props) => {
   e.preventDefault();
   let materials_used = props.values['materials_used'];
@@ -109,6 +212,13 @@ export const addMaterialsUsedNode = (e, props) => {
   }
 };
 
+
+/**
+* @function removeTag
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const removeTag = (_, props, value) => {
   let tags = props.values['tags'];
   tags = tags ? JSON.parse(tags) : [];
@@ -116,6 +226,14 @@ export const removeTag = (_, props, value) => {
   props.setFieldValue('tags', JSON.stringify(tags));
 };
 
+
+
+/**
+* @function handleImageFieldChange
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleImageFieldChange = (refs, props, state, handleSetState) => {
   refs.image_count_el.current.innerText = `${
     refs.image_el.current.files.length
@@ -134,6 +252,13 @@ export const handleImageFieldChange = (refs, props, state, handleSetState) => {
   props.setStatus({ ...props.status, images: '' });
 };
 
+
+/**
+* @function handleVideoFieldCancel
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleVideoFieldCancel = async (refs, props, state) => {
   refs.video_selection_feedback_el.current.innerText = '';
 
@@ -145,6 +270,13 @@ export const handleVideoFieldCancel = async (refs, props, state) => {
   });
 };
 
+
+/**
+* @function handleAddMaterialFieldChange
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleAddMaterialFieldChange = (_, props, refs) => {
   const children = refs.add_materials_used_el.current.children;
   let value = '';
@@ -166,6 +298,13 @@ export const handleAddMaterialFieldChange = (_, props, refs) => {
   props.setStatus({ ...props.status, materials_used: '' });
 };
 
+
+/**
+* @function handleAddTags
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleAddTags = (e, props, add_tags_el) => {
   props.setFieldTouched('tags', true, true);
   let value = e.currentTarget.value.split(',');
@@ -190,6 +329,14 @@ export const handleAddTags = (e, props, add_tags_el) => {
   return { tag_suggestion_open: false, tag_suggestion: [] };
 };
 
+
+
+/**
+* @function handleVideoSelectDone
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleVideoSelectDone = async (refs, props, state) => {
   const { media_upload } = state;
   if (media_upload.videos_to_upload.length < 1) {
@@ -203,6 +350,13 @@ export const handleVideoSelectDone = async (refs, props, state) => {
   return {};
 };
 
+
+/**
+* @function initUpload
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();
 
@@ -279,6 +433,14 @@ export const initUpload = (e, state, props, handleSetState) => {
   }
 };
 
+
+
+/**
+* @function uploadProject
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const uploadProject = async (state, props, handleSetState) => {
   const { media_upload } = state;
   media_upload.upload_dialog = false;
@@ -332,6 +494,13 @@ export const uploadProject = async (state, props, handleSetState) => {
 };
 
 
+
+/**
+* @function uploadVideo
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const uploadVideo = async(video, state, props, handleSetState) => {
   if (
     typeof video === 'string' &&
@@ -362,11 +531,18 @@ export const uploadVideo = async(video, state, props, handleSetState) => {
 };
 
 
+
+/**
+* @function uploadVideoToLocal
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const uploadVideoToLocal = (video, state, props, handleSetState) => {
   let url = process.env.REACT_APP_NODE_ENV === 'production'
             ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
             : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
-  url = url + "upload_file_to_local/";
+  url = url + "upload-file-to-local/";
 
   let key = nanoid();
   key = key.slice(0, Math.floor(key.length/3));
@@ -380,6 +556,13 @@ export const uploadVideoToLocal = (video, state, props, handleSetState) => {
   um.upload();
 };
 
+
+/**
+* @function uploadVideoToCloudinary
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const uploadVideoToCloudinary = async (video, state, props, handleSetState) => {
 
     const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
@@ -422,7 +605,15 @@ export const uploadVideoToCloudinary = async (video, state, props, handleSetStat
     }
 };
 
+
+/**
+* @function uploadImage
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const uploadImage = async(image, state, props, handleSetState) => {
+  debugger;
   const args = {
     t: props.t,
     token: props.auth.token
@@ -438,12 +629,19 @@ export const uploadImage = async(image, state, props, handleSetState) => {
 
 };
 
+
+/**
+* @function uploadImageToLocal
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const uploadImageToLocal = (image, state, props, handleSetState) => {
 
   let url = process.env.REACT_APP_NODE_ENV === 'production'
             ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
             : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
-  url = url + "upload_file_to_local/";
+  url = url + "upload-file-to-local/";
 
   const formData = new FormData();
   formData.append('file', image);
@@ -452,6 +650,13 @@ export const uploadImageToLocal = (image, state, props, handleSetState) => {
   um.upload();
 };
 
+
+/**
+* @function uploadImageToDO
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const uploadImageToDO = (image, state, props, handleSetState) => {
 
   const params = {
@@ -511,6 +716,13 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
     });
 };
 
+
+/**
+* @function getProject
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const getProject = (refs, props, state) => {
   return props
     .getProject({
@@ -589,6 +801,13 @@ export const getProject = (refs, props, state) => {
     });
 };
 
+
+/**
+* @function handleVideoFieldChange
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const handleVideoFieldChange = async (e, refs, props, state) => {
   let video_node;
   let type;
@@ -635,6 +854,13 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
     });
 };
 
+
+/**
+* @function checkMediaFilesErrorState
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export const checkMediaFilesErrorState = (refs, props) => {
   if (props.auth.token) {
     if (props.touched['project_images'] && props.errors['project_images']) {
@@ -675,6 +901,13 @@ export const checkMediaFilesErrorState = (refs, props) => {
   }
 };
 
+
+/**
+* @object validationSchema
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe object's function
+*/
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
   description: Yup.string().max(10000, 'max').required('required'),
@@ -814,6 +1047,12 @@ export const validationSchema = Yup.object().shape({
 });
 
 
+/**
+* @function UploadMedia
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 export class UploadMedia { 
 
     constructor(type, url, formData, state, props, handleSetState) {

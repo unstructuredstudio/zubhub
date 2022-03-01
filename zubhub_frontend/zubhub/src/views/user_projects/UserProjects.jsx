@@ -27,6 +27,12 @@ import styles from '../../assets/js/styles/views/user_projects/userProjectsStyle
 
 const useStyles = makeStyles(styles);
 
+/**
+* @function UserProjects View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function UserProjects(props) {
   const classes = useStyles();
 

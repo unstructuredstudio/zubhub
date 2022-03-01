@@ -32,6 +32,13 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
+
+/**
+* @function buildMembers Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 const buildMembers = (members, style, props, state, handleSetState) =>
   members.map(member => (
     <Grid
@@ -92,6 +99,13 @@ const buildMembers = (members, style, props, state, handleSetState) =>
     </Grid>
   ));
 
+
+/**
+* @function GroupMembers View
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function GroupMembers(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();

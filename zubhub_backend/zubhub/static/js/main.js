@@ -8,7 +8,7 @@
           data.append("file",file);
           data.append("folder","zubhub");
           $.ajax({
-            url:`${document.location.origin}/api/upload_file/`,
+            url:`${document.location.origin}/api/upload-file/`,
             data: data,
             cache: false,
             contentType: false,
@@ -138,7 +138,7 @@
         const iframe_inner_doc = iframe.contentDocument || iframe.contentWindow.document;
         if(!iframe_inner_doc.querySelector(`#${public_id}`)){
   
-            url = `${document.location.origin}/api/delete_file/`;
+            url = `${document.location.origin}/api/delete-file/`;
             data = new FormData();
             data.append("url", url);
   

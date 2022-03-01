@@ -30,6 +30,14 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
+
+
+/**
+* @function CommentInput Component
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function CommentInput(props) {
   const refs = {
     comment_text: React.useRef(null),

@@ -22,6 +22,14 @@ import ErrorPage from '../error/ErrorPage';
 import styles from '../../assets/js/styles/views/faqs/FAQsStyles';
 
 const useStyles = makeStyles(styles);
+
+
+/**
+* @function FAQs
+* @author Raymond Ndibe <ndiberaymond1@gmail.com>
+* 
+* @todo - describe function's signature
+*/
 function FAQs(props) {
   const classes = useStyles();
 
