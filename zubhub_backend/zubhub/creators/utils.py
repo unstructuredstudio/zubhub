@@ -5,8 +5,6 @@ from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text
 
-from .models import Setting
-
 try:
     from allauth.account.adapter import get_adapter
     from allauth.account.utils import send_email_confirmation
@@ -239,6 +237,7 @@ def activity_notification(activities, **kwargs):
         )
     
 def send_notification(users, context, template_name):
+    from .models import Setting
     for user in users:
         user_setting = Setting.objects.get(contact=user)
         if (user_setting.contact == 2):
