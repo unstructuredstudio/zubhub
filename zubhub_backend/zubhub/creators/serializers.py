@@ -14,29 +14,30 @@ from projects.utils import parse_comment_trees
 
 Creator = get_user_model()
 
-
-class CreatorSerializer(serializers.ModelSerializer):
-    phone = serializers.CharField(allow_blank=True, default="")
-    email = serializers.EmailField(allow_blank=True, default="")
+class CreatorMinimalSerializer(serializers.ModelSerializer):
     followers = serializers.SlugRelatedField(
         slug_field="id", read_only=True, many=True)
     comments = serializers.SerializerMethodField('get_profile_comments')
-    projects_count = serializers.SerializerMethodField('get_projects_count')
+    projects_count = serializers.SerializerMethodField()
     following_count = serializers.IntegerField(read_only=True)
-    dateOfBirth = serializers.DateField(read_only=True)
-    location = serializers.SlugRelatedField(
-        slug_field='name', queryset=Location.objects.all())
-    members_count = serializers.SerializerMethodField('get_members_count')
-    role = serializers.SerializerMethodField("get_role")
+    members_count = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
 
     class Meta:
         model = Creator
 
-        fields = ('id', 'username', 'email', 'phone', 'avatar', 'location', 'comments',
-                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'members_count', 'role')
-
-    read_only_fields = ["id", "projects_count",
-                        "following_count", "dateOfBirth", "role"]
+        fields = [
+            "id",
+            "username",
+            "avatar",
+            "comments",
+            "bio",
+            "followers",
+            "following_count",
+            "projects_count",
+            "members_count",
+            "role"
+        ]
 
     def get_role(self, obj):
         if obj:
@@ -82,6 +83,23 @@ class CreatorSerializer(serializers.ModelSerializer):
             map(lambda x: Comment.dump_bulk(x)[0], root_comments))
 
         return parse_comment_trees(root_comments, creators_dict)
+
+
+class CreatorSerializer(CreatorMinimalSerializer):
+    phone = serializers.CharField(allow_blank=True, default="")
+    email = serializers.EmailField(allow_blank=True, default="")
+    dateOfBirth = serializers.DateField(read_only=True)
+    location = serializers.SlugRelatedField(
+        slug_field='name', queryset=Location.objects.all())
+
+    class Meta:
+        model = Creator
+
+        fields = ('id', 'username', 'email', 'phone', 'avatar', 'location', 'comments',
+                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'members_count', 'role')
+
+    read_only_fields = ["id", "projects_count",
+                        "following_count", "dateOfBirth", "role"]
 
     def validate_email(self, email):
 

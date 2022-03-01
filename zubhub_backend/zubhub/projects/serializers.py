@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from creators.serializers import CreatorSerializer
+from creators.serializers import CreatorMinimalSerializer
 from .models import Project, Comment, Image, StaffPick, Category, Tag
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
@@ -79,7 +79,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    creator = CreatorSerializer(read_only=True)
+    creator = CreatorMinimalSerializer(read_only=True)
     likes = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
     saved_by = serializers.SlugRelatedField(
@@ -235,7 +235,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
-    creator = CreatorSerializer(read_only=True)
+    creator = CreatorMinimalSerializer(read_only=True)
     images = ImageSerializer(many=True)
     likes = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
