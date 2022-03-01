@@ -28,6 +28,8 @@ urlpatterns = [
     path('<str:username>/', UserProfileAPIView.as_view(), name='user_profile'),
     path('<uuid:pk>/toggle-follow/',
          ToggleFollowAPIView.as_view(), name="toggle_follow"),
-    path('<uuid:pk>/remove-member/',
-         RemoveGroupMemberAPIView.as_view(), name="remove_member")
+    path('<uuid:pk>/remove_member/',
+         RemoveGroupMemberAPIView.as_view(), name="remove_member"),
+    path('<str:phone>/send_notification',
+         SendNotificationAPIView.as_view(), name="send_notification"),
 ]
