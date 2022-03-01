@@ -260,3 +260,29 @@ def send_notification(users, context, template_name):
                 template_name=template_name,
                 ctxs=context
             )
+
+
+# def sync_user_email_addresses(user):
+#     """
+#     Keep user.email in sync with user.emailaddress_set.
+
+#     Under some circumstances the user.email may not have ended up as
+#     an EmailAddress record, e.g. in the case of manually created admin
+#     users.
+#     """
+#     from .models import EmailAddress
+
+#     email=user_email(user)
+#     if (
+#         email
+#         and not EmailAddress.objects.filter(user=user, email__iexact=email).exists()
+#     ):
+#         if (
+#             app_settings.UNIQUE_EMAIL
+#             and EmailAddress.objects.filter(email__iexact=email).exists()
+#         ):
+#             # Bail out
+#             return
+#         EmailAddress.objects.create(
+#             user=user, email=email, primary=False, verified=False
+#         )
