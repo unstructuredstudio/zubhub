@@ -2,7 +2,7 @@ const styles = theme => ({
     notificationStyle: {
         display: 'flex',
         borderRadius: '5px',
-        width: '500px',
+        width: '100%',
         height:'80px',
         cursor: 'pointer',
         flexDirection: 'row',

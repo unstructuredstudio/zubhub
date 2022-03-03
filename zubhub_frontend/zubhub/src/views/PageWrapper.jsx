@@ -175,7 +175,6 @@ function PageWrapper(props) {
                   common_classes.removeOnSmallScreen,
                 )}
               >
-                <Notification notification={notif} />
                 <TranslateIcon />
                 <Select
                   className={classes.languageSelectStyle}
@@ -356,6 +355,7 @@ function PageWrapper(props) {
                     <SearchIcon />
                   </IconButton>
                   <NotificationButton
+                    notif={notif}
                     className={clsx(common_classes.marginRight1em)}
                   />
                   <Avatar

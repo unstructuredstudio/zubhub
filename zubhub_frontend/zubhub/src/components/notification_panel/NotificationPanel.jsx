@@ -5,6 +5,7 @@ import NotificationPanelButton from './NotificationPanelButton';
 import cn from 'classnames';
 import NotificationPanelPopper from './NotificationPanelPopper';
 import { useMediaQuery } from '@material-ui/core';
+import Notification from '../notification/Notification';
 
 const useStyles = makeStyles(styles);
 
@@ -13,7 +14,7 @@ const NOTIFICATION_VIEW_TYPE = {
   UNREAD: 'UNREAD',
 };
 
-const NotificationPanel = ({ open, anchorEl }) => {
+const NotificationPanel = ({ open, anchorEl, notif }) => {
   const classes = useStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
   const [notificationViewType, setNotificationViewType] = useState(
@@ -56,6 +57,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
           >
             All
           </NotificationPanelButton>
+          <Notification notification={notif}></Notification>
           <NotificationPanelButton
             selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
             onClick={() =>

@@ -45,7 +45,6 @@ const Notification = ({ notification }) => {
           {!notification.viewed && <div className={classes.viewDot}></div>}
         </div>
       )}
-      
 
       {notification.type != NOTIFICATION_TYPE.FOLLOW && (
         <div
