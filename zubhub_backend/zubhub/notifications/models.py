@@ -21,5 +21,6 @@ class Notification(models.Model):
         Creator, on_delete=models.CASCADE, null=True, related_name="notification_recipient", blank=True)
     source = models.ForeignKey(
         Creator, on_delete=models.CASCADE, null=True, related_name="notification_source", blank=True)
+    link = models.URLField(max_length=1000)
     viewed = models.BooleanField(default=False)
     date = models.DateTimeField(default=timezone.now)
