@@ -18,7 +18,7 @@ from rest_auth.registration.views import RegisterView
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
 from creators.tasks import send_whatsapp
-from .serializers import (CreatorSerializer, LocationSerializer, VerifyPhoneSerializer,
+from .serializers import (CreatorMinimalSerializer, CreatorSerializer, LocationSerializer, VerifyPhoneSerializer,
                           CustomRegisterSerializer, ConfirmGroupInviteSerializer, AddGroupMembersSerializer)
 from projects.serializers import CommentSerializer
 from projects.models import Comment
@@ -64,10 +64,15 @@ class UserProfileAPIView(RetrieveAPIView):
     """
 
     queryset = Creator.objects.all()
-    serializer_class = CreatorSerializer
     lookup_field = "username"
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_serializer_class(self):
+        if self.kwargs.get("username") == self.request.user.username:
+            return CreatorSerializer
+        else:
+            return CreatorMinimalSerializer
 
 
 class RegisterCreatorAPIView(RegisterView):
@@ -141,7 +146,7 @@ class CreatorSearchAPIView(ListAPIView):
     Returns paginated list of users that match the search term
     """
 
-    serializer_class = CreatorSerializer
+    serializer_class = CreatorMinimalSerializer
     permission_classes = [AllowAny]
     pagination_class = CreatorNumberPagination
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
@@ -251,7 +256,7 @@ class UserFollowersAPIView(ListAPIView):
     Returns list of users.
     """
 
-    serializer_class = CreatorSerializer
+    serializer_class = CreatorMinimalSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
@@ -269,7 +274,7 @@ class UserFollowingAPIView(ListAPIView):
     Returns list of users.
     """
 
-    serializer_class = CreatorSerializer
+    serializer_class = CreatorMinimalSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
@@ -288,7 +293,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
     Returns user profile of user with provided id.
     """
 
-    serializer_class = CreatorSerializer
+    serializer_class = CreatorMinimalSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
@@ -348,7 +353,7 @@ class GroupMembersAPIView(ListAPIView):
     Requires username of group. Returns list of users.
     """
 
-    serializer_class = CreatorSerializer
+    serializer_class = CreatorMinimalSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
@@ -429,7 +434,7 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
     Returns profile of user removed from group.
     """
 
-    serializer_class = CreatorSerializer
+    serializer_class = CreatorMinimalSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
