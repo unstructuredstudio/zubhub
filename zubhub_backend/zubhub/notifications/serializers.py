@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from .models import Notification
-from creators.serializers import CreatorSerializer
+from creators.serializers import CreatorMinimalSerializer
 
 class NotificationSerializer(serializers.ModelSerializer):
-    recipient = CreatorSerializer(read_only=True)
-    source = CreatorSerializer(read_only=True)
+    recipient = CreatorMinimalSerializer(read_only=True)
+    source = CreatorMinimalSerializer(read_only=True)
 
     class Meta:
         model = Notification
