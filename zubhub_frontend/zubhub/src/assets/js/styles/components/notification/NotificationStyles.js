@@ -33,7 +33,7 @@ const styles = theme => ({
         width: '56px !important',
         height: '56px !important',
         borderRadius: '50%',
-        border: '2px solid #C4C4C4',
+        border: '2px solid #E4E4E4',
         margin: '0px',
         padding: '0px',
     },
@@ -42,6 +42,7 @@ const styles = theme => ({
         font: 'Raleway',
         color: '#000000',
         marginBottom: '0px',
+        textDecoration: 'none',
     },
     time: {
         marginTop: '0px',

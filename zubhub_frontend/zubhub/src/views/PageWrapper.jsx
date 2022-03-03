@@ -107,10 +107,27 @@ function PageWrapper(props) {
 
   const notif = {
     type: 'CLAP',
-    message: 'user120 commented on "Post"',
-    picture: 'https://robohash.org/saxytony',
+    user: 'joe_momma',
+    projectName: 'Blowing Switch Light',
+    source: {
+      id: 'b112451f-9c90-437b-96fd-5cabc389435b',
+      username: 'acruzm3',
+      email: 'acruzm3@illinois.edu',
+      phone: '+18472079456',
+      avatar: 'https://robohash.org/acruzm3',
+      location: 'United States of America',
+      comments: [],
+      dateOfBirth: '2001-10-12',
+      bio: 'Hello!',
+      followers: [],
+      following_count: 0,
+      projects_count: 0,
+      members_count: null,
+      role: 'creator',
+    },
     project: 'https://youtube.com',
     viewed: false,
+    type: 'CLAP',
     time: '5 minutes ago',
   };
 

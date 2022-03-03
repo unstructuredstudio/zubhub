@@ -14,6 +14,16 @@ const NOTIFICATION_TYPE = {
 };
 
 const Notification = ({ notification }) => {
+  const getNotification = () => {
+    if (notification.type == 'CLAP') {
+      return (
+        <>
+          <strong>{notification.source.username}</strong> clapped for "
+          {notification.projectName}"
+        </>
+      );
+    }
+  };
   const classes = useStyles();
   const history = useHistory();
   return (
@@ -35,24 +45,26 @@ const Notification = ({ notification }) => {
           {!notification.viewed && <div className={classes.viewDot}></div>}
         </div>
       )}
+      
 
       {notification.type != NOTIFICATION_TYPE.FOLLOW && (
         <div
           className={classes.notificationStyle}
           display="flex"
-          onClick={() => history.push(notification.project)}
+          onClick={() =>
+            history.push('creator/' + notification.source.username)
+          }
         >
           <img
             className={classes.image}
-            src={notification.picture}
+            src={notification.source.avatar}
             alt="user-profile"
           />
 
           <div className={classes.text}>
-            <p className={classes.message}>{notification.message}</p>
+            <p className={classes.message}>{getNotification()}</p>
             <p className={classes.time}>{notification.time}</p>
           </div>
-
           {!notification.viewed && <div className={classes.viewDot}></div>}
         </div>
       )}
