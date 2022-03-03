@@ -57,6 +57,7 @@ import Notification from '../components/notification/Notification.jsx';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
+import NotificationButton from '../components/notification_button/NotificationButton';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -354,6 +355,9 @@ function PageWrapper(props) {
                   >
                     <SearchIcon />
                   </IconButton>
+                  <NotificationButton
+                    className={clsx(common_classes.marginRight1em)}
+                  />
                   <Avatar
                     className={classes.avatarStyle}
                     aria-label={`${props.auth.username}' Avatar`}
