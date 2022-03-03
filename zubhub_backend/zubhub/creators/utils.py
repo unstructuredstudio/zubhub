@@ -237,29 +237,40 @@ def activity_notification(activities, **kwargs):
         )
 
 
-def send_notification(users, context, template_name):
+def send_notification(users, contexts, template_name):
     from .models import Setting
 
-    for user in users:
+    email_contexts = []
+    sms_contexts = []
+
+    for user, context in zip(users, contexts):
         user_setting = Setting.objects.get(creator=user)
+
         if user_setting.contact == Setting.WHATSAPP:
             context.update({"phone": user.phone})
             send_whatsapp(
                 phone=user.phone,
                 template_name=template_name,
                 ctx=context)
+
         if user_setting.contact == Setting.EMAIL:
             context.update({"email": user.email})
-            send_mass_email.delay(
-                template_name=template_name,
-                ctxs=context
-            )
+            email_contexts.append(context)
+
         if user_setting.contact == Setting.SMS:
             context.update({"phone": user.phone})
-            send_mass_text.delay(
-                template_name=template_name,
-                ctxs=context
-            )
+            sms_contexts.append(context)
+
+    if len(email_contexts) > 0:
+        send_mass_email.delay(
+            template_name=template_name,
+            ctxs=email_contexts
+        )
+    if len(sms_contexts) > 0:
+        send_mass_text.delay(
+            template_name=template_name,
+            ctxs=sms_contexts
+        )
 
 
 # def sync_user_email_addresses(user):
