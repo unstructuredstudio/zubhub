@@ -33,9 +33,8 @@ const styles = theme => ({
         width: '56px !important',
         height: '56px !important',
         borderRadius: '50%',
-        backgroundColor: '#00B8C4',
+        border: '2px solid #C4C4C4',
         margin: '0px',
-        border: '0px',
         padding: '0px',
     },
     message: {
@@ -43,26 +42,18 @@ const styles = theme => ({
         font: 'Raleway',
         color: '#000000',
         marginBottom: '0px',
-        '&:hover': {
-            color: '#FFFFFF',
-        },
     },
     time: {
         marginTop: '0px',
         fontSize: '14px',
         color: '#00B8C4',
-        '&:hover': {
-            color: '#FFFFFF',
-        },
     },
     viewDot: {
         backgroundColor: '#00B8C4',
         borderRadius: '50%',
         width: '14px',
         height: '14px',
-        '&:hover': {
-            backgroundColor: '#F9D967',
-        },
+        marginLeft: '15%',
     },
 });
 
