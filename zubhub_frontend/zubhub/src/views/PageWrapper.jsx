@@ -69,6 +69,7 @@ import Autocomplete from '../components/autocomplete/Autocomplete';
 import API from '../api';
 import { throttle } from '../utils.js';
 import Option from '../components/autocomplete/Option';
+import NotificationButton from '../components/notification_button/NotificationButton';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -83,7 +84,7 @@ function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const trigger = useScrollTrigger()
+  const trigger = useScrollTrigger();
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
@@ -161,10 +162,10 @@ function PageWrapper(props) {
         handleSetState({ loading: false });
       });
   }, [props.auth.token]);
-  
-  React.useEffect(()=>{
-    handleSetState(handleProfileMenuClose()) 
-  },[trigger])
+
+  React.useEffect(() => {
+    handleSetState(handleProfileMenuClose());
+  }, [trigger]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -485,6 +486,9 @@ function PageWrapper(props) {
                   >
                     <SearchIcon />
                   </IconButton>
+                  <NotificationButton
+                    className={clsx(common_classes.marginRight1em)}
+                  />
                   <Avatar
                     className={classes.avatarStyle}
                     aria-label={`${props.auth.username}' Avatar`}
@@ -836,7 +840,7 @@ function PageWrapper(props) {
               href={
                 hero.tinkering_resource_url
                   ? hero.tinkering_resource_url
-                  :'https://kriti.unstructured.studio/'
+                  : 'https://kriti.unstructured.studio/'
               }
               className={common_classes.textDecorationNone}
             >
