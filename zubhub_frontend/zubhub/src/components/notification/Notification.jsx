@@ -24,7 +24,11 @@ const Notification = ({ notification }) => {
           display="flex"
           onClick={() => history.push(notification.user)}
         >
-          <img className={classes.image} src={notification.picture} alt="user- profile" />
+          <img
+            className={classes.image}
+            src={notification.picture}
+            alt="user- profile"
+          />
 
           <p className={classes.message}>{notification.message}</p>
 
@@ -38,7 +42,11 @@ const Notification = ({ notification }) => {
           display="flex"
           onClick={() => history.push(notification.project)}
         >
-          <img className={classes.image} src={notification.picture} alt="user-profile" />
+          <img
+            className={classes.image}
+            src={notification.picture}
+            alt="user-profile"
+          />
 
           <div className={classes.text}>
             <p className={classes.message}>{notification.message}</p>

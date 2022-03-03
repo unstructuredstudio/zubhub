@@ -2,22 +2,41 @@ const styles = theme => ({
     notificationStyle: {
         display: 'flex',
         borderRadius: '5px',
-        cursor: 'pointer',
         width: '500px',
         height:'80px',
+        cursor: 'pointer',
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
         alignItems: 'center',
         backgroundColor: '#FFFFFF',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+        justifyContent: 'space-evenly',
         '&:hover': {
+            '& $viewDot': {
+                backgroundColor: '#F9D967',
+            },
+            '& $message': {
+                color: '#FFFFFF',
+            },
+            '& $time': {
+                color: '#FFFFFF',
+            },
+            '& $image': {
+                backgroundColor: 'white',
+
+            },
             backgroundColor: '#52B5C2',
-            fontColor: '#FFFFFF'
+            fontColor: '#FFFFFF',
         },
     },
     image: {
-        height: '30px',
-        width: '30px',
+        width: '56px !important',
+        height: '56px !important',
         borderRadius: '50%',
+        backgroundColor: '#00B8C4',
+        margin: '0px',
+        border: '0px',
+        padding: '0px',
     },
     message: {
         fontSize: '16px',

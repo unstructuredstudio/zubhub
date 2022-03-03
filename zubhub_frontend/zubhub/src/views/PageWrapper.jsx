@@ -108,7 +108,7 @@ function PageWrapper(props) {
   const notif = {
     type: 'CLAP',
     message: 'user120 commented on "Post"',
-    picture: 'https://ca.slack-edge.com/T6VL1BSEA-UCY2PD70S-1e0733637986-512',
+    picture: 'https://robohash.org/saxytony',
     project: 'https://youtube.com',
     viewed: false,
     time: '5 minutes ago',
@@ -122,7 +122,6 @@ function PageWrapper(props) {
         <Container className={classes.mainContainerStyle}>
           <Toolbar className={classes.toolBarStyle}>
             <Box className={classes.logoStyle}>
-              <Notification notification={notif} />
               <Link to="/">
                 <img
                   src={hero.header_logo_url ? hero.header_logo_url : logo}
@@ -158,6 +157,7 @@ function PageWrapper(props) {
                   common_classes.removeOnSmallScreen,
                 )}
               >
+                <Notification notification={notif} />
                 <TranslateIcon />
                 <Select
                   className={classes.languageSelectStyle}
