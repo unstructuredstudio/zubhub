@@ -75,8 +75,6 @@ import commonStyles from '../../assets/js/styles';
 
 import debounce from 'lodash.debounce';
 
-import { Autosave, useAutosave } from 'react-autosave';
-
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
