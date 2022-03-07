@@ -4,11 +4,11 @@ import { toast } from 'react-toastify';
 const API = new ZubhubAPI();
 
 /**
-* @function setAuthUser
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function setAuthUser
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const setAuthUser = auth_user => {
   return dispatch => {
     dispatch({
@@ -18,13 +18,12 @@ export const setAuthUser = auth_user => {
   };
 };
 
-
 /**
-* @function login
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function login
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const login = args => {
   return dispatch => {
     return API.login(args.values)
@@ -41,16 +40,15 @@ export const login = args => {
   };
 };
 
-
 /**
-* @function logout
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function logout
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const logout = args => {
   return dispatch => {
-    API.logout(args.token)
+    return API.logout(args.token)
       .then(_ => {
         dispatch({
           type: 'SET_AUTH_USER',
@@ -60,7 +58,7 @@ export const logout = args => {
             id: null,
             avatar: null,
             members_count: null,
-            role: null,
+            tags: [],
           },
         });
       })
@@ -73,32 +71,40 @@ export const logout = args => {
   };
 };
 
-
 /**
-* @function getAuthUser
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getAuthUser
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getAuthUser = props => {
   return dispatch => {
     return API.getAuthUser(props.auth.token)
       .then(res => {
         if (!res.id) {
+          dispatch(
+            logout({
+              token: props.auth.token,
+              history: props.history,
+              t: props.t,
+            }),
+          ).then(() => {
+            props.history.push('/account-status');
+          });
           throw new Error(props.t('pageWrapper.errors.unexpected'));
+        } else {
+          dispatch({
+            type: 'SET_AUTH_USER',
+            payload: {
+              ...props.auth,
+              username: res.username,
+              id: res.id,
+              avatar: res.avatar,
+              members_count: res.members_count,
+              tags: res.tags,
+            },
+          });
         }
-
-        dispatch({
-          type: 'SET_AUTH_USER',
-          payload: {
-            ...props.auth,
-            username: res.username,
-            id: res.id,
-            avatar: res.avatar,
-            members_count: res.members_count,
-            role: res.role,
-          },
-        });
 
         return res;
       })
@@ -106,14 +112,20 @@ export const getAuthUser = props => {
   };
 };
 
-
+export const AccountStatus = args => {
+  return () => {
+    return API.getAccountStatus(args.token).catch(() => {
+      toast.warning(args.t('pageWrapper.errors.unexpected'));
+    });
+  };
+};
 
 /**
-* @function signup
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function signup
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const signup = args => {
   return dispatch => {
     return API.signup(args.values)
@@ -130,13 +142,12 @@ export const signup = args => {
   };
 };
 
-
 /**
-* @function sendEmailConfirmation
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function sendEmailConfirmation
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const sendEmailConfirmation = args => {
   return () => {
     return API.sendEmailConfirmation(args.key).then(res => {
@@ -152,13 +163,12 @@ export const sendEmailConfirmation = args => {
   };
 };
 
-
 /**
-* @function sendPhoneConfirmation
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function sendPhoneConfirmation
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const sendPhoneConfirmation = args => {
   return () => {
     return API.sendPhoneConfirmation(args.key).then(res => {
@@ -174,13 +184,12 @@ export const sendPhoneConfirmation = args => {
   };
 };
 
-
 /**
-* @function sendPasswordResetLink
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function sendPasswordResetLink
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const sendPasswordResetLink = args => {
   return () => {
     return API.sendPasswordResetLink(args.email).then(res => {
@@ -196,13 +205,12 @@ export const sendPasswordResetLink = args => {
   };
 };
 
-
 /**
-* @function passwordResetConfirm
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function passwordResetConfirm
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const passwordResetConfirm = args => {
   return () => {
     return API.passwordResetConfirm(args).then(res => {
@@ -218,13 +226,12 @@ export const passwordResetConfirm = args => {
   };
 };
 
-
 /**
-* @function getLocations
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getLocations
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getLocations = args => {
   return () => {
     return API.getLocations()
@@ -250,13 +257,12 @@ export const getLocations = args => {
   };
 };
 
-
 /**
-* @function deleteAccount
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function deleteAccount
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const deleteAccount = args => {
   return () => {
     return API.deleteAccount(args)
@@ -280,13 +286,12 @@ export const deleteAccount = args => {
   };
 };
 
-
 /**
-* @function getSignature
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getSignature
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getSignature = args => {
   return () => {
     const t = args.t;

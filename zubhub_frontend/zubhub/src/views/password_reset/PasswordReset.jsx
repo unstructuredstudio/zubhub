@@ -34,11 +34,11 @@ import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 const useStyles = makeStyles(styles);
 
 /**
-* @function PasswordReset View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function PasswordReset View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function PasswordReset(props) {
   const classes = useStyles();
   const { t } = props;

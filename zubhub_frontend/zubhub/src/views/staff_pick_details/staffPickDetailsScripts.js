@@ -1,28 +1,33 @@
 /**
-* @function fetchPage
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function fetchPage
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const fetchPage = (page, props) => {
-  return props.getStaffPick({ page, id: props.match.params.id, t: props.t });
+  return props.getStaffPick({
+    page,
+    id: props.match.params.id,
+    t: props.t,
+    token: props.auth.token,
+  });
 };
 
 /**
-* @function updateProjects
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function updateProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const updateProjects = (res, { staff_pick }, props, toast) => {
   return res
     .then(res => {
-
       if (res.project && res.project.title) {
-        const projects =  {
+        const projects = {
           ...staff_pick.projects,
           results: staff_pick.projects.results.map(project =>
-            project.id === res.project.id ? res.project : project)
+            project.id === res.project.id ? res.project : project,
+          ),
         };
 
         return { staff_pick: { ...staff_pick, projects } };

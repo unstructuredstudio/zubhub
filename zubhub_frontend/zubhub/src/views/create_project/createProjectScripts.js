@@ -1,98 +1,152 @@
 import { nanoid } from 'nanoid';
 import * as Yup from 'yup';
-import { s3 as DO, doConfig, Compress, slugify} from '../../assets/js/utils/scripts';
+import { toast } from 'react-toastify';
+import {
+  s3 as DO,
+  doConfig,
+  Compress,
+  slugify,
+} from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
-
+import { site_mode, publish_type } from '../../assets/js/utils/constants';
 
 /**
-* @constant vars
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe constant's function
-*/
+ * @constant vars
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe constant's function
+ */
 export const vars = {
   image_field_touched: false,
   video_field_touched: false,
   upload_in_progress: false,
   timer: { id: null },
   default_state: {
-    desc_tool_tip_open: false,
-    video_upload_dialog_open: false,
     loading: true,
     error: null,
+    desc_input_is_focused: false,
+    video_upload_dialog_open: false,
+    select_video_file: false,
     materials_used: [],
     categories: [],
     tag_suggestion: [],
     tag_suggestion_open: false,
-    select_video_file: false,
+    publish_types: [],
+    publish_visible_to_suggestion: [],
+    publish_visible_to_suggestion_open: false,
     media_upload: {
       upload_dialog: false,
       images_to_upload: [],
       videos_to_upload: [],
-      successful_uploads: 0,
       upload_info: {},
       upload_percent: 0,
       uploaded_images_url: [],
       uploaded_videos_url: [],
     },
   },
+  quill: {
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ header: [1, 2, 3, 4, 5, 6] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        ['code-block'],
+      ],
+    },
+    formats: [
+      'header',
+      'bold',
+      'italic',
+      'underline',
+      'strike',
+      'blockquote',
+      'script',
+      'list',
+      'bullet',
+      'indent',
+      'link',
+      'image',
+      'color',
+      'code-block',
+    ],
+  },
 };
 
-
 /**
-* @function getCategories
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getCategories
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getCategories = props => {
   return props.getCategories({ t: props.t });
 };
 
-
 /**
-* @function handleTextFieldChange
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleTextFieldChange
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleTextFieldChange = (e, props) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
 };
 
-
-
 /**
-* @function handleTextFieldBlur
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleTextFieldBlur
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleTextFieldBlur = (e, props) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleBlur(e);
 };
 
+/**
+ * @function handleDescFieldChange
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const handleDescFieldChange = (value, props, handleSetState) => {
+  if (value && value !== '<p><br></p>') {
+    // second conditional is a guide for when quill is cleared.
+    props.setStatus({ ...props.status, description: '' });
+    props.setFieldValue('description', value, true);
+  } else {
+    props.setFieldValue('description', undefined, true);
+  }
+
+  handleDescFieldFocusChange(value, props, handleSetState);
+};
+
+export const handleDescFieldFocusChange = (value, props, handleSetState) => {
+  props.setFieldTouched('description');
+  if (!value) {
+    handleSetState({ desc_input_is_focused: true });
+  }
+};
 
 /**
-* @function handleMaterialsUsedFieldBlur
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleMaterialsUsedFieldBlur
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleMaterialsUsedFieldBlur = props => {
   props.setStatus({ ...props.status, materials_used: '' });
   props.setFieldTouched('materials_used', true);
 };
 
-
 /**
-* @function removeMetaData
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function removeMetaData
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const removeMetaData = (images, state, handleSetState) => {
   const newWorker = worker();
   newWorker.removeMetaData(images);
@@ -101,76 +155,47 @@ export const removeMetaData = (images, state, handleSetState) => {
   });
 };
 
-
 /**
-* @function handleImageButtonClick
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleImageButtonClick
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleImageButtonClick = (e, props, refs) => {
   e.preventDefault();
   refs.image_el.current.click();
   props.setFieldTouched('project_images');
 };
 
-
 /**
-* @function handleVideoButtonClick
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleVideoButtonClick
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleVideoButtonClick = (e, props, bool) => {
   e.preventDefault();
   props.setFieldTouched('video');
   return { video_upload_dialog_open: !bool };
 };
 
-
-
 /**
-* @function handleDescTooltipOpen
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export const handleDescTooltipOpen = () => {
-  return { desc_tool_tip_open: true };
-};
-
-
-/**
-* @function handleDescTooltipClose
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export const handleDescTooltipClose = () => {
-  return { desc_tool_tip_open: false };
-};
-
-
-
-/**
-* @function handleSelectVideoFileChecked
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleSelectVideoFileChecked
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleSelectVideoFileChecked = el => {
   el.click();
   return { select_video_file: true };
 };
 
-
-
 /**
-* @function handleSuggestTags
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleSuggestTags
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleSuggestTags = (e, props, state, handleSetState) => {
   clearTimeout(vars.timer.id);
   const value = e.currentTarget.value;
@@ -182,26 +207,23 @@ export const handleSuggestTags = (e, props, state, handleSetState) => {
   }
 };
 
-
-
 /**
-* @function suggestTags
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function suggestTags
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const suggestTags = (value, props, handleSetState, _) => {
   handleSetState({ tag_suggestion_open: true });
   handleSetState(props.suggestTags({ value, t: props.t }));
 };
 
-
 /**
-* @function addMaterialsUsedNode
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function addMaterialsUsedNode
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const addMaterialsUsedNode = (e, props) => {
   e.preventDefault();
   let materials_used = props.values['materials_used'];
@@ -212,13 +234,12 @@ export const addMaterialsUsedNode = (e, props) => {
   }
 };
 
-
 /**
-* @function removeTag
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function removeTag
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const removeTag = (_, props, value) => {
   let tags = props.values['tags'];
   tags = tags ? JSON.parse(tags) : [];
@@ -226,14 +247,12 @@ export const removeTag = (_, props, value) => {
   props.setFieldValue('tags', JSON.stringify(tags));
 };
 
-
-
 /**
-* @function handleImageFieldChange
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleImageFieldChange
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleImageFieldChange = (refs, props, state, handleSetState) => {
   refs.image_count_el.current.innerText = `${
     refs.image_el.current.files.length
@@ -252,13 +271,12 @@ export const handleImageFieldChange = (refs, props, state, handleSetState) => {
   props.setStatus({ ...props.status, images: '' });
 };
 
-
 /**
-* @function handleVideoFieldCancel
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleVideoFieldCancel
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleVideoFieldCancel = async (refs, props, state) => {
   refs.video_selection_feedback_el.current.innerText = '';
 
@@ -270,13 +288,12 @@ export const handleVideoFieldCancel = async (refs, props, state) => {
   });
 };
 
-
 /**
-* @function handleAddMaterialFieldChange
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleAddMaterialFieldChange
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleAddMaterialFieldChange = (_, props, refs) => {
   const children = refs.add_materials_used_el.current.children;
   let value = '';
@@ -298,13 +315,12 @@ export const handleAddMaterialFieldChange = (_, props, refs) => {
   props.setStatus({ ...props.status, materials_used: '' });
 };
 
-
 /**
-* @function handleAddTags
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleAddTags
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleAddTags = (e, props, add_tags_el) => {
   props.setFieldTouched('tags', true, true);
   let value = e.currentTarget.value.split(',');
@@ -329,14 +345,211 @@ export const handleAddTags = (e, props, add_tags_el) => {
   return { tag_suggestion_open: false, tag_suggestion: [] };
 };
 
+/**
+ * @function buildPublishTypes
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @description - The order of the publish type options in the publish dropdown
+ *   depends on what site_mode the deployment runs. This function helps select
+ *   the appropriate order for the publish type options.
+ * @param {Object} props.projects - projects redux store.
+ * @param {Object} props.values - form values.
+ * @returns {Object} - {publish_types:[...]} object with array of publish types as value
+ */
+export const buildPublishTypes = ({ projects, values, setFieldValue }) => {
+  const { zubhub } = projects;
+  let publish_types;
+  if (zubhub?.site_mode === site_mode.PRIVATE) {
+    publish_types = {
+      publish_types: [
+        {
+          value: publish_type['Authenticated Creators'],
+          name: 'Authenticated Creators',
+        },
+        { value: publish_type['Draft'], name: 'Draft' },
+        { value: publish_type['Preview'], name: 'Preview' },
+        { value: publish_type['Public'], name: 'Public' },
+      ],
+    };
+  } else {
+    publish_types = {
+      publish_types: [
+        { value: publish_type['Public'], name: 'Public' },
+        { value: publish_type['Draft'], name: 'Draft' },
+        {
+          value: publish_type['Authenticated Creators'],
+          name: 'Authenticated Creators',
+        },
+        { value: publish_type['Preview'], name: 'Preview' },
+      ],
+    };
+  }
 
+  //set initial form value for publish if it's undefined
+  if (!values.publish) {
+    const publish = {
+      type: publish_types.publish_types[0].value,
+      visible_to: [],
+    };
+    setFieldValue('publish', publish);
+  }
+
+  return publish_types;
+};
 
 /**
-* @function handleVideoSelectDone
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleRemovePublishVisibleTo
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @description - Removes username from list of usernames in
+ *   props.values.publish.visible_to
+ * @param {Object} _ - dom event.
+ * @param {Object} props.values - form values.
+ * @param {Function} props.setFieldTouched - formik method to mark a form field as touched.
+ * @param {Function} props.setFieldValue - formik method to set the value of a form field.
+ * @param {string} value - username to be removed.
+ */
+export const handleRemovePublishVisibleTo = (_, props, value) => {
+  let publish = props.values['publish'];
+  const usernames = publish.visible_to.filter(username => username !== value);
+  publish.visible_to = usernames;
+  props.setFieldTouched('publish', true, true);
+  props.setFieldValue('publish', publish);
+};
+
+/**
+ * @function handleAddPublishVisibleTo
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @description - Add username from list of usernames in
+ *   props.values.publish.visible_to
+ * @param {Object} e - dom event.
+ * @param {Object} props.values - form values.
+ * @param {Function} props.setFieldTouched - formik method to mark a form field as touched.
+ * @param {Function} props.setFieldValue - formik method to set the value of a form field.
+ * @param {string} value - username to be removed.
+ * @returns {Object} - object to reset the username suggestion dialog.
+ */
+export const handleAddPublishVisibleTo = (e, props, publish_visible_to_el) => {
+  props.setFieldTouched('publish', true, true);
+  let value = e.currentTarget.value.split(',');
+  value[0] = value[0].trim();
+  let publish = props.values['publish'];
+
+  const exists =
+    publish.visible_to.filter(username => username === value[0]).length > 0
+      ? true
+      : false;
+
+  if (!exists && value.length > 1 && value[0]) {
+    publish.visible_to.push(value[0]);
+    props.setFieldValue('publish', publish);
+    e.currentTarget.value = '';
+    if (e.currentTarget.focus) e.currentTarget.focus();
+    if (publish_visible_to_el) {
+      publish_visible_to_el.current.value = '';
+      publish_visible_to_el.current.focus();
+    }
+  }
+
+  return {
+    publish_visible_to_suggestion_open: false,
+    publish_visible_to_suggestion: [],
+  };
+};
+
+/**
+ * @function handleSuggestPublishVisibleTo
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const handleSuggestPublishVisibleTo = (
+  e,
+  props,
+  state,
+  handleSetState,
+) => {
+  clearTimeout(vars.timer.id);
+  const value = e.currentTarget.value;
+
+  if (value !== '' && value.search(',') === -1) {
+    vars.timer.id = setTimeout(() => {
+      suggestPublishVisibleTo(value, props, handleSetState, state);
+    }, 500);
+  }
+};
+
+/**
+ * @function suggestPublishVisibleTo
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const suggestPublishVisibleTo = (value, props, handleSetState, _) => {
+  handleSetState({ publish_visible_to_suggestion_open: true });
+  const res = props
+    .suggestCreators({
+      page: null,
+      query_string: value,
+      t: props.t,
+    })
+    .then(res => {
+      let publish_visible_to_suggestion_open = false;
+      let publish_visible_to_suggestion = [];
+      if (res.creator_suggestion) {
+        publish_visible_to_suggestion = res.creator_suggestion.map(creator => {
+          return creator.username;
+        });
+        publish_visible_to_suggestion_open = true;
+      }
+      return {
+        publish_visible_to_suggestion,
+        publish_visible_to_suggestion_open,
+      };
+    });
+
+  handleSetState(res);
+};
+
+/**
+ * @function handlePublishFieldBlur
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const handlePublishFieldBlur = (e, props) => {
+  let obj = {
+    type: e.target.value,
+    visible_to: [],
+  };
+
+  props.setFieldValue('publish', obj, true);
+  props.setStatus({ ...props.status, publish: '' });
+};
+
+/**
+ * @function handlePublishFieldChange
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const handlePublishFieldChange = (e, props) => {
+  let obj = {
+    type: e.target.value,
+    visible_to: [],
+  };
+
+  props.setFieldValue('publish', obj, true);
+  props.setStatus({ ...props.status, publish: '' });
+};
+
+/**
+ * @function handleVideoSelectDone
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleVideoSelectDone = async (refs, props, state) => {
   const { media_upload } = state;
   if (media_upload.videos_to_upload.length < 1) {
@@ -350,13 +563,12 @@ export const handleVideoSelectDone = async (refs, props, state) => {
   return {};
 };
 
-
 /**
-* @function initUpload
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function initUpload
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();
 
@@ -370,6 +582,7 @@ export const initUpload = (e, state, props, handleSetState) => {
     props.setFieldTouched('materials_used');
     props.setFieldTouched('category');
     props.setFieldTouched('tags');
+    props.setFieldTouched('publish');
 
     vars.image_field_touched = true;
     vars.video_field_touched = true;
@@ -397,55 +610,98 @@ export const initUpload = (e, state, props, handleSetState) => {
         vars.upload_in_progress = true;
         uploadProject(state, props, handleSetState);
       } else {
-        const { media_upload } = state;
-        media_upload.upload_dialog = true;
-        media_upload.upload_percent = 0;
         vars.upload_in_progress = true;
-        handleSetState({ media_upload });
+        state.media_upload.upload_dialog = true;
+        handleSetState({
+          media_upload: {
+            ...state.media_upload,
+            upload_dialog: true,
+            upload_percent: 0,
+          },
+        });
 
+        const promises = [];
+
+        // upload images
         for (
           let index = 0;
-          index < media_upload.images_to_upload.length;
+          index < state.media_upload.images_to_upload.length;
           index++
         ) {
-          uploadImage(
-            media_upload.images_to_upload[index],
-            state,
-            props,
-            handleSetState,
+          promises.push(
+            uploadImage(
+              state.media_upload.images_to_upload[index],
+              state,
+              props,
+              handleSetState,
+            ),
           );
         }
 
+        // upload videos
         for (
           let index = 0;
-          index < media_upload.videos_to_upload.length;
+          index < state.media_upload.videos_to_upload.length;
           index++
         ) {
-          uploadVideo(
-            media_upload.videos_to_upload[index],
-            state,
-            props,
-            handleSetState,
+          promises.push(
+            uploadVideo(
+              state.media_upload.videos_to_upload[index],
+              state,
+              props,
+              handleSetState,
+            ),
           );
         }
+
+        // wait for all image and video promises to resolve before continuing
+        Promise.all(promises)
+          .then(all => {
+            const uploaded_images_url = state.media_upload.uploaded_images_url;
+            const uploaded_videos_url = state.media_upload.uploaded_videos_url;
+
+            all.forEach(each => {
+              if (each.public_id) {
+                uploaded_images_url.push(each);
+              } else if (each.secure_url) {
+                uploaded_videos_url[0] = each.secure_url;
+              }
+            });
+
+            state = JSON.parse(JSON.stringify(state));
+            state.media_upload.uploaded_images_url = uploaded_images_url;
+            state.media_upload.uploaded_videos_url = uploaded_videos_url;
+
+            uploadProject(state, props, handleSetState);
+          })
+          .catch(error => {
+            // settimeout is used to delay closing the upload_dialog until
+            // state have reflected all prior attempts to set state.
+            // This is to ensure nothing overwrites the dialog closing.
+            // A better approach would be to refactor the app and use
+            // redux for most complex state interactions.
+            setTimeout(
+              () =>
+                handleSetState({
+                  media_upload: { ...state.media_upload, upload_dialog: false },
+                }),
+              2000,
+            );
+
+            if (error) toast.warning(error);
+          });
       }
     });
   }
 };
 
-
-
 /**
-* @function uploadProject
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function uploadProject
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const uploadProject = async (state, props, handleSetState) => {
-  const { media_upload } = state;
-  media_upload.upload_dialog = false;
-  handleSetState({ media_upload });
-
   const materials_used = props.values['materials_used']
     ?.split(',')
     .filter(value => (value ? true : false))
@@ -459,7 +715,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     ? props.updateProject
     : props.createProject;
 
-  await create_or_update({
+  create_or_update({
     ...props.values,
     materials_used,
     tags,
@@ -471,119 +727,131 @@ export const uploadProject = async (state, props, handleSetState) => {
       : '',
     category: props.values.category,
     t: props.t,
-  }).catch(error => {
-    const messages = JSON.parse(error.message);
-    if (typeof messages === 'object') {
-      const server_errors = {};
-      Object.keys(messages).forEach(key => {
-        if (key === 'non_field_errors') {
-          server_errors['non_field_errors'] = messages[key][0];
-        } else {
-          server_errors[key] = messages[key][0];
-        }
+  })
+    .catch(error => {
+      handleSetState({
+        media_upload: {
+          ...state.media_upload,
+          upload_dialog: false,
+        },
       });
-      props.setStatus({ ...server_errors });
-    } else {
-      props.setStatus({
-        non_field_errors: props.t('createProject.errors.unexpected'),
-      });
-    }
-  });
-
-  vars.upload_in_progress = false; //flag to prevent attempting to upload a project when an upload is already in progress
+      const messages = JSON.parse(error.message);
+      if (typeof messages === 'object') {
+        const server_errors = {};
+        Object.keys(messages).forEach(key => {
+          if (key === 'non_field_errors') {
+            server_errors['non_field_errors'] = messages[key][0];
+          } else {
+            server_errors[key] = messages[key][0];
+          }
+        });
+        props.setStatus({ ...server_errors });
+      } else {
+        props.setStatus({
+          non_field_errors: props.t('createProject.errors.unexpected'),
+        });
+      }
+    })
+    .finally(() => {
+      vars.upload_in_progress = false; // flag to prevent attempting to upload a project when an upload is already in progress
+    });
 };
 
-
-
 /**
-* @function uploadVideo
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export const uploadVideo = async(video, state, props, handleSetState) => {
+ * @function uploadVideo
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const uploadVideo = (video, state, props, handleSetState) => {
   if (
     typeof video === 'string' &&
     video.match(
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
     )
   ) {
-      const { media_upload } = state;
-
-      media_upload.uploaded_videos_url = [video];
-      media_upload.successful_uploads = media_upload.successful_uploads + 1;
-
-      handleSetState({ media_upload });
+    return new Promise(r => r({ secure_url: video }));
   } else {
-      const args = {
-        t: props.t,
-        token: props.auth.token
-      };
+    const args = {
+      t: props.t,
+      token: props.auth.token,
+    };
 
-      const res = await props.shouldUploadToLocal(args);
-
-      if(res && res.local === true){
-        uploadVideoToLocal(video, state, props, handleSetState);
-      }else if(res && res.local === false){
-        uploadVideoToCloudinary(video, state, props, handleSetState);
-      };
+    return props.shouldUploadToLocal(args).then(res => {
+      if (res && res.local === true) {
+        return uploadVideoToLocal(video, state, props, handleSetState);
+      } else if (res && res.local === false) {
+        return uploadVideoToCloudinary(video, state, props, handleSetState);
+      }
+    });
   }
 };
 
-
-
 /**
-* @function uploadVideoToLocal
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function uploadVideoToLocal
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const uploadVideoToLocal = (video, state, props, handleSetState) => {
-  let url = process.env.REACT_APP_NODE_ENV === 'production'
-            ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
-            : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
-  url = url + "upload-file-to-local/";
+  let url =
+    process.env.REACT_APP_NODE_ENV === 'production'
+      ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
+      : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
+  url = url + 'upload-file-to-local/';
 
   let key = nanoid();
-  key = key.slice(0, Math.floor(key.length/3));
+  key = key.slice(0, Math.floor(key.length / 3));
   key = `videos/${slugify(props.auth.username)}-${slugify(video.name)}-${key}`;
 
   const formData = new FormData();
   formData.append('file', video);
   formData.append('key', key);
-  
-  const um = new UploadMedia("video", url, formData, state, props, handleSetState);
-  um.upload();
+
+  return new Promise((resolve, reject) => {
+    const um = new UploadMedia(
+      'video',
+      url,
+      formData,
+      state,
+      props,
+      handleSetState,
+      resolve,
+      reject,
+    );
+    um.upload();
+  });
 };
 
-
 /**
-* @function uploadVideoToCloudinary
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export const uploadVideoToCloudinary = async (video, state, props, handleSetState) => {
+ * @function uploadVideoToCloudinary
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const uploadVideoToCloudinary = (
+  video,
+  state,
+  props,
+  handleSetState,
+) => {
+  const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
 
-    const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
+  const upload_preset =
+    process.env.REACT_APP_NODE_ENV === 'production'
+      ? process.env.REACT_APP_VIDEO_UPLOAD_PRESET_NAME
+      : process.env.REACT_APP_DEV_VIDEO_UPLOAD_PRESET_NAME;
 
-    const upload_preset =
-      process.env.REACT_APP_NODE_ENV === 'production'
-        ? process.env.REACT_APP_VIDEO_UPLOAD_PRESET_NAME
-        : process.env.REACT_APP_DEV_VIDEO_UPLOAD_PRESET_NAME;
+  const params = {
+    upload_preset,
+    username: props.auth.username,
+    filename: video.name,
+    t: props.t,
+    token: props.auth.token,
+  };
 
-    const params = {
-      upload_preset,
-      username: props.auth.username,
-      filename: video.name,
-      t: props.t,
-      token: props.auth.token,
-    };
-
-    const sig_res = await props.getSignature(params);
-
+  return props.getSignature(params).then(sig_res => {
     if (typeof sig_res === 'object') {
-
       const formData = new FormData();
       formData.append('file', video);
       formData.append('public_id', sig_res.public_id);
@@ -591,138 +859,144 @@ export const uploadVideoToCloudinary = async (video, state, props, handleSetStat
       formData.append('api_key', sig_res.api_key);
       formData.append('timestamp', sig_res.timestamp);
       formData.append('signature', sig_res.signature);
-     
-      const um = new UploadMedia("video", url, formData, state, props, handleSetState);
-      um.upload();
 
-    } else {
-      const { media_upload } = state;
-      media_upload.upload_dialog = false;
-
-      handleSetState({
-        media_upload,
+      return new Promise((resolve, reject) => {
+        const um = new UploadMedia(
+          'video',
+          url,
+          formData,
+          state,
+          props,
+          handleSetState,
+          resolve,
+          reject,
+        );
+        um.upload();
       });
+    } else {
+      return Promise.reject('');
     }
+  });
 };
 
-
 /**
-* @function uploadImage
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export const uploadImage = async(image, state, props, handleSetState) => {
-  debugger;
+ * @function uploadImage
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const uploadImage = (image, state, props, handleSetState) => {
   const args = {
     t: props.t,
-    token: props.auth.token
+    token: props.auth.token,
   };
 
-   const res  = await props.shouldUploadToLocal(args);
-
-   if(res && res.local === true){
-    uploadImageToLocal(image, state, props, handleSetState);
-   }else if(res && res.local === false){
-    uploadImageToDO(image, state, props, handleSetState);
-   }
-
+  return props.shouldUploadToLocal(args).then(res => {
+    if (res && res.local === true) {
+      return uploadImageToLocal(image, state, props, handleSetState);
+    } else if (res && res.local === false) {
+      return uploadImageToDO(image, state, props, handleSetState);
+    }
+  });
 };
 
-
 /**
-* @function uploadImageToLocal
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function uploadImageToLocal
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const uploadImageToLocal = (image, state, props, handleSetState) => {
-
-  let url = process.env.REACT_APP_NODE_ENV === 'production'
-            ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
-            : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
-  url = url + "upload-file-to-local/";
+  let url =
+    process.env.REACT_APP_NODE_ENV === 'production'
+      ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
+      : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
+  url = url + 'upload-file-to-local/';
 
   const formData = new FormData();
   formData.append('file', image);
   formData.append('key', `project_images/${nanoid()}`);
-  const um = new UploadMedia("image", url, formData, state, props, handleSetState);
-  um.upload();
+
+  return new Promise((resolve, reject) => {
+    const um = new UploadMedia(
+      'image',
+      url,
+      formData,
+      state,
+      props,
+      handleSetState,
+      resolve,
+      reject,
+    );
+    um.upload();
+  });
 };
 
-
 /**
-* @function uploadImageToDO
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function uploadImageToDO
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const uploadImageToDO = (image, state, props, handleSetState) => {
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: `${doConfig.bucketName}`,
+      Key: `${doConfig.project_images}/${nanoid()}`,
+      Body: image,
+      ContentType: image.type,
+      ACL: 'public-read',
+    };
 
-  const params = {
-    Bucket: `${doConfig.bucketName}`,
-    Key: `${doConfig.project_images}/${nanoid()}`,
-    Body: image,
-    ContentType: image.type,
-    ACL: 'public-read',
-  };
-
-  DO.upload(params, err => {
-    const { media_upload } = state;
-    media_upload.upload_dialog = false;
-    handleSetState({ media_upload });
-  })
-    .on('httpUploadProgress', e => {
-      const progress = Math.round((e.loaded * 100.0) / e.total);
-      const { media_upload } = state;
-      media_upload.upload_info[image.name] = progress;
-
-      let total = 0;
-      Object.keys(media_upload.upload_info).forEach(each => {
-        total = total + media_upload.upload_info[each];
-      });
-
-      total = total / Object.keys(media_upload.upload_info).length;
-      media_upload.upload_percent = total;
-
-      handleSetState({ media_upload });
+    DO.upload(params, err => {
+      reject(err.message);
     })
-    .send((err, data) => {
-      if (err) {
+      .on('httpUploadProgress', e => {
+        const progress = Math.round((e.loaded * 100.0) / e.total);
         const { media_upload } = state;
-        media_upload.upload_dialog = false;
+        const upload_info = JSON.parse(
+          JSON.stringify(media_upload.upload_info),
+        );
+        upload_info[image.name] = progress;
 
-        if (err.message.startsWith('Unexpected')) {
-          handleSetState({
-            error: props.t('createProject.errors.unexpected'),
-            media_upload,
-          });
-        } else {
-          handleSetState({ error: err.message, media_upload });
-        }
-      } else {
-        const secure_url = data.Location;
-        const public_id = data.Key;
-        const { media_upload } = state;
-
-        media_upload.uploaded_images_url.push({
-          image_url: secure_url,
-          public_id,
+        let total = 0;
+        Object.keys(upload_info).forEach(each => {
+          total = total + upload_info[each];
         });
-        media_upload.successful_uploads = media_upload.successful_uploads + 1;
 
-        handleSetState({ media_upload });
-      }
-    });
+        total = total / Object.keys(upload_info).length;
+
+        handleSetState({
+          media_upload: {
+            ...media_upload,
+            upload_info,
+            upload_percent: total,
+          },
+        });
+      })
+      .send((err, data) => {
+        if (err) {
+          if (err.message.startsWith('Unexpected')) {
+            const error = props.t('createProject.errors.unexpected');
+            reject(error);
+          } else {
+            reject(err.message);
+          }
+        } else {
+          const secure_url = data.Location;
+          const public_id = data.Key;
+          resolve({ image_url: secure_url, public_id });
+        }
+      });
+  });
 };
 
-
 /**
-* @function getProject
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getProject
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getProject = (refs, props, state) => {
   return props
     .getProject({
@@ -742,7 +1016,7 @@ export const getProject = (refs, props, state) => {
 
         if (refs.desc_el.current && obj.project.description) {
           props.setFieldValue('description', obj.project.description);
-          refs.desc_el.current.firstChild.value = obj.project.description;
+          refs.desc_el.current.editor.root.innerHTML = obj.project.description;
         }
 
         if (refs.video_selection_feedback_el.current && obj.project.video) {
@@ -787,6 +1061,16 @@ export const getProject = (refs, props, state) => {
           props.setFieldValue('tags', JSON.stringify(obj.project.tags), true);
         }
 
+        if (refs.publish_type_el.current && obj.project.publish) {
+          const publish = {
+            type: obj.project.publish.type,
+            visible_to: obj.project.publish.visible_to.map(
+              creator => creator.username,
+            ),
+          };
+          props.setFieldValue('publish', publish, true);
+        }
+
         media_upload.uploaded_images_url = obj.project.images;
         media_upload.uploaded_videos_url = obj.project.video
           ? [obj.project.video]
@@ -801,13 +1085,12 @@ export const getProject = (refs, props, state) => {
     });
 };
 
-
 /**
-* @function handleVideoFieldChange
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleVideoFieldChange
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleVideoFieldChange = async (e, refs, props, state) => {
   let video_node;
   let type;
@@ -854,13 +1137,12 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
     });
 };
 
-
 /**
-* @function checkMediaFilesErrorState
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function checkMediaFilesErrorState
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const checkMediaFilesErrorState = (refs, props) => {
   if (props.auth.token) {
     if (props.touched['project_images'] && props.errors['project_images']) {
@@ -901,13 +1183,12 @@ export const checkMediaFilesErrorState = (refs, props) => {
   }
 };
 
-
 /**
-* @object validationSchema
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe object's function
-*/
+ * @object validationSchema
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe object's function
+ */
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
   description: Yup.string().max(10000, 'max').required('required'),
@@ -1044,110 +1325,132 @@ export const validationSchema = Yup.object().shape({
       return true;
     }
   }),
+  publish: Yup.mixed()
+    .test('visible_to_required', 'visible_to_required', publish => {
+      if (
+        publish.type === publish_type['Preview'] &&
+        publish.visible_to.length < 1
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    })
+    .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
+      const re = /^[a-z0-9_-]{3,16}$/i;
+      let unsupported = false;
+      for (let username of publish.visible_to) {
+        if (!re.test(username)) {
+          unsupported = true;
+        }
+      }
+      return unsupported ? false : true;
+    }),
 });
 
-
 /**
-* @function UploadMedia
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export class UploadMedia { 
+ * @class UploadMedia
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export class UploadMedia {
+  constructor(
+    type,
+    url,
+    formData,
+    state,
+    props,
+    handleSetState,
+    resolve,
+    reject,
+  ) {
+    this.xhr = new XMLHttpRequest();
+    this.type = type;
+    this.url = url;
+    this.formData = formData;
+    this.state = state;
+    this.props = props;
+    this.handleSetState = handleSetState;
+    this.resolve = resolve;
+    this.reject = reject;
+    this.xhr.upload.onload = this.uploadOnLoad;
+    this.xhr.onreadystatechange = this.onReadyStateChange;
+    this.xhr.upload.onerror = this.uploadOnerror;
+    this.xhr.upload.onprogress = this.uploadOnprogress;
+  }
 
-    constructor(type, url, formData, state, props, handleSetState) {
-       this.xhr = new XMLHttpRequest();
-       this.type = type;
-       this.url = url;
-       this.formData = formData;
-       this.state = state;
-       this.props = props;
-       this.handleSetState = handleSetState;
-       this.xhr.upload.onload = this.uploadOnLoad;
-       this.xhr.onreadystatechange = this.onReadyStateChange;
-       this.xhr.upload.onerror = this.uploadOnerror;
-       this.xhr.upload.onprogress = this.uploadOnprogress;
-    };
+  uploadOnLoad = () => {
+    if (this.xhr.status !== 200 && this.xhr.readyState === 4) {
+      const error = this.props.t('createProject.errors.unexpected');
+      this.reject(error);
+    }
+  };
 
-  
-      uploadOnLoad = () =>{
-        if (this.xhr.status !== 200 && this.xhr.readyState === 4) {
-          const { media_upload } = this.state;
-          media_upload.upload_dialog = false;
+  onReadyStateChange = () => {
+    if (
+      this.xhr.status === 200 &&
+      this.xhr.readyState === 4 &&
+      this.type === 'video'
+    ) {
+      const data = JSON.parse(this.xhr.response);
+      const secure_url = data.secure_url;
+      this.resolve({ secure_url });
+    } else if (
+      this.xhr.status === 200 &&
+      this.xhr.readyState === 4 &&
+      this.type === 'image'
+    ) {
+      const data = JSON.parse(this.xhr.response);
+      const secure_url = data.Location;
+      const public_id = data.Key;
 
-          this.handleSetState({
-            error: this.props.t('createProject.errors.unexpected'),
-            media_upload,
-          });
-        }
-      };
-  
-      onReadyStateChange = () => {
-        if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === "video") {
+      this.resolve({ image_url: secure_url, public_id });
+    }
+  };
 
-          const data = JSON.parse(this.xhr.response);
-          const secure_url = data.secure_url;
-          const { media_upload } = this.state;
+  uploadOnerror = _ => {
+    const error = this.props.t('createProject.errors.unexpected');
 
-          media_upload.uploaded_videos_url = [secure_url];
-          media_upload.successful_uploads = media_upload.successful_uploads + 1;
+    this.reject(error);
+  };
 
-          this.handleSetState({ media_upload });
+  uploadOnprogress = e => {
+    const progress = Math.round((e.loaded * 100.0) / e.total);
+    const { media_upload } = this.state;
 
-        } else if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === "image"){
+    const upload_info = JSON.parse(JSON.stringify(media_upload.upload_info));
+    upload_info[this.formData.get('file').name] = progress;
 
-          const data = JSON.parse(this.xhr.response);
-          const secure_url = data.Location;
-          const public_id = data.Key;
-          const { media_upload } = this.state;
-  
-          media_upload.uploaded_images_url.push({
-            image_url: secure_url,
-            public_id,
-          });
-          media_upload.successful_uploads = media_upload.successful_uploads + 1;
-  
-          this.handleSetState({ media_upload });
+    let total = 0;
+    Object.keys(upload_info).forEach(each => {
+      total = total + upload_info[each];
+    });
 
-        }
-      };
-  
-      uploadOnerror = e => {
-          const { media_upload } = this.state;
-          media_upload.upload_dialog = false;
-  
-          this.handleSetState({
-            error: this.props.t('createProject.errors.unexpected'),
-            media_upload,
-          });
-        };
-  
-      uploadOnprogress = e => {
-          const progress = Math.round((e.loaded * 100.0) / e.total);
-          const { media_upload } = this.state;
-          media_upload.upload_info[this.formData.get("file").name] = progress;
-  
-          let total = 0;
-          Object.keys(media_upload.upload_info).forEach(each => {
-            total = total + media_upload.upload_info[each];
-          });
-  
-          total = total / Object.keys(media_upload.upload_info).length;
-          media_upload.upload_percent = total;
-  
-          this.handleSetState({ media_upload });
-        };
+    total = total / Object.keys(upload_info).length;
 
-        upload = () => {
-          this.xhr.open('POST', this.url);
+    this.handleSetState({
+      media_upload: {
+        ...media_upload,
+        upload_info,
+        upload_percent: total,
+      },
+    });
+  };
 
-          if(!this.url.startsWith(process.env.REACT_APP_VIDEO_UPLOAD_URL)){
-            this.xhr.xsrfCookieName =  'csrftoken';
-            this.xhr.xsrfHeaderName = 'X-CSRFToken';
-            this.xhr.setRequestHeader("Authorization",`Token ${this.props.auth.token}`);
-            this.xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
-          };
+  upload = () => {
+    this.xhr.open('POST', this.url);
 
-          this.xhr.send(this.formData)
-        }
-    };
+    if (!this.url.startsWith(process.env.REACT_APP_VIDEO_UPLOAD_URL)) {
+      this.xhr.xsrfCookieName = 'csrftoken';
+      this.xhr.xsrfHeaderName = 'X-CSRFToken';
+      this.xhr.setRequestHeader(
+        'Authorization',
+        `Token ${this.props.auth.token}`,
+      );
+      this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    }
+
+    this.xhr.send(this.formData);
+  };
+}

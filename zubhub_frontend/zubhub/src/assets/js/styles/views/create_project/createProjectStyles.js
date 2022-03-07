@@ -1,5 +1,4 @@
 import { fade } from '@material-ui/core/styles';
-import uploadIcon from '../../../../images/upload.svg';
 
 const styles = theme => ({
   root: {
@@ -67,64 +66,96 @@ const styles = theme => ({
       },
     },
   },
+  descInputStyle: {
+    color: 'black',
+    borderRadius: 15,
+    boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+    '&:hover': {
+      outline: '2px solid #00B8C4',
+    },
+    '& .ql-toolbar': {
+      borderTopRightRadius: 15,
+      borderTopLeftRadius: 15,
+    },
+    '& .ql-container': {
+      borderBottomRightRadius: 15,
+      borderBottomLeftRadius: 15,
+      '& .ql-editor': {
+        color: '#000000de',
+        fontSize: '1rem',
+        fontFamily: 'Raleway,Roboto,sans-serif',
+        lineHeight: '1.1876em',
+        minHeight: '200px !important',
+        [theme.breakpoints.up('1600')]: {
+          fontSize: '1.7rem',
+        },
+      },
+    },
+  },
+  descInputFocusStyle: {
+    outline: '2px solid #00B8C4 !important',
+  },
+  descInputErrorStyle: {
+    outline: '1px solid #f44336',
+  },
   videoInputDialogContainerStyle: {
     [theme.breakpoints.down('400')]: {
       paddingLeft: 0,
       paddingRight: 0,
-    }
+    },
   },
   videoInputDialogCardStyle: {
     [theme.breakpoints.down('400')]: {
       paddingLeft: 0,
       paddingRight: 0,
-    }
+    },
   },
   videoFileName: {
     margin: 0,
     color: 'rgba(0, 0, 0, 0.54)',
-    textOverflow: "ellipsis",
+    textOverflow: 'ellipsis',
 
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    width: "50%",
-    minWidth: "150px",
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    width: '50%',
+    minWidth: '150px',
     [theme.breakpoints.down('550')]: {
-      width: '100%'
+      width: '100%',
     },
   },
   videoInputDialogURLFormControlStyle: {
-    width: "59%",
+    width: '59%',
     [theme.breakpoints.down('550')]: {
-      width: '100%'
+      width: '100%',
     },
   },
   videoInputDialogControlSectionStyle: {
-    width: "100%",
-    border: "2px solid #00B8C4",
-    padding: "2px",
+    width: '100%',
+    border: '2px solid #00B8C4',
+    padding: '2px',
     borderRadius: 30,
   },
   videoInputDialogControlButtonStyle: {
-    width: "50%"
+    width: '50%',
   },
   videoInputDialogControlButtonUseTextDescStyle: {
     [theme.breakpoints.down('500')]: {
-     display: "none",
-    }
+      display: 'none',
+    },
   },
   videoInputDialogControlButtonUseIconDescStyle: {
     [theme.breakpoints.up('500')]: {
-    display: "none",
-    }
+      display: 'none',
+    },
   },
   videoInputDialogBodyGridStyle: {
-  display: "flex",
-  alignItems: "center",
-  flexWrap: "wrap",
-  paddingTop: "16px !important",
-  [theme.breakpoints.down("550")]: {
-    justifyContent: "space-between"
-  }
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingTop: '16px !important',
+    [theme.breakpoints.down('550')]: {
+      justifyContent: 'space-between',
+    },
   },
   videoInputDialogActionSectionStyle: {
     display: 'flex',
@@ -135,7 +166,7 @@ const styles = theme => ({
     [theme.breakpoints.down('550')]: {
       width: '48.5%',
       marginLeft: 0,
-      marginTop: '0.5em'
+      marginTop: '0.5em',
     },
   },
   fieldNumberStyle: {
@@ -161,9 +192,9 @@ const styles = theme => ({
     },
   },
   uploadProgressIndicatorContainerStyle: {
-    display: "inline-flex",
-    position: "relative",
-    overflow: "hidden"
+    display: 'inline-flex',
+    position: 'relative',
+    overflow: 'hidden',
   },
   uploadProgressLabelStyle: {
     color: 'white',

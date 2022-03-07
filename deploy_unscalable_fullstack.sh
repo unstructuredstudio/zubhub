@@ -64,7 +64,15 @@ docker-compose -f docker-compose.unscalable.prod.yml --env-file ./zubhub_backend
 sleep 10s
 docker-compose -f docker-compose.unscalable.prod.yml --env-file ./zubhub_backend/.env up -d --build
 sleep 180s
-docker-compose -f docker-compose.unscalable.prod.yml exec web bash  -c "echo 'echo \"from django.contrib.auth import get_user_model;User = get_user_model();superusers = User.objects.filter(is_superuser=True);user = len(superusers) == 0 and User.objects.create_superuser(\\\"dummy\\\", \\\"dummy@mail.com\\\", \\\"dummy_password\\\");user.is_staff = True;user.save()\" | python /zubhub_backend/zubhub/manage.py shell' > /dummy.sh"
+docker-compose -f docker-compose.unscalable.prod.yml exec web bash  -c "echo 'echo \"from django.contrib.auth \
+import get_user_model;User = get_user_model();superusers = User.objects.filter(is_superuser=True);\
+user = User.objects.create_superuser(\\\"dummy\\\", \\\"dummy@mail.com\\\", \\\"dummy_password\\\") \
+if superusers.count() == 0 else superusers.none(); \
+hasattr(user, \\\"is_staff\\\") and setattr(user, \\\"is_staff\\\", True); \
+user and user.save(); \
+print(\\\"new super user created successfully\\\") if hasattr(user, \\\"is_staff\\\") \
+else print(\\\"superuser already exists\\\");\" | python /zubhub_backend/zubhub/manage.py shell' > /dummy.sh"
+
 docker-compose -f docker-compose.unscalable.prod.yml exec web bash /dummy.sh
 docker-compose -f docker-compose.unscalable.prod.yml exec web bash -c "rm /dummy.sh"
 echo "Updated fullstack"

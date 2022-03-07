@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
 
 /**
-* @function sendPasswordResetLink
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function sendPasswordResetLink
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const sendPasswordResetLink = (e, props) => {
   e.preventDefault();
   return props
@@ -34,13 +34,12 @@ export const sendPasswordResetLink = (e, props) => {
     });
 };
 
-
 /**
-* @object validationSchema
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe object's function
-*/
+ * @object validationSchema
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe object's function
+ */
 export const validationSchema = Yup.object().shape({
   email: Yup.string().email('invalid').required('required'),
 });

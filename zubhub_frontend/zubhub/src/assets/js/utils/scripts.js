@@ -1,14 +1,14 @@
 import Compressor from 'compressorjs';
 import AWS from 'aws-sdk';
 import logo from '../../images/logos/logo.png';
-
+import { BASE_TAGS } from './constants';
 
 /**
-* @constant doConfig
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe constant's function
-*/
+ * @constant doConfig
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe constant's function
+ */
 export const doConfig = {
   digitalOceanSpaces: 'https://zubhub.sfo2.digitaloceanspaces.com/',
   bucketName: 'zubhub',
@@ -16,11 +16,11 @@ export const doConfig = {
 };
 
 /**
-* @function cloudinaryFactory
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function cloudinaryFactory
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const cloudinaryFactory = window => {
   return window.cloudinary.Cloudinary.new({
     cloud_name: 'zubhub',
@@ -28,52 +28,42 @@ export const cloudinaryFactory = window => {
   });
 };
 
-
 /**
-* @function buildVideoThumbnailURL
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function buildVideoThumbnailURL
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const buildVideoThumbnailURL = video_url => {
-  if(video_url.search("youtube.com/embed/") > -1){
-
-     const id = video_url.split("youtube.com/embed/")[1];
-     return `https://img.youtube.com/vi/${id}/0.jpg`;
-
-  } else if(video_url.search("player.vimeo.com/video/") > -1){
-
-    const id = video_url.split("player.vimeo.com/video/")[1];
+  if (video_url.search('youtube.com/embed/') > -1) {
+    const id = video_url.split('youtube.com/embed/')[1];
+    return `https://img.youtube.com/vi/${id}/0.jpg`;
+  } else if (video_url.search('player.vimeo.com/video/') > -1) {
+    const id = video_url.split('player.vimeo.com/video/')[1];
     return `https://vumbnail.com/${id}.jpg`;
-
-  }else if(video_url.search("drive.google.com") > -1){ 
-
-      let id = video_url.split("/");
-      id = id[id.length - 2]
-      return `https://lh3.googleusercontent.com/d/${id}=s300`;
-
-  }else if(video_url.search("cloudinary.com") > -1){
-
+  } else if (video_url.search('drive.google.com') > -1) {
+    let id = video_url.split('/');
+    id = id[id.length - 2];
+    return `https://lh3.googleusercontent.com/d/${id}=s300`;
+  } else if (video_url.search('cloudinary.com') > -1) {
     if (video_url.search('upload/sp_hd') > -1) {
       return video_url.replace('upload/sp_hd', 'upload/f_jpg');
     } else if (video_url.search('upload') > -1) {
       return video_url.replace('upload', 'upload/f_jpg');
     } else {
       return video_url;
-    } 
-
-  }else{
-      return video_url + ".jpg";
+    }
+  } else {
+    return video_url + '.jpg';
   }
 };
 
-
 /**
-* @function getPlayerOptions
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getPlayerOptions
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getPlayerOptions = (window, video_url) => {
   return {
     posterOptions: { publicId: buildVideoThumbnailURL(video_url) },
@@ -84,26 +74,24 @@ export const getPlayerOptions = (window, video_url) => {
   };
 };
 
-
 /**
-* @object s3
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe object's function
-*/
+ * @object s3
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe object's function
+ */
 export const s3 = new AWS.S3({
   endpoint: new AWS.Endpoint('sfo2.digitaloceanspaces.com'),
   accessKeyId: process.env.REACT_APP_DOSPACE_ACCESS_KEY_ID,
   secretAccessKey: process.env.REACT_APP_DOSPACE_ACCESS_SECRET_KEY,
 });
 
-
 /**
-* @function shouldSetImages
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function shouldSetImages
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const shouldSetImages = (compressed, images, state, handleSetState) => {
   if (compressed.length === images.length) {
     const { media_upload } = state;
@@ -113,24 +101,22 @@ const shouldSetImages = (compressed, images, state, handleSetState) => {
   }
 };
 
-
 /**
-* @function slugify
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export const slugify = str=> {
+ * @function slugify
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const slugify = str => {
   return str.replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
 };
 
-
 /**
-* @function recursiveCountComments
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function recursiveCountComments
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const recursiveCountComments = (comments, countArr) => {
   for (let comment of comments) {
     countArr['count'] += 1;
@@ -138,26 +124,24 @@ const recursiveCountComments = (comments, countArr) => {
   }
 };
 
-
 /**
-* @function countComments
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function countComments
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const countComments = comments => {
   const countArr = { count: 0 };
   recursiveCountComments(comments, countArr);
   return countArr['count'];
 };
 
-
 /**
-* @function Compress
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function Compress
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const Compress = (images, state, handleSetState) => {
   let compressed = [];
 
@@ -185,13 +169,12 @@ export const Compress = (images, state, handleSetState) => {
   }
 };
 
-
 /**
-* @function dFormatter
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function dFormatter
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const dFormatter = str => {
   const date = new Date(str);
 
@@ -240,13 +223,12 @@ export function nFormatter(num) {
   return num;
 }
 
-
 /**
-* @function parseComments
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function parseComments
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const parseComments = comments => {
   for (let each_comment of comments) {
     const mentions = each_comment.text.match(/\B@[a-z0-9_.-]+/gi);
@@ -264,13 +246,12 @@ export const parseComments = comments => {
   }
 };
 
-
 /**
-* @function tempAddComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function tempAddComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const tempAddComment = (comment, comments, parent_id) => {
   for (let each_comment of comments) {
     if (each_comment.id === parent_id) {
@@ -282,13 +263,12 @@ export const tempAddComment = (comment, comments, parent_id) => {
   }
 };
 
-
 /**
-* @function tempDeleteComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function tempDeleteComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const tempDeleteComment = (comments, comment_id) => {
   for (let index = 0; index < comments.length; index++) {
     if (Number(comments[index].id) === Number(comment_id)) {
@@ -300,21 +280,38 @@ export const tempDeleteComment = (comments, comment_id) => {
   }
 };
 
+/**
+ * @function calculateLabelWidth
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const calculateLabelWidth = (text, document) => {
+  if (text?.length) {
+    let label = document.evaluate(
+      `//label[text()='${text}']`,
+      document,
+      null,
+      0,
+      null,
+    );
+    label = label?.iterateNext();
+
+    let label_width = label?.offsetWidth;
+    return label_width ? label_width : text?.length;
+  } else {
+    return;
+  }
+};
 
 /**
-* @function calculateLabelWidth
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
-export const calculateLabelWidth=(text, document)=>{
-  if(text?.length){
-  let label = document.evaluate(`//label[text()='${text}']`, document, null, 0, null );
-  label = label?.iterateNext();
-  
-  let label_width = label?.offsetWidth;
-  return label_width ? label_width : text?.length;
-  }else{
-      return;
-  }
-}
+ * @function isBaseTag
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @description used to know if a creator tag is base tag or not.
+ * @param {String} tag - name of tag.
+ * @returns {boolean}
+ */
+export const isBaseTag = tag => {
+  return BASE_TAGS.includes(tag);
+};
