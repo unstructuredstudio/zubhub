@@ -278,7 +278,7 @@ function CreateProject(props) {
                           id="title"
                           name="title"
                           type="text"
-                          onChange={e => handleTextFieldChange(e, props)}
+                          onChange={e => handleTextFieldChange(e, state, props, handleSetState)}
                           onBlur={e => handleTextFieldBlur(e, props)}
                         />
                         <FormHelperText
@@ -357,7 +357,7 @@ function CreateProject(props) {
                           multiline
                           rows={6}
                           rowsMax={6}
-                          onChange={e => handleTextFieldChange(e, props)}
+                          onChange={e => handleTextFieldChange(e, state, props, handleSetState)}
                           onBlur={e => handleTextFieldBlur(e, props)}
                         />
                         <FormHelperText

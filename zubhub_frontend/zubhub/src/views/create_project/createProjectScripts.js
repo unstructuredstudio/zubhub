@@ -56,9 +56,15 @@ export const getCategories = props => {
 * 
 * @todo - describe function's signature
 */
-export const handleTextFieldChange = (e, props) => {
+let timer = null;
+const timeoutConst = 5000;
+export const handleTextFieldChange = (e, state, props, handleSetState) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
+  clearTimeout(timer);
+  timer = setTimeout(function(){
+    uploadProject(state, props, handleSetState);
+  }, timeoutConst);
 };
 
 
