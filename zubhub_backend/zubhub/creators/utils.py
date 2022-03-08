@@ -246,18 +246,18 @@ def send_notification(users, contexts, template_name):
     for user, context in zip(users, contexts):
         user_setting = Setting.objects.get(creator=user)
 
-        if user_setting.contact == Setting.WHATSAPP:
+        if user.phone and user_setting.contact == Setting.WHATSAPP:
             context.update({"phone": user.phone})
             send_whatsapp(
                 phone=user.phone,
                 template_name=template_name,
                 ctx=context)
 
-        if user_setting.contact == Setting.EMAIL:
+        if user.email and user_setting.contact == Setting.EMAIL:
             context.update({"email": user.email})
             email_contexts.append(context)
 
-        if user_setting.contact == Setting.SMS:
+        if user.phone and user_setting.contact == Setting.SMS:
             context.update({"phone": user.phone})
             sms_contexts.append(context)
 
