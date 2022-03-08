@@ -7,10 +7,11 @@ from creators.models import Creator
 
 class Notification(models.Model):
     class Type(models.IntegerChoices):
-        CLAP = 1
-        COMMENT = 2
-        SAVE = 3
+        BOOKMARK = 1
+        CLAP = 2
+        COMMENT = 3
         FOLLOW = 4
+        FOLLOWING_PROJECT = 5
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)

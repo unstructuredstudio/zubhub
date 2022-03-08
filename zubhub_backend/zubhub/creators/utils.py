@@ -1,9 +1,14 @@
 from datetime import timedelta
+from typing import List, Set, Dict
 from django.core.exceptions import FieldDoesNotExist
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp
+from creators.models import Setting
+from notifications.models import Notification
+from notifications.utils import push_notification
+from creators.models import Creator
 
 try:
     from allauth.account.adapter import get_adapter
@@ -237,8 +242,25 @@ def activity_notification(activities, **kwargs):
         )
 
 
-def send_notification(users, contexts, template_name):
-    from .models import Setting
+enabled_notification_channels: Dict[Notification.Type, Set[int]] = {
+    Notification.Type.BOOKMARK: set(),
+    Notification.Type.CLAP: set(),
+    Notification.Type.COMMENT: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS},
+    Notification.Type.FOLLOW: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS},
+    Notification.Type.FOLLOWING_PROJECT: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS},
+}
+
+
+def get_notification_url(source: Creator, type: Notification.Type) -> str:
+    if type == Notification.Type.CLAP:
+        return ''
+    if type == Notification.Type.
+
+
+def get_notification_template_name(contact_method: Setting, notification_type: Notification.Type) -> str:
+
+
+def send_notification(users: List[Creator], source: Creator, contexts, type: Notification.Type) -> None:
 
     email_contexts = []
     sms_contexts = []
@@ -248,18 +270,20 @@ def send_notification(users, contexts, template_name):
 
         if user.phone and user_setting.contact == Setting.WHATSAPP:
             context.update({"phone": user.phone})
-            send_whatsapp(
+            send_whatsapp.delay(
                 phone=user.phone,
                 template_name=template_name,
                 ctx=context)
 
-        if user.email and user_setting.contact == Setting.EMAIL:
+        if user.email and user_setting.contact == Setting.EMAIL and Setting.EMAIL in enabled_notification_channels[type]:
             context.update({"email": user.email})
             email_contexts.append(context)
 
         if user.phone and user_setting.contact == Setting.SMS:
             context.update({"phone": user.phone})
             sms_contexts.append(context)
+
+        push_notification(user, source, notification_type, link)
 
     if len(email_contexts) > 0:
         send_mass_email.delay(
