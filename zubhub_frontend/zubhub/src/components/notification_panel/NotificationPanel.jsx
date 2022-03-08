@@ -30,6 +30,9 @@ const NotificationPanel = ({ open, anchorEl, notif }) => {
         {newNotificationsLength > 0 && (
           <h2 className={classes.panelSubheadingTextStyle}>New</h2>
         )}
+        <div>
+          <Notification notification={notif}></Notification>
+        </div>
         {earlierNotificationsLength > 0 && (
           <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>
         )}
@@ -57,7 +60,6 @@ const NotificationPanel = ({ open, anchorEl, notif }) => {
           >
             All
           </NotificationPanelButton>
-          <Notification notification={notif}></Notification>
           <NotificationPanelButton
             selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
             onClick={() =>

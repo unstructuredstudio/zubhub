@@ -5,11 +5,13 @@ const styles = theme => ({
         width: '100%',
         height:'80px',
         cursor: 'pointer',
-        flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#FFFFFF',
         paddingTop: '0px',
         paddingBottom: '0px',
+        paddingLeft: '2.5%',
+        paddingRight: '5%',
+        margin: '0px',
         justifyContent: 'space-evenly',
         '&:hover': {
             '& $viewDot': {
@@ -34,8 +36,7 @@ const styles = theme => ({
         height: '56px !important',
         borderRadius: '50%',
         border: '2px solid #E4E4E4',
-        margin: '0px',
-        padding: '0px',
+        marginRight: '5%',
     },
     message: {
         fontSize: '16px',
@@ -43,6 +44,11 @@ const styles = theme => ({
         color: '#000000',
         marginBottom: '0px',
         textDecoration: 'none',
+    },
+    text: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '80%',
     },
     time: {
         marginTop: '0px',
@@ -52,9 +58,13 @@ const styles = theme => ({
     viewDot: {
         backgroundColor: '#00B8C4',
         borderRadius: '50%',
-        width: '14px',
-        height: '14px',
-        marginLeft: '15%',
+        width: '14px !important',
+        height: '14px !important',
+    },
+    unviewed: {
+        backgroundColor: 'transparent',
+        width: '14px !important',
+        height: '14px !important',
     },
 });
 

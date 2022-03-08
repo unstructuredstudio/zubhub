@@ -9,11 +9,14 @@ const NOTIFICATION_TYPE = {
   ALL: 'ALL',
   CLAP: 'CLAP',
   COMMENT: 'COMMENT',
-  SAVE: 'SAVE',
+  BOOKMARK: 'BOOKMARK',
   FOLLOW: 'FOLLOW',
 };
 
 const Notification = ({ notification }) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const [viewed, setViewed] = useState(notification.viewed);
   const getNotification = () => {
     if (notification.type == 'CLAP') {
       return (
@@ -22,51 +25,51 @@ const Notification = ({ notification }) => {
           {notification.projectName}"
         </>
       );
+    } else if (notification.type == 'COMMENT') {
+      return (
+        <>
+          <strong>{notification.source.username}</strong> commented on "
+          {notification.projectName}!"
+        </>
+      );
+    } else if (notification.type == 'BOOKMARK') {
+      return (
+        <>
+          <strong>{notification.source.username}</strong> bookmarked "
+          {notification.projectName}!"
+        </>
+      );
+    } else {
+      return (
+        <>
+          <strong>{notification.source.username}</strong> started following you!
+        </>
+      );
     }
   };
-  const classes = useStyles();
-  const history = useHistory();
+
   return (
     <>
-      {notification.type == NOTIFICATION_TYPE.FOLLOW && (
-        <div
-          className={classes.notificationStyle}
-          display="flex"
-          onClick={() => history.push(notification.user)}
-        >
-          <img
-            className={classes.image}
-            src={notification.picture}
-            alt="user- profile"
-          />
+      <div
+        className={classes.notificationStyle}
+        onClick={() => {
+          history.push(notification.link);
+          if (viewed == false) setViewed((viewed = true));
+        }}
+      >
+        <img
+          className={classes.image}
+          src={notification.source.avatar}
+          alt="user-profile"
+        />
 
-          <p className={classes.message}>{notification.message}</p>
-
-          {!notification.viewed && <div className={classes.viewDot}></div>}
+        <div className={classes.text}>
+          <p className={classes.message}>{getNotification()}</p>
+          <p className={classes.time}>{notification.time}</p>
         </div>
-      )}
-
-      {notification.type != NOTIFICATION_TYPE.FOLLOW && (
-        <div
-          className={classes.notificationStyle}
-          display="flex"
-          onClick={() =>
-            history.push('creator/' + notification.source.username)
-          }
-        >
-          <img
-            className={classes.image}
-            src={notification.source.avatar}
-            alt="user-profile"
-          />
-
-          <div className={classes.text}>
-            <p className={classes.message}>{getNotification()}</p>
-            <p className={classes.time}>{notification.time}</p>
-          </div>
-          {!notification.viewed && <div className={classes.viewDot}></div>}
-        </div>
-      )}
+        {!viewed && <div className={classes.viewDot}></div>}
+        {viewed && <div className={classes.unviewed}></div> }
+      </div>
     </>
   );
 };

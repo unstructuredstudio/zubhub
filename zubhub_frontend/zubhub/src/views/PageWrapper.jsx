@@ -126,9 +126,8 @@ function PageWrapper(props) {
       members_count: null,
       role: 'creator',
     },
-    project: 'https://youtube.com',
-    viewed: false,
-    type: 'CLAP',
+    link: 'https://youtube.com',
+    viewed: true,
     time: '5 minutes ago',
   };
 
