@@ -57,7 +57,8 @@ function UserDrafts(props) {
   const username = props.match.params.username;
 //   if (loading) {
 //     return <LoadingPage />;
-//   } else if (drafts && drafts.length > 0) {
+//   } else
+    if (drafts && drafts.length > 0) {
     return (
       <Box className={classes.root}>
         <Container className={classes.mainContainerStyle}>
@@ -117,9 +118,9 @@ function UserDrafts(props) {
         </Container>
       </Box>
     );
-//   } else {
-//     return <ErrorPage error={t('userDrafts.errors.noUserDrafts')} />;
-//   }
+  } else {
+    return <ErrorPage error={t('userDrafts.errors.noUserDrafts')} />;
+  }
 }
 
 UserDrafts.propTypes = {
