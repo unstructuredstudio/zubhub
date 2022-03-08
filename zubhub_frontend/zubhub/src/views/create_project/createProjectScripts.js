@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 import { s3 as DO, doConfig, Compress, slugify} from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 
-
 /**
 * @constant vars
 * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -58,11 +57,12 @@ export const getCategories = props => {
 */
 let timer = null;
 const timeoutConst = 5000;
-export const handleTextFieldChange = (e, state, props, handleSetState) => {
+export const handleTextFieldChange = (e, state, props, debounce, handleSetState) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
   clearTimeout(timer);
   timer = setTimeout(function(){
+    // props.values contain the actual form data 
     uploadProject(state, props, handleSetState);
   }, timeoutConst);
 };

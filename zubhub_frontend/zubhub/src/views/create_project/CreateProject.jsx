@@ -73,16 +73,17 @@ import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import commonStyles from '../../assets/js/styles';
 
+import { debounce } from 'lodash';
+import { useCallback } from 'react';
+
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
-
-
 /**
-* @function buildMaterialUsedNodes
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function buildMaterialUsedNodes
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
   if (props.values['materials_used']) {
     return props.values['materials_used']
@@ -115,13 +116,12 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
   }
 };
 
-
 /**
-* @function CreateProject View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function CreateProject View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function CreateProject(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -141,6 +141,15 @@ function CreateProject(props) {
   };
 
   const [state, setState] = React.useState({ ...vars.default_state });
+
+  const debounceTime = 1;
+  const debouncedSave = useCallback(() => {
+    console.log('uwughg');
+    debounce(() => console.log("hello hello!"), 360, {
+      'leading': false,
+      'trailing': true
+    });
+  }, []);
 
   React.useEffect(() => {
     if (props.match.params.id) {
@@ -278,7 +287,15 @@ function CreateProject(props) {
                           id="title"
                           name="title"
                           type="text"
-                          onChange={e => handleTextFieldChange(e, state, props, handleSetState)}
+                          onChange={e =>
+                            handleTextFieldChange(
+                              e,
+                              state,
+                              props,
+                              debouncedSave(),
+                              handleSetState,
+                            )
+                          }
                           onBlur={e => handleTextFieldBlur(e, props)}
                         />
                         <FormHelperText
@@ -357,7 +374,15 @@ function CreateProject(props) {
                           multiline
                           rows={6}
                           rowsMax={6}
-                          onChange={e => handleTextFieldChange(e, state, props, handleSetState)}
+                          onChange={e =>
+                            handleTextFieldChange(
+                              e,
+                              state,
+                              props,
+                              debouncedSave(),
+                              handleSetState,
+                            )
+                          }
                           onBlur={e => handleTextFieldBlur(e, props)}
                         />
                         <FormHelperText

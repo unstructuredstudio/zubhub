@@ -48,18 +48,18 @@ export const createProject = props => {
 * @todo - describe function's signature
 */
 export const shouldUploadToLocal = args => {
-   return ()=> {
-     return API.shouldUploadToLocal(args).then(res=> {
-       if(res.local === undefined){
-          throw new Error();
-       }else{
-         return res;
-       }
-     })
-     .catch(()=>{
-         toast.warning(args.t('createProject.errors.unexpected'))
-     })
-   }
+  return () => {
+    return API.shouldUploadToLocal(args).then(res => {
+      if (res.local === undefined) {
+        throw new Error();
+      } else {
+        return res;
+      }
+    })
+      .catch(() => {
+        toast.warning(args.t('createProject.errors.unexpected'))
+      })
+  }
 };
 
 
@@ -83,6 +83,20 @@ export const updateProject = props => {
   };
 };
 
+
+// Autosave Update 
+export const autoSaveUpdateProject = props => {
+  return () => {
+    return API.updateProject(props).then(res => {
+      if (!res.id) {
+        throw new Error(JSON.stringify(res));
+      } else {
+        // change this into message display 
+        toast.success(props.t('createProject.updateToastSuccess'));
+      }
+    });
+  };
+};
 
 
 /**
@@ -530,8 +544,8 @@ export const getHero = args => {
   return dispatch => {
     return API.getHero()
       .then(res => {
-          dispatch(setHero(res));
-          return { loading: false };
+        dispatch(setHero(res));
+        return { loading: false };
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
