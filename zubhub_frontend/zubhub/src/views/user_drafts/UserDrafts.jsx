@@ -22,8 +22,8 @@ import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
-import Project from '../../components/project/Project';
-import styles from '../../assets/js/styles/views/user_projects/userProjectsStyles';
+import Draft from '../../components/draft/Draft';
+import styles from '../../assets/js/styles/views/user_drafts/userDraftsStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -124,7 +124,7 @@ function UserDrafts(props) {
 
 UserDrafts.propTypes = {
   auth: PropTypes.object.isRequired,
-  getUserProjects: PropTypes.func.isRequired,
+  getUserDrafts: PropTypes.func.isRequired,
   toggleLike: PropTypes.func.isRequired,
   toggleSave: PropTypes.func.isRequired,
 };
@@ -137,7 +137,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getUserProjects: args => {
+    getUserDrafts: args => {
       return dispatch(ProjectActions.getUserProjects(args));
     },
     toggleLike: args => {

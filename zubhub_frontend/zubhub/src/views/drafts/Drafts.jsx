@@ -38,7 +38,7 @@ const useCommonStyles = makeStyles(commonStyles);
 * 
 * @todo - describe function's signature
 */
-function Projects(props) {
+function Drafts(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
@@ -183,4 +183,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Projects);
+export default connect(mapStateToProps, mapDispatchToProps)(Drafts);
