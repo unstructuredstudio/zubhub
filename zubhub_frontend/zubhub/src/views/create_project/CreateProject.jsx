@@ -73,8 +73,10 @@ import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import commonStyles from '../../assets/js/styles';
 
-import { debounce } from 'lodash';
 import { useCallback } from 'react';
+
+// import { debounce } from 'lodash';
+const _ = require('lodash');
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -141,11 +143,16 @@ function CreateProject(props) {
   };
 
   const [state, setState] = React.useState({ ...vars.default_state });
+  const [saved, setSaved] = React.useState(false);
+  const [time, setTime] = React.useState("");
 
-  const debounceTime = 1;
+  React.useEffect(()=>{
+    setTime(new Date().toLocaleTimeString());
+  },saved)
+
   const debouncedSave = useCallback(() => {
     console.log('uwughg');
-    debounce(() => console.log("hello hello!"), 360, {
+    _.debounce(() => console.log("hello hello!"), 1, {
       'leading': false,
       'trailing': true
     });
@@ -185,6 +192,7 @@ function CreateProject(props) {
     if (obj) {
       Promise.resolve(obj).then(obj => {
         setState(state => ({ ...state, ...obj }));
+        setTime(new Date().toLocaleTimeString());
       });
     }
   };
@@ -209,6 +217,7 @@ function CreateProject(props) {
           <Card className={classes.cardStyle}>
             <CardActionArea>
               <CardContent>
+              <p className={classes.pStyle}>Autosaved at {time}</p>
                 <form
                   className="project-create-form"
                   name="create_project"
@@ -1139,6 +1148,7 @@ CreateProject.propTypes = {
   suggestTags: PropTypes.func.isRequired,
   createProject: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
+  autoSaveUpdateProject: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -1166,6 +1176,9 @@ const mapDispatchToProps = dispatch => {
     },
     updateProject: props => {
       return dispatch(ProjectActions.updateProject(props));
+    },
+    autoSaveUpdateProject: props => {
+      return dispatch(ProjectActions.autoSaveUpdateProject(props));
     },
     shouldUploadToLocal: args => {
       return dispatch(ProjectActions.shouldUploadToLocal(args));

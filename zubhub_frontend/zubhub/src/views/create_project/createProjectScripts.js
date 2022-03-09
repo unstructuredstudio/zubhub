@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import * as Yup from 'yup';
-import { s3 as DO, doConfig, Compress, slugify} from '../../assets/js/utils/scripts';
+import { s3 as DO, doConfig, Compress, slugify } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 /**
@@ -61,9 +61,10 @@ export const handleTextFieldChange = (e, state, props, debounce, handleSetState)
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
   clearTimeout(timer);
-  timer = setTimeout(function(){
+  timer = setTimeout(function () {
     // props.values contain the actual form data 
-    uploadProject(state, props, handleSetState);
+    console.log("time out!");
+    autoSaveProject(state, props, handleSetState);
   }, timeoutConst);
 };
 
@@ -241,13 +242,11 @@ export const removeTag = (_, props, value) => {
 * @todo - describe function's signature
 */
 export const handleImageFieldChange = (refs, props, state, handleSetState) => {
-  refs.image_count_el.current.innerText = `${
-    refs.image_el.current.files.length
-  } ${props.t(
-    `createProject.inputs.${
-      refs.image_el.current.files.length < 2 ? 'image' : 'images'
-    }`,
-  )}`;
+  refs.image_count_el.current.innerText = `${refs.image_el.current.files.length
+    } ${props.t(
+      `createProject.inputs.${refs.image_el.current.files.length < 2 ? 'image' : 'images'
+      }`,
+    )}`;
 
   props.setFieldValue('project_images', refs.image_el.current).then(errors => {
     if (!errors['project_images']) {
@@ -499,6 +498,58 @@ export const uploadProject = async (state, props, handleSetState) => {
   vars.upload_in_progress = false; //flag to prevent attempting to upload a project when an upload is already in progress
 };
 
+export const autoSaveProject = async (state, props, handleSetState) => {
+  const { media_upload } = state;
+  media_upload.upload_dialog = false;
+  handleSetState({ media_upload });
+
+  const materials_used = props.values['materials_used']
+    ?.split(',')
+    .filter(value => (value ? true : false))
+    .join(',');
+
+  const tags = props.values['tags']
+    ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
+    : [];
+
+  const autosave = props.match.params.id
+    ? props.autoSaveUpdateProject
+    : props.createProject;
+
+  await autosave({
+    ...props.values,
+    materials_used,
+    tags,
+    id: props.match.params.id,
+    token: props.auth.token,
+    images: state.media_upload.uploaded_images_url,
+    video: state.media_upload.uploaded_videos_url[0]
+      ? state.media_upload.uploaded_videos_url[0]
+      : '',
+    category: props.values.category,
+    t: props.t,
+  }).catch(error => {
+    const messages = JSON.parse(error.message);
+    if (typeof messages === 'object') {
+      const server_errors = {};
+      Object.keys(messages).forEach(key => {
+        if (key === 'non_field_errors') {
+          server_errors['non_field_errors'] = messages[key][0];
+        } else {
+          server_errors[key] = messages[key][0];
+        }
+      });
+      props.setStatus({ ...server_errors });
+    } else {
+      props.setStatus({
+        non_field_errors: props.t('createProject.errors.unexpected'),
+      });
+    }
+  });
+
+  vars.upload_in_progress = false; //flag to prevent attempting to upload a project when an upload is already in progress
+};
+
 
 
 /**
@@ -507,32 +558,32 @@ export const uploadProject = async (state, props, handleSetState) => {
 * 
 * @todo - describe function's signature
 */
-export const uploadVideo = async(video, state, props, handleSetState) => {
+export const uploadVideo = async (video, state, props, handleSetState) => {
   if (
     typeof video === 'string' &&
     video.match(
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
     )
   ) {
-      const { media_upload } = state;
+    const { media_upload } = state;
 
-      media_upload.uploaded_videos_url = [video];
-      media_upload.successful_uploads = media_upload.successful_uploads + 1;
+    media_upload.uploaded_videos_url = [video];
+    media_upload.successful_uploads = media_upload.successful_uploads + 1;
 
-      handleSetState({ media_upload });
+    handleSetState({ media_upload });
   } else {
-      const args = {
-        t: props.t,
-        token: props.auth.token
-      };
+    const args = {
+      t: props.t,
+      token: props.auth.token
+    };
 
-      const res = await props.shouldUploadToLocal(args);
+    const res = await props.shouldUploadToLocal(args);
 
-      if(res && res.local === true){
-        uploadVideoToLocal(video, state, props, handleSetState);
-      }else if(res && res.local === false){
-        uploadVideoToCloudinary(video, state, props, handleSetState);
-      };
+    if (res && res.local === true) {
+      uploadVideoToLocal(video, state, props, handleSetState);
+    } else if (res && res.local === false) {
+      uploadVideoToCloudinary(video, state, props, handleSetState);
+    };
   }
 };
 
@@ -546,18 +597,18 @@ export const uploadVideo = async(video, state, props, handleSetState) => {
 */
 export const uploadVideoToLocal = (video, state, props, handleSetState) => {
   let url = process.env.REACT_APP_NODE_ENV === 'production'
-            ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
-            : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
+    ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
+    : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
   url = url + "upload-file-to-local/";
 
   let key = nanoid();
-  key = key.slice(0, Math.floor(key.length/3));
+  key = key.slice(0, Math.floor(key.length / 3));
   key = `videos/${slugify(props.auth.username)}-${slugify(video.name)}-${key}`;
 
   const formData = new FormData();
   formData.append('file', video);
   formData.append('key', key);
-  
+
   const um = new UploadMedia("video", url, formData, state, props, handleSetState);
   um.upload();
 };
@@ -571,44 +622,44 @@ export const uploadVideoToLocal = (video, state, props, handleSetState) => {
 */
 export const uploadVideoToCloudinary = async (video, state, props, handleSetState) => {
 
-    const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
+  const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
 
-    const upload_preset =
-      process.env.REACT_APP_NODE_ENV === 'production'
-        ? process.env.REACT_APP_VIDEO_UPLOAD_PRESET_NAME
-        : process.env.REACT_APP_DEV_VIDEO_UPLOAD_PRESET_NAME;
+  const upload_preset =
+    process.env.REACT_APP_NODE_ENV === 'production'
+      ? process.env.REACT_APP_VIDEO_UPLOAD_PRESET_NAME
+      : process.env.REACT_APP_DEV_VIDEO_UPLOAD_PRESET_NAME;
 
-    const params = {
-      upload_preset,
-      username: props.auth.username,
-      filename: video.name,
-      t: props.t,
-      token: props.auth.token,
-    };
+  const params = {
+    upload_preset,
+    username: props.auth.username,
+    filename: video.name,
+    t: props.t,
+    token: props.auth.token,
+  };
 
-    const sig_res = await props.getSignature(params);
+  const sig_res = await props.getSignature(params);
 
-    if (typeof sig_res === 'object') {
+  if (typeof sig_res === 'object') {
 
-      const formData = new FormData();
-      formData.append('file', video);
-      formData.append('public_id', sig_res.public_id);
-      formData.append('upload_preset', upload_preset);
-      formData.append('api_key', sig_res.api_key);
-      formData.append('timestamp', sig_res.timestamp);
-      formData.append('signature', sig_res.signature);
-     
-      const um = new UploadMedia("video", url, formData, state, props, handleSetState);
-      um.upload();
+    const formData = new FormData();
+    formData.append('file', video);
+    formData.append('public_id', sig_res.public_id);
+    formData.append('upload_preset', upload_preset);
+    formData.append('api_key', sig_res.api_key);
+    formData.append('timestamp', sig_res.timestamp);
+    formData.append('signature', sig_res.signature);
 
-    } else {
-      const { media_upload } = state;
-      media_upload.upload_dialog = false;
+    const um = new UploadMedia("video", url, formData, state, props, handleSetState);
+    um.upload();
 
-      handleSetState({
-        media_upload,
-      });
-    }
+  } else {
+    const { media_upload } = state;
+    media_upload.upload_dialog = false;
+
+    handleSetState({
+      media_upload,
+    });
+  }
 };
 
 
@@ -618,20 +669,20 @@ export const uploadVideoToCloudinary = async (video, state, props, handleSetStat
 * 
 * @todo - describe function's signature
 */
-export const uploadImage = async(image, state, props, handleSetState) => {
+export const uploadImage = async (image, state, props, handleSetState) => {
   debugger;
   const args = {
     t: props.t,
     token: props.auth.token
   };
 
-   const res  = await props.shouldUploadToLocal(args);
+  const res = await props.shouldUploadToLocal(args);
 
-   if(res && res.local === true){
+  if (res && res.local === true) {
     uploadImageToLocal(image, state, props, handleSetState);
-   }else if(res && res.local === false){
+  } else if (res && res.local === false) {
     uploadImageToDO(image, state, props, handleSetState);
-   }
+  }
 
 };
 
@@ -645,8 +696,8 @@ export const uploadImage = async(image, state, props, handleSetState) => {
 export const uploadImageToLocal = (image, state, props, handleSetState) => {
 
   let url = process.env.REACT_APP_NODE_ENV === 'production'
-            ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
-            : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
+    ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
+    : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
   url = url + "upload-file-to-local/";
 
   const formData = new FormData();
@@ -760,13 +811,11 @@ export const getProject = (refs, props, state) => {
         }
 
         if (refs.image_count_el.current && obj.project.images.length > 0) {
-          refs.image_count_el.current.innerText = `${
-            obj.project.images.length
-          } ${props.t(
-            `createProject.inputs.${
-              obj.project.images.length < 2 ? 'image' : 'images'
-            }`,
-          )}`;
+          refs.image_count_el.current.innerText = `${obj.project.images.length
+            } ${props.t(
+              `createProject.inputs.${obj.project.images.length < 2 ? 'image' : 'images'
+              }`,
+            )}`;
 
           const files = obj.project.images.map(url => ({
             name: url,
@@ -825,15 +874,15 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
       e.target === refs.video_file_el.current
         ? refs.video_file_el.current
         : e.target === refs.video_el.current.firstChild
-        ? e.target
-        : '';
+          ? e.target
+          : '';
 
     type =
       e.target === refs.video_file_el.current
         ? 'videoFile'
         : e.target === refs.video_el.current.firstChild
-        ? 'videoURL'
-        : null;
+          ? 'videoURL'
+          : null;
   }
 
   props.setStatus({ ...props.status, video: '' });
@@ -1059,101 +1108,101 @@ export const validationSchema = Yup.object().shape({
 * 
 * @todo - describe function's signature
 */
-export class UploadMedia { 
+export class UploadMedia {
 
-    constructor(type, url, formData, state, props, handleSetState) {
-       this.xhr = new XMLHttpRequest();
-       this.type = type;
-       this.url = url;
-       this.formData = formData;
-       this.state = state;
-       this.props = props;
-       this.handleSetState = handleSetState;
-       this.xhr.upload.onload = this.uploadOnLoad;
-       this.xhr.onreadystatechange = this.onReadyStateChange;
-       this.xhr.upload.onerror = this.uploadOnerror;
-       this.xhr.upload.onprogress = this.uploadOnprogress;
+  constructor(type, url, formData, state, props, handleSetState) {
+    this.xhr = new XMLHttpRequest();
+    this.type = type;
+    this.url = url;
+    this.formData = formData;
+    this.state = state;
+    this.props = props;
+    this.handleSetState = handleSetState;
+    this.xhr.upload.onload = this.uploadOnLoad;
+    this.xhr.onreadystatechange = this.onReadyStateChange;
+    this.xhr.upload.onerror = this.uploadOnerror;
+    this.xhr.upload.onprogress = this.uploadOnprogress;
+  };
+
+
+  uploadOnLoad = () => {
+    if (this.xhr.status !== 200 && this.xhr.readyState === 4) {
+      const { media_upload } = this.state;
+      media_upload.upload_dialog = false;
+
+      this.handleSetState({
+        error: this.props.t('createProject.errors.unexpected'),
+        media_upload,
+      });
+    }
+  };
+
+  onReadyStateChange = () => {
+    if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === "video") {
+
+      const data = JSON.parse(this.xhr.response);
+      const secure_url = data.secure_url;
+      const { media_upload } = this.state;
+
+      media_upload.uploaded_videos_url = [secure_url];
+      media_upload.successful_uploads = media_upload.successful_uploads + 1;
+
+      this.handleSetState({ media_upload });
+
+    } else if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === "image") {
+
+      const data = JSON.parse(this.xhr.response);
+      const secure_url = data.Location;
+      const public_id = data.Key;
+      const { media_upload } = this.state;
+
+      media_upload.uploaded_images_url.push({
+        image_url: secure_url,
+        public_id,
+      });
+      media_upload.successful_uploads = media_upload.successful_uploads + 1;
+
+      this.handleSetState({ media_upload });
+
+    }
+  };
+
+  uploadOnerror = e => {
+    const { media_upload } = this.state;
+    media_upload.upload_dialog = false;
+
+    this.handleSetState({
+      error: this.props.t('createProject.errors.unexpected'),
+      media_upload,
+    });
+  };
+
+  uploadOnprogress = e => {
+    const progress = Math.round((e.loaded * 100.0) / e.total);
+    const { media_upload } = this.state;
+    media_upload.upload_info[this.formData.get("file").name] = progress;
+
+    let total = 0;
+    Object.keys(media_upload.upload_info).forEach(each => {
+      total = total + media_upload.upload_info[each];
+    });
+
+    total = total / Object.keys(media_upload.upload_info).length;
+    media_upload.upload_percent = total;
+
+    this.handleSetState({ media_upload });
+  };
+
+  upload = () => {
+    this.xhr.open('POST', this.url);
+
+    if (!this.url.startsWith(process.env.REACT_APP_VIDEO_UPLOAD_URL)) {
+      this.xhr.xsrfCookieName = 'csrftoken';
+      this.xhr.xsrfHeaderName = 'X-CSRFToken';
+      this.xhr.setRequestHeader("Authorization", `Token ${this.props.auth.token}`);
+      this.xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     };
 
-  
-      uploadOnLoad = () =>{
-        if (this.xhr.status !== 200 && this.xhr.readyState === 4) {
-          const { media_upload } = this.state;
-          media_upload.upload_dialog = false;
-
-          this.handleSetState({
-            error: this.props.t('createProject.errors.unexpected'),
-            media_upload,
-          });
-        }
-      };
-  
-      onReadyStateChange = () => {
-        if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === "video") {
-
-          const data = JSON.parse(this.xhr.response);
-          const secure_url = data.secure_url;
-          const { media_upload } = this.state;
-
-          media_upload.uploaded_videos_url = [secure_url];
-          media_upload.successful_uploads = media_upload.successful_uploads + 1;
-
-          this.handleSetState({ media_upload });
-
-        } else if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === "image"){
-
-          const data = JSON.parse(this.xhr.response);
-          const secure_url = data.Location;
-          const public_id = data.Key;
-          const { media_upload } = this.state;
-  
-          media_upload.uploaded_images_url.push({
-            image_url: secure_url,
-            public_id,
-          });
-          media_upload.successful_uploads = media_upload.successful_uploads + 1;
-  
-          this.handleSetState({ media_upload });
-
-        }
-      };
-  
-      uploadOnerror = e => {
-          const { media_upload } = this.state;
-          media_upload.upload_dialog = false;
-  
-          this.handleSetState({
-            error: this.props.t('createProject.errors.unexpected'),
-            media_upload,
-          });
-        };
-  
-      uploadOnprogress = e => {
-          const progress = Math.round((e.loaded * 100.0) / e.total);
-          const { media_upload } = this.state;
-          media_upload.upload_info[this.formData.get("file").name] = progress;
-  
-          let total = 0;
-          Object.keys(media_upload.upload_info).forEach(each => {
-            total = total + media_upload.upload_info[each];
-          });
-  
-          total = total / Object.keys(media_upload.upload_info).length;
-          media_upload.upload_percent = total;
-  
-          this.handleSetState({ media_upload });
-        };
-
-        upload = () => {
-          this.xhr.open('POST', this.url);
-
-          if(!this.url.startsWith(process.env.REACT_APP_VIDEO_UPLOAD_URL)){
-            this.xhr.xsrfCookieName =  'csrftoken';
-            this.xhr.xsrfHeaderName = 'X-CSRFToken';
-            this.xhr.setRequestHeader("Authorization",`Token ${this.props.auth.token}`);
-            this.xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
-          };
-
-          this.xhr.send(this.formData)
-        }
-    };
+    this.xhr.send(this.formData)
+  }
+};

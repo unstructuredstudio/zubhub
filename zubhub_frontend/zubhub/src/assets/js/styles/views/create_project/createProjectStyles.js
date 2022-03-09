@@ -249,6 +249,10 @@ const styles = theme => ({
       fontSize: '1.2rem',
     },
   },
+  pStyle:{
+    textAlign:"right",
+    color:"#ff0000",
+  },
 });
 
 export default styles;

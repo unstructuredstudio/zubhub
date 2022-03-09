@@ -91,8 +91,7 @@ export const autoSaveUpdateProject = props => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        // change this into message display 
-        toast.success(props.t('createProject.updateToastSuccess'));
+        // toast.success(props.t('createProject.updateToastSuccess'));
       }
     });
   };
