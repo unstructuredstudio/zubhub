@@ -284,9 +284,9 @@ def send_notification(users: List[Creator], source: Creator, contexts,
 
         push_notification(user, source, notification_type, link)
 
-    if len(email_contexts) > 0 and is_valid_setting(Setting.EMAIL, notification_type):
+    if len(email_contexts) > 0:
         send_mass_email.delay(template_name=get_notification_template_name(Setting.EMAIL, notification_type), ctxs=email_contexts)
-    if len(sms_contexts) > 0 and is_valid_setting(Setting.SMS, notification_type):
+    if len(sms_contexts) > 0:
         send_mass_text.delay(template_name=get_notification_template_name(Setting.SMS, notification_type), ctxs=sms_contexts)
 
 
