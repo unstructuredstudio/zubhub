@@ -57,14 +57,14 @@ export const getCategories = props => {
 */
 let timer = null;
 const timeoutConst = 5000;
-export const handleTextFieldChange = (e, state, props, debounce, handleSetState) => {
+export const handleTextFieldChange = (e, state, props, handleSetState) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
   clearTimeout(timer);
   timer = setTimeout(function () {
     // props.values contain the actual form data 
     console.log("time out!");
-    autoSaveProject(state, props, handleSetState);
+    uploadProject(state, props, handleSetState, false);
   }, timeoutConst);
 };
 
@@ -364,7 +364,7 @@ export const handleVideoSelectDone = async (refs, props, state) => {
 */
 export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();
-
+  console.log(props,state);
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
@@ -446,10 +446,12 @@ export const initUpload = (e, state, props, handleSetState) => {
 * 
 * @todo - describe function's signature
 */
-export const uploadProject = async (state, props, handleSetState) => {
+export const uploadProject = async (state, props, handleSetState, redirect = true) => {
   const { media_upload } = state;
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
+
+  console.log(props, state);
 
   const materials_used = props.values['materials_used']
     ?.split(',')
@@ -464,7 +466,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     ? props.updateProject
     : props.createProject;
 
-  await create_or_update({
+  const data = {
     ...props.values,
     materials_used,
     tags,
@@ -476,7 +478,11 @@ export const uploadProject = async (state, props, handleSetState) => {
       : '',
     category: props.values.category,
     t: props.t,
-  }).catch(error => {
+  };
+  console.log("data", data);
+
+  await create_or_update(data, redirect).catch(error => {
+    console.log(error);
     const messages = JSON.parse(error.message);
     if (typeof messages === 'object') {
       const server_errors = {};
@@ -497,60 +503,6 @@ export const uploadProject = async (state, props, handleSetState) => {
 
   vars.upload_in_progress = false; //flag to prevent attempting to upload a project when an upload is already in progress
 };
-
-export const autoSaveProject = async (state, props, handleSetState) => {
-  const { media_upload } = state;
-  media_upload.upload_dialog = false;
-  handleSetState({ media_upload });
-
-  const materials_used = props.values['materials_used']
-    ?.split(',')
-    .filter(value => (value ? true : false))
-    .join(',');
-
-  const tags = props.values['tags']
-    ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
-    : [];
-
-  const autosave = props.match.params.id
-    ? props.autoSaveUpdateProject
-    : props.createProject;
-
-  await autosave({
-    ...props.values,
-    materials_used,
-    tags,
-    id: props.match.params.id,
-    token: props.auth.token,
-    images: state.media_upload.uploaded_images_url,
-    video: state.media_upload.uploaded_videos_url[0]
-      ? state.media_upload.uploaded_videos_url[0]
-      : '',
-    category: props.values.category,
-    t: props.t,
-  }).catch(error => {
-    const messages = JSON.parse(error.message);
-    if (typeof messages === 'object') {
-      const server_errors = {};
-      Object.keys(messages).forEach(key => {
-        if (key === 'non_field_errors') {
-          server_errors['non_field_errors'] = messages[key][0];
-        } else {
-          server_errors[key] = messages[key][0];
-        }
-      });
-      props.setStatus({ ...server_errors });
-    } else {
-      props.setStatus({
-        non_field_errors: props.t('createProject.errors.unexpected'),
-      });
-    }
-  });
-
-  vars.upload_in_progress = false; //flag to prevent attempting to upload a project when an upload is already in progress
-};
-
-
 
 /**
 * @function uploadVideo

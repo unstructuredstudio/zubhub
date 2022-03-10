@@ -249,9 +249,13 @@ const styles = theme => ({
       fontSize: '1.2rem',
     },
   },
-  pStyle:{
+  autoSaveTime:{
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '2.5rem',
+    },
     textAlign:"right",
     color:"#ff0000",
+    width:"auto",
   },
 });
 

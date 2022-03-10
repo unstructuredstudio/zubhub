@@ -76,7 +76,7 @@ import commonStyles from '../../assets/js/styles';
 import { useCallback } from 'react';
 
 // import { debounce } from 'lodash';
-const _ = require('lodash');
+// const _ = require('lodash');
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -143,20 +143,16 @@ function CreateProject(props) {
   };
 
   const [state, setState] = React.useState({ ...vars.default_state });
-  const [saved, setSaved] = React.useState(false);
-  const [time, setTime] = React.useState("");
+  const [saved, setSaved] = React.useState('none');
+  const [time, setTime] = React.useState('');
 
-  React.useEffect(()=>{
-    setTime(new Date().toLocaleTimeString());
-  },saved)
-
-  const debouncedSave = useCallback(() => {
-    console.log('uwughg');
-    _.debounce(() => console.log("hello hello!"), 1, {
-      'leading': false,
-      'trailing': true
-    });
-  }, []);
+  // const debouncedSave = useCallback(() => {
+  //   console.log('uwughg');
+  //   _.debounce(() => console.log('hello hello!'), 1, {
+  //     leading: false,
+  //     trailing: true,
+  //   });
+  // }, []);
 
   React.useEffect(() => {
     if (props.match.params.id) {
@@ -192,10 +188,14 @@ function CreateProject(props) {
     if (obj) {
       Promise.resolve(obj).then(obj => {
         setState(state => ({ ...state, ...obj }));
-        setTime(new Date().toLocaleTimeString());
       });
     }
   };
+
+  React.useEffect(() => {
+    setSaved('block');
+    setTime(new Date().toLocaleTimeString());
+  }, props.value);
 
   const {
     desc_tool_tip_open,
@@ -217,7 +217,6 @@ function CreateProject(props) {
           <Card className={classes.cardStyle}>
             <CardActionArea>
               <CardContent>
-              <p className={classes.pStyle}>Autosaved at {time}</p>
                 <form
                   className="project-create-form"
                   name="create_project"
@@ -228,6 +227,13 @@ function CreateProject(props) {
                       : null
                   }
                 >
+                  <Typography
+                    variant="body2"
+                    className={classes.autoSaveTime}
+                    style={{ display: { saved } }}
+                  >
+                    Autosaved at {time}
+                  </Typography>
                   <Typography
                     className={classes.titleStyle}
                     gutterBottom
@@ -247,7 +253,6 @@ function CreateProject(props) {
                   >
                     {t('createProject.welcomeMsg.secondary')}
                   </Typography>
-
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <Box
@@ -301,7 +306,6 @@ function CreateProject(props) {
                               e,
                               state,
                               props,
-                              debouncedSave(),
                               handleSetState,
                             )
                           }
@@ -388,7 +392,6 @@ function CreateProject(props) {
                               e,
                               state,
                               props,
-                              debouncedSave(),
                               handleSetState,
                             )
                           }
@@ -1171,11 +1174,11 @@ const mapDispatchToProps = dispatch => {
     suggestTags: args => {
       return dispatch(ProjectActions.suggestTags(args));
     },
-    createProject: props => {
-      return dispatch(ProjectActions.createProject(props));
+    createProject: (props, x) => {
+      return dispatch(ProjectActions.createProject(props, x));
     },
-    updateProject: props => {
-      return dispatch(ProjectActions.updateProject(props));
+    updateProject: (props, x) => {
+      return dispatch(ProjectActions.updateProject(props, x));
     },
     autoSaveUpdateProject: props => {
       return dispatch(ProjectActions.autoSaveUpdateProject(props));

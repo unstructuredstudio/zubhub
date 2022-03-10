@@ -26,14 +26,17 @@ export const setProjects = projects => {
 * 
 * @todo - describe function's signature
 */
-export const createProject = props => {
+export const createProject = (props, redirect = true) => {
   return () => {
     return API.createProject(props).then(res => {
       if (!res.id) {
+        console.log(res);
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(props.t('createProject.createToastSuccess'));
-        return props.history.push('/profile');
+        if (redirect) {
+          toast.success(props.t('createProject.createToastSuccess'));
+          return props.history.push('/profile');
+        }
       }
     });
   };
@@ -70,14 +73,16 @@ export const shouldUploadToLocal = args => {
 * 
 * @todo - describe function's signature
 */
-export const updateProject = props => {
+export const updateProject = (props, redirect = true) => {
   return () => {
     return API.updateProject(props).then(res => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(props.t('createProject.updateToastSuccess'));
-        return props.history.push('/profile');
+        if (redirect) {
+          toast.success(props.t('createProject.updateToastSuccess'));
+          return props.history.push('/profile');
+        }
       }
     });
   };
