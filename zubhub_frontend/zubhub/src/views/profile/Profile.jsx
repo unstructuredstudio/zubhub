@@ -50,6 +50,7 @@ import * as ProjectActions from '../../store/actions/projectActions';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
+import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid'
 import Comments from '../../components/comments/Comments';
 
 import {
@@ -314,56 +315,14 @@ function Profile(props) {
                 : t('profile.about.placeholder2')}
             </Paper>
 
-            {/* {profile.projects_count > 0 ? (
-              <Paper className={classes.profileLowerStyle}>
-                <Typography
-                  gutterBottom
-                  component="h2"
-                  variant="h6"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
-                  {t('profile.projects.label')}
-                  <CustomButton
-                    className={clsx(classes.floatRight)}
-                    variant="outlined"
-                    margin="normal"
-                    secondaryButtonStyle
-                    onClick={() =>
-                      props.history.push(
-                        `/creators/${profile.username}/projects`,
-                      )
-                    }
-                  >
-                    {t('profile.projects.viewAll')}
-                  </CustomButton>
-                </Typography>
-                <Grid container>
-                  {Array.isArray(projects) &&
-                    projects.map(project => (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={6}
-                        className={classes.projectGridStyle}
-                        align="center"
-                      >
-                        <Project
-                          project={project}
-                          key={project.id}
-                          updateProjects={res =>
-                            handleSetState(
-                              updateProjects(res, state, props, toast),
-                            )
-                          }
-                          {...props}
-                        />
-                      </Grid>
-                    ))}
-                </Grid>
-              </Paper>
-            ) : null} */}
+            {profile.projects_count > 0 ? (
+              <ProjectsDraftsGrid
+                props={props}
+                state={state}
+                profile={profile}
+                projects={projects}
+              />
+            ) : null}
             <Comments
               context={{ name: 'profile', body: profile }}
               handleSetState={handleSetState}
