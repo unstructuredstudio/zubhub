@@ -314,7 +314,7 @@ function Profile(props) {
                 : t('profile.about.placeholder2')}
             </Paper>
 
-            {profile.projects_count > 0 ? (
+            {/* {profile.projects_count > 0 ? (
               <Paper className={classes.profileLowerStyle}>
                 <Typography
                   gutterBottom
@@ -363,7 +363,7 @@ function Profile(props) {
                     ))}
                 </Grid>
               </Paper>
-            ) : null}
+            ) : null} */}
             <Comments
               context={{ name: 'profile', body: profile }}
               handleSetState={handleSetState}
