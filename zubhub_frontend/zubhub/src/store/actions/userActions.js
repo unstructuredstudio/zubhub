@@ -357,6 +357,17 @@ export const addComment = args => {
   };
 };
 
+export const viewNotification = props => {
+  return API.viewNotification(props)
+  .then(res => {
+    if (!res.token) {
+      throw new Error(JSON.stringify(res));
+    } else {
+      toast.success(props.t('viewNotification.updateToastSuccess'));
+      return;
+    }
+  });
+};
 
 /**
 * @function sendGroupInviteConfirmation

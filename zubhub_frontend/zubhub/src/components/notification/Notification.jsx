@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import styles from '../../assets/js/styles/components/notification/NotificationStyles';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
+import { viewNotification } from '../../store/actions/userActions';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(styles);
 
 const NOTIFICATION_TYPE = {
-  ALL: 'ALL',
-  CLAP: 'CLAP',
-  COMMENT: 'COMMENT',
-  BOOKMARK: 'BOOKMARK',
-  FOLLOW: 'FOLLOW',
+  BOOKMARK: 1,
+  CLAP: 2,
+  COMMENT: 3,
+  FOLLOW: 4,
+  FOLLOWING_PROJECT: 5,
 };
 
 const Notification = ({ notification }) => {
   const classes = useStyles();
-  const history = useHistory();
-  const [viewed, setViewed] = useState(notification.viewed);
+  const token = useSelector(store => store.auth.token);
+  // method for rendering message
   const getNotification = () => {
     if (notification.type == 'CLAP') {
       return (
@@ -53,8 +54,13 @@ const Notification = ({ notification }) => {
       <div
         className={classes.notificationStyle}
         onClick={() => {
-          history.push(notification.link);
-          if (viewed == false) setViewed((viewed = true));
+          if (!notification.viewed) {
+            viewNotification({
+              id: notification.id,
+              token: token,
+            });
+          }
+          // window.location.href = notification.link;
         }}
       >
         <img
@@ -67,8 +73,8 @@ const Notification = ({ notification }) => {
           <p className={classes.message}>{getNotification()}</p>
           <p className={classes.time}>{notification.time}</p>
         </div>
-        {!viewed && <div className={classes.viewDot}></div>}
-        {viewed && <div className={classes.unviewed}></div> }
+        {!notification.viewed && <div className={classes.viewDot}></div>}
+        {notification.viewed && <div className={classes.unviewed}></div>}
       </div>
     </>
   );

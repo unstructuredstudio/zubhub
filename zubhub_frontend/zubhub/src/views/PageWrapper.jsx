@@ -106,9 +106,25 @@ function PageWrapper(props) {
   const { hero } = props.projects;
   const profileMenuOpen = Boolean(anchor_el);
 
-  const notif = {
+  var notif = {
     type: 'CLAP',
-    user: 'joe_momma',
+    id: 'b112451f-9c90-437b-96fd-5cabc389435b',
+    recipient: {
+      id: 'b112451f-9c90-437b-96fd-5cabc389435b',
+      username: 'joe_momma123',
+      email: 'acruzm3@illinois.edu',
+      phone: '+18472079456',
+      avatar: 'https://robohash.org/acruzm3',
+      location: 'United States of America',
+      comments: [],
+      dateOfBirth: '2001-10-12',
+      bio: 'Hello!',
+      followers: [],
+      following_count: 0,
+      projects_count: 0,
+      members_count: null,
+      role: 'creator',
+    },
     projectName: 'Blowing Switch Light',
     source: {
       id: 'b112451f-9c90-437b-96fd-5cabc389435b',
@@ -126,8 +142,8 @@ function PageWrapper(props) {
       members_count: null,
       role: 'creator',
     },
-    link: 'https://youtube.com',
-    viewed: true,
+    link: 'youtube.com',
+    viewed: false,
     time: '5 minutes ago',
   };
 

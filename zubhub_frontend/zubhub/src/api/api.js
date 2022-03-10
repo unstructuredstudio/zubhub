@@ -725,6 +725,46 @@ class API {
     return this.request({ url, method, body, token }).then(res => res.json());
   };
 
+  
+  /**
+  * @method viewNotification
+  * 
+  * @todo - describe method's signature
+  */
+   viewNotification = ({ id, token }) => {
+    const url = `notifications/${id}/update/`;
+    const method = 'PUT';
+    return this.request({ url, method, token }).then(res => res.json());
+  };
+
+  updateProject = ({
+    token,
+    id,
+    title,
+    description,
+    video,
+    images,
+    materials_used,
+    category,
+    tags,
+  }) => {
+    const url = `projects/${id}/update/`;
+    const method = 'PATCH';
+    const body = JSON.stringify({
+      id,
+      title,
+      description,
+      images,
+      video,
+      materials_used,
+      category,
+      tags,
+    });
+    return this.request({ url, method, token, body }).then(res => res.json());
+  };
+
+
+
 
   /**
   * @method addProfileComment
