@@ -107,8 +107,8 @@ function PageWrapper(props) {
   const profileMenuOpen = Boolean(anchor_el);
 
   var notif = {
-    type: 'CLAP',
-    id: 'b112451f-9c90-437b-96fd-5cabc389435b',
+    type: 1,
+    id: '26895b6a-2378-464f-bd45-c5f2b3f88229',
     recipient: {
       id: 'b112451f-9c90-437b-96fd-5cabc389435b',
       username: 'joe_momma123',
@@ -144,7 +144,8 @@ function PageWrapper(props) {
     },
     link: 'youtube.com',
     viewed: false,
-    time: '5 minutes ago',
+    time: '2022-03-12T21:30:57.732Z',
+    // time: '2022-03-12T01:53:51.431Z',
   };
 
   return (
