@@ -3,8 +3,6 @@ import styles from '../../assets/js/styles/components/notification/NotificationS
 import { makeStyles } from '@material-ui/core/styles';
 import { viewNotification } from '../../store/actions/userActions';
 import { useSelector } from 'react-redux';
-import { setRef } from '@material-ui/core';
-import CommentInput from '../comment_input/CommentInput';
 
 const useStyles = makeStyles(styles);
 
@@ -20,9 +18,6 @@ const Notification = ({ notification }) => {
   const classes = useStyles();
   const token = useSelector(store => store.auth.token);
 
-  const time = Date.now();
-  const date = new Date(JSON.parse('"' + notification.time + '"')).getTime();
-
   const renderTimeAgo = () => {
     const second = 1000;
     const minute = second * 60;
@@ -32,7 +27,9 @@ const Notification = ({ notification }) => {
     const month = week * 4;
     const year = day * 365;
 
-    let t = time - date;
+    let t =
+      Date.now() -
+      new Date(JSON.parse('"' + notification.time + '"')).getTime();
     let plural = '';
     let timeType = '';
     var type;
