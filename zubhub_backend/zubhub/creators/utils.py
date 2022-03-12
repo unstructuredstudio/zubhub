@@ -1,6 +1,5 @@
-from ctypes import cast
 from datetime import timedelta
-from typing import List, Set, Dict
+from typing import List, Set, Dict, cast
 from django.core.exceptions import FieldDoesNotExist
 from django.utils import timezone
 from django.contrib.auth import get_user_model
@@ -98,7 +97,8 @@ def perform_send_email_confirmation(request, user, signup=False, email=None):
         return adapter.respond_user_inactive(request, user)
 
     if not _has_verified_email_for_login(user, email):
-        send_email_confirmation(request, user, signup=signup)
+        send_email_confirmation(
+            request, user, signup=signup)
 
 
 def setup_user_phone(user):
@@ -114,10 +114,8 @@ def setup_user_phone(user):
     phone = user_phone(user)
     phone_number = None
     if phone:
-        phone_number = PhoneNumber(user=user,
-                                   phone=phone,
-                                   primary=True,
-                                   verified=False)
+        phone_number = PhoneNumber(
+            user=user, phone=phone, primary=True, verified=False)
         phone_number.save()
 
     if phone_number:
@@ -141,11 +139,9 @@ def send_phone_confirmation(request, user, signup=False, phone=None):
             if not phone_number.verified:
                 phone_number.send_confirmation(request, signup=signup)
         except PhoneNumber.DoesNotExist:
-            phone_number = PhoneNumber.objects.add_phone(request,
-                                                         user,
-                                                         phone,
-                                                         signup=signup,
-                                                         confirm=True)
+            phone_number = PhoneNumber.objects.add_phone(
+                request, user, phone, signup=signup, confirm=True
+            )
             assert phone_number
 
 
@@ -194,48 +190,56 @@ def activity_notification(activities, **kwargs):
 
         new_creators = get_user_model().objects.filter(
             date_joined__gte=yesterday, date_joined__lt=today)
-        new_projects = Project.objects.filter(created_on__gte=yesterday,
-                                              created_on__lt=today)
-        new_comments = Comment.objects.filter(created_on__gte=yesterday,
-                                              created_on__lt=today)
+        new_projects = Project.objects.filter(
+            created_on__gte=yesterday, created_on__lt=today)
+        new_comments = Comment.objects.filter(
+            created_on__gte=yesterday, created_on__lt=today)
 
         if new_creators:
             new_creators = list(
-                map(lambda creator: [str(creator.pk), creator.username],
-                    new_creators))
+                map(lambda creator: [str(creator.pk), creator.username], new_creators))
             ctx["new_creators"] = new_creators
 
         if new_projects:
             new_projects = list(
-                map(lambda project: [str(project.pk), project.title],
-                    new_projects))
+                map(lambda project: [str(project.pk), project.title], new_projects))
             ctx["new_projects"] = new_projects
 
         if new_comments:
             new_comments = list(
-                map(
-                    lambda comment:
-                    [str(comment.pk), comment.creator.username], new_comments))
+                map(lambda comment: [str(comment.pk), comment.creator.username], new_comments))
             ctx["new_comments"] = new_comments
 
     for creator in staffs:
         if creator.email:
-            email_contexts.append({
-                "user": creator.username,
-                "email": creator.email,
-                **ctx
-            })
+            email_contexts.append(
+                {"user": creator.username,
+                 "email": creator.email,
+                 **ctx
+                 }
+            )
 
         if creator.phone:
-            phone_contexts.append({"phone": creator.phone, **ctx})
+            phone_contexts.append(
+                {
+                    "phone": creator.phone,
+                    **ctx
+                }
+            )
 
     ctx_values = list(filter(lambda x: ctx[x] is not None, list(ctx.keys())))
 
     if len(email_contexts) > 0 and ctx_values:
-        send_mass_email.delay(template_name=template_name, ctxs=email_contexts)
+        send_mass_email.delay(
+            template_name=template_name,
+            ctxs=email_contexts
+        )
 
     if len(phone_contexts) > 0 and ctx_values:
-        send_mass_text.delay(template_name=template_name, ctxs=phone_contexts)
+        send_mass_text.delay(
+            template_name=template_name,
+            ctxs=phone_contexts
+        )
 
 
 enabled_notification_settings: Dict[Notification.Type, Set[int]] = {
@@ -256,17 +260,17 @@ def get_notification_template_name(
         contact_method: int, notification_type: Notification.Type) -> str:
     file_extension = '.html' if contact_method == Setting.EMAIL else '.txt'
     return (f'templates/notifications/{notification_type.label.lower()}'
-            f'/{Setting.CONTACT_CHOICES[cast(contact_method, int) - 1][1].lower()}.{file_extension}')  # type: ignore
+            f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}.{file_extension}')
 
 
 def send_notification(users: List[Creator], source: Creator, contexts,
                       notification_type: Notification.Type, link: str) -> None:
-
     email_contexts = []
     sms_contexts = []
 
     for user, context in zip(users, contexts):
         user_setting = Setting.objects.get(creator=user)
+        context.update({'source': user.username})
 
         if user.phone and user_setting.contact == Setting.WHATSAPP and is_valid_setting(Setting.WHATSAPP, notification_type):
             context.update({"phone": user.phone})
@@ -290,27 +294,27 @@ def send_notification(users: List[Creator], source: Creator, contexts,
         send_mass_text.delay(template_name=get_notification_template_name(Setting.SMS, notification_type), ctxs=sms_contexts)
 
 
-# def sync_user_email_addresses(user):
-#     """
-#     Keep user.email in sync with user.emailaddress_set.
+def sync_user_email_addresses(user):
+    """
+    Keep user.email in sync with user.emailaddress_set.
 
-#     Under some circumstances the user.email may not have ended up as
-#     an EmailAddress record, e.g. in the case of manually created admin
-#     users.
-#     """
-#     from .models import EmailAddress
+    Under some circumstances the user.email may not have ended up as
+    an EmailAddress record, e.g. in the case of manually created admin
+    users.
+    """
+    from .models import EmailAddress
 
-#     email=user_email(user)
-#     if (
-#         email
-#         and not EmailAddress.objects.filter(user=user, email__iexact=email).exists()
-#     ):
-#         if (
-#             app_settings.UNIQUE_EMAIL
-#             and EmailAddress.objects.filter(email__iexact=email).exists()
-#         ):
-#             # Bail out
-#             return
-#         EmailAddress.objects.create(
-#             user=user, email=email, primary=False, verified=False
-#         )
+    email=user_email(user)
+    if (
+        email
+        and not EmailAddress.objects.filter(user=user, email__iexact=email).exists()
+    ):
+        if (
+            app_settings.UNIQUE_EMAIL
+            and EmailAddress.objects.filter(email__iexact=email).exists()
+        ):
+            # Bail out
+            return
+        EmailAddress.objects.create(
+            user=user, email=email, primary=False, verified=False
+        )

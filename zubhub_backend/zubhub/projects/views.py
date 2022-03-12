@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
+from notifications.models import Notification
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import SearchQuery, SearchRank
@@ -13,7 +14,7 @@ from projects.permissions import (IsOwner, IsStaffOrModerator, SustainedRateThro
                                   PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
 from .models import Project, Comment, StaffPick, Category, Tag
 from .utils import project_changed, detect_mentions, perform_project_search
-from creators.utils import activity_notification
+from creators.utils import activity_notification, send_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)
 from .pagination import ProjectNumberPagination
@@ -47,7 +48,13 @@ class ProjectCreateAPIView(CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
         self.request.user.save()
-
+        send_notification(
+            [self.request.user.followers],
+            self.request.user,
+            [{} for _ in self.request.user.followers],
+            Notification.Type.FOLLOWING_PROJECT,
+            f'/profile/{self.request.user.username}'
+        )
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """
@@ -241,6 +248,14 @@ class ToggleLikeAPIView(RetrieveAPIView):
             obj.likes.add(self.request.user)
             obj.save()
 
+            send_notification(
+                [obj.creator],
+                self.request.user,
+                [{}],
+                Notification.Type.CLAP,
+                f'/projects/{obj.pk}'
+            )
+
         return obj
 
 
@@ -269,6 +284,14 @@ class ToggleSaveAPIView(RetrieveAPIView):
         else:
             obj.saved_by.add(self.request.user)
             obj.save()
+
+            send_notification(
+                [obj.creator],
+                self.request.user,
+                [{}],
+                Notification.Type.BOOKMARK,
+                f'/projects/{obj.pk}'
+            )
 
         return obj
 
@@ -326,6 +349,14 @@ class AddCommentAPIView(CreateAPIView):
         if result:
             detect_mentions(
                 {"text": text, "project_id": result.pk, "creator": request.user.username})
+
+            send_notification(
+                [result.creator],
+                self.request.user,
+                [{}],
+                Notification.Type.COMMENT,
+                f'/projects/{result.pk}'
+            )
 
         return Response(ProjectSerializer(result).data, status=status.HTTP_201_CREATED)
 

@@ -1,6 +1,7 @@
 import csv
 from io import StringIO
 from django.utils.translation import ugettext_lazy as _
+from notifications.models import Notification
 from rest_framework import status
 from django.http import Http404
 from django.contrib.auth import get_user_model
@@ -27,7 +28,7 @@ from projects.permissions import (SustainedRateThrottle,
 from .permissions import IsOwner
 from .models import Location
 from .pagination import CreatorNumberPagination
-from .utils import perform_send_phone_confirmation, perform_send_email_confirmation, process_avatar, send_group_invite_notification
+from .utils import perform_send_phone_confirmation, perform_send_email_confirmation, process_avatar, send_group_invite_notification, send_notification
 from projects.utils import detect_mentions
 
 from .models import CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC
@@ -296,7 +297,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
     serializer_class = CreatorMinimalSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
-    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+    # throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
@@ -308,6 +309,8 @@ class ToggleFollowAPIView(RetrieveAPIView):
         else:
             obj.followers.add(self.request.user)
             obj.save()
+
+            send_notification([obj], self.request.user, [{}], Notification.Type.FOLLOW, f'/profile/{self.request.user.username}')
         self.request.user.save()
 
         return obj
