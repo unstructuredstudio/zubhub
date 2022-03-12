@@ -297,7 +297,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
     serializer_class = CreatorMinimalSerializer
     queryset = Creator.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
-    # throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
