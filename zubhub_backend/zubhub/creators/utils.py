@@ -258,7 +258,7 @@ def is_valid_setting(setting: int, notification_type: Notification.Type) -> bool
 
 def get_notification_template_name(
         contact_method: int, notification_type: Notification.Type) -> str:
-    file_extension = '.html' if contact_method == Setting.EMAIL else '.txt'
+    file_extension = 'html' if contact_method == Setting.EMAIL else 'txt'
     return (f'templates/notifications/{notification_type.label.lower()}'
             f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}.{file_extension}')
 
