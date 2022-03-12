@@ -11,10 +11,8 @@ import { theme } from './assets/js/muiTheme';
 
 import App from './App';
 import './assets/css/index.css';
-import configureStore from './store/configureStore';
+import { store, persistor } from './store/configureStore';
 import './i18n';
-
-let { store, persistor } = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
