@@ -6,14 +6,10 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('creators', '0003_creator_contact'),
+        ('creators', '0002_alter_creator_first_name'),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='creator',
-            name='contact',
-        ),
         migrations.AddField(
             model_name='setting',
             name='contact',
