@@ -13,6 +13,7 @@ import {
   Tabs, 
   Tab,
   Box,
+  Divider,
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -60,13 +61,13 @@ function a11yProps(index) {
 }
 
 
-const ProjectsDraftsGrid = ({ props, state, profile, projects }) => {
+const ProjectsDraftsGrid = ({ props, profile, projects }) => {
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  
+
+  const history = useHistory();
   // const profile = useSelector((state) => state.profile);
   // const projects = useSelector((state) => state.projects);
-  
 
   const {t} = useTranslation();
   const [value, setValue] = React.useState(0);
@@ -77,10 +78,28 @@ const ProjectsDraftsGrid = ({ props, state, profile, projects }) => {
 
   return (
     <Paper className={classes.profileLowerStyle}>
+      <Box>
+        <Typography       
+          component="h2"
+          variant="h6"
+          color="textPrimary"
+          className={classes.titleStyle}
+        >
+          Projects
+        </Typography>
+      </Box>
+      <Divider/>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Projects" {...a11yProps(0)} />
-          <Tab label="Drafts" {...a11yProps(1)} />
+        <Tabs 
+          value={value} 
+          onChange={handleChange} 
+          aria-label="basic tabs example"
+          classes = {{
+            indicator: classes.indicator
+          }}
+        >
+          <Tab label="Projects" {...a11yProps(0)} className={classes.tabStyle} />
+          <Tab label="Drafts" {...a11yProps(1)} className={classes.tabStyle} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -90,7 +109,7 @@ const ProjectsDraftsGrid = ({ props, state, profile, projects }) => {
           margin="normal"
           secondaryButtonStyle
           onClick={() =>
-            props.history.push(
+            history.push(
               `/creators/${profile.username}/projects`,
             )
           }
@@ -112,7 +131,7 @@ const ProjectsDraftsGrid = ({ props, state, profile, projects }) => {
                   project={project}
                   key={project.id}
                   updateProjects={res =>
-                    updateProjects(res, state, props, toast)
+                    updateProjects(res, projects, t, toast)
                 
                   }
                   {...props}
@@ -128,7 +147,7 @@ const ProjectsDraftsGrid = ({ props, state, profile, projects }) => {
           margin="normal"
           secondaryButtonStyle
           onClick={() =>
-            props.history.push(
+            history.push(
               `/creators/${profile.username}/drafts`,
             )
           }
@@ -136,8 +155,8 @@ const ProjectsDraftsGrid = ({ props, state, profile, projects }) => {
           {t('profile.projects.viewAll')}
         </CustomButton>
         <Grid container>
-          {Array.isArray(projects) &&
-            projects.map(project => (
+          {/* {Array.isArray(drafts) &&
+            drafts.map(draft => (
               <Grid
                 item
                 xs={12}
@@ -146,17 +165,17 @@ const ProjectsDraftsGrid = ({ props, state, profile, projects }) => {
                 className={classes.gridStyle}
                 align="center"
               >
-                <Project
-                  project={project}
-                  key={project.id}
-                  updateProjects={res =>
-                    updateProjects(res, state, props, toast)
+                <Draft
+                  draft={draft}
+                  key={draft.id}
+                  updateDrafts={res =>
+                    updateDrafts(res, state, t, toast)
                 
                   }
                   {...props}
                 />
               </Grid>
-            ))}
+            ))} */}
         </Grid>
       </TabPanel>
     </Paper>

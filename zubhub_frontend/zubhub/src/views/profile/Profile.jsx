@@ -318,7 +318,6 @@ function Profile(props) {
             {profile.projects_count > 0 ? (
               <ProjectsDraftsGrid
                 props={props}
-                state={state}
                 profile={profile}
                 projects={projects}
               />
