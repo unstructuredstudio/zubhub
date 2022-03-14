@@ -281,16 +281,13 @@ def detect_mentions(kwargs):
 """ String html tags, event handlers, styles, etc from comment string """
 def clean_comment_text(string):
     doc = document_fromstring(string)
-    cleaner = Cleaner(
-        style=True
-        )
+    cleaner = Cleaner()
     return cleaner.clean_html(doc).text_content()
 
 """ Clean project description while still allowing for basic html structure """
 def clean_project_desc(string):
-    doc = document_fromstring(string)
-    cleaner = Cleaner(remove_tags=["button","a"])
-    return cleaner.clean_html(doc).text_content()
+    cleaner = Cleaner(remove_tags=["a"])
+    return cleaner.clean_html(string)
 
 
 
