@@ -1,13 +1,17 @@
 import re
+from akismet import Akismet
+from lxml.html.clean import Cleaner
+from lxml.html import document_fromstring
 from django.core.cache import cache
+from django.contrib.auth import get_user_model
+from django.apps import apps
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import prefetch_related_objects
 from django.db.models import F
 from django.conf import settings
-from akismet import Akismet
-from .models import Comment, Image, Tag, Category, Project
 from creators.tasks import send_mass_email, send_mass_text
-from creators.models import Creator, Setting
+
+Creator = get_user_model()
 
 
 LOCK_EXPIRE = {"30mins": 60 * 10}
@@ -24,6 +28,7 @@ def task_lock(key):
 
 
 def update_images(project, images_data):
+    Image = apps.get_model('projects.Image')
     images = project.images.all()
 
     images_to_save = []
@@ -45,6 +50,7 @@ def update_images(project, images_data):
 
 
 def update_tags(project, tags_data):
+    Tag = apps.get_model('projects.Tag')
     tags = project.tags.all()
 
     tags_dict = {}
@@ -62,6 +68,7 @@ def update_tags(project, tags_data):
 
 
 def send_staff_pick_notification(staff_pick):
+    from creators.models import Setting
     subscribed = Setting.objects.filter(subscribe=True)
     email_contexts = []
     phone_contexts = []
@@ -139,6 +146,7 @@ def filter_spam(ctx):
     if site_url.find("localhost") != -1:
         return
 
+    Comment = apps.get_model('projects.Comment')
     comment = Comment.objects.get(id=ctx.get("comment_id"))
 
     if ctx.get("method") == 'POST' and comment.published:
@@ -270,8 +278,28 @@ def detect_mentions(kwargs):
                 ctxs=phone_contexts
             )
 
+""" String html tags, event handlers, styles, etc from comment string """
+def clean_comment_text(string):
+    doc = document_fromstring(string)
+    cleaner = Cleaner(
+        style=True
+        )
+    return cleaner.clean_html(doc).text_content()
+
+""" Clean project description while still allowing for basic html structure """
+def clean_project_desc(string):
+    doc = document_fromstring(string)
+    cleaner = Cleaner(remove_tags=["button","a"])
+    return cleaner.clean_html(doc).text_content()
+
+
+
 
 def perform_project_search(query_string):
+    Category = apps.get_model('projects.Category')
+    Tag = apps.get_model('projects.Tag')
+    Project = apps.get_model('projects.Project')
+
     query = SearchQuery(query_string, search_type="phrase")
     rank = SearchRank(F('search_vector'), query)
     result_projects = None

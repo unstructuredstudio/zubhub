@@ -7,6 +7,7 @@ from django.utils.text import slugify
 from django.utils import timezone
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
+from projects.utils import clean_comment_text, clean_project_desc
 
 
 Creator = get_user_model()
@@ -99,6 +100,7 @@ class Project(models.Model):
             uid = str(uuid.uuid4())
             uid = uid[0: floor(len(uid)/6)]
             self.slug = slugify(self.title) + "-" + uid
+        self.description = clean_project_desc(self.description)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -138,6 +140,7 @@ class Comment(MP_Node):
     def save(self, *args, **kwargs):
         if self.project:
             self.project.save()
+        self.text  = clean_comment_text(self.text)
         super().save(*args, **kwargs)
 
 

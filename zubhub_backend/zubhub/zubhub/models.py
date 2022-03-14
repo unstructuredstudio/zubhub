@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.db import models
 from django.core.validators import FileExtensionValidator
+from zubhub.utils import clean_summernote_html
 
 
 class StaticAssets(models.Model):
@@ -48,6 +49,8 @@ class Privacy(models.Model):
         return self.edited_on.strftime("ZubHub's Guildlines, Policies and Terms of use as edited on %I:%M %p, %d %b %Y %Z")
 
     def save(self, *args, **kwargs):
+        self.privacy_policy = clean_summernote_html(self.privacy_policy)
+        self.terms_of_use = clean_summernote_html(self.terms_of_use)
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
 
@@ -64,6 +67,7 @@ class Help(models.Model):
         return self.edited_on.strftime("About Zubhub as edited on %I:%M %p, %d %b %Y %Z")
 
     def save(self, *args, **kwargs):
+        self.about = clean_summernote_html(self.about)
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
 
@@ -78,3 +82,8 @@ class FAQ(models.Model):
 
     def __str__(self):
         return self.question
+
+    def save(self, *args, **kwargs):
+        self.question = clean_summernote_html(self.question)
+        self.answer = clean_summernote_html(self.answer)
+        super().save(*args, **kwargs)
