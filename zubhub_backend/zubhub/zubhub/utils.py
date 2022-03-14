@@ -1,7 +1,6 @@
 import requests
 from hashlib import sha256
 from lxml.html.clean import Cleaner
-from lxml.html import document_fromstring
 from django.conf import settings
 
 
@@ -41,9 +40,8 @@ def delete_file_from_media_server(file_url):
 
 """ Clean summermote html while still allowing for basic html structure """
 def clean_summernote_html(string):
-    doc = document_fromstring(string)
-    cleaner = Cleaner(remove_tags=["button"])
-    return cleaner.clean_html(doc).text_content()
+    cleaner = Cleaner()
+    return cleaner.clean_html(string)
 
 
 
