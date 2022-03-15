@@ -357,10 +357,6 @@ export const addComment = args => {
   };
 };
 
-export const viewNotification = props => {
-  return API.viewNotification(props)
-};
-
 /**
 * @function sendGroupInviteConfirmation
 * @author Raymond Ndibe <ndiberaymond1@gmail.com>
