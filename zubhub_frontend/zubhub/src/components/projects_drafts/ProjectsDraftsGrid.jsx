@@ -63,12 +63,8 @@ function a11yProps(index) {
 
 const ProjectsDraftsGrid = ({ props, profile, projects }) => {
   const classes = useStyles();
-  const common_classes = useCommonStyles();
 
   const history = useHistory();
-  // const profile = useSelector((state) => state.profile);
-  // const projects = useSelector((state) => state.projects);
-
   const {t} = useTranslation();
   const [value, setValue] = React.useState(0);
 
@@ -169,7 +165,7 @@ const ProjectsDraftsGrid = ({ props, profile, projects }) => {
                   draft={draft}
                   key={draft.id}
                   updateDrafts={res =>
-                    updateDrafts(res, state, t, toast)
+                    updateDrafts(res, drafts, t, toast)
                 
                   }
                   {...props}
