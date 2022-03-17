@@ -1,5 +1,6 @@
 import requests
 from hashlib import sha256
+from lxml.html.clean import Cleaner
 from django.conf import settings
 
 
@@ -34,6 +35,13 @@ def delete_file_from_media_server(file_url):
     secret_hash = get_hash(settings.MEDIA_SECRET)
     url = 'http://media:8001/delete-file/'
     return requests.post(url, data={'url': file_url, "secret_hash": secret_hash})
+
+
+
+""" Clean summermote html while still allowing for basic html structure """
+def clean_summernote_html(string):
+    cleaner = Cleaner()
+    return cleaner.clean_html(string)
 
 
 

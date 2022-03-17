@@ -42,6 +42,7 @@ jedi>=0.17.2
 Jinja2>=2.11.2
 jmespath>=0.10.0
 kombu>=4.6.11
+lxml>=4.8.0
 MarkupSafe>=1.1.1
 Markdown>=3.3.6
 more-itertools>=8.6.0
