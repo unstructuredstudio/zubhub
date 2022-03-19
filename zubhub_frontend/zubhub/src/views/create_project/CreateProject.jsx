@@ -73,20 +73,19 @@ import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import commonStyles from '../../assets/js/styles';
 
-import { useCallback } from 'react';
-
 // import { debounce } from 'lodash';
 // const _ = require('lodash');
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
+
 /**
  * @function buildMaterialUsedNodes
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
-const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
+const buildMaterialUsedNodes = ({ props, refs, classes, common_classes, state, handleSetState, handleDisplayTime }) => {
   if (props.values['materials_used']) {
     return props.values['materials_used']
       .split(',')
@@ -99,7 +98,7 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
           )}
           type="text"
           onBlur={() => handleMaterialsUsedFieldBlur(props)}
-          onChange={e => handleAddMaterialFieldChange(e, props, refs)}
+          onChange={e => handleAddMaterialFieldChange(e, props, refs, state, handleSetState, handleDisplayTime)}
           value={material}
           placeholder={`${index + 1}.`}
         />
@@ -111,7 +110,7 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
         className={clsx(classes.customInputStyle, common_classes.marginTop1em)}
         type="text"
         onBlur={() => props.setFieldTouched('materials_used', true)}
-        onChange={e => handleAddMaterialFieldChange(e, props, refs)}
+        onChange={e => handleAddMaterialFieldChange(e, props, refs, state, handleSetState, handleDisplayTime)}
         placeholder={`${index + 1}.`}
       />
     ));
@@ -192,10 +191,10 @@ function CreateProject(props) {
     }
   };
 
-  React.useEffect(() => {
+  const savedTimeDisplay = () => {
     setSaved('block');
     setTime(new Date().toLocaleTimeString());
-  }, props.value);
+  };
 
   const {
     desc_tool_tip_open,
@@ -230,7 +229,7 @@ function CreateProject(props) {
                   <Typography
                     variant="body2"
                     className={classes.autoSaveTime}
-                    style={{ display: { saved } }}
+                    style={{ display: saved }}
                   >
                     Autosaved at {time}
                   </Typography>
@@ -307,6 +306,7 @@ function CreateProject(props) {
                               state,
                               props,
                               handleSetState,
+                              savedTimeDisplay,
                             )
                           }
                           onBlur={e => handleTextFieldBlur(e, props)}
@@ -393,6 +393,7 @@ function CreateProject(props) {
                               state,
                               props,
                               handleSetState,
+                              savedTimeDisplay,
                             )
                           }
                           onBlur={e => handleTextFieldBlur(e, props)}
@@ -485,6 +486,7 @@ function CreateProject(props) {
                               props,
                               state,
                               handleSetState,
+                              savedTimeDisplay
                             )
                           }
                           onBlur={props.handleBlur}
@@ -619,6 +621,9 @@ function CreateProject(props) {
                                 refs,
                                 classes,
                                 common_classes,
+                                state, 
+                                handleSetState,
+                                savedTimeDisplay
                               })}
                             </Box>
                           </Grid>
@@ -1151,7 +1156,6 @@ CreateProject.propTypes = {
   suggestTags: PropTypes.func.isRequired,
   createProject: PropTypes.func.isRequired,
   updateProject: PropTypes.func.isRequired,
-  autoSaveUpdateProject: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -1180,14 +1184,13 @@ const mapDispatchToProps = dispatch => {
     updateProject: (props, x) => {
       return dispatch(ProjectActions.updateProject(props, x));
     },
-    autoSaveUpdateProject: props => {
-      return dispatch(ProjectActions.autoSaveUpdateProject(props));
-    },
     shouldUploadToLocal: args => {
       return dispatch(ProjectActions.shouldUploadToLocal(args));
     },
   };
 };
+
+const is_autosave = true;
 
 export default connect(
   mapStateToProps,
@@ -1199,6 +1202,7 @@ export default connect(
       description: '',
       video: '',
       materials_used: '',
+      is_autosave: {is_autosave},
     }),
     validationSchema,
   })(CreateProject),

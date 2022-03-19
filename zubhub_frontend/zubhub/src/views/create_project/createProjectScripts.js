@@ -38,6 +38,18 @@ export const vars = {
 };
 
 
+let timer = null;
+const timeoutConst = 2000;
+
+const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
+  clearTimeout(timer);
+  timer = setTimeout(function () {
+    console.log("time out!");
+    autoSaveProject(state, props, handleSetState);
+    handleDisplayTime();
+  }, timeoutConst);
+}
+
 /**
 * @function getCategories
 * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -55,17 +67,10 @@ export const getCategories = props => {
 * 
 * @todo - describe function's signature
 */
-let timer = null;
-const timeoutConst = 5000;
-export const handleTextFieldChange = (e, state, props, handleSetState) => {
+export const handleTextFieldChange = (e, state, props, handleSetState, handleDisplayTime) => {
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
-  clearTimeout(timer);
-  timer = setTimeout(function () {
-    // props.values contain the actual form data 
-    console.log("time out!");
-    uploadProject(state, props, handleSetState, false);
-  }, timeoutConst);
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
 
@@ -241,7 +246,7 @@ export const removeTag = (_, props, value) => {
 * 
 * @todo - describe function's signature
 */
-export const handleImageFieldChange = (refs, props, state, handleSetState) => {
+export const handleImageFieldChange = (refs, props, state, handleSetState, handleDisplayTime) => {
   refs.image_count_el.current.innerText = `${refs.image_el.current.files.length
     } ${props.t(
       `createProject.inputs.${refs.image_el.current.files.length < 2 ? 'image' : 'images'
@@ -255,6 +260,7 @@ export const handleImageFieldChange = (refs, props, state, handleSetState) => {
   });
 
   props.setStatus({ ...props.status, images: '' });
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
 
@@ -282,7 +288,7 @@ export const handleVideoFieldCancel = async (refs, props, state) => {
 * 
 * @todo - describe function's signature
 */
-export const handleAddMaterialFieldChange = (_, props, refs) => {
+export const handleAddMaterialFieldChange = (e, props, refs, state, handleSetState, handleDisplayTime) => {
   const children = refs.add_materials_used_el.current.children;
   let value = '';
   for (let index = 0; index < children.length; index++) {
@@ -301,6 +307,7 @@ export const handleAddMaterialFieldChange = (_, props, refs) => {
 
   props.setFieldValue('materials_used', value, true);
   props.setStatus({ ...props.status, materials_used: '' });
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
 
@@ -310,7 +317,7 @@ export const handleAddMaterialFieldChange = (_, props, refs) => {
 * 
 * @todo - describe function's signature
 */
-export const handleAddTags = (e, props, add_tags_el) => {
+export const handleAddTags = (e, props, add_tags_el, state, handleSetState, handleDisplayTime) => {
   props.setFieldTouched('tags', true, true);
   let value = e.currentTarget.value.split(',');
   value[0] = value[0].trim();
@@ -330,7 +337,7 @@ export const handleAddTags = (e, props, add_tags_el) => {
       add_tags_el.current.focus();
     }
   }
-
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
   return { tag_suggestion_open: false, tag_suggestion: [] };
 };
 
@@ -364,7 +371,6 @@ export const handleVideoSelectDone = async (refs, props, state) => {
 */
 export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();
-  console.log(props,state);
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
@@ -438,6 +444,78 @@ export const initUpload = (e, state, props, handleSetState) => {
   }
 };
 
+export const autoSaveProject = async (state, props, handleSetState) => {
+  if (!props.auth.token) {
+    props.history.push('/login');
+  } else {
+    props.setFieldTouched('title');
+    props.setFieldTouched('description');
+    props.setFieldTouched('project_images');
+    props.setFieldTouched('video');
+    props.setFieldTouched('materials_used');
+    props.setFieldTouched('category');
+    props.setFieldTouched('tags');
+
+    vars.image_field_touched = true;
+    vars.video_field_touched = true;
+
+    props.validateForm().then(errors => {
+      if (
+        Object.keys(errors).length > 0 &&
+        (Object.keys(errors).length !== 2 ||
+          !(
+            errors['project_images'] === 'imageOrVideo' &&
+            errors['video'] === 'imageOrVideo' &&
+            state.media_upload.uploaded_videos_url.length !== 0 &&
+            state.media_upload.uploaded_videos_url.length !== 0
+          ))
+      ) {
+        return;
+      } else if (
+        (state.media_upload.uploaded_images_url.length !== 0 ||
+          state.media_upload.uploaded_videos_url.length !== 0) &&
+        !(
+          state.media_upload.images_to_upload.length !== 0 ||
+          state.media_upload.videos_to_upload.length !== 0
+        )
+      ) {
+        vars.upload_in_progress = true;
+        uploadProject(state, props, handleSetState);
+      } else {
+        const { media_upload } = state;
+        media_upload.upload_percent = 0;
+        vars.upload_in_progress = true;
+        handleSetState({ media_upload });
+
+        for (
+          let index = 0;
+          index < media_upload.images_to_upload.length;
+          index++
+        ) {
+          uploadImage(
+            media_upload.images_to_upload[index],
+            state,
+            props,
+            handleSetState,
+          );
+        }
+
+        for (
+          let index = 0;
+          index < media_upload.videos_to_upload.length;
+          index++
+        ) {
+          uploadVideo(
+            media_upload.videos_to_upload[index],
+            state,
+            props,
+            handleSetState,
+          );
+        }
+      }
+    });
+  }
+}
 
 
 /**
@@ -446,12 +524,10 @@ export const initUpload = (e, state, props, handleSetState) => {
 * 
 * @todo - describe function's signature
 */
-export const uploadProject = async (state, props, handleSetState, redirect = true) => {
+export const uploadProject = async (state, props, handleSetState, redirect = false) => {
   const { media_upload } = state;
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
-
-  console.log(props, state);
 
   const materials_used = props.values['materials_used']
     ?.split(',')
@@ -479,10 +555,8 @@ export const uploadProject = async (state, props, handleSetState, redirect = tru
     category: props.values.category,
     t: props.t,
   };
-  console.log("data", data);
 
   await create_or_update(data, redirect).catch(error => {
-    console.log(error);
     const messages = JSON.parse(error.message);
     if (typeof messages === 'object') {
       const server_errors = {};
@@ -622,7 +696,7 @@ export const uploadVideoToCloudinary = async (video, state, props, handleSetStat
 * @todo - describe function's signature
 */
 export const uploadImage = async (image, state, props, handleSetState) => {
-  debugger;
+  // debugger;
   const args = {
     t: props.t,
     token: props.auth.token
@@ -916,8 +990,19 @@ export const checkMediaFilesErrorState = (refs, props) => {
 * @todo - describe object's function
 */
 export const validationSchema = Yup.object().shape({
-  title: Yup.string().max(100, 'max').required('required'),
-  description: Yup.string().max(10000, 'max').required('required'),
+  is_autosave: Yup.boolean(),
+  title: Yup.string().max(100, 'max').required('required').when(
+    "is_autosave", {
+      is: false,
+      then: Yup.string().required("required")
+    }
+  ),
+  description: Yup.string().max(10000, 'max').when(
+    "is_autosave", {
+      is: false,
+      then: Yup.string().required("required")
+    }
+  ),
   project_images: Yup.mixed()
     .test('image_is_empty', 'imageOrVideo', function (value) {
       return vars.image_field_touched && !value && !this.parent.video

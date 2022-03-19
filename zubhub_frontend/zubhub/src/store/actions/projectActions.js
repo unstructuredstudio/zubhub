@@ -73,7 +73,7 @@ export const shouldUploadToLocal = args => {
 * 
 * @todo - describe function's signature
 */
-export const updateProject = (props, redirect = true) => {
+export const updateProject = (props, redirect) => {
   return () => {
     return API.updateProject(props).then(res => {
       if (!res.id) {
@@ -87,21 +87,6 @@ export const updateProject = (props, redirect = true) => {
     });
   };
 };
-
-
-// Autosave Update 
-export const autoSaveUpdateProject = props => {
-  return () => {
-    return API.updateProject(props).then(res => {
-      if (!res.id) {
-        throw new Error(JSON.stringify(res));
-      } else {
-        // toast.success(props.t('createProject.updateToastSuccess'));
-      }
-    });
-  };
-};
-
 
 /**
 * @function deleteProject
