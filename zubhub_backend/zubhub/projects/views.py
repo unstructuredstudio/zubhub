@@ -48,13 +48,15 @@ class ProjectCreateAPIView(CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
         self.request.user.save()
-        send_notification(
-            [self.request.user.followers],
-            self.request.user,
-            [{} for _ in self.request.user.followers],
-            Notification.Type.FOLLOWING_PROJECT,
-            f'/profile/{self.request.user.username}'
-        )
+
+        if self.request.user.followers is not None:
+            send_notification(
+                list(self.request.user.followers.all()),
+                self.request.user,
+                [{} for _ in list(self.request.user.followers.all())],
+                Notification.Type.FOLLOWING_PROJECT,
+                f'/profile/{self.request.user.username}'
+            )
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """

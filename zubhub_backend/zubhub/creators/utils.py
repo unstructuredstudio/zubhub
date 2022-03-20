@@ -261,7 +261,7 @@ html_based_contacts = {Setting.EMAIL, Setting.WEB}
 def get_notification_template_name(
         contact_method: int, notification_type: Notification.Type) -> str:
     file_extension = 'html' if contact_method in html_based_contacts else 'txt'
-    return (f'notifications/{notification_type.label.lower()}'
+    return (f'notifications/{notification_type.name.lower()}'
             f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}.{file_extension}')
 
 
