@@ -9,6 +9,7 @@ from creators.models import Setting
 from notifications.models import Notification
 from notifications.utils import push_notification
 from creators.models import Creator
+from django.template.loader import render_to_string
 
 try:
     from allauth.account.adapter import get_adapter
@@ -243,12 +244,12 @@ def activity_notification(activities, **kwargs):
 
 
 enabled_notification_settings: Dict[Notification.Type, Set[int]] = {
-    Notification.Type.BOOKMARK: set(),
-    Notification.Type.CLAP: set(),
-    Notification.Type.COMMENT: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS},
-    Notification.Type.FOLLOW: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS},
+    Notification.Type.BOOKMARK: {Setting.WEB},
+    Notification.Type.CLAP: {Setting.WEB},
+    Notification.Type.COMMENT: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+    Notification.Type.FOLLOW: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
     Notification.Type.FOLLOWING_PROJECT:
-    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS},
+    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
 }
 
 
@@ -256,9 +257,10 @@ def is_valid_setting(setting: int, notification_type: Notification.Type) -> bool
     return setting in enabled_notification_settings[notification_type]
 
 
+html_based_contacts = {Setting.EMAIL, Setting.WEB}
 def get_notification_template_name(
         contact_method: int, notification_type: Notification.Type) -> str:
-    file_extension = 'html' if contact_method == Setting.EMAIL else 'txt'
+    file_extension = 'html' if contact_method in html_based_contacts else 'txt'
     return (f'notifications/{notification_type.label.lower()}'
             f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}.{file_extension}')
 
@@ -286,7 +288,11 @@ def send_notification(users: List[Creator], source: Creator, contexts,
             context.update({"phone": user.phone})
             sms_contexts.append(context)
 
-        push_notification(user, source, notification_type, link)
+        message = render_to_string(
+            get_notification_template_name(Setting.WEB, notification_type),
+            context
+        ).strip()
+        push_notification(user, source, notification_type, message, link)
 
     if len(email_contexts) > 0:
         send_mass_email.delay(template_name=get_notification_template_name(Setting.EMAIL, notification_type), ctxs=email_contexts)

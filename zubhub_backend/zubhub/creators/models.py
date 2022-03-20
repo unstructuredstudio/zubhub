@@ -85,11 +85,13 @@ class Setting(models.Model):
     WHATSAPP = 1
     EMAIL = 2
     SMS = 3
+    WEB = 4
 
     CONTACT_CHOICES = (
         (WHATSAPP, 'WHATSAPP'),
         (EMAIL, 'EMAIL'),
-        (SMS, 'SMS')
+        (SMS, 'SMS'),
+        (WEB, 'WEB')
     )
 
     creator = models.OneToOneField(
