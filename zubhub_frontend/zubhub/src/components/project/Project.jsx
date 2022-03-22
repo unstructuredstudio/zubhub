@@ -71,48 +71,47 @@ function Project(props) {
             className={clsx(classes.contentStyle, classes.positionRelative)}
           >
             { isDraft?
-            <Fab
-            className={clsx(classes.editButtonStyle)}
-              size="small"
-              aria-label="edit button"
-              variant="extended"
-              onClick={() =>
-              props.history.push(
-                `/${project.creator.id}/update/`,
-              )
-              }
-            >
-              {/* {t('profile.projects.viewAll')} */}
-              Edit
-            </Fab>
+              <Link
+                className={classes.textDecorationNone}
+                to={`/projects/${project.id}/edit`}
+              >
+                <CustomButton
+                  className={clsx(classes.editButtonStyle)}
+                  size="small"
+                  aria-label="edit button"
+                  variant="contained"
+                >
+                  {t('projectDetails.project.edit')}
+                </CustomButton>
+              </Link>
               :
               <>
-              <Fab
-                className={classes.fabButtonStyle}
-                size="small"
-                aria-label="save button"
-                onClick={(e, id = project.id) => toggleSave(e, id, props)}
-              >
-                {project.saved_by.includes(props.auth.id) ? (
-                  <BookmarkIcon aria-label="unsave" />
-                ) : (
-                  <BookmarkBorderIcon aria-label="save" />
-                )}
-              </Fab>
-              <Fab
-                className={clsx(classes.fabButtonStyle, classes.likeButtonStyle)}
-                size="small"
-                aria-label="like button"
-                variant="extended"
-                onClick={(e, id = project.id) => toggleLike(e, id, props)}
-              >
-                {project.likes.includes(props.auth.id) ? (
-                  <ClapIcon arial-label="unlike" />
-                ) : (
-                  <ClapBorderIcon arial-label="like" />
-                )}
-                {nFormatter(project.likes.length)}
-              </Fab> 
+                <Fab
+                  className={classes.fabButtonStyle}
+                  size="small"
+                  aria-label="save button"
+                  onClick={(e, id = project.id) => toggleSave(e, id, props)}
+                >
+                  {project.saved_by.includes(props.auth.id) ? (
+                    <BookmarkIcon aria-label="unsave" />
+                    ) : (
+                    <BookmarkBorderIcon aria-label="save" />
+                  )}
+                </Fab>
+                <Fab
+                  className={clsx(classes.fabButtonStyle, classes.likeButtonStyle)}
+                  size="small"
+                  aria-label="like button"
+                  variant="extended"
+                  onClick={(e, id = project.id) => toggleLike(e, id, props)}
+                >
+                  {project.likes.includes(props.auth.id) ? (
+                    <ClapIcon arial-label="unlike" />
+                    ) : (
+                    <ClapBorderIcon arial-label="like" />
+                  )}
+                  {nFormatter(project.likes.length)}
+                </Fab> 
               </>
             }
             <Typography

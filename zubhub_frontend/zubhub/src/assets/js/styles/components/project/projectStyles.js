@@ -86,14 +86,15 @@ const styles = theme => ({
     top: '-1.8em',
     paddingLeft: '1.25em !important',
     paddingRight: '1.25em !important',
+    zIndex: 2000,
 
     backgroundColor: 'white',
     color: '#00B8C4',
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: '0.8rem',
 
     borderRadius: '30px',
-    borderWidth: '2px',
+    borderWidth: '1px',
     borderColor: '#00B8C4',
     borderStyle: 'solid',
     

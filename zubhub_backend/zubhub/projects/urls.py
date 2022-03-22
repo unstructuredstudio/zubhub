@@ -8,7 +8,6 @@ urlpatterns = [
     path('tags/search/', ProjectTagSearchAPIView.as_view(), name='search_tags'),
     path('search/', ProjectSearchAPIView.as_view(), name='search_projects'),
     path('create/', ProjectCreateAPIView.as_view(), name='create_project'),
-   # path('edit/', DraftUpdateAPIView.as_view(), name='edit_draft'),
     path('<uuid:pk>/update/', ProjectUpdateAPIView.as_view(), name='update_project'),
     path('<uuid:pk>/delete/', ProjectDeleteAPIView.as_view(), name='delete_project'),
     path('saved/', SavedProjectsAPIView.as_view(), name="saved_projects"),
