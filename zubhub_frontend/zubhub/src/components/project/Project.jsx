@@ -16,9 +16,10 @@ import {
   CardContent,
   Fab,
   Typography,
-  Button, 
+  Button,
 } from '@material-ui/core';
 
+import CustomButton from '../button/Button';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CommentIcon from '../../assets/js/icons/CommentIcon';
 import playIcon from '../../assets/images/play-icon.png';
@@ -43,7 +44,7 @@ const useStyles = makeStyles(styles);
 function Project(props) {
   const classes = useStyles();
 
-  const { isEdit, project, t } = props;
+  const { isDraft, project, t } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
@@ -69,35 +70,51 @@ function Project(props) {
           <CardContent
             className={clsx(classes.contentStyle, classes.positionRelative)}
           >
-            {isEdit? 
+            { isDraft?
             <Fab
-              className={classes.fabButtonStyle}
+            className={clsx(classes.editButtonStyle)}
               size="small"
-              aria-label="save button"
-              onClick={(e, id = project.id) => toggleSave(e, id, props)}
-            >
-              {project.saved_by.includes(props.auth.id) ? (
-                <BookmarkIcon aria-label="unsave" />
-              ) : (
-                <BookmarkBorderIcon aria-label="save" />
-              )}
-            </Fab> :
-            <Button></Button>
-            }
-            <Fab
-              className={clsx(classes.fabButtonStyle, classes.likeButtonStyle)}
-              size="small"
-              aria-label="like button"
+              aria-label="edit button"
               variant="extended"
-              onClick={(e, id = project.id) => toggleLike(e, id, props)}
+              onClick={() =>
+              props.history.push(
+                `/${project.creator.id}/update/`,
+              )
+              }
             >
-              {project.likes.includes(props.auth.id) ? (
-                <ClapIcon arial-label="unlike" />
-              ) : (
-                <ClapBorderIcon arial-label="like" />
-              )}
-              {nFormatter(project.likes.length)}
+              {/* {t('profile.projects.viewAll')} */}
+              Edit
             </Fab>
+              :
+              <>
+              <Fab
+                className={classes.fabButtonStyle}
+                size="small"
+                aria-label="save button"
+                onClick={(e, id = project.id) => toggleSave(e, id, props)}
+              >
+                {project.saved_by.includes(props.auth.id) ? (
+                  <BookmarkIcon aria-label="unsave" />
+                ) : (
+                  <BookmarkBorderIcon aria-label="save" />
+                )}
+              </Fab>
+              <Fab
+                className={clsx(classes.fabButtonStyle, classes.likeButtonStyle)}
+                size="small"
+                aria-label="like button"
+                variant="extended"
+                onClick={(e, id = project.id) => toggleLike(e, id, props)}
+              >
+                {project.likes.includes(props.auth.id) ? (
+                  <ClapIcon arial-label="unlike" />
+                ) : (
+                  <ClapBorderIcon arial-label="like" />
+                )}
+                {nFormatter(project.likes.length)}
+              </Fab> 
+              </>
+            }
             <Typography
               className={classes.titleStyle}
               variant="h5"

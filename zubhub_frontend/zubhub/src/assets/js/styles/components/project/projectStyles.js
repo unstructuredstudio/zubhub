@@ -80,6 +80,28 @@ const styles = theme => ({
       fill: '#ffcc00',
     },
   },
+  editButtonStyle: {
+    position: 'absolute',
+    right: '1em',
+    top: '-1.8em',
+    paddingLeft: '1.25em !important',
+    paddingRight: '1.25em !important',
+
+    backgroundColor: 'white',
+    color: '#00B8C4',
+    fontWeight: '600',
+    fontSize: '0.8rem',
+
+    borderRadius: '30px',
+    borderWidth: '2px',
+    borderColor: '#00B8C4',
+    borderStyle: 'solid',
+    
+    '&:hover': {
+      backgroundColor: '#00B8C4',
+      color: 'white',
+    },
+  },
   likeButtonStyle: {
     right: '4.5em',
     top: '-1.6em',
