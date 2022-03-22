@@ -13,11 +13,11 @@ import styles from '../../assets/js/styles/views/about/aboutStyles';
 const useStyles = makeStyles(styles);
 
 /**
-* @function About View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function About View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function About(props) {
   const classes = useStyles();
 

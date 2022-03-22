@@ -1,33 +1,28 @@
-
-
 /**
-* @function fetchPage
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/export const fetchPage = (page, props) => {
+ * @function fetchPage
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */ export const fetchPage = (page, props) => {
   return props.getProjects({ page, t: props.t });
 };
 
-
 /**
-* @function fetchStaffPicks
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function fetchStaffPicks
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const fetchStaffPicks = props => {
   return props.getStaffPicks({ t: props.t });
 };
 
-
-
 /**
-* @function updateProjects
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function updateProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const updateProjects = (res, props, toast) => {
   return res
     .then(res => {
@@ -54,13 +49,12 @@ export const updateProjects = (res, props, toast) => {
     });
 };
 
-
 /**
-* @function updateStaffPicks
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function updateStaffPicks
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const updateStaffPicks = (res, staff_pick_id, props, toast) => {
   return res
     .then(res => {
@@ -72,8 +66,9 @@ export const updateStaffPicks = (res, staff_pick_id, props, toast) => {
                 projects: {
                   ...staff_pick.projects,
                   results: staff_pick.projects.results.map(project =>
-                    project.id === res.project.id ? res.project : project)
-                }
+                    project.id === res.project.id ? res.project : project,
+                  ),
+                },
               }
             : staff_pick,
         );

@@ -71,60 +71,60 @@ const styles = theme => ({
     [theme.breakpoints.down('400')]: {
       paddingLeft: 0,
       paddingRight: 0,
-    }
+    },
   },
   videoInputDialogCardStyle: {
     [theme.breakpoints.down('400')]: {
       paddingLeft: 0,
       paddingRight: 0,
-    }
+    },
   },
   videoFileName: {
     margin: 0,
     color: 'rgba(0, 0, 0, 0.54)',
-    textOverflow: "ellipsis",
+    textOverflow: 'ellipsis',
 
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    width: "50%",
-    minWidth: "150px",
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    width: '50%',
+    minWidth: '150px',
     [theme.breakpoints.down('550')]: {
-      width: '100%'
+      width: '100%',
     },
   },
   videoInputDialogURLFormControlStyle: {
-    width: "59%",
+    width: '59%',
     [theme.breakpoints.down('550')]: {
-      width: '100%'
+      width: '100%',
     },
   },
   videoInputDialogControlSectionStyle: {
-    width: "100%",
-    border: "2px solid #00B8C4",
-    padding: "2px",
+    width: '100%',
+    border: '2px solid #00B8C4',
+    padding: '2px',
     borderRadius: 30,
   },
   videoInputDialogControlButtonStyle: {
-    width: "50%"
+    width: '50%',
   },
   videoInputDialogControlButtonUseTextDescStyle: {
     [theme.breakpoints.down('500')]: {
-     display: "none",
-    }
+      display: 'none',
+    },
   },
   videoInputDialogControlButtonUseIconDescStyle: {
     [theme.breakpoints.up('500')]: {
-    display: "none",
-    }
+      display: 'none',
+    },
   },
   videoInputDialogBodyGridStyle: {
-  display: "flex",
-  alignItems: "center",
-  flexWrap: "wrap",
-  paddingTop: "16px !important",
-  [theme.breakpoints.down("550")]: {
-    justifyContent: "space-between"
-  }
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingTop: '16px !important',
+    [theme.breakpoints.down('550')]: {
+      justifyContent: 'space-between',
+    },
   },
   videoInputDialogActionSectionStyle: {
     display: 'flex',
@@ -135,7 +135,7 @@ const styles = theme => ({
     [theme.breakpoints.down('550')]: {
       width: '48.5%',
       marginLeft: 0,
-      marginTop: '0.5em'
+      marginTop: '0.5em',
     },
   },
   fieldNumberStyle: {
@@ -161,9 +161,9 @@ const styles = theme => ({
     },
   },
   uploadProgressIndicatorContainerStyle: {
-    display: "inline-flex",
-    position: "relative",
-    overflow: "hidden"
+    display: 'inline-flex',
+    position: 'relative',
+    overflow: 'hidden',
   },
   uploadProgressLabelStyle: {
     color: 'white',

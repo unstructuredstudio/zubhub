@@ -31,14 +31,12 @@ import styles from '../../assets/js/styles/components/project/projectStyles';
 
 const useStyles = makeStyles(styles);
 
-
-
 /**
-* @function Project Component
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function Project Component
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function Project(props) {
   const classes = useStyles();
 

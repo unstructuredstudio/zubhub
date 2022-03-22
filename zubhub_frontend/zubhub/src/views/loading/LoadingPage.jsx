@@ -6,13 +6,12 @@ import styles from '../../assets/js/styles/views/loading/loadingPageStyles';
 
 const useStyles = makeStyles(styles);
 
-
 /**
-* @function LoadingPage
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function LoadingPage
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function LoadingPage() {
   const classes = useStyles();
   return (

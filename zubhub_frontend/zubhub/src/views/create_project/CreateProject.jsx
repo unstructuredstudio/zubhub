@@ -76,13 +76,12 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-
 /**
-* @function buildMaterialUsedNodes
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function buildMaterialUsedNodes
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
   if (props.values['materials_used']) {
     return props.values['materials_used']
@@ -115,13 +114,12 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
   }
 };
 
-
 /**
-* @function CreateProject View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function CreateProject View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function CreateProject(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
