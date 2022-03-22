@@ -16,6 +16,7 @@ import {
   CardContent,
   Fab,
   Typography,
+  Button, 
 } from '@material-ui/core';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
@@ -42,7 +43,7 @@ const useStyles = makeStyles(styles);
 function Project(props) {
   const classes = useStyles();
 
-  const { project, t } = props;
+  const { isEdit, project, t } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
@@ -68,6 +69,7 @@ function Project(props) {
           <CardContent
             className={clsx(classes.contentStyle, classes.positionRelative)}
           >
+            {isEdit? 
             <Fab
               className={classes.fabButtonStyle}
               size="small"
@@ -79,7 +81,9 @@ function Project(props) {
               ) : (
                 <BookmarkBorderIcon aria-label="save" />
               )}
-            </Fab>
+            </Fab> :
+            <Button></Button>
+            }
             <Fab
               className={clsx(classes.fabButtonStyle, classes.likeButtonStyle)}
               size="small"
