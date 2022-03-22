@@ -257,12 +257,14 @@ def is_valid_setting(setting: int, notification_type: Notification.Type) -> bool
     return setting in enabled_notification_settings[notification_type]
 
 
-html_based_contacts = {Setting.EMAIL, Setting.WEB}
+html_based_contacts = {Setting.WEB}
 def get_notification_template_name(
         contact_method: int, notification_type: Notification.Type) -> str:
-    file_extension = 'html' if contact_method in html_based_contacts else 'txt'
+    file_extension = '.html' if contact_method in html_based_contacts else '.txt'
+    if contact_method == Setting.EMAIL:
+        file_extension = ''
     return (f'notifications/{notification_type.name.lower()}'
-            f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}.{file_extension}')
+            f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}{file_extension}')
 
 
 def send_notification(users: List[Creator], source: Creator, contexts,
@@ -295,9 +297,9 @@ def send_notification(users: List[Creator], source: Creator, contexts,
         push_notification(user, source, notification_type, message, link)
 
     if len(email_contexts) > 0:
-        send_mass_email.delay(template_name=get_notification_template_name(Setting.EMAIL, notification_type), ctxs=email_contexts)
+        send_mass_email.delay(template_name=get_notification_template_name(Setting.EMAIL, notification_type), ctxs=email_contexts, full_template=True)
     if len(sms_contexts) > 0:
-        send_mass_text.delay(template_name=get_notification_template_name(Setting.SMS, notification_type), ctxs=sms_contexts)
+        send_mass_text.delay(template_name=get_notification_template_name(Setting.SMS, notification_type), ctxs=sms_contexts, full_template=True)
 
 
 # def sync_user_email_addresses(user):
