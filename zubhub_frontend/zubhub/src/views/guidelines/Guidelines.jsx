@@ -13,13 +13,12 @@ import styles from '../../assets/js/styles/views/guidelines/guidelinesStyles';
 
 const useStyles = makeStyles(styles);
 
-
 /**
-* @function Guidelines View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function Guidelines View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function Guidelines(props) {
   const classes = useStyles();
 

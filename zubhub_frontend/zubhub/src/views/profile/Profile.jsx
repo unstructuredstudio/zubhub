@@ -52,9 +52,7 @@ import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import Comments from '../../components/comments/Comments';
 
-import {
-  parseComments,
-} from '../../assets/js/utils/scripts';
+import { parseComments } from '../../assets/js/utils/scripts';
 
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
@@ -62,13 +60,12 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-
 /**
-* @function Profile View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function Profile View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function Profile(props) {
   const username_el = React.useRef(null);
   const classes = useStyles();

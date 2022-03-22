@@ -1,35 +1,32 @@
 import * as Yup from 'yup';
 
-
 /**
-* @function handleClickShowPassword
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleClickShowPassword
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleClickShowPassword = state => {
   const { show_password } = state;
   return { show_password: !show_password };
 };
 
-
 /**
-* @function handleMouseDownPassword
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleMouseDownPassword
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleMouseDownPassword = e => {
   e.preventDefault();
 };
 
-
 /**
-* @function login
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function login
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const login = (e, props) => {
   e.preventDefault();
   return props
@@ -54,13 +51,12 @@ export const login = (e, props) => {
     });
 };
 
-
 /**
-* @object validationSchema
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe object's function
-*/
+ * @object validationSchema
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe object's function
+ */
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   password: Yup.string().min(8, 'min').required('required'),

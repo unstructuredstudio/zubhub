@@ -39,13 +39,12 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-
 /**
-* @function buildCreatorProfiles Component
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function buildCreatorProfiles Component
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const buildCreatorProfiles = (
   results,
   { classes, common_classes },
@@ -99,13 +98,12 @@ const buildCreatorProfiles = (
     </Grid>
   ));
 
-
 /**
-* @function SearchResults View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function SearchResults View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function SearchResults(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();

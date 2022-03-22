@@ -6,13 +6,12 @@ import {
   parseComments,
 } from '../../assets/js/utils/scripts';
 
-
 /**
-* @function addComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function addComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const addComment = (
   props,
   comment_text_el,
@@ -62,13 +61,12 @@ export const addComment = (
   }
 };
 
-
 /**
-* @function unpublishComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function unpublishComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const unpublishComment = (props, context, id) => {
   if (
     props.auth.token &&
@@ -90,13 +88,12 @@ export const unpublishComment = (props, context, id) => {
   }
 };
 
-
 /**
-* @function handleToggleDeleteCommentModal
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleToggleDeleteCommentModal
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleToggleDeleteCommentModal = (state, id) => {
   const open_delete_comment_modal = !state.open_delete_comment_modal;
   if (open_delete_comment_modal) {
@@ -105,14 +102,12 @@ export const handleToggleDeleteCommentModal = (state, id) => {
   return { open_delete_comment_modal };
 };
 
-
-
 /**
-* @function deleteComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function deleteComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const deleteComment = (
   props,
   context,
