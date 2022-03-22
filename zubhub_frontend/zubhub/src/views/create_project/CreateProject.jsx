@@ -62,6 +62,7 @@ import {
   uploadProject,
   checkMediaFilesErrorState,
   handleSelectVideoFileChecked,
+  handleCategoryChange,
 } from './createProjectScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
@@ -85,7 +86,15 @@ const useCommonStyles = makeStyles(commonStyles);
  *
  * @todo - describe function's signature
  */
-const buildMaterialUsedNodes = ({ props, refs, classes, common_classes, state, handleSetState, handleDisplayTime }) => {
+const buildMaterialUsedNodes = ({
+  props,
+  refs,
+  classes,
+  common_classes,
+  state,
+  handleSetState,
+  savedTimeDisplay,
+}) => {
   if (props.values['materials_used']) {
     return props.values['materials_used']
       .split(',')
@@ -98,7 +107,16 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes, state, h
           )}
           type="text"
           onBlur={() => handleMaterialsUsedFieldBlur(props)}
-          onChange={e => handleAddMaterialFieldChange(e, props, refs, state, handleSetState, handleDisplayTime)}
+          onChange={e =>
+            handleAddMaterialFieldChange(
+              e,
+              props,
+              refs,
+              state,
+              handleSetState,
+              savedTimeDisplay,
+            )
+          }
           value={material}
           placeholder={`${index + 1}.`}
         />
@@ -110,7 +128,16 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes, state, h
         className={clsx(classes.customInputStyle, common_classes.marginTop1em)}
         type="text"
         onBlur={() => props.setFieldTouched('materials_used', true)}
-        onChange={e => handleAddMaterialFieldChange(e, props, refs, state, handleSetState, handleDisplayTime)}
+        onChange={e =>
+          handleAddMaterialFieldChange(
+            e,
+            props,
+            refs,
+            state,
+            handleSetState,
+            savedTimeDisplay,
+          )
+        }
         placeholder={`${index + 1}.`}
       />
     ));
@@ -486,7 +513,7 @@ function CreateProject(props) {
                               props,
                               state,
                               handleSetState,
-                              savedTimeDisplay
+                              savedTimeDisplay,
                             )
                           }
                           onBlur={props.handleBlur}
@@ -621,9 +648,9 @@ function CreateProject(props) {
                                 refs,
                                 classes,
                                 common_classes,
-                                state, 
+                                state,
                                 handleSetState,
-                                savedTimeDisplay
+                                savedTimeDisplay,
                               })}
                             </Box>
                           </Grid>
@@ -697,6 +724,15 @@ function CreateProject(props) {
                             props.values.category ? props.values.category : ''
                           }
                           onChange={props.handleChange}
+                          onChange={e =>
+                            handleCategoryChange(
+                              e,
+                              state,
+                              props,
+                              handleSetState,
+                              savedTimeDisplay,
+                            )
+                          }
                           onBlur={props.handleBlur}
                           label="Category"
                         >
@@ -1063,6 +1099,8 @@ function CreateProject(props) {
                                         refs,
                                         props,
                                         state,
+                                        handleSetState,
+                                        savedTimeDisplay,
                                       )),
                                       video_upload_dialog_open: false,
                                     })
@@ -1190,8 +1228,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const is_autosave = true;
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
@@ -1202,7 +1238,7 @@ export default connect(
       description: '',
       video: '',
       materials_used: '',
-      is_autosave: {is_autosave},
+      is_autosave: true,
     }),
     validationSchema,
   })(CreateProject),

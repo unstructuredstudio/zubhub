@@ -33,6 +33,7 @@ export const createProject = (props, redirect = true) => {
         console.log(res);
         throw new Error(JSON.stringify(res));
       } else {
+        console.log("I'm here!");
         if (redirect) {
           toast.success(props.t('createProject.createToastSuccess'));
           return props.history.push('/profile');

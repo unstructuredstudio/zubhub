@@ -47,6 +47,7 @@ const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
     console.log("time out!");
     autoSaveProject(state, props, handleSetState);
     handleDisplayTime();
+    console.log(props.values);
   }, timeoutConst);
 }
 
@@ -73,7 +74,10 @@ export const handleTextFieldChange = (e, state, props, handleSetState, handleDis
   timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
-
+export const handleCategoryChange = (e, state, props, handleSetState, handleDisplayTime) => {
+  props.handleChange();
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
+}
 
 /**
 * @function handleTextFieldBlur
@@ -304,7 +308,6 @@ export const handleAddMaterialFieldChange = (e, props, refs, state, handleSetSta
       }
     }
   }
-
   props.setFieldValue('materials_used', value, true);
   props.setStatus({ ...props.status, materials_used: '' });
   timeOutSave(state, props, handleSetState, handleDisplayTime);
@@ -337,7 +340,7 @@ export const handleAddTags = (e, props, add_tags_el, state, handleSetState, hand
       add_tags_el.current.focus();
     }
   }
-  timeOutSave(state, props, handleSetState, handleDisplayTime);
+  // timeOutSave(state, props, handleSetState, handleDisplayTime);
   return { tag_suggestion_open: false, tag_suggestion: [] };
 };
 
@@ -349,7 +352,7 @@ export const handleAddTags = (e, props, add_tags_el, state, handleSetState, hand
 * 
 * @todo - describe function's signature
 */
-export const handleVideoSelectDone = async (refs, props, state) => {
+export const handleVideoSelectDone = async (refs, props, state, handleSetState, handleDisplayTime) => {
   const { media_upload } = state;
   if (media_upload.videos_to_upload.length < 1) {
     refs.video_selection_feedback_el.current.innerText = '';
@@ -359,6 +362,7 @@ export const handleVideoSelectDone = async (refs, props, state) => {
       return { media_upload };
     });
   }
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
   return {};
 };
 
@@ -445,6 +449,7 @@ export const initUpload = (e, state, props, handleSetState) => {
 };
 
 export const autoSaveProject = async (state, props, handleSetState) => {
+  console.log(state.media_upload.images_to_upload);
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
@@ -529,10 +534,15 @@ export const uploadProject = async (state, props, handleSetState, redirect = fal
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
 
-  const materials_used = props.values['materials_used']
-    ?.split(',')
-    .filter(value => (value ? true : false))
-    .join(',');
+  let materials_used;
+  if (redirect == false && !props.values['materials_used']) {
+    materials_used = "test";
+  } else {
+    materials_used = props.values['materials_used']
+      ?.split(',')
+      .filter(value => (value ? true : false))
+      .join(',');
+  }
 
   const tags = props.values['tags']
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
@@ -989,26 +999,25 @@ export const checkMediaFilesErrorState = (refs, props) => {
 * 
 * @todo - describe object's function
 */
+
 export const validationSchema = Yup.object().shape({
   is_autosave: Yup.boolean(),
   title: Yup.string().max(100, 'max').required('required').when(
-    "is_autosave", {
-      is: false,
-      then: Yup.string().required("required")
-    }
+    'is_autosave', {
+    is: false,
+    then: Yup.string().required("required"),
+    otherwise: Yup.string(),
+  }
   ),
   description: Yup.string().max(10000, 'max').when(
-    "is_autosave", {
-      is: false,
-      then: Yup.string().required("required")
-    }
+    'is_autosave', {
+    is: false,
+    then: Yup.string().required("required"),
+    otherwise: Yup.string(),
+  }
   ),
+  // description: Yup.string().max(10000, 'max').required("required"),
   project_images: Yup.mixed()
-    .test('image_is_empty', 'imageOrVideo', function (value) {
-      return vars.image_field_touched && !value && !this.parent.video
-        ? false
-        : true;
-    })
     .test('not_an_image', 'onlyImages', value => {
       if (value) {
         let not_an_image = false;
@@ -1041,7 +1050,19 @@ export const validationSchema = Yup.object().shape({
       } else {
         return true;
       }
-    }),
+    })
+    .when(
+      'is_autosave', {
+      is: false,
+      then: Yup.mixed().test('image_is_empty', 'imageOrVideo', function (value) {
+        return vars.image_field_touched && !value && !this.parent.video
+          ? false
+          : true;
+      }),
+      otherwise: Yup.mixed(),
+    }
+    )
+  ,
   video: Yup.mixed()
     .test('should_be_video_file', 'shouldBeVideoFile', value => {
       if (!value) {
@@ -1101,25 +1122,38 @@ export const validationSchema = Yup.object().shape({
 
       return false;
     })
-    .test('video_is_empty', 'imageOrVideo', function (value) {
-      return vars.video_field_touched && !value && !this.parent.project_images
-        ? false
-        : true;
-    }),
+    .when(
+      'is_autosave', {
+      is: false,
+      then: Yup.mixed().test('video_is_empty', 'imageOrVideo', function (value) {
+        return vars.video_field_touched && !value && !this.parent.project_images
+          ? false
+          : true;
+      }),
+      otherwise: Yup.mixed(),
+    }
+    ),
   materials_used: Yup.string()
     .max(10000, 'max')
-    .test('empty', 'required', value => {
-      let is_empty = true;
+    .when(
+      'is_autosave', {
+      is: false,
+      then: Yup.string().test('empty', 'required', value => {
+        let is_empty = true;
 
-      value &&
-        value.split(',').forEach(material => {
-          if (material) {
-            is_empty = false;
-          }
-        });
+        value &&
+          value.split(',').forEach(material => {
+            if (material) {
+              is_empty = false;
+            }
+          });
 
-      return !is_empty;
-    }),
+        return !is_empty;
+      }),
+      otherwise: Yup.string()
+    }
+    )
+  ,
   category: Yup.string().min(1, 'min'),
   tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
     if (tags) {
