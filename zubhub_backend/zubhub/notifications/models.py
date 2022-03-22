@@ -23,6 +23,6 @@ class Notification(models.Model):
     source = models.ForeignKey(
         Creator, on_delete=models.CASCADE, null=True, related_name="notification_source", blank=True)
     message = models.CharField(max_length=255, blank=True, null=True)
-    link = models.URLField(max_length=1000)
+    link = models.CharField(max_length=1000, blank=True, null=True)
     viewed = models.BooleanField(default=False)
     date = models.DateTimeField(default=timezone.now)
