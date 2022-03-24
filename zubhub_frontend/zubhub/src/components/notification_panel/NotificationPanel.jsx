@@ -129,7 +129,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
         <p style={{ color: 'black', padding: '50px 0px' }}>
           {notification.message}
         </p>
-      ))}{' '}
+      ))}
       {loading && getLoadingSpinner()}
     </div>
   );
