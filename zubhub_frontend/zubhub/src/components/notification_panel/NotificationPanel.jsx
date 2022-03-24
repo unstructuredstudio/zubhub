@@ -52,7 +52,9 @@ const NotificationPanel = ({ open, anchorEl }) => {
         return;
       }
 
-      await new Promise(resolve => setTimeout(resolve, 5000));
+      if (page > 1) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
 
       setNotifications((currentNotifications) => [...currentNotifications, ...notifications.results]);
       await new Promise(resolve => setTimeout(resolve, 100));
