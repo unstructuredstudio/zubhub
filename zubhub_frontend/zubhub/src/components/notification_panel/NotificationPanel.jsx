@@ -34,6 +34,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [outOfNotifications, setOutOfNotifications] = useState(false);
+  const notificationsWrapperRef = useRef();
 
   const newNotifications = useMemo(
     () => notifications.filter(isNewNotification),
@@ -101,7 +102,11 @@ const NotificationPanel = ({ open, anchorEl }) => {
     const earlierNotificationsLength = earlierNotifications.length;
 
     return (
-      <div className={classes.notificationsWrapper} onScroll={handleScroll}>
+      <div
+        className={classes.notificationsWrapper}
+        onScroll={handleScroll}
+        ref={notificationsWrapperRef}
+      >
         {newNotificationsLength > 0 && (
           <h2 className={classes.panelSubheadingTextStyle}>New</h2>
         )}
@@ -124,7 +129,11 @@ const NotificationPanel = ({ open, anchorEl }) => {
   };
 
   const getUnreadNotificationView = () => (
-    <div className={classes.notificationsWrapper} onScroll={handleScroll}>
+    <div
+      className={classes.notificationsWrapper}
+      onScroll={handleScroll}
+      ref={notificationsWrapperRef}
+    >
       {unreadNotifications.map(notification => (
         <p style={{ color: 'black', padding: '50px 0px' }}>
           {notification.message}
@@ -133,6 +142,11 @@ const NotificationPanel = ({ open, anchorEl }) => {
       {loading && getLoadingSpinner()}
     </div>
   );
+
+  const handleNotificationTabChange = notificationViewType => () => {
+    setNotificationViewType(notificationViewType);
+    notificationsWrapperRef.current.scrollTop = 0;
+  };
 
   return (
     <NotificationPanelPopper open={open} anchorEl={anchorEl}>
@@ -146,15 +160,13 @@ const NotificationPanel = ({ open, anchorEl }) => {
           <h1 className={classes.panelHeaderTextStyle}>Notifications</h1>
           <NotificationPanelButton
             selected={notificationViewType === NOTIFICATION_VIEW_TYPE.ALL}
-            onClick={() => setNotificationViewType(NOTIFICATION_VIEW_TYPE.ALL)}
+            onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.ALL)}
           >
             All
           </NotificationPanelButton>
           <NotificationPanelButton
             selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
-            onClick={() =>
-              setNotificationViewType(NOTIFICATION_VIEW_TYPE.UNREAD)
-            }
+            onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.UNREAD)}
           >
             Unread
           </NotificationPanelButton>
