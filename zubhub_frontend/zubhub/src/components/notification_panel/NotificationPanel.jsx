@@ -15,7 +15,7 @@ const NOTIFICATION_VIEW_TYPE = {
   UNREAD: 'UNREAD',
 };
 
-const recentDateThreshold = 3.6e6;
+const recentDateThreshold = 3.6e6;  // One hour
 const isNewNotification = (notification) => {
   const date = new Date(notification.date);
   const now = new Date();
