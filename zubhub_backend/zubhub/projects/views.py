@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
+from notifications.models import Notification
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import TrigramSimilarity, SearchQuery, SearchRank
@@ -18,7 +19,7 @@ from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
                     get_published_projects_for_user)
-from creators.utils import activity_notification
+from creators.utils import activity_notification, send_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer,
                           StaffPickSerializer)
@@ -54,6 +55,14 @@ class ProjectCreateAPIView(CreateAPIView):
         serializer.save(creator=self.request.user)
         self.request.user.save()
 
+        if self.request.user.followers is not None:
+            send_notification(
+                list(self.request.user.followers.all()),
+                self.request.user,
+                [{} for _ in list(self.request.user.followers.all())],
+                Notification.Type.FOLLOWING_PROJECT,
+                f'/profile/{self.request.user.username}'
+            )
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """
@@ -312,6 +321,14 @@ class ToggleLikeAPIView(RetrieveAPIView):
                     obj.likes.add(self.request.user)
                     obj.save()
 
+                    send_notification(
+                        [obj.creator],
+                        self.request.user,
+                        [{}],
+                        Notification.Type.CLAP,
+                        f'/projects/{obj.pk}'
+                    )
+
             return obj
         else:
             raise PermissionDenied(
@@ -346,6 +363,14 @@ class ToggleSaveAPIView(RetrieveAPIView):
                 else:
                     obj.saved_by.add(self.request.user)
                     obj.save()
+
+                    send_notification(
+                        [obj.creator],
+                        self.request.user,
+                        [{}],
+                        Notification.Type.BOOKMARK,
+                        f'/projects/{obj.pk}'
+                    )
 
             return obj
         else:
@@ -423,11 +448,19 @@ class AddCommentAPIView(CreateAPIView):
                 "project_id": result.pk,
                 "creator": request.user.username
             })
+            send_notification(
+                [result.creator],
+                self.request.user,
+                [{}],
+                Notification.Type.COMMENT,
+                f'/projects/{result.pk}'
+            )
 
         return Response(ProjectSerializer(result, context={
             'request': request
         }).data,
                         status=status.HTTP_201_CREATED)
+            
 
 
 class CategoryListAPIView(ListAPIView):

@@ -1,12 +1,18 @@
 from datetime import timedelta
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import F
+from typing import List, Set, Dict, cast
 from django.core.exceptions import FieldDoesNotExist
 from django.db import transaction
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp
+from creators.models import Setting
+from notifications.models import Notification
+from notifications.utils import push_notification
+from creators.models import Creator
+from django.template.loader import render_to_string
 
 try:
     from allauth.account.adapter import get_adapter
@@ -368,40 +374,63 @@ def enforce_creator__creator_tags_constraints(creator, tag):
 
 
 
-def send_notification(users, contexts, template_name):
-    from .models import Setting
+enabled_notification_settings: Dict[Notification.Type, Set[int]] = {
+    Notification.Type.BOOKMARK: {Setting.WEB},
+    Notification.Type.CLAP: {Setting.WEB},
+    Notification.Type.COMMENT: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+    Notification.Type.FOLLOW: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+    Notification.Type.FOLLOWING_PROJECT:
+    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+}
 
+
+def is_valid_setting(setting: int, notification_type: Notification.Type) -> bool:
+    return setting in enabled_notification_settings[notification_type]
+
+
+html_based_contacts = {Setting.WEB}
+def get_notification_template_name(
+        contact_method: int, notification_type: Notification.Type) -> str:
+    file_extension = '.html' if contact_method in html_based_contacts else '.txt'
+    if contact_method == Setting.EMAIL:
+        file_extension = ''
+    return (f'notifications/{notification_type.name.lower()}'
+            f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}{file_extension}')
+
+
+def send_notification(users: List[Creator], source: Creator, contexts,
+                      notification_type: Notification.Type, link: str) -> None:
     email_contexts = []
     sms_contexts = []
 
     for user, context in zip(users, contexts):
         user_setting = Setting.objects.get(creator=user)
+        context.update({'source': user.username})
 
-        if user.phone and user_setting.contact == Setting.WHATSAPP:
+        if user.phone and user_setting.contact == Setting.WHATSAPP and is_valid_setting(Setting.WHATSAPP, notification_type):
             context.update({"phone": user.phone})
-            send_whatsapp(
-                phone=user.phone,
-                template_name=template_name,
-                ctx=context)
+            send_whatsapp.delay(phone=user.phone,
+                                template_name=get_notification_template_name(Setting.WHATSAPP, notification_type),
+                                ctx=context)
 
-        if user.email and user_setting.contact == Setting.EMAIL:
+        if user.email and user_setting.contact == Setting.EMAIL and is_valid_setting(Setting.EMAIL, notification_type):
             context.update({"email": user.email})
             email_contexts.append(context)
 
-        if user.phone and user_setting.contact == Setting.SMS:
+        if user.phone and user_setting.contact == Setting.SMS and is_valid_setting(Setting.SMS, notification_type):
             context.update({"phone": user.phone})
             sms_contexts.append(context)
 
+        message = render_to_string(
+            get_notification_template_name(Setting.WEB, notification_type),
+            context
+        ).strip()
+        push_notification(user, source, notification_type, message, link)
+
     if len(email_contexts) > 0:
-        send_mass_email.delay(
-            template_name=template_name,
-            ctxs=email_contexts
-        )
+        send_mass_email.delay(template_name=get_notification_template_name(Setting.EMAIL, notification_type), ctxs=email_contexts, full_template=True)
     if len(sms_contexts) > 0:
-        send_mass_text.delay(
-            template_name=template_name,
-            ctxs=sms_contexts
-        )
+        send_mass_text.delay(template_name=get_notification_template_name(Setting.SMS, notification_type), ctxs=sms_contexts, full_template=True)
 
 
 # def sync_user_email_addresses(user):

@@ -1,6 +1,7 @@
 import csv
 from io import StringIO
 from django.utils.translation import ugettext_lazy as _
+from notifications.models import Notification
 from rest_framework import status
 from django.http import Http404
 from django.contrib.auth import get_user_model
@@ -361,6 +362,8 @@ class ToggleFollowAPIView(RetrieveAPIView):
         else:
             obj.followers.add(self.request.user)
             obj.save()
+
+            send_notification([obj], self.request.user, [{}], Notification.Type.FOLLOW, f'/profile/{self.request.user.username}')
         self.request.user.save()
 
         return obj
