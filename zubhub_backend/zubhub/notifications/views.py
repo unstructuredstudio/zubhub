@@ -37,4 +37,4 @@ class UserNotificationsAPIView(ListAPIView):
 
     def get_queryset(self):
         return Notification.objects.all().filter(
-            recipient=self.request.user).order_by("date")
+            recipient=self.request.user).order_by("-date")
