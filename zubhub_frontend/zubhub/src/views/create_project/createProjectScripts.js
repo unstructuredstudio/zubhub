@@ -39,7 +39,7 @@ export const vars = {
 
 
 let timer = null;
-const timeoutConst = 2000;
+const timeoutConst = 5000;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   clearTimeout(timer);
@@ -47,7 +47,6 @@ const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
     console.log("time out!");
     autoSaveProject(state, props, handleSetState);
     handleDisplayTime();
-    console.log(props.values);
   }, timeoutConst);
 }
 
@@ -74,8 +73,8 @@ export const handleTextFieldChange = (e, state, props, handleSetState, handleDis
   timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
-export const handleCategoryChange = (e, state, props, handleSetState, handleDisplayTime) => {
-  props.handleChange();
+export const handleCategoryChange = (targetValue, state, props, handleSetState, handleDisplayTime) => {
+  props.values.category = targetValue;
   timeOutSave(state, props, handleSetState, handleDisplayTime);
 }
 
@@ -235,11 +234,12 @@ export const addMaterialsUsedNode = (e, props) => {
 * 
 * @todo - describe function's signature
 */
-export const removeTag = (_, props, value) => {
+export const removeTag = (_, props, value, state, handleSetState, handleDisplayTime) => {
   let tags = props.values['tags'];
   tags = tags ? JSON.parse(tags) : [];
   tags = tags.filter(tag => tag.name !== value);
   props.setFieldValue('tags', JSON.stringify(tags));
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
 
@@ -340,7 +340,7 @@ export const handleAddTags = (e, props, add_tags_el, state, handleSetState, hand
       add_tags_el.current.focus();
     }
   }
-  // timeOutSave(state, props, handleSetState, handleDisplayTime);
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
   return { tag_suggestion_open: false, tag_suggestion: [] };
 };
 
@@ -449,7 +449,6 @@ export const initUpload = (e, state, props, handleSetState) => {
 };
 
 export const autoSaveProject = async (state, props, handleSetState) => {
-  console.log(state.media_upload.images_to_upload);
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
@@ -485,7 +484,7 @@ export const autoSaveProject = async (state, props, handleSetState) => {
         )
       ) {
         vars.upload_in_progress = true;
-        uploadProject(state, props, handleSetState);
+        uploadProject(state, props, handleSetState, false);
       } else {
         const { media_upload } = state;
         media_upload.upload_percent = 0;
@@ -529,7 +528,7 @@ export const autoSaveProject = async (state, props, handleSetState) => {
 * 
 * @todo - describe function's signature
 */
-export const uploadProject = async (state, props, handleSetState, redirect = false) => {
+export const uploadProject = async (state, props, handleSetState, redirect = true) => {
   const { media_upload } = state;
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });

@@ -190,6 +190,10 @@ function CreateProject(props) {
     }
   }, []);
 
+  React.useEffect(() => {
+    console.log(props.values);
+  }, props.values);
+
   useStateUpdateCallback(() => {
     if (
       state.media_upload.images_to_upload.length +
@@ -723,16 +727,15 @@ function CreateProject(props) {
                           value={
                             props.values.category ? props.values.category : ''
                           }
-                          onChange={props.handleChange}
-                          onChange={e =>
+                          onChange={e => {
                             handleCategoryChange(
-                              e,
+                              e.target.value,
                               state,
                               props,
                               handleSetState,
                               savedTimeDisplay,
-                            )
-                          }
+                            );
+                          }}
                           onBlur={props.handleBlur}
                           label="Category"
                         >
@@ -801,7 +804,16 @@ function CreateProject(props) {
                                   className={classes.customChipStyle}
                                   key={num}
                                   label={tag.name}
-                                  onDelete={e => removeTag(e, props, tag.name)}
+                                  onDelete={e =>
+                                    removeTag(
+                                      e,
+                                      props,
+                                      tag.name,
+                                      state,
+                                      handleSetState,
+                                      savedTimeDisplay,
+                                    )
+                                  }
                                   color="secondary"
                                   variant="outlined"
                                 />
@@ -828,7 +840,16 @@ function CreateProject(props) {
                                 state,
                                 handleSetState,
                               );
-                              handleSetState(handleAddTags(e, props));
+                              handleSetState(
+                                handleAddTags(
+                                  e,
+                                  props,
+                                  refs.add_tags_el,
+                                  state,
+                                  handleSetState,
+                                  savedTimeDisplay,
+                                ),
+                              );
                             }}
                             onBlur={e => {
                               handleAddTags(e, props);
