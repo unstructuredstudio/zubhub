@@ -84,7 +84,6 @@ function UserProjects(props) {
                 align="center"
               >
                 <Project
-                  isDraft={true}
                   project={project}
                   key={project.id}
                   updateProjects={res =>
