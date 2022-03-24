@@ -15,8 +15,8 @@ const NOTIFICATION_VIEW_TYPE = {
   UNREAD: 'UNREAD',
 };
 
-const recentDateThreshold = 3.6e6;  // One hour
-const isNewNotification = (notification) => {
+const recentDateThreshold = 3.6e6; // One hour
+const isNewNotification = notification => {
   const date = new Date(notification.date);
   const now = new Date();
 
@@ -35,9 +35,19 @@ const NotificationPanel = ({ open, anchorEl }) => {
   const [loading, setLoading] = useState(false);
   const [outOfNotifications, setOutOfNotifications] = useState(false);
 
-  const newNotifications = useMemo(() => notifications.filter(isNewNotification), [notifications]);
-  const earlierNotifications = useMemo(() => notifications.filter((notification) => !isNewNotification(notification)), [notifications]);
-  const unreadNotifications = useMemo(() => notifications.filter((notification) => !notification.viewed), [notifications]);
+  const newNotifications = useMemo(
+    () => notifications.filter(isNewNotification),
+    [notifications],
+  );
+  const earlierNotifications = useMemo(
+    () =>
+      notifications.filter(notification => !isNewNotification(notification)),
+    [notifications],
+  );
+  const unreadNotifications = useMemo(
+    () => notifications.filter(notification => !notification.viewed),
+    [notifications],
+  );
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -56,7 +66,10 @@ const NotificationPanel = ({ open, anchorEl }) => {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
 
-      setNotifications((currentNotifications) => [...currentNotifications, ...notifications.results]);
+      setNotifications(currentNotifications => [
+        ...currentNotifications,
+        ...notifications.results,
+      ]);
       await new Promise(resolve => setTimeout(resolve, 100));
       setLoading(false);
     };
@@ -67,8 +80,11 @@ const NotificationPanel = ({ open, anchorEl }) => {
   }, [page, token, outOfNotifications]);
 
   const handleScroll = ({ target }) => {
-    if (!loading && target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
-      setPage((page) => page + 1);
+    if (
+      !loading &&
+      target.scrollTop + target.clientHeight >= target.scrollHeight - 50
+    ) {
+      setPage(page => page + 1);
     }
   };
 
@@ -89,18 +105,33 @@ const NotificationPanel = ({ open, anchorEl }) => {
         {newNotificationsLength > 0 && (
           <h2 className={classes.panelSubheadingTextStyle}>New</h2>
         )}
-        {newNotifications.map((notification) => <p style={{ color: 'black', padding: '50px 0px' }}>{notification.message}</p>)}
+        {newNotifications.map(notification => (
+          <p style={{ color: 'black', padding: '50px 0px' }}>
+            {notification.message}
+          </p>
+        ))}
         {earlierNotificationsLength > 0 && (
           <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>
         )}
-        {earlierNotifications.map((notification) => <p style={{ color: 'black', padding: '50px 0px' }}>{notification.message}</p>)}
+        {earlierNotifications.map(notification => (
+          <p style={{ color: 'black', padding: '50px 0px' }}>
+            {notification.message}
+          </p>
+        ))}
         {loading && getLoadingSpinner()}
       </div>
     );
   };
 
   const getUnreadNotificationView = () => (
-    <div className={classes.notificationsWrapper} onScroll={handleScroll}>{unreadNotifications.map((notification) => <p style={{ color: 'black', padding: '50px 0px' }}>{notification.message}</p>)} {loading && getLoadingSpinner()}</div>
+    <div className={classes.notificationsWrapper} onScroll={handleScroll}>
+      {unreadNotifications.map(notification => (
+        <p style={{ color: 'black', padding: '50px 0px' }}>
+          {notification.message}
+        </p>
+      ))}{' '}
+      {loading && getLoadingSpinner()}
+    </div>
   );
 
   return (
