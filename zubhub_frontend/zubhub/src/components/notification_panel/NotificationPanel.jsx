@@ -103,8 +103,6 @@ const NotificationPanel = ({ open, anchorEl }) => {
     <div className={classes.notificationsWrapper} onScroll={handleScroll}>{unreadNotifications.map((notification) => <p style={{ color: 'black', padding: '50px 0px' }}>{notification.message}</p>)} {loading && getLoadingSpinner()}</div>
   );
 
-    console.log('new', newNotifications);
-
   return (
     <NotificationPanelPopper open={open} anchorEl={anchorEl}>
       <div
