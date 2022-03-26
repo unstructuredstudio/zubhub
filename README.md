@@ -13,26 +13,72 @@ Zubhub is designed and developed by [Unstructured Studio](https://unstructured.s
 
 <img src="screenshot.png">
 
-## Development
+## Developer Setup
 Follow the instructions below to set up your local development environment
+### Prerequisites
 
-### Backend
-- Change directory to `./zubhub_backend`
-- Run `make init` to do all the initial setups required and start the server.
-  `make init` generates the minimal .env file required to run the backend, 
-  spins-up all containers defined in the backend docker-compose file,
-  applies all necessary migrations to the database,
-  and creates a default admin user with 
-  username and password of dummy and dummy_password respectively.
+1. install [docker](https://docs.docker.com/get-docker/).
+2. install [docker-compose](https://docs.docker.com/compose/install/).
+3. Install [Node.js 14 and npm 7 or later](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/).
+4. Install [make](https://www.gnu.org/software/make/) using either your system’s package manager (Linux) or Xcode command line developer tools (OSX). On Windows, you can use [MozillaBuild](https://wiki.mozilla.org/MozillaBuild).
 
-  Subsequently to start and stop the docker containers, use `make start`, `make stop`, or `make down`. (run `make help` to see all the available make commands).
-- Visit `localhost:8000` on your browser to access the API documentation.
+### Quick Start
+The following describes how to set up an instance of the site on your computer for development with Docker and docker-compose.
 
-### Frontend
+1. Clone the [zubHub repository](https://github.com/unstructuredstudio/zubhub)
+ ```sh
+       $ git clone https://github.com/mozilla/pontoon.git
+ ```
+> **_NOTE:_** ❗  : To contribute changes to the project, you will need to [fork](<https://help.github.com/en/github/getting-started-with-github/fork-a-repo>) the repository under your own GitHub account.
+
+#### Backend
+2. From the root of the repository, run:
+```sh
+       $ cd ./zubhub_backend
+ ```
+3. Run:
+```sh
+       $ make init
+```
+This will run all  the initial setups required and start the server.generates the minimal `.env file` required to run the backend, spins-up all containers defined in the backend docker-compose file,applies all necessary migrations to the database,and creates a default admin user with username and password of `dummy` and `dummy_password` respectively.
+
+4. Run the server:
+
+Subsequently to start and stop the docker containers, you run the following
+
+To start: 
+```sh
+       $ make start
+```
+To stop: 
+```sh
+       $ make stop or make down
+```
+For other make commands: run `make help`
+
+Visit  http://localhost:8000 on your browser to access the API documentation.
+
+#### Frontend
 - Create a file named .env in the frontend root folder (same directory with package.json)
 - Copy the content of .env.example and paste into the new .env file.
 - Run `make start` to spin up the frontend container.
 - Visit `localhost:3000` on your browser to access the frontend.
+
+### Installing Docker on Windows Pro/Enterprise/Education
+- Install Docker [Desktop for Windows](https://docs.docker.com/desktop/windows/install/).
+
+#### Install tools (git, make, cygwin)
+The easiest way is to use a package manager like [Chocolatey](https://chocolatey.org/install). Follow the installation instructions for Windows Powershell (Admin), then run `choco install make git cygwin` to install all packages.
+
+Follow the prompt requests allowing script execution. At the end, verify that packages are available with `make --version` and `git --version`, it should return a version for each command.
+
+At this point you need to disable the config `core.autocrlf` before cloning the **zubhub** repository, otherwise all files will use Windows line-endings (CRLF), and docker images will fail to build. To do so, open a Powershell as Admin (right click on the Start Menu, select Windows Powershell (Admin)), and run:
+
+```sh
+git config --system --unset core.autocrlf
+git config --global core.autocrlf false
+```
+You can use `git config -l` to verify that the value for `core.autocrlf` is correctly set.
 
 ## Deployment
 ZubHub is currently deployed on its main website using Github Actions that act as our build and deployment tooling. If you are interested in deploying Zubhub on your own VM for testing and hosting purposes, follow the [Single VM Deployment](single_vm_deployment) instructions.  
