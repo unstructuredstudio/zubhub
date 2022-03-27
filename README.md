@@ -37,10 +37,18 @@ The following describes how to set up an instance of the site on your computer f
        $ cd ./zubhub_backend
  ```
 3. Run:
+
 ```sh
        $ make init
 ```
 This will run all  the initial setups required and start the server.generates the minimal `.env file` required to run the backend, spins-up all containers defined in the backend docker-compose file,applies all necessary migrations to the database,and creates a default admin user with username and password of `dummy` and `dummy_password` respectively.
+
+Incase you're facing issues after running the above, like make: Error,
+kindly run this before the above command:
+
+```sh
+       $ docker-compose up
+```
 
 4. Run the server:
 
