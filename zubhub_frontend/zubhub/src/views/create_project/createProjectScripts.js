@@ -8,6 +8,7 @@ import {
 } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import FFMPEG from "react-ffmpeg";
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
 /**
  * @constant vars
@@ -509,7 +510,7 @@ export const uploadVideo = async (video, state, props, handleSetState) => {
 export const compressVideo = async (video) => {
   await FFMPEG.process(
     video,
-    '-metadata location="" -metadata location-eng="" -metadata author="" -c:v copy -c:a copy',
+    '-vcodec libx264 -crf 28',
     function (e) {
       const vid = e.result;
       console.log(vid);
@@ -546,6 +547,7 @@ export const uploadVideoToLocal = (video, state, props, handleSetState) => {
     props,
     handleSetState,
   );
+  console.log(video)
   um.upload();
 };
 
