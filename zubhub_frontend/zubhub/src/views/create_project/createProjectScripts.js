@@ -499,7 +499,7 @@ export const uploadVideo = async (video, state, props, handleSetState) => {
     console.log(video)
     compressVideo(video)
     if (res && res.local === true) {
-      uploadVideoToLocal(video);
+      uploadVideoToLocal(video, state, props, handleSetState);
     } else if (res && res.local === false) {
       uploadVideoToCloudinary(video, state, props, handleSetState);
     }
