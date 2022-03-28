@@ -67,7 +67,12 @@ export const getCategories = props => {
 * 
 * @todo - describe function's signature
 */
-export const handleTextFieldChange = (e, state, props, handleSetState, handleDisplayTime) => {
+export const handleTextFieldChange = (e, targetField, targetValue, state, props, handleSetState, handleDisplayTime) => {
+  if (targetField == "title") {
+    props.values.title = targetValue;
+  } else if (targetField == "description") {
+    props.values.description = targetValue;
+  }
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
   timeOutSave(state, props, handleSetState, handleDisplayTime);
@@ -239,6 +244,7 @@ export const removeTag = (_, props, value, state, handleSetState, handleDisplayT
   tags = tags ? JSON.parse(tags) : [];
   tags = tags.filter(tag => tag.name !== value);
   props.setFieldValue('tags', JSON.stringify(tags));
+  props.values.tags = JSON.stringify(tags);
   timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
@@ -310,6 +316,7 @@ export const handleAddMaterialFieldChange = (e, props, refs, state, handleSetSta
   }
   props.setFieldValue('materials_used', value, true);
   props.setStatus({ ...props.status, materials_used: '' });
+  props.values.materials_used = value;
   timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
@@ -333,6 +340,7 @@ export const handleAddTags = (e, props, add_tags_el, state, handleSetState, hand
   if (!exists && value.length > 1 && value[0] && !(tags.length >= 5)) {
     tags.push({ name: value[0] });
     props.setFieldValue('tags', JSON.stringify(tags));
+    props.values.tags = JSON.stringify(tags);
     e.currentTarget.value = '';
     if (e.currentTarget.focus) e.currentTarget.focus();
     if (add_tags_el) {

@@ -131,6 +131,7 @@ const buildMaterialUsedNodes = ({
         onChange={e =>
           handleAddMaterialFieldChange(
             e,
+            e.target.value,
             props,
             refs,
             state,
@@ -334,6 +335,8 @@ function CreateProject(props) {
                           onChange={e =>
                             handleTextFieldChange(
                               e,
+                              e.target.id,
+                              e.target.value,
                               state,
                               props,
                               handleSetState,
@@ -421,6 +424,8 @@ function CreateProject(props) {
                           onChange={e =>
                             handleTextFieldChange(
                               e,
+                              e.target.id,
+                              e.target.value,
                               state,
                               props,
                               handleSetState,
@@ -888,6 +893,9 @@ function CreateProject(props) {
                                           },
                                           props,
                                           refs.add_tags_el,
+                                          state,
+                                          handleSetState,
+                                          savedTimeDisplay
                                         ),
                                       );
                                     }}
