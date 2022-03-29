@@ -5,7 +5,7 @@ const styles = theme => ({
   popperStyle: {
     backgroundColor: 'white',
     zIndex: 20,
-    padding: '20px',
+    padding: '20px 15px',
     borderRadius: '20px',
     boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
   },
@@ -20,6 +20,23 @@ const styles = theme => ({
     alignItems: 'center',
     gap: '10px',
     color: '#00B8C4',
+    padding: '2.5px 0px'
+  },
+  circularProgressStyle: {
+    color: '#00B8C4',
+    alignSelf: 'center',
+    margin: '20px',
+  },
+  notificationsWrapper: {
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    color: 'black',
+    maxHeight: '450px',
+    overflowY: 'auto',
+    [theme.breakpoints.down('600')]: {
+      maxHeight: '100%',
+    },
+    overscrollBehavior: 'contain',
   },
   panelHeaderTextStyle: {
     margin: '0px',
@@ -27,9 +44,13 @@ const styles = theme => ({
     fontWeight: '600',
   },
   panelSubheadingTextStyle: {
-    margin: '5px 0px',
     fontWeight: '600',
     color: '#00B8C4',
+    padding: '5px 0px',
+    position: 'sticky',
+    top: '0px',
+    backgroundColor: 'white',
+    margin: '0px',
   },
   fullWidth: {
     width: '100%',
