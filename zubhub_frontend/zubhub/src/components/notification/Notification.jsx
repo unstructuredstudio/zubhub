@@ -14,6 +14,13 @@ const Notification = ({ notification }) => {
   const token = useSelector(store => store.auth.token);
   const { t } = useTranslation();
   const st = dFormatter(JSON.parse('"' + notification.time + '"'));
+  let message = '';
+  if (notification.message.length < 50) {
+    message += notification.message;
+  } else {
+    message += notification.message.slice(0, 50) + '...';
+  }
+
   return (
     <>
       <ListItem
@@ -35,9 +42,10 @@ const Notification = ({ notification }) => {
           <Avatar className={classes.image} src={notification.source.avatar} />
         </ListItemAvatar>
         <ListItemText
-          primary={notification.message}
+          className={classes.text}
+          classes={{ primary: classes.message, secondary: classes.time }}
+          primary={message}
           secondary={t(st.value + ' ' + st.key + ' ' + 'ago')}
-          style={{ color: 'black', width: '275px' }}
         />
         {!notification.viewed && <div className={classes.viewDot}></div>}
         {notification.viewed && <div className={classes.unviewed}></div>}

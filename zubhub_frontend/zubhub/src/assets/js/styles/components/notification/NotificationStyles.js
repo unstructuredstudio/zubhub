@@ -9,7 +9,7 @@ const styles = theme => ({
         backgroundColor: '#FFFFFF',
         paddingTop: '0px',
         paddingBottom: '0px',
-        paddingLeft: '2.5%',
+        paddingLeft: '1.5%',
         paddingRight: '5%',
         margin: '0px',
         justifyContent: 'space-evenly',
@@ -25,7 +25,6 @@ const styles = theme => ({
             },
             '& $image': {
                 backgroundColor: 'white',
-
             },
             backgroundColor: '#52B5C2',
             fontColor: '#FFFFFF',
@@ -43,17 +42,19 @@ const styles = theme => ({
         font: 'Raleway',
         color: '#000000',
         marginBottom: '0px',
+        marginLeft: '8px',
         textDecoration: 'none',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
-        width: '80%',
+        width: '0px',
     },
     time: {
         marginTop: '0px',
         fontSize: '14px',
         color: '#00B8C4',
+        marginLeft: '8px',
     },
     viewDot: {
         backgroundColor: '#00B8C4',
