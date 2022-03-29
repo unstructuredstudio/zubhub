@@ -50,7 +50,7 @@ def push_notification(recipient, source, notification_type, link, context):
         notification.date = datetime.now()
         notification.viewed = False
         notification.save()
-        return notification
+        return
 
     message = render_to_string(
         template_name,
@@ -59,5 +59,3 @@ def push_notification(recipient, source, notification_type, link, context):
     notification = Notification.objects.create(recipient=recipient, type=notification_type, message=message, link=link)
     notification.sources.set([source])
     notification.save()
-
-    return notification
