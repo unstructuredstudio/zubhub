@@ -39,7 +39,7 @@ export const vars = {
 
 
 let timer = null;
-const timeoutConst = 5000;
+const timeoutConst = 2000;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   clearTimeout(timer);
@@ -418,7 +418,7 @@ export const initUpload = (e, state, props, handleSetState) => {
         )
       ) {
         vars.upload_in_progress = true;
-        uploadProject(state, props, handleSetState);
+        uploadProject(state, props, handleSetState, false);
       } else {
         const { media_upload } = state;
         media_upload.upload_dialog = true;
@@ -473,17 +473,6 @@ export const autoSaveProject = async (state, props, handleSetState) => {
 
     props.validateForm().then(errors => {
       if (
-        Object.keys(errors).length > 0 &&
-        (Object.keys(errors).length !== 2 ||
-          !(
-            errors['project_images'] === 'imageOrVideo' &&
-            errors['video'] === 'imageOrVideo' &&
-            state.media_upload.uploaded_videos_url.length !== 0 &&
-            state.media_upload.uploaded_videos_url.length !== 0
-          ))
-      ) {
-        return;
-      } else if (
         (state.media_upload.uploaded_images_url.length !== 0 ||
           state.media_upload.uploaded_videos_url.length !== 0) &&
         !(
@@ -491,6 +480,7 @@ export const autoSaveProject = async (state, props, handleSetState) => {
           state.media_upload.videos_to_upload.length !== 0
         )
       ) {
+        console.log("im in the if statement");
         vars.upload_in_progress = true;
         uploadProject(state, props, handleSetState, false);
       } else {
@@ -498,7 +488,6 @@ export const autoSaveProject = async (state, props, handleSetState) => {
         media_upload.upload_percent = 0;
         vars.upload_in_progress = true;
         handleSetState({ media_upload });
-
         for (
           let index = 0;
           index < media_upload.images_to_upload.length;
@@ -537,13 +526,14 @@ export const autoSaveProject = async (state, props, handleSetState) => {
 * @todo - describe function's signature
 */
 export const uploadProject = async (state, props, handleSetState, redirect = true) => {
+  console.log("REDIRECT:", redirect)
   const { media_upload } = state;
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
 
   let materials_used;
-  if (redirect == false && !props.values['materials_used']) {
-    materials_used = "test";
+  if (!redirect && !props.values['materials_used']) {
+    materials_used = "place holder";
   } else {
     materials_used = props.values['materials_used']
       ?.split(',')
@@ -906,7 +896,7 @@ export const getProject = (refs, props, state) => {
 * 
 * @todo - describe function's signature
 */
-export const handleVideoFieldChange = async (e, refs, props, state) => {
+export const handleVideoFieldChange = async (e, refs, props, state, handleSetState, handleDisplayTime) => {
   let video_node;
   let type;
 
@@ -944,6 +934,7 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
         refs.video_selection_feedback_el.current.innerText = props.t(
           `createProject.inputs.${type}`,
         );
+        timeOutSave(state, props, handleSetState, handleDisplayTime);
         return { media_upload };
       } else {
         refs.video_selection_feedback_el.current.innerText = '';

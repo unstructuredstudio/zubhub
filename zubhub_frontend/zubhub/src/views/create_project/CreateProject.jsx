@@ -202,7 +202,7 @@ function CreateProject(props) {
         state.media_upload.successful_uploads &&
       vars.upload_in_progress
     ) {
-      uploadProject(state, props, handleSetState);
+      saved == 'none' ? uploadProject(state, props, handleSetState) : uploadProject(state, props, handleSetState, false);
     }
   }, [state.media_upload.successful_uploads]);
 
@@ -1079,6 +1079,7 @@ function CreateProject(props) {
                                             props,
                                             state,
                                             handleSetState,
+                                            savedTimeDisplay
                                           ),
                                         )
                                       }
@@ -1153,6 +1154,7 @@ function CreateProject(props) {
                                         props,
                                         state,
                                         handleSetState,
+                                        savedTimeDisplay
                                       ),
                                     );
                                   }}
@@ -1248,8 +1250,9 @@ const mapDispatchToProps = dispatch => {
     createProject: (props, x) => {
       return dispatch(ProjectActions.createProject(props, x));
     },
-    updateProject: (props, x) => {
-      return dispatch(ProjectActions.updateProject(props, x));
+    updateProject: (props, redirect) => {
+      console.log("I AM", redirect);
+      return dispatch(ProjectActions.updateProject(props, redirect));
     },
     shouldUploadToLocal: args => {
       return dispatch(ProjectActions.shouldUploadToLocal(args));
