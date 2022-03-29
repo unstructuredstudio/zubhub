@@ -334,15 +334,7 @@ export const handleVideoSelectDone = async (refs, props, state) => {
       media_upload.uploaded_videos_url = [];
       return { media_upload };
     });
-  } else {
-    for (
-      let index = 0;
-      index < media_upload.videos_to_upload.length;
-      index++
-    ) {
-      await compressVideo(media_upload, index)
-    }
-  }
+  } 
   return {};
 };
 
@@ -418,9 +410,7 @@ export const initUpload = (e, state, props, handleSetState) => {
           index < media_upload.videos_to_upload.length;
           index++
         ) {
-          console.log("uploading video: ");
-          console.log(media_upload.videos_to_upload)
-          console.log(media_upload.videos_to_upload[index]);
+          console.log("uploading video");
           uploadVideo(
             media_upload.videos_to_upload[index],
             state,
@@ -521,6 +511,7 @@ export const uploadVideo = async (video, state, props, handleSetState) => {
     const res = await props.shouldUploadToLocal(args);
 
     console.log('uploadVideo')
+
     if (res && res.local === true) {
       await uploadVideoToLocal(video, state, props, handleSetState);
     } else if (res && res.local === false) {
@@ -529,17 +520,15 @@ export const uploadVideo = async (video, state, props, handleSetState) => {
   }
 };
 
-export const compressVideo = async (media_upload, index) => {
+export const compressVideo = async (video) => {
   await FFMPEG.process(
-    media_upload.videos_to_upload[index],
+    video,
     '-aspect 10:1 -preset fast',
     function (e) {
       const vid = e.result;
       console.log('compressed output: ')
       console.log(vid);
-      media_upload.videos_to_upload[index] = vid
     }.bind(this), 
-    
   )
 }
 
@@ -562,20 +551,21 @@ export const uploadVideoToLocal = async (video, state, props, handleSetState) =>
 
   const formData = new FormData();
 
-  // console.log('starting input: ');
-  // console.log(video)
+  console.log('starting input: ');
+  console.log(video)
 
-  // await FFMPEG.process(
-  //   video,
-  //   '-aspect 10:1 -preset fast',
-  //   // '-vcodec libx264 -vf scale=320:-1',
+  const start = new Date().getTime();
 
-  //   async function (e) {
-  //     const vid = e.result;
-  //     console.log('compressed output: ')
-  //     console.log(vid);
+  await FFMPEG.process(
+    video,
+    '-c:a copy -c:v libx264 -crf 28 -preset ultrafast',
 
-      formData.append('file', video); // change to vid
+    async function (e) {
+      const vid = e.result;
+      console.log('compressed output: ')
+      console.log(vid);
+
+      formData.append('file', vid); 
       formData.append('key', key);
 
       const um = new UploadMedia(
@@ -588,10 +578,12 @@ export const uploadVideoToLocal = async (video, state, props, handleSetState) =>
       );
 
       console.log("uploaded video: ")
-      console.log(video)
+      console.log(vid)
+      const end = new Date().getTime();
+      console.log(end - start)
       um.upload();
-    // }.bind(this)
-  // );
+    }.bind(this)
+  );
 
   console.log('after await');
 };
