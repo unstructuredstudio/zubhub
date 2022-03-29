@@ -13,20 +13,26 @@ def push_notification(recipient, source, notification_type, message, link, templ
     prev_notifications = []
     if notification_type in grouped_notification_types:
         try:
-            prev_notifications = Notification.objects.filter(recipient=recipient, type=notification_type, link=check_link).order_by('-date')[:30]
+            filters = {
+                'recipient': recipient,
+                'type': notification_type
+            }
+            if check_link:
+                filters['link'] = check_link
+            prev_notifications = Notification.objects.filter(**filters).order_by('-date')[:30]
         except Notification.DoesNotExist:
             pass
 
     for notification in prev_notifications:
         if datetime.now(timezone.utc) - notification.date > recent_notification_time:
             break
-        
+
         notification.sources.add(source)
         template_prefix, template_ext = template_name.rsplit('.', 1)
         template_name = f'{template_prefix}_many.{template_ext}'
         notification.message = render_to_string(
             template_name,
-            {'sources': notification.sources}
+            {'sources': notification.sources.all()}
         ).strip()
         notification.date = datetime.now()
         notification.viewed = False
