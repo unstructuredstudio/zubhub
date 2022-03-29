@@ -44,7 +44,7 @@ const Notification = ({ notification }) => {
         <ListItemText
           className={classes.text}
           classes={{ primary: classes.message, secondary: classes.time }}
-          primary={message}
+          primary={t(message)}
           secondary={t(st.value + ' ' + st.key + ' ' + 'ago')}
         />
         {!notification.viewed && <div className={classes.viewDot}></div>}
