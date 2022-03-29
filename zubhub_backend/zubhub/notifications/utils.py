@@ -35,9 +35,8 @@ def push_notification(recipient, source, notification_type, link, context):
             if check_link:
                 filters['link'] = check_link
             notification = Notification.objects.filter(**filters).order_by('-date').first()
-            print(notification)
         except Notification.DoesNotExist:
-            print('none exists')
+            pass
 
     if notification is not None:
         notification.sources.add(source)
