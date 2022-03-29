@@ -5,12 +5,12 @@ from creators.serializers import CreatorMinimalSerializer
 
 class NotificationSerializer(serializers.ModelSerializer):
     recipient = CreatorMinimalSerializer(read_only=True)
-    source = CreatorMinimalSerializer(read_only=True)
+    sources = CreatorMinimalSerializer(read_only=True, many=True)
 
     class Meta:
         model = Notification
-        fields = ('id', 'recipient', 'source', 'date', 'viewed', 'type', 'link', 'message')
+        fields = ('id', 'recipient', 'sources', 'date', 'viewed', 'type', 'link', 'message')
 
         read_only_field = [
-            'id', 'recipient', 'source', 'date', 'viewed', 'type', 'link', 'message'
+            'id', 'recipient', 'sources', 'date', 'viewed', 'type', 'link', 'message'
         ]

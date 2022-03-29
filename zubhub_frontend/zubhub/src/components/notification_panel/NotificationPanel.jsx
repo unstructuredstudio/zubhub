@@ -98,8 +98,8 @@ const NotificationPanel = ({ open, anchorEl }) => {
   );
 
   const getAllNotificationView = () => {
-    const newNotificationsLength = newNotifications.length;
-    const earlierNotificationsLength = earlierNotifications.length;
+    const hasNewNotifications = newNotifications.length > 0;
+    const hasEarlierNotifications = earlierNotifications.length > 0;
 
     return (
       <div
@@ -107,7 +107,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
         onScroll={handleScroll}
         ref={notificationsWrapperRef}
       >
-        {newNotificationsLength > 0 && (
+        {hasNewNotifications && (
           <h2 className={classes.panelSubheadingTextStyle}>New</h2>
         )}
         {newNotifications.map(notification => (
@@ -115,7 +115,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
             {notification.message}
           </p>
         ))}
-        {earlierNotificationsLength > 0 && (
+        {hasEarlierNotifications && (
           <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>
         )}
         {earlierNotifications.map(notification => (
@@ -123,6 +123,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
             {notification.message}
           </p>
         ))}
+        {!loading && !hasNewNotifications && !hasEarlierNotifications && <p>You have no notifications in this category.</p>}
         {loading && getLoadingSpinner()}
       </div>
     );
@@ -139,6 +140,7 @@ const NotificationPanel = ({ open, anchorEl }) => {
           {notification.message}
         </p>
       ))}
+      {!loading && unreadNotifications.length === 0 && <p>You have no notifications in this category.</p>}
       {loading && getLoadingSpinner()}
     </div>
   );

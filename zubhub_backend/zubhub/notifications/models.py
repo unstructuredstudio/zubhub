@@ -20,8 +20,7 @@ class Notification(models.Model):
     )
     recipient = models.ForeignKey(
         Creator, on_delete=models.CASCADE, null=True, related_name="notification_recipient", blank=True)
-    source = models.ForeignKey(
-        Creator, on_delete=models.CASCADE, null=True, related_name="notification_source", blank=True)
+    sources = models.ManyToManyField(Creator, null=True, related_name='notification_source', blank=True)
     message = models.CharField(max_length=255, blank=True, null=True)
     link = models.CharField(max_length=1000, blank=True, null=True)
     viewed = models.BooleanField(default=False)

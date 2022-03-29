@@ -290,11 +290,12 @@ def send_notification(users: List[Creator], source: Creator, contexts,
             context.update({"phone": user.phone})
             sms_contexts.append(context)
 
+        template_name = get_notification_template_name(Setting.WEB, notification_type)
         message = render_to_string(
-            get_notification_template_name(Setting.WEB, notification_type),
+            template_name,
             context
         ).strip()
-        push_notification(user, source, notification_type, message, link)
+        push_notification(user, source, notification_type, message, link, template_name)
 
     if len(email_contexts) > 0:
         send_mass_email.delay(template_name=get_notification_template_name(Setting.EMAIL, notification_type), ctxs=email_contexts, full_template=True)
