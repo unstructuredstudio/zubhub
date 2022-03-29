@@ -3,6 +3,7 @@ from notifications.models import Notification
 from django.template.loader import render_to_string
 
 
+grouped_notification_types = {Notification.Type.BOOKMARK, Notification.Type.CLAP, Notification.Type.COMMENT, Notification.Type.FOLLOW}
 recent_notification_time = timedelta(hours=1)
 def push_notification(recipient, source, notification_type, message, link, template_name):
     check_link = None
@@ -10,7 +11,7 @@ def push_notification(recipient, source, notification_type, message, link, templ
         check_link = link
 
     prev_notifications = []
-    if notification_type is not Notification.Type.FOLLOWING_PROJECT:
+    if notification_type in grouped_notification_types:
         try:
             prev_notifications = Notification.objects.filter(recipient=recipient, type=notification_type, link=check_link).order_by('-date')[:30]
         except Notification.DoesNotExist:
