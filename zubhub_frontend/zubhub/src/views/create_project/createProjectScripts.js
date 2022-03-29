@@ -10,6 +10,11 @@ import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // e
 import FFMPEG from "react-ffmpeg";
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
+// const ffmpeg = createFFmpeg({
+//   corePath: "./node_modules/@ffmpeg/core/dist/ffmpeg-core.js",
+//   log: true,
+// });
+
 /**
  * @constant vars
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -122,6 +127,7 @@ export const handleImageButtonClick = (e, props, refs) => {
 export const handleVideoButtonClick = (e, props, bool) => {
   e.preventDefault();
   props.setFieldTouched('video');
+  console.log("handleVideoButtonClick");
   return { video_upload_dialog_open: !bool };
 };
 
@@ -153,6 +159,7 @@ export const handleDescTooltipClose = () => {
  */
 export const handleSelectVideoFileChecked = el => {
   el.click();
+  console.log("handleSelectVideoFileChecked")
   return { select_video_file: true };
 };
 
@@ -319,6 +326,7 @@ export const handleAddTags = (e, props, add_tags_el) => {
  */
 export const handleVideoSelectDone = async (refs, props, state) => {
   const { media_upload } = state;
+  console.log("handleVideoSelectDone");
   if (media_upload.videos_to_upload.length < 1) {
     refs.video_selection_feedback_el.current.innerText = '';
     return props.setFieldValue('video', '').then(() => {
@@ -352,6 +360,8 @@ export const initUpload = (e, state, props, handleSetState) => {
 
     vars.image_field_touched = true;
     vars.video_field_touched = true;
+
+    console.log("initUpload")
 
     props.validateForm().then(errors => {
       if (
@@ -422,6 +432,8 @@ export const uploadProject = async (state, props, handleSetState) => {
   const { media_upload } = state;
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
+
+  console.log("uploadProject")
 
   const materials_used = props.values['materials_used']
     ?.split(',')
@@ -497,26 +509,42 @@ export const uploadVideo = async (video, state, props, handleSetState) => {
 
     const res = await props.shouldUploadToLocal(args);
 
-    console.log(video)
-    compressVideo(video)
+    // console.log('uploadVideo')
+    // await compressVideo(video);
     if (res && res.local === true) {
-      uploadVideoToLocal(video, state, props, handleSetState);
+      await uploadVideoToLocal(video, state, props, handleSetState);
     } else if (res && res.local === false) {
       uploadVideoToCloudinary(video, state, props, handleSetState);
     }
   }
 };
 
-export const compressVideo = async (video) => {
-  await FFMPEG.process(
-    video,
-    '-vcodec libx264 -crf 28',
-    function (e) {
-      const vid = e.result;
-      console.log(vid);
-    }.bind(this)
-  );
-}
+// export const compressVideo = async (video) => {
+//   console.log('1')
+//   if (!ffmpeg.isLoaded()) {
+//     console.log('2')
+//     await ffmpeg.load();
+//     console.log('4')
+//   }
+
+//   console.log('3')
+//   ffmpeg.FS('writeFile', video.name, await fetchFile(video));
+//   await ffmpeg.run('-i', video.name, '-s', '1920x1080', `${video.name}test.mp4`);
+//   const data = ffmpeg.FS('readFile', `${video.name}test.mp4`);
+//   console.log('hello');
+//   console.log(data);
+
+//   await FFMPEG.process(
+//     video,
+//     '-vcodec libx264 -vf scale=320:-1',
+//     function (e) {
+//       const vid = e.result;
+//       console.log('compressed output: ')
+//       console.log(vid);
+//     }.bind(this)
+//   );
+//   console.log('^^')
+// }
 
 /**
  * @function uploadVideoToLocal
@@ -524,7 +552,7 @@ export const compressVideo = async (video) => {
  *
  * @todo - describe function's signature
  */
-export const uploadVideoToLocal = (video, state, props, handleSetState) => {
+export const uploadVideoToLocal = async (video, state, props, handleSetState) => {
   let url =
     process.env.REACT_APP_NODE_ENV === 'production'
       ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
@@ -536,19 +564,35 @@ export const uploadVideoToLocal = (video, state, props, handleSetState) => {
   key = `videos/${slugify(props.auth.username)}-${slugify(video.name)}-${key}`;
 
   const formData = new FormData();
-  formData.append('file', video);
-  formData.append('key', key);
 
-  const um = new UploadMedia(
-    'video',
-    url,
-    formData,
-    state,
-    props,
-    handleSetState,
-  );
+  console.log('starting input: ');
   console.log(video)
-  um.upload();
+
+  await FFMPEG.process(
+    video,
+    '-aspect 10:1 -preset fast',
+
+    async function (e) {
+      const vid = e.result;
+      console.log('compressed output: ')
+      console.log(vid);
+
+      formData.append('file', vid);
+      formData.append('key', key);
+
+      const um = new UploadMedia(
+        'video',
+        url,
+        formData,
+        state,
+        props,
+        handleSetState,
+      );
+      um.upload();
+    }.bind(this)
+  );
+
+  console.log('after await');
 };
 
 /**
