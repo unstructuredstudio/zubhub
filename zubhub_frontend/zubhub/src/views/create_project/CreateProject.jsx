@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,7 +13,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ImageIcon from '@material-ui/icons/Image';
 import VideoIcon from '@material-ui/icons/Movie';
-import HelpIcon from '@material-ui/icons/Help';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import MovieIcon from '@material-ui/icons/Movie';
@@ -33,7 +34,6 @@ import {
   FormHelperText,
   FormControl,
   InputLabel,
-  Tooltip,
   ClickAwayListener,
 } from '@material-ui/core';
 
@@ -49,26 +49,32 @@ import {
   handleVideoFieldChange,
   handleTextFieldChange,
   handleTextFieldBlur,
+  handleDescFieldChange,
+  handleDescFieldFocusChange,
   handleMaterialsUsedFieldBlur,
   handleImageButtonClick,
   handleVideoButtonClick,
-  handleDescTooltipOpen,
-  handleDescTooltipClose,
   handleAddMaterialFieldChange,
   addMaterialsUsedNode,
   removeTag,
   handleAddTags,
   handleSuggestTags,
-  uploadProject,
+  buildPublishTypes,
+  handleRemovePublishVisibleTo,
+  handleAddPublishVisibleTo,
+  handleSuggestPublishVisibleTo,
+  handlePublishFieldChange,
+  handlePublishFieldBlur,
   checkMediaFilesErrorState,
   handleSelectVideoFileChecked,
 } from './createProjectScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
+import * as UserActions from '../../store/actions/userActions';
 import * as AuthActions from '../../store/actions/authActions';
 import ErrorPage from '../error/ErrorPage';
-import { useStateUpdateCallback } from '../../assets/js/utils/hooks';
 import { calculateLabelWidth } from '../../assets/js/utils/scripts';
+import { publish_type } from '../../assets/js/utils/constants';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import commonStyles from '../../assets/js/styles';
@@ -76,13 +82,12 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-
 /**
-* @function buildMaterialUsedNodes
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function buildMaterialUsedNodes
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
   if (props.values['materials_used']) {
     return props.values['materials_used']
@@ -115,13 +120,12 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
   }
 };
 
-
 /**
-* @function CreateProject View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function CreateProject View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function CreateProject(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -138,9 +142,13 @@ function CreateProject(props) {
     video_selection_feedback_el: React.useRef(null),
     add_materials_used_el: React.useRef(null),
     add_tags_el: React.useRef(null),
+    publish_type_el: React.useRef(null),
+    publish_visible_to_el: React.useRef(null),
   };
 
-  const [state, setState] = React.useState({ ...vars.default_state });
+  const [state, setState] = React.useState({
+    ...JSON.parse(JSON.stringify(vars.default_state)),
+  });
 
   React.useEffect(() => {
     if (props.match.params.id) {
@@ -150,18 +158,8 @@ function CreateProject(props) {
     } else {
       handleSetState(getCategories(props));
     }
+    handleSetState(buildPublishTypes(props));
   }, []);
-
-  useStateUpdateCallback(() => {
-    if (
-      state.media_upload.images_to_upload.length +
-        state.media_upload.videos_to_upload.length ===
-        state.media_upload.successful_uploads &&
-      vars.upload_in_progress
-    ) {
-      uploadProject(state, props, handleSetState);
-    }
-  }, [state.media_upload.successful_uploads]);
 
   React.useEffect(() => {
     checkMediaFilesErrorState(refs, props);
@@ -181,13 +179,16 @@ function CreateProject(props) {
   };
 
   const {
-    desc_tool_tip_open,
+    desc_input_is_focused,
     video_upload_dialog_open,
     media_upload,
     categories,
     tag_suggestion,
     tag_suggestion_open,
     select_video_file,
+    publish_types,
+    publish_visible_to_suggestion_open,
+    publish_visible_to_suggestion,
   } = state;
   const { t } = props;
   const id = props.match.params.id;
@@ -207,7 +208,7 @@ function CreateProject(props) {
                   onSubmit={e =>
                     !vars.upload_in_progress
                       ? initUpload(e, state, props, handleSetState)
-                      : null
+                      : e.preventDefault()
                   }
                 >
                   <Typography
@@ -302,11 +303,6 @@ function CreateProject(props) {
                         size="small"
                         fullWidth
                         margin="small"
-                        error={
-                          (props.status && props.status['description']) ||
-                          (props.touched['description'] &&
-                            props.errors['description'])
-                        }
                       >
                         <label htmlFor="description">
                           <Typography
@@ -320,46 +316,60 @@ function CreateProject(props) {
                             {t('createProject.inputs.description.label')}
                           </Typography>
                         </label>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                          className={clsx(
+                            classes.fieldHelperTextStyle,
+                            common_classes.marginBottom1em,
+                          )}
+                        >
+                          {t('createProject.inputs.description.helperText')}
+                        </Typography>
                         <ClickAwayListener
                           onClickAway={() =>
-                            handleSetState(handleDescTooltipClose())
+                            handleSetState({ desc_input_is_focused: false })
                           }
                         >
-                          <Tooltip
-                            placement="bottom-end"
-                            PopperProps={{
-                              disablePortal: true,
-                            }}
-                            onClose={() =>
-                              handleSetState(handleDescTooltipClose())
-                            }
-                            open={desc_tool_tip_open}
-                            disableFocusListener
-                            disableHoverListener
-                            title={t(
-                              'createProject.inputs.description.helperText',
+                          <ReactQuill
+                            ref={refs.desc_el}
+                            className={clsx(
+                              classes.descInputStyle,
+                              {
+                                [classes.descInputFocusStyle]:
+                                  desc_input_is_focused,
+                              },
+                              {
+                                [classes.descInputErrorStyle]:
+                                  (props.status &&
+                                    props.status['description']) ||
+                                  (props.touched['description'] &&
+                                    props.errors['description']),
+                              },
                             )}
-                          >
-                            <HelpIcon
-                              className={classes.questionIconStyle}
-                              onClick={() =>
-                                handleSetState(handleDescTooltipOpen())
-                              }
-                            />
-                          </Tooltip>
+                            modules={vars.quill.modules}
+                            formats={vars.quill.formats}
+                            defaultValue={''}
+                            placeholder={t(
+                              'createProject.inputs.description.placeholder',
+                            )}
+                            onChange={value =>
+                              handleDescFieldChange(
+                                value,
+                                props,
+                                handleSetState,
+                              )
+                            }
+                            onFocus={() =>
+                              handleDescFieldFocusChange(
+                                null,
+                                props,
+                                handleSetState,
+                              )
+                            }
+                          />
                         </ClickAwayListener>
-                        <OutlinedInput
-                          ref={refs.desc_el}
-                          className={classes.customInputStyle}
-                          id="description"
-                          name="description"
-                          type="text"
-                          multiline
-                          rows={6}
-                          rowsMax={6}
-                          onChange={e => handleTextFieldChange(e, props)}
-                          onBlur={e => handleTextFieldBlur(e, props)}
-                        />
                         <FormHelperText
                           error
                           className={classes.fieldHelperTextStyle}
@@ -656,7 +666,6 @@ function CreateProject(props) {
                           }
                           onChange={props.handleChange}
                           onBlur={props.handleBlur}
-                          label="Category"
                         >
                           <MenuItem value="">
                             <em>None</em>
@@ -811,6 +820,181 @@ function CreateProject(props) {
                               props.errors['tags'] &&
                               t(
                                 `createProject.inputs.tags.errors.${props.errors['tags']}`,
+                              ))}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} className={common_classes.marginTop1em}>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="small"
+                        error={
+                          (props.status && props.status['publish']) ||
+                          (props.touched['publish'] && props.errors['publish'])
+                        }
+                      >
+                        <label htmlFor="publish">
+                          <Typography
+                            color="textSecondary"
+                            className={classes.customLabelStyle}
+                          >
+                            <Box className={classes.fieldNumberStyle}>8</Box>
+                            {t('createProject.inputs.publish.label')}
+                          </Typography>
+                        </label>
+
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                          className={clsx(
+                            classes.fieldHelperTextStyle,
+                            common_classes.marginBottom1em,
+                          )}
+                        >
+                          {t('createProject.inputs.publish.topHelperText')}
+                        </Typography>
+
+                        <Select
+                          ref={refs.publish_type_el}
+                          labelId="publish"
+                          id="publish"
+                          name="publish"
+                          className={classes.customInputStyle}
+                          value={
+                            props.values.publish
+                              ? props.values.publish.type
+                              : publish_types[0]
+                              ? publish_types[0].value
+                              : ''
+                          }
+                          onChange={e => handlePublishFieldChange(e, props)}
+                          onBlur={e => handlePublishFieldBlur(e, props)}
+                        >
+                          {publish_types.map(type => (
+                            <MenuItem key={type.name} value={type.value}>
+                              {type.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+
+                        <Box
+                          className={clsx(
+                            classes.tagsViewStyle,
+                            common_classes.marginTop1em,
+                            {
+                              [common_classes.displayNone]:
+                                props.values.publish?.type !==
+                                publish_type['Preview'],
+                            },
+                          )}
+                        >
+                          {props.values.publish?.visible_to &&
+                            props.values['publish']['visible_to'].map(
+                              (username, num) =>
+                                username ? (
+                                  <Chip
+                                    className={classes.customChipStyle}
+                                    key={num}
+                                    label={username}
+                                    onDelete={e =>
+                                      handleRemovePublishVisibleTo(
+                                        e,
+                                        props,
+                                        username,
+                                      )
+                                    }
+                                    color="secondary"
+                                    variant="outlined"
+                                  />
+                                ) : null,
+                            )}
+                          <input
+                            ref={refs.publish_visible_to_el}
+                            className={classes.tagsInputStyle}
+                            name="publish_visible_to"
+                            type="text"
+                            autocomplete="off"
+                            placeholder={`${t(
+                              'createProject.inputs.publish.addUsernames',
+                            )}...`}
+                            onChange={e => {
+                              handleSuggestPublishVisibleTo(
+                                e,
+                                props,
+                                state,
+                                handleSetState,
+                              );
+                              handleSetState(
+                                handleAddPublishVisibleTo(e, props),
+                              );
+                            }}
+                            onBlur={e => {
+                              handleAddPublishVisibleTo(e, props);
+                            }}
+                          />
+                          <ClickAwayListener
+                            onClickAway={() =>
+                              handleSetState({
+                                publish_visible_to_suggestion_open: false,
+                                publish_visible_to_suggestion: [],
+                              })
+                            }
+                          >
+                            <Box
+                              className={clsx(
+                                classes.tagSuggestionStyle,
+                                !publish_visible_to_suggestion_open
+                                  ? common_classes.displayNone
+                                  : null,
+                              )}
+                            >
+                              {publish_visible_to_suggestion &&
+                              publish_visible_to_suggestion.length > 0 ? (
+                                publish_visible_to_suggestion.map(
+                                  (username, index) => (
+                                    <Typography
+                                      key={index}
+                                      color="textPrimary"
+                                      className={classes.tagSuggestionTextStyle}
+                                      onClick={() => {
+                                        clearTimeout(vars.timer.id);
+                                        handleSetState(
+                                          handleAddPublishVisibleTo(
+                                            {
+                                              currentTarget: {
+                                                value: `${username},`,
+                                              },
+                                            },
+                                            props,
+                                            refs.publish_visible_to_el,
+                                          ),
+                                        );
+                                      }}
+                                    >
+                                      {username}
+                                    </Typography>
+                                  ),
+                                )
+                              ) : (
+                                <CircularProgress size={30} thickness={3} />
+                              )}
+                            </Box>
+                          </ClickAwayListener>
+                        </Box>
+                        <FormHelperText
+                          error
+                          className={classes.fieldHelperTextStyle}
+                        >
+                          {(props.status && props.status['publish']) ||
+                            (props.touched['publish'] &&
+                              props.errors['publish'] &&
+                              t(
+                                `createProject.inputs.publish.errors.${props.errors['publish']}`,
                               ))}
                         </FormHelperText>
                       </FormControl>
@@ -1119,6 +1303,7 @@ CreateProject.propTypes = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    projects: state.projects,
   };
 };
 
@@ -1135,6 +1320,9 @@ const mapDispatchToProps = dispatch => {
     },
     suggestTags: args => {
       return dispatch(ProjectActions.suggestTags(args));
+    },
+    suggestCreators: args => {
+      return dispatch(UserActions.suggestCreators(args));
     },
     createProject: props => {
       return dispatch(ProjectActions.createProject(props));

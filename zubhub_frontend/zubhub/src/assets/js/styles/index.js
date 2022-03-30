@@ -63,6 +63,22 @@ const styles = theme => ({
   floatLeft: {
     float: 'left',
   },
+  baseTagStyle: {
+    backgroundColor: '#00B8C4',
+    borderRadius: '50px',
+    color: 'white',
+    padding: '0 0.5em',
+    marginLeft: '0.4em',
+    marginBottom: '0.4em',
+    [theme.breakpoints.down('470')]: {
+      marginLeft: 0,
+      position: 'static',
+      marginBottom: '0.4em',
+    },
+  },
+  extendedTagStyle: {
+    backgroundColor: 'grey',
+  },
 });
 
 export default styles;

@@ -36,14 +36,29 @@ const styles = theme => ({
     width: '100%',
     height: '13em',
     position: 'relative',
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   mediaStyle: {
     width: '100%',
     height: '100%',
     borderStyle: 'none',
+  },
+  publishStyle: {
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white',
+    top: '0.5em',
+    right: '0.5em',
+    zIndex: 1,
+    backgroundColor: '#0000003b',
+    padding: '0.2em 0.5em',
+    borderRadius: '50px',
+    fontWeight: 700,
+    fontSize: '1.05rem',
   },
   mediaImageStyle: {
     objectFit: 'cover',
@@ -52,7 +67,7 @@ const styles = theme => ({
     position: 'absolute',
   },
   playIconStyle: {
-    zIndex: 0
+    zIndex: 0,
   },
   actionAreaStyle: {
     flexGrow: 100,

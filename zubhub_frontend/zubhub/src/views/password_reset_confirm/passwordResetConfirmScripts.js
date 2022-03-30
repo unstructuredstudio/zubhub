@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
 
 /**
-* @function getUidAndToken
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getUidAndToken
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getUidAndToken = queryString => {
   let uid = queryString.split('&&');
   const token = uid[1].split('=')[1];
@@ -13,13 +13,12 @@ export const getUidAndToken = queryString => {
   return { uid, token };
 };
 
-
 /**
-* @function resetPassword
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function resetPassword
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const resetPassword = (e, props) => {
   e.preventDefault();
   const { uid, token } = getUidAndToken(props.location.search);
@@ -52,13 +51,12 @@ export const resetPassword = (e, props) => {
     });
 };
 
-
 /**
-* @function handleClickShowPassword
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleClickShowPassword
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleClickShowPassword = (field, state) => {
   if (field === 1) {
     const { show_password1 } = state;
@@ -69,24 +67,22 @@ export const handleClickShowPassword = (field, state) => {
   }
 };
 
-
 /**
-* @function handleMouseDownPassword
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleMouseDownPassword
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleMouseDownPassword = e => {
   e.preventDefault();
 };
 
-
 /**
-* @object validationSchema
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe object's function
-*/
+ * @object validationSchema
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe object's function
+ */
 export const validationSchema = Yup.object().shape({
   new_password1: Yup.string().min(8, 'min').required('required'),
   new_password2: Yup.string()

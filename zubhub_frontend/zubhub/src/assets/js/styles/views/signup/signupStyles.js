@@ -67,9 +67,9 @@ const styles = theme => ({
   },
 
   locationInputStyle: {
-    "& input": {
-      boxSizing: "content-box",
-    }
+    '& input': {
+      boxSizing: 'content-box',
+    },
   },
 
   secondaryLink: {

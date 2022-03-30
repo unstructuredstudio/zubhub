@@ -25,11 +25,11 @@ import styles from '../../assets/js/styles/views/email_confirm/emailConfirmStyle
 const useStyles = makeStyles(styles);
 
 /**
-* @function EmailConfirm View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function EmailConfirm View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function EmailConfirm(props) {
   const classes = useStyles();
 

@@ -41,14 +41,12 @@ import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
-
-
 /**
-* @function Login View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function Login View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function Login(props) {
   const classes = useStyles();
 

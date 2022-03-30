@@ -2,13 +2,12 @@ import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
 const API = new ZubhubAPI();
 
-
 /**
-* @function setProjects
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function setProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const setProjects = projects => {
   return dispatch => {
     dispatch({
@@ -18,14 +17,12 @@ export const setProjects = projects => {
   };
 };
 
-
-
 /**
-* @function createProject
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function createProject
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const createProject = props => {
   return () => {
     return API.createProject(props).then(res => {
@@ -39,37 +36,34 @@ export const createProject = props => {
   };
 };
 
-
-
 /**
-* @function shouldUploadToLocal
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function shouldUploadToLocal
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const shouldUploadToLocal = args => {
-   return ()=> {
-     return API.shouldUploadToLocal(args).then(res=> {
-       if(res.local === undefined){
+  return () => {
+    return API.shouldUploadToLocal(args)
+      .then(res => {
+        if (res.local === undefined) {
           throw new Error();
-       }else{
-         return res;
-       }
-     })
-     .catch(()=>{
-         toast.warning(args.t('createProject.errors.unexpected'))
-     })
-   }
+        } else {
+          return res;
+        }
+      })
+      .catch(() => {
+        toast.warning(args.t('createProject.errors.unexpected'));
+      });
+  };
 };
 
-
-
 /**
-* @function updateProject
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function updateProject
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const updateProject = props => {
   return () => {
     return API.updateProject(props).then(res => {
@@ -83,14 +77,12 @@ export const updateProject = props => {
   };
 };
 
-
-
 /**
-* @function deleteProject
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function deleteProject
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const deleteProject = args => {
   return () => {
     return API.deleteProject({ token: args.token, id: args.id }).then(res => {
@@ -104,13 +96,12 @@ export const deleteProject = args => {
   };
 };
 
-
 /**
-* @function unpublishComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function unpublishComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const unpublishComment = args => {
   return () => {
     return API.unpublishComment({ token: args.token, id: args.id })
@@ -135,13 +126,12 @@ export const unpublishComment = args => {
   };
 };
 
-
 /**
-* @function deleteComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function deleteComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const deleteComment = args => {
   return () => {
     return API.deleteComment({ token: args.token, id: args.id }).then(res => {
@@ -154,14 +144,12 @@ export const deleteComment = args => {
   };
 };
 
-
-
 /**
-* @function getProject
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getProject
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getProject = args => {
   return () => {
     return API.getProject(args)
@@ -186,14 +174,12 @@ export const getProject = args => {
   };
 };
 
-
-
 /**
-* @function getProjects
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getProjects = args => {
   return dispatch => {
     return API.getProjects(args)
@@ -222,13 +208,12 @@ export const getProjects = args => {
   };
 };
 
-
 /**
-* @function getCategories
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getCategories
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getCategories = args => {
   return () => {
     return API.getCategories()
@@ -253,20 +238,18 @@ export const getCategories = args => {
   };
 };
 
-
-
 /**
-* @function searchProjects
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function searchProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const searchProjects = args => {
   return () => {
     return API.searchProjects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-          return { ...res, loading: false, type: args.type };
+          return { ...res, loading: false, tab: args.tab };
         } else {
           res = Object.keys(res)
             .map(key => res[key])
@@ -280,19 +263,17 @@ export const searchProjects = args => {
         } else {
           toast.warning(error.message);
         }
-        return { loading: false, type: args.type };
+        return { loading: false, tab: args.tab };
       });
   };
 };
 
-
-
 /**
-* @function suggestTags
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function suggestTags
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const suggestTags = args => {
   return () => {
     return API.suggestTags(args.value)
@@ -319,13 +300,12 @@ export const suggestTags = args => {
   };
 };
 
-
 /**
-* @function getUserProjects
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getUserProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getUserProjects = args => {
   return () => {
     return API.getUserProjects(args)
@@ -355,13 +335,12 @@ export const getUserProjects = args => {
   };
 };
 
-
 /**
-* @function getSaved
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getSaved
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getSaved = args => {
   return () => {
     return API.getSaved(args)
@@ -389,13 +368,12 @@ export const getSaved = args => {
   };
 };
 
-
 /**
-* @function toggleLike
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function toggleLike
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const toggleLike = args => {
   return () => {
     return API.toggleLike(args)
@@ -421,14 +399,12 @@ export const toggleLike = args => {
   };
 };
 
-
-
 /**
-* @function toggleSave
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function toggleSave
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const toggleSave = args => {
   return () => {
     return API.toggleSave(args)
@@ -453,14 +429,12 @@ export const toggleSave = args => {
   };
 };
 
-
-
 /**
-* @function addComment
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function addComment
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const addComment = args => {
   return () => {
     return API.addComment(args)
@@ -485,14 +459,12 @@ export const addComment = args => {
   };
 };
 
-
-
 /**
-* @function setStaffPicks
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function setStaffPicks
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const setStaffPicks = staff_picks => {
   return dispatch => {
     dispatch({
@@ -502,13 +474,12 @@ export const setStaffPicks = staff_picks => {
   };
 };
 
-
 /**
-* @function setHero
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function setHero
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const setHero = hero => {
   return dispatch => {
     dispatch({
@@ -518,20 +489,43 @@ export const setHero = hero => {
   };
 };
 
-
+/**
+ * @function setZubhub
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const setZubhub = zubhub => {
+  return dispatch => {
+    dispatch({
+      type: 'SET_PROJECTS',
+      payload: { zubhub },
+    });
+  };
+};
 
 /**
-* @function getHero
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getHero
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getHero = args => {
   return dispatch => {
     return API.getHero()
       .then(res => {
+        if (res.id || res.title !== undefined) {
+          const { header_logo_url, footer_logo_url, site_mode } = res;
+          delete res.header_logo_url;
+          delete res.footer_logo_url;
+          delete res.site_mode;
+
           dispatch(setHero(res));
+          dispatch(setZubhub({ header_logo_url, footer_logo_url, site_mode }));
           return { loading: false };
+        } else {
+          throw new Error();
+        }
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
@@ -544,17 +538,15 @@ export const getHero = args => {
   };
 };
 
-
-
 /**
-* @function getStaffPicks
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getStaffPicks
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getStaffPicks = args => {
   return dispatch => {
-    return API.getStaffPicks()
+    return API.getStaffPicks(args)
       .then(res => {
         if (Array.isArray(res)) {
           dispatch(setStaffPicks(res));
@@ -580,13 +572,12 @@ export const getStaffPicks = args => {
   };
 };
 
-
 /**
-* @function getStaffPick
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function getStaffPick
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const getStaffPick = args => {
   return () => {
     return API.getStaffPick(args)

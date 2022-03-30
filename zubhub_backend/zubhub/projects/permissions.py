@@ -14,7 +14,7 @@ class IsStaffOrModerator(BasePermission):
     message = "You must be a staff or a moderator to perform this function"
 
     def has_object_permission(self, request, view, object):
-        return request.user.is_staff == True or request.user.role == 2
+        return request.user.is_staff == True or request.user.tags.filter(name="Moderator").exists()
 
 
 class PostAnonRateThrottle(AnonRateThrottle):

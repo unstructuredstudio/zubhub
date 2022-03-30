@@ -1,11 +1,11 @@
 import { useRef, useEffect } from 'react';
 
 /**
-* @function useStateUpdateCallback
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function useStateUpdateCallback
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export default function useStateUpdateCallback(effect, deps) {
   const isFirstRender = useRef(true);
 

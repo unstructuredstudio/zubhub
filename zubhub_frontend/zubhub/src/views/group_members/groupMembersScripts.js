@@ -1,20 +1,20 @@
 /**
-* @function fetchPage
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function fetchPage
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const fetchPage = (page, props) => {
   const username = props.match.params.username;
   return props.getMembers({ page, username, t: props.t });
 };
 
 /**
-* @function toggleFollow
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function toggleFollow
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const toggleFollow = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {
@@ -46,13 +46,12 @@ export const toggleFollow = (e, props, state, id, toast) => {
   }
 };
 
-
 /**
-* @function removeMember
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function removeMember
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const removeMember = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {

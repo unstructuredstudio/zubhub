@@ -1,7 +1,8 @@
-from django.db.models.signals import pre_delete,  m2m_changed
+from django.db.models.signals import pre_delete, post_save,  m2m_changed
 from django.dispatch import Signal, receiver
-from .models import Creator, CreatorGroup
+from .models import Creator, CreatorGroup, CreatorTag
 from projects.tasks import delete_file_task
+from .utils import enforce_creator__creator_tags_constraints
 
 
 # Provides the arguments "request", "phone_number"
@@ -9,6 +10,12 @@ phone_confirmed = Signal()
 # Provides the arguments "request", "confirmation", "signup"
 phone_confirmation_sent = Signal()
 
+
+@receiver(post_save, sender=Creator)
+def creator_saved(sender, instance, **kwargs):
+    """ creatortag should default to 'creator' if instance.tags.all() is empty """
+    if instance.tags.all().count() < 1:
+        instance.tags.set(CreatorTag.objects.filter(name="creator"))
 
 @receiver(pre_delete, sender=Creator)
 def creator_to_be_deleted(sender, instance, **kwargs):

@@ -1,9 +1,12 @@
 from datetime import timedelta
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 from django.core.exceptions import FieldDoesNotExist
+from django.db import transaction
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text
+from projects.tasks import delete_file_task
 
 try:
     from allauth.account.adapter import get_adapter
@@ -147,6 +150,7 @@ def send_group_invite_notification(creatorgroup, new_members):
 
 
 def process_avatar(oldInstance, newInstance):
+    """ Upload Creator avatar to media server and do cleanups where neccessary """
 
     if oldInstance and oldInstance.username != newInstance.username:
         newInstance.avatar = 'https://robohash.org/{0}'.format(
@@ -235,6 +239,133 @@ def activity_notification(activities, **kwargs):
             template_name=template_name,
             ctxs=phone_contexts
         )
+
+def perform_creator_search(user, query_string):
+    from creators.models import CreatorTag
+    """
+    Perform search for creators matching query.
+
+    performs search across creators and creatortags, 
+    and aggregate all creators that match the result.
+    """
+
+    query = SearchQuery(query_string)
+    rank = SearchRank(F('search_vector'), query)
+    result_creators = None
+
+
+    # fetch all creators whose creatortag(s) matches the search query
+    result_tags = CreatorTag.objects.filter(
+        search_vector=query).prefetch_related("creators")
+
+    for tag in result_tags:
+        result_creators = tag.creators.filter(is_active=True).annotate(rank=rank).order_by('-rank')
+    ############################################################
+
+    # fetch all creators that matches the search term
+    if result_creators:
+        result_creators.union(get_user_model().objects.annotate(rank=rank).filter(
+            search_vector=query, is_active=True ).order_by('-rank'))
+    else:
+        result_creators = get_user_model().objects.annotate(rank=rank).filter(
+            search_vector=query,is_active=True ).order_by('-rank')
+    ##############################################################
+
+    return result_creators
+
+
+
+def custom_set_creatortags_queryset(creator, creatortags):
+    """
+    Handle the process of assigning a queryset of creatortags to creator.tags
+    
+    Given a queryset of creatortags,'enforce_creator__creator_tags_constraints' needs 
+    to be called for each core creatortags (staff, moderator, group, creator) and
+    there needs to be some order to how it is called to ensure adherence to an order 
+    of relative importance.
+    E.g. if you attempt giving a creator instance a queryset of  'staff' and 'creator', 
+    'staff' tag should be set and 'creator' tag should be dropped. This is because 'staff' 
+    tag is expected to precede 'creator' tag.
+
+    Note: do not change the order of the if statements, they are arranged in order of 
+    relative importance to ensure certain tags takes precidence over others.
+    """
+    with transaction.atomic():
+        from creators.models import CreatorTag
+
+        creator.tags.set(creatortags)
+
+        tag = CreatorTag.objects.filter(name="staff").first()
+        if creatortags.filter(name=tag.name).exists():
+            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creatortags = creatortags.exclude(name=tag.name)
+
+        tag = CreatorTag.objects.filter(name="moderator").first()
+        if creatortags.filter(name=tag.name).exists():
+            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creatortags = creatortags.exclude(name=tag.name)
+
+        tag = CreatorTag.objects.filter(name="group").first()
+        if creatortags.filter(name=tag.name).exists():
+            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creatortags = creatortags.exclude(name=tag.name)
+
+        tag = CreatorTag.objects.filter(name="creator").first()
+        if creatortags.filter(name=tag.name).exists():
+            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creatortags = creatortags.exclude(name=tag.name)
+
+
+def enforce_creator__creator_tags_constraints(creator, tag):
+    """
+    Enforce certain constraints on what tags a creator instance should have together.
+
+    Should only be called when trying to set base tags like 'creator', 'staff', 'moderator' or 'group'. 
+
+    Creator tags is a list, but certain tags shouldn't be in the same list at the same time.
+    e.g. "creator" tag is the default tag set when a user account is created, but should be removed
+         from a creator's tags list when other tags like "staff", "moderator" or "group" is added to the tags list.
+    This function contains the logic to decide which creator tags already in a creator's tags list should be set with 
+    the incoming tag and which should be removed.
+    """
+
+    if tag.creators.filter(id=creator.id).exists():
+
+        from creators.models import CreatorTag
+
+        if tag.name == "creator":
+            """ If tag is 'creator', ensure that 'staff', 'moderator' and 'group' tags are not in the user's tags list """
+            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group", "moderator"])
+            tags_to_set = creator.tags.difference(diff)
+            return tags_to_set.union(diff.filter(name=tag.name))
+            
+        elif tag.name == "staff":
+            """ If tag is 'staff', ensure that 'creator' and 'group' tags are not in the user's tags list """
+            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group"])
+            tags_to_set = creator.tags.difference(diff)
+            return tags_to_set.union(diff.filter(name=tag.name))
+
+        elif tag.name == "moderator":
+            """ If tag is 'moderator', ensure that 'creator' and 'group' tags are not in the user's tags list """
+            diff = CreatorTag.objects.filter(name__in=["creator", "group", "moderator"])
+            tags_to_set = creator.tags.difference(diff)
+            return tags_to_set.union(diff.filter(name=tag.name))
+
+        elif tag.name == "group":
+            """ If tag is 'group', ensure that 'staff', 'creator' and 'moderator' tags are not in the user's tags list """
+            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group", "moderator"])
+            tags_to_set = creator.tags.difference(diff)
+            return tags_to_set.union(diff.filter(name=tag.name))
+
+        else:
+            """ If no matching tag is found, raise an Exception to avoid mistakenly resetting creator.tags """
+            raise Exception("""
+            tag didn't match any of the conditions. 
+            pass a tag that matches any of 'creator', 'staff', 'moderator', or 'group' 
+            """)
+    else:
+        return creator.tags.all()
+
 
 
 # def sync_user_email_addresses(user):
