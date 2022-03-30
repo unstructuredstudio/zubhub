@@ -185,10 +185,12 @@ class HeroAPIView(RetrieveAPIView):
         serializer = self.get_serializer(self.get_object())
         admin_settings = AdminSettings.objects.all().last()
 
+        header_logo = getattr(admin_settings, "header_logo", None)
+        footer_logo = getattr(admin_settings, "footer_logo", None)
         data = {
             **serializer.data,
-            "header_logo_url": getattr(admin_settings.header_logo, "name", ""),
-            "fooer_logo_url": getattr(admin_settings.footer_logo, "name", ""),
+            "header_logo_url": getattr(header_logo, "name", ""),
+            "fooer_logo_url": getattr(footer_logo, "name", ""),
             "site_mode": getattr(admin_settings, "site_mode", "PUBLIC")
         }
         return Response(data)
