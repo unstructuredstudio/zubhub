@@ -249,7 +249,7 @@ export const searchProjects = args => {
     return API.searchProjects(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-          return { ...res, loading: false, type: args.type };
+          return { ...res, loading: false, tab: args.tab };
         } else {
           res = Object.keys(res)
             .map(key => res[key])
@@ -263,7 +263,7 @@ export const searchProjects = args => {
         } else {
           toast.warning(error.message);
         }
-        return { loading: false, type: args.type };
+        return { loading: false, tab: args.tab };
       });
   };
 };
@@ -490,6 +490,21 @@ export const setHero = hero => {
 };
 
 /**
+ * @function setZubhub
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const setZubhub = zubhub => {
+  return dispatch => {
+    dispatch({
+      type: 'SET_PROJECTS',
+      payload: { zubhub },
+    });
+  };
+};
+
+/**
  * @function getHero
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
@@ -499,8 +514,18 @@ export const getHero = args => {
   return dispatch => {
     return API.getHero()
       .then(res => {
-        dispatch(setHero(res));
-        return { loading: false };
+        if (res.id || res.title !== undefined) {
+          const { header_logo_url, footer_logo_url, site_mode } = res;
+          delete res.header_logo_url;
+          delete res.footer_logo_url;
+          delete res.site_mode;
+
+          dispatch(setHero(res));
+          dispatch(setZubhub({ header_logo_url, footer_logo_url, site_mode }));
+          return { loading: false };
+        } else {
+          throw new Error();
+        }
       })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
@@ -521,7 +546,7 @@ export const getHero = args => {
  */
 export const getStaffPicks = args => {
   return dispatch => {
-    return API.getStaffPicks()
+    return API.getStaffPicks(args)
       .then(res => {
         if (Array.isArray(res)) {
           dispatch(setStaffPicks(res));

@@ -4,16 +4,27 @@
  *
  * @todo - describe function's signature
  */
-export const getQueryParams = url => {
-  const params = url.split('?')[1];
-  let [page, query] = params.split('q=');
-  if (page) {
-    page = page.split('=')[1];
-    page = page.split('&')[0];
-  } else {
-    page = null;
+export const getQueryParams = (url, tab) => {
+  let params = new URL(url);
+  params = new URLSearchParams(params.search);
+  if (tab) {
+    params.set('tab', tab);
   }
-  return { page, query };
+
+  return params;
+};
+
+/**
+ * @function switchTab
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const switchTab = (tab, props, url) => {
+  props.history.push({
+    pathname: props.location.pathname,
+    search: getQueryParams(url, tab).toString(),
+  });
 };
 
 /**
@@ -22,11 +33,23 @@ export const getQueryParams = url => {
  *
  * @todo - describe function's signature
  */
-export const fetchPage = (page, props, query_string, type) => {
-  if (type === 'projects') {
-    return props.searchProjects({ page, query_string, t: props.t, type });
-  } else if (type === 'creators') {
-    return props.searchCreators({ page, query_string, t: props.t, type });
+export const fetchPage = (page, props, query_string, tab) => {
+  if (!tab || tab === 'projects' || tab !== 'creators') {
+    return props.searchProjects({
+      page,
+      query_string,
+      t: props.t,
+      token: props.auth.token,
+      tab: 'projects',
+    });
+  } else if (tab === 'creators') {
+    return props.searchCreators({
+      page,
+      query_string,
+      t: props.t,
+      token: props.auth.token,
+      tab,
+    });
   }
 };
 

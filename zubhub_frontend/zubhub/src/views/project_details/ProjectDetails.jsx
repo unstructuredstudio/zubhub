@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -398,12 +400,12 @@ function ProjectDetails(props) {
                   >
                     {t('projectDetails.project.description')}
                   </Typography>
-                  <Typography
+                  <ReactQuill
                     className={classes.descriptionBodyStyle}
-                    color="textSecondary"
-                  >
-                    {project.description}
-                  </Typography>
+                    theme={'bubble'}
+                    readOnly={true}
+                    value={project.description || ''}
+                  />
                 </Grid>
                 {project.tags.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12}>

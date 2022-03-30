@@ -1,32 +1,62 @@
+import uuid
+from math import floor
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import FileExtensionValidator
-from zubhub.utils import clean_summernote_html
+from django.utils.text import slugify
+from .utils import MediaStorage, get_upload_path, clean_summernote_html
 
 
-class StaticAssets(models.Model):
-    header_logo = models.FileField(blank=False, null=True, validators=[
-                                   FileExtensionValidator(["jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
-    header_logo_url = models.URLField(max_length=1000, blank=True, null=False)
-    footer_logo = models.FileField(blank=False, null=True, validators=[
-                                   FileExtensionValidator(["jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
-    footer_logo_url = models.URLField(max_length=1000, blank=True, null=False)
+class AdminSettings(models.Model):
+    PUBLIC = 1
+    PRIVATE = 2
+
+    MODE_CHOICES = (
+        (PUBLIC, 'PUBLIC'),
+        (PRIVATE, 'PRIVATE')
+    )
+    MEDIA_PATH = "zubhub"
+
+
+    header_logo = models.ImageField(upload_to=get_upload_path, storage=MediaStorage(),
+                                    blank=True, null=True, validators=[
+                                   FileExtensionValidator(["", "jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
+    footer_logo = models.ImageField(upload_to=get_upload_path, storage=MediaStorage(),
+                                    blank=True, null=True, validators=[
+                                   FileExtensionValidator(["", "jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
+    site_mode = models.PositiveSmallIntegerField(
+        choices=MODE_CHOICES, blank=False, null=False, default=PUBLIC)
+    edited_by_id = models.CharField(max_length=100, blank=True, null=True)
+    edited_on = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "StaticAssets"
-        verbose_name_plural = "StaticAssets"
+        verbose_name = "AdminSettings"
+        verbose_name_plural = "AdminSettings"
 
     def __str__(self):
-        return self.header_logo_url
+        formatted_edit_date =  self.edited_on.strftime("%I:%M %p, %d %b %Y %Z")
+        edited_by = get_user_model().objects.filter(id=self.edited_by_id)
+        if edited_by.count() > 0:
+            edited_by = edited_by[0].username
+        else:
+            edited_by = "Anonymous User"
+
+        return  "Administration Settings as edited on {0} by {1}".format(formatted_edit_date, edited_by)
+
+
+
 
 
 class Hero(models.Model):
+    MEDIA_PATH = "hero_images"
+
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=100, null=True)
-    image = models.ImageField(blank=False, null=True)
-    image_url = models.URLField(max_length=1000, blank=True, null=False, default='')
-    activity_url = models.URLField(max_length=1000, null=True)
-    explore_ideas_url = models.URLField(max_length=1000, null=True)
+    image = models.ImageField(blank=True, null=True, upload_to=get_upload_path, storage=MediaStorage(),
+            validators=[FileExtensionValidator(["","jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
+    activity_url = models.URLField(max_length=1000, blank=True, null=True)
+    explore_ideas_url = models.URLField(max_length=1000, blank=True, null=True)
 
     class Meta:
         verbose_name = "Hero"
