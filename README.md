@@ -29,7 +29,7 @@ Follow the instructions below to set up your local development environment
 - Visit `localhost:8000` on your browser to access the API documentation.
 
 ### Frontend
-- Create a file named .env in the frontend root folder (same directory with package.json)
+- Create a file named .env in the `.zubhub_frontend/zubhub` directory (same directory with package.json).
 - Copy the content of .env.example and paste into the new .env file.
 - Run `make start` to spin up the frontend container.
 - Visit `localhost:3000` on your browser to access the frontend.
