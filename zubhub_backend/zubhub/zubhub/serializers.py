@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hero, FAQ, Help, Privacy
+from .models import Hero, FAQ, Help, Privacy, TinkeringResources
 
 
 class HeroSerializer(serializers.ModelSerializer):
@@ -43,4 +43,12 @@ class FAQListSerializer(serializers.ModelSerializer):
         fields = [
             "question",
             "answer"
+        ]
+
+class TinkeringResSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TinkeringResources
+        fields = [
+            "url",
         ]
