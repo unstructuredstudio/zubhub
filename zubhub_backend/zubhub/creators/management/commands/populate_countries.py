@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'Populate Location table with countries'
 
     def handle(self, *args, **kwargs):
-        if len(Location.objects.all()) < 1:
+        if Location.objects.all().count() < 1:
             with open("./zubhub/creators/management/commands/countries.txt", "r") as countries:
                 countries = countries.readlines()
                 for country in countries:

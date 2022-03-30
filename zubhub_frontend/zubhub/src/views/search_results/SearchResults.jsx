@@ -22,6 +22,7 @@ import {
 
 import {
   getQueryParams,
+  switchTab,
   fetchPage,
   updateProjects,
   toggleFollow,
@@ -114,18 +115,17 @@ function SearchResults(props) {
     previous: null,
     next: null,
     loading: true,
-    type: null,
+    tab: 'projects',
   });
 
   React.useEffect(() => {
-    handleSetState(
-      fetchPage(
-        null,
-        props,
-        getQueryParams(props.location.search).query,
-        'projects',
-      ),
-    );
+    const params = getQueryParams(window.location.href);
+
+    if (!['creators', 'projects'].includes(params.get('tab'))) {
+      switchTab('projects', props, window.location.href);
+    }
+
+    handleSetState(fetchPage(null, props, params.get('q'), params.get('tab')));
   }, []);
 
   const handleSetState = obj => {
@@ -142,7 +142,7 @@ function SearchResults(props) {
     previous: prev_page,
     next: next_page,
     loading,
-    type,
+    tab,
   } = state;
   const { t } = props;
   if (loading) {
@@ -153,44 +153,42 @@ function SearchResults(props) {
         <Box className={classes.searchSectionStyle}>
           <Button
             className={clsx(
-              type === 'projects' ? classes.selectedTabStyle : null,
+              tab === 'projects' ? classes.selectedTabStyle : null,
               classes.tabStyle,
             )}
-            onClick={() =>
+            onClick={() => {
+              switchTab('projects', props, window.location.href);
+              const params = getQueryParams(window.location.href);
+              handleSetState({ loading: true });
+
               handleSetState(
-                fetchPage(
-                  null,
-                  props,
-                  getQueryParams(props.location.search).query,
-                  'projects',
-                ),
-              )
-            }
+                fetchPage(null, props, params.get('q'), params.get('tab')),
+              );
+            }}
           >
             {t('searchResults.projects')}
           </Button>
 
           <Button
             className={clsx(
-              type === 'creators' ? classes.selectedTabStyle : null,
+              tab === 'creators' ? classes.selectedTabStyle : null,
               classes.tabStyle,
             )}
-            onClick={() =>
+            onClick={() => {
+              switchTab('creators', props, window.location.href);
+              const params = getQueryParams(window.location.href);
+              handleSetState({ loading: true });
+
               handleSetState(
-                fetchPage(
-                  null,
-                  props,
-                  getQueryParams(props.location.search).query,
-                  'creators',
-                ),
-              )
-            }
+                fetchPage(null, props, params.get('q'), params.get('tab')),
+              );
+            }}
           >
             {t('searchResults.creators')}
           </Button>
         </Box>
         {results && results.length > 0 ? (
-          type === 'projects' ? (
+          tab === 'projects' ? (
             <Container className={classes.mainContainerStyle}>
               <Grid container>
                 <Grid item xs={12}>
@@ -234,16 +232,20 @@ function SearchResults(props) {
                     className={classes.floatLeft}
                     size="large"
                     startIcon={<NavigateBeforeIcon />}
-                    onClick={(e, page = getQueryParams(prev_page).page) =>
+                    onClick={(
+                      _,
+                      page = getQueryParams(prev_page).get('page'),
+                    ) => {
+                      handleSetState({ loading: true });
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(prev_page).query,
-                          'projects',
+                          getQueryParams(prev_page).get('q'),
+                          tab,
                         ),
-                      )
-                    }
+                      );
+                    }}
                     primaryButtonStyle
                   >
                     {t('searchResults.prev')}
@@ -254,16 +256,20 @@ function SearchResults(props) {
                     className={classes.floatRight}
                     size="large"
                     endIcon={<NavigateNextIcon />}
-                    onClick={(_, page = getQueryParams(next_page).page) =>
+                    onClick={(
+                      _,
+                      page = getQueryParams(next_page, tab).get('page'),
+                    ) => {
+                      handleSetState({ loading: true });
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(next_page).query,
-                          'projects',
+                          getQueryParams(next_page, tab).get('q'),
+                          tab,
                         ),
-                      )
-                    }
+                      );
+                    }}
                     primaryButtonStyle
                   >
                     {t('searchResults.next')}
@@ -303,16 +309,20 @@ function SearchResults(props) {
                     className={classes.floatLeft}
                     size="large"
                     startIcon={<NavigateBeforeIcon />}
-                    onClick={(_, page = getQueryParams(prev_page).page) =>
+                    onClick={(
+                      _,
+                      page = getQueryParams(prev_page, tab).get('page'),
+                    ) => {
+                      handleSetState({ loading: true });
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(prev_page).query,
-                          'projects',
+                          getQueryParams(prev_page, tab).get('q'),
+                          tab,
                         ),
-                      )
-                    }
+                      );
+                    }}
                     primaryButtonStyle
                   >
                     {t('searchResults.prev')}
@@ -323,16 +333,20 @@ function SearchResults(props) {
                     className={classes.floatRight}
                     size="large"
                     endIcon={<NavigateNextIcon />}
-                    onClick={(e, page = getQueryParams(next_page).page) =>
+                    onClick={(
+                      _,
+                      page = getQueryParams(next_page, tab).get('page'),
+                    ) => {
+                      handleSetState({ loading: true });
                       handleSetState(
                         fetchPage(
                           page,
                           props,
-                          getQueryParams(next_page).query,
-                          'projects',
+                          getQueryParams(next_page, tab).get('q'),
+                          tab,
                         ),
-                      )
-                    }
+                      );
+                    }}
                     primaryButtonStyle
                   >
                     {t('searchResults.next')}

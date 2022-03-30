@@ -13,6 +13,7 @@ python /zubhub_backend/zubhub/manage.py migrate
 python /zubhub_backend/zubhub/manage.py createcachetable
 
 python /zubhub_backend/zubhub/manage.py populate_countries
+python /zubhub_backend/zubhub/manage.py populate_initial_creator_tags
 python /zubhub_backend/zubhub/manage.py populate_categories
 
 exec /usr/local/bin/gunicorn zubhub.wsgi --threads=3 --timeout 155 --bind 0.0.0.0:8000 \

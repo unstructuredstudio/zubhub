@@ -1,12 +1,15 @@
+import json
 from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.core.mail import get_connection
 from django.template.loader import render_to_string
 from allauth.account.adapter import DefaultAccountAdapter
 from django.template import TemplateDoesNotExist
 from twilio.rest import Client
-import json
 
 from .models import Location, Setting
+from zubhub.models import AdminSettings
 
 from creators.tasks import send_text, send_mass_email
 
@@ -19,16 +22,31 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         creator = super().save_user(request, user, form, commit)
         data = form.cleaned_data
         location = Location.objects.get(name=data.get('location'))
+        
+        """
+        Automatically deactivate every new account if the site mode is set to private.
+        
+        Admin will need to review signup before account will be active.
+        """
+        is_active = True
+        admin_settings = AdminSettings.objects.all().last()
+        if admin_settings and admin_settings.site_mode == AdminSettings.PRIVATE:
+            is_active = False
 
         creator.phone = data.get("phone")
         creator.dateOfBirth = data.get('dateOfBirth')
         creator.bio = data.get('bio')
         creator.location = location
+        creator.is_active = is_active
         creator.save()
 
         Setting(creator=creator, subscribe=data.get("subscribe")).save()
 
         return creator
+
+
+    def respond_user_inactive(self, request, user):
+        return HttpResponseRedirect(reverse("creators:account_status"))
 
     def confirm_phone(self, request, phone_number):
         """

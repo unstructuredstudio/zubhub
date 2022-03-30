@@ -1,5 +1,4 @@
 from datetime import date
-
 import re
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -20,36 +19,17 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField('get_profile_comments')
     projects_count = serializers.SerializerMethodField()
     following_count = serializers.IntegerField(read_only=True)
-    members_count = serializers.SerializerMethodField()
-    role = serializers.SerializerMethodField()
+    members_count = serializers.SerializerMethodField('get_members_count')
+    tags = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
 
     class Meta:
         model = Creator
 
-        fields = [
-            "id",
-            "username",
-            "avatar",
-            "comments",
-            "bio",
-            "followers",
-            "following_count",
-            "projects_count",
-            "members_count",
-            "role"
-        ]
+        fields = ('id', 'username', 'avatar', 'comments', 'bio', 
+                    'followers', 'following_count', 'projects_count', 
+                    'members_count', 'tags')
 
-    def get_role(self, obj):
-        if obj:
-            if obj.role == Creator.CREATOR:
-                return "creator"
-            if obj.role == Creator.MODERATOR:
-                return "moderator"
-            if obj.role == Creator.STAFF:
-                return "staff"
-            if obj.role == Creator.GROUP:
-                return "group"
-        return None
+    read_only_fields = ["id", "projects_count", "following_count", "tags"]
 
     def get_members_count(self, obj):
         if hasattr(obj, "creatorgroup"):
@@ -66,6 +46,8 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
     def get_profile_comments(self, obj):
         from projects.serializers import CommentSerializer
 
+        ## There is a need to really start thinking about optimizing our queries
+        ## to limit/eliminate n+1 queries problem (i.e selecte_related and prefetch_related )
         all_comments = obj.profile_comments.all()
         root_comments = []
         creators_dict = {}
@@ -81,8 +63,9 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
 
         root_comments = list(
             map(lambda x: Comment.dump_bulk(x)[0], root_comments))
-
-        return parse_comment_trees(root_comments, creators_dict)
+        
+        user = self.context.get("request").user
+        return parse_comment_trees(user, root_comments, creators_dict)
 
 
 class CreatorSerializer(CreatorMinimalSerializer):
@@ -91,15 +74,16 @@ class CreatorSerializer(CreatorMinimalSerializer):
     dateOfBirth = serializers.DateField(read_only=True)
     location = serializers.SlugRelatedField(
         slug_field='name', queryset=Location.objects.all())
+    tags = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
 
     class Meta:
         model = Creator
 
         fields = ('id', 'username', 'email', 'phone', 'avatar', 'location', 'comments',
-                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'members_count', 'role')
+                  'dateOfBirth', 'bio', 'followers', 'following_count', 'projects_count', 'members_count', 'tags')
 
     read_only_fields = ["id", "projects_count",
-                        "following_count", "dateOfBirth", "role"]
+                        "following_count", "dateOfBirth", "tags"]
 
     def validate_email(self, email):
 
@@ -107,7 +91,7 @@ class CreatorSerializer(CreatorMinimalSerializer):
             raise serializers.ValidationError(
                 _("you must provide either email or phone number"))
 
-        if(len(Creator.objects.filter(email=email)) > 0 and email != ""):
+        if(Creator.objects.filter(email=email).count() > 0 and email != ""):
             if email == self.context.get("request").user.email:
                 return email
             raise serializers.ValidationError(
@@ -128,7 +112,7 @@ class CreatorSerializer(CreatorMinimalSerializer):
             raise serializers.ValidationError(
                 _("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."))
 
-        if(len(Creator.objects.filter(phone=phone)) > 0 and phone != ""):
+        if(Creator.objects.filter(phone=phone).count() > 0 and phone != ""):
             if phone == self.context.get("request").user.phone:
                 return phone
             raise serializers.ValidationError(
@@ -174,7 +158,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             raise serializers.ValidationError(
                 _("you must provide either email or phone number"))
 
-        if(len(Creator.objects.filter(email=email)) > 0 and email != ""):
+        if(Creator.objects.filter(email=email).count() > 0 and email != ""):
             raise serializers.ValidationError(
                 _("A user with that email address already exists"))
 
@@ -189,7 +173,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             raise serializers.ValidationError(
                 _("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."))
 
-        if(len(Creator.objects.filter(phone=phone)) > 0 and phone != ""):
+        if(Creator.objects.filter(phone=phone).count() > 0 and phone != ""):
             raise serializers.ValidationError(
                 _("A user with that phone number already exists"))
 

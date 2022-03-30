@@ -51,20 +51,9 @@ const styles = theme => ({
       alignItems: 'center',
     },
   },
-  roleStyle: {
-    backgroundColor: '#00B8C4',
-    borderRadius: '50px',
-    color: 'white',
-    padding: '0 0.5em',
-    position: 'absolute',
-    display: 'inline-block',
-    top: '0.8em',
-    marginLeft: '0.4em',
-    [theme.breakpoints.down('470')]: {
-      marginLeft: 0,
-      position: 'static',
-      marginBottom: '0.4em',
-    },
+  tagsContainerStyle: {
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   emailStyle: { marginBottom: '0.5em' },
   dividerStyle: {

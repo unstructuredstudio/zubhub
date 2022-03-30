@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 
 import { connect } from 'react-redux';
 
@@ -11,7 +12,6 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { Grid, Box, ButtonGroup, Typography } from '@material-ui/core';
 
 import {
-  fetchHero,
   fetchPage,
   fetchStaffPicks,
   updateProjects,
@@ -111,7 +111,11 @@ function Projects(props) {
                   </CustomButton>
                 </a>
               </Box>
-              <Box className={classes.heroImageContainerStyle}>
+              <Box
+                className={clsx(classes.heroImageContainerStyle, {
+                  [common_classes.displayNone]: !hero.activity_url,
+                })}
+              >
                 <img
                   className={classes.heroImageTextSmallStyle}
                   src={activity_of_the_month_small_svg}

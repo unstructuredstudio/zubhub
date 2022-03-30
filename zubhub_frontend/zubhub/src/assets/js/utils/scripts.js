@@ -1,6 +1,7 @@
 import Compressor from 'compressorjs';
 import AWS from 'aws-sdk';
 import logo from '../../images/logos/logo.png';
+import { BASE_TAGS } from './constants';
 
 /**
  * @constant doConfig
@@ -301,4 +302,16 @@ export const calculateLabelWidth = (text, document) => {
   } else {
     return;
   }
+};
+
+/**
+ * @function isBaseTag
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @description used to know if a creator tag is base tag or not.
+ * @param {String} tag - name of tag.
+ * @returns {boolean}
+ */
+export const isBaseTag = tag => {
+  return BASE_TAGS.includes(tag);
 };

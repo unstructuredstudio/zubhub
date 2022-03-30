@@ -21,7 +21,7 @@ except ImportError:
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique = True)
     slug = models.SlugField(unique=True, max_length=106)
 
     def save(self, *args, **kwargs):
@@ -37,18 +37,18 @@ class Location(models.Model):
         return self.name
 
 
-class Creator(AbstractUser):
-    CREATOR = 1
-    MODERATOR = 2
-    STAFF = 3
-    GROUP = 4
+class CreatorTag(models.Model):
+    name = models.CharField(max_length=100, unique = True)
+    search_vector = SearchVectorField(null=True)
 
-    ROLE_CHOICES = (
-        (CREATOR, 'CREATOR'),
-        (MODERATOR, 'MODERATOR'),
-        (STAFF, 'STAFF'),
-        (GROUP, 'GROUP')
-    )
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
+
+    def __str__(self):
+        return self.name
+
+
+class Creator(AbstractUser):
 
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
@@ -59,12 +59,11 @@ class Creator(AbstractUser):
         Location, null=True, on_delete=models.SET_NULL)
     bio = models.CharField(max_length=255, blank=True, null=True)
     followers = models.ManyToManyField(
-        "self", symmetrical=False, related_name="following")
+        "self", symmetrical=False, blank=True, related_name="following")
     followers_count = models.IntegerField(blank=True, default=0)
     following_count = models.IntegerField(blank=True, default=0)
     projects_count = models.IntegerField(blank=True, default=0)
-    role = models.PositiveSmallIntegerField(
-        choices=ROLE_CHOICES, blank=True, null=True, default=CREATOR)
+    tags = models.ManyToManyField(CreatorTag, blank=True, related_name="creators")
     search_vector = SearchVectorField(null=True)
 
     class Meta:
@@ -73,8 +72,7 @@ class Creator(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.avatar:
             self.avatar = 'https://robohash.org/{0}'.format(self.username)
-        if self.is_staff:
-            self.role = self.STAFF
+
         self.followers_count = self.followers.count()
         self.following_count = self.following.count()
         self.projects_count = self.projects.count()
@@ -105,6 +103,7 @@ class CreatorGroup(models.Model):
     def get_projects(self, **kwargs):
         limit = kwargs.get("limit")
         projects = self.creator.projects.all()
+        count = 0
         members = self.members.prefetch_related("projects")
         for member in members.all():
             if not projects:
