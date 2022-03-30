@@ -249,6 +249,12 @@
   },
 
   "project": {
+    "publish": {
+      "draft":"Draft",
+      "preview":"Preview",
+      "authenticated_creators":"Authenticated Creators",
+      "public":"Public"
+    },
     "errors": {
       "videoPlayerError": "An error occured while trying to play this video"
     }
@@ -286,6 +292,7 @@
       "description": {
         "label": "Describe what it is",
         "helperText": "Tell us something interesting about the project! You can share what it is about, what inspired you to make it, your making process, fun and challenging moments you experienced, etc.",
+        "placeholder": "Describe your project ...",
         "errors": {
           "max": "your description shouldn't be more than 10,000 characters",
           "required": "This field is required"
@@ -342,6 +349,16 @@
         "errors": {
           "limitReached": "Too many tags added! Maybe remove some and try again?",
           "unsupported": "Tags support only letters, numbers, spaces, and dashes. Did you add something else?"
+        }
+      },
+      "publish": {
+        "label": "What publish option do you want to set for this project?",
+        "topHelperText":"Think about your target audience. Should this project be visible to all creators?, authenticated creators?, or do you want to provide the usernames of creators this project should be visible to?",
+        "visibleTo": "Visible To",
+        "addUsernames": "Add Usernames",
+        "errors": {
+          "visible_to_required":"You must provide the usernames of creators your post should be visible to in preview mode",
+          "visible_to_unsupported":"One of the usernames provided is not a valid username"
         }
       },
       "submit": "Create Project",
@@ -412,6 +429,12 @@
           "cancel": "Cancel",
           "proceed": "Proceed"
         }
+      },
+      "publish": {
+        "draft":"Draft",
+        "preview":"Preview",
+        "authenticated_creators":"Authenticated Creators",
+        "public":"Public"
       }
     },
     "comment": {
@@ -460,6 +483,11 @@
     "errors": {
       "unexpected": "Sorry, looks like we hit a snag :( Please try again later!"
     }
+  },
+
+  "accountStatus": {
+    "contactAdmin": "If you think this is an error, your should contact the admin(s) for help.",
+    "backToHome": "Back To Home"
   },
 
   "profile": {

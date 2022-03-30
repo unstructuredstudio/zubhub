@@ -110,7 +110,7 @@ export const searchCreators = args => {
     return API.searchCreators(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-          return { ...res, loading: false, type: args.type };
+          return { ...res, loading: false, tab: args.tab };
         } else {
           res = Object.keys(res)
             .map(key => res[key])
@@ -124,7 +124,7 @@ export const searchCreators = args => {
         } else {
           toast.warning(error.message);
         }
-        return { loading: false, type: args.type };
+        return { loading: false, tab: args.tab };
       });
   };
 };

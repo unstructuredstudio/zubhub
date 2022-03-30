@@ -5,6 +5,7 @@ app_name = "creators"
 
 urlpatterns = [
     path('auth-user/', AuthUserAPIView.as_view(), name='auth_user_detail'),
+    path('account-status/', AccountStatusAPIView.as_view(), name='account_status'),
     path('register/', RegisterCreatorAPIView.as_view(), name="signup_creator"),
     path('verify-phone/', VerifyPhoneView.as_view(), name="verify_phone"),
     path('confirm-group-invite/', ConfirmGroupInviteAPIView.as_view(),

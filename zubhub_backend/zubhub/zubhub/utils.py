@@ -1,11 +1,23 @@
 import requests
 from hashlib import sha256
 from lxml.html.clean import Cleaner
+import uuid
+from math import floor
+from django.utils.text import slugify
+from django.core.files.storage import Storage
+from django.core.files.base import ContentFile
+from django.utils.deconstruct import deconstructible
 from django.conf import settings
+from projects.tasks import delete_file_task
 
 
 def get_hash(string):
     return sha256(string.encode("utf-8")).hexdigest()
+
+def get_upload_path(self, filename):
+    key = str(uuid.uuid4())
+    key = key[0: floor(len(key)/6)]
+    return '{0}/{1}-{2}'.format(self.MEDIA_PATH, slugify(filename), key)
 
 
 def get_sig(username, filename, upload_preset):
@@ -87,4 +99,30 @@ def images_to_base64(paths, html):
 #==================================================================================
 
     
+@deconstructible
+class MediaStorage(Storage):
+    def __eq__(self, other):
+        return False
+
+    def _open(self, name, _):
+        res = requests.get(name)
+        return ContentFile(res.content)
+
+    def _save(self, name, content):
+        res = upload_file_to_media_server(content, name)
+        res = res.json()["url"]
+
+        if isinstance(res, str):
+            return res
+        else:
+            raise Exception()
+
+    def delete(self, name):
+        delete_file_task.delay(name)
+
+    def get_available_name(self, name, max_length):
+        return name
+
+    def url(self, name):
+        return name
 

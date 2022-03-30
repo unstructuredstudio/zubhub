@@ -1,7 +1,7 @@
 from math import floor
 import uuid
 from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, PrivacySerializer
-from .models import Hero, FAQ, Privacy, Help, StaticAssets
+from .models import Hero, FAQ, Privacy, Help, AdminSettings
 from .utils import delete_file_from_media_server, upload_file_to_media_server, get_sig
 from projects.permissions import PostUserRateThrottle, GetUserRateThrottle, SustainedRateThrottle
 from rest_framework.permissions import IsAuthenticated
@@ -159,7 +159,7 @@ def UploadFileToLocalAPIView(request):
 class HeroAPIView(RetrieveAPIView):
     """
     Get site Hero content. To be displayed on the home page of the frontend.\n
-    Returns modified hero object (with additional header_logo_url and footer_logo_url):\n
+    Returns modified hero object (with additional header_logo_url and footer_logo_url and site_mode):\n
         {   
             "id": <hero id>,
             "title": "string",
@@ -168,7 +168,8 @@ class HeroAPIView(RetrieveAPIView):
             "activity_url": "string",
             "explore_ideas_url": "string",
             "header_logo_url": "string",
-            "footer_logo_url": "string"
+            "footer_logo_url": "string",
+            "site_mode": "PUBLIC|PRIVATE"
         }
     """
 
@@ -182,12 +183,15 @@ class HeroAPIView(RetrieveAPIView):
 
     def get(self, _):
         serializer = self.get_serializer(self.get_object())
-        static_assets = StaticAssets.objects.all().last()
+        admin_settings = AdminSettings.objects.all().last()
 
+        header_logo = getattr(admin_settings, "header_logo", None)
+        footer_logo = getattr(admin_settings, "footer_logo", None)
         data = {
             **serializer.data,
-            "header_logo_url": getattr(static_assets, "header_logo_url", ""),
-            "fooer_logo_url": getattr(static_assets, "footer_logo_url", "")
+            "header_logo_url": getattr(header_logo, "name", ""),
+            "fooer_logo_url": getattr(footer_logo, "name", ""),
+            "site_mode": getattr(admin_settings, "site_mode", "PUBLIC")
         }
         return Response(data)
 

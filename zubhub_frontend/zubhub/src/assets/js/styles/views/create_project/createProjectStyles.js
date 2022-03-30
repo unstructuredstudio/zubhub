@@ -1,5 +1,4 @@
 import { fade } from '@material-ui/core/styles';
-import uploadIcon from '../../../../images/upload.svg';
 
 const styles = theme => ({
   root: {
@@ -66,6 +65,38 @@ const styles = theme => ({
         fontSize: '1.7rem',
       },
     },
+  },
+  descInputStyle: {
+    color: 'black',
+    borderRadius: 15,
+    boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+    '&:hover': {
+      outline: '2px solid #00B8C4',
+    },
+    '& .ql-toolbar': {
+      borderTopRightRadius: 15,
+      borderTopLeftRadius: 15,
+    },
+    '& .ql-container': {
+      borderBottomRightRadius: 15,
+      borderBottomLeftRadius: 15,
+      '& .ql-editor': {
+        color: '#000000de',
+        fontSize: '1rem',
+        fontFamily: 'Raleway,Roboto,sans-serif',
+        lineHeight: '1.1876em',
+        minHeight: '200px !important',
+        [theme.breakpoints.up('1600')]: {
+          fontSize: '1.7rem',
+        },
+      },
+    },
+  },
+  descInputFocusStyle: {
+    outline: '2px solid #00B8C4 !important',
+  },
+  descInputErrorStyle: {
+    outline: '1px solid #f44336',
   },
   videoInputDialogContainerStyle: {
     [theme.breakpoints.down('400')]: {

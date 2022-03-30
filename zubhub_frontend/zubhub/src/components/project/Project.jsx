@@ -7,7 +7,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import LockIcon from '@material-ui/icons/Lock';
+import PublicIcon from '@material-ui/icons/Public';
 import {
+  Tooltip,
   Avatar,
   Box,
   Card,
@@ -25,11 +28,20 @@ import {
   dFormatter,
   nFormatter,
   buildVideoThumbnailURL,
+  isBaseTag,
 } from '../../assets/js/utils/scripts';
-import { toggleLike, toggleSave } from './projectScripts';
+import { publish_type } from '../../assets/js/utils/constants';
+import {
+  toggleLike,
+  toggleSave,
+  formatProjectDescription,
+  getPublishTypeLabel,
+} from './projectScripts';
 import styles from '../../assets/js/styles/components/project/projectStyles';
+import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
+const useCommonStyles = makeStyles(commonStyles);
 
 /**
  * @function Project Component
@@ -39,12 +51,38 @@ const useStyles = makeStyles(styles);
  */
 function Project(props) {
   const classes = useStyles();
+  const common_classes = useCommonStyles();
 
   const { project, t } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
+          <Tooltip
+            title={getPublishTypeLabel(project.publish.type)}
+            placement="right-start"
+            arrow
+          >
+            <Box className={classes.publishStyle}>
+              {project.publish.type === publish_type.Draft
+                ? t('project.publish.draft')
+                : ''}
+              {project.publish.type === publish_type.Preview
+                ? t('project.publish.preview')
+                : ''}
+              {project.publish.type ===
+              publish_type['Authenticated Creators'] ? (
+                <LockIcon />
+              ) : (
+                ''
+              )}
+              {project.publish.type === publish_type.Public ? (
+                <PublicIcon />
+              ) : (
+                ''
+              )}
+            </Box>
+          </Tooltip>
           {project.video ? (
             <>
               <img
@@ -105,7 +143,7 @@ function Project(props) {
                 color="textSecondary"
                 component="p"
               >
-                {project.description}
+                {formatProjectDescription(project.description)}
               </Typography>
             </Box>
             <Link
@@ -125,6 +163,21 @@ function Project(props) {
                 >
                   {project.creator.username}
                 </Typography>
+                <Link
+                  className={common_classes.textDecorationNone}
+                  to={`/search/?q=${project.creator.tags[0]}&tab=creators`}
+                >
+                  <Typography
+                    className={clsx(common_classes.baseTagStyle, {
+                      [common_classes.extendedTagStyle]: !isBaseTag(
+                        project.creator.tags[0],
+                      ),
+                    })}
+                    component="h2"
+                  >
+                    {project.creator.tags[0]}
+                  </Typography>
+                </Link>
               </Box>
             </Link>
             <Box className={classes.captionStyle}>
