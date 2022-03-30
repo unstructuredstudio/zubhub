@@ -87,3 +87,17 @@ class FAQ(models.Model):
         self.question = clean_summernote_html(self.question)
         self.answer = clean_summernote_html(self.answer)
         super().save(*args, **kwargs)
+
+class TinkeringResources(models.Model):
+    # handle changes in Tinkering Resources URL
+    url = models.URLField(blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Tinkering Resources"
+
+    def __str__(self):
+        return self.url
+
+    def save(self, *args, **kwargs):
+        self.url = clean_summernote_html(self.url)
+        super().save(*args, **kwargs)
