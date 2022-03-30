@@ -3,7 +3,7 @@ from math import floor
 from django.utils.text import slugify
 from .utils import upload_file_to_media_server
 from django.contrib import admin
-from .models import StaticAssets, Hero, Privacy, FAQ, Help
+from .models import StaticAssets, Hero, Privacy, FAQ, Help, TinkeringResources
 from django_summernote.admin import SummernoteModelAdmin
 from projects.tasks import delete_file_task
 
@@ -134,3 +134,4 @@ admin.site.register(Hero, HeroAdmin)
 admin.site.register(Privacy, PrivacyAdmin)
 admin.site.register(Help, HelpAdmin)
 admin.site.register(FAQ, FAQAdmin)
+admin.site.register(TinkeringResources)
