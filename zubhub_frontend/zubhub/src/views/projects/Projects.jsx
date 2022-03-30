@@ -263,6 +263,6 @@ const mapDispatchToProps = dispatch => {
       return dispatch(ProjectActions.setStaffPicks(args));
     },
   };
-};
+};Projects
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projects);
