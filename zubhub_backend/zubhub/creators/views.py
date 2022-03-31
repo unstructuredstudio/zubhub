@@ -91,10 +91,16 @@ class UserProfileAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_serializer_class(self):
-        if self.kwargs.get("username") == self.request.user.username:
-            return CreatorSerializer
-        else:
+        if self.request and self.kwargs.get("username") != self.request.user.username:
             return CreatorMinimalSerializer
+        else:
+            return CreatorSerializer
+
+    """
+    Note that this schema returns the full user profile, but the api sometimes
+    returns a minimal version of the user profile, omitting certain fields that
+    are not neccessary or are sensitive.
+    """
 
 
 class RegisterCreatorAPIView(RegisterView):
