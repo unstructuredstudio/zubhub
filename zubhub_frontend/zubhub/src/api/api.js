@@ -832,6 +832,18 @@ class API {
     return this.request({ url }).then(res => res.json());
   };
 
+  /**
+   * Gets a user's notifications
+   * @param {number} page the page of notifications to get
+   * @param {string} token the user's auth token
+   * @returns the user's notifications
+   */
+  getNotifications = (page, token) => {
+    const url = 'notifications/?' + new URLSearchParams({ page }).toString();
+
+    return this.request({ url, token }).then(res => res.json());
+  }
+
 
   /**
   * @method getSignature
