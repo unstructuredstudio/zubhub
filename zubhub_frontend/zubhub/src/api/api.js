@@ -310,6 +310,17 @@ class API {
     return this.request({ url, token }).then(res => res.json());
   };
 
+  searchTags = ({ page, token, query_string }) => {
+    let url;
+    if (page) {
+      url = `projects/tags/search/?q=${query_string}&page=${page}`;
+    } else {
+      url = `projects/tags/search/?q=${query_string}`;
+    }
+
+    return this.request({ url, token }).then(res => res.json());
+  };
+
   /**
    * @method getFollowers - get a list of users that a username is following
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>

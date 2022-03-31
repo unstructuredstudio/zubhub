@@ -130,6 +130,29 @@ function SearchResults(props) {
     }
   };
 
+  const getTagResults = results => {
+    return results.map(tag => (
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={4}
+        className={classes.projectGridStyle}
+        align="center"
+      >
+        <Link to={`/search?q=${tag.slug}&type=projects`}>
+          <Typography
+            component="h3"
+            color="textPrimary"
+            className={classes.userNameStyle}
+          >
+            {tag.name}
+          </Typography>
+        </Link>
+      </Grid>
+    ));
+  };
+
   const getResults = (type, results) => {
     if (type === 'projects') {
       return results.map(project => (
@@ -159,6 +182,8 @@ function SearchResults(props) {
         state,
         handleSetState,
       );
+    } else {
+      return getTagResults(results);
     }
   };
 

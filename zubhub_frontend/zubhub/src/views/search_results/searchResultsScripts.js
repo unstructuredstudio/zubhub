@@ -18,7 +18,6 @@ export const getQueryParams = url => {
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props, query_string, type) => {
-  console.log('type');
   if (type === 'projects') {
     return props.searchProjects({
       page,
@@ -36,7 +35,7 @@ export const fetchPage = (page, props, query_string, type) => {
       tab: 'creators',
     });
   } else {
-    return props.searchCreators({
+    return props.searchTags({
       page,
       query_string,
       t: props.t,
