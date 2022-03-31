@@ -1,4 +1,4 @@
-```.
+```
 ├── docs
 │   ├── deploy.md
 │   ├── erd.png
@@ -12,5 +12,5 @@
 │   ├── zubhub_infra_prod_single_vm.jpg
 │   └── zubhub-openapi-schema.yml
 ├── mkdocs.yml
-└── Readme.md```
+└── Readme.md
 ```
