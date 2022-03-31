@@ -22,36 +22,37 @@ const styles = theme => ({
   },
   searchFormStyle: {
     display: 'inline-block',
-    position: 'relative',
-    marginLeft: '2em',
-    verticalAlign: 'bottom',
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: ['translate(-50%, -50%)'],
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
-      width: '35em',
-      backgroundColor: 'rgba(255,255,255,0.2)',
-      color: 'black',
+      width: '40em',
+      backgroundColor: 'rgba(0,0,0,0.2)',
+      color: 'white',
       borderRadius: '50px',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       '&:hover': {
-        backgroundColor: 'rgba(255,255,255,0.8)',
+        backgroundColor: 'rgba(0,0,0,0.3)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
-          color: '#DC3545',
+          color: '#FFF',
         },
       },
       '&.MuiOutlinedInput-notchedOutline': {
-        border: '1px solid rgba(255,255,255,0.2)',
+        border: '1px solid rgba(0,0,0,0.2)',
       },
       '&.MuiOutlinedInput-root': {
         '& fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&:hover fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&.Mui-focused fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
       },
       [theme.breakpoints.down('1216')]: {
@@ -70,30 +71,33 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     '& .search-form-input': {
-      height: '2.5em',
-      backgroundColor: 'rgba(255,255,255,0.2)',
+      height: '2em',
+      position: 'absolute',
+      top: '-0.3em',
+      width: '100%',
+      backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'black',
       borderRadius: '50px',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       '&:hover': {
-        backgroundColor: 'rgba(255,255,255,0.8)',
+        backgroundColor: 'rgba(0,0,0,0.3)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
-          color: '#DC3545',
+          color: '#FFF',
         },
       },
       '&.MuiOutlinedInput-notchedOutline': {
-        border: '1px solid rgba(255,255,255,0.2)',
+        border: '1px solid rgba(0,0,0,0.2)',
       },
       '&.MuiOutlinedInput-root': {
         '& fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&:hover fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&.Mui-focused fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
       },
     },
