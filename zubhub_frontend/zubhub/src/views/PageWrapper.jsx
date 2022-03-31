@@ -46,6 +46,10 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
+import {
+  getQueryParams
+} from './search_results/searchResultsScripts'
+
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
@@ -61,11 +65,11 @@ const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 /**
-* @function PageWrapper View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function PageWrapper View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
@@ -101,7 +105,7 @@ function PageWrapper(props) {
 
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
-  const { hero } = props.projects;
+  const { zubhub } = props.projects;
   const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
@@ -113,7 +117,7 @@ function PageWrapper(props) {
             <Box className={classes.logoStyle}>
               <Link to="/">
                 <img
-                  src={hero.header_logo_url ? hero.header_logo_url : logo}
+                  src={zubhub?.header_logo_url ? zubhub.header_logo_url : logo}
                   alt="logo"
                 />
               </Link>
@@ -175,6 +179,7 @@ function PageWrapper(props) {
                     name="q"
                     id="q"
                     type="search"
+                    defaultValue={props.location.search && getQueryParams(props.location.search).query}
                     className={clsx(
                       classes.searchFormInputStyle,
                       'search-form-input',
@@ -509,7 +514,9 @@ function PageWrapper(props) {
           <a href="https://unstructured.studio">
             <img
               src={
-                hero.footer_logo_url ? hero.footer_logo_url : unstructuredLogo
+                zubhub?.footer_logo_url
+                  ? zubhub.footer_logo_url
+                  : unstructuredLogo
               }
               className={classes.footerLogoStyle}
               alt="unstructured-studio-logo"

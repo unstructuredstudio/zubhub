@@ -29,13 +29,12 @@ import styles from '../../assets/js/styles/components/comments/commentsStyles';
 
 const useStyles = makeStyles(styles);
 
-
 /**
-* @function Comments Component
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function Comments Component
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function Comments(props) {
   const classes = useStyles();
 

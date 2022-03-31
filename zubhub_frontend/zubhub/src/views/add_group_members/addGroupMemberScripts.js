@@ -1,23 +1,21 @@
 import * as Yup from 'yup';
 
-
 /**
-* @constant vars
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe constant's function
-*/
+ * @constant vars
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe constant's function
+ */
 export const vars = {
   csv_not_added: true,
 };
 
-
 /**
-* @function useStateUpdateCallback
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function useStateUpdateCallback
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const submit = (state, handleSetState, props) => {
   let { upload_dialog, csv } = state;
   upload_dialog = true;
@@ -68,13 +66,12 @@ export const submit = (state, handleSetState, props) => {
   handleSetState({ upload_dialog });
 };
 
-
 /**
-* @function handleSubmit
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleSubmit
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleSubmit = (e, state, handleSetState, props) => {
   e.preventDefault();
 
@@ -93,13 +90,12 @@ export const handleSubmit = (e, state, handleSetState, props) => {
   }
 };
 
-
 /**
-* @function handleAddGroupMembersFieldChange
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleAddGroupMembersFieldChange
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleAddGroupMembersFieldChange = (e, props, refs) => {
   const children = refs.add_group_members_el.current.children;
   let arr = [];
@@ -116,24 +112,22 @@ export const handleAddGroupMembersFieldChange = (e, props, refs) => {
   props.setFieldValue('group_members', JSON.stringify(arr), true);
 };
 
-
 /**
-* @function handleBulkAddCheck
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleBulkAddCheck
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleBulkAddCheck = bulk_add_checked => ({
   bulk_add_checked: !bulk_add_checked,
 });
 
-
 /**
-* @function handleAddCSV
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function handleAddCSV
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const handleAddCSV = (e, refs) => {
   e.preventDefault();
   if (e.dataTransfer.items[0].getAsFile() !== null) {
@@ -143,13 +137,12 @@ export const handleAddCSV = (e, refs) => {
   }
 };
 
-
 /**
-* @function addGroupMembersNode
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function addGroupMembersNode
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const addGroupMembersNode = (e, props) => {
   e.preventDefault();
   let group_members = props.values['group_members'];
@@ -162,13 +155,12 @@ export const addGroupMembersNode = (e, props) => {
   }
 };
 
-
 /**
-* @object validationSchema
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe object's function
-*/
+ * @object validationSchema
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe object's function
+ */
 export const validationSchema = Yup.object().shape({
   group_members: Yup.string().test('empty', 'required', value => {
     let is_empty = true;

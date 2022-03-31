@@ -1,9 +1,9 @@
 /**
-* @function fetchPage
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function fetchPage
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const fetchPage = (page, props) => {
   if (!props.auth.token) {
     props.history.push('/login');
@@ -12,13 +12,12 @@ export const fetchPage = (page, props) => {
   }
 };
 
-
 /**
-* @function updateProjects
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function updateProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 export const updateProjects = (res, { results: projects }, props, toast) => {
   return res
     .then(res => {
