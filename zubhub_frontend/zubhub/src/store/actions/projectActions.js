@@ -83,7 +83,6 @@ export const updateProject = (props, redirect) => {
         console.log(res);
         throw new Error(JSON.stringify(res));
       } else {
-        console.log("Success upload?");
         if (redirect) {
           toast.success(props.t('createProject.updateToastSuccess'));
           return props.history.push('/profile');

@@ -131,7 +131,6 @@ const buildMaterialUsedNodes = ({
         onChange={e =>
           handleAddMaterialFieldChange(
             e,
-            e.target.value,
             props,
             refs,
             state,
@@ -1251,7 +1250,6 @@ const mapDispatchToProps = dispatch => {
       return dispatch(ProjectActions.createProject(props, x));
     },
     updateProject: (props, redirect) => {
-      console.log("I AM", redirect);
       return dispatch(ProjectActions.updateProject(props, redirect));
     },
     shouldUploadToLocal: args => {

@@ -460,16 +460,16 @@ export const autoSaveProject = async (state, props, handleSetState) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    props.setFieldTouched('title');
-    props.setFieldTouched('description');
-    props.setFieldTouched('project_images');
-    props.setFieldTouched('video');
-    props.setFieldTouched('materials_used');
-    props.setFieldTouched('category');
-    props.setFieldTouched('tags');
+    // props.setFieldTouched('title');
+    // props.setFieldTouched('description');
+    // props.setFieldTouched('project_images');
+    // props.setFieldTouched('video');
+    // props.setFieldTouched('materials_used');
+    // props.setFieldTouched('category');
+    // props.setFieldTouched('tags');
 
-    vars.image_field_touched = true;
-    vars.video_field_touched = true;
+    // vars.image_field_touched = true;
+    // vars.video_field_touched = true;
 
     props.validateForm().then(errors => {
       if (
@@ -480,14 +480,21 @@ export const autoSaveProject = async (state, props, handleSetState) => {
           state.media_upload.videos_to_upload.length !== 0
         )
       ) {
-        console.log("im in the if statement");
+        console.log("if");
+        console.log(state.media_upload);
         vars.upload_in_progress = true;
         uploadProject(state, props, handleSetState, false);
       } else {
+        console.log("else");
+        console.log(state.media_upload);
+
         const { media_upload } = state;
         media_upload.upload_percent = 0;
         vars.upload_in_progress = true;
         handleSetState({ media_upload });
+
+        console.log(media_upload);
+
         for (
           let index = 0;
           index < media_upload.images_to_upload.length;
@@ -526,7 +533,6 @@ export const autoSaveProject = async (state, props, handleSetState) => {
 * @todo - describe function's signature
 */
 export const uploadProject = async (state, props, handleSetState, redirect = true) => {
-  console.log("REDIRECT:", redirect)
   const { media_upload } = state;
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
@@ -583,6 +589,7 @@ export const uploadProject = async (state, props, handleSetState, redirect = tru
   });
 
   vars.upload_in_progress = false; //flag to prevent attempting to upload a project when an upload is already in progress
+  console.log(vars);
 };
 
 /**
@@ -998,23 +1005,182 @@ export const checkMediaFilesErrorState = (refs, props) => {
 * @todo - describe object's function
 */
 
+// export const validationSchema = Yup.object().shape({
+//   is_autosave: Yup.boolean(),
+//   title: Yup.string().max(100, 'max').required('required').when(
+//     'is_autosave', {
+//     is: false,
+//     then: Yup.string().required("required"),
+//     otherwise: Yup.string(),
+//   }
+//   ),
+//   description: Yup.string().max(10000, 'max').when(
+//     'is_autosave', {
+//     is: false,
+//     then: Yup.string().required("required"),
+//     otherwise: Yup.string(),
+//   }
+//   ),
+//   // description: Yup.string().max(10000, 'max').required("required"),
+//   project_images: Yup.mixed()
+//     .test('not_an_image', 'onlyImages', value => {
+//       if (value) {
+//         let not_an_image = false;
+//         for (let index = 0; index < value.files.length; index++) {
+//           if (value.files[index].type.split('/')[0] !== 'image') {
+//             not_an_image = true;
+//           }
+//         }
+//         return not_an_image ? false : true;
+//       } else {
+//         return true;
+//       }
+//     })
+//     .test('too_many_images', 'tooManyImages', value => {
+//       if (value) {
+//         return value.files.length > 10 ? false : true;
+//       } else {
+//         return true;
+//       }
+//     })
+//     .test('image_size_too_large', 'imageSizeTooLarge', value => {
+//       if (value) {
+//         let image_size_too_large = false;
+//         for (let index = 0; index < value.files.length; index++) {
+//           if (value.files[index].size / 1000 > 10240) {
+//             image_size_too_large = true;
+//           }
+//         }
+//         return image_size_too_large ? false : true;
+//       } else {
+//         return true;
+//       }
+//     })
+//     .when(
+//       'is_autosave', {
+//       is: false,
+//       then: Yup.mixed().test('image_is_empty', 'imageOrVideo', function (value) {
+//         return vars.image_field_touched && !value && !this.parent.video
+//           ? false
+//           : true;
+//       }),
+//       otherwise: Yup.mixed(),
+//     }
+//     )
+//   ,
+//   video: Yup.mixed()
+//     .test('should_be_video_file', 'shouldBeVideoFile', value => {
+//       if (!value) {
+//         return true;
+//       } else if (typeof value === 'string') {
+//         return true;
+//       } else if (typeof value === 'object') {
+//         let not_a_video = false;
+//         for (let index = 0; index < value.files.length; index++) {
+//           if (value.files[index].type.split('/')[0] !== 'video') {
+//             not_a_video = true;
+//           }
+//         }
+//         return not_a_video ? false : true;
+//       }
+//       return false;
+//     })
+//     .test('should_be_url', 'shouldBeURL', value => {
+//       if (!value) {
+//         return true;
+//       } else if (typeof value === 'object') {
+//         return true;
+//       } else if (typeof value === 'string') {
+//         const res = value.match(
+//           /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+//         );
+//         return res !== null ? true : false;
+//       }
+
+//       return false;
+//     })
+//     .test('max-video-url-length', 'maxVideoURLLength', value => {
+//       if (!value) {
+//         return true;
+//       } else if (typeof value === 'object') {
+//         return true;
+//       } else if (typeof value === 'string') {
+//         return value.length > 2048 ? false : true;
+//       }
+
+//       return false;
+//     })
+//     .test('max-video-file-size', 'maxVideoFileSize', value => {
+//       if (!value) {
+//         return true;
+//       } else if (typeof value === 'string') {
+//         return true;
+//       } else if (typeof value === 'object') {
+//         let max = false;
+//         for (let index = 0; index < value.files.length; index++) {
+//           if (value.files[index].size / 1000 > 60240) {
+//             max = true;
+//           }
+//         }
+//         return max ? false : true;
+//       }
+
+//       return false;
+//     })
+//     .when(
+//       'is_autosave', {
+//       is: false,
+//       then: Yup.mixed().test('video_is_empty', 'imageOrVideo', function (value) {
+//         return vars.video_field_touched && !value && !this.parent.project_images
+//           ? false
+//           : true;
+//       }),
+//       otherwise: Yup.mixed(),
+//     }
+//     ),
+//   materials_used: Yup.string()
+//     .max(10000, 'max')
+//     .when(
+//       'is_autosave', {
+//       is: false,
+//       then: Yup.string().test('empty', 'required', value => {
+//         let is_empty = true;
+
+//         value &&
+//           value.split(',').forEach(material => {
+//             if (material) {
+//               is_empty = false;
+//             }
+//           });
+
+//         return !is_empty;
+//       }),
+//       otherwise: Yup.string()
+//     }
+//     )
+//   ,
+//   category: Yup.string().min(1, 'min'),
+//   tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
+//     if (tags) {
+//       tags = JSON.parse(tags);
+//       const re = /^[0-9A-Za-z\s\-]+$/;
+//       let unsupported = false;
+//       for (let tag of tags) {
+//         if (!re.test(tag.name)) {
+//           unsupported = true;
+//         }
+//       }
+//       return unsupported ? false : true;
+//     } else {
+//       return true;
+//     }
+//   }),
+// });
+
 export const validationSchema = Yup.object().shape({
   is_autosave: Yup.boolean(),
-  title: Yup.string().max(100, 'max').required('required').when(
-    'is_autosave', {
-    is: false,
-    then: Yup.string().required("required"),
-    otherwise: Yup.string(),
-  }
-  ),
-  description: Yup.string().max(10000, 'max').when(
-    'is_autosave', {
-    is: false,
-    then: Yup.string().required("required"),
-    otherwise: Yup.string(),
-  }
-  ),
-  // description: Yup.string().max(10000, 'max').required("required"),
+  title: Yup.string().max(100, 'max').required('required'),
+  description: Yup.string().max(10000, 'max').required('required'),
   project_images: Yup.mixed()
     .test('not_an_image', 'onlyImages', value => {
       if (value) {
@@ -1049,17 +1215,11 @@ export const validationSchema = Yup.object().shape({
         return true;
       }
     })
-    .when(
-      'is_autosave', {
-      is: false,
-      then: Yup.mixed().test('image_is_empty', 'imageOrVideo', function (value) {
-        return vars.image_field_touched && !value && !this.parent.video
-          ? false
-          : true;
-      }),
-      otherwise: Yup.mixed(),
-    }
-    )
+    .test('image_is_empty', 'imageOrVideo', function (value) {
+      return vars.image_field_touched && !value && !this.parent.video
+        ? false
+        : true;
+    })
   ,
   video: Yup.mixed()
     .test('should_be_video_file', 'shouldBeVideoFile', value => {
@@ -1089,7 +1249,6 @@ export const validationSchema = Yup.object().shape({
         );
         return res !== null ? true : false;
       }
-
       return false;
     })
     .test('max-video-url-length', 'maxVideoURLLength', value => {
@@ -1119,18 +1278,11 @@ export const validationSchema = Yup.object().shape({
       }
 
       return false;
-    })
-    .when(
-      'is_autosave', {
-      is: false,
-      then: Yup.mixed().test('video_is_empty', 'imageOrVideo', function (value) {
-        return vars.video_field_touched && !value && !this.parent.project_images
-          ? false
-          : true;
-      }),
-      otherwise: Yup.mixed(),
-    }
-    ),
+    }).test('video_is_empty', 'imageOrVideo', function (value) {
+      return vars.video_field_touched && !value && !this.parent.project_images
+        ? false
+        : true;
+    }),
   materials_used: Yup.string()
     .max(10000, 'max')
     .when(
