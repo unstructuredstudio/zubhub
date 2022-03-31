@@ -147,16 +147,18 @@ class ProjectSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
     def validate_video(self, video):
-        if(video == "" and len(self.initial_data.get("images")) == 0):
-            raise serializers.ValidationError(
-                _("You must provide either image(s), video file, or video URL to create your project!"))
         return video
+    #     if(video == "" and len(self.initial_data.get("images")) == 0):
+    #         raise serializers.ValidationError(
+    #             _("You must provide either image(s), video file, or video URL to create your project!"))
+    #     return video
 
     def validate_images(self, images):
-        if(len(images) == 0 and len(self.initial_data["video"]) == 0):
-            raise serializers.ValidationError(
-                _("You must provide either image(s), video file, or video URL to create your project!"))
         return images
+    #     if(len(images) == 0 and len(self.initial_data["video"]) == 0):
+    #         raise serializers.ValidationError(
+    #             _("You must provide either image(s), video file, or video URL to create your project!"))
+    #     return images
 
     def validate_tags(self, tags):
         if not isinstance(tags, list):

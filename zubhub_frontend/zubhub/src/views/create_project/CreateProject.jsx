@@ -346,7 +346,6 @@ function CreateProject(props) {
                           onChange={e =>
                             handleTextFieldChange(
                               e,
-                              e.target.id,
                               e.target.value,
                               state,
                               props,
@@ -430,9 +429,11 @@ function CreateProject(props) {
                             )}
                             onChange={value =>
                               handleDescFieldChange(
+                                state,
                                 value,
                                 props,
                                 handleSetState,
+                                savedTimeDisplay
                               )
                             }
                             onFocus={() =>

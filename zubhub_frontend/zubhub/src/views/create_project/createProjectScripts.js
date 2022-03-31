@@ -102,12 +102,8 @@ export const getCategories = props => {
 * 
 * @todo - describe function's signature
 */
-export const handleTextFieldChange = (e, targetField, targetValue, state, props, handleSetState, handleDisplayTime) => {
-  if (targetField == "title") {
-    props.values.title = targetValue;
-  } else if (targetField == "description") {
-    props.values.description = targetValue;
-  }
+export const handleTextFieldChange = (e, targetValue, state, props, handleSetState, handleDisplayTime) => {
+  props.values.title = targetValue;
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
   timeOutSave(state, props, handleSetState, handleDisplayTime);
@@ -135,7 +131,7 @@ export const handleTextFieldBlur = (e, props) => {
  *
  * @todo - describe function's signature
  */
-export const handleDescFieldChange = (value, props, handleSetState) => {
+export const handleDescFieldChange = (state, value, props, handleSetState, handleDisplayTime) => {
   if (value && value !== '<p><br></p>') {
     // second conditional is a guide for when quill is cleared.
     props.setStatus({ ...props.status, description: '' });
@@ -143,6 +139,8 @@ export const handleDescFieldChange = (value, props, handleSetState) => {
   } else {
     props.setFieldValue('description', undefined, true);
   }
+  props.values.description = value;
+  timeOutSave(state, props, handleSetState, handleDisplayTime);
 
   handleDescFieldFocusChange(value, props, handleSetState);
 };
@@ -747,45 +745,90 @@ export const autoSaveProject = async (state, props, handleSetState) => {
         )
       ) {
         console.log("if");
-        console.log(state.media_upload);
         vars.upload_in_progress = true;
         uploadProject(state, props, handleSetState, false);
       } else {
         console.log("else");
-        console.log(state.media_upload);
-
-        const { media_upload } = state;
-        media_upload.upload_percent = 0;
         vars.upload_in_progress = true;
-        handleSetState({ media_upload });
+        state.media_upload.upload_dialog = false;
+        handleSetState({
+          media_upload: {
+            ...state.media_upload,
+            upload_dialog: true,
+            upload_percent: 0,
+          },
+        });
 
-        console.log(media_upload);
+        const promises = [];
 
+        // upload images
         for (
           let index = 0;
-          index < media_upload.images_to_upload.length;
+          index < state.media_upload.images_to_upload.length;
           index++
         ) {
-          uploadImage(
-            media_upload.images_to_upload[index],
-            state,
-            props,
-            handleSetState,
+          promises.push(
+            uploadImage(
+              state.media_upload.images_to_upload[index],
+              state,
+              props,
+              handleSetState,
+            ),
           );
         }
 
+        // upload videos
         for (
           let index = 0;
-          index < media_upload.videos_to_upload.length;
+          index < state.media_upload.videos_to_upload.length;
           index++
         ) {
-          uploadVideo(
-            media_upload.videos_to_upload[index],
-            state,
-            props,
-            handleSetState,
+          promises.push(
+            uploadVideo(
+              state.media_upload.videos_to_upload[index],
+              state,
+              props,
+              handleSetState,
+            ),
           );
         }
+
+        // wait for all image and video promises to resolve before continuing
+        Promise.all(promises)
+          .then(all => {
+            const uploaded_images_url = state.media_upload.uploaded_images_url;
+            const uploaded_videos_url = state.media_upload.uploaded_videos_url;
+
+            all.forEach(each => {
+              if (each.public_id) {
+                uploaded_images_url.push(each);
+              } else if (each.secure_url) {
+                uploaded_videos_url[0] = each.secure_url;
+              }
+            });
+
+            state = JSON.parse(JSON.stringify(state));
+            state.media_upload.uploaded_images_url = uploaded_images_url;
+            state.media_upload.uploaded_videos_url = uploaded_videos_url;
+
+            uploadProject(state, props, handleSetState);
+          })
+          .catch(error => {
+            // settimeout is used to delay closing the upload_dialog until
+            // state have reflected all prior attempts to set state.
+            // This is to ensure nothing overwrites the dialog closing.
+            // A better approach would be to refactor the app and use
+            // redux for most complex state interactions.
+            setTimeout(
+              () =>
+                handleSetState({
+                  media_upload: { ...state.media_upload, upload_dialog: false },
+                }),
+              2000,
+            );
+
+            if (error) toast.warning(error);
+          });
       }
     });
   }
@@ -841,22 +884,22 @@ export const uploadProject = async (state, props, handleSetState, redirect = tru
           upload_dialog: false,
         },
       });
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        const server_errors = {};
-        Object.keys(messages).forEach(key => {
-          if (key === 'non_field_errors') {
-            server_errors['non_field_errors'] = messages[key][0];
-          } else {
-            server_errors[key] = messages[key][0];
-          }
-        });
-        props.setStatus({ ...server_errors });
-      } else {
-        props.setStatus({
-          non_field_errors: props.t('createProject.errors.unexpected'),
-        });
-      }
+      // const messages = JSON.parse(error.message);
+      // if (typeof messages === 'object') {
+      //   const server_errors = {};
+      //   Object.keys(messages).forEach(key => {
+      //     if (key === 'non_field_errors') {
+      //       server_errors['non_field_errors'] = messages[key][0];
+      //     } else {
+      //       server_errors[key] = messages[key][0];
+      //     }
+      //   });
+      //   props.setStatus({ ...server_errors });
+      // } else {
+      //   props.setStatus({
+      //     non_field_errors: props.t('createProject.errors.unexpected'),
+      //   });
+      // }
     })
     .finally(() => {
       vars.upload_in_progress = false; // flag to prevent attempting to upload a project when an upload is already in progress

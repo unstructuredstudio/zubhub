@@ -485,6 +485,7 @@ class API {
     tags,
     publish,
   }) => {
+    console.log("endpoint");
     const url = 'projects/create/';
     const method = 'POST';
 
@@ -498,7 +499,7 @@ class API {
       tags,
       publish,
     });
-    return this.request({ url, method, token, body }).then(res => res.json());
+    return this.request({ url, method, token, body }).then(res => {console.log(res);return res.json();});
   };
 
   /**
