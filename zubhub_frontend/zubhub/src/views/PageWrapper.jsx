@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -33,6 +33,8 @@ import {
   MenuItem,
   Avatar,
   Select,
+  FormGroup,
+  InputBase,
 } from '@material-ui/core';
 
 import {
@@ -46,9 +48,7 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
-import {
-  getQueryParams
-} from './search_results/searchResultsScripts'
+import { getQueryParams } from './search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
@@ -60,9 +60,16 @@ import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
+import InputSelect from '../components/input_select/InputSelect';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
+
+const SearchType = {
+  CREATORS: 'creators',
+  PROJECTS: 'projects',
+  TAGS: 'tags',
+};
 
 /**
  * @function PageWrapper View
@@ -74,6 +81,9 @@ function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const [searchType, setSearchType] = useState(
+    getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
+  );
 
   const [state, setState] = React.useState({
     username: null,
@@ -175,29 +185,43 @@ function PageWrapper(props) {
                   >
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
-                  <OutlinedInput
-                    name="q"
-                    id="q"
-                    type="search"
-                    defaultValue={getQueryParams(window.location.href).get('q')}
-                    className={clsx(
-                      classes.searchFormInputStyle,
-                      'search-form-input',
-                    )}
-                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                    pattern="(.|\s)*\S(.|\s)*"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          type="submit"
-                          className={classes.searchFormSubmitStyle}
-                          aria-label={t('pageWrapper.inputs.search.label')}
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
+                  <FormGroup row>
+                    <InputSelect
+                      searchType={searchType}
+                      onSearchTypeChange={setSearchType}
+                      name="type"
+                    >
+                      <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
+                      <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
+                      <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                    </InputSelect>
+                    <OutlinedInput
+                      name="q"
+                      id="q"
+                      type="search"
+                      defaultValue={
+                        props.location.search &&
+                        getQueryParams(window.location.href).get('q')
+                      }
+                      className={clsx(
+                        classes.searchFormInputStyle,
+                        'search-form-input',
+                      )}
+                      placeholder={`${t('pageWrapper.inputs.search.label')}...`}
+                      pattern="(.|\s)*\S(.|\s)*"
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            type="submit"
+                            className={classes.searchFormSubmitStyle}
+                            aria-label={t('pageWrapper.inputs.search.label')}
+                          >
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormGroup>
                 </FormControl>
               </form>
             </Box>

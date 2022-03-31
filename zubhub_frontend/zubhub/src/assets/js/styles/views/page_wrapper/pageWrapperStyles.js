@@ -23,16 +23,17 @@ const styles = theme => ({
   searchFormStyle: {
     display: 'inline-block',
     position: 'relative',
-    marginLeft: '1em',
+    marginLeft: '2em',
+    verticalAlign: 'bottom',
     '& .search-form-input': {
       height: '2.5em',
-      position: 'absolute',
-      top: '-1em',
       maxWidth: '40em',
-      width: '40em',
+      width: '35em',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
+      borderTopLeftRadius: '0px',
+      borderBottomLeftRadius: '0px',
       '&:hover': {
         backgroundColor: 'rgba(255,255,255,0.8)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
@@ -61,7 +62,6 @@ const styles = theme => ({
       },
     },
   },
-
   smallSearchFormStyle: {
     height: '2.5em',
     width: '100%',

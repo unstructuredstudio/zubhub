@@ -22,7 +22,6 @@ import {
 
 import {
   getQueryParams,
-  switchTab,
   fetchPage,
   updateProjects,
   toggleFollow,
@@ -115,17 +114,12 @@ function SearchResults(props) {
     previous: null,
     next: null,
     loading: true,
-    tab: 'projects',
   });
 
   React.useEffect(() => {
     const params = getQueryParams(window.location.href);
 
-    if (!['creators', 'projects'].includes(params.get('tab'))) {
-      switchTab('projects', props, window.location.href);
-    }
-
-    handleSetState(fetchPage(null, props, params.get('q'), params.get('tab')));
+    handleSetState(fetchPage(null, props, params.get('q'), params.get('type')));
   }, []);
 
   const handleSetState = obj => {
@@ -136,13 +130,44 @@ function SearchResults(props) {
     }
   };
 
+  const getResults = (type, results) => {
+    if (type === 'projects') {
+      return results.map(project => (
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          className={classes.projectGridStyle}
+          align="center"
+        >
+          <Project
+            project={project}
+            key={project.id}
+            updateProjects={res =>
+              handleSetState(updateProjects(res, state, props, toast))
+            }
+            {...props}
+          />
+        </Grid>
+      ));
+    } else if (type === 'creators') {
+      return buildCreatorProfiles(
+        results,
+        { classes, common_classes },
+        props,
+        state,
+        handleSetState,
+      );
+    }
+  };
+
   const {
     count,
     results,
     previous: prev_page,
     next: next_page,
     loading,
-    tab,
   } = state;
   const { t } = props;
   if (loading) {
@@ -150,211 +175,80 @@ function SearchResults(props) {
   } else {
     return (
       <Box className={classes.root}>
-        <Box className={classes.searchSectionStyle}>
-          <Button
-            className={clsx(
-              tab === 'projects' ? classes.selectedTabStyle : null,
-              classes.tabStyle,
-            )}
-            onClick={() => {
-              switchTab('projects', props, window.location.href);
-              const params = getQueryParams(window.location.href);
-              handleSetState({ loading: true });
-
-              handleSetState(
-                fetchPage(null, props, params.get('q'), params.get('tab')),
-              );
-            }}
-          >
-            {t('searchResults.projects')}
-          </Button>
-
-          <Button
-            className={clsx(
-              tab === 'creators' ? classes.selectedTabStyle : null,
-              classes.tabStyle,
-            )}
-            onClick={() => {
-              switchTab('creators', props, window.location.href);
-              const params = getQueryParams(window.location.href);
-              handleSetState({ loading: true });
-
-              handleSetState(
-                fetchPage(null, props, params.get('q'), params.get('tab')),
-              );
-            }}
-          >
-            {t('searchResults.creators')}
-          </Button>
-        </Box>
         {results && results.length > 0 ? (
-          tab === 'projects' ? (
-            <Container className={classes.mainContainerStyle}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography
-                    className={classes.pageHeaderStyle}
-                    variant="h3"
-                    gutterBottom
-                  >
-                    {count}{' '}
-                    {count > 1
-                      ? t('searchResults.resultsFound')
-                      : t('searchResults.resultFound')}
-                  </Typography>
-                </Grid>
-                {results.map(project => (
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    className={classes.projectGridStyle}
-                    align="center"
-                  >
-                    <Project
-                      project={project}
-                      key={project.id}
-                      updateProjects={res =>
-                        handleSetState(updateProjects(res, state, props, toast))
-                      }
-                      {...props}
-                    />
-                  </Grid>
-                ))}
+          <Container className={classes.mainContainerStyle}>
+            <Grid container>
+              <Grid item xs={12}>
+                <Typography
+                  className={classes.pageHeaderStyle}
+                  variant="h3"
+                  gutterBottom
+                >
+                  {count}{' '}
+                  {count > 1
+                    ? t('searchResults.resultsFound')
+                    : t('searchResults.resultFound')}
+                </Typography>
               </Grid>
-              <ButtonGroup
-                aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
-                className={classes.buttonGroupStyle}
-              >
-                {prev_page ? (
-                  <CustomButton
-                    className={classes.floatLeft}
-                    size="large"
-                    startIcon={<NavigateBeforeIcon />}
-                    onClick={(
-                      _,
-                      page = getQueryParams(prev_page).get('page'),
-                    ) => {
-                      handleSetState({ loading: true });
-                      handleSetState(
-                        fetchPage(
-                          page,
-                          props,
-                          getQueryParams(prev_page).get('q'),
-                          tab,
-                        ),
-                      );
-                    }}
-                    primaryButtonStyle
-                  >
-                    {t('searchResults.prev')}
-                  </CustomButton>
-                ) : null}
-                {next_page ? (
-                  <CustomButton
-                    className={classes.floatRight}
-                    size="large"
-                    endIcon={<NavigateNextIcon />}
-                    onClick={(
-                      _,
-                      page = getQueryParams(next_page, tab).get('page'),
-                    ) => {
-                      handleSetState({ loading: true });
-                      handleSetState(
-                        fetchPage(
-                          page,
-                          props,
-                          getQueryParams(next_page, tab).get('q'),
-                          tab,
-                        ),
-                      );
-                    }}
-                    primaryButtonStyle
-                  >
-                    {t('searchResults.next')}
-                  </CustomButton>
-                ) : null}
-              </ButtonGroup>
-            </Container>
-          ) : (
-            <Container className={classes.mainContainerStyle}>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography
-                    className={classes.pageHeaderStyle}
-                    variant="h3"
-                    gutterBottom
-                  >
-                    {count}{' '}
-                    {count > 1
-                      ? t('searchResults.resultsFound')
-                      : t('searchResults.resultFound')}
-                  </Typography>
-                </Grid>
-                {buildCreatorProfiles(
-                  results,
-                  { classes, common_classes },
-                  props,
-                  state,
-                  handleSetState,
-                )}
-              </Grid>
-              <ButtonGroup
-                aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
-                className={classes.buttonGroupStyle}
-              >
-                {prev_page ? (
-                  <CustomButton
-                    className={classes.floatLeft}
-                    size="large"
-                    startIcon={<NavigateBeforeIcon />}
-                    onClick={(
-                      _,
-                      page = getQueryParams(prev_page, tab).get('page'),
-                    ) => {
-                      handleSetState({ loading: true });
-                      handleSetState(
-                        fetchPage(
-                          page,
-                          props,
-                          getQueryParams(prev_page, tab).get('q'),
-                          tab,
-                        ),
-                      );
-                    }}
-                    primaryButtonStyle
-                  >
-                    {t('searchResults.prev')}
-                  </CustomButton>
-                ) : null}
-                {next_page ? (
-                  <CustomButton
-                    className={classes.floatRight}
-                    size="large"
-                    endIcon={<NavigateNextIcon />}
-                    onClick={(
-                      _,
-                      page = getQueryParams(next_page, tab).get('page'),
-                    ) => {
-                      handleSetState({ loading: true });
-                      handleSetState(
-                        fetchPage(
-                          page,
-                          props,
-                          getQueryParams(next_page, tab).get('q'),
-                          tab,
-                        ),
-                      );
-                    }}
-                    primaryButtonStyle
-                  >
-                    {t('searchResults.next')}
-                  </CustomButton>
-                ) : null}
-              </ButtonGroup>
-            </Container>
-          )
+              {getResults(
+                getQueryParams(window.location.href).get('type'),
+                results,
+              )}
+            </Grid>
+            <ButtonGroup
+              aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
+              className={classes.buttonGroupStyle}
+            >
+              {prev_page ? (
+                <CustomButton
+                  className={classes.floatLeft}
+                  size="large"
+                  startIcon={<NavigateBeforeIcon />}
+                  onClick={(
+                    _,
+                    page = getQueryParams(prev_page).get('page'),
+                  ) => {
+                    handleSetState({ loading: true });
+                    handleSetState(
+                      fetchPage(
+                        page,
+                        props,
+                        getQueryParams(prev_page).get('q'),
+                        getQueryParams(window.location.href).get('type'),
+                      ),
+                    );
+                  }}
+                  primaryButtonStyle
+                >
+                  {t('searchResults.prev')}
+                </CustomButton>
+              ) : null}
+              {next_page ? (
+                <CustomButton
+                  className={classes.floatRight}
+                  size="large"
+                  endIcon={<NavigateNextIcon />}
+                  onClick={(
+                    _,
+                    page = getQueryParams(next_page).get('page'),
+                  ) => {
+                    handleSetState({ loading: true });
+                    handleSetState(
+                      fetchPage(
+                        page,
+                        props,
+                        getQueryParams(next_page).get('q'),
+                        getQueryParams(window.location.href).get('type'),
+                      ),
+                    );
+                  }}
+                  primaryButtonStyle
+                >
+                  {t('searchResults.next')}
+                </CustomButton>
+              ) : null}
+            </ButtonGroup>
+          </Container>
         ) : (
           <ErrorPage
             style={{ width: '100vw' }}
