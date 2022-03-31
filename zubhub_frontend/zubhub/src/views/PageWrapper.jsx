@@ -179,7 +179,7 @@ function PageWrapper(props) {
                     name="q"
                     id="q"
                     type="search"
-                    defaultValue={props.location.search && getQueryParams(props.location.search).query}
+                    defaultValue={getQueryParams(window.location.href).get('q')}
                     className={clsx(
                       classes.searchFormInputStyle,
                       'search-form-input',
