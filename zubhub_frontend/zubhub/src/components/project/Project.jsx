@@ -173,7 +173,7 @@ function Project(props) {
                         project.creator.tags[0],
                       ),
                     })}
-                    component="h2"
+                    component="h4"
                   >
                     {project.creator.tags[0]}
                   </Typography>

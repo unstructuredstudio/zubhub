@@ -1,6 +1,12 @@
+/* eslint-disable no-dupe-keys */
 const styles = theme => ({
   root: {
-    maxWidth: 345,
+    [theme.breakpoints.down('md')]: {
+      marginLeft: '0em',
+      marginRight: '0em',
+    },
+    maxWidth: 300,
+    width: '100%',
     height: '94%',
     paddingTop: 0,
     paddingBottom: '0!important',
@@ -118,8 +124,9 @@ const styles = theme => ({
     marginTop: '0.5em',
     marginBottom: '0.5em',
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    width: '100%',
   },
   creatorAvatarStyle: {
     marginRight: '0.5em',
