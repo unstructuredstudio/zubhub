@@ -66,7 +66,7 @@ const styles = theme => ({
     color: '#ffcc00',
     backgroundColor: '#dc3545',
     position: 'absolute',
-    marginLeft: '1em',
+    marginLeft: '5em',
     right: '1em',
     top: '-1.8em',
     '&:hover': {
@@ -75,6 +75,7 @@ const styles = theme => ({
     },
     '& svg': {
       fill: '#ffcc00',
+
     },
     '& svg:hover': {
       fill: '#ffcc00',
@@ -112,7 +113,7 @@ const styles = theme => ({
   },
   captionStyle: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   captionIconStyle: {
     display: 'flex',

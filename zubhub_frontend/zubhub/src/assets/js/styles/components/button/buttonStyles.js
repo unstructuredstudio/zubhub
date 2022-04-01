@@ -28,9 +28,9 @@ const styles = theme => ({
   darkDangerButtonStyle: {
     borderRadius: 30,
     backgroundColor: '#9A0036',
-    color: 'white',
+    color: 'black',
     '&:hover': {
-      color: 'white',
+      color: 'green',
       backgroundColor: '#9A0036',
     },
   },
@@ -38,7 +38,7 @@ const styles = theme => ({
     '& MuiButton-label': {
       width: '100%',
       display: 'flex',
-      justifyContent: 'flex-end',
+      justifyContent: 'space-between',
     },
   },
   customButtonStyle: {
