@@ -79,10 +79,9 @@ class AccountStatusAPIView(APIView):
 
 class UserProfileAPIView(RetrieveAPIView):
     """
-    Fetch Profile of user with given username.
-
-    Requires username of user.
-    Returns user profile.
+    Note that this schema returns the full user profile, but the api sometimes
+    returns a minimal version of the user profile, omitting certain fields that
+    are not neccessary or are sensitive.
     """
 
     queryset = Creator.objects.filter(is_active=True)
@@ -95,12 +94,6 @@ class UserProfileAPIView(RetrieveAPIView):
             return CreatorMinimalSerializer
         else:
             return CreatorSerializer
-
-    """
-    Note that this schema returns the full user profile, but the api sometimes
-    returns a minimal version of the user profile, omitting certain fields that
-    are not neccessary or are sensitive.
-    """
 
 
 class RegisterCreatorAPIView(RegisterView):
