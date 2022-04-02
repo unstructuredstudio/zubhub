@@ -79,6 +79,10 @@ class AccountStatusAPIView(APIView):
 
 class UserProfileAPIView(RetrieveAPIView):
     """
+    Fetch Profile of user with given username.
+    Requires username of user.
+    Returns user profile.
+
     Note that this schema returns the full user profile, but the api sometimes
     returns a minimal version of the user profile, omitting certain fields that
     are not neccessary or are sensitive.
