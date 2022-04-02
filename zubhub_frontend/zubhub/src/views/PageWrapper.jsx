@@ -74,6 +74,7 @@ function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const trigger = useScrollTrigger()
 
   const [state, setState] = React.useState({
     username: null,
@@ -95,6 +96,10 @@ function PageWrapper(props) {
       });
   }, [props.auth.token]);
 
+  React.useEffect(()=>{
+     handleSetState(handleProfileMenuClose()) 
+  },[trigger])
+
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -103,15 +108,16 @@ function PageWrapper(props) {
     }
   };
 
+
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
   const { zubhub } = props.projects;
-  const profileMenuOpen = Boolean(anchor_el);
+  const profileMenuOpen = Boolean(anchor_el); 
   return (
     <>
       <ToastContainer />
       <CssBaseline />
-      <AppBar className={classes.navBarStyle}>
+      <AppBar className={classes.navBarStyle} >
         <Container className={classes.mainContainerStyle}>
           <Toolbar className={classes.toolBarStyle}>
             <Box className={classes.logoStyle}>
@@ -131,6 +137,7 @@ function PageWrapper(props) {
               >
                 <TranslateIcon />
                 <Select
+                  disableScrollLock={true}
                   className={classes.languageSelectStyle}
                   value=""
                   onChange={e => handleChangeLanguage({ e, props })}
@@ -152,6 +159,9 @@ function PageWrapper(props) {
               >
                 <TranslateIcon />
                 <Select
+                  menuProps={{
+                    disablescrolllock: true,
+                  }}
                   className={classes.languageSelectStyle}
                   value={props.i18n.language}
                   onChange={e => handleChangeLanguage({ e, props })}
@@ -261,7 +271,9 @@ function PageWrapper(props) {
                   <Menu
                     className={common_classes.addOnSmallScreen}
                     id="menu"
+                    disableScrollLock={true}
                     anchorEl={anchor_el}
+                   
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
@@ -343,6 +355,7 @@ function PageWrapper(props) {
                     className={classes.profileMenuStyle}
                     id="profile_menu"
                     anchorEl={anchor_el}
+                    disableScrollLock={true}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
