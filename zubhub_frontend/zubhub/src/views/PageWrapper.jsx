@@ -46,6 +46,10 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
+import {
+  getQueryParams
+} from './search_results/searchResultsScripts'
+
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
@@ -175,6 +179,7 @@ function PageWrapper(props) {
                     name="q"
                     id="q"
                     type="search"
+                    defaultValue={getQueryParams(window.location.href).get('q')}
                     className={clsx(
                       classes.searchFormInputStyle,
                       'search-form-input',
