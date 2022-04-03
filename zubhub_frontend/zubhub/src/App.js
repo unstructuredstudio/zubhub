@@ -75,7 +75,6 @@ const LazyImport = props => {
 };
 
 function App(props) {
-  console.log("hey alice");
   return (
     <Router>
       <Switch>
