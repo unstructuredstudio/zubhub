@@ -1,7 +1,7 @@
 const styles = theme => ({
   primaryButtonStyle: {
     backgroundColor: '#00B8C4',
-    borderRadius: '30 !important',
+    borderRadius: '30px !important',
     color: 'white',
     '&:hover': {
       backgroundColor: '#03848C',
