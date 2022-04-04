@@ -1,17 +1,30 @@
 # Quick Start
 
-- Welcome to the Zubhub Dev Docs ! This page will walk you through how to Setup your Developer Environment and Run ZubHub on your local machine.
+- Welcome to the Zubhub Dev Docs ! This page will walk you through how to setup your Developer Environment and Run ZubHub on your local machine.
 
-> Requirements 
-
-> * git 
-> * Docker and Docker Compose     
-
-**Cloning Repo**: clone the Zubhub Repo using the following commands
+**Cloning Repo**: Clone the Zubhub Repo using the following commands
 
 ```git
 git clone https://github.com/FNNDSC/ChRIS_ui.git
 ```
+
+> **Prerequisties**
+
+> * [Github](https://github.com/)
+> * [Docker](https://docs.docker.com/engine/install/ubuntu/)  
+> * [Docker Compose ](https://docs.docker.com/compose/install/)
+> * [Make](https://linuxhint.com/install-make-ubuntu/)
+
+
+Alternatively on Linux machine you can install these by running a command like this:
+```bash
+bash onetime-setup.sh
+```
+
+Make sure you are into the zubhub directory!
+
+
+
 
 **Change** the **Directory** to the zubhub folder using:
 
@@ -19,7 +32,7 @@ git clone https://github.com/FNNDSC/ChRIS_ui.git
 cd zubhub
 ```
 
-### Backend:
+### **Backend:**
 
 - Change directory to `./zubhub_backend`
 
@@ -31,9 +44,9 @@ cd zubhub
   
   Subsequently to start and stop the docker containers, use `make start`, `make stop`, or `make down`. (run `make help` to see all the available make commands).
 
-- Visit `localhost:8000` on your browser to access the API documentation.
+- Visit [`localhost:8000`](localhost:8000)on your browser to access the API documentation.
 
-### Frontend:
+### **Frontend:**
 
 Go inside the Frontend directory by running commands
 
@@ -48,4 +61,4 @@ cd zubhub_frontend/zubhub
 - Create a file named .env in the frontend  folder (same directory with package.json)
 - Copy the content of .env.example and paste into the new .env file.
 - Run `make start` to spin up the frontend container.
-- Visit `localhost:3000` on your browser to access the frontend.
+- Visit [`localhost:3000`](localhost:3000) on your browser to access the frontend.
