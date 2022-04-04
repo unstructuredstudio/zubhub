@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AdminSettings, Hero, Privacy, FAQ, Help
+from .models import AdminSettings, Hero, Privacy, FAQ, Help, TinkeringResources
 
 ## these models are imported to be unregsitered
 from django_summernote.models import Attachment
@@ -51,6 +51,7 @@ admin.site.register(Hero, HeroAdmin)
 admin.site.register(Privacy, PrivacyAdmin)
 admin.site.register(Help, HelpAdmin)
 admin.site.register(FAQ, FAQAdmin)
+admin.site.register(TinkeringResources)
 
 ## Unregister some default and third-party models
 admin.site.unregister(Attachment)
