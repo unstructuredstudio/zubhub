@@ -31,14 +31,21 @@ def get_cloudinary_resource_info(url):
 
 
 def upload_file(file, key):
-    compress_video(file)
+    compress_video(file, key)
     if settings.STORE_MEDIA_LOCALLY == False:
         return upload_file_to_DO(file, key)
     elif settings.STORE_MEDIA_LOCALLY == True:
         return upload_file_to_local(file, key)
 
-def compress_video(file):
-    FFmpeg(inputs={file: None}, outputs={file: ['-aspect 10:1 -preset fast']}).run()
+def compress_video(file, key):
+    folder, name = key.split("/")
+    fs = FileSystemStorage(settings.MEDIA_ROOT + "/" + folder)
+    fs.save(name, file)
+    
+    root_dir = settings.MEDIA_ROOT + "/" + folder
+    video_path = "{0}/{1}".format(root_dir, name)
+
+    FFmpeg(inputs={video_path: None}, outputs={video_path: '-aspect 10:1 -preset fast'}).run()
     # -c:v libx264 -crf 28 -preset ultrafast
 
 def upload_file_to_DO(file, key):
