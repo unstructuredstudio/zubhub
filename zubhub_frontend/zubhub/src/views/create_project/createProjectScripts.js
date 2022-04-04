@@ -75,7 +75,6 @@ export const vars = {
 
 
 let timer = null;
-let savedOnce = false;
 const timeoutConst = 5000;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
@@ -83,7 +82,6 @@ const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   timer = setTimeout(function () {
     props.values.publish.type = 1;
     props.values.publish.visible_to = [];
-    savedOnce = true;
     console.log("time out!");
     console.log(props.values);
     autoSaveProject(state, props, handleSetState);

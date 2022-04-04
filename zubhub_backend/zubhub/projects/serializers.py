@@ -146,7 +146,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         user = self.context.get("request").user
         return parse_comment_trees(user, root_comments, creators_dict)
 
-    def validate_video(self, video):
+    def validate_video(self, video, publish):
         # if publish["type"] == PublishingRule.DRAFT:
             return video
         # else:
