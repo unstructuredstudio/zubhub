@@ -180,14 +180,6 @@ function CreateProject(props) {
   const [saved, setSaved] = React.useState('none');
   const [time, setTime] = React.useState('');
 
-  // const debouncedSave = useCallback(() => {
-  //   console.log('uwughg');
-  //   _.debounce(() => console.log('hello hello!'), 1, {
-  //     leading: false,
-  //     trailing: true,
-  //   });
-  // }, []);
-
   React.useEffect(() => {
     if (props.match.params.id) {
       Promise.all([getProject(refs, props, state), getCategories(props)]).then(
@@ -199,9 +191,9 @@ function CreateProject(props) {
     handleSetState(buildPublishTypes(props));
   }, []);
 
-  React.useEffect(() => {
-    console.log(props.values);
-  }, props.values);
+  // React.useEffect(() => {
+  //   console.log(props);
+  // }, props.values);
 
   // useStateUpdateCallback(() => {
   //   if (
@@ -1433,8 +1425,8 @@ const mapDispatchToProps = dispatch => {
     suggestTags: args => {
       return dispatch(ProjectActions.suggestTags(args));
     },
-    createProject: (props, x) => {
-      return dispatch(ProjectActions.createProject(props, x));
+    createProject: (props, redirect) => {
+      return dispatch(ProjectActions.createProject(props, redirect));
     },
     suggestCreators: args => {
       return dispatch(UserActions.suggestCreators(args));

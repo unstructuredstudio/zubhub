@@ -75,12 +75,17 @@ export const vars = {
 
 
 let timer = null;
-const timeoutConst = 2000;
+let savedOnce = false;
+const timeoutConst = 5000;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   clearTimeout(timer);
   timer = setTimeout(function () {
+    props.values.publish.type = 1;
+    props.values.publish.visible_to = [];
+    savedOnce = true;
     console.log("time out!");
+    console.log(props.values);
     autoSaveProject(state, props, handleSetState);
     handleDisplayTime();
   }, timeoutConst);
@@ -744,11 +749,11 @@ export const autoSaveProject = async (state, props, handleSetState) => {
           state.media_upload.videos_to_upload.length !== 0
         )
       ) {
-        console.log("if");
+        // console.log("if");
         vars.upload_in_progress = true;
         uploadProject(state, props, handleSetState, false);
       } else {
-        console.log("else");
+        // console.log("else");
         vars.upload_in_progress = true;
         state.media_upload.upload_dialog = false;
         handleSetState({
@@ -860,6 +865,8 @@ export const uploadProject = async (state, props, handleSetState, redirect = tru
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
     : [];
 
+  console.log(props);
+  console.log(props.match.params.id);
   const create_or_update = props.match.params.id
     ? props.updateProject
     : props.createProject;
@@ -1225,7 +1232,7 @@ export const getProject = (refs, props, state) => {
 
         return {
           loading: false,
-          materials_used: obj.project.materials_used.split(','),
+          materials_used: obj.project.materials_used && obj.project.materials_used.split(','),
           media_upload,
         };
       }

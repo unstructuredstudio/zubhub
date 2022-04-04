@@ -362,8 +362,9 @@ def clean_comment_text(string):
 
 """ Clean project description while still allowing for basic html structure """
 def clean_project_desc(string):
-    cleaner = Cleaner(remove_tags=["a"])
-    return cleaner.clean_html(string)
+    if string != None:
+        cleaner = Cleaner(remove_tags=["a"])
+        return cleaner.clean_html(string)
 
 
 

@@ -147,18 +147,23 @@ class ProjectSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
     def validate_video(self, video):
-        return video
-    #     if(video == "" and len(self.initial_data.get("images")) == 0):
-    #         raise serializers.ValidationError(
-    #             _("You must provide either image(s), video file, or video URL to create your project!"))
-    #     return video
+        # if publish["type"] == PublishingRule.DRAFT:
+            return video
+        # else:
+        #     if(video == "" and len(self.initial_data.get("images")) == 0):
+        #         raise serializers.ValidationError(
+        #         _("You must provide either image(s), video file, or video URL to create your project!"))
+        #         return video
 
     def validate_images(self, images):
-        return images
-    #     if(len(images) == 0 and len(self.initial_data["video"]) == 0):
-    #         raise serializers.ValidationError(
-    #             _("You must provide either image(s), video file, or video URL to create your project!"))
-    #     return images
+        # if publish["type"] == PublishingRule.DRAFT:
+            return images
+        # else:
+        #     if(len(images) == 0 and len(self.initial_data["video"]) == 0):
+        #         raise serializers.ValidationError(
+        #             _("You must provide either image(s), video file, or video URL to create your project!"))
+        #     return images
+
 
     def validate_tags(self, tags):
         if not isinstance(tags, list):
@@ -233,8 +238,9 @@ class ProjectSerializer(serializers.ModelSerializer):
             
             if rule.type == PublishingRule.PREVIEW:
                 rule.visible_to.set(Creator.objects.filter(username__in=publish["visible_to"]))
-
+            
             project = Project.objects.create(**validated_data, publish=rule)
+
 
             for image in images_data:
                 Image.objects.create(project=project, **image)

@@ -72,7 +72,7 @@ class Project(models.Model):
         primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     creator = models.ForeignKey(
         Creator, on_delete=models.CASCADE, related_name="projects")
-    title = models.CharField(max_length=1000)
+    title = models.CharField(max_length=1000, null=True, blank=True)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000, blank=True, null=True)

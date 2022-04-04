@@ -69,15 +69,17 @@ const useCommonStyles = makeStyles(commonStyles);
 const buildMaterialsUsedComponent = (classes, state) => {
   const arr =
     state.project.materials_used && state.project.materials_used.split(',');
-  return arr.map((material, index) => (
-    <Typography
-      key={index}
-      component="span"
-      className={classes.materialsUsedStyle}
-    >
-      {material}
-    </Typography>
-  ));
+  if (arr != null) {
+    return arr.map((material, index) => (
+      <Typography
+        key={index}
+        component="span"
+        className={classes.materialsUsedStyle}
+      >
+        {material}
+      </Typography>
+    ));
+  }
 };
 
 /**

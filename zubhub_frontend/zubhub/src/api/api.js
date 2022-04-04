@@ -485,7 +485,6 @@ class API {
     tags,
     publish,
   }) => {
-    console.log("endpoint");
     const url = 'projects/create/';
     const method = 'POST';
 
