@@ -146,23 +146,24 @@ class ProjectSerializer(serializers.ModelSerializer):
         user = self.context.get("request").user
         return parse_comment_trees(user, root_comments, creators_dict)
 
-    def validate_video(self, video, publish):
-        # if publish["type"] == PublishingRule.DRAFT:
+    def validate_video(self, video):
+        print(self.initial_data["publish"]["type"])
+        if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
             return video
-        # else:
-        #     if(video == "" and len(self.initial_data.get("images")) == 0):
-        #         raise serializers.ValidationError(
-        #         _("You must provide either image(s), video file, or video URL to create your project!"))
-        #         return video
+        else:
+            if(video == "" and len(self.initial_data.get("images")) == 0):
+                raise serializers.ValidationError(
+                _("You must provide either image(s), video file, or video URL to create your project!"))
+                return video
 
     def validate_images(self, images):
-        # if publish["type"] == PublishingRule.DRAFT:
+        if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
             return images
-        # else:
-        #     if(len(images) == 0 and len(self.initial_data["video"]) == 0):
-        #         raise serializers.ValidationError(
-        #             _("You must provide either image(s), video file, or video URL to create your project!"))
-        #     return images
+        else:
+            if(len(images) == 0 and len(self.initial_data["video"]) == 0):
+                raise serializers.ValidationError(
+                    _("You must provide either image(s), video file, or video URL to create your project!"))
+            return images
 
 
     def validate_tags(self, tags):
