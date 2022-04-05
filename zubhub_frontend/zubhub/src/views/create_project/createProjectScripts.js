@@ -75,7 +75,7 @@ export const vars = {
 
 
 let timer = null;
-const timeoutConst = 60000;
+const timeoutConst = 2000;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   clearTimeout(timer);
@@ -865,7 +865,7 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
     : [];
 
-  console.log("id:", props.match.params.id);
+  console.log("id:", props.match.params);
   const create_or_update = props.match.params.id
     ? props.updateProject
     : props.createProject;
@@ -882,7 +882,7 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
       : '',
     category: props.values.category,
     t: props.t,
-  }, redirect)
+  }, redirect).then((res) => console.log(res))
     .catch(error => {
       handleSetState({
         media_upload: {

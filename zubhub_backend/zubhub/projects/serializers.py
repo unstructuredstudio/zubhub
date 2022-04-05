@@ -146,6 +146,24 @@ class ProjectSerializer(serializers.ModelSerializer):
         user = self.context.get("request").user
         return parse_comment_trees(user, root_comments, creators_dict)
 
+    def validate_title(self, title):
+        if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
+            return title
+        else:
+            if (title == ""):
+                raise serializers.ValidationError(
+                _("You must provide a title!"))
+            return title
+
+    def validate_materials_used(self, materials_used):
+        if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
+            return materials_used
+        else:
+            if(materials_used == None):
+                raise serializers.ValidationError(
+                    _("You must provide materials used!"))
+            return materials_used 
+
     def validate_video(self, video):
         if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
             return video
@@ -153,7 +171,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             if(video == "" and len(self.initial_data.get("images")) == 0):
                 raise serializers.ValidationError(
                 _("You must provide either image(s), video file, or video URL to create your project!"))
-                return video
+            return video
 
     def validate_images(self, images):
         if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:

@@ -181,6 +181,7 @@ function CreateProject(props) {
   const [time, setTime] = React.useState('');
 
   React.useEffect(() => {
+    // console.log("id:", props.match);
     if (props.match.params.id) {
       Promise.all([getProject(refs, props, state), getCategories(props)]).then(
         result => handleSetState({ ...result[0], ...result[1] }),

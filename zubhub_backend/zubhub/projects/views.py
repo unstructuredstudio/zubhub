@@ -51,6 +51,15 @@ class ProjectCreateAPIView(CreateAPIView):
         serializer.save(creator=self.request.user)
         self.request.user.save()
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        print(serializer.data)
+        return Response(data = serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """

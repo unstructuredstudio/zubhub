@@ -26,11 +26,12 @@ export const setProjects = projects => {
 export const createProject = (props, redirect) => {
   console.log("I'm here createProject", redirect);
   return () => {
-    return API.createProject(props).then(res => {
+    const x = API.createProject(props).then(res => {
       if (!res.id) {
         console.log(res);
         throw new Error(JSON.stringify(res));
       } else {
+        console.log(res);
         console.log("No Error", redirect);
         if (redirect) {
           toast.success(props.t('createProject.createToastSuccess'));
@@ -38,6 +39,8 @@ export const createProject = (props, redirect) => {
         }
       }
     });
+    console.log("hi", x)
+    return x;
   };
 };
 

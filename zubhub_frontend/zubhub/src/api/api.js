@@ -498,7 +498,7 @@ class API {
       tags,
       publish,
     });
-    return this.request({ url, method, token, body }).then(res => {console.log(res);return res.json();});
+    return this.request({ url, method, token, body }).then(res => {console.log(res.body, res.data, res.clone().json());return res.json();});
   };
 
   /**

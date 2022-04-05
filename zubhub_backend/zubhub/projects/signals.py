@@ -14,11 +14,12 @@ def project_saved(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Project)
 def project_deleted(sender, instance, **kwargs):
-    if instance.video.find("cloudinary.com") > -1:
-        delete_file_task.delay(instance.video)
-    elif instance.video.startswith("{0}://{1}".format(settings.DEFAULT_MEDIA_SERVER_PROTOCOL,
-                                                      settings.DEFAULT_MEDIA_SERVER_DOMAIN)):
-        delete_file_task.delay(instance.video)
+    if instance.video != None:
+        if instance.video.find("cloudinary.com") > -1:
+            delete_file_task.delay(instance.video)
+        elif instance.video.startswith("{0}://{1}".format(settings.DEFAULT_MEDIA_SERVER_PROTOCOL,
+                                                        settings.DEFAULT_MEDIA_SERVER_DOMAIN)):
+            delete_file_task.delay(instance.video)
 
     # delete relevant publishing rule
     publish_rule_id = instance.publish.id
