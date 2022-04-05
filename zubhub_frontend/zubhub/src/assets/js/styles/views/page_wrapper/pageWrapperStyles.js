@@ -63,20 +63,19 @@ const styles = theme => ({
     },
   },
   smallSearchFormStyle: {
-    height: '2.5em',
+    height: '4em',
     width: '100%',
-    '& .MuiFormControl-root': {
-      width: '100%',
-    },
-
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'center',
     '& .search-form-input': {
-      height: '2em',
-      position: 'absolute',
-      top: '-0.3em',
-      width: '100%',
+      height: '2.5em',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
+      borderTopLeftRadius: '0px',
+      borderBottomLeftRadius: '0px',
       '&:hover': {
         backgroundColor: 'rgba(255,255,255,0.8)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {

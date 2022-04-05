@@ -48,7 +48,10 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
-import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
+import {
+  getQueryParams,
+  SearchType,
+} from './search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
@@ -494,6 +497,17 @@ function PageWrapper(props) {
                 className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
                 role="search"
               >
+                <FormControl variant="outlined">
+                  <InputSelect
+                    searchType={searchType}
+                    onSearchTypeChange={setSearchType}
+                    name="type"
+                  >
+                    <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
+                    <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
+                    <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                  </InputSelect>
+                </FormControl>
                 <FormControl variant="outlined">
                   <InputLabel
                     htmlFor="q"

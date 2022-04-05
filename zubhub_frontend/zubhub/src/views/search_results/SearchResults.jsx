@@ -188,7 +188,7 @@ function SearchResults(props) {
                   {count}{' '}
                   {count > 1
                     ? t('searchResults.resultsFound')
-                    : t('searchResults.resultFound')}
+                    : t('searchResults.resultFound')}{' '}"{getQueryParams(window.location.href).get('q')}"
                 </Typography>
               </Grid>
               {getResults(
