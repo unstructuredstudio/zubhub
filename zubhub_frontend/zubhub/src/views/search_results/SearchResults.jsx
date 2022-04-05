@@ -132,7 +132,15 @@ function SearchResults(props) {
   };
 
   const getResults = (type, results) => {
-    if (type === SearchType.PROJECTS || type === SearchType.TAGS) {
+    if (type === SearchType.CREATORS) {
+      return buildCreatorProfiles(
+        results,
+        { classes, common_classes },
+        props,
+        state,
+        handleSetState,
+      );
+    } else {
       return results.map(project => (
         <Grid
           item
@@ -152,14 +160,6 @@ function SearchResults(props) {
           />
         </Grid>
       ));
-    } else {
-      return buildCreatorProfiles(
-        results,
-        { classes, common_classes },
-        props,
-        state,
-        handleSetState,
-      );
     }
   };
 
@@ -188,7 +188,8 @@ function SearchResults(props) {
                   {count}{' '}
                   {count > 1
                     ? t('searchResults.resultsFound')
-                    : t('searchResults.resultFound')}{' '}"{getQueryParams(window.location.href).get('q')}"
+                    : t('searchResults.resultFound')}{' '}
+                  "{getQueryParams(window.location.href).get('q')}"
                 </Typography>
               </Grid>
               {getResults(
