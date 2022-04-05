@@ -25,6 +25,7 @@ import {
   fetchPage,
   updateProjects,
   toggleFollow,
+  SearchType,
 } from './searchResultsScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
@@ -130,31 +131,8 @@ function SearchResults(props) {
     }
   };
 
-  const getTagResults = results => {
-    return results.map(tag => (
-      <Grid
-        item
-        xs={12}
-        sm={6}
-        md={4}
-        className={classes.projectGridStyle}
-        align="center"
-      >
-        <Link to={`/search?q=${tag.slug}&type=projects`}>
-          <Typography
-            component="h3"
-            color="textPrimary"
-            className={classes.userNameStyle}
-          >
-            {tag.name}
-          </Typography>
-        </Link>
-      </Grid>
-    ));
-  };
-
   const getResults = (type, results) => {
-    if (type === 'projects') {
+    if (type === SearchType.PROJECTS || type === SearchType.TAGS) {
       return results.map(project => (
         <Grid
           item
@@ -174,7 +152,7 @@ function SearchResults(props) {
           />
         </Grid>
       ));
-    } else if (type === 'creators') {
+    } else {
       return buildCreatorProfiles(
         results,
         { classes, common_classes },
@@ -182,8 +160,6 @@ function SearchResults(props) {
         state,
         handleSetState,
       );
-    } else {
-      return getTagResults(results);
     }
   };
 
@@ -289,6 +265,7 @@ SearchResults.propTypes = {
   auth: PropTypes.object.isRequired,
   searchProjects: PropTypes.func.isRequired,
   searchCreators: PropTypes.func.isRequired,
+  searchTags: PropTypes.func.isRequired,
   toggleFollow: PropTypes.func.isRequired,
   toggleLike: PropTypes.func.isRequired,
   toggleSave: PropTypes.func.isRequired,
@@ -307,6 +284,9 @@ const mapDispatchToProps = dispatch => {
     },
     searchCreators: args => {
       return dispatch(CreatorActions.searchCreators(args));
+    },
+    searchTags: args => {
+      return dispatch(ProjectActions.searchTags(args));
     },
     toggleFollow: args => {
       return dispatch(CreatorActions.toggleFollow(args));

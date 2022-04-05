@@ -48,7 +48,7 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
-import { getQueryParams } from './search_results/searchResultsScripts';
+import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
@@ -64,12 +64,6 @@ import InputSelect from '../components/input_select/InputSelect';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
-
-const SearchType = {
-  CREATORS: 'creators',
-  PROJECTS: 'projects',
-  TAGS: 'tags',
-};
 
 /**
  * @function PageWrapper View
@@ -186,15 +180,21 @@ function PageWrapper(props) {
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
                   <FormGroup row>
-                    <InputSelect
-                      searchType={searchType}
-                      onSearchTypeChange={setSearchType}
-                      name="type"
-                    >
-                      <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
-                      <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
-                      <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
-                    </InputSelect>
+                    <FormControl variant="outlined">
+                      <InputSelect
+                        searchType={searchType}
+                        onSearchTypeChange={setSearchType}
+                        name="type"
+                      >
+                        <MenuItem value={SearchType.PROJECTS}>
+                          Projects
+                        </MenuItem>
+                        <MenuItem value={SearchType.CREATORS}>
+                          Creators
+                        </MenuItem>
+                        <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                      </InputSelect>
+                    </FormControl>
                     <OutlinedInput
                       name="q"
                       id="q"

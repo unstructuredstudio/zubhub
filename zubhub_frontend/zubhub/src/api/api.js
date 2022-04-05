@@ -282,13 +282,14 @@ class API {
    *
    * @todo - describe method's signature
    */
-  searchProjects = ({ page, token, query_string }) => {
-    let url;
+  searchProjects = ({ page, token, query_string, criteria }) => {
+    const params = { q: query_string, criteria };
     if (page) {
-      url = `projects/search/?q=${query_string}&page=${page}`;
-    } else {
-      url = `projects/search/?q=${query_string}`;
+      params[page] = page;
     }
+
+    const searchParams = new URLSearchParams(params);
+    const url = `projects/search/?${searchParams.toString()}`;
 
     return this.request({ url, token }).then(res => res.json());
   };

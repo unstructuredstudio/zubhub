@@ -12,6 +12,7 @@ const BootstrapInput = withStyles(theme => ({
     backgroundColor: '#00B8C4',
     color: 'white',
     transition: 'background-color 250ms ease',
+    textAlign: 'center',
     '& ~ svg': {
       color: 'white',
     },
