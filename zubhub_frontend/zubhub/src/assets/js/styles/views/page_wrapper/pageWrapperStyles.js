@@ -32,8 +32,8 @@ const styles = theme => ({
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
-      borderTopLeftRadius: '0px',
-      borderBottomLeftRadius: '0px',
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
       '&:hover': {
         backgroundColor: 'rgba(255,255,255,0.8)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
@@ -74,8 +74,8 @@ const styles = theme => ({
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
-      borderTopLeftRadius: '0px',
-      borderBottomLeftRadius: '0px',
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
       '&:hover': {
         backgroundColor: 'rgba(255,255,255,0.8)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
