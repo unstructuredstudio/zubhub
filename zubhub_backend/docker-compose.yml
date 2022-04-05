@@ -25,6 +25,7 @@ services:
       dockerfile: ./compose/media/dev/Dockerfile
     restart: on-failure
     volumes:
+      - ./zubhub:/zubhub_backend/media
       - media_data:/home/media/media_store
       - ./compose/media/requirements.txt:/home/requirements.txt:ro
     ports:
