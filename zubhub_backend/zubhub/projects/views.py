@@ -156,7 +156,6 @@ class ProjectTagSearchAPIView(ListAPIView):
         query = SearchQuery(query_string)
         rank = SearchRank(F('search_vector'), query)
         tags = Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
-        print(tags.all())
         return tags
 
 
