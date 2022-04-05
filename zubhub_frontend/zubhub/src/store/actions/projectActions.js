@@ -24,7 +24,7 @@ export const setProjects = projects => {
 * @todo - describe function's signature
 */
 export const createProject = (props, redirect) => {
-  console.log("I'm here createProject");
+  console.log("I'm here createProject", redirect);
   return () => {
     return API.createProject(props).then(res => {
       if (!res.id) {
@@ -71,7 +71,7 @@ export const shouldUploadToLocal = args => {
 */
 export const updateProject = (props, redirect) => {
   return () => {
-    // console.log("I'm here updateProject", redirect);
+    console.log("I'm here updateProject", redirect);
     return API.updateProject(props).then(res => {
       if (!res.id) {
         // console.log(res);

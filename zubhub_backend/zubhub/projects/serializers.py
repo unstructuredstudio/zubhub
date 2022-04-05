@@ -147,7 +147,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
     def validate_video(self, video):
-        print(self.initial_data["publish"]["type"])
         if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
             return video
         else:
@@ -253,9 +252,10 @@ class ProjectSerializer(serializers.ModelSerializer):
             if category:
                 category.projects.add(project)
 
-            if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
-                update_video_url_if_transform_ready.delay(
-                    {"url": project.video, "project_id": project.id})
+            if project.video != None: 
+                if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
+                    update_video_url_if_transform_ready.delay(
+                        {"url": project.video, "project_id": project.id})
 
             return project
 

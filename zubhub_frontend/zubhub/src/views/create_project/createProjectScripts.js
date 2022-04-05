@@ -75,15 +75,14 @@ export const vars = {
 
 
 let timer = null;
-const timeoutConst = 5000;
+const timeoutConst = 60000;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   clearTimeout(timer);
-  timer = setTimeout(function () {
+  timer = !props.match.params.id && setTimeout(function () {
     props.values.publish.type = 1;
     props.values.publish.visible_to = [];
     console.log("time out!");
-    console.log(props.values);
     autoSaveProject(state, props, handleSetState);
     handleDisplayTime();
   }, timeoutConst);
@@ -106,15 +105,15 @@ export const getCategories = props => {
 * @todo - describe function's signature
 */
 export const handleTextFieldChange = (e, targetValue, state, props, handleSetState, handleDisplayTime) => {
-  props.values.title = targetValue;
   props.setStatus({ ...props.status, [e.target.id]: '' });
   props.handleChange(e);
+  props.values.title = targetValue;
   timeOutSave(state, props, handleSetState, handleDisplayTime);
 };
 
 export const handleCategoryChange = (targetValue, state, props, handleSetState, handleDisplayTime) => {
   props.values.category = targetValue;
-  timeOutSave(state, props, handleSetState, handleDisplayTime);
+  !props.match.params.id && timeOutSave(state, props, handleSetState, handleDisplayTime);
 }
 
 /**
@@ -700,7 +699,7 @@ export const initUpload = (e, state, props, handleSetState) => {
             state.media_upload.uploaded_images_url = uploaded_images_url;
             state.media_upload.uploaded_videos_url = uploaded_videos_url;
 
-            uploadProject(state, props, handleSetState);
+            uploadProject(state, props, handleSetState, true);
           })
           .catch(error => {
             // settimeout is used to delay closing the upload_dialog until
@@ -747,11 +746,9 @@ export const autoSaveProject = async (state, props, handleSetState) => {
           state.media_upload.videos_to_upload.length !== 0
         )
       ) {
-        // console.log("if");
         vars.upload_in_progress = true;
         uploadProject(state, props, handleSetState, false);
       } else {
-        // console.log("else");
         vars.upload_in_progress = true;
         state.media_upload.upload_dialog = false;
         handleSetState({
@@ -814,7 +811,7 @@ export const autoSaveProject = async (state, props, handleSetState) => {
             state.media_upload.uploaded_images_url = uploaded_images_url;
             state.media_upload.uploaded_videos_url = uploaded_videos_url;
 
-            uploadProject(state, props, handleSetState);
+            uploadProject(state, props, handleSetState, false);
           })
           .catch(error => {
             // settimeout is used to delay closing the upload_dialog until
@@ -844,27 +841,31 @@ export const autoSaveProject = async (state, props, handleSetState) => {
 * 
 * @todo - describe function's signature
 */
-export const uploadProject = async (state, props, handleSetState, redirect = true) => {
+export const uploadProject = async (state, props, handleSetState, redirect) => {
   const { media_upload } = state;
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
 
-  let materials_used;
-  if (!redirect && !props.values['materials_used']) {
-    materials_used = "place holder";
-  } else {
-    materials_used = props.values['materials_used']
-      ?.split(',')
-      .filter(value => (value ? true : false))
-      .join(',');
-  }
+  // let materials_used;
+  // if (!redirect && !props.values['materials_used']) {
+  //   materials_used = "place holder";
+  // } else {
+  //   materials_used = props.values['materials_used']
+  //     ?.split(',')
+  //     .filter(value => (value ? true : false))
+  //     .join(',');
+  // }
+
+  const materials_used = props.values['materials_used']
+    ?.split(',')
+    .filter(value => (value ? true : false))
+    .join(',');
 
   const tags = props.values['tags']
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
     : [];
 
-  console.log(props);
-  console.log(props.match.params.id);
+  console.log("id:", props.match.params.id);
   const create_or_update = props.match.params.id
     ? props.updateProject
     : props.createProject;
@@ -881,7 +882,7 @@ export const uploadProject = async (state, props, handleSetState, redirect = tru
       : '',
     category: props.values.category,
     t: props.t,
-  })
+  }, redirect)
     .catch(error => {
       handleSetState({
         media_upload: {
