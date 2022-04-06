@@ -55,7 +55,7 @@ class ProjectCreateAPIView(CreateAPIView):
                 self.request.user,
                 [{} for _ in list(self.request.user.followers.all())],
                 Notification.Type.FOLLOWING_PROJECT,
-                f'/profile/{self.request.user.username}'
+                f'/creators/{self.request.user.username}'
             )
 
 class ProjectUpdateAPIView(UpdateAPIView):
