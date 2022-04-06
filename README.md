@@ -33,7 +33,6 @@ Follow the instructions below to set up your local development environment
 - Copy the content of `.env.example` and paste into the new `.env` file.
 - On your terminal/command line, navigate to `./zubhub/zubhub_frontend/zubhub` directory.
 
-
 #### Using `npm`
 This is advisable for development experience.
 
@@ -45,7 +44,6 @@ Use this when you are done with making your changes and you want to test your co
 
 - Run `make start` to spin up the frontend container.
 - Visit `localhost:3000` on your browser to access the frontend.
-
 
 ## Deployment
 ZubHub is currently deployed on its main website using Github Actions that act as our build and deployment tooling. If you are interested in deploying Zubhub on your own VM for testing and hosting purposes, follow the [Single VM Deployment](single_vm_deployment) instructions.  
