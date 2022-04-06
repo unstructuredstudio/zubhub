@@ -310,7 +310,7 @@ class ToggleFollowAPIView(RetrieveAPIView):
             obj.followers.add(self.request.user)
             obj.save()
 
-            send_notification([obj], self.request.user, [{}], Notification.Type.FOLLOW, f'/profile/{self.request.user.username}')
+            send_notification([obj], self.request.user, [{}], Notification.Type.FOLLOW, f'/creators/{self.request.user.username}')
         self.request.user.save()
 
         return obj
