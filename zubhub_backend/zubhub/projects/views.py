@@ -61,7 +61,7 @@ class ProjectCreateAPIView(CreateAPIView):
                 self.request.user,
                 [{} for _ in list(self.request.user.followers.all())],
                 Notification.Type.FOLLOWING_PROJECT,
-                f'/profile/{self.request.user.username}'
+                f'/creators/{self.request.user.username}'
             )
 
 class ProjectUpdateAPIView(UpdateAPIView):
@@ -334,7 +334,6 @@ class ToggleLikeAPIView(RetrieveAPIView):
             raise PermissionDenied(
                 _('you are not permitted to view this project'))
 
-
 class ToggleSaveAPIView(RetrieveAPIView):
     """
     Add/Remove a project from authenticated user's bookmark.
@@ -376,7 +375,6 @@ class ToggleSaveAPIView(RetrieveAPIView):
         else:
             raise PermissionDenied(
                 _('you are not permitted to view this project'))
-
 
 class AddCommentAPIView(CreateAPIView):
     """
@@ -451,7 +449,7 @@ class AddCommentAPIView(CreateAPIView):
             send_notification(
                 [result.creator],
                 self.request.user,
-                [{}],
+                [{'project': obj.title}],
                 Notification.Type.COMMENT,
                 f'/projects/{result.pk}'
             )

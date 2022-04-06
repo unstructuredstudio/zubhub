@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(styles);
 
-const NotificationButton = ({ className }) => {
+const NotificationButton = ({ className, notif }) => {
   const classes = useStyles();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const buttonRef = useRef();
@@ -28,7 +28,11 @@ const NotificationButton = ({ className }) => {
         >
           <NotificationsIcon />
         </CustomButton>
-        <NotificationPanel open={dropdownOpen} anchorEl={buttonRef} />
+        <NotificationPanel
+          open={dropdownOpen}
+          anchorEl={buttonRef}
+          notif={notif}
+        />
       </div>
     </ClickAwayListener>
   );

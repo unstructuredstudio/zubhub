@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import NotificationPanelButton from './NotificationPanelButton';
 import cn from 'classnames';
 import NotificationPanelPopper from './NotificationPanelPopper';
+import Notification from '../notification/Notification';
 import { useMediaQuery, CircularProgress } from '@material-ui/core';
 import API from '../../api/api';
 import { useSelector } from 'react-redux';
@@ -111,19 +112,17 @@ const NotificationPanel = ({ open, anchorEl }) => {
           <h2 className={classes.panelSubheadingTextStyle}>New</h2>
         )}
         {newNotifications.map(notification => (
-          <p style={{ color: 'black', padding: '50px 0px' }}>
-            {notification.message}
-          </p>
+          <Notification notification={notification} />
         ))}
         {hasEarlierNotifications && (
           <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>
         )}
         {earlierNotifications.map(notification => (
-          <p style={{ color: 'black', padding: '50px 0px' }}>
-            {notification.message}
-          </p>
+          <Notification notification={notification} />
         ))}
-        {!loading && !hasNewNotifications && !hasEarlierNotifications && <p>You have no notifications in this category.</p>}
+        {!loading && !hasNewNotifications && !hasEarlierNotifications && (
+          <p>You have no notifications in this category.</p>
+        )}
         {loading && getLoadingSpinner()}
       </div>
     );
@@ -136,11 +135,11 @@ const NotificationPanel = ({ open, anchorEl }) => {
       ref={notificationsWrapperRef}
     >
       {unreadNotifications.map(notification => (
-        <p style={{ color: 'black', padding: '50px 0px' }}>
-          {notification.message}
-        </p>
+        <Notification notification={notification} />
       ))}
-      {!loading && unreadNotifications.length === 0 && <p>You have no notifications in this category.</p>}
+      {!loading && unreadNotifications.length === 0 && (
+        <p>You have no notifications in this category.</p>
+      )}
       {loading && getLoadingSpinner()}
     </div>
   );

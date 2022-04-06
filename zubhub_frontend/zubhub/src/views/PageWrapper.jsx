@@ -61,6 +61,7 @@ import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
 import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
+import Notification from '../components/notification/Notification.jsx';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
