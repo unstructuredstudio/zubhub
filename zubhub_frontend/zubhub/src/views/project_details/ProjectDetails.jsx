@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -58,13 +58,12 @@ import commonStyles from '../../assets/js/styles';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-
 /**
-* @function buildMaterialsUsedComponent
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function buildMaterialsUsedComponent
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const buildMaterialsUsedComponent = (classes, state) => {
   const arr =
     state.project.materials_used && state.project.materials_used.split(',');
@@ -79,13 +78,12 @@ const buildMaterialsUsedComponent = (classes, state) => {
   ));
 };
 
-
 /**
-* @function buildTagsComponent
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function buildTagsComponent
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 const buildTagsComponent = (classes, tags, history) => {
   return tags.map((tag, index) => (
     <CustomButton
@@ -98,16 +96,16 @@ const buildTagsComponent = (classes, tags, history) => {
   ));
 };
 
-
 /**
-* @function ProjectDetails View
-* @author Raymond Ndibe <ndiberaymond1@gmail.com>
-* 
-* @todo - describe function's signature
-*/
+ * @function ProjectDetails View
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const { id } = useParams();
 
   const [state, setState] = React.useState({
     project: {},
@@ -131,7 +129,7 @@ function ProjectDetails(props) {
       }
       handleSetState(obj);
     });
-  }, []);
+  }, [id]);
 
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {

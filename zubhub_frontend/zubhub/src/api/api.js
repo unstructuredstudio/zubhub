@@ -731,10 +731,12 @@ class API {
   * 
   * @todo - describe method's signature
   */
-   viewNotification = ({ id, token }) => {
+   viewNotification = async ({ id, token, body }) => {
     const url = `notifications/${id}/update/`;
     const method = 'PUT';
-    return this.request({ url, method, token }).then(res => res.json());
+    const bodyString = JSON.stringify( body );
+    const res = await this.request({ url, method, body: bodyString, token });
+    return res.json();
   };
 
   updateProject = ({
@@ -842,7 +844,7 @@ class API {
     const url = 'notifications/?' + new URLSearchParams({ page }).toString();
 
     return this.request({ url, token }).then(res => res.json());
-  }
+  };
 
 
   /**
