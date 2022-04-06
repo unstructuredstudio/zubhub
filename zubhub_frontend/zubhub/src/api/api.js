@@ -725,6 +725,48 @@ class API {
     return this.request({ url, method, body, token }).then(res => res.json());
   };
 
+  
+  /**
+  * @method viewNotification
+  * 
+  * @todo - describe method's signature
+  */
+   viewNotification = async ({ id, token, body }) => {
+    const url = `notifications/${id}/update/`;
+    const method = 'PUT';
+    const bodyString = JSON.stringify( body );
+    const res = await this.request({ url, method, body: bodyString, token });
+    return res.json();
+  };
+
+  updateProject = ({
+    token,
+    id,
+    title,
+    description,
+    video,
+    images,
+    materials_used,
+    category,
+    tags,
+  }) => {
+    const url = `projects/${id}/update/`;
+    const method = 'PATCH';
+    const body = JSON.stringify({
+      id,
+      title,
+      description,
+      images,
+      video,
+      materials_used,
+      category,
+      tags,
+    });
+    return this.request({ url, method, token, body }).then(res => res.json());
+  };
+
+
+
 
   /**
   * @method addProfileComment
@@ -802,7 +844,7 @@ class API {
     const url = 'notifications/?' + new URLSearchParams({ page }).toString();
 
     return this.request({ url, token }).then(res => res.json());
-  }
+  };
 
 
   /**

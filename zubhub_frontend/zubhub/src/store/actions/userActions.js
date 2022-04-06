@@ -357,7 +357,6 @@ export const addComment = args => {
   };
 };
 
-
 /**
 * @function sendGroupInviteConfirmation
 * @author Raymond Ndibe <ndiberaymond1@gmail.com>

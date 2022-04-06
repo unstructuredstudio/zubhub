@@ -55,7 +55,7 @@ class ProjectCreateAPIView(CreateAPIView):
                 self.request.user,
                 [{} for _ in list(self.request.user.followers.all())],
                 Notification.Type.FOLLOWING_PROJECT,
-                f'/profile/{self.request.user.username}'
+                f'/creators/{self.request.user.username}'
             )
 
 class ProjectUpdateAPIView(UpdateAPIView):
@@ -253,7 +253,7 @@ class ToggleLikeAPIView(RetrieveAPIView):
             send_notification(
                 [obj.creator],
                 self.request.user,
-                [{}],
+                [{'project': obj.title}],
                 Notification.Type.CLAP,
                 f'/projects/{obj.pk}'
             )
@@ -290,7 +290,7 @@ class ToggleSaveAPIView(RetrieveAPIView):
             send_notification(
                 [obj.creator],
                 self.request.user,
-                [{}],
+                [{'project': obj.title}],
                 Notification.Type.BOOKMARK,
                 f'/projects/{obj.pk}'
             )
@@ -355,7 +355,7 @@ class AddCommentAPIView(CreateAPIView):
             send_notification(
                 [result.creator],
                 self.request.user,
-                [{}],
+                [{'project': obj.title}],
                 Notification.Type.COMMENT,
                 f'/projects/{result.pk}'
             )
