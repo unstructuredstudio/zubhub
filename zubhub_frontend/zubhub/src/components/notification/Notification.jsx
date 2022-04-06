@@ -23,11 +23,20 @@ const Notification = ({ notification }) => {
 
   const getMessage = () => {
     let message = '';
-    // 55 character message limit + 17 for strong tags being counted as well
-    if (notification.message.length < 72) {
-      message += notification.message;
+    if (notification.sources.length === 1) {
+      // 50 character message limit + 17 for strong tags being counted as well
+      if (notification.message.length < 67) {
+        message += notification.message;
+      } else {
+        message += notification.message.slice(0, 67) + '...';
+      }
     } else {
-      message += notification.message.slice(0, 72) + '...';
+      if (notification.message.length < 50) {
+        // handles notifications without tags
+        message += notification.message;
+      } else {
+        message += notification.message.slice(0, 50) + '...';
+      }
     }
     return message;
   };
@@ -55,7 +64,7 @@ const Notification = ({ notification }) => {
           }}
         >
           <ListItemAvatar>
-            {Object.keys(notification.sources).length === 1 && (
+            {notification.sources.length === 1 && (
               <AvatarGroup className={classes.group}>
                 <Avatar
                   className={classes.image}
@@ -63,7 +72,7 @@ const Notification = ({ notification }) => {
                 />
               </AvatarGroup>
             )}
-            {Object.keys(notification.sources).length > 1 && (
+            {notification.sources.length > 1 && (
               <AvatarGroup className={classes.group}>
                 <Avatar
                   className={classes.firstImage}
@@ -82,11 +91,11 @@ const Notification = ({ notification }) => {
             primary={
               <span
                 dangerouslySetInnerHTML={{
-                  __html: t(getMessage(notification.message)),
+                  __html: getMessage(),
                 }}
               ></span>
             }
-            secondary={t(st.value + ' ' + st.key + ' ' + 'ago')}
+            secondary={st.value + ' ' + st.key + ' ' + 'ago'}
           />
           {!notification.viewed && <div className={classes.viewDot}></div>}
           {notification.viewed && <div className={classes.unviewed}></div>}

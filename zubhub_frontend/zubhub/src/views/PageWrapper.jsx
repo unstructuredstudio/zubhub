@@ -106,48 +106,6 @@ function PageWrapper(props) {
   const { hero } = props.projects;
   const profileMenuOpen = Boolean(anchor_el);
 
-  var notif = {
-    type: 4,
-    id: '26895b6a-2378-464f-bd45-c5f2b3f88229',
-    recipient: {
-      id: 'b112451f-9c90-437b-96fd-5cabc389435b',
-      username: 'joe_momma123',
-      email: 'acruzm3@illinois.edu',
-      phone: '+18472079456',
-      avatar: 'https://robohash.org/acruzm3',
-      location: 'United States of America',
-      comments: [],
-      dateOfBirth: '2001-10-12',
-      bio: 'Hello!',
-      followers: [],
-      following_count: 0,
-      projects_count: 0,
-      members_count: null,
-      role: 'creator',
-    },
-    projectName: 'Blowing Switch Light',
-    source: {
-      id: 'b112451f-9c90-437b-96fd-5cabc389435b',
-      username: 'acruzm3',
-      email: 'acruzm3@illinois.edu',
-      phone: '+18472079456',
-      avatar: 'https://robohash.org/acruzm3',
-      location: 'United States of America',
-      comments: [],
-      dateOfBirth: '2001-10-12',
-      bio: 'Hello!',
-      followers: [],
-      following_count: 0,
-      projects_count: 0,
-      members_count: null,
-      role: 'creator',
-    },
-    link: 'https://www.youtube.com',
-    viewed: false,
-    time: '2022-03-12T21:30:57.732Z',
-    // time: '2022-03-12T01:53:51.431Z',
-  };
-
   return (
     <>
       <ToastContainer />
@@ -371,7 +329,6 @@ function PageWrapper(props) {
                     <SearchIcon />
                   </IconButton>
                   <NotificationButton
-                    notif={notif}
                     className={clsx(common_classes.marginRight1em)}
                   />
                   <Avatar

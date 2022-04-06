@@ -3,6 +3,9 @@ const styles = theme => ({
         display: 'flex',
         borderRadius: '5px',
         width: '340px',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%'
+        },
         height:'80px',
         cursor: 'pointer',
         alignItems: 'center',
