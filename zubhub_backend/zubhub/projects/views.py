@@ -14,7 +14,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from projects.permissions import (IsOwner, IsStaffOrModerator, SustainedRateThrottle,
                                   PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
 from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
-from .utils import (project_changed, detect_mentions, 
+from .utils import (ProjectSearchCriteria, project_changed, detect_mentions, 
                     perform_project_search, can_view, get_published_projects_for_user)
 from creators.utils import activity_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
@@ -155,7 +155,8 @@ class ProjectTagSearchAPIView(ListAPIView):
         query_string = self.request.GET.get('q')
         query = SearchQuery(query_string)
         rank = SearchRank(F('search_vector'), query)
-        return Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
+        tags = Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
+        return tags
 
 
 class ProjectSearchAPIView(ListAPIView):
@@ -172,7 +173,11 @@ class ProjectSearchAPIView(ListAPIView):
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
-        return perform_project_search(self.request.user, self.request.GET.get("q"))
+        try:
+            search_criteria = {ProjectSearchCriteria(int(self.request.GET.get('criteria', '')))}
+        except (KeyError, ValueError):
+            search_criteria = None
+        return perform_project_search(self.request.user, self.request.GET.get("q"), search_criteria)
 
 
 class ProjectDetailsAPIView(RetrieveAPIView):

@@ -1,4 +1,6 @@
+from enum import IntEnum
 import re
+from typing import Optional, Set
 from akismet import Akismet
 from lxml.html.clean import Cleaner
 from lxml.html import document_fromstring
@@ -366,8 +368,14 @@ def clean_project_desc(string):
     return cleaner.clean_html(string)
 
 
+class ProjectSearchCriteria(IntEnum):
+    CATGEORY = 0
+    TAG = 1
+    TITLE_DESCRIPTION = 2
 
-def perform_project_search(user, query_string):
+
+default_search_criteria = {ProjectSearchCriteria.CATGEORY, ProjectSearchCriteria.TAG, ProjectSearchCriteria.TITLE_DESCRIPTION}
+def perform_project_search(user, query_string, search_criteria: Optional[Set[ProjectSearchCriteria]] = None):
     """
     Perform search for projects matching query.
 
@@ -397,25 +405,23 @@ def perform_project_search(user, query_string):
         else:
             result_categories_tree = Category.get_tree(parent=category)
 
-    if result_categories_tree:
+    if search_criteria is None:
+        search_criteria = default_search_criteria
+
+    result_projects = Project.objects.none()
+    if ProjectSearchCriteria.CATGEORY in search_criteria and result_categories_tree:
         prefetch_related_objects(result_categories_tree, 'projects')
 
         for category in result_categories_tree:
-            if result_projects:
-                result_projects |= category.projects.all().annotate(rank=rank).order_by('-rank')
-            else:
-                result_projects = category.projects.all().annotate(rank=rank).order_by('-rank')
+            result_projects |= category.projects.all().annotate(rank=rank).order_by('-rank')
     #################################################################
 
     # fetch all projects whose tag(s) matches the search query
     result_tags = Tag.objects.filter(
         search_vector=query).prefetch_related("projects")
-
-    for tag in result_tags:
-        if result_projects:
+    if ProjectSearchCriteria.TAG in search_criteria:
+        for tag in result_tags:
             result_projects |= tag.projects.all().annotate(rank=rank).order_by('-rank')
-        else:
-            result_projects = tag.projects.all().annotate(rank=rank).order_by('-rank')
     ############################################################
 
 
@@ -436,16 +442,12 @@ def perform_project_search(user, query_string):
     # ############################################################
 
     # fetch all projects that matches the search term
-    if result_projects:
-        result_projects |= Project.objects.annotate(rank=rank).filter(
-            search_vector=query ).order_by('-rank')
-    else:
-        result_projects = Project.objects.annotate(rank=rank).filter(
-            search_vector=query ).order_by('-rank')
+    if ProjectSearchCriteria.TITLE_DESCRIPTION in search_criteria:
+        result_projects |= Project.objects.annotate(rank=rank).filter(search_vector=query ).order_by('-rank')
     ##############################################################
 
     result = []
-    
+
     """ make sure that user can view all projects in search result """
     for project in result_projects:
         if can_view(user, project):
