@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -398,12 +400,12 @@ function ProjectDetails(props) {
                   >
                     {t('projectDetails.project.description')}
                   </Typography>
-                  <Typography
+                  <ReactQuill
                     className={classes.descriptionBodyStyle}
-                    color="textSecondary"
-                  >
-                    {project.description}
-                  </Typography>
+                    theme={'bubble'}
+                    readOnly={true}
+                    value={project.description || ''}
+                  />
                 </Grid>
                 {project.tags.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12}>
@@ -489,24 +491,25 @@ function ProjectDetails(props) {
           aria-labelledby={t('projectDetails.ariaLabels.deleteProject')}
         >
           <DialogTitle id="delete-project">
+            <Typography variant="h4">
             {t('projectDetails.project.delete.dialog.primary')}
+            </Typography>
           </DialogTitle>
-          <Box
+          {delete_project_dialog_error !== null && (<Box
             component="p"
-            className={delete_project_dialog_error !== null && classes.errorBox}
+            className={classes.errorBox}
           >
-            {delete_project_dialog_error !== null && (
-              <Box component="span" className={classes.error}>
-                {delete_project_dialog_error}
-              </Box>
-            )}
-          </Box>{' '}
+            <Box component="span" className={classes.error}>
+              {delete_project_dialog_error}
+            </Box>
+            
+          </Box>)}
           <DialogContent>
             <Typography>
               {t('projectDetails.project.delete.dialog.secondary')}
             </Typography>
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dialogButtonContainer}>
             <CustomButton
               variant="outlined"
               onClick={() =>

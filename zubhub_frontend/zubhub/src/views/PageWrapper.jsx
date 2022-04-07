@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -33,6 +33,8 @@ import {
   MenuItem,
   Avatar,
   Select,
+  FormGroup,
+  InputBase,
 } from '@material-ui/core';
 
 import {
@@ -46,6 +48,11 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
+import {
+  getQueryParams,
+  SearchType,
+} from './search_results/searchResultsScripts';
+
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
@@ -56,6 +63,7 @@ import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
+import InputSelect from '../components/input_select/InputSelect';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -70,6 +78,9 @@ function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const [searchType, setSearchType] = useState(
+    getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
+  );
 
   const [state, setState] = React.useState({
     username: null,
@@ -101,7 +112,7 @@ function PageWrapper(props) {
 
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
-  const { hero } = props.projects;
+  const { zubhub } = props.projects;
   const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
@@ -113,7 +124,7 @@ function PageWrapper(props) {
             <Box className={classes.logoStyle}>
               <Link to="/">
                 <img
-                  src={hero.header_logo_url ? hero.header_logo_url : logo}
+                  src={zubhub?.header_logo_url ? zubhub.header_logo_url : logo}
                   alt="logo"
                 />
               </Link>
@@ -171,28 +182,49 @@ function PageWrapper(props) {
                   >
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
-                  <OutlinedInput
-                    name="q"
-                    id="q"
-                    type="search"
-                    className={clsx(
-                      classes.searchFormInputStyle,
-                      'search-form-input',
-                    )}
-                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                    pattern="(.|\s)*\S(.|\s)*"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          type="submit"
-                          className={classes.searchFormSubmitStyle}
-                          aria-label={t('pageWrapper.inputs.search.label')}
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
+                  <FormGroup row>
+                    <FormControl variant="outlined">
+                      <InputSelect
+                        searchType={searchType}
+                        onSearchTypeChange={setSearchType}
+                        name="type"
+                      >
+                        <MenuItem value={SearchType.PROJECTS}>
+                          Projects
+                        </MenuItem>
+                        <MenuItem value={SearchType.CREATORS}>
+                          Creators
+                        </MenuItem>
+                        <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                      </InputSelect>
+                    </FormControl>
+                    <OutlinedInput
+                      name="q"
+                      id="q"
+                      type="search"
+                      defaultValue={
+                        props.location.search &&
+                        getQueryParams(window.location.href).get('q')
+                      }
+                      className={clsx(
+                        classes.searchFormInputStyle,
+                        'search-form-input',
+                      )}
+                      placeholder={`${t('pageWrapper.inputs.search.label')}...`}
+                      pattern="(.|\s)*\S(.|\s)*"
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            type="submit"
+                            className={classes.searchFormSubmitStyle}
+                            aria-label={t('pageWrapper.inputs.search.label')}
+                          >
+                            <SearchIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </FormGroup>
                 </FormControl>
               </form>
             </Box>
@@ -466,6 +498,17 @@ function PageWrapper(props) {
                 role="search"
               >
                 <FormControl variant="outlined">
+                  <InputSelect
+                    searchType={searchType}
+                    onSearchTypeChange={setSearchType}
+                    name="type"
+                  >
+                    <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
+                    <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
+                    <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                  </InputSelect>
+                </FormControl>
+                <FormControl variant="outlined">
                   <InputLabel
                     htmlFor="q"
                     className={classes.searchFormLabelStyle}
@@ -509,7 +552,9 @@ function PageWrapper(props) {
           <a href="https://unstructured.studio">
             <img
               src={
-                hero.footer_logo_url ? hero.footer_logo_url : unstructuredLogo
+                zubhub?.footer_logo_url
+                  ? zubhub.footer_logo_url
+                  : unstructuredLogo
               }
               className={classes.footerLogoStyle}
               alt="unstructured-studio-logo"

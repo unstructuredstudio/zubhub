@@ -1,17 +1,47 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
-from .models import PhoneNumber, Setting, CreatorGroup
+from django.db import transaction
+from .models import PhoneNumber, Setting, CreatorGroup, CreatorTag
 
-from .utils import send_group_invite_notification
+from .utils import (send_group_invite_notification, 
+                    custom_set_creatortags_queryset,
+                    enforce_creator__creator_tags_constraints)
 
 Creator = get_user_model()
+
+def active(obj):
+    return obj.is_active
+
+def tags(obj):
+    if obj:
+        tags = []
+        for tag in obj.tags.all():
+            tags.append(tag.name)
+        return ", ".join(tags)
+    return None
+
+
+def group_projects(obj):
+    if obj:
+        count = obj.creator.projects.count()
+        for creator in obj.members.all():
+            count += creator.projects.count()
+        return count
+    return None
+
+
+def group_members(obj):
+    if obj:
+        return obj.members.count()
+    return None
 
 
 class PhoneNumberAdmin(admin.ModelAdmin):
     list_display = ["creator", "phone", "verified", "primary"]
     search_fields = ["phone", "user__username"]
     list_filter = ['verified', "primary"]
+    list_per_page = 50 ## paginate when more than 50 items
     actions = ["download_csv"]
 
     def creator(self, obj):
@@ -40,34 +70,20 @@ class PhoneNumberAdmin(admin.ModelAdmin):
 
 class SettingAdmin(admin.ModelAdmin):
     list_filter = ["subscribe"]
+    list_per_page = 50 ## paginate when more than 50 items
 
 
-def role(obj):
+def used_by(obj):
     if obj:
-        if obj.role == Creator.CREATOR:
-            return "creator"
-        if obj.role == Creator.MODERATOR:
-            return "moderator"
-        if obj.role == Creator.STAFF:
-            return "staff"
-        if obj.role == Creator.GROUP:
-            return "group"
-    return None
+        return obj.creators.all().count()
+    else:
+        return 0
 
-
-def group_projects(obj):
-    if obj:
-        count = obj.creator.projects.count()
-        for creator in obj.members.all():
-            count += creator.projects.count()
-        return count
-    return None
-
-
-def group_members(obj):
-    if obj:
-        return obj.members.count()
-    return None
+class CreatorTagAdmin(admin.ModelAdmin):
+    list_display = ["name", used_by]
+    search_fields = ["name"]
+    exclude = ["id", "search_vector"]
+    list_per_page = 50 ## paginate when more than 50 items
 
 
 class CreatorGroupAdmin(admin.ModelAdmin):
@@ -82,11 +98,19 @@ class CreatorGroupAdmin(admin.ModelAdmin):
         submitted_members = form.cleaned_data.get("members")
         creator = form.cleaned_data.get("creator")
 
-        creator.role = Creator.GROUP
-        creator.save()
+        """ Ensure that creator tag is 'group' """
+        tag = CreatorTag.objects.filter(name="group").first()
+        if not creator.tags.filter(name=tag.name).exists():
+            creator.tags.add(tag)
+            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
 
+        """
+        Send group invite to new members alone.
+
+        Members who are already on the group shouldn't receive group invites 
+        when new members are added to the group.
+        """
         new_members = submitted_members.difference(obj.members.all())
-
         if new_members.count() > 0:
             form.cleaned_data.pop("members")
             send_group_invite_notification(obj, new_members)
@@ -95,12 +119,102 @@ class CreatorGroupAdmin(admin.ModelAdmin):
             request, obj, form, change)
 
 
-UserAdmin.fieldsets += ('Personal Info',
-                        {'fields': ('avatar', 'phone', 'dateOfBirth', 'location', 'bio', 'role')}),
-UserAdmin.list_display += (role),
-UserAdmin.readonly_fields += ("avatar"),
+class CreatorAdmin(UserAdmin):
 
-admin.site.register(Creator, UserAdmin)
+    fieldsets = (
+        ('Personal Info', {
+            'fields': (
+                ('username',),
+                ('first_name',),
+                ('last_name',),
+                ('password',),
+            )
+        }),
+        ('Personal Detail', {
+            'fields': (
+                ('avatar',),
+                ('phone',),
+                ('email',),
+                ('dateOfBirth',),
+                ('location',),
+                ('bio',),
+                ('tags',),
+                ('followers',),
+                ('followers_count',),
+                ('following_count',),
+                ('projects_count',)
+            )
+        }),
+        ('Important Dates', {
+            'fields': (
+                ('date_joined',)
+            )
+        }),
+        ('Permission', {
+            'fields': (
+                ('is_active',),
+                ('is_staff',),
+                ('is_superuser',),
+            )
+        })
+    )
+
+
+    list_display = UserAdmin.list_display + (tags, active,)
+    list_per_page = 50 ## paginate when more than 50 items
+    readonly_fields = UserAdmin.readonly_fields + ('avatar',) + ('followers_count',) + ('following_count',) + ('projects_count',)
+    actions = ["activate_creators", "deactivate_creators"]
+
+    ## disable the ability to add a new creator from the admin for now.
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def activate_creators(self, request, queryset):
+        for creator in queryset.all():
+            creator.is_active = True
+            creator.save()
+    
+    def deactivate_creators(self, request, queryset):
+        for creator in queryset.all():
+            creator.is_active = False
+            creator.save()
+
+    def save_model(self, request, obj, form, change):
+
+        if change:
+
+            """ Handle setting creatortags manually so we can enforce some constraints"""
+            tags = form.cleaned_data.get("tags")
+            custom_set_creatortags_queryset(obj, tags)
+            form.cleaned_data.pop("tags")
+
+
+
+            tag = CreatorTag.objects.filter(name="staff").first()
+
+            if ((form.cleaned_data.get("is_staff") == True) and 
+            (not obj.tags.filter(name=tag.name).exists())):
+                """
+                Add 'staff' creatortag  to creator.tags if creator is staff 
+                
+                And remove any conflicting tag like 'creator' or 'group'
+                """
+                obj.tags.add(tag)
+                obj.tags.set(enforce_creator__creator_tags_constraints(obj, tag))
+
+            elif ((form.cleaned_data.get("is_staff") == False) and 
+            (obj.tags.filter(name=tag.name).exists())):
+                """ Remove 'staff' creatortag from creator.tags if creator is not staff """
+                obj.tags.remove(tag)
+
+
+        super(CreatorAdmin, self).save_model(
+            request, obj, form, change)
+
+
+
+admin.site.register(Creator, CreatorAdmin)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(CreatorGroup, CreatorGroupAdmin)
+admin.site.register(CreatorTag, CreatorTagAdmin)

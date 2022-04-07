@@ -70,7 +70,7 @@ export const addComment = (
 export const unpublishComment = (props, context, id) => {
   if (
     props.auth.token &&
-    (props.auth.role === 'moderator' || props.auth.role === 'staff')
+    (props.auth.tags.includes('moderator') || props.auth.tags.includes('staff'))
   ) {
     return props
       .unpublishComment({
@@ -117,7 +117,7 @@ export const deleteComment = (
 ) => {
   if (
     props.auth.token &&
-    (props.auth.role === 'moderator' || props.auth.role === 'staff')
+    (props.auth.tags.includes('moderator') || props.auth.tags.includes('staff'))
   ) {
     props
       .deleteComment({

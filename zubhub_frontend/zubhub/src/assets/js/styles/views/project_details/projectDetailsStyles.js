@@ -161,8 +161,12 @@ const styles = theme => ({
     fontSize: '2.2rem',
   },
   descriptionBodyStyle: {
-    fontSize: '1.5rem',
     marginBottom: '0.7em',
+    color: 'rgba(0, 0, 0, 0.54)',
+    '& .ql-editor': {
+      fontSize: '1.5rem',
+      fontFamily: 'Raleway,Roboto,sans-serif',
+    },
   },
   materialsUsedStyle: {
     display: 'inline-block',
@@ -248,6 +252,9 @@ const styles = theme => ({
   },
   error: {
     color: '#a94442',
+  },
+  dialogButtonContainer: {
+    padding: '16px 24px',
   },
 });
 

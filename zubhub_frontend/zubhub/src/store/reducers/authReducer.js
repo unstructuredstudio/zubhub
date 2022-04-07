@@ -4,7 +4,7 @@ const default_state = {
   id: null,
   avatar: null,
   members_count: null,
-  role: null,
+  tags: [],
 };
 
 const auth = (state = default_state, action) => {

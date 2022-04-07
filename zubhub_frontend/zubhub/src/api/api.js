@@ -228,6 +228,18 @@ class API {
   };
 
   /**
+   * @method getAccountStatus - make api request to this endpoint providing a valid user token to
+   *         get the account status of the creator the token belongs to.
+   * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+   *
+   * @todo - describe method's signature
+   */
+  getAccountStatus = token => {
+    const url = 'creators/account-status/';
+    return this.request({ url, token }).then(res => res.json());
+  };
+
+  /**
    * @method getUserProfile - get the user profile of the user that the username belongs to
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *
@@ -270,15 +282,16 @@ class API {
    *
    * @todo - describe method's signature
    */
-  searchProjects = ({ page, query_string }) => {
-    let url;
+  searchProjects = ({ page, token, query_string, criteria }) => {
+    const params = { q: query_string, criteria };
     if (page) {
-      url = `projects/search/?q=${query_string}&page=${page}`;
-    } else {
-      url = `projects/search/?q=${query_string}`;
+      params[page] = page;
     }
 
-    return this.request({ url }).then(res => res.json());
+    const searchParams = new URLSearchParams(params);
+    const url = `projects/search/?${searchParams.toString()}`;
+
+    return this.request({ url, token }).then(res => res.json());
   };
 
   /**
@@ -287,7 +300,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  searchCreators = ({ page, query_string }) => {
+  searchCreators = ({ page, token, query_string }) => {
     let url;
     if (page) {
       url = `creators/search/?q=${query_string}&page=${page}`;
@@ -295,7 +308,18 @@ class API {
       url = `creators/search/?q=${query_string}`;
     }
 
-    return this.request({ url }).then(res => res.json());
+    return this.request({ url, token }).then(res => res.json());
+  };
+
+  searchTags = ({ page, token, query_string }) => {
+    let url;
+    if (page) {
+      url = `projects/tags/search/?q=${query_string}&page=${page}`;
+    } else {
+      url = `projects/tags/search/?q=${query_string}`;
+    }
+
+    return this.request({ url, token }).then(res => res.json());
   };
 
   /**
@@ -471,9 +495,11 @@ class API {
     materials_used,
     category,
     tags,
+    publish,
   }) => {
     const url = 'projects/create/';
     const method = 'POST';
+
     const body = JSON.stringify({
       title,
       description,
@@ -482,6 +508,7 @@ class API {
       materials_used,
       category,
       tags,
+      publish,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
@@ -502,9 +529,11 @@ class API {
     materials_used,
     category,
     tags,
+    publish,
   }) => {
     const url = `projects/${id}/update/`;
     const method = 'PATCH';
+
     const body = JSON.stringify({
       id,
       title,
@@ -514,6 +543,7 @@ class API {
       materials_used,
       category,
       tags,
+      publish,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
@@ -580,9 +610,9 @@ class API {
    *
    * @todo - describe method's signature
    */
-  getProjects = ({ page }) => {
+  getProjects = ({ token, page }) => {
     const url = page ? `projects/?${page}` : `projects/`;
-    return this.request({ url }).then(res => res.json());
+    return this.request({ token, url }).then(res => res.json());
   };
 
   /**
@@ -613,9 +643,9 @@ class API {
    *
    * @todo - describe method's signature
    */
-  getStaffPicks = () => {
+  getStaffPicks = ({ token }) => {
     const url = 'projects/staff-picks/';
-    return this.request({ url }).then(res => res.json());
+    return this.request({ token, url }).then(res => res.json());
   };
 
   /**
@@ -624,12 +654,12 @@ class API {
    *
    * @todo - describe method's signature
    */
-  getStaffPick = ({ page, id }) => {
+  getStaffPick = ({ token, page, id }) => {
     const url = page
       ? `projects/staff-picks/${id}/?page=${page}`
       : `projects/staff-picks/${id}`;
 
-    return this.request({ url }).then(res => res.json());
+    return this.request({ token, url }).then(res => res.json());
   };
 
   /**

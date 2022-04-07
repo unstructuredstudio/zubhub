@@ -112,7 +112,7 @@ function Comment(props) {
             </Typography>
           </Box>
         </Link>
-        {auth.role === 'staff' || auth.role === 'moderator' ? (
+        {auth.tags.includes('staff') || auth.tags.includes('moderator') ? (
           <>
             <CustomButton
               className={clsx(

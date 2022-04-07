@@ -3,11 +3,12 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.db import transaction
 from creators.serializers import CreatorMinimalSerializer
-from .models import Project, Comment, Image, StaffPick, Category, Tag
+from .models import Project, Comment, Image, StaffPick, Category, Tag, PublishingRule
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
-from .utils import update_images, update_tags, parse_comment_trees
+from .utils import update_images, update_tags, parse_comment_trees, get_published_projects_for_user
 from .tasks import update_video_url_if_transform_ready, delete_file_task
 from math import ceil
 
@@ -15,10 +16,20 @@ from math import ceil
 Creator = get_user_model()
 
 
+class PublishingRuleSerializer(serializers.ModelSerializer):
+    visible_to = CreatorMinimalSerializer(read_only=True, many=True)
+    class Meta:
+        model = PublishingRule
+        fields = [
+            "type",
+            "visible_to"
+        ]
+
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     creator = serializers.SerializerMethodField('get_creator')
     created_on = serializers.DateTimeField(read_only=True)
+    publish = PublishingRuleSerializer(read_only=True)
 
     def save(self, **kwargs):
         comment = super().save(**kwargs)
@@ -44,6 +55,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "creator",
             "text",
             "created_on",
+            "publish"
         ]
 
     def get_creator(self, obj):
@@ -68,7 +80,6 @@ class TagSerializer(serializers.ModelSerializer):
             "name"
         ]
 
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -91,6 +102,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         slug_field="name", queryset=Category.objects.all(), required=False)
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
+    publish =  PublishingRuleSerializer(read_only=True)
 
     class Meta:
         model = Project
@@ -109,6 +121,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "views_count",
             "comments",
             "created_on",
+            "publish"
         ]
 
     read_only_fields = ["created_on", "views_count"]
@@ -130,7 +143,8 @@ class ProjectSerializer(serializers.ModelSerializer):
         root_comments = list(
             map(lambda x: Comment.dump_bulk(x)[0], root_comments))
 
-        return parse_comment_trees(root_comments, creators_dict)
+        user = self.context.get("request").user
+        return parse_comment_trees(user, root_comments, creators_dict)
 
     def validate_video(self, video):
         if(video == "" and len(self.initial_data.get("images")) == 0):
@@ -171,35 +185,76 @@ class ProjectSerializer(serializers.ModelSerializer):
             )
         return tags
 
+    def validate_publish(self, publish):
+
+        try:
+
+            if publish["type"] not in [
+                PublishingRule.DRAFT, PublishingRule.PUBLIC,
+                PublishingRule.AUTHENTICATED_VIEWERS, PublishingRule.PREVIEW]:
+                raise serializers.ValidationError(
+                    _("publish type is not supported. must be one of 1,2,3 or 4")
+                )
+
+            if not isinstance(publish["visible_to"], list):
+                raise serializers.ValidationError(
+                    _("publish visible_to must be a list")
+                )
+
+            if (publish["type"] == PublishingRule.PREVIEW and
+                len(publish["visible_to"]) == 0):
+                raise serializers.ValidationError(
+                    _("publish visible_to must not be empty when publish type is Preview")
+                )
+
+        except:
+             raise serializers.ValidationError(
+                 _("publish format is not supported")
+             )
+
+        return publish
+        
+
     def create(self, validated_data):
         images_data = validated_data.pop('images')
-        tags_data = self.validate_tags(
-            self.context['request'].data.get("tags", []))
+        tags_data = self.validate_tags(self.context['request'].data.get("tags", []))
         category = None
         if validated_data.get('category', None):
             category = validated_data.pop('category')
 
-        project = Project.objects.create(**validated_data)
+        publish = self.validate_publish(self.context['request'].data.get("publish", {}))
 
-        for image in images_data:
-            Image.objects.create(project=project, **image)
+        with transaction.atomic():
 
-        for tag in tags_data:
-            tag, _ = Tag.objects.get_or_create(name=tag["name"])
-            project.tags.add(tag)
+            rule = PublishingRule.objects.create(type=publish["type"], 
+                        publisher_id=str(self.context["request"].user.id))
+            
+            if rule.type == PublishingRule.PREVIEW:
+                rule.visible_to.set(Creator.objects.filter(username__in=publish["visible_to"]))
 
-        if category:
-            category.projects.add(project)
+            project = Project.objects.create(**validated_data, publish=rule)
 
-        if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
-            update_video_url_if_transform_ready.delay(
-                {"url": project.video, "project_id": project.id})
+            for image in images_data:
+                Image.objects.create(project=project, **image)
 
-        return project
+            for tag in tags_data:
+                tag, _ = Tag.objects.get_or_create(name=tag["name"])
+                project.tags.add(tag)
+
+            if category:
+                category.projects.add(project)
+
+            if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
+                update_video_url_if_transform_ready.delay(
+                    {"url": project.video, "project_id": project.id})
+
+            return project
 
     def update(self, project, validated_data):
         images_data = validated_data.pop('images')
-        tags_data = self.validate_tags(self.initial_data["tags"])
+        tags_data = self.validate_tags(self.initial_data.get("tags", []))
+        publish = self.validate_publish(self.initial_data.get("publish", {}))
+
         category = None
         if validated_data.get('category', None):
             category = validated_data.pop('category')
@@ -208,30 +263,41 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         if (project.video.find("cloudinary.com") > -1 or
             project.video.startswith("{0}://{1}".format(
-                settings.DEFAULT_MEDIA_SERVER_PROTOCOL, settings.DEFAULT_MEDIA_SERVER_DOMAIN))) and project.video != video_data:
+            settings.DEFAULT_MEDIA_SERVER_PROTOCOL,
+            settings.DEFAULT_MEDIA_SERVER_DOMAIN)) and 
+            project.video != video_data):
             delete_file_task.delay(project.video)
 
-        project.title = validated_data.pop("title")
-        project.description = validated_data.pop("description")
-        project.video = video_data
-        project.materials_used = validated_data.pop("materials_used")
+        with transaction.atomic():
 
-        project.save()
+            rule = PublishingRule.objects.create(type=publish["type"], 
+                        publisher_id=str(self.context["request"].user.id))
 
-        update_images(project, images_data)
-        update_tags(project, tags_data)
+            if rule.type == PublishingRule.PREVIEW:
+                rule.visible_to.set(Creator.objects.filter(username__in=publish["visible_to"]))
 
-        old_category = project.category
-        if old_category:
-            old_category.projects.remove(project)
-        if category:
-            category.projects.add(project)
+            project.title = validated_data.pop("title")
+            project.description = validated_data.pop("description")
+            project.video = video_data
+            project.materials_used = validated_data.pop("materials_used")
+            project.publish = rule
+                
+            project.save()
 
-        if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
-            update_video_url_if_transform_ready.delay(
-                {"url": project.video, "project_id": project.id})
+            update_images(project, images_data)
+            update_tags(project, tags_data)
 
-        return project
+            old_category = project.category
+            if old_category:
+                old_category.projects.remove(project)
+            if category:
+                category.projects.add(project)
+
+            if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
+                update_video_url_if_transform_ready.delay(
+                    {"url": project.video, "project_id": project.id})
+
+            return project
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
@@ -242,6 +308,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
     saved_by = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
     created_on = serializers.DateTimeField(read_only=True)
+    publish =  PublishingRuleSerializer(read_only=True)
 
     class Meta:
         model = Project
@@ -257,6 +324,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "saved_by",
             "comments_count",
             "created_on",
+            "publish"
         ]
 
 
@@ -275,6 +343,11 @@ class StaffPickSerializer(serializers.ModelSerializer):
 
     def paginated_projects(self, obj):
         projects = obj.projects.all()
+
+        projects = get_published_projects_for_user(
+                    self.context['request'].user, 
+                    projects)
+
         paginator = ProjectNumberPagination()
         page = paginator.paginate_queryset(
             projects, self.context['request'])
