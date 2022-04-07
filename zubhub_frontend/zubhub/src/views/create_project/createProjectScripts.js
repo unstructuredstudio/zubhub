@@ -75,6 +75,7 @@ export const vars = {
 
 
 let timer = null;
+let newId = null;
 const timeoutConst = 2000;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
@@ -865,7 +866,7 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
     : [];
 
-  console.log("id:", props.match.params);
+  // console.log("id:", props.match.params);
   const create_or_update = props.match.params.id
     ? props.updateProject
     : props.createProject;
@@ -882,7 +883,7 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
       : '',
     category: props.values.category,
     t: props.t,
-  }, redirect).then((res) => console.log(res))
+  }, redirect)
     .catch(error => {
       handleSetState({
         media_upload: {
@@ -890,22 +891,25 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
           upload_dialog: false,
         },
       });
-      // const messages = JSON.parse(error.message);
-      // if (typeof messages === 'object') {
-      //   const server_errors = {};
-      //   Object.keys(messages).forEach(key => {
-      //     if (key === 'non_field_errors') {
-      //       server_errors['non_field_errors'] = messages[key][0];
-      //     } else {
-      //       server_errors[key] = messages[key][0];
-      //     }
-      //   });
-      //   props.setStatus({ ...server_errors });
-      // } else {
-      //   props.setStatus({
-      //     non_field_errors: props.t('createProject.errors.unexpected'),
-      //   });
-      // }
+      const messages = JSON.parse(error.message);
+      if (typeof messages === 'object') {
+        const server_errors = {};
+        Object.keys(messages).forEach(key => {
+          if (key === 'non_field_errors') {
+            server_errors['non_field_errors'] = messages[key][0];
+          } else {
+            server_errors[key] = messages[key][0];
+          }
+        });
+        props.setStatus({ ...server_errors });
+      } else {
+        props.setStatus({
+          non_field_errors: props.t('createProject.errors.unexpected'),
+        });
+      }
+    }).then(res => {
+      newId = res.id;
+      return newId;
     })
     .finally(() => {
       vars.upload_in_progress = false; // flag to prevent attempting to upload a project when an upload is already in progress

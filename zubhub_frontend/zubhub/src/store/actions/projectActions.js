@@ -24,23 +24,23 @@ export const setProjects = projects => {
 * @todo - describe function's signature
 */
 export const createProject = (props, redirect) => {
-  console.log("I'm here createProject", redirect);
-  return () => {
-    const x = API.createProject(props).then(res => {
+  // console.log("I'm here createProject", redirect);
+  return async () => {
+    var projectId;
+    const x = await API.createProject(props).then(res => {
       if (!res.id) {
-        console.log(res);
+        // console.log(res);
         throw new Error(JSON.stringify(res));
       } else {
-        console.log(res);
-        console.log("No Error", redirect);
+        projectId = res.id;
+        // console.log("No Error", redirect);
         if (redirect) {
           toast.success(props.t('createProject.createToastSuccess'));
           return props.history.push('/profile');
         }
       }
     });
-    console.log("hi", x)
-    return x;
+    return {'x': x, 'id': projectId};
   };
 };
 
