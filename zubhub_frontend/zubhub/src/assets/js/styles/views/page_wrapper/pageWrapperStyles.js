@@ -22,9 +22,10 @@ const styles = theme => ({
   },
   searchFormStyle: {
     display: 'inline-block',
-    position: 'relative',
-    marginLeft: '2em',
-    verticalAlign: 'bottom',
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: ['translate(-50%, -50%)'],
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
