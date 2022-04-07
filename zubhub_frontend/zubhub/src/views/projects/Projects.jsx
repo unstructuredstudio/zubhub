@@ -192,9 +192,7 @@ function Projects(props) {
           >
             {prev_page ? (
               <CustomButton
-                // className={classes.floatLeft}
-
-                className={`${classes.floatLeft} ${classes.buttonGroupStyleAlternative}`}
+               className={clsx(classes.floatLeft, classes.buttonGroupStyleAlternative)}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
                 onClick={(e, page = prev_page.split('?')[1]) => {
@@ -208,9 +206,7 @@ function Projects(props) {
             ) : null}
             {next_page ? (
               <CustomButton
-                // className={classes.floatRight}
-
-                className={`${classes.floatRight} ${classes.buttonGroupStyleAlternative}`}
+                 className={clsx(classes.floatRight, classes.buttonGroupStyleAlternative)} 
                 size="large"
                 endIcon={<NavigateNextIcon />}
                 onClick={(e, page = next_page.split('?')[1]) => {
