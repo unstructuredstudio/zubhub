@@ -93,11 +93,8 @@ export const handleCloseSearchForm = () => {
  * @todo - describe function's signature
  */
 export const closeSearchFormOrIgnore = e => {
-  let is_toggle_search_button;
-  e.path.forEach(el => {
-    if (el.id === 'toggle-search') {
-      is_toggle_search_button = true;
-    }
-  });
-  if (!is_toggle_search_button) return handleCloseSearchForm();
+  const form = e.target.closest('form');
+  if (!form || form.getAttribute('role') !== 'search') {
+    handleCloseSearchForm();
+  }
 };
