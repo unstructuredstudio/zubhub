@@ -491,24 +491,25 @@ function ProjectDetails(props) {
           aria-labelledby={t('projectDetails.ariaLabels.deleteProject')}
         >
           <DialogTitle id="delete-project">
+            <Typography variant="h4">
             {t('projectDetails.project.delete.dialog.primary')}
+            </Typography>
           </DialogTitle>
-          <Box
+          {delete_project_dialog_error !== null && (<Box
             component="p"
-            className={delete_project_dialog_error !== null && classes.errorBox}
+            className={classes.errorBox}
           >
-            {delete_project_dialog_error !== null && (
-              <Box component="span" className={classes.error}>
-                {delete_project_dialog_error}
-              </Box>
-            )}
-          </Box>{' '}
+            <Box component="span" className={classes.error}>
+              {delete_project_dialog_error}
+            </Box>
+            
+          </Box>)}
           <DialogContent>
             <Typography>
               {t('projectDetails.project.delete.dialog.secondary')}
             </Typography>
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dialogButtonContainer}>
             <CustomButton
               variant="outlined"
               onClick={() =>
