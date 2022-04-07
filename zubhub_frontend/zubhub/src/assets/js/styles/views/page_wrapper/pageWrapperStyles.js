@@ -32,7 +32,10 @@ const styles = theme => ({
       width: '40em',
       backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'white',
+
       borderRadius: '50px',
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
       '&:hover': {
         backgroundColor: 'rgba(0,0,0,0.3)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
@@ -61,14 +64,13 @@ const styles = theme => ({
       },
     },
   },
-
   smallSearchFormStyle: {
-    height: '2.5em',
+    height: '4em',
     width: '100%',
-    '& .MuiFormControl-root': {
-      width: '100%',
-    },
-
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'center',
     '& .search-form-input': {
       height: '2em',
       position: 'absolute',
@@ -77,6 +79,8 @@ const styles = theme => ({
       backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'black',
       borderRadius: '50px',
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
       '&:hover': {
         backgroundColor: 'rgba(0,0,0,0.3)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {

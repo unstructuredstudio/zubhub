@@ -268,6 +268,31 @@ export const searchProjects = args => {
   };
 };
 
+export const searchTags = args => {
+  return () => {
+    return API.searchTags(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          return { ...res, loading: false, tab: args.tab };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false, tab: args.tab };
+      });
+  };
+};
+
 /**
  * @function suggestTags
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
