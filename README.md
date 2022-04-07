@@ -34,7 +34,7 @@ Follow the instructions below to set up your local development environment
 - On your terminal/command line, navigate to `./zubhub/zubhub_frontend/zubhub` directory.
 
 #### Using `npm`
-This is advisable for development experience.
+This is advisable for a better development experience.
 
 - Run `npm install` to install the dependencies.
 - Run `npm start` to start the frontend.
