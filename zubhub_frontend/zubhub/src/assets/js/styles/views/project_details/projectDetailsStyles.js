@@ -253,6 +253,9 @@ const styles = theme => ({
   error: {
     color: '#a94442',
   },
+  dialogButtonContainer: {
+    padding: '16px 24px',
+  },
 });
 
 export const sliderSettings = images_num => ({
