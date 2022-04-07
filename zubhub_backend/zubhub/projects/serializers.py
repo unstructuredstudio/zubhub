@@ -9,7 +9,7 @@ from .models import Project, Comment, Image, StaffPick, Category, Tag, Publishin
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
 from .utils import update_images, update_tags, parse_comment_trees, get_published_projects_for_user
-from .tasks import update_video_url_if_transform_ready, delete_file_task
+from .tasks import update_video_url_if_transform_ready, delete_file_task, compress_video
 from math import ceil
 
 
@@ -216,6 +216,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         
 
     def create(self, validated_data):
+        print("ZUBHUB!!!!")
+        compress_video.delay()
+
         images_data = validated_data.pop('images')
         tags_data = self.validate_tags(self.context['request'].data.get("tags", []))
         category = None
