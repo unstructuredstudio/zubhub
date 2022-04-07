@@ -9,6 +9,7 @@ import {
 } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
+// import { store } from '../../store/configureStore';
 
 /**
  * @constant vars
@@ -74,9 +75,11 @@ export const vars = {
 };
 
 
+// Global Var Controls for Autosave
 let timer = null;
 let newId = null;
 const timeoutConst = 2000;
+// let isAutoSave = !props.match.params.id || newId;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   clearTimeout(timer);
@@ -86,6 +89,8 @@ const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
     console.log("time out!");
     autoSaveProject(state, props, handleSetState);
     handleDisplayTime();
+    // console.log(store.getState());
+    // console.log(newId);
   }, timeoutConst);
 }
 
@@ -847,16 +852,6 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
   media_upload.upload_dialog = false;
   handleSetState({ media_upload });
 
-  // let materials_used;
-  // if (!redirect && !props.values['materials_used']) {
-  //   materials_used = "place holder";
-  // } else {
-  //   materials_used = props.values['materials_used']
-  //     ?.split(',')
-  //     .filter(value => (value ? true : false))
-  //     .join(',');
-  // }
-
   const materials_used = props.values['materials_used']
     ?.split(',')
     .filter(value => (value ? true : false))
@@ -867,15 +862,17 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
     : [];
 
   // console.log("id:", props.match.params);
-  const create_or_update = props.match.params.id
+  const create_or_update = props.match.params.id || newId
     ? props.updateProject
     : props.createProject;
+
+  // console.log(create_or_update);
 
   create_or_update({
     ...props.values,
     materials_used,
     tags,
-    id: props.match.params.id,
+    id: newId ? newId : props.match.params.id,
     token: props.auth.token,
     images: state.media_upload.uploaded_images_url,
     video: state.media_upload.uploaded_videos_url[0]
@@ -891,6 +888,7 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
           upload_dialog: false,
         },
       });
+      console.log(error);
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {
         const server_errors = {};
@@ -908,10 +906,12 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
         });
       }
     }).then(res => {
-      newId = res.id;
-      return newId;
+      if (!props.match.params.id) {
+        newId = res.id;
+      }
     })
     .finally(() => {
+      console.log(newId);
       vars.upload_in_progress = false; // flag to prevent attempting to upload a project when an upload is already in progress
     });
 };

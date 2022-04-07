@@ -3,6 +3,7 @@ const default_state = {
   staff_picks: [],
   hero: {},
   zubhub: {},
+  // draft_project_id: {},
 };
 
 const projects = (state = default_state, action) => {
@@ -12,6 +13,10 @@ const projects = (state = default_state, action) => {
         ...state,
         ...action.payload,
       };
+      // case 'SET_DRAFT_ID':
+      //   return {
+      //     ...draft_project_id,
+      //   }
     default:
       return state;
   }

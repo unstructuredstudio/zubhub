@@ -156,6 +156,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             return title
 
     def validate_materials_used(self, materials_used):
+        print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
         if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
             return materials_used
         else:
@@ -278,6 +279,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             return project
 
     def update(self, project, validated_data):
+        print(validated_data)
         images_data = validated_data.pop('images')
         tags_data = self.validate_tags(self.initial_data.get("tags", []))
         publish = self.validate_publish(self.initial_data.get("publish", {}))
@@ -306,7 +308,12 @@ class ProjectSerializer(serializers.ModelSerializer):
             project.title = validated_data.pop("title")
             project.description = validated_data.pop("description")
             project.video = video_data
-            project.materials_used = validated_data.pop("materials_used")
+            # project.materials_used = validated_data.pop("materials_used")
+
+            materials_used = None
+            if validated_data.get('materials_used', None):
+                materials_used = validated_data.pop('materials_used')
+
             project.publish = rule
                 
             project.save()
