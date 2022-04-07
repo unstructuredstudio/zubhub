@@ -192,13 +192,13 @@ function Projects(props) {
               </Grid>
             ))}
           </Grid>
-          <ButtonGroup
+          <div
             aria-label={t('projects.ariaLabels.prevNxtButtons')}
             className={classes.buttonGroupStyle}
           >
             {prev_page ? (
               <CustomButton
-                className={classes.floatLeft}
+               className={clsx(classes.floatLeft, classes.buttonGroupStyleAlternative)}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
                 onClick={(e, page = prev_page.split('?')[1]) => {
@@ -212,7 +212,7 @@ function Projects(props) {
             ) : null}
             {next_page ? (
               <CustomButton
-                className={classes.floatRight}
+                 className={clsx(classes.floatRight, classes.buttonGroupStyleAlternative)} 
                 size="large"
                 endIcon={<NavigateNextIcon />}
                 onClick={(e, page = next_page.split('?')[1]) => {
@@ -224,7 +224,7 @@ function Projects(props) {
                 {t('projects.next')}
               </CustomButton>
             ) : null}
-          </ButtonGroup>
+          </div>
         </Box>
       </Box>
     );
