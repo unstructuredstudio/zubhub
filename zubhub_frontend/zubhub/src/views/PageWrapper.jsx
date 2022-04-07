@@ -497,7 +497,7 @@ function PageWrapper(props) {
                 className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
                 role="search"
               >
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" className={classes.formControlStyle}>
                   <InputSelect
                     searchType={searchType}
                     onSearchTypeChange={setSearchType}
