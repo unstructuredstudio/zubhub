@@ -1,22 +1,28 @@
-# Quick Start
+# **Quick Start**
 
-- Welcome to the Zubhub Dev Docs ! This page will walk you through how to setup your Developer Environment and Run ZubHub on your local machine.
+- **Welcome to the Zubhub Dev Docs ! This page will walk you through how to setup your Developer Environment and Run ZubHub on your local machine.**
+<br>
+<br>
 
-**Cloning Repo**: Clone the Zubhub Repo using the following commands
+### **Prerequisties**
 
-```git
-git clone https://github.com/FNNDSC/ChRIS_ui.git
-```
-
-> **Prerequisties**
-
+> * [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) OR [Linux - VM / Dual boot]()
 > * [Github](https://github.com/)
 > * [Docker](https://docs.docker.com/engine/install/ubuntu/)  
 > * [Docker Compose ](https://docs.docker.com/compose/install/)
 > * [Make](https://linuxhint.com/install-make-ubuntu/)
 
+<br>
 
-Alternatively on Linux machine you can install these by running a command like this:
+### **Cloning Repo**: 
+Clone the Zubhub Repo using the following commands
+
+```git
+git clone https://github.com/unstructuredstudio/zubhub.git
+```
+
+
+Alternatively on Linux machine you can install docker by running a command given below:
 ```bash
 bash onetime-setup.sh
 ```
@@ -60,5 +66,8 @@ cd zubhub_frontend/zubhub
 
 - Create a file named .env in the frontend  folder (same directory with package.json)
 - Copy the content of .env.example and paste into the new .env file.
+```bash
+cp .env.example .env
+```
 - Run `make start` to spin up the frontend container.
 - Visit [`localhost:3000`](localhost:3000) on your browser to access the frontend.
