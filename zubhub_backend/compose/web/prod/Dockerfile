@@ -11,6 +11,8 @@ RUN apt-get update \
   && apt-get install -y libpq-dev \
   # Translations dependencies
   && apt-get install -y gettext \
+
+  && apt-get install ffmpeg -y \
   # Install graphviz and dependencies
   && apt-get install -y graphviz libgraphviz-dev pkg-config \
   # cleaning up unused files

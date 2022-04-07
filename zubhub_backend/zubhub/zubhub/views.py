@@ -14,6 +14,7 @@ from django.utils.text import slugify
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+from projects.tasks import compress_video
 
 
 @api_view(['POST'])
@@ -69,7 +70,6 @@ def UploadFileAPIView(request):
             folder: <storage folder>\n
         }\n
     """
-
     try:
         file = request.data.get("file")
         folder = request.data.get("folder")
@@ -134,13 +134,25 @@ def UploadFileToLocalAPIView(request):
         }\n
     """
 
+    print("upload file to local!!!")
+
     if request.method == "POST":
         try:
             file = request.data.get("file")
             key = request.data.get("key")
+
+            print("before calling compress_video")
+            compress_video.delay(file=file, key=key)
+            print("after calling compress_video")
+            
             res = upload_file_to_media_server(file, key)
             res = res.json()
             url = res["url"]
+
+            print("FILE!!!!!")
+            print(file)
+            print(key)
+            # isinstance to see if instance of video
 
             if isinstance(url, str):
                 if url.split("/")[-2].find("image") != -1:

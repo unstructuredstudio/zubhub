@@ -18,6 +18,7 @@ RUN apt-get update \
 RUN apt-get update \
   && apt-get install -y graphviz libgraphviz-dev pkg-config
 
+RUN apt-get update && apt-get install ffmpeg -y
 
 WORKDIR /zubhub_backend
 
