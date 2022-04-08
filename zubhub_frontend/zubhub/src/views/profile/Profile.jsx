@@ -349,7 +349,7 @@ function Profile(props) {
                       <Grid
                         item
                         xs={12}
-                        sm={6}
+                        sm={12}
                         md={6}
                         className={classes.projectGridStyle}
                         align="center"

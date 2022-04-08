@@ -70,10 +70,11 @@ const styles = theme => ({
     padding: '0 0.5em',
     marginLeft: '0.4em',
     marginBottom: '0.4em',
-    [theme.breakpoints.down('470')]: {
+    [theme.breakpoints.down('628')]: {
       marginLeft: 0,
       position: 'static',
       marginBottom: '0.4em',
+      fontSize: '0.8rem',
     },
   },
   extendedTagStyle: {

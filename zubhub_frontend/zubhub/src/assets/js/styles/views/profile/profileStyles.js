@@ -49,6 +49,7 @@ const styles = theme => ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      fontSize: '1.2rem',
     },
   },
   tagsContainerStyle: {
@@ -74,8 +75,13 @@ const styles = theme => ({
     color: '#00B8C4',
   },
   profileLowerStyle: {
-    margin: '1em',
+    marginTop: '1em',
+    marginBottom: '1em',
     padding: '1em',
+    width: '100%',
+    [theme.breakpoints.down('690')]: {
+      padding: '0.5em',
+    },
   },
   titleStyle: {
     fontWeight: 900,

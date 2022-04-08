@@ -529,6 +529,12 @@ html,
   font-family: 'Raleway';
 }
 
+@media screen and (max-width: 417px) {
+  .comment-text {
+    font-size: 1rem;
+  }
+}
+
 .comment-box.comment {
   -webkit-box-shadow: 0px 0px 3px 1px rgba(0, 184, 196, 0.4);
   -moz-box-shadow: 0px 0px 3px 1px rgba(0, 184, 196, 0.4);
