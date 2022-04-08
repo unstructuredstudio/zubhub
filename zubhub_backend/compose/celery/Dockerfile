@@ -9,10 +9,11 @@ RUN apt-get update \
   && apt-get install -y build-essential procps netcat \
   # psycopg2 dependencies
   && apt-get install -y libpq-dev \
+  && apt-get install ffmpeg -y \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
-
+  
 
 WORKDIR /celery
 
@@ -26,6 +27,7 @@ RUN pip install --upgrade pip wheel \
 
 # copy project
 COPY ./zubhub/ /celery/zubhub/
+COPY ./media/ /celery/media/
 
 COPY ./compose/celery/start-celeryworker /celery/start-celeryworker
 RUN sed -i 's/\r$//g' /celery/start-celeryworker

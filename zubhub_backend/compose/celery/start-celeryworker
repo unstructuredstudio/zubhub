@@ -9,6 +9,11 @@ set -o nounset
 cd zubhub
 
 exec celery -A zubhub beat -l DEBUG &
-exec celery -A zubhub worker -l INFO &
+exec celery -n zubhub -A zubhub worker -l INFO &
+
+
+cd ../media
+exec celery -n media -A media worker -l INFO &
 
 tail -f /dev/null
+

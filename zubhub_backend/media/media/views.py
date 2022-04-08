@@ -10,6 +10,7 @@ from math import floor
 import uuid
 from time import time
 from cloudinary import config
+from media.tasks import compress_video
 
 
 @api_view(['POST'])
@@ -136,6 +137,8 @@ def UploadFileAPIView(request):
         __, name = key.split("/")
         file = request.data.get(name)
         url = upload_file(file, key)
+        print("URL:", url)
+        compress_video.delay("x", url.split("localhost:8001/").pop())
         return Response({"url": url}, status=status.HTTP_200_OK)
 
     except Exception:

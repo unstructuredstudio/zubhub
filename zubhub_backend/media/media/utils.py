@@ -5,6 +5,7 @@ import cloudinary
 from cloudinary import api
 from hashlib import sha256
 from ffmpy import FFmpeg
+from media.tasks import compress_video
 
 
 def get_hash(string):

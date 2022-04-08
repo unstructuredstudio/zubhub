@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'media',
+    'django_celery_results'
 ]
 
 # cloudinary
@@ -134,6 +135,27 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'media.wsgi.application'
+
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get("POSTGRES_NAME"),
+        'USER': os.environ.get("POSTGRES_USER"),
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
+        'HOST': os.environ.get("POSTGRES_HOST"),
+        'PORT': 5432
+    }
+}
+
+################################################################################
+# How to setup Celery with Django
+################################################################################
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
 
 # Internationalization
