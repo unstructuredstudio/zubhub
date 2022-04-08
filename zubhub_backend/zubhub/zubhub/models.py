@@ -57,6 +57,7 @@ class Hero(models.Model):
             validators=[FileExtensionValidator(["","jpg", "jpeg", "jfif", "pjpeg", "pjp", "png", "svg", "webp"])])
     activity_url = models.URLField(max_length=1000, blank=True, null=True)
     explore_ideas_url = models.URLField(max_length=1000, blank=True, null=True)
+    tinkering_resource_url = models.URLField(max_length=1000, blank=True, null=True)
 
     class Meta:
         verbose_name = "Hero"
