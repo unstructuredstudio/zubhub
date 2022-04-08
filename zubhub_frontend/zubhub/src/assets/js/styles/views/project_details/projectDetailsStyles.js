@@ -43,6 +43,7 @@ const styles = theme => ({
       alignItems: 'center',
     },
     [theme.breakpoints.down('500')]: {
+      flexDirection: 'column',
       width: '100%',
       justifyContent: 'space-between',
     },
