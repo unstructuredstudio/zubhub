@@ -71,6 +71,7 @@ const useCommonStyles = makeStyles(commonStyles);
  * @todo - describe function's signature
  */
 function PageWrapper(props) {
+  console.log("propssssss",props)
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -106,6 +107,8 @@ function PageWrapper(props) {
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
   const { zubhub } = props.projects;
+  const { hero } = props.projects;
+
   const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
@@ -637,7 +640,11 @@ function PageWrapper(props) {
             <a
               target="__blank"
               rel="noreferrer"
-              href="http://kriti.unstructured.studio/"
+              href={
+                hero.tinkering_resource_url
+                  ? hero.tinkering_resource_url
+                  :'https://kriti.unstructured.studio/'
+              }
               className={common_classes.textDecorationNone}
             >
               <Typography
