@@ -379,8 +379,8 @@
   "searchResults": {
     "projects": "Projects",
     "creators": "Creators",
-    "resultFound": "Result found",
-    "resultsFound": "Results found",
+    "resultFound": "Result for",
+    "resultsFound": "Results for",
     "prev": "Prev",
     "next": "Next",
     "ariaLabels": {

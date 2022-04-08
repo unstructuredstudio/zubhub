@@ -131,6 +131,9 @@ const styles = theme => ({
     maxWidth: '2000px',
     width: '100%',
   },
+  buttonGroupStyleAlternative: {
+     padding: '7px 21px ' ,
+ },
   floatRight: {
     float: 'right',
   },
