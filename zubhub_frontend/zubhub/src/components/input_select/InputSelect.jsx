@@ -42,8 +42,6 @@ const InputSelect = ({
 }) => {
   return (
     <Select
-      labelId="demo-customized-select-label"
-      id="demo-customized-select"
       value={searchType}
       onChange={({ target: { value } }) => onSearchTypeChange(value)}
       input={<BootstrapInput />}
@@ -53,6 +51,7 @@ const InputSelect = ({
         anchorOrigin: { vertical: 'bottom', horizontal: 'center' },
         transformOrigin: { vertical: 'top', horizontal: 'center' },
         disableScrollLock: true,
+        style: { minHeight: '20px' },
       }}
       {...selectProps}
     >
