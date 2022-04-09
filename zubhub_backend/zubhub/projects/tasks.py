@@ -16,8 +16,8 @@ def delete_file_task(self, url):
             raise Exception()
 
     except Exception as e:
-        raise self.retry(exc=e,
-                         countdown=int(uniform(2, 4)**self.request.retries))
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
 
 
 @shared_task(bind=True, acks_late=True, max_retries=10)
@@ -40,12 +40,8 @@ def update_video_url_if_transform_ready(self, dict):
     #     raise self.retry(exc=e, countdown=180)
 
 
-@periodic_task(run_every=(crontab(hour="*/5")),
-               name="projects.tasks.update_search_index",
-               bind=True,
-               acks_late=True,
-               max_retries=5,
-               ignore_result=True)
+@periodic_task(run_every=(crontab(hour="*/5")), name="projects.tasks.update_search_index",
+               bind=True, acks_late=True, max_retries=5, ignore_result=True)
 def update_search_index(self):
     from creators.models import Creator
     from creators.models import CreatorTag
@@ -56,15 +52,18 @@ def update_search_index(self):
     try:
         Category.objects.update(search_vector=SearchVector('name'))
         Tag.objects.update(search_vector=SearchVector('name'))
-        Creator.objects.update(search_vector=SearchVector('username'))
-        CreatorTag.objects.update(search_vector=SearchVector('name'))
-        search_vector = SearchVector('title', weight='A') + SearchVector(
-            'description', weight='B')
+        Creator.objects.update(
+            search_vector=SearchVector('username'))
+        CreatorTag.objects.update(
+            search_vector=SearchVector('name')
+        )
+        search_vector = SearchVector(
+            'title', weight='A') + SearchVector('description', weight='B')
         Project.objects.update(search_vector=search_vector)
 
     except Exception as e:
-        raise self.retry(exc=e,
-                         countdown=int(uniform(2, 4)**self.request.retries))
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
 
 
 @shared_task(bind=True, acks_late=True, max_retries=10)
@@ -73,5 +72,5 @@ def filter_spam_task(self, ctx):
     try:
         filter_spam(ctx)
     except Exception as e:
-        raise self.retry(exc=e,
-                         countdown=int(uniform(2, 4)**self.request.retries))
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
