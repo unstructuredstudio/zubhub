@@ -24,7 +24,17 @@ const Autocomplete = ({
         const parts = parse(option.title, matches);
 
         return (
-          <div onClick={() => onOptionClick(option)}>
+          <div
+            onClick={() => onOptionClick(option)}
+            style={{
+              width: '100%',
+              height: '100%',
+              marginInline: '-15px',
+              marginBlock: '-10px',
+              paddingBlock: '10px',
+              paddingInline: '15px',
+            }}
+          >
             {parts.map((part, index) => (
               <span
                 key={index}

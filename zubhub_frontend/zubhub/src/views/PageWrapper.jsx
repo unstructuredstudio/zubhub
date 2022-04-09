@@ -142,6 +142,7 @@ function PageWrapper(props) {
 
   const onSearchOptionClick = async () => {
     await new Promise(resolve => setTimeout(resolve, 100));
+    console.log(formRef);
     formRef.current.submit();
   };
 
