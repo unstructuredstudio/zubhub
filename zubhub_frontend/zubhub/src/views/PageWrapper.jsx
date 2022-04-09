@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -35,6 +35,7 @@ import {
   Select,
   FormGroup,
   InputBase,
+  TextField,
 } from '@material-ui/core';
 
 import {
@@ -64,6 +65,7 @@ import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
 import InputSelect from '../components/input_select/InputSelect';
+import Autocomplete from '../components/autocomplete/Autocomplete';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -90,7 +92,29 @@ function PageWrapper(props) {
     open_search_form: false,
   });
 
-  React.useEffect(() => {
+  const [options, setOptions] = useState([]);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    const fetchOptions = async () => {
+      const tags = await fetch(
+        'http://localhost:8000/api/projects/tags/search/?q=' + query,
+      ).then(res => res.json());
+      setOptions(
+        tags.map(({ name }) => ({
+          title: name,
+        })),
+      );
+    };
+
+    if (query.length > 0) {
+      fetchOptions();
+    } else {
+      setOptions([]);
+    }
+  }, [query]);
+
+  useEffect(() => {
     handleSetState({ loading: true });
     fetchHero(props)
       .then(() => {
@@ -204,32 +228,46 @@ function PageWrapper(props) {
                         <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                       </InputSelect>
                     </FormControl>
-                    <OutlinedInput
-                      name="q"
-                      id="q"
-                      type="search"
-                      defaultValue={
-                        props.location.search &&
-                        getQueryParams(window.location.href).get('q')
-                      }
-                      className={clsx(
-                        classes.searchFormInputStyle,
-                        'search-form-input',
+                    <Autocomplete options={options}>
+                      {params => (
+                        <TextField
+                          name="q"
+                          id="q"
+                          type="search"
+                          variant="outlined"
+                          defaultValue={
+                            props.location.search &&
+                            getQueryParams(window.location.href).get('q')
+                          }
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            className: clsx(
+                              classes.searchFormInputStyle,
+                              'search-form-input',
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  type="submit"
+                                  className={classes.searchFormSubmitStyle}
+                                  aria-label={t(
+                                    'pageWrapper.inputs.search.label',
+                                  )}
+                                >
+                                  <SearchIcon />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                            pattern: '(.|s)*S(.|s)*',
+                          }}
+                          onChange={e => setQuery(e.target.value)}
+                          placeholder={`${t(
+                            'pageWrapper.inputs.search.label',
+                          )}...`}
+                        />
                       )}
-                      placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                      pattern="(.|\s)*\S(.|\s)*"
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            type="submit"
-                            className={classes.searchFormSubmitStyle}
-                            aria-label={t('pageWrapper.inputs.search.label')}
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
+                    </Autocomplete>
                   </FormGroup>
                 </FormControl>
               </form>
@@ -523,28 +561,42 @@ function PageWrapper(props) {
                   >
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
-                  <OutlinedInput
-                    name="q"
-                    id="q"
-                    type="search"
-                    className={clsx(
-                      classes.smallSearchFormInputStyle,
-                      'search-form-input',
+                  <Autocomplete options={options}>
+                    {params => (
+                      <TextField
+                        name="q"
+                        id="q"
+                        type="search"
+                        variant="outlined"
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          className: clsx(
+                            classes.smallSearchFormInputStyle,
+                            'search-form-input',
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                type="submit"
+                                className={classes.searchFormSubmitStyle}
+                                aria-label={t(
+                                  'pageWrapper.inputs.search.label',
+                                )}
+                              >
+                                <SearchIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                          pattern: '(.|s)*S(.|s)*',
+                        }}
+                        placeholder={`${t(
+                          'pageWrapper.inputs.search.label',
+                        )}...`}
+                        onChange={e => setQuery(e.target.value)}
+                      />
                     )}
-                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                    pattern="(.|\s)*\S(.|\s)*"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          type="submit"
-                          className={classes.searchFormSubmitStyle}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
+                  </Autocomplete>
                 </FormControl>
               </form>
             </ClickAwayListener>

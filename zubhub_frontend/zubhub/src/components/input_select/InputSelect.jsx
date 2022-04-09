@@ -13,6 +13,7 @@ const BootstrapInput = withStyles(theme => ({
     color: 'white',
     transition: 'background-color 250ms ease',
     textAlign: 'center',
+    minHeight: '20px',
     '& ~ svg': {
       color: 'white',
     },
@@ -51,7 +52,6 @@ const InputSelect = ({
         anchorOrigin: { vertical: 'bottom', horizontal: 'center' },
         transformOrigin: { vertical: 'top', horizontal: 'center' },
         disableScrollLock: true,
-        style: { minHeight: '20px' },
       }}
       {...selectProps}
     >

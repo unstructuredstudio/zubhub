@@ -3,7 +3,7 @@ from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
 from django.db import transaction
@@ -156,10 +156,9 @@ class ProjectTagSearchAPIView(ListAPIView):
 
     def get_queryset(self):
         query_string = self.request.GET.get('q')
-        query = SearchQuery(query_string)
-        rank = SearchRank(F('search_vector'), query)
-        tags = Tag.objects.annotate(rank=rank).filter(
-            search_vector=query).order_by('-rank')
+        tags = Tag.objects.annotate(
+            similarity=TrigramSimilarity('name', query_string)).filter(
+                similarity__gt=0.01).order_by('-similarity')
         return tags
 
 

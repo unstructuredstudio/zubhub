@@ -1,6 +1,7 @@
 from enum import IntEnum
+import functools
 import re
-from typing import Optional, Set
+from typing import List, Optional, Set
 from akismet import Akismet
 from lxml.html.clean import Cleaner
 from lxml.html import document_fromstring
@@ -14,7 +15,6 @@ from django.conf import settings
 from creators.tasks import send_mass_email, send_mass_text
 
 Creator = get_user_model()
-
 
 LOCK_EXPIRE = {"30mins": 60 * 10}
 
@@ -77,33 +77,24 @@ def send_staff_pick_notification(staff_pick):
     template_name = "new_staff_pick_notification"
     for each in subscribed:
         if each.creator.email:
-            email_contexts.append(
-                {"title": staff_pick.title,
-                 "user": each.creator.username,
-                 "email": each.creator.email,
-                 "staff_pick_id": staff_pick.id
-                 }
-            )
+            email_contexts.append({
+                "title": staff_pick.title,
+                "user": each.creator.username,
+                "email": each.creator.email,
+                "staff_pick_id": staff_pick.id
+            })
 
         if each.creator.phone:
-            phone_contexts.append(
-                {
-                    "phone": each.creator.phone,
-                    "staff_pick_id": staff_pick.id
-                }
-            )
+            phone_contexts.append({
+                "phone": each.creator.phone,
+                "staff_pick_id": staff_pick.id
+            })
 
     if len(email_contexts) > 0:
-        send_mass_email.delay(
-            template_name=template_name,
-            ctxs=email_contexts
-        )
+        send_mass_email.delay(template_name=template_name, ctxs=email_contexts)
 
     if len(phone_contexts) > 0:
-        send_mass_text.delay(
-            template_name=template_name,
-            ctxs=phone_contexts
-        )
+        send_mass_text.delay(template_name=template_name, ctxs=phone_contexts)
 
 
 def send_spam_notification(comment_id, staffs_and_mods):
@@ -112,32 +103,23 @@ def send_spam_notification(comment_id, staffs_and_mods):
     template_name = "spam_notification"
     for each in staffs_and_mods:
         if each.email:
-            email_contexts.append(
-                {"user": each.username,
-                 "email": each.email,
-                 "comment_id": comment_id
-                 }
-            )
+            email_contexts.append({
+                "user": each.username,
+                "email": each.email,
+                "comment_id": comment_id
+            })
 
         if each.phone:
-            phone_contexts.append(
-                {
-                    "phone": each.phone,
-                    "comment_id": comment_id
-                }
-            )
+            phone_contexts.append({
+                "phone": each.phone,
+                "comment_id": comment_id
+            })
 
     if len(email_contexts) > 0:
-        send_mass_email.delay(
-            template_name=template_name,
-            ctxs=email_contexts
-        )
+        send_mass_email.delay(template_name=template_name, ctxs=email_contexts)
 
     if len(phone_contexts) > 0:
-        send_mass_text.delay(
-            template_name=template_name,
-            ctxs=phone_contexts
-        )
+        send_mass_text.delay(template_name=template_name, ctxs=phone_contexts)
 
 
 def filter_spam(ctx):
@@ -152,9 +134,9 @@ def filter_spam(ctx):
     PublishingRule = apps.get_model('projects.PublishingRule')
     comment = Comment.objects.get(id=ctx.get("comment_id"))
 
-    if ctx.get("method") == 'POST' and comment.publish.type != PublishingRule.DRAFT:
-        akismet_api = Akismet(key=settings.AKISMET_API_KEY,
-                              blog_url=site_url)
+    if ctx.get("method"
+               ) == 'POST' and comment.publish.type != PublishingRule.DRAFT:
+        akismet_api = Akismet(key=settings.AKISMET_API_KEY, blog_url=site_url)
 
         is_spam = akismet_api.comment_check(
             user_ip=ctx.get("REMOTE_ADDR"),
@@ -166,11 +148,12 @@ def filter_spam(ctx):
 
         if is_spam:
             comment.publish.type = PublishingRule.DRAFT
-            comment.publish.publisher_id = None ## Set publisher_id to none when zubhub system unpublished a comment.
+            comment.publish.publisher_id = None  ## Set publisher_id to none when zubhub system unpublished a comment.
             comment.save()
 
             staffs_and_mods = Creator.objects.filter(is_staff=True)
-            staffs_and_mods = staffs.union(Creator.objects.filter(tags__name="moderator"))
+            staffs_and_mods = staffs.union(
+                Creator.objects.filter(tags__name="moderator"))
 
             send_spam_notification(ctx.get("comment_id"), staffs_and_mods)
 
@@ -188,8 +171,9 @@ def project_changed(obj, instance):
         changed = True
     elif not obj.materials_used == instance.materials_used:
         changed = True
-    elif ((not obj.publish.type == instance.publish.type) or 
-        (not set(obj.publish.visible_to.all()) == set(instance.publish.visible_to.all()))):
+    elif ((not obj.publish.type == instance.publish.type)
+          or (not set(obj.publish.visible_to.all()) == set(
+              instance.publish.visible_to.all()))):
         changed = True
     else:
         obj_images = obj.images.all()
@@ -226,7 +210,6 @@ def parse_comment_trees(user, data, creators_dict):
             ## out all the places in the codebase where there are database query related problems
             ## and start optimizing those queries.
             rule = PublishingRule.objects.get(id=comment["data"]["publish"])
-
             """ If user making request is permitted to view comment """
             if can_view(user, rule.comment_target):
 
@@ -251,25 +234,24 @@ def can_view(user, target):
     """
     Check if user can view project or comment.
     """
-
     """ get type and visible_to from publish """
     PublishingRule = apps.get_model('projects.PublishingRule')
     type = target.publish.type
     visible_to = target.publish.visible_to
 
-    if (type == PublishingRule.DRAFT and user.is_authenticated and 
-        (user.comments.filter(id=target.id).exists() or 
-        user.projects.filter(id=target.id).exists())):
+    if (type == PublishingRule.DRAFT and user.is_authenticated
+            and (user.comments.filter(id=target.id).exists()
+                 or user.projects.filter(id=target.id).exists())):
         return True
     if type == PublishingRule.PUBLIC:
         return True
     if type == PublishingRule.AUTHENTICATED_VIEWERS and user.is_authenticated:
         return True
 
-    if (type == PublishingRule.PREVIEW and user.is_authenticated and 
-        ( visible_to.filter(id=user.id).count() > 0 or 
-        user.comments.filter(id=target.id).exists() or 
-        user.projects.filter(id=target.id).exists())):
+    if (type == PublishingRule.PREVIEW and user.is_authenticated
+            and (visible_to.filter(id=user.id).count() > 0
+                 or user.comments.filter(id=target.id).exists()
+                 or user.projects.filter(id=target.id).exists())):
         """ Check if user is in visible_to or if project/comment belongs to the authenticated user """
         return True
 
@@ -293,21 +275,19 @@ def get_published_projects_for_user(user, all):
 
     Project = apps.get_model('projects.Project')
     PublishingRule = apps.get_model('projects.PublishingRule')
-
-
     """ fetch all projects where publishing rule is PUBLIC """
     public = all.filter(publish__type=PublishingRule.PUBLIC)
-
     """ fetch all projects where publishing rule is AUTHENTICATED_VIEWERS if user is authenticated """
     authenticated = Project.objects.none()
     if user.is_authenticated:
-        authenticated = all.filter(publish__type=PublishingRule.AUTHENTICATED_VIEWERS)
-    
+        authenticated = all.filter(
+            publish__type=PublishingRule.AUTHENTICATED_VIEWERS)
     """ fetch all projects where publishing rule is PREVIEW """
-    visible_to = all.filter(publish__type=PublishingRule.PREVIEW, 
+    visible_to = all.filter(publish__type=PublishingRule.PREVIEW,
                             publish__visible_to__id=user.id)
 
-    return public.union(authenticated).union(visible_to).order_by("-created_on")
+    return public.union(authenticated).union(visible_to).order_by(
+        "-created_on")
 
 
 def detect_mentions(kwargs):
@@ -317,8 +297,9 @@ def detect_mentions(kwargs):
     profile_username = kwargs.get("profile_username", None)
 
     if isinstance(text, str):
-        mentions = list(map(lambda x: x.split(
-            "@")[1], re.findall("\B@[0-9a-zA-Z_.-]+", text)))
+        mentions = list(
+            map(lambda x: x.split("@")[1],
+                re.findall("\B@[0-9a-zA-Z_.-]+", text)))
 
         email_contexts = []
         phone_contexts = []
@@ -327,42 +308,42 @@ def detect_mentions(kwargs):
         template_name = "mention_notification"
         for mention in mentions:
             if mention.email and (mention.username != creator):
-                email_contexts.append(
-                    {"creator": creator,
-                     "project_id": project_id,
-                     "profile_username": profile_username,
-                     "email": mention.email
-                     }
-                )
+                email_contexts.append({
+                    "creator": creator,
+                    "project_id": project_id,
+                    "profile_username": profile_username,
+                    "email": mention.email
+                })
 
             if mention.phone and (mention.username != creator):
-                phone_contexts.append(
-                    {"creator": creator,
-                     "project_id": project_id,
-                     "profile_username": profile_username,
-                     "phone": mention.phone
-                     }
-                )
+                phone_contexts.append({
+                    "creator": creator,
+                    "project_id": project_id,
+                    "profile_username": profile_username,
+                    "phone": mention.phone
+                })
 
         if len(email_contexts) > 0:
-            send_mass_email.delay(
-                template_name=template_name,
-                ctxs=email_contexts
-            )
+            send_mass_email.delay(template_name=template_name,
+                                  ctxs=email_contexts)
 
         if len(phone_contexts) > 0:
-            send_mass_text.delay(
-                template_name=template_name,
-                ctxs=phone_contexts
-            )
+            send_mass_text.delay(template_name=template_name,
+                                 ctxs=phone_contexts)
+
 
 """ String html tags, event handlers, styles, etc from comment string """
+
+
 def clean_comment_text(string):
     doc = document_fromstring(string)
     cleaner = Cleaner()
     return cleaner.clean_html(doc).text_content()
 
+
 """ Clean project description while still allowing for basic html structure """
+
+
 def clean_project_desc(string):
     cleaner = Cleaner(remove_tags=["a"])
     return cleaner.clean_html(string)
@@ -374,8 +355,16 @@ class ProjectSearchCriteria(IntEnum):
     TITLE_DESCRIPTION = 2
 
 
-default_search_criteria = {ProjectSearchCriteria.CATGEORY, ProjectSearchCriteria.TAG, ProjectSearchCriteria.TITLE_DESCRIPTION}
-def perform_project_search(user, query_string, search_criteria: Optional[Set[ProjectSearchCriteria]] = None):
+default_search_criteria = {
+    ProjectSearchCriteria.CATGEORY, ProjectSearchCriteria.TAG,
+    ProjectSearchCriteria.TITLE_DESCRIPTION
+}
+
+
+def perform_project_search(
+        user,
+        query_string,
+        search_criteria: Optional[Set[ProjectSearchCriteria]] = None):
     """
     Perform search for projects matching query.
 
@@ -413,7 +402,8 @@ def perform_project_search(user, query_string, search_criteria: Optional[Set[Pro
         prefetch_related_objects(result_categories_tree, 'projects')
 
         for category in result_categories_tree:
-            result_projects |= category.projects.all().annotate(rank=rank).order_by('-rank')
+            result_projects |= category.projects.all().annotate(
+                rank=rank).order_by('-rank')
     #################################################################
 
     # fetch all projects whose tag(s) matches the search query
@@ -421,9 +411,9 @@ def perform_project_search(user, query_string, search_criteria: Optional[Set[Pro
         search_vector=query).prefetch_related("projects")
     if ProjectSearchCriteria.TAG in search_criteria:
         for tag in result_tags:
-            result_projects |= tag.projects.all().annotate(rank=rank).order_by('-rank')
+            result_projects |= tag.projects.all().annotate(
+                rank=rank).order_by('-rank')
     ############################################################
-
 
     # #################################################################
 
@@ -443,11 +433,11 @@ def perform_project_search(user, query_string, search_criteria: Optional[Set[Pro
 
     # fetch all projects that matches the search term
     if ProjectSearchCriteria.TITLE_DESCRIPTION in search_criteria:
-        result_projects |= Project.objects.annotate(rank=rank).filter(search_vector=query ).order_by('-rank')
+        result_projects |= Project.objects.annotate(rank=rank).filter(
+            search_vector=query).order_by('-rank')
     ##############################################################
 
     result = []
-
     """ make sure that user can view all projects in search result """
     for project in result_projects:
         if can_view(user, project):
