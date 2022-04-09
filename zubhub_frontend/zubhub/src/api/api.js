@@ -311,15 +311,10 @@ class API {
     return this.request({ url, token }).then(res => res.json());
   };
 
-  searchTags = ({ page, token, query_string }) => {
-    let url;
-    if (page) {
-      url = `projects/tags/search/?q=${query_string}&page=${page}`;
-    } else {
-      url = `projects/tags/search/?q=${query_string}`;
-    }
+  searchTags = ({ query }) => {
+    const url = `projects/tags/search/?q=${query}`;
 
-    return this.request({ url, token }).then(res => res.json());
+    return this.request({ url }).then(res => res.json());
   };
 
   /**

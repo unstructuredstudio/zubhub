@@ -66,6 +66,7 @@ import commonStyles from '../assets/js/styles';
 import languageMap from '../assets/js/languageMap.json';
 import InputSelect from '../components/input_select/InputSelect';
 import Autocomplete from '../components/autocomplete/Autocomplete';
+import API from '../api';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -97,9 +98,8 @@ function PageWrapper(props) {
 
   useEffect(() => {
     const fetchOptions = async () => {
-      const tags = await fetch(
-        'http://localhost:8000/api/projects/tags/search/?q=' + query,
-      ).then(res => res.json());
+      const api = new API();
+      const tags = await api.searchTags({ query });
       setOptions(
         tags.map(({ name }) => ({
           title: name,
