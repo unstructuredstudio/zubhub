@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -85,6 +85,7 @@ function PageWrapper(props) {
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
+  const formRef = useRef();
 
   const [state, setState] = React.useState({
     username: null,
@@ -137,6 +138,11 @@ function PageWrapper(props) {
         setState(state => ({ ...state, ...obj }));
       });
     }
+  };
+
+  const onSearchOptionClick = async () => {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    formRef.current.submit();
   };
 
   const { anchor_el, loading, open_search_form } = state;
@@ -204,6 +210,7 @@ function PageWrapper(props) {
                 action="/search"
                 className={clsx(classes.searchFormStyle, classes.removeOn894)}
                 role="search"
+                ref={formRef}
               >
                 <FormControl variant="outlined">
                   <InputLabel
@@ -228,17 +235,21 @@ function PageWrapper(props) {
                         <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                       </InputSelect>
                     </FormControl>
-                    <Autocomplete options={options}>
+                    <Autocomplete
+                      options={options}
+                      onOptionClick={onSearchOptionClick}
+                      defaultValue={{
+                        title:
+                          props.location.search &&
+                          getQueryParams(window.location.href).get('q'),
+                      }}
+                    >
                       {params => (
                         <TextField
                           name="q"
                           id="q"
                           type="search"
                           variant="outlined"
-                          defaultValue={
-                            props.location.search &&
-                            getQueryParams(window.location.href).get('q')
-                          }
                           {...params}
                           InputProps={{
                             ...params.InputProps,
@@ -260,6 +271,11 @@ function PageWrapper(props) {
                               </InputAdornment>
                             ),
                             pattern: '(.|s)*S(.|s)*',
+                            defaultValue: {
+                              title:
+                                props.location.search &&
+                                getQueryParams(window.location.href).get('q'),
+                            },
                           }}
                           onChange={e => setQuery(e.target.value)}
                           placeholder={`${t(
@@ -542,6 +558,7 @@ function PageWrapper(props) {
                 action="/search"
                 className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
                 role="search"
+                ref={formRef}
               >
                 <FormControl variant="outlined">
                   <InputSelect
@@ -561,7 +578,14 @@ function PageWrapper(props) {
                   >
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
-                  <Autocomplete options={options}>
+                  <Autocomplete
+                    options={options}
+                    onOptionClick={onSearchOptionClick}
+                    defaultValue={
+                      props.location.search &&
+                      getQueryParams(window.location.href).get('q')
+                    }
+                  >
                     {params => (
                       <TextField
                         name="q"
