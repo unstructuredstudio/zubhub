@@ -29,10 +29,8 @@ const Autocomplete = ({
             style={{
               width: '100%',
               height: '100%',
-              marginInline: '-15px',
-              marginBlock: '-10px',
-              paddingBlock: '10px',
-              paddingInline: '15px',
+              margin: '-10px -15px',
+              padding: '10px 15px',
             }}
           >
             {parts.map((part, index) => (

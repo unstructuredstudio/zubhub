@@ -317,6 +317,12 @@ class API {
     return this.request({ url }).then(res => res.json());
   };
 
+  autocompleteTags = ({ query }) => {
+    const url = `projects/tags/autocomplete/?q=${query}`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
   /**
    * @method getFollowers - get a list of users that a username is following
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>

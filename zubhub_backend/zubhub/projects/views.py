@@ -3,7 +3,7 @@ from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.postgres.search import TrigramSimilarity
+from django.contrib.postgres.search import TrigramSimilarity, SearchQuery, SearchRank
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
 from django.db import transaction
@@ -145,6 +145,27 @@ class ProjectListAPIView(ListAPIView):
 class ProjectTagSearchAPIView(ListAPIView):
     """
     Fulltext search of project tags.
+
+    Requires query string.
+    Returns list of matching tags
+    """
+
+    serializer_class = TagSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        query_string = self.request.GET.get('q')
+        query = SearchQuery(query_string)
+        rank = SearchRank(F('search_vector'), query)
+        tags = Tag.objects.annotate(rank=rank).filter(
+            search_vector=query).order_by('-rank')
+        return tags
+
+
+class ProjectTagAutocompleteAPIView(ListAPIView):
+    """
+    Autocomplete based search of all tags
 
     Requires query string.
     Returns list of matching tags

@@ -100,7 +100,7 @@ function PageWrapper(props) {
   useEffect(() => {
     const fetchOptions = async () => {
       const api = new API();
-      const tags = await api.searchTags({ query });
+      const tags = await api.autocompleteTags({ query });
       setOptions(
         tags.map(({ name }) => ({
           title: name,
