@@ -303,6 +303,7 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
+                  {/* box style here */}
                   <Box className={classes.actionBoxStyle}>
                     <CustomButton
                       className={classes.actionBoxButtonStyle}
