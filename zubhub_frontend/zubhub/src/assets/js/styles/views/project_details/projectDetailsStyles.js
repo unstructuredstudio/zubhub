@@ -105,9 +105,17 @@ const styles = theme => ({
       height: '3.5em',
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'flex-end',
+      paddingRight: 12,
     },
   },
+  iconsBoxStyle: {
+    [theme.breakpoints.down('1080')]: {
+      display: 'flex',
+      paddingRight: 4,
+    },
+  },
+
   actionBoxButtonStyle: {
     margin: '0.5em',
     display: 'flex',
@@ -117,7 +125,8 @@ const styles = theme => ({
     '& span': { display: 'flex', flexDirection: 'column' },
     [theme.breakpoints.down('1080')]: {
       flexDirection: 'row',
-      marginBottom: '1em',
+      margin: '0.2em',
+      padding: '7px',
       '& span': {
         flexDirection: 'row',
       },
