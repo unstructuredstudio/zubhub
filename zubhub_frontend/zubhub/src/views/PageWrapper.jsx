@@ -112,8 +112,7 @@ function PageWrapper(props) {
 
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
-  const { zubhub } = props.projects;
-  const { hero } = props.projects;
+  const { zubhub, hero } = props.projects;
 
   const profileMenuOpen = Boolean(anchor_el);
   return (
