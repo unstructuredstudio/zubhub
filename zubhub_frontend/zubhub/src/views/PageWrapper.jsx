@@ -78,6 +78,7 @@ function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const trigger = useScrollTrigger()
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
@@ -101,6 +102,10 @@ function PageWrapper(props) {
         handleSetState({ loading: false });
       });
   }, [props.auth.token]);
+  
+  React.useEffect(()=>{
+    handleSetState(handleProfileMenuClose()) 
+  },[trigger])
 
   const handleSetState = obj => {
     if (obj) {
@@ -287,6 +292,7 @@ function PageWrapper(props) {
                   />
                   <Menu
                     className={common_classes.addOnSmallScreen}
+                    disableScrollLock={true}
                     id="menu"
                     anchorEl={anchor_el}
                     anchorOrigin={{
@@ -368,6 +374,7 @@ function PageWrapper(props) {
                   />
                   <Menu
                     className={classes.profileMenuStyle}
+                    disableScrollLock={true}
                     id="profile_menu"
                     anchorEl={anchor_el}
                     anchorOrigin={{
