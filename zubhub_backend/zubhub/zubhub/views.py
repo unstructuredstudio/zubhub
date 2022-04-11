@@ -1,7 +1,7 @@
 from math import floor
 import uuid
-from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, PrivacySerializer
-from .models import Hero, FAQ, Privacy, Help, AdminSettings
+from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, PrivacySerializer, ThemeSerializer
+from .models import Hero, FAQ, Privacy, Help, AdminSettings, Theme
 from .utils import delete_file_from_media_server, upload_file_to_media_server, get_sig
 from projects.permissions import PostUserRateThrottle, GetUserRateThrottle, SustainedRateThrottle
 from rest_framework.permissions import IsAuthenticated
@@ -240,6 +240,21 @@ class FAQAPIView(ListAPIView):
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
+class ThemeAPIView(RetrieveAPIView):
+    """
+    Get "Theme Zubhub".
+    """
+
+    queryset = Theme.objects.all()
+    serializer_class = ThemeSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_object(self):
+        obj = self.get_queryset()[:1]
+        if obj:
+            return obj[0]
+        return None
 
 
 @api_view(['GET'])

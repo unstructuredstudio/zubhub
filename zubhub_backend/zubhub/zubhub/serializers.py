@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hero, FAQ, Help, Privacy
+from .models import Hero, FAQ, Help, Privacy, Theme
 
 
 class HeroSerializer(serializers.ModelSerializer):
@@ -46,4 +46,12 @@ class FAQListSerializer(serializers.ModelSerializer):
         fields = [
             "question",
             "answer"
+        ]
+
+class ThemeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Theme
+        fields = [
+            "theme",
         ]

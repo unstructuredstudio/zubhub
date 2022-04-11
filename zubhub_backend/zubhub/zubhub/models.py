@@ -1,3 +1,4 @@
+from distutils.command.clean import clean
 import uuid
 from math import floor
 from django.utils import timezone
@@ -6,6 +7,7 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from .utils import MediaStorage, get_upload_path, clean_summernote_html
+
 
 
 class AdminSettings(models.Model):
@@ -117,3 +119,15 @@ class FAQ(models.Model):
         self.question = clean_summernote_html(self.question)
         self.answer = clean_summernote_html(self.answer)
         super().save(*args, **kwargs)
+
+class Theme(models.Model):
+    theme = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Theme"
+        verbose_name_plural = "Themes"
+
+    def save(self, *args, **kwargs):
+        self.theme = clean_summernote_html(self.theme)
+        super().save(*args, **kwargs)
+    

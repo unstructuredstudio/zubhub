@@ -48,7 +48,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
     from rest_auth.registration.urls import VerifyEmailView
     from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
                             HeroAPIView, HelpAPIView, PrivacyAPIView, 
-                            FAQAPIView, SigGenAPIView, UploadFileToLocalAPIView, 
+                            FAQAPIView, ThemeAPIView, SigGenAPIView, UploadFileToLocalAPIView, 
                             MarkdownToHtmlAPIView, MediaSchemaAPIView, WebSchemaAPIView)
 
     schema_url_patterns = [
@@ -66,6 +66,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/help/', HelpAPIView.as_view()),
             path('api/privacy/', PrivacyAPIView.as_view()),
             path('api/faqs/', FAQAPIView.as_view()),
+            path('api/faqs/', ThemeAPIView.as_view()),
             path('api/signature/', SigGenAPIView)
             ]
 
