@@ -608,6 +608,7 @@ export const initUpload = (e, state, props, handleSetState) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
+    console.log("I'm here initupload!");
     props.setFieldTouched('title');
     props.setFieldTouched('description');
     props.setFieldTouched('project_images');
@@ -641,7 +642,7 @@ export const initUpload = (e, state, props, handleSetState) => {
         )
       ) {
         vars.upload_in_progress = true;
-        uploadProject(state, props, handleSetState, false);
+        uploadProject(state, props, handleSetState, true);
       } else {
         vars.upload_in_progress = true;
         state.media_upload.upload_dialog = true;
@@ -732,16 +733,6 @@ export const autoSaveProject = async (state, props, handleSetState) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    // props.setFieldTouched('title');
-    // props.setFieldTouched('description');
-    // props.setFieldTouched('project_images');
-    // props.setFieldTouched('video');
-    // props.setFieldTouched('materials_used');
-    // props.setFieldTouched('category');
-    // props.setFieldTouched('tags');
-
-    // vars.image_field_touched = true;
-    // vars.video_field_touched = true;
 
     props.validateForm().then(errors => {
       if (
@@ -818,23 +809,23 @@ export const autoSaveProject = async (state, props, handleSetState) => {
             state.media_upload.uploaded_videos_url = uploaded_videos_url;
 
             uploadProject(state, props, handleSetState, false);
-          })
-          .catch(error => {
-            // settimeout is used to delay closing the upload_dialog until
-            // state have reflected all prior attempts to set state.
-            // This is to ensure nothing overwrites the dialog closing.
-            // A better approach would be to refactor the app and use
-            // redux for most complex state interactions.
-            setTimeout(
-              () =>
-                handleSetState({
-                  media_upload: { ...state.media_upload, upload_dialog: false },
-                }),
-              2000,
-            );
-
-            if (error) toast.warning(error);
           });
+          // .catch(error => {
+          //   // settimeout is used to delay closing the upload_dialog until
+          //   // state have reflected all prior attempts to set state.
+          //   // This is to ensure nothing overwrites the dialog closing.
+          //   // A better approach would be to refactor the app and use
+          //   // redux for most complex state interactions.
+          //   setTimeout(
+          //     () =>
+          //       handleSetState({
+          //         media_upload: { ...state.media_upload, upload_dialog: false },
+          //       }),
+          //     2000,
+          //   );
+
+          //   if (error) toast.warning(error);
+          // });
       }
     });
   }
@@ -906,7 +897,7 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
         });
       }
     }).then(res => {
-      if (!props.match.params.id) {
+      if (!props.match.params.id && !newId) {
         newId = res.id;
       }
     })

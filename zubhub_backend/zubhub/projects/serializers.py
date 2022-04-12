@@ -1,4 +1,5 @@
 import re
+from wsgiref import validate
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -306,13 +307,13 @@ class ProjectSerializer(serializers.ModelSerializer):
                 rule.visible_to.set(Creator.objects.filter(username__in=publish["visible_to"]))
 
             project.title = validated_data.pop("title")
-            project.description = validated_data.pop("description")
             project.video = video_data
-            # project.materials_used = validated_data.pop("materials_used")
 
-            materials_used = None
+            if validated_data.get('description', None):
+                project.description = validated_data.pop("description")
+
             if validated_data.get('materials_used', None):
-                materials_used = validated_data.pop('materials_used')
+                project.materials_used = validated_data.pop('materials_used')
 
             project.publish = rule
                 

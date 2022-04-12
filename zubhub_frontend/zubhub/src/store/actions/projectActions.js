@@ -24,7 +24,7 @@ export const setProjects = projects => {
 * @todo - describe function's signature
 */
 export const createProject = (props, redirect) => {
-  // console.log("I'm here createProject", redirect);
+  console.log("I'm here createProject", redirect);
   return async () => {
     var projectId;
     const x = await API.createProject(props).then(res => {
