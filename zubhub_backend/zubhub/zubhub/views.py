@@ -13,6 +13,7 @@ from rest_framework.decorators import api_view, permission_classes, throttle_cla
 from django.utils.text import slugify
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.core.files.storage import FileSystemStorage
 
 from projects.tasks import compress_video
 
@@ -142,7 +143,16 @@ def UploadFileToLocalAPIView(request):
             key = request.data.get("key")
 
             print("before calling compress_video")
-            compress_video.delay(file=file, key=key)
+
+            folder, name = key.split("/")
+            fs = FileSystemStorage(settings.MEDIA_ROOT + "/" + folder)
+            fs.save("test" + name, file)
+
+            root_dir = settings.MEDIA_ROOT + "/" + folder
+            video_path = "{0}/{1}".format(root_dir, "test" + name)
+            output_video_path = video_path + "hello"
+
+            compress_video.delay(video_path, output_video_path)
             print("after calling compress_video")
             
             res = upload_file_to_media_server(file, key)
