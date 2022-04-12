@@ -24,16 +24,13 @@ export const setProjects = projects => {
 * @todo - describe function's signature
 */
 export const createProject = (props, redirect) => {
-  console.log("I'm here createProject", redirect);
   return async () => {
     var projectId;
     const x = await API.createProject(props).then(res => {
       if (!res.id) {
-        // console.log(res);
         throw new Error(JSON.stringify(res));
       } else {
         projectId = res.id;
-        // console.log("No Error", redirect);
         if (redirect) {
           toast.success(props.t('createProject.createToastSuccess'));
           return props.history.push('/profile');
@@ -74,10 +71,8 @@ export const shouldUploadToLocal = args => {
 */
 export const updateProject = (props, redirect) => {
   return () => {
-    console.log("I'm here updateProject", redirect);
     return API.updateProject(props).then(res => {
       if (!res.id) {
-        // console.log(res);
         throw new Error(JSON.stringify(res));
       } else {
         if (redirect) {

@@ -279,7 +279,6 @@ class ProjectSerializer(serializers.ModelSerializer):
             return project
 
     def update(self, project, validated_data):
-        print(validated_data)
         images_data = validated_data.pop('images')
         tags_data = self.validate_tags(self.initial_data.get("tags", []))
         publish = self.validate_publish(self.initial_data.get("publish", {}))

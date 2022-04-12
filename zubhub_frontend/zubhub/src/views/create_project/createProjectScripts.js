@@ -85,7 +85,6 @@ const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   timer = !props.match.params.id && setTimeout(function () {
     props.values.publish.type = 1;
     props.values.publish.visible_to = [];
-    console.log("time out!");
     autoSaveProject(state, props, handleSetState);
     handleDisplayTime();
   }, timeoutConst);
@@ -605,7 +604,6 @@ export const initUpload = (e, state, props, handleSetState) => {
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    console.log("I'm here initupload!");
     props.setFieldTouched('title');
     props.setFieldTouched('description');
     props.setFieldTouched('project_images');
@@ -787,10 +785,6 @@ export const autoSaveProject = async (state, props, handleSetState) => {
           );
         }
 
-        console.log(promises);
-        console.log(state.media_upload.images_to_upload.length);
-        // let filledPromise = false;
-
         // wait for all image and video promises to resolve before continuing
         Promise.all(promises)
           .then(all => {
@@ -849,12 +843,10 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
     : [];
 
-  // console.log("id:", props.match.params);
   const create_or_update = props.match.params.id || newId
     ? props.updateProject
     : props.createProject;
 
-  // console.log(create_or_update);
 
   create_or_update({
     ...props.values,
@@ -876,7 +868,6 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
           upload_dialog: false,
         },
       });
-      console.log(error);
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {
         const server_errors = {};
@@ -899,7 +890,6 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
       }
     })
     .finally(() => {
-      console.log(newId);
       vars.upload_in_progress = false; // flag to prevent attempting to upload a project when an upload is already in progress
     });
 };
