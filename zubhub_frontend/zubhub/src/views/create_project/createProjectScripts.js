@@ -885,7 +885,8 @@ export const uploadProject = async (state, props, handleSetState, redirect) => {
         });
       }
     }).then(res => {
-      if (!props.match.params.id && !newId) {
+      console.log(props.values.title);
+      if (!props.match.params.id && !newId && props.values.title != null) {
         newId = res.id;
       }
     })
