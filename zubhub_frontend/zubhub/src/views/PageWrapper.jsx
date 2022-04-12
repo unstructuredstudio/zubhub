@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -67,6 +67,8 @@ import languageMap from '../assets/js/languageMap.json';
 import InputSelect from '../components/input_select/InputSelect';
 import Autocomplete from '../components/autocomplete/Autocomplete';
 import API from '../api';
+import { throttle } from '../utils.js';
+import Option from '../components/autocomplete/Option';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -97,23 +99,48 @@ function PageWrapper(props) {
   const [options, setOptions] = useState([]);
   const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      const api = new API();
-      const tags = await api.autocompleteTags({ query });
-      setOptions(
-        tags.map(({ name }) => ({
-          title: name,
-        })),
-      );
-    };
+  const throttledFetchOptions = useMemo(
+    () =>
+      throttle(async (query, searchType) => {
+        const api = new API();
+        let completions = [];
+        if (searchType === SearchType.TAGS) {
+          completions = await api.autocompleteTags({ query });
+          completions = completions.map(({ name }) => ({
+            title: name,
+          }));
+        } else if (searchType === SearchType.PROJECTS) {
+          completions = await api.autocompleteProjects({ query });
+          completions = completions.map(({ id, title, creator, images }) => ({
+            title,
+            shortInfo: creator.username,
+            image: images.length > 0 ? images[0].image_url : null,
+            link: `/projects/${id}`,
+          }));
+        } else {
+          completions = await api.autocompleteCreators({ query });
+          completions = completions.map(({ username, avatar }) => ({
+            title: username,
+            image: avatar,
+            link: `/creators/${username}`,
+          }));
+        }
+        setOptions(completions);
+      }, 2),
+    [],
+  );
 
+  useEffect(() => {
     if (query.length > 0) {
-      fetchOptions();
+      throttledFetchOptions(query, searchType);
     } else {
       setOptions([]);
     }
-  }, [query]);
+  }, [query, searchType]);
+
+  useEffect(() => {
+    throttledFetchOptions.cancel();
+  }, []);
 
   useEffect(() => {
     handleSetState({ loading: true });
@@ -151,6 +178,7 @@ function PageWrapper(props) {
   const { zubhub, hero } = props.projects;
 
   const profileMenuOpen = Boolean(anchor_el);
+
   return (
     <>
       <ToastContainer />
@@ -238,12 +266,18 @@ function PageWrapper(props) {
                     </FormControl>
                     <Autocomplete
                       options={options}
-                      onOptionClick={onSearchOptionClick}
                       defaultValue={{
                         title:
                           props.location.search &&
                           getQueryParams(window.location.href).get('q'),
                       }}
+                      renderOption={(option, { inputValue }) => (
+                        <Option
+                          option={option}
+                          inputValue={inputValue}
+                          onOptionClick={onSearchOptionClick}
+                        />
+                      )}
                     >
                       {params => (
                         <TextField
@@ -581,11 +615,17 @@ function PageWrapper(props) {
                   </InputLabel>
                   <Autocomplete
                     options={options}
-                    onOptionClick={onSearchOptionClick}
                     defaultValue={
                       props.location.search &&
                       getQueryParams(window.location.href).get('q')
                     }
+                    renderOption={(option, { inputValue }) => (
+                      <Option
+                        option={option}
+                        inputValue={inputValue}
+                        onOptionClick={onSearchOptionClick}
+                      />
+                    )}
                   >
                     {params => (
                       <TextField

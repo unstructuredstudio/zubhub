@@ -183,6 +183,26 @@ class ProjectTagAutocompleteAPIView(ListAPIView):
         return tags
 
 
+class ProjectAutocompleteAPIView(ListAPIView):
+    """
+    Fulltext search of projects.
+
+    Requires query string.
+    Returns paginated list of matching projects.
+    """
+
+    serializer_class = ProjectListSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        query_string = self.request.GET.get('q')
+        projects = Project.objects.annotate(
+            similarity=TrigramSimilarity('title', query_string)).filter(
+                similarity__gt=0.01).order_by('-similarity')
+        return projects
+
+
 class ProjectSearchAPIView(ListAPIView):
     """
     Fulltext search of projects.
