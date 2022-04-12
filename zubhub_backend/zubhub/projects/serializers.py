@@ -157,7 +157,6 @@ class ProjectSerializer(serializers.ModelSerializer):
             return title
 
     def validate_materials_used(self, materials_used):
-        print("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
         if self.initial_data["publish"]["type"] == PublishingRule.DRAFT:
             return materials_used
         else:

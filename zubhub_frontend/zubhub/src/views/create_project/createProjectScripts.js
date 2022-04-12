@@ -79,7 +79,6 @@ export const vars = {
 let timer = null;
 let newId = null;
 const timeoutConst = 2000;
-// let isAutoSave = !props.match.params.id || newId;
 
 const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
   clearTimeout(timer);
@@ -89,8 +88,6 @@ const timeOutSave = (state, props, handleSetState, handleDisplayTime) => {
     console.log("time out!");
     autoSaveProject(state, props, handleSetState);
     handleDisplayTime();
-    // console.log(store.getState());
-    // console.log(newId);
   }, timeoutConst);
 }
 
@@ -790,6 +787,10 @@ export const autoSaveProject = async (state, props, handleSetState) => {
           );
         }
 
+        console.log(promises);
+        console.log(state.media_upload.images_to_upload.length);
+        // let filledPromise = false;
+
         // wait for all image and video promises to resolve before continuing
         Promise.all(promises)
           .then(all => {
@@ -808,24 +809,20 @@ export const autoSaveProject = async (state, props, handleSetState) => {
             state.media_upload.uploaded_images_url = uploaded_images_url;
             state.media_upload.uploaded_videos_url = uploaded_videos_url;
 
+            for (
+              let index = 0;
+              index < state.media_upload.images_to_upload.length;
+              index++
+            ) { state.media_upload.images_to_upload.pop(); }
+
+            for (
+              let index = 0;
+              index < state.media_upload.videos_to_upload.length;
+              index++
+            ) { state.media_upload.videos_to_upload.pop(); }
+
             uploadProject(state, props, handleSetState, false);
           });
-          // .catch(error => {
-          //   // settimeout is used to delay closing the upload_dialog until
-          //   // state have reflected all prior attempts to set state.
-          //   // This is to ensure nothing overwrites the dialog closing.
-          //   // A better approach would be to refactor the app and use
-          //   // redux for most complex state interactions.
-          //   setTimeout(
-          //     () =>
-          //       handleSetState({
-          //         media_upload: { ...state.media_upload, upload_dialog: false },
-          //       }),
-          //     2000,
-          //   );
-
-          //   if (error) toast.warning(error);
-          // });
       }
     });
   }
@@ -1339,178 +1336,6 @@ export const checkMediaFilesErrorState = (refs, props) => {
 * @todo - describe object's function
 */
 
-// export const validationSchema = Yup.object().shape({
-//   is_autosave: Yup.boolean(),
-//   title: Yup.string().max(100, 'max').required('required').when(
-//     'is_autosave', {
-//     is: false,
-//     then: Yup.string().required("required"),
-//     otherwise: Yup.string(),
-//   }
-//   ),
-//   description: Yup.string().max(10000, 'max').when(
-//     'is_autosave', {
-//     is: false,
-//     then: Yup.string().required("required"),
-//     otherwise: Yup.string(),
-//   }
-//   ),
-//   // description: Yup.string().max(10000, 'max').required("required"),
-//   project_images: Yup.mixed()
-//     .test('not_an_image', 'onlyImages', value => {
-//       if (value) {
-//         let not_an_image = false;
-//         for (let index = 0; index < value.files.length; index++) {
-//           if (value.files[index].type.split('/')[0] !== 'image') {
-//             not_an_image = true;
-//           }
-//         }
-//         return not_an_image ? false : true;
-//       } else {
-//         return true;
-//       }
-//     })
-//     .test('too_many_images', 'tooManyImages', value => {
-//       if (value) {
-//         return value.files.length > 10 ? false : true;
-//       } else {
-//         return true;
-//       }
-//     })
-//     .test('image_size_too_large', 'imageSizeTooLarge', value => {
-//       if (value) {
-//         let image_size_too_large = false;
-//         for (let index = 0; index < value.files.length; index++) {
-//           if (value.files[index].size / 1000 > 10240) {
-//             image_size_too_large = true;
-//           }
-//         }
-//         return image_size_too_large ? false : true;
-//       } else {
-//         return true;
-//       }
-//     })
-//     .when(
-//       'is_autosave', {
-//       is: false,
-//       then: Yup.mixed().test('image_is_empty', 'imageOrVideo', function (value) {
-//         return vars.image_field_touched && !value && !this.parent.video
-//           ? false
-//           : true;
-//       }),
-//       otherwise: Yup.mixed(),
-//     }
-//     )
-//   ,
-//   video: Yup.mixed()
-//     .test('should_be_video_file', 'shouldBeVideoFile', value => {
-//       if (!value) {
-//         return true;
-//       } else if (typeof value === 'string') {
-//         return true;
-//       } else if (typeof value === 'object') {
-//         let not_a_video = false;
-//         for (let index = 0; index < value.files.length; index++) {
-//           if (value.files[index].type.split('/')[0] !== 'video') {
-//             not_a_video = true;
-//           }
-//         }
-//         return not_a_video ? false : true;
-//       }
-//       return false;
-//     })
-//     .test('should_be_url', 'shouldBeURL', value => {
-//       if (!value) {
-//         return true;
-//       } else if (typeof value === 'object') {
-//         return true;
-//       } else if (typeof value === 'string') {
-//         const res = value.match(
-//           /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-//         );
-//         return res !== null ? true : false;
-//       }
-
-//       return false;
-//     })
-//     .test('max-video-url-length', 'maxVideoURLLength', value => {
-//       if (!value) {
-//         return true;
-//       } else if (typeof value === 'object') {
-//         return true;
-//       } else if (typeof value === 'string') {
-//         return value.length > 2048 ? false : true;
-//       }
-
-//       return false;
-//     })
-//     .test('max-video-file-size', 'maxVideoFileSize', value => {
-//       if (!value) {
-//         return true;
-//       } else if (typeof value === 'string') {
-//         return true;
-//       } else if (typeof value === 'object') {
-//         let max = false;
-//         for (let index = 0; index < value.files.length; index++) {
-//           if (value.files[index].size / 1000 > 60240) {
-//             max = true;
-//           }
-//         }
-//         return max ? false : true;
-//       }
-
-//       return false;
-//     })
-//     .when(
-//       'is_autosave', {
-//       is: false,
-//       then: Yup.mixed().test('video_is_empty', 'imageOrVideo', function (value) {
-//         return vars.video_field_touched && !value && !this.parent.project_images
-//           ? false
-//           : true;
-//       }),
-//       otherwise: Yup.mixed(),
-//     }
-//     ),
-//   materials_used: Yup.string()
-//     .max(10000, 'max')
-//     .when(
-//       'is_autosave', {
-//       is: false,
-//       then: Yup.string().test('empty', 'required', value => {
-//         let is_empty = true;
-
-//         value &&
-//           value.split(',').forEach(material => {
-//             if (material) {
-//               is_empty = false;
-//             }
-//           });
-
-//         return !is_empty;
-//       }),
-//       otherwise: Yup.string()
-//     }
-//     )
-//   ,
-//   category: Yup.string().min(1, 'min'),
-//   tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
-//     if (tags) {
-//       tags = JSON.parse(tags);
-//       const re = /^[0-9A-Za-z\s\-]+$/;
-//       let unsupported = false;
-//       for (let tag of tags) {
-//         if (!re.test(tag.name)) {
-//           unsupported = true;
-//         }
-//       }
-//       return unsupported ? false : true;
-//     } else {
-//       return true;
-//     }
-//   }),
-// });
-
 export const validationSchema = Yup.object().shape({
   is_autosave: Yup.boolean(),
   title: Yup.string().max(100, 'max').required('required'),
@@ -1618,25 +1443,18 @@ export const validationSchema = Yup.object().shape({
         : true;
     }),
   materials_used: Yup.string()
-    .max(10000, 'max')
-    .when(
-      'is_autosave', {
-      is: false,
-      then: Yup.string().test('empty', 'required', value => {
-        let is_empty = true;
+    .max(10000, 'max').test('empty', 'required', value => {
+      let is_empty = true;
 
-        value &&
-          value.split(',').forEach(material => {
-            if (material) {
-              is_empty = false;
-            }
-          });
+      value &&
+        value.split(',').forEach(material => {
+          if (material) {
+            is_empty = false;
+          }
+        });
 
-        return !is_empty;
-      }),
-      otherwise: Yup.string()
-    }
-    )
+      return !is_empty;
+    })
   ,
   category: Yup.string().min(1, 'min'),
   tags: Yup.mixed().test('unsupported', 'unsupported', tags => {

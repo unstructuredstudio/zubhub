@@ -1451,7 +1451,6 @@ export default connect(
       description: '',
       video: '',
       materials_used: '',
-      is_autosave: true,
     }),
     validationSchema,
   })(CreateProject),
