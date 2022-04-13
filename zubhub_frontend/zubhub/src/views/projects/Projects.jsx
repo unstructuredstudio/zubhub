@@ -239,7 +239,7 @@ function Projects(props) {
                   alt={'Create project'}
                 />
                 <Box className={classes.welcomeBoxStyle}>
-                  <Typography variant="h1">{t('projects.welcome')}!!!</Typography>
+                  <Typography variant="h1">{t('projects.welcome')}!</Typography>
                   <Typography variant="h5">{t('projects.errors.noProject')}</Typography>
                   <Box>
                     <CustomButton
