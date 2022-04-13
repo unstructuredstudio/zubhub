@@ -97,7 +97,9 @@ function Projects(props) {
                   href={
                     hero.explore_ideas_url
                       ? hero.explore_ideas_url
-                      : 'https://kriti.unstructured.studio/'
+                      : hero.tinkering_resource_url
+                      ? hero.tinkering_resource_url
+                      :'https://kriti.unstructured.studio/'
                   }
                   target="__blank"
                   rel="noreferrer"

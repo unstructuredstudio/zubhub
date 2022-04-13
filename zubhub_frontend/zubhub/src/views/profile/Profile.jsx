@@ -137,6 +137,7 @@ function Profile(props) {
                   </CustomButton>
                   <Menu
                     className={classes.moreMenuStyle}
+                    disableScrollLock = {true}
                     id="profile_menu"
                     anchorEl={more_anchor_el}
                     anchorOrigin={{
