@@ -117,7 +117,8 @@ function PageWrapper(props) {
 
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
-  const { zubhub } = props.projects;
+  const { zubhub, hero } = props.projects;
+
   const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
@@ -682,7 +683,11 @@ function PageWrapper(props) {
             <a
               target="__blank"
               rel="noreferrer"
-              href="http://kriti.unstructured.studio/"
+              href={
+                hero.tinkering_resource_url
+                  ? hero.tinkering_resource_url
+                  :'https://kriti.unstructured.studio/'
+              }
               className={common_classes.textDecorationNone}
             >
               <Typography
