@@ -303,75 +303,76 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
-                  {/* box style here */}
-                  <Box className={classes.actionBoxStyle}>
-                    <CustomButton
-                      className={classes.actionBoxButtonStyle}
-                      size="small"
-                      aria-label={t(
-                        'projectDetails.ariaLabels.likeButton.label',
-                      )}
-                      variant="extended"
-                      onClick={e =>
-                        handleSetState(toggleLike(e, props, project.id))
-                      }
-                    >
-                      <Box className={classes.iconsBoxStyle}>
-                        {project.likes.includes(props.auth.id) ? (
-                          <ClapIcon
-                            arial-label={t(
-                              'projectDetails.ariaLabels.likeButton.unlilke',
-                            )}
-                          />
-                        ) : (
-                          <ClapBorderIcon
-                            arial-label={t(
-                              'projectDetails.ariaLabels.likeButton.like',
-                            )}
-                          />
+                  <Box display="flex" justifyContent="flex-end">
+                    <Box className={classes.actionBoxStyle}>
+                      <CustomButton
+                        className={classes.actionBoxButtonStyle}
+                        size="small"
+                        aria-label={t(
+                          'projectDetails.ariaLabels.likeButton.label',
                         )}
-                      </Box>
-                      <Typography>
-                        {nFormatter(project.likes.length)}
+                        variant="extended"
+                        onClick={e =>
+                          handleSetState(toggleLike(e, props, project.id))
+                        }
+                      >
+                        <Box className={classes.iconsBoxStyle}>
+                          {project.likes.includes(props.auth.id) ? (
+                            <ClapIcon
+                              arial-label={t(
+                                'projectDetails.ariaLabels.likeButton.unlilke',
+                              )}
+                            />
+                          ) : (
+                            <ClapBorderIcon
+                              arial-label={t(
+                                'projectDetails.ariaLabels.likeButton.like',
+                              )}
+                            />
+                          )}
+                        </Box>
+                        <Typography>
+                          {nFormatter(project.likes.length)}
+                        </Typography>
+                      </CustomButton>
+                      <CustomButton
+                        className={classes.actionBoxButtonStyle}
+                        size="small"
+                        aria-label={t(
+                          'projectDetails.ariaLabels.saveButton.label',
+                        )}
+                        onClick={e =>
+                          handleSetState(toggleSave(e, props, project.id))
+                        }
+                      >
+                        <Box className={classes.iconsBoxStyle}>
+                          {project.saved_by.includes(props.auth.id) ? (
+                            <BookmarkIcon
+                              aria-label={t(
+                                'projectDetails.ariaLabels.saveButton.unsave',
+                              )}
+                            />
+                          ) : (
+                            <BookmarkBorderIcon
+                              aria-label={t(
+                                'projectDetails.ariaLabels.saveButton.save',
+                              )}
+                            />
+                          )}
+                        </Box>
+                      </CustomButton>
+                      <Typography
+                        color="textSecondary"
+                        variant="caption"
+                        component="span"
+                        className={classes.actionBoxButtonStyle}
+                      >
+                        <Box className={classes.iconsBoxStyle}>
+                          <VisibilityIcon />
+                        </Box>
+                        <Typography>{project.views_count}</Typography>
                       </Typography>
-                    </CustomButton>
-                    <CustomButton
-                      className={classes.actionBoxButtonStyle}
-                      size="small"
-                      aria-label={t(
-                        'projectDetails.ariaLabels.saveButton.label',
-                      )}
-                      onClick={e =>
-                        handleSetState(toggleSave(e, props, project.id))
-                      }
-                    >
-                      <Box className={classes.iconsBoxStyle}>
-                        {project.saved_by.includes(props.auth.id) ? (
-                          <BookmarkIcon
-                            aria-label={t(
-                              'projectDetails.ariaLabels.saveButton.unsave',
-                            )}
-                          />
-                        ) : (
-                          <BookmarkBorderIcon
-                            aria-label={t(
-                              'projectDetails.ariaLabels.saveButton.save',
-                            )}
-                          />
-                        )}
-                      </Box>
-                    </CustomButton>
-                    <Typography
-                      color="textSecondary"
-                      variant="caption"
-                      component="span"
-                      className={classes.actionBoxButtonStyle}
-                    >
-                      <Box className={classes.iconsBoxStyle}>
-                        <VisibilityIcon />
-                      </Box>
-                      <Typography>{project.views_count}</Typography>
-                    </Typography>
+                    </Box>
                   </Box>
                 </Grid>
                 {project.images && project.images.length > 0 ? (
