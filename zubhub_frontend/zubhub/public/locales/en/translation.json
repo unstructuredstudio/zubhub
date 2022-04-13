@@ -240,11 +240,14 @@
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
+    "createProject": "Create a project",
+    "sorry": "Sorry",
     "ariaLabels": {
       "prevNxtButtons": "Previous and next page buttons"
     },
     "errors": {
-      "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?"
+      "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
+      "noProject": "Uh oh! Seems there are no projects at the moment :(. Try creating one."
     }
   },
 

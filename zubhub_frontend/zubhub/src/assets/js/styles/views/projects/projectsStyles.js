@@ -132,13 +132,38 @@ const styles = theme => ({
     width: '100%',
   },
   buttonGroupStyleAlternative: {
-     padding: '7px 21px ' ,
- },
+    padding: '7px 21px ',
+  },
   floatRight: {
     float: 'right',
   },
   floatLeft: {
     float: 'left',
+  },
+  uploadContainerStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('500')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  },
+  uploadStyle: {
+    height: '20em',
+    [theme.breakpoints.down('500')]: {
+      height: '10em',
+    },
+  },
+  uploadBoxStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& h1': {
+      fontWeight: 'bold',
+    },
   },
 });
 
