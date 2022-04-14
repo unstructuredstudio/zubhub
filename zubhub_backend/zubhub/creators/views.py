@@ -205,7 +205,7 @@ class CreatorAutocompleteAPIView(ListAPIView):
         query_string = self.request.GET.get('q')
         creators = Creator.objects.annotate(
             similarity=TrigramSimilarity('username', query_string)).filter(
-                similarity__gt=0.01).order_by('-similarity')
+                similarity__gt=0.01).order_by('-similarity')[:20]
         return creators
 
 

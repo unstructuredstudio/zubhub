@@ -179,7 +179,7 @@ class ProjectTagAutocompleteAPIView(ListAPIView):
         query_string = self.request.GET.get('q')
         tags = Tag.objects.annotate(
             similarity=TrigramSimilarity('name', query_string)).filter(
-                similarity__gt=0.01).order_by('-similarity')
+                similarity__gt=0.01).order_by('-similarity')[:20]
         return tags
 
 
@@ -199,7 +199,7 @@ class ProjectAutocompleteAPIView(ListAPIView):
         query_string = self.request.GET.get('q')
         projects = Project.objects.annotate(
             similarity=TrigramSimilarity('title', query_string)).filter(
-                similarity__gt=0.01).order_by('-similarity')
+                similarity__gt=0.01).order_by('-similarity')[:20]
         return projects
 
 
