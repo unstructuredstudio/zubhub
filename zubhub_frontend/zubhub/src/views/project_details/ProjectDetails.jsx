@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMediaQuery } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
@@ -44,6 +45,7 @@ import {
   toggleFollow,
   isCloudinaryVideo,
   isGdriveORVimeoORYoutube,
+  handleMobileShare,
 } from './projectDetailsScripts';
 
 import {
@@ -107,6 +109,7 @@ const buildTagsComponent = (classes, tags, history) => {
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const mediaQuery = useMediaQuery('(max-width: 600px)');
 
   const [state, setState] = React.useState({
     project: {},
@@ -306,6 +309,16 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
+                  {mediaQuery && (
+                    <CustomButton
+                      className={common_classes.marginLeft1em}
+                      variant="contained"
+                      primaryButtonStyle
+                      onClick={e => handleMobileShare(project)}
+                    >
+                      share
+                    </CustomButton>
+                  )}
                   <Box className={classes.actionBoxStyle}>
                     <CustomButton
                       className={classes.actionBoxButtonStyle}
@@ -492,18 +505,16 @@ function ProjectDetails(props) {
         >
           <DialogTitle id="delete-project">
             <Typography variant="h4">
-            {t('projectDetails.project.delete.dialog.primary')}
+              {t('projectDetails.project.delete.dialog.primary')}
             </Typography>
           </DialogTitle>
-          {delete_project_dialog_error !== null && (<Box
-            component="p"
-            className={classes.errorBox}
-          >
-            <Box component="span" className={classes.error}>
-              {delete_project_dialog_error}
+          {delete_project_dialog_error !== null && (
+            <Box component="p" className={classes.errorBox}>
+              <Box component="span" className={classes.error}>
+                {delete_project_dialog_error}
+              </Box>
             </Box>
-            
-          </Box>)}
+          )}
           <DialogContent>
             <Typography>
               {t('projectDetails.project.delete.dialog.secondary')}

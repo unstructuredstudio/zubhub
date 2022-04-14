@@ -135,3 +135,17 @@ export const isGdriveORVimeoORYoutube = url => {
     return false;
   }
 };
+
+export const handleMobileShare = async (project) => {
+  const shareData = {
+    title: project.title,
+    text: project.title,
+    url: ""
+  }
+  try {
+    await navigator.share(shareData);
+    // resultPara.textContent = 'MDN shared successfully'
+  } catch(err) {
+    // resultPara.textContent = 'Error: ' + err
+  }
+}
