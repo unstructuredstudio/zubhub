@@ -13,21 +13,25 @@ const Option = ({ option, inputValue, onOptionClick }) => {
   const parts = parse(option.title, matches);
 
   const title = parts.map((part, index) => (
-    <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+    <pre
+      key={index}
+      className={classes.optionTitle}
+      style={{ fontWeight: part.highlight ? 700 : 400 }}
+    >
       {part.text}
-    </span>
+    </pre>
   ));
 
   const OptionWrap = option.link ? 'a' : 'div';
 
   return (
     <OptionWrap
-      onClick={onOptionClick}
+      onClick={e => onOptionClick(e, option)}
       className={classes.option}
       href={option.link}
     >
-      <div>
-        {title}
+      <div className={classes.infoWrapper}>
+        <span className={classes.optionTitleWrapper}>{title}</span>
         {option.shortInfo && (
           <span className={classes.shortInfo}>{option.shortInfo}</span>
         )}

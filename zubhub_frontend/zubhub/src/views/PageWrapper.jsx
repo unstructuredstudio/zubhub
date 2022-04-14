@@ -98,10 +98,20 @@ function PageWrapper(props) {
 
   const [options, setOptions] = useState([]);
   const [query, setQuery] = useState('');
+  const [queryInput, setQueryInput] = useState('');
+
+  useEffect(() => {
+    console.log(queryInput);
+  }, [queryInput]);
 
   const throttledFetchOptions = useMemo(
     () =>
       throttle(async (query, searchType) => {
+        if (query.length === 0) {
+          setOptions([]);
+          return;
+        }
+
         const api = new API();
         let completions = [];
         if (searchType === SearchType.TAGS) {
@@ -131,11 +141,12 @@ function PageWrapper(props) {
   );
 
   useEffect(() => {
-    if (query.length > 0) {
-      throttledFetchOptions(query, searchType);
-    } else {
-      setOptions([]);
-    }
+    throttledFetchOptions(
+      query ||
+        (props.location.search &&
+          getQueryParams(window.location.href).get('q')),
+      searchType,
+    );
   }, [query, searchType]);
 
   useEffect(() => {
@@ -167,10 +178,24 @@ function PageWrapper(props) {
     }
   };
 
-  const onSearchOptionClick = async () => {
+  const onSearchOptionClick = async (_, option) => {
     await new Promise(resolve => setTimeout(resolve, 100));
-    console.log(formRef);
-    formRef.current.submit();
+    if (option && option.link && typeof option.link === 'string') {
+      window.history.pushState({}, '', option.link);
+      window.location.reload();
+    }
+  };
+
+  const handleSubmit = e => {
+    if (e.key !== 'Enter') return;
+
+    e.preventDefault();
+    const queryParams = new URLSearchParams({
+      type: searchType,
+      q: queryInput,
+    });
+    window.history.pushState({}, '', `/search?${queryParams}`);
+    window.location.reload();
   };
 
   const { anchor_el, loading, open_search_form } = state;
@@ -278,6 +303,11 @@ function PageWrapper(props) {
                           onOptionClick={onSearchOptionClick}
                         />
                       )}
+                      onChange={onSearchOptionClick}
+                      inputValue={queryInput}
+                      onInputChange={(_, newInputValue) =>
+                        setQueryInput(newInputValue)
+                      }
                     >
                       {params => (
                         <TextField
@@ -312,6 +342,7 @@ function PageWrapper(props) {
                                 getQueryParams(window.location.href).get('q'),
                             },
                           }}
+                          onKeyDown={handleSubmit}
                           onChange={e => setQuery(e.target.value)}
                           placeholder={`${t(
                             'pageWrapper.inputs.search.label',
@@ -626,6 +657,11 @@ function PageWrapper(props) {
                         onOptionClick={onSearchOptionClick}
                       />
                     )}
+                    onChange={onSearchOptionClick}
+                    inputValue={queryInput}
+                    onInputChange={(_, newInputValue) =>
+                      setQueryInput(newInputValue)
+                    }
                   >
                     {params => (
                       <TextField
@@ -658,6 +694,7 @@ function PageWrapper(props) {
                         placeholder={`${t(
                           'pageWrapper.inputs.search.label',
                         )}...`}
+                        onKeyDown={handleSubmit}
                         onChange={e => setQuery(e.target.value)}
                       />
                     )}
