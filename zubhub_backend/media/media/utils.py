@@ -33,7 +33,6 @@ def get_cloudinary_resource_info(url):
 
 
 def upload_file(file, key):
-    # compress_video.delay()
     if settings.STORE_MEDIA_LOCALLY == False:
         return upload_file_to_DO(file, key)
     elif settings.STORE_MEDIA_LOCALLY == True:

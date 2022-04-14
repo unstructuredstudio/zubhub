@@ -80,16 +80,14 @@ def filter_spam_task(self, ctx):
 
 
 @shared_task(name="media.tasks.compress_video_task", bind=True, acks_late=True, max_retries=10)
-def compress_video(self, video_path, output_video_path):
+def compress_video(self, key):
     print("hello")
-    print(video_path)
-    print(output_video_path)
-   
-    # FFmpeg(inputs={video_path: None}, outputs={output_video_path: '-metadata location=""'}).run()
-    #     # -c:v libx264 -crf 28 -preset ultrafast
-    #     # -aspect 10:1 -preset fast
+    print(key)
 
-    # except Exception as e:
-    #     raise self.retry(exc=e, countdown=int(
-    #         uniform(2, 4) ** self.request.retries))
-        
+    root_dir = "/media_data/videos"
+    folder, name = key.split("/")
+    video_path = "{0}/{1}".format(root_dir, name)
+    output_video_path = "{0}/duck{1}.mp4".format(root_dir, name)
+
+    FFmpeg(inputs={video_path: None}, outputs={output_video_path: ['-c:v', 'libx264', '-crf', '28', '-preset', 'veryfast']}).run()
+ 

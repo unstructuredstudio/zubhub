@@ -9,10 +9,11 @@ RUN apt-get update \
   && apt-get install -y build-essential procps netcat \
   # psycopg2 dependencies
   && apt-get install -y libpq-dev \
+
+  && apt-get install ffmpeg -y \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
-
 
 WORKDIR /celery
 

@@ -141,27 +141,11 @@ def UploadFileToLocalAPIView(request):
         try:
             file = request.data.get("file")
             key = request.data.get("key")
-
-            print("before calling compress_video")
-
-            folder, name = key.split("/")
-            fs = FileSystemStorage(settings.MEDIA_ROOT + "/" + folder)
-            fs.save("test" + name, file)
-
-            root_dir = settings.MEDIA_ROOT + "/" + folder
-            video_path = "{0}/{1}".format(root_dir, "test" + name)
-            output_video_path = video_path + "hello"
-
-            compress_video.delay(video_path, output_video_path)
-            print("after calling compress_video")
-            
             res = upload_file_to_media_server(file, key)
             res = res.json()
             url = res["url"]
+            compress_video.delay(url.split("localhost:8001/").pop())
 
-            print("FILE!!!!!")
-            print(file)
-            print(key)
             # isinstance to see if instance of video
 
             if isinstance(url, str):

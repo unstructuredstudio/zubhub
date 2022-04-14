@@ -63,9 +63,11 @@ services:
     command: /celery/start-celeryworker
     restart: on-failure
     volumes:
+      - ./zubhub:/celery/zubhub
       - ./zubhub:/zubhub_backend/zubhub
       - ./compose/celery/start-celeryworker:/zubhub_backend/start-celeryworker:ro
       - ./compose/celery/requirements.txt:/zubhub_backend/requirements.txt:ro
+      - media_data:/media_data
     depends_on:
       - rabbitmq
       - db
