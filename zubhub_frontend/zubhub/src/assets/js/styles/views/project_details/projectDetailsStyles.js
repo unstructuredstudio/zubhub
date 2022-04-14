@@ -108,6 +108,35 @@ const styles = theme => ({
       justifyContent: 'flex-start',
     },
   },
+  actionBoxStyleMobile: {
+    backgroundColor: '#00B8C4',
+    '&:hover': {
+      backgroundColor: '#03848C',
+    },
+    borderRadius: '15px',
+    position: 'absolute',
+    top: '0',
+    right: '-4.5em',
+    width: '3.5em',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    [theme.breakpoints.down('1080')]: {
+      position: 'static',
+      height: '3.5em',
+      width: '70%',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+    },
+  },
+  actionBoxMobileWrapper: {
+    flexDirection: "row", 
+    display: "flex", 
+    justifyContent: "space-between"
+  },
   actionBoxButtonStyle: {
     margin: '0.5em',
     display: 'flex',

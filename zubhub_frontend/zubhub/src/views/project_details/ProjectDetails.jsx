@@ -309,9 +309,11 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
+                  <div className={mediaQuery ? classes.actionBoxMobileWrapper : ''}>
                   {mediaQuery && (
                     <CustomButton
                       className={common_classes.marginLeft1em}
+                      style = {{marginLeft:0}}
                       variant="contained"
                       primaryButtonStyle
                       onClick={e => handleMobileShare(project)}
@@ -319,7 +321,7 @@ function ProjectDetails(props) {
                       share
                     </CustomButton>
                   )}
-                  <Box className={classes.actionBoxStyle}>
+                  <Box className={mediaQuery ? classes.actionBoxStyleMobile : classes.actionBoxStyle}>
                     <CustomButton
                       className={classes.actionBoxButtonStyle}
                       size="small"
@@ -382,6 +384,7 @@ function ProjectDetails(props) {
                       <Typography>{project.views_count}</Typography>
                     </Typography>
                   </Box>
+                  </div>
                 </Grid>
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
