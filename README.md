@@ -27,6 +27,7 @@ Follow the instructions below to set up your local development environment
 
   Subsequently to start and stop the docker containers, use `make start`, `make stop`, or `make down`. (run `make help` to see all the available make commands).
 - Visit `localhost:8000` on your browser to access the API documentation.
+You can run test by running `make test` 
 
 ### Frontend
 - Create a file named `.env` in `./zubhub/zubhub_frontend/zubhub` directory (same directory with package.json).
