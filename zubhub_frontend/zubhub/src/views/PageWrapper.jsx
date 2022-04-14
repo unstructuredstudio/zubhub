@@ -100,10 +100,6 @@ function PageWrapper(props) {
   const [query, setQuery] = useState('');
   const [queryInput, setQueryInput] = useState('');
 
-  useEffect(() => {
-    console.log(queryInput);
-  }, [queryInput]);
-
   const throttledFetchOptions = useMemo(
     () =>
       throttle(async (query, searchType) => {
@@ -179,21 +175,30 @@ function PageWrapper(props) {
   };
 
   const onSearchOptionClick = async (_, option) => {
+    if (!option || !option.title) return;
+
     await new Promise(resolve => setTimeout(resolve, 100));
-    if (option && option.link && typeof option.link === 'string') {
+    if (option.link) {
       window.history.pushState({}, '', option.link);
       window.location.reload();
+      return;
     }
+
+    const queryParams = new URLSearchParams({
+      type: searchType,
+      q: option.title,
+    });
+    window.history.pushState({}, '', `/search?${queryParams}`);
+    window.location.reload();
   };
 
   const handleSubmit = e => {
-    if (e.key !== 'Enter') return;
-
     e.preventDefault();
     const queryParams = new URLSearchParams({
       type: searchType,
-      q: queryInput,
+      q: query,
     });
+
     window.history.pushState({}, '', `/search?${queryParams}`);
     window.location.reload();
   };
@@ -264,6 +269,7 @@ function PageWrapper(props) {
                 action="/search"
                 className={clsx(classes.searchFormStyle, classes.removeOn894)}
                 role="search"
+                onSubmit={handleSubmit}
                 ref={formRef}
               >
                 <FormControl variant="outlined">
@@ -304,10 +310,6 @@ function PageWrapper(props) {
                         />
                       )}
                       onChange={onSearchOptionClick}
-                      inputValue={queryInput}
-                      onInputChange={(_, newInputValue) =>
-                        setQueryInput(newInputValue)
-                      }
                     >
                       {params => (
                         <TextField
@@ -342,7 +344,6 @@ function PageWrapper(props) {
                                 getQueryParams(window.location.href).get('q'),
                             },
                           }}
-                          onKeyDown={handleSubmit}
                           onChange={e => setQuery(e.target.value)}
                           placeholder={`${t(
                             'pageWrapper.inputs.search.label',
@@ -658,10 +659,6 @@ function PageWrapper(props) {
                       />
                     )}
                     onChange={onSearchOptionClick}
-                    inputValue={queryInput}
-                    onInputChange={(_, newInputValue) =>
-                      setQueryInput(newInputValue)
-                    }
                   >
                     {params => (
                       <TextField
@@ -694,7 +691,6 @@ function PageWrapper(props) {
                         placeholder={`${t(
                           'pageWrapper.inputs.search.label',
                         )}...`}
-                        onKeyDown={handleSubmit}
                         onChange={e => setQuery(e.target.value)}
                       />
                     )}
