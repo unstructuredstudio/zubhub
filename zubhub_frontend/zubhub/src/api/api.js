@@ -646,7 +646,7 @@ class API {
    * @todo - describe method's signature
    */
   suggestTags = value => {
-    const url = `projects/tags/search/?q=${value}`;
+    const url = `projects/tags/autocomplete/?q=${value}`;
     return this.request({ url }).then(res => res.json());
   };
 
