@@ -276,9 +276,7 @@ function EditProfile(props) {
                       <OutlinedInput
                         ref={refs.email_el}
                         disabled={
-                          props.status && props.status['init_email']
-                            ? true
-                            : false
+                          false
                         }
                         className={clsx(classes.customInputStyle)}
                         id="email"
@@ -303,7 +301,6 @@ function EditProfile(props) {
                             component="span"
                             className={classes.fieldHelperTextStyle}
                           >
-                            {t('editProfile.inputs.email.disabledHelperText')}
                           </Typography>
                         )}
                         <br />
