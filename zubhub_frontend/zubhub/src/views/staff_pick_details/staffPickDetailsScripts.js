@@ -5,7 +5,12 @@
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props) => {
-  return props.getStaffPick({ page, id: props.match.params.id, t: props.t });
+  return props.getStaffPick({
+    page,
+    id: props.match.params.id,
+    t: props.t,
+    token: props.auth.token,
+  });
 };
 
 /**

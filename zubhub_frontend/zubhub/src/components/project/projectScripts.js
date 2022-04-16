@@ -1,3 +1,5 @@
+import { publish_type } from '../../assets/js/utils/constants';
+
 /**
  * @function toggleLike
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -35,4 +37,32 @@ export const toggleSave = (e, id, props) => {
     });
     props.updateProjects(toggle_save_promise);
   }
+};
+
+/**
+ * @function formatProjectDescription
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const formatProjectDescription = desc => {
+  const descEl = document.createElement('div');
+  descEl.innerHTML = desc;
+  return descEl.textContent;
+};
+
+/**
+ * @function getPublishTypeLabel
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getPublishTypeLabel = type => {
+  let label = '';
+  Object.keys(publish_type).forEach(key => {
+    if (type === publish_type[key]) {
+      label = key;
+    }
+  });
+  return label;
 };

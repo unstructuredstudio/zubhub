@@ -66,9 +66,20 @@ For other make commands: run `make help`
 
 Visit  http://localhost:8000 on your browser to access the API documentation.
 
-#### Frontend
-- Create a file named .env in the frontend root folder (same directory with package.json)
-- Copy the content of .env.example and paste into the new .env file.
+### Frontend
+- Create a file named `.env` in `./zubhub/zubhub_frontend/zubhub` directory (same directory with package.json).
+- Copy the content of `.env.example` and paste into the new `.env` file.
+- On your terminal/command line, navigate to `./zubhub/zubhub_frontend/zubhub` directory.
+
+#### Using `npm`
+This is advisable for a better development experience.
+
+- Run `npm install` to install the dependencies.
+- Run `npm start` to start the frontend.
+
+#### Using the Docker Container
+Use this when you are done with making your changes and you want to test your code on the Docker container.
+
 - Run `make start` to spin up the frontend container.
 - Visit `localhost:3000` on your browser to access the frontend.
 

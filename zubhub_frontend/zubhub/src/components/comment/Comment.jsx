@@ -112,7 +112,7 @@ function Comment(props) {
             </Typography>
           </Box>
         </Link>
-        {auth.role === 'staff' || auth.role === 'moderator' ? (
+        {auth.tags.includes('staff') || auth.tags.includes('moderator') ? (
           <>
             <CustomButton
               className={clsx(
@@ -124,6 +124,7 @@ function Comment(props) {
               <MoreVertIcon />
             </CustomButton>
             <Menu
+              disableScrollLock = {true}
               className={classes.commentMenuStyle}
               id="comment_menu"
               anchorEl={comment_menu_anchor_el}

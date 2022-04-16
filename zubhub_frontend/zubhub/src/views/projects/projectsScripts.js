@@ -4,7 +4,7 @@
  *
  * @todo - describe function's signature
  */ export const fetchPage = (page, props) => {
-  return props.getProjects({ page, t: props.t });
+  return props.getProjects({ page, t: props.t, token: props.auth.token });
 };
 
 /**
@@ -14,7 +14,7 @@
  * @todo - describe function's signature
  */
 export const fetchStaffPicks = props => {
-  return props.getStaffPicks({ t: props.t });
+  return props.getStaffPicks({ t: props.t, token: props.auth.token });
 };
 
 /**

@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -194,7 +196,7 @@ function ProjectDetails(props) {
                     </Typography>
                   </Link>
                   {project.creator.id === props.auth.id ? (
-                    <>
+                    <Grid container justify="flex-end">
                       <Link
                         className={classes.textDecorationNone}
                         to={`/projects/${project.id}/edit`}
@@ -217,7 +219,7 @@ function ProjectDetails(props) {
                       >
                         {t('projectDetails.project.delete.label')}
                       </CustomButton>
-                    </>
+                    </Grid>
                   ) : (
                     <CustomButton
                       className={common_classes.marginLeft1em}
@@ -244,10 +246,7 @@ function ProjectDetails(props) {
                   xs={12}
                   sm={12}
                   md={12}
-                  className={clsx(
-                    classes.positionRelative,
-                    classes.marginBottom1em,
-                  )}
+                  className={clsx(classes.positionRelative)}
                 >
                   <Grid
                     item
@@ -304,68 +303,76 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
-                  <Box className={classes.actionBoxStyle}>
-                    <CustomButton
-                      className={classes.actionBoxButtonStyle}
-                      size="small"
-                      aria-label={t(
-                        'projectDetails.ariaLabels.likeButton.label',
-                      )}
-                      variant="extended"
-                      onClick={e =>
-                        handleSetState(toggleLike(e, props, project.id))
-                      }
-                    >
-                      {project.likes.includes(props.auth.id) ? (
-                        <ClapIcon
-                          arial-label={t(
-                            'projectDetails.ariaLabels.likeButton.unlilke',
+                  <Box display="flex" justifyContent="flex-end">
+                    <Box className={classes.actionBoxStyle}>
+                      <CustomButton
+                        className={classes.actionBoxButtonStyle}
+                        size="small"
+                        aria-label={t(
+                          'projectDetails.ariaLabels.likeButton.label',
+                        )}
+                        variant="extended"
+                        onClick={e =>
+                          handleSetState(toggleLike(e, props, project.id))
+                        }
+                      >
+                        <Box className={classes.iconsBoxStyle}>
+                          {project.likes.includes(props.auth.id) ? (
+                            <ClapIcon
+                              arial-label={t(
+                                'projectDetails.ariaLabels.likeButton.unlilke',
+                              )}
+                            />
+                          ) : (
+                            <ClapBorderIcon
+                              arial-label={t(
+                                'projectDetails.ariaLabels.likeButton.like',
+                              )}
+                            />
                           )}
-                        />
-                      ) : (
-                        <ClapBorderIcon
-                          arial-label={t(
-                            'projectDetails.ariaLabels.likeButton.like',
+                        </Box>
+                        <Typography>
+                          {nFormatter(project.likes.length)}
+                        </Typography>
+                      </CustomButton>
+                      <CustomButton
+                        className={classes.actionBoxButtonStyle}
+                        size="small"
+                        aria-label={t(
+                          'projectDetails.ariaLabels.saveButton.label',
+                        )}
+                        onClick={e =>
+                          handleSetState(toggleSave(e, props, project.id))
+                        }
+                      >
+                        <Box className={classes.iconsBoxStyle}>
+                          {project.saved_by.includes(props.auth.id) ? (
+                            <BookmarkIcon
+                              aria-label={t(
+                                'projectDetails.ariaLabels.saveButton.unsave',
+                              )}
+                            />
+                          ) : (
+                            <BookmarkBorderIcon
+                              aria-label={t(
+                                'projectDetails.ariaLabels.saveButton.save',
+                              )}
+                            />
                           )}
-                        />
-                      )}
-                      <Typography>
-                        {nFormatter(project.likes.length)}
+                        </Box>
+                      </CustomButton>
+                      <Typography
+                        color="textSecondary"
+                        variant="caption"
+                        component="span"
+                        className={classes.actionBoxButtonStyle}
+                      >
+                        <Box className={classes.iconsBoxStyle}>
+                          <VisibilityIcon />
+                        </Box>
+                        <Typography>{project.views_count}</Typography>
                       </Typography>
-                    </CustomButton>
-                    <CustomButton
-                      className={classes.actionBoxButtonStyle}
-                      size="small"
-                      aria-label={t(
-                        'projectDetails.ariaLabels.saveButton.label',
-                      )}
-                      onClick={e =>
-                        handleSetState(toggleSave(e, props, project.id))
-                      }
-                    >
-                      {project.saved_by.includes(props.auth.id) ? (
-                        <BookmarkIcon
-                          aria-label={t(
-                            'projectDetails.ariaLabels.saveButton.unsave',
-                          )}
-                        />
-                      ) : (
-                        <BookmarkBorderIcon
-                          aria-label={t(
-                            'projectDetails.ariaLabels.saveButton.save',
-                          )}
-                        />
-                      )}
-                    </CustomButton>
-                    <Typography
-                      color="textSecondary"
-                      variant="caption"
-                      component="span"
-                      className={classes.actionBoxButtonStyle}
-                    >
-                      <VisibilityIcon />
-                      <Typography>{project.views_count}</Typography>
-                    </Typography>
+                    </Box>
                   </Box>
                 </Grid>
                 {project.images && project.images.length > 0 ? (
@@ -398,12 +405,12 @@ function ProjectDetails(props) {
                   >
                     {t('projectDetails.project.description')}
                   </Typography>
-                  <Typography
+                  <ReactQuill
                     className={classes.descriptionBodyStyle}
-                    color="textSecondary"
-                  >
-                    {project.description}
-                  </Typography>
+                    theme={'bubble'}
+                    readOnly={true}
+                    value={project.description || ''}
+                  />
                 </Grid>
                 {project.tags.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12}>
@@ -489,24 +496,23 @@ function ProjectDetails(props) {
           aria-labelledby={t('projectDetails.ariaLabels.deleteProject')}
         >
           <DialogTitle id="delete-project">
-            {t('projectDetails.project.delete.dialog.primary')}
+            <Typography variant="h4">
+              {t('projectDetails.project.delete.dialog.primary')}
+            </Typography>
           </DialogTitle>
-          <Box
-            component="p"
-            className={delete_project_dialog_error !== null && classes.errorBox}
-          >
-            {delete_project_dialog_error !== null && (
+          {delete_project_dialog_error !== null && (
+            <Box component="p" className={classes.errorBox}>
               <Box component="span" className={classes.error}>
                 {delete_project_dialog_error}
               </Box>
-            )}
-          </Box>{' '}
+            </Box>
+          )}
           <DialogContent>
             <Typography>
               {t('projectDetails.project.delete.dialog.secondary')}
             </Typography>
           </DialogContent>
-          <DialogActions>
+          <DialogActions className={classes.dialogButtonContainer}>
             <CustomButton
               variant="outlined"
               onClick={() =>
