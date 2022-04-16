@@ -26,7 +26,7 @@
     "react-quill": "^1.3.5",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "4.0.3",
     "react-slick": "^0.27.13",
     "react-toastify": "^6.1.0",
     "redux": "^4.0.5",
@@ -34,7 +34,6 @@
     "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
     "source-map-explorer": "^2.5.2",
-    "util": "^0.12.4",
     "web-vitals": "^0.2.4",
     "workerize-loader": "^1.3.0",
     "yup": "^0.29.3"
