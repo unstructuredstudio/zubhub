@@ -251,10 +251,7 @@ class ThemeAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
-        obj = self.get_queryset()[:1]
-        if obj:
-            return obj[0]
-        return None
+        return self.get_queryset().last()
 
 
 @api_view(['GET'])
