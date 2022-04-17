@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - "zubhub_backend/**"
+      - "!zubhub_backend/zubhub/docs/**"
       - "!zubhub_backend/.gitignore"
       - "!zubhub_backend/.env.example"
       - "!zubhub_backend/.dockerignore"
