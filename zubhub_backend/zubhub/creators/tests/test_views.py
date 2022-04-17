@@ -37,7 +37,7 @@ class FetchAuthUserApiTests(TestCase):
         self.assertEqual(res_false.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue(res)
 
-    def test_user_create_unsuccess(self):
+    def test_user_create_unsuccessful(self):
         """Test creating user with invalid payload is unsuccessful"""
         payload_false = {"username": "bean", "password": "boom12345"}
         res_false = self.client.post(reverse("creators:signup_creator"), payload_false)
