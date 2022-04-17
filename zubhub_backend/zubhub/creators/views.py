@@ -74,7 +74,7 @@ class AccountStatusAPIView(APIView):
             return Response({'detail': _('Your account is active.')}, status=status.HTTP_200_OK)
         else:
             return Response({
-                'detail': _("Account doesn't exist, is inactive or has been deleted.")}, status=status.HTTP_200_OK)
+                'detail': _("Account doesn't exist, is inactive or has been deleted.")}, status=status.HTTP_404_NOT_FOUND)
 
 
 class UserProfileAPIView(RetrieveAPIView):

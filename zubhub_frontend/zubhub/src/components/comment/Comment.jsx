@@ -124,6 +124,7 @@ function Comment(props) {
               <MoreVertIcon />
             </CustomButton>
             <Menu
+              disableScrollLock = {true}
               className={classes.commentMenuStyle}
               id="comment_menu"
               anchorEl={comment_menu_anchor_el}

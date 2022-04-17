@@ -132,13 +132,43 @@ const styles = theme => ({
     width: '100%',
   },
   buttonGroupStyleAlternative: {
+<<<<<<< HEAD
      padding: '7px 21px ' ,
  },
+=======
+    padding: '7px 21px',
+  },
+>>>>>>> 3221337cb6f9df2e256f5d7622563825634b3288
   floatRight: {
     float: 'right',
   },
   floatLeft: {
     float: 'left',
+  },
+  welcomeContainerStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    [theme.breakpoints.down('500')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  },
+  welcomeStyle: {
+    height: '20em',
+    [theme.breakpoints.down('500')]: {
+      height: '10em',
+    },
+  },
+  welcomeBoxStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& h1': {
+      fontWeight: 'bold',
+    },
   },
 });
 
