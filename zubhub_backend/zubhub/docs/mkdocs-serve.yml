@@ -1,0 +1,25 @@
+site_name: Zubhub Developer Documentation
+docs_dir: ../../../
+nav:
+  - Installation And Environment Setup:
+      - Intro: /#intro
+      - Development Setup: /#development-setup
+      - Windows Specific Setup: /#windows-specific-setup
+      - API Documentation: /#api-documentation
+      - Contributions: /#contributions
+  - Full Stack Deployment Guide:
+      - Steps To Be Followed: /single_vm_deployment/DEPLOYMENT/#steps-to-be-followed
+      - Create A VM And Set Up The Server: /single_vm_deployment/DEPLOYMENT/#create-a-vm-and-set-up-the-server
+      - Clone The Repository From Github: /single_vm_deployment/DEPLOYMENT/#clone-the-repository-from-github
+      - Run deploy_unscalable_fullstack.sh: /single_vm_deployment/DEPLOYMENT/#run-deploy_unscalable_fullstack.sh
+      - Set Appropriate Env variables: /single_vm_deployment/DEPLOYMENT/#set-appropriate-env-variables
+      - Repeat 2 and 3: /single_vm_deployment/DEPLOYMENT/#repeat-2-and-3
+  - API Docs:
+      - Overview: ./zubhub_backend/zubhub/docs/docs/overview.md
+      - Web Container: ./zubhub_backend/zubhub/docs/docs/web_container.md
+      - Media Container: ./zubhub_backend/zubhub/docs/docs/media_container.md
+      - Others: ./zubhub_backend/zubhub/docs/docs/others.md
+theme:
+  name: readthedocs
+  higlightjs: true
+  include_homepage_in_sidebar: true
