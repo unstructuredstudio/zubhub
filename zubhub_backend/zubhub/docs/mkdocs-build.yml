@@ -1,0 +1,19 @@
+site_name: Zubhub Developer Documentation
+nav:
+  - Installation an Environment Setup:
+      - Intro: ./index.html#intro
+      - Development Setup: ./index.html#development-setup
+      - Steps: ./index.html#steps
+      - Windows Specific Setup: ./index.html#windows-specific-setup
+      - API Documentation: ./index.html#api-documentation
+      - Contributions: ./index.html#contributions
+  - Full Stack Deployment Guide: ./DEPLOYMENT/index.html
+  - API Docs:
+      - Overview: ./overview/index.html
+      - Web Container: ./web_container/index.html
+      - Media Container: ./media_container/index.html
+      - Others: ./others/index.html
+theme:
+  name: readthedocs
+  higlightjs: true
+  include_homepage_in_sidebar: true

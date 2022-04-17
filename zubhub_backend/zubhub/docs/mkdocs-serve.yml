@@ -1,0 +1,15 @@
+site_name: Zubhub Developer Documentation
+docs_dir: ../../../
+nav:
+nav:
+  - Installation an Environment Setup: ./README.md
+  - Full Stack Deploy Guide: ./DEPLOYMENTS.md
+  - API Docs:
+      - ./overview.md
+      - ./web_container.md
+      - ./media_container.md
+      - ./others.md
+theme:
+  name: readthedocs
+  higlightjs: true
+  include_homepage_in_sidebar: true
