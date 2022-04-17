@@ -3,6 +3,7 @@ media_store/
 __pycache__/
 *.pyc
 staticfiles/
+site
 .env
 .docker/
 cadvisor.htpasswd
