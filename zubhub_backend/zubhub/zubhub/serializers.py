@@ -12,7 +12,8 @@ class HeroSerializer(serializers.ModelSerializer):
             "description",
             "image_url",
             "activity_url",
-            "explore_ideas_url"
+            "explore_ideas_url",
+            "tinkering_resource_url",
         ]
 
     def get_image_url(self, instance):

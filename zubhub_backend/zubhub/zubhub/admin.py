@@ -18,7 +18,7 @@ class AdminSettingsAdmin(admin.ModelAdmin):
 
 
 class HeroAdmin(admin.ModelAdmin):
-    list_display = ["title", "image", "activity_url", "explore_ideas_url"]
+    list_display = ["title", "image", "activity_url", "explore_ideas_url", "tinkering_resource_url"]
     search_fields = ["title", 'description']
     exclude = ["id"]
 
