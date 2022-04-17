@@ -343,14 +343,14 @@ function Profile(props) {
                     {t('profile.projects.viewAll')}
                   </CustomButton>
                 </Typography>
-                <Grid container>
+                <Grid container spacing={1}>
                   {Array.isArray(projects) &&
                     projects.map(project => (
                       <Grid
                         item
                         xs={12}
-                        sm={12}
-                        md={6}
+                        sm={6}
+                        md={4}
                         className={classes.projectGridStyle}
                         align="center"
                       >

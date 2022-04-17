@@ -156,28 +156,30 @@ function Project(props) {
                   src={project.creator.avatar}
                   alt={project.creator.username}
                 />
-                <Typography
-                  color="textSecondary"
-                  variant="caption"
-                  component="p"
-                >
-                  {project.creator.username}
-                </Typography>
-                <Link
-                  className={common_classes.textDecorationNone}
-                  to={`/search/?q=${project.creator.tags[0]}&tab=creators`}
-                >
+                <Box className={classes.creatorEmailAndTagBoxStyle}>
                   <Typography
-                    className={clsx(common_classes.baseTagStyle, {
-                      [common_classes.extendedTagStyle]: !isBaseTag(
-                        project.creator.tags[0],
-                      ),
-                    })}
-                    component="h4"
+                    color="textSecondary"
+                    variant="caption"
+                    component="p"
                   >
-                    {project.creator.tags[0]}
+                    {project.creator.username}
                   </Typography>
-                </Link>
+                  <Link
+                    className={common_classes.textDecorationNone}
+                    to={`/search/?q=${project.creator.tags[0]}&tab=creators`}
+                  >
+                    <Typography
+                      className={clsx(common_classes.baseTagStyle, {
+                        [common_classes.extendedTagStyle]: !isBaseTag(
+                          project.creator.tags[0],
+                        ),
+                      })}
+                      component="h4"
+                    >
+                      {project.creator.tags[0]}
+                    </Typography>
+                  </Link>
+                </Box>
               </Box>
             </Link>
             <Box className={classes.captionStyle}>

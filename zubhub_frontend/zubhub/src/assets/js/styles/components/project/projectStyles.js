@@ -1,10 +1,8 @@
 /* eslint-disable no-dupe-keys */
 const styles = theme => ({
   root: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: '0em',
-      marginRight: '0em',
-    },
+    whiteSpace: 'unset',
+    wordBreak: 'break-all',
     maxWidth: 300,
     width: '100%',
     height: '94%',
@@ -12,8 +10,6 @@ const styles = theme => ({
     paddingBottom: '0!important',
     marginTop: '1em',
     marginBottom: '1em',
-    marginLeft: '1em',
-    marginRight: '1em',
     borderRadius: '15px',
     textAlign: 'left',
     backgroundColor: '#ffffff',
@@ -124,13 +120,22 @@ const styles = theme => ({
     marginTop: '0.5em',
     marginBottom: '0.5em',
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
   },
   creatorAvatarStyle: {
     marginRight: '0.5em',
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
+  },
+  creatorEmailAndTagBoxStyle: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    [theme.breakpoints.down('376')]: {
+      '& p': {
+        fontSize: '0.66rem',
+        marginRight: '0.3em',
+      },
+    },
   },
   captionStyle: {
     display: 'flex',

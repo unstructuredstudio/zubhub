@@ -85,7 +85,7 @@ const styles = theme => ({
   },
   titleStyle: {
     fontWeight: 900,
-    fontSize: '1.5rem',
+    fontSize: '1.4rem',
   },
   cardStyle: {
     border: 0,
@@ -134,7 +134,12 @@ const styles = theme => ({
   textDecorationNone: {
     textDecoration: 'none',
   },
-  floatRight: { float: 'right' },
+  floatRight: {
+    float: 'right',
+    [theme.breakpoints.down(321)]: {
+      float: 'left',
+    },
+  },
   displayNone: { display: 'none' },
   largeLabel: {
     fontSize: '1.3rem',
