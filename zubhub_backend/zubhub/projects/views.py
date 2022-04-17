@@ -440,9 +440,7 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
     def get_object(self):
         queryset = self.get_queryset()
         pk = self.kwargs.get("pk")
-        obj = get_object_or_404(queryset, pk=pk)
-
-        return obj
+        return get_object_or_404(queryset, pk=pk)
 
 
 class UnpublishCommentAPIView(UpdateAPIView):
