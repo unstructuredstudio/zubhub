@@ -82,7 +82,6 @@ class AccountStatusAPIView(APIView):
                 },
                 status=status.HTTP_200_OK)
 
-
 class UserProfileAPIView(RetrieveAPIView):
     """
     Fetch Profile of user with given username.
