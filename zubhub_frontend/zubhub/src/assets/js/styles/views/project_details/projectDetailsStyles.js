@@ -104,7 +104,7 @@ const styles = theme => ({
     [theme.breakpoints.down('1080')]: {
       position: 'static',
       height: '3.5em',
-      width: '100%',
+      width: 'fit-content',
       flexDirection: 'row',
       justifyContent: 'flex-end',
       paddingRight: 12,
