@@ -22,9 +22,11 @@ const styles = theme => ({
     color: 'white',
     padding: '0 30px',
   },
-  ttitleStyle: {
-    fontWeight: 900,
-    fontSize: '1.7rem',
+  titleStyle: {
+    fontWeight: 990,
+    color: '#fbd22c',
+    textShadow: '2px 2px 2px black, 0 3px 2px black, 0 0 1px white, 0 0 2px white',
+    fontSize: '1.6rem',
     [theme.breakpoints.up('1600')]: {
       fontSize: '2.5rem',
     },
