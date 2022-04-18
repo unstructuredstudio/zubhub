@@ -56,3 +56,14 @@ class FetchAuthUserApiTests(TestCase):
         self.assertEqual(url.status_code, status.HTTP_200_OK)
         new_user_exists = creator.objects.filter(username="test_dummy").exists()
         self.assertTrue(new_user_exists)
+
+    def test_user_is_active(self):
+        """Test a user is active i.e is authenticated"""
+        create_user = self.client.post(reverse("creators:signup_creator"), self.payload)
+        url = self.client.get(reverse("creators:account_status"))
+        self.assertEqual(url.status_code, status.HTTP_200_OK)
+
+    def test_user_is_not_active(self):
+        """Test user is not active"""
+        url = self.client.get(reverse("creators:account_status"))
+        self.assertEqual(url.status_code, status.HTTP_404_NOT_FOUND)
