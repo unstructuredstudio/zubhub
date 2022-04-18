@@ -6,7 +6,6 @@ from cloudinary import api
 from hashlib import sha256
 from ffmpy import FFmpeg
 from random import uniform
-# from celery import shared_task
 
 
 def get_hash(string):
@@ -37,28 +36,6 @@ def upload_file(file, key):
         return upload_file_to_DO(file, key)
     elif settings.STORE_MEDIA_LOCALLY == True:
         return upload_file_to_local(file, key)
-
-# @shared_task(name="media.tasks.compress_video_task", bind=True, acks_late=True, max_retries=10)
-# def compress_video(self):
-#     print("hello")
-#     # try:
-#     #     folder, name = key.split("/")
-#     #     fs = FileSystemStorage(settings.MEDIA_ROOT + "/" + folder)
-#     #     fs.save("test" + name, file)
-
-#     #     root_dir = settings.MEDIA_ROOT + "/" + folder
-#     #     video_path = "{0}/{1}".format(root_dir, "test" + name)
-#     #     output_video_path = video_path + "hello"
-#     #     FFmpeg(inputs={video_path: None}, outputs={output_video_path: '-metadata location=""'}).run()
-#     #     -c:v libx264 -crf 28 -preset ultrafast
-#     #     -aspect 10:1 -preset fast
-
-#     # except Exception as e:
-#     #     raise self.retry(exc=e, countdown=int(
-#     #         uniform(2, 4) ** self.request.retries))
-        
-
-
 
 def upload_file_to_DO(file, key):
     bucket = settings.DOSPACE_BUCKETNAME

@@ -146,13 +146,14 @@ def UploadFileToLocalAPIView(request):
             url = res["url"]
             compress_video.delay(url.split("localhost:8001/").pop())
 
-            # isinstance to see if instance of video
-
             if isinstance(url, str):
                 if url.split("/")[-2].find("image") != -1:
                     return Response({"Location": url, "Key": key}, status=status.HTTP_200_OK)
                 elif url.split("/")[-2].find("video") != -1:
-                    return Response({"secure_url": url}, status.HTTP_200_OK)
+                    print("HELLOOOOOOOO")
+                    compressed_url = url + "-compressed.mp4"
+                    print(compressed_url)
+                    return Response({"secure_url": compressed_url}, status.HTTP_200_OK)
             else:
                 raise Exception()
 
