@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -25,6 +24,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 
+import SocialButtons from '../../components/social_share_buttons/social_share_buttons.jsx';
 import * as UserActions from '../../store/actions/userActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -105,6 +105,7 @@ const buildTagsComponent = (classes, tags, history) => {
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const { id } = useParams();
 
   const [state, setState] = React.useState({
     project: {},
@@ -128,7 +129,7 @@ function ProjectDetails(props) {
       }
       handleSetState(obj);
     });
-  }, []);
+  }, [id]);
 
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {
@@ -304,6 +305,7 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
+
                   <Box className={classes.actionBoxStyle}>
                     <CustomButton
                       className={classes.actionBoxButtonStyle}
@@ -366,6 +368,7 @@ function ProjectDetails(props) {
                       <VisibilityIcon />
                       <Typography>{project.views_count}</Typography>
                     </Typography>
+                    <SocialButtons />
                   </Box>
                 </Grid>
                 {project.images && project.images.length > 0 ? (
