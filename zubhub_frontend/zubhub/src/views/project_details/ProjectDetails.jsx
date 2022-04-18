@@ -196,7 +196,7 @@ function ProjectDetails(props) {
                     </Typography>
                   </Link>
                   {project.creator.id === props.auth.id ? (
-                    <>
+                    <Grid container justify="flex-end">
                       <Link
                         className={classes.textDecorationNone}
                         to={`/projects/${project.id}/edit`}
@@ -219,7 +219,7 @@ function ProjectDetails(props) {
                       >
                         {t('projectDetails.project.delete.label')}
                       </CustomButton>
-                    </>
+                    </Grid>
                   ) : (
                     <CustomButton
                       className={common_classes.marginLeft1em}
@@ -246,10 +246,7 @@ function ProjectDetails(props) {
                   xs={12}
                   sm={12}
                   md={12}
-                  className={clsx(
-                    classes.positionRelative,
-                    classes.marginBottom1em,
-                  )}
+                  className={clsx(classes.positionRelative)}
                 >
                   <Grid
                     item
@@ -306,6 +303,7 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
+                  {/* box style here */}
                   <Box className={classes.actionBoxStyle}>
                     <CustomButton
                       className={classes.actionBoxButtonStyle}
@@ -318,19 +316,21 @@ function ProjectDetails(props) {
                         handleSetState(toggleLike(e, props, project.id))
                       }
                     >
-                      {project.likes.includes(props.auth.id) ? (
-                        <ClapIcon
-                          arial-label={t(
-                            'projectDetails.ariaLabels.likeButton.unlilke',
-                          )}
-                        />
-                      ) : (
-                        <ClapBorderIcon
-                          arial-label={t(
-                            'projectDetails.ariaLabels.likeButton.like',
-                          )}
-                        />
-                      )}
+                      <Box className={classes.iconsBoxStyle}>
+                        {project.likes.includes(props.auth.id) ? (
+                          <ClapIcon
+                            arial-label={t(
+                              'projectDetails.ariaLabels.likeButton.unlilke',
+                            )}
+                          />
+                        ) : (
+                          <ClapBorderIcon
+                            arial-label={t(
+                              'projectDetails.ariaLabels.likeButton.like',
+                            )}
+                          />
+                        )}
+                      </Box>
                       <Typography>
                         {nFormatter(project.likes.length)}
                       </Typography>
@@ -345,19 +345,21 @@ function ProjectDetails(props) {
                         handleSetState(toggleSave(e, props, project.id))
                       }
                     >
-                      {project.saved_by.includes(props.auth.id) ? (
-                        <BookmarkIcon
-                          aria-label={t(
-                            'projectDetails.ariaLabels.saveButton.unsave',
-                          )}
-                        />
-                      ) : (
-                        <BookmarkBorderIcon
-                          aria-label={t(
-                            'projectDetails.ariaLabels.saveButton.save',
-                          )}
-                        />
-                      )}
+                      <Box className={classes.iconsBoxStyle}>
+                        {project.saved_by.includes(props.auth.id) ? (
+                          <BookmarkIcon
+                            aria-label={t(
+                              'projectDetails.ariaLabels.saveButton.unsave',
+                            )}
+                          />
+                        ) : (
+                          <BookmarkBorderIcon
+                            aria-label={t(
+                              'projectDetails.ariaLabels.saveButton.save',
+                            )}
+                          />
+                        )}
+                      </Box>
                     </CustomButton>
                     <Typography
                       color="textSecondary"
@@ -365,7 +367,9 @@ function ProjectDetails(props) {
                       component="span"
                       className={classes.actionBoxButtonStyle}
                     >
-                      <VisibilityIcon />
+                      <Box className={classes.iconsBoxStyle}>
+                        <VisibilityIcon />
+                      </Box>
                       <Typography>{project.views_count}</Typography>
                     </Typography>
                   </Box>
@@ -492,18 +496,16 @@ function ProjectDetails(props) {
         >
           <DialogTitle id="delete-project">
             <Typography variant="h4">
-            {t('projectDetails.project.delete.dialog.primary')}
+              {t('projectDetails.project.delete.dialog.primary')}
             </Typography>
           </DialogTitle>
-          {delete_project_dialog_error !== null && (<Box
-            component="p"
-            className={classes.errorBox}
-          >
-            <Box component="span" className={classes.error}>
-              {delete_project_dialog_error}
+          {delete_project_dialog_error !== null && (
+            <Box component="p" className={classes.errorBox}>
+              <Box component="span" className={classes.error}>
+                {delete_project_dialog_error}
+              </Box>
             </Box>
-            
-          </Box>)}
+          )}
           <DialogContent>
             <Typography>
               {t('projectDetails.project.delete.dialog.secondary')}
