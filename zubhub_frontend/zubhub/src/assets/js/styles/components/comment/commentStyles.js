@@ -10,6 +10,7 @@ const styles = theme => ({
     boxShadow: '0 1px 4px rgba(0,0,0,.06)',
     border: '1px solid rgba(0,0,0,.1)',
     margin: '0.8em',
+    wordBreak: 'break-word',
   },
   creatorSuggestionBoxStyle: {
     position: 'absolute',
@@ -48,6 +49,7 @@ const styles = theme => ({
     boxShadow: '0 1px 4px rgba(0,0,0,0)',
     border: '1px solid rgba(0,0,0,0)',
     margin: '0.2em',
+    wordBreak: 'break-word',
   },
   commentMetaStyle: {
     display: 'flex',
