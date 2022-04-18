@@ -105,16 +105,29 @@ const styles = theme => ({
       height: '3.5em',
       width: '100%',
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'left',
     },
   },
   actionBoxButtonStyle: {
-    margin: '0.5em',
+    color: 'white',
+    margin: '1.0em',
     display: 'flex',
-    maxWidth: '100%',
-    minWidth: 0,
-    flexDirection: 'column',
-    '& span': { display: 'flex', flexDirection: 'column' },
+    maxwidth: '100%',
+    minwidth: '0',
+    textalign: 'center',
+    flexdirection: 'column',
+    justifycontent: 'left',
+    
+    
+    '& span': { 
+      display: 'inline-flex', 
+      flexDirection: 'column',
+      justifyContent:'left',
+      paddingright:'0px',
+      height:'50px',
+      width:'50px',
+      
+    },
     [theme.breakpoints.down('1080')]: {
       flexDirection: 'row',
       marginBottom: '1em',
@@ -128,7 +141,7 @@ const styles = theme => ({
       color: '#F2F2F2',
     },
     '& svg': {
-      fill: 'white',
+      fill: 'white'
     },
     '& svg:hover': {
       fill: '#F2F2F2',
