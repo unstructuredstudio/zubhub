@@ -132,13 +132,8 @@ const styles = theme => ({
     width: '100%',
   },
   buttonGroupStyleAlternative: {
-<<<<<<< HEAD
-     padding: '7px 21px ' ,
- },
-=======
     padding: '7px 21px',
   },
->>>>>>> 3221337cb6f9df2e256f5d7622563825634b3288
   floatRight: {
     float: 'right',
   },
