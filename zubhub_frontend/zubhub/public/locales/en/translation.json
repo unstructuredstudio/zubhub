@@ -240,11 +240,14 @@
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
+    "createProject": "Create a project",
+    "welcome": "Welcome",
     "ariaLabels": {
       "prevNxtButtons": "Previous and next page buttons"
     },
     "errors": {
-      "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?"
+      "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
+      "noProject": "Seems like you have arrived at a new and fresh ZubHub! There are no projects at this moment. Maybe try creating one?"
     }
   },
 
@@ -379,8 +382,8 @@
   "searchResults": {
     "projects": "Projects",
     "creators": "Creators",
-    "resultFound": "Result found",
-    "resultsFound": "Results found",
+    "resultFound": "Result for",
+    "resultsFound": "Results for",
     "prev": "Prev",
     "next": "Next",
     "ariaLabels": {

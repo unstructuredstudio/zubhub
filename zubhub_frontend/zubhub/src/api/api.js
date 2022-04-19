@@ -282,13 +282,14 @@ class API {
    *
    * @todo - describe method's signature
    */
-  searchProjects = ({ page, token, query_string }) => {
-    let url;
+  searchProjects = ({ page, token, query_string, criteria }) => {
+    const params = { q: query_string, criteria };
     if (page) {
-      url = `projects/search/?q=${query_string}&page=${page}`;
-    } else {
-      url = `projects/search/?q=${query_string}`;
+      params[page] = page;
     }
+
+    const searchParams = new URLSearchParams(params);
+    const url = `projects/search/?${searchParams.toString()}`;
 
     return this.request({ url, token }).then(res => res.json());
   };
@@ -308,6 +309,30 @@ class API {
     }
 
     return this.request({ url, token }).then(res => res.json());
+  };
+
+  searchTags = ({ query }) => {
+    const url = `projects/tags/search/?q=${query}`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
+  autocompleteTags = ({ query }) => {
+    const url = `projects/tags/autocomplete/?q=${query}`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
+  autocompleteProjects = ({ query }) => {
+    const url = `projects/autocomplete/?q=${query}`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
+  autocompleteCreators = ({ query }) => {
+    const url = `creators/autocomplete/?q=${query}`;
+
+    return this.request({ url }).then(res => res.json());
   };
 
   /**
@@ -621,7 +646,7 @@ class API {
    * @todo - describe method's signature
    */
   suggestTags = value => {
-    const url = `projects/tags/search/?q=${value}`;
+    const url = `projects/tags/autocomplete/?q=${value}`;
     return this.request({ url }).then(res => res.json());
   };
 

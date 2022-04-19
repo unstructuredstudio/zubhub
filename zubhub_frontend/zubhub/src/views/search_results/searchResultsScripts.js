@@ -1,30 +1,26 @@
+export const SearchType = {
+  CREATORS: 'creators',
+  PROJECTS: 'projects',
+  TAGS: 'tags',
+};
+
+export const ProjectSearchCriteria = {
+  CATEGORY: 0,
+  TAG: 1,
+  TITLE_DESCRIPTION: 2,
+};
+
 /**
  * @function getQueryParams
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
-export const getQueryParams = (url, tab) => {
+export const getQueryParams = url => {
   let params = new URL(url);
   params = new URLSearchParams(params.search);
-  if (tab) {
-    params.set('tab', tab);
-  }
 
   return params;
-};
-
-/**
- * @function switchTab
- * @author Raymond Ndibe <ndiberaymond1@gmail.com>
- *
- * @todo - describe function's signature
- */
-export const switchTab = (tab, props, url) => {
-  props.history.push({
-    pathname: props.location.pathname,
-    search: getQueryParams(url, tab).toString(),
-  });
 };
 
 /**
@@ -33,8 +29,8 @@ export const switchTab = (tab, props, url) => {
  *
  * @todo - describe function's signature
  */
-export const fetchPage = (page, props, query_string, tab) => {
-  if (!tab || tab === 'projects' || tab !== 'creators') {
+export const fetchPage = (page, props, query_string, type) => {
+  if (type === SearchType.PROJECTS) {
     return props.searchProjects({
       page,
       query_string,
@@ -42,13 +38,22 @@ export const fetchPage = (page, props, query_string, tab) => {
       token: props.auth.token,
       tab: 'projects',
     });
-  } else if (tab === 'creators') {
+  } else if (type === SearchType.CREATORS) {
     return props.searchCreators({
       page,
       query_string,
       t: props.t,
       token: props.auth.token,
-      tab,
+      tab: 'creators',
+    });
+  } else {
+    return props.searchProjects({
+      page,
+      query_string,
+      t: props.t,
+      token: props.auth.token,
+      criteria: ProjectSearchCriteria.TAG,
+      tab: 'tags',
     });
   }
 };

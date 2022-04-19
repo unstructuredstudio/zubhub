@@ -595,3 +595,7 @@ html,
 .display-none {
   display: none !important;
 }
+
+.MuiInputBase-root #phone{
+  width: 80%;
+}
