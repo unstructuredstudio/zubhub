@@ -45,6 +45,7 @@ import {
   isCloudinaryVideo,
   isGdriveORVimeoORYoutube,
 } from './projectDetailsScripts';
+import ProjectsBar from '../../components/projects_bar/ProjectsBar';
 
 import {
   nFormatter,
@@ -168,6 +169,7 @@ function ProjectDetails(props) {
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
+    const testProjects = [project, project, project];
     return (
       <>
         <Box className={classes.root}>
@@ -457,7 +459,7 @@ function ProjectDetails(props) {
                 </Grid>
               </Grid>
             </Container>
-
+            <ProjectsBar projects = {testProjects}/>
             <Comments
               context={{ name: 'project', body: project }}
               handleSetState={handleSetState}
