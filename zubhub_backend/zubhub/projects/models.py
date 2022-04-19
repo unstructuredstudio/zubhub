@@ -9,8 +9,8 @@ from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
 from projects.utils import clean_comment_text, clean_project_desc
 
-
 Creator = get_user_model()
+
 
 class PublishingRule(models.Model):
     DRAFT = 1
@@ -18,16 +18,14 @@ class PublishingRule(models.Model):
     AUTHENTICATED_VIEWERS = 3
     PUBLIC = 4
 
+    PUBLISHING_CHOICES = ((DRAFT, 'DRAFT'), (PREVIEW, 'PREVIEW'),
+                          (AUTHENTICATED_VIEWERS,
+                           'AUTHENTICATED_VIEWERS'), (PUBLIC, 'PUBLIC'))
 
-    PUBLISHING_CHOICES = (
-        (DRAFT, 'DRAFT'),
-        (PREVIEW, 'PREVIEW'),
-        (AUTHENTICATED_VIEWERS, 'AUTHENTICATED_VIEWERS'),
-        (PUBLIC, 'PUBLIC')
-    )
-  
-    type = models.PositiveSmallIntegerField(
-        choices=PUBLISHING_CHOICES, blank=False, null=False, default=DRAFT)
+    type = models.PositiveSmallIntegerField(choices=PUBLISHING_CHOICES,
+                                            blank=False,
+                                            null=False,
+                                            default=DRAFT)
     publisher_id = models.CharField(max_length=100, blank=True, null=True)
     visible_to = models.ManyToManyField(Creator, blank=True)
 
@@ -53,7 +51,7 @@ class Category(MP_Node):
 
     class Meta:
         verbose_name_plural = "categories"
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["search_vector"]), )
 
     def __str__(self):
         return self.name
@@ -63,37 +61,50 @@ class Category(MP_Node):
             pass
         else:
             uid = str(uuid.uuid4())
-            uid = uid[0: floor(len(uid)/6)]
+            uid = uid[0:floor(len(uid) / 6)]
             self.slug = slugify(self.name) + "-" + uid
         super().save(*args, **kwargs)
 
+
 class Project(models.Model):
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    creator = models.ForeignKey(
-        Creator, on_delete=models.CASCADE, related_name="projects")
+    id = models.UUIDField(primary_key=True,
+                          default=uuid.uuid4,
+                          editable=False,
+                          unique=True)
+    creator = models.ForeignKey(Creator,
+                                on_delete=models.CASCADE,
+                                related_name="projects")
     title = models.CharField(max_length=1000)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000)
-    category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="projects")
-    views = models.ManyToManyField(
-        Creator, blank=True, related_name="projects_viewed")
+    category = models.ForeignKey(Category,
+                                 on_delete=models.SET_NULL,
+                                 null=True,
+                                 blank=True,
+                                 related_name="projects")
+    views = models.ManyToManyField(Creator,
+                                   blank=True,
+                                   related_name="projects_viewed")
     views_count = models.IntegerField(blank=True, default=0)
-    likes = models.ManyToManyField(
-        Creator, blank=True, related_name="projects_liked")
+    likes = models.ManyToManyField(Creator,
+                                   blank=True,
+                                   related_name="projects_liked")
     likes_count = models.IntegerField(blank=True, default=0)
     comments_count = models.IntegerField(blank=True, default=0)
-    saved_by = models.ManyToManyField(
-        Creator, blank=True, related_name="saved_for_future")
+    saved_by = models.ManyToManyField(Creator,
+                                      blank=True,
+                                      related_name="saved_for_future")
     slug = models.SlugField(unique=True, max_length=1000)
     created_on = models.DateTimeField(default=timezone.now)
-    publish = models.OneToOneField(PublishingRule, null=True, on_delete=models.RESTRICT, related_name='project_target')
+    publish = models.OneToOneField(PublishingRule,
+                                   null=True,
+                                   on_delete=models.RESTRICT,
+                                   related_name='project_target')
     search_vector = SearchVectorField(null=True)
 
     class Meta:
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["search_vector"]), )
 
     def save(self, *args, **kwargs):
         self.description = clean_project_desc(self.description)
@@ -117,7 +128,8 @@ class Project(models.Model):
                 self.video = "player.vimeo.com/video".join(
                     self.video.split("vimeo.com"))
 
-            elif self.video.find("drive.google.com") != -1 and self.video.find("/view") != -1:
+            elif self.video.find("drive.google.com") != -1 and self.video.find(
+                    "/view") != -1:
                 self.video = self.video.split("/view")[0] + "/preview"
 
         if self.id:
@@ -128,7 +140,7 @@ class Project(models.Model):
             pass
         else:
             uid = str(uuid.uuid4())
-            uid = uid[0: floor(len(uid)/6)]
+            uid = uid[0:floor(len(uid) / 6)]
             self.slug = slugify(self.title) + "-" + uid
         self.description = clean_project_desc(self.description)
         super().save(*args, **kwargs)
@@ -138,8 +150,11 @@ class Project(models.Model):
 
 
 class Image(models.Model):
-    project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, null=True, related_name="images", blank=True)
+    project = models.ForeignKey(Project,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                related_name="images",
+                                blank=True)
     image_url = models.URLField(max_length=1000)
     public_id = models.CharField(max_length=1000, null=True, blank=True)
 
@@ -152,15 +167,25 @@ class Image(models.Model):
 
 
 class Comment(MP_Node):
-    project = models.ForeignKey(
-        Project, on_delete=models.CASCADE, related_name="comments", blank=True, null=True)
-    profile = models.ForeignKey(Creator, on_delete=models.CASCADE,
-                                related_name="profile_comments", blank=True, null=True)
-    creator = models.ForeignKey(
-        Creator, on_delete=models.CASCADE, related_name="comments")
+    project = models.ForeignKey(Project,
+                                on_delete=models.CASCADE,
+                                related_name="comments",
+                                blank=True,
+                                null=True)
+    profile = models.ForeignKey(Creator,
+                                on_delete=models.CASCADE,
+                                related_name="profile_comments",
+                                blank=True,
+                                null=True)
+    creator = models.ForeignKey(Creator,
+                                on_delete=models.CASCADE,
+                                related_name="comments")
     text = models.CharField(max_length=10000)
     created_on = models.DateTimeField(default=timezone.now)
-    publish = models.OneToOneField(PublishingRule, null=True, on_delete=models.RESTRICT, related_name='comment_target')
+    publish = models.OneToOneField(PublishingRule,
+                                   null=True,
+                                   on_delete=models.RESTRICT,
+                                   related_name='comment_target')
 
     node_order_by = ['created_on']
 
@@ -170,19 +195,23 @@ class Comment(MP_Node):
     def save(self, *args, **kwargs):
         if self.project:
             self.project.save()
-        self.text  = clean_comment_text(self.text)
+        self.text = clean_comment_text(self.text)
         super().save(*args, **kwargs)
 
 
 class Tag(models.Model):
-    projects = models.ManyToManyField(
-        Project, blank=True, related_name="tags")
+    projects = models.ManyToManyField(Project, blank=True, related_name="tags")
     name = models.CharField(unique=True, max_length=100)
     slug = models.SlugField(unique=True, max_length=150)
     search_vector = SearchVectorField(null=True)
 
     class Meta:
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["search_vector"]),
+                   GinIndex(
+                       name="tag_name_gin_idx",
+                       fields=["name"],
+                       opclasses=["gin_trgm_ops"],
+                   ))
 
     def __str__(self):
         return self.name
@@ -192,18 +221,19 @@ class Tag(models.Model):
             pass
         else:
             uid = str(uuid.uuid4())
-            uid = uid[0: floor(len(uid)/6)]
+            uid = uid[0:floor(len(uid) / 6)]
             self.slug = slugify(self.name) + "-" + uid
         super().save(*args, **kwargs)
 
 
 class StaffPick(models.Model):
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    id = models.UUIDField(primary_key=True,
+                          default=uuid.uuid4,
+                          editable=False,
+                          unique=True)
     title = models.CharField(max_length=1000)
     description = models.CharField(max_length=1000)
-    projects = models.ManyToManyField(
-        Project, related_name="staff_picks")
+    projects = models.ManyToManyField(Project, related_name="staff_picks")
     slug = models.SlugField(unique=True, max_length=1000)
     created_on = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
@@ -216,6 +246,6 @@ class StaffPick(models.Model):
             pass
         else:
             uid = str(uuid.uuid4())
-            uid = uid[0: floor(len(uid)/6)]
+            uid = uid[0:floor(len(uid) / 6)]
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
