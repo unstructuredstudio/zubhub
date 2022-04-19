@@ -807,10 +807,6 @@ export const uploadVideoToLocal = (video, state, props, handleSetState) => {
   const formData = new FormData();
   formData.append('file', video);
   formData.append('key', key);
-  
-  console.log(formData);
-  console.log(video);
-  console.log(key);
 
   return new Promise((resolve, reject) => {
     const um = new UploadMedia(

@@ -135,8 +135,6 @@ def UploadFileToLocalAPIView(request):
         }\n
     """
 
-    print("upload file to local!!!")
-
     if request.method == "POST":
         try:
             file = request.data.get("file")
@@ -150,9 +148,7 @@ def UploadFileToLocalAPIView(request):
                 if url.split("/")[-2].find("image") != -1:
                     return Response({"Location": url, "Key": key}, status=status.HTTP_200_OK)
                 elif url.split("/")[-2].find("video") != -1:
-                    print("HELLOOOOOOOO")
                     compressed_url = url + "-compressed.mp4"
-                    print(compressed_url)
                     return Response({"secure_url": compressed_url}, status.HTTP_200_OK)
             else:
                 raise Exception()

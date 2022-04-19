@@ -34,7 +34,11 @@ export const cloudinaryFactory = window => {
  *
  * @todo - describe function's signature
  */
-export const buildVideoThumbnailURL = video_url => {
+export const buildVideoThumbnailURL = url => {
+  let video_url = url
+  if (url.search("-compressed.mp4") > -1) {
+    video_url = url.split("-compressed.mp4")[0]
+  }
   if (video_url.search('youtube.com/embed/') > -1) {
     const id = video_url.split('youtube.com/embed/')[1];
     return `https://img.youtube.com/vi/${id}/0.jpg`;

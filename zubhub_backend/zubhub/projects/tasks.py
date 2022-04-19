@@ -81,14 +81,10 @@ def filter_spam_task(self, ctx):
 
 @shared_task(name="media.tasks.compress_video_task", bind=True, acks_late=True, max_retries=10)
 def compress_video(self, key):
-    print("hello")
-    print(key)
-
     root_dir = "/media_data/videos"
     folder, name = key.split("/")
     video_path = "{0}/{1}".format(root_dir, name)
     output_video_path = "{0}/{1}-compressed.mp4".format(root_dir, name)
-    print(output_video_path)
 
     FFmpeg(inputs={video_path: None}, outputs={output_video_path: ['-c:v', 'libx264', '-crf', '28', '-preset', 'veryfast']}).run()
  
