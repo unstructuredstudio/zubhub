@@ -106,8 +106,6 @@ def DeleteFileAPIView(request):
     """
 
     try:
-        print("DeleteFileApiView")
-        print(request.data.get("url"))
         delete_file_from_media_server(request.data.get("url"))
         return Response({"result": "ok"}, status=status.HTTP_200_OK)
 
@@ -145,8 +143,6 @@ def UploadFileToLocalAPIView(request):
             res = res.json()
             url = res["url"]
             compress_video.delay(url)
-
-            # delete_file_task.delay(file)
 
             if isinstance(url, str):
                 if url.split("/")[-2].find("image") != -1:

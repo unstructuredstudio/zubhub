@@ -12,7 +12,6 @@ from ffmpy import FFmpeg
 def delete_file_task(self, url):
     from zubhub.utils import delete_file_from_media_server, get_cloudinary_resource_info
     try:
-        print("delete_file_task")
         res = delete_file_from_media_server(url)
 
         res = res.json()

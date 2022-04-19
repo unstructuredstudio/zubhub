@@ -111,14 +111,12 @@ def delete_file_from_cloudinary(url):
 
 
 def delete_file_from_local(url):
-    print("delete_file_from_local")
-    print(url)
     url = url.split("/")
     folder = url[-2]
     name = url[-1]
-    print(folder, name)
     fs = FileSystemStorage(settings.MEDIA_ROOT + "/" + folder)
     fs.delete(name)
-    fs.delete(name + ".jpg")
-    print("actually deleted")
+    if name.find("-compressed.mp4") > -1:
+        thumbnail_path = name.split("-compressed.mp4")[0] + ".jpg"
+        fs.delete(thumbnail_path)
     return "ok"
