@@ -139,13 +139,11 @@ export const isGdriveORVimeoORYoutube = url => {
 export const handleMobileShare = async (project) => {
   const shareData = {
     title: project.title,
-    text: project.title,
+    text: "Check out this amazing Zubhub project! ",
     url: ""
   }
   try {
     await navigator.share(shareData);
-    // resultPara.textContent = 'MDN shared successfully'
   } catch(err) {
-    // resultPara.textContent = 'Error: ' + err
   }
 }
