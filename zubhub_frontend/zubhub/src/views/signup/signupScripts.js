@@ -93,9 +93,7 @@ export const signup = (e, props) => {
           }
         });
     } else {
-      toast.error(
-        'Looks like there are a few errors in the registration form. Review it before clicking Signup!',
-      );
+      toast.error(props.t('signup.errors.invalidFormFields'));
     }
   });
 };
