@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(styles);
-const Notification = ({ notification }) => {
+const Notification = ({ notification, onNotificationClick }) => {
   const classes = useStyles();
   const token = useSelector(store => store.auth.token);
   const { t } = useTranslation();
@@ -61,6 +61,7 @@ const Notification = ({ notification }) => {
                 body: notification,
               });
             }
+            onNotificationClick();
           }}
         >
           <ListItemAvatar>

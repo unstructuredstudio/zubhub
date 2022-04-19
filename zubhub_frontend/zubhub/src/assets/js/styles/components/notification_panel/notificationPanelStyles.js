@@ -20,7 +20,7 @@ const styles = theme => ({
     alignItems: 'center',
     gap: '10px',
     color: '#00B8C4',
-    padding: '2.5px 0px'
+    padding: '2.5px 0px',
   },
   circularProgressStyle: {
     color: '#00B8C4',
@@ -51,6 +51,7 @@ const styles = theme => ({
     top: '0px',
     backgroundColor: 'white',
     margin: '0px',
+    zIndex: 20,
   },
   fullWidth: {
     width: '100%',

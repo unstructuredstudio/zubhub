@@ -24,7 +24,11 @@ const isNewNotification = notification => {
   return now - date < recentDateThreshold;
 };
 
-const NotificationPanel = ({ open, anchorEl }) => {
+const notificationSort = (a, b) => {
+  return new Date(b.date) - new Date(a.date);
+};
+
+const NotificationPanel = ({ open, anchorEl, onClose }) => {
   const classes = useStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
   const [notificationViewType, setNotificationViewType] = useState(
@@ -32,22 +36,30 @@ const NotificationPanel = ({ open, anchorEl }) => {
   );
   const token = useSelector(state => state.auth.token);
   const [page, setPage] = useState(1);
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState({});
   const [loading, setLoading] = useState(false);
   const [outOfNotifications, setOutOfNotifications] = useState(false);
   const notificationsWrapperRef = useRef();
 
   const newNotifications = useMemo(
-    () => notifications.filter(isNewNotification),
+    () =>
+      Object.values(notifications)
+        .sort(notificationSort)
+        .filter(isNewNotification),
     [notifications],
   );
   const earlierNotifications = useMemo(
     () =>
-      notifications.filter(notification => !isNewNotification(notification)),
+      Object.values(notifications)
+        .sort(notificationSort)
+        .filter(notification => !isNewNotification(notification)),
     [notifications],
   );
   const unreadNotifications = useMemo(
-    () => notifications.filter(notification => !notification.viewed),
+    () =>
+      Object.values(notifications)
+        .sort(notificationSort)
+        .filter(notification => !notification.viewed),
     [notifications],
   );
 
@@ -68,18 +80,23 @@ const NotificationPanel = ({ open, anchorEl }) => {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
 
-      setNotifications(currentNotifications => [
-        ...currentNotifications,
-        ...notifications.results,
-      ]);
+      const newNotifications = notifications.results.reduce(
+        (obj, notification) => ({ ...obj, [notification.id]: notification }),
+        {},
+      );
+
       await new Promise(resolve => setTimeout(resolve, 100));
+      setNotifications(currentNotifications => ({
+        ...currentNotifications,
+        ...newNotifications,
+      }));
       setLoading(false);
     };
 
-    if (!outOfNotifications && token && page) {
+    if (!outOfNotifications && token && page && open) {
       getNotifications();
     }
-  }, [page, token, outOfNotifications]);
+  }, [open, page, token, outOfNotifications]);
 
   const handleScroll = ({ target }) => {
     if (
@@ -88,6 +105,15 @@ const NotificationPanel = ({ open, anchorEl }) => {
     ) {
       setPage(page => page + 1);
     }
+  };
+
+  const onNotificationClick = notification => {
+    notification.viewed = true;
+    setNotifications(currentNotifications => ({
+      ...currentNotifications,
+      [notification.id]: notification,
+    }));
+    onClose();
   };
 
   const getLoadingSpinner = () => (
@@ -112,13 +138,19 @@ const NotificationPanel = ({ open, anchorEl }) => {
           <h2 className={classes.panelSubheadingTextStyle}>New</h2>
         )}
         {newNotifications.map(notification => (
-          <Notification notification={notification} />
+          <Notification
+            notification={notification}
+            onNotificationClick={() => onNotificationClick(notification)}
+          />
         ))}
         {hasEarlierNotifications && (
           <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>
         )}
         {earlierNotifications.map(notification => (
-          <Notification notification={notification} />
+          <Notification
+            notification={notification}
+            onNotificationClick={() => onNotificationClick(notification)}
+          />
         ))}
         {!loading && !hasNewNotifications && !hasEarlierNotifications && (
           <p>You have no notifications in this category.</p>
@@ -135,7 +167,10 @@ const NotificationPanel = ({ open, anchorEl }) => {
       ref={notificationsWrapperRef}
     >
       {unreadNotifications.map(notification => (
-        <Notification notification={notification} />
+        <Notification
+          notification={notification}
+          onNotificationClick={() => onNotificationClick(notification)}
+        />
       ))}
       {!loading && unreadNotifications.length === 0 && (
         <p>You have no notifications in this category.</p>

@@ -98,8 +98,7 @@ def perform_send_email_confirmation(request, user, signup=False, email=None):
         return adapter.respond_user_inactive(request, user)
 
     if not _has_verified_email_for_login(user, email):
-        send_email_confirmation(
-            request, user, signup=signup)
+        send_email_confirmation(request, user, signup=signup)
 
 
 def setup_user_phone(user):
@@ -115,8 +114,10 @@ def setup_user_phone(user):
     phone = user_phone(user)
     phone_number = None
     if phone:
-        phone_number = PhoneNumber(
-            user=user, phone=phone, primary=True, verified=False)
+        phone_number = PhoneNumber(user=user,
+                                   phone=phone,
+                                   primary=True,
+                                   verified=False)
         phone_number.save()
 
     if phone_number:
@@ -140,9 +141,11 @@ def send_phone_confirmation(request, user, signup=False, phone=None):
             if not phone_number.verified:
                 phone_number.send_confirmation(request, signup=signup)
         except PhoneNumber.DoesNotExist:
-            phone_number = PhoneNumber.objects.add_phone(
-                request, user, phone, signup=signup, confirm=True
-            )
+            phone_number = PhoneNumber.objects.add_phone(request,
+                                                         user,
+                                                         phone,
+                                                         signup=signup,
+                                                         confirm=True)
             assert phone_number
 
 
@@ -191,69 +194,64 @@ def activity_notification(activities, **kwargs):
 
         new_creators = get_user_model().objects.filter(
             date_joined__gte=yesterday, date_joined__lt=today)
-        new_projects = Project.objects.filter(
-            created_on__gte=yesterday, created_on__lt=today)
-        new_comments = Comment.objects.filter(
-            created_on__gte=yesterday, created_on__lt=today)
+        new_projects = Project.objects.filter(created_on__gte=yesterday,
+                                              created_on__lt=today)
+        new_comments = Comment.objects.filter(created_on__gte=yesterday,
+                                              created_on__lt=today)
 
         if new_creators:
             new_creators = list(
-                map(lambda creator: [str(creator.pk), creator.username], new_creators))
+                map(lambda creator: [str(creator.pk), creator.username],
+                    new_creators))
             ctx["new_creators"] = new_creators
 
         if new_projects:
             new_projects = list(
-                map(lambda project: [str(project.pk), project.title], new_projects))
+                map(lambda project: [str(project.pk), project.title],
+                    new_projects))
             ctx["new_projects"] = new_projects
 
         if new_comments:
             new_comments = list(
-                map(lambda comment: [str(comment.pk), comment.creator.username], new_comments))
+                map(
+                    lambda comment:
+                    [str(comment.pk), comment.creator.username], new_comments))
             ctx["new_comments"] = new_comments
 
     for creator in staffs:
         if creator.email:
-            email_contexts.append(
-                {"user": creator.username,
-                 "email": creator.email,
-                 **ctx
-                 }
-            )
+            email_contexts.append({
+                "user": creator.username,
+                "email": creator.email,
+                **ctx
+            })
 
         if creator.phone:
-            phone_contexts.append(
-                {
-                    "phone": creator.phone,
-                    **ctx
-                }
-            )
+            phone_contexts.append({"phone": creator.phone, **ctx})
 
     ctx_values = list(filter(lambda x: ctx[x] is not None, list(ctx.keys())))
 
     if len(email_contexts) > 0 and ctx_values:
-        send_mass_email.delay(
-            template_name=template_name,
-            ctxs=email_contexts
-        )
+        send_mass_email.delay(template_name=template_name, ctxs=email_contexts)
 
     if len(phone_contexts) > 0 and ctx_values:
-        send_mass_text.delay(
-            template_name=template_name,
-            ctxs=phone_contexts
-        )
+        send_mass_text.delay(template_name=template_name, ctxs=phone_contexts)
 
 
 enabled_notification_settings: Dict[Notification.Type, Set[int]] = {
     Notification.Type.BOOKMARK: {Setting.WEB},
     Notification.Type.CLAP: {Setting.WEB},
-    Notification.Type.COMMENT: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
-    Notification.Type.FOLLOW: {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+    Notification.Type.COMMENT:
+    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+    Notification.Type.FOLLOW:
+    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
     Notification.Type.FOLLOWING_PROJECT:
     {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
 }
 
 
-def is_valid_setting(setting: int, notification_type: Notification.Type) -> bool:
+def is_valid_setting(setting: int,
+                     notification_type: Notification.Type) -> bool:
     return setting in enabled_notification_settings[notification_type]
 
 
@@ -266,26 +264,41 @@ def send_notification(users: List[Creator], source: Creator, contexts,
         user_setting = Setting.objects.get(creator=user)
         context.update({'source': source.username})
 
-        if user.phone and user_setting.contact == Setting.WHATSAPP and is_valid_setting(Setting.WHATSAPP, notification_type):
-            context.update({"phone": user.phone})
-            send_whatsapp.delay(phone=user.phone,
-                                template_name=get_notification_template_name(Setting.WHATSAPP, notification_type),
-                                ctx=context)
-
-        if user.email and user_setting.contact == Setting.EMAIL and is_valid_setting(Setting.EMAIL, notification_type):
+        if user.email and user_setting.contact == Setting.EMAIL and is_valid_setting(
+                Setting.EMAIL, notification_type):
             context.update({"email": user.email})
             email_contexts.append(context)
 
-        if user.phone and user_setting.contact == Setting.SMS and is_valid_setting(Setting.SMS, notification_type):
+        if user.phone and user_setting.contact == Setting.SMS and is_valid_setting(
+                Setting.SMS, notification_type):
             context.update({"phone": user.phone})
             sms_contexts.append(context)
 
-        push_notification(user, source, notification_type, link, context)
+        if is_valid_setting(Setting.WEB, notification_type):
+            successfully_pushed = push_notification(user, source,
+                                                    notification_type, link,
+                                                    context)
+            if not successfully_pushed:
+                return
+
+        if user.phone and user_setting.contact == Setting.WHATSAPP and is_valid_setting(
+                Setting.WHATSAPP, notification_type):
+            context.update({"phone": user.phone})
+            send_whatsapp.delay(phone=user.phone,
+                                template_name=get_notification_template_name(
+                                    Setting.WHATSAPP, notification_type),
+                                ctx=context)
 
     if len(email_contexts) > 0:
-        send_mass_email.delay(template_name=get_notification_template_name(Setting.EMAIL, notification_type), ctxs=email_contexts, full_template=True)
+        send_mass_email.delay(template_name=get_notification_template_name(
+            Setting.EMAIL, notification_type),
+                              ctxs=email_contexts,
+                              full_template=True)
     if len(sms_contexts) > 0:
-        send_mass_text.delay(template_name=get_notification_template_name(Setting.SMS, notification_type), ctxs=sms_contexts, full_template=True)
+        send_mass_text.delay(template_name=get_notification_template_name(
+            Setting.SMS, notification_type),
+                             ctxs=sms_contexts,
+                             full_template=True)
 
 
 # def sync_user_email_addresses(user):
