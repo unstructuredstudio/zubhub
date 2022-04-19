@@ -144,6 +144,6 @@ export const handleMobileShare = async (project) => {
   }
   try {
     await navigator.share(shareData);
-  } catch(err) {
+  } catch (err) {
   }
 }
