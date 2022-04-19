@@ -153,6 +153,7 @@ To stop:
        $ make stop or make down
 ```
 
+You can run test by running `make test`.
 For other make commands: run **make help**
 
 Visit http://localhost:8000 on your browser to access the API documentation.
