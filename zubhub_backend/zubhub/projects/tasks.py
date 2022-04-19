@@ -12,6 +12,7 @@ from ffmpy import FFmpeg
 def delete_file_task(self, url):
     from zubhub.utils import delete_file_from_media_server, get_cloudinary_resource_info
     try:
+        print("delete_file_task")
         res = delete_file_from_media_server(url)
 
         res = res.json()
@@ -80,11 +81,13 @@ def filter_spam_task(self, ctx):
 
 
 @shared_task(name="media.tasks.compress_video_task", bind=True, acks_late=True, max_retries=10)
-def compress_video(self, key):
+def compress_video(self, url):
+    key = url.split("localhost:8001/").pop()
     root_dir = "/media_data/videos"
     folder, name = key.split("/")
     video_path = "{0}/{1}".format(root_dir, name)
     output_video_path = "{0}/{1}-compressed.mp4".format(root_dir, name)
 
     FFmpeg(inputs={video_path: None}, outputs={output_video_path: ['-c:v', 'libx264', '-crf', '28', '-preset', 'veryfast']}).run()
+    delete_file_task.delay(url)
  

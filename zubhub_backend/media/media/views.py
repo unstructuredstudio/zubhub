@@ -104,6 +104,8 @@ def DeleteFileAPIView(request):
     """
 
     try:
+        print("DeleteFileMediaApiView")
+        print(request.data.get("url"))
         res = delete_file(request.data.get("url"))
         return Response({"result": res}, status=status.HTTP_200_OK)
 

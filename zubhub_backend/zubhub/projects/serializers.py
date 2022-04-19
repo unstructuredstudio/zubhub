@@ -147,8 +147,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
     def validate_video(self, video):
-        print("!!!!!!!!!!!!!!!!!!!!!")
-        print(video)
         if(video == "" and len(self.initial_data.get("images")) == 0):
             raise serializers.ValidationError(
                 _("You must provide either image(s), video file, or video URL to create your project!"))
@@ -246,8 +244,6 @@ class ProjectSerializer(serializers.ModelSerializer):
             if category:
                 category.projects.add(project)
 
-            print("VIDEO!!!!!!")
-            print(project.video)
             if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
                 update_video_url_if_transform_ready.delay(
                     {"url": project.video, "project_id": project.id})

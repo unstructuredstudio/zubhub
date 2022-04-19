@@ -44,6 +44,7 @@ def upload_file_to_media_server(file, key):
 
 
 def delete_file_from_media_server(file_url):
+    print("delete_file_from_media_server")
     secret_hash = get_hash(settings.MEDIA_SECRET)
     url = 'http://media:8001/delete-file/'
     return requests.post(url, data={'url': file_url, "secret_hash": secret_hash})
