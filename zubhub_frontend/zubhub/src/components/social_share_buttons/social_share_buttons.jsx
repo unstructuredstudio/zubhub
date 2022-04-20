@@ -1,8 +1,8 @@
 import React from 'react';
-import { FacebookShareButton, WhatsappShareButton } from 'react-share';
 import { Avatar, Button, ButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkIcon from '@material-ui/icons/Link';
+// import fbicon from 'fbicon.png';
 
 const useStyles = makeStyles({
   text: {
@@ -20,10 +20,18 @@ const useStyles = makeStyles({
     height: '50px',
     borderRadius: '50% !important',
     margin: '10px',
+    borderColor: 'white',
+  },
+  whatsapp: {
+    width: '40px',
+    height: '40px',
+    backgroundColor: 'transparent',
   },
   avatar: {
     width: '35px',
     height: '35px',
+    backgroundColor: 'transparent',
+    border: '3px solid white',
   },
 });
 
@@ -33,25 +41,37 @@ const SocialButtons = () => {
   return (
     <>
       <ButtonGroup className={classes.buttonGroup} orientation="vertical">
-        <h3 className={classes.text}>Share</h3>
-        <Button variant="uncontained" className={classes.button}>
-          <FacebookShareButton url={ahref} quote="Check out this project!">
-            <Avatar
-              className={classes.avatar}
-              src={'https://www.facebook.com/images/fb_icon_325x325.png'}
-            />
-          </FacebookShareButton>
+        <Button
+          variant="uncontained"
+          className={classes.button}
+          href={
+            'https://www.facebook.com/sharer/sharer.php?u=' +
+            ahref +
+            '&quote=Check%20out%20this%20project%20on%20ZubHub!'
+          }
+        >
+          <Avatar
+            className={classes.avatar}
+            src={
+              'http://assets.stickpng.com/images/60fea6c83d624000048712b7.png'
+            }
+          />
         </Button>
-
-        <Button variant="uncontained" className={classes.button}>
-          <WhatsappShareButton url={ahref} title="Check out this project!">
-            <Avatar
-              className={classes.avatar}
-              src={
-                'https://seeklogo.com/images/W/whatsapp-icon-logo-8CA4FB831E-seeklogo.com.png'
-              }
-            />
-          </WhatsappShareButton>
+        <Button
+          variant="uncontained"
+          className={classes.button}
+          href={
+            'https://web.whatsapp.com/send?text=' +
+            'Check out this project on ZubHub! ' +
+            ahref
+          }
+        >
+          <Avatar
+            className={classes.whatsapp}
+            src={
+              'https://pnggrid.com/wp-content/uploads/2021/05/WhatsApp-logo-png-White.png'
+            }
+          />
         </Button>
 
         <Button
