@@ -86,6 +86,10 @@ migrate: ## Run `manage.py migrate`
 	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py migrate"
 .PHONY: migrate
 
+test: ## Run `manage.py test`
+	docker-compose -f docker-compose.yml exec web bash -c "cd zubhub && python manage.py test"
+.PHONY: test
+
 admin-user:
 	@echo "===="
 	@echo "== DANGER: don't forget to delete this user after you have created a proper superuser!!! =="

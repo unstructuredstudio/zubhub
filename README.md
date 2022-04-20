@@ -34,6 +34,7 @@ Follow the instructions below to set up your local development environment
 8. Setup Frontend.\
    [jump to section](#setup-frontend)
 
+
 <br/>
 <br/>
 
@@ -142,6 +143,7 @@ To stop:
 ```sh
        $ make stop or make down
 ```
+You can run test by running `make test`.
 For other make commands: run **make help**
 
 Visit  http://localhost:8000 on your browser to access the API documentation.
