@@ -110,13 +110,17 @@ const styles = theme => ({
       paddingRight: 12,
     },
   },
+  actionBoxMobileWrapper: {
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "space-between"
+  },
   iconsBoxStyle: {
     [theme.breakpoints.down('1080')]: {
       display: 'flex',
       paddingRight: 4,
     },
   },
-
   actionBoxButtonStyle: {
     margin: '0.5em',
     display: 'flex',
