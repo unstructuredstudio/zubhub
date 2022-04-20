@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 /**
  * @function handleOpenEnlargedImageDialog
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -145,5 +147,6 @@ export const handleMobileShare = async (project) => {
   try {
     await navigator.share(shareData);
   } catch (err) {
+    toast.warning("Failed to share project.");
   }
 }
