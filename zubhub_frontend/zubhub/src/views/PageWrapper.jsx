@@ -36,7 +36,10 @@ import {
   FormGroup,
   InputBase,
   TextField,
+  Button,
 } from '@material-ui/core';
+
+import Tooltip from '@mui/material/Tooltip';
 
 import {
   logout,
@@ -47,6 +50,7 @@ import {
   handleChangeLanguage,
   handleToggleSearchForm,
   closeSearchFormOrIgnore,
+  sliceLongName,
 } from './pageWrapperScripts';
 
 import {
@@ -512,14 +516,16 @@ function PageWrapper(props) {
                     onClose={e => handleSetState(handleProfileMenuClose(e))}
                   >
                     <MenuItem>
+                    <Tooltip title={props.auth.username} placement="top">
                       <Typography
                         variant="subtitle2"
                         color="textPrimary"
                         component="span"
                         className={classes.profileStyle}
                       >
-                        {props.auth.username}
+                        {props.auth.username.length<=14? props.auth.username : sliceLongName(props.auth.username) }
                       </Typography>
+                      </Tooltip>
                     </MenuItem>
                     <MenuItem>
                       <a className={classes.textDecorationNone} href="/profile">

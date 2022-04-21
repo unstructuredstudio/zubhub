@@ -98,3 +98,9 @@ export const closeSearchFormOrIgnore = e => {
     handleCloseSearchForm();
   }
 };
+
+export const sliceLongName = (name) => {
+  const arr = name.split('')
+  arr.splice(11,arr.length-14,'...')
+  return arr.join('')
+}
