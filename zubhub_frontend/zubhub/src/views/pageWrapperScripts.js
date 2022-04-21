@@ -101,6 +101,6 @@ export const closeSearchFormOrIgnore = e => {
 
 export const sliceLongName = (name) => {
   const arr = name.split('')
-  arr.splice(11,arr.length-14,'...')
+  arr.splice(9, arr.length - 11, '...')
   return arr.join('')
 }

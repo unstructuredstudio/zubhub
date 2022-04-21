@@ -36,10 +36,8 @@ import {
   FormGroup,
   InputBase,
   TextField,
-  Button,
+  Tooltip,
 } from '@material-ui/core';
-
-import Tooltip from '@mui/material/Tooltip';
 
 import {
   logout,
@@ -523,7 +521,7 @@ function PageWrapper(props) {
                         component="span"
                         className={classes.profileStyle}
                       >
-                        {props.auth.username.length<=14? props.auth.username : sliceLongName(props.auth.username) }
+                        {props.auth.username.length <=14 ? props.auth.username : sliceLongName(props.auth.username) }
                       </Typography>
                       </Tooltip>
                     </MenuItem>
