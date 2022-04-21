@@ -439,50 +439,6 @@ def DeleteFileAPIView(request):
         return Response({'result': _('failed to delete file to storage backend')}, status=status.HTTP_502_BAD_GATEWAY)
 
 
-@api_view(['POST', 'GET'])
-@permission_classes([IsAuthenticated])
-@throttle_classes([GetUserRateThrottle, SustainedRateThrottle])
-def UploadFileToLocalAPIView(request):
-    """
-    Upload File To Storage backend.\n
-
-    Requires Authentication.\n
-    ------------------------\n
-    "GET":\n
-    Returns {"local":True|False} indicating if we are to store \n
-    media files on our custom media server or not.\n
-    ------------------------\n
-    "POST":\n
-    Returns {"secure_url":"url of uploaded file"}\n
-    Request body format:\n
-        {\n
-            file: <media file>,\n
-            key: <file storage path str>\n
-        }\n
-    """
-
-    if request.method == "POST":
-        try:
-            file = request.data.get("file")
-            key = request.data.get("key")
-            res = upload_file_to_media_server(file, key)
-            res = res.json()
-            url = res["url"]
-
-            if isinstance(url, str):
-                if url.split("/")[-2].find("image") != -1:
-                    return Response({"Location": url, "Key": key}, status=status.HTTP_200_OK)
-                elif url.split("/")[-2].find("video") != -1:
-                    return Response({"secure_url": url}, status.HTTP_200_OK)
-            else:
-                raise Exception()
-
-        except Exception:
-            return Response({"result": _('failed to upload file to storage backend')}, status=status.HTTP_502_BAD_GATEWAY)
-    else:
-        return Response({"local": settings.STORE_MEDIA_LOCALLY}, status=status.HTTP_200_OK)
-
-
 class HeroAPIView(RetrieveAPIView):
     """
     Get site Hero content. To be displayed on the home page of the frontend.\n
