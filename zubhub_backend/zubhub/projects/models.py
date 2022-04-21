@@ -249,3 +249,27 @@ class StaffPick(models.Model):
             uid = uid[0:floor(len(uid) / 6)]
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
+
+
+class UnpublishmentReason(models.Model):
+    id = models.UUIDField(primary_key=True,
+                          default=uuid.uuid4,
+                          editable=False,
+                          unique=True)
+    description = models.CharField(max_length=250)
+
+
+class Unpublishment(models.Model):
+    id = models.UUIDField(primary_key=True,
+                          default=uuid.uuid4,
+                          editable=False,
+                          unique=True)
+    reason = models.ForeignKey(UnpublishmentReason,
+                               null=True,
+                               blank=True,
+                               on_delete=models.SET_NULL)
+    creator = models.ForeignKey(Creator,
+                                null=True,
+                                blank=True,
+                                on_delete=models.SET_NULL)
+    date = models.DateTimeField(default=timezone.now)
