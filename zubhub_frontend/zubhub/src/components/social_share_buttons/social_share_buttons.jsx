@@ -2,36 +2,24 @@ import React from 'react';
 import { Avatar, Button, ButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkIcon from '@material-ui/icons/Link';
-// import fbicon from 'fbicon.png';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles({
-  text: {
-    color: 'white',
-  },
   buttonGroup: {
     width: '50px',
     height: '200px',
-    display: 'flex-column',
+    display: 'flex',
+    justifyContent: 'flex',
     alignItems: 'center',
-    marginBottom: '20px',
   },
   button: {
     width: '50px',
     height: '50px',
     borderRadius: '50% !important',
-    margin: '10px',
-    borderColor: 'white',
-  },
-  whatsapp: {
-    width: '40px',
-    height: '40px',
-    backgroundColor: 'transparent',
-  },
-  avatar: {
-    width: '35px',
-    height: '35px',
-    backgroundColor: 'transparent',
-    border: '3px solid white',
+    marginTop: '10px',
+    color: 'white',
   },
 });
 
@@ -41,8 +29,7 @@ const SocialButtons = () => {
   return (
     <>
       <ButtonGroup className={classes.buttonGroup} orientation="vertical">
-        <Button
-          variant="uncontained"
+        <IconButton
           className={classes.button}
           href={
             'https://www.facebook.com/sharer/sharer.php?u=' +
@@ -50,6 +37,29 @@ const SocialButtons = () => {
             '&quote=Check%20out%20this%20project%20on%20ZubHub!'
           }
         >
+          <FacebookIcon />
+        </IconButton>
+        <IconButton
+          className={classes.button}
+          href={
+            'https://web.whatsapp.com/send?text=' +
+            'Check out this project on ZubHub! ' +
+            ahref
+          }
+        >
+          <WhatsAppIcon />
+        </IconButton>
+        <IconButton
+          className={classes.button}
+          onClick={() => {
+            navigator.clipboard.writeText(ahref);
+            alert('Link to this project copied to clipboard!');
+          }}
+        >
+          <LinkIcon />
+        </IconButton>
+
+        {/* <Button variant="uncontained" className={classes.button}>
           <Avatar
             className={classes.avatar}
             src={
@@ -85,7 +95,7 @@ const SocialButtons = () => {
           <Avatar className={classes.avatar}>
             <LinkIcon />
           </Avatar>
-        </Button>
+        </Button> */}
       </ButtonGroup>
     </>
   );
