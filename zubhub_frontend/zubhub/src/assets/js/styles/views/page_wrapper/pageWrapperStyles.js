@@ -1,8 +1,6 @@
 const styles = theme => ({
   navBarStyle: {
     backgroundColor: '#DC3545',
-    position: 'relative',
-    zIndex: 999,
   },
   mainContainerStyle: {
     maxWidth: '2000px',
