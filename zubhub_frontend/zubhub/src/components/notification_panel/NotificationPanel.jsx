@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styles from '../../assets/js/styles/components/notification_panel/notificationPanelStyles';
 import { makeStyles } from '@material-ui/core/styles';
 import NotificationPanelButton from './NotificationPanelButton';
@@ -101,9 +107,11 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
   const handleScroll = ({ target }) => {
     if (
       !loading &&
+      !outOfNotifications &&
       target.scrollTop + target.clientHeight >= target.scrollHeight - 50
     ) {
       setPage(page => page + 1);
+      setLoading(true);
     }
   };
 
@@ -194,18 +202,22 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
       >
         <div className={classes.panelHeaderStyle}>
           <h1 className={classes.panelHeaderTextStyle}>Notifications</h1>
-          <NotificationPanelButton
-            selected={notificationViewType === NOTIFICATION_VIEW_TYPE.ALL}
-            onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.ALL)}
-          >
-            All
-          </NotificationPanelButton>
-          <NotificationPanelButton
-            selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
-            onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.UNREAD)}
-          >
-            Unread
-          </NotificationPanelButton>
+          <div className={classes.panelHeaderButtons}>
+            <NotificationPanelButton
+              selected={notificationViewType === NOTIFICATION_VIEW_TYPE.ALL}
+              onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.ALL)}
+            >
+              All
+            </NotificationPanelButton>
+            <NotificationPanelButton
+              selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
+              onClick={handleNotificationTabChange(
+                NOTIFICATION_VIEW_TYPE.UNREAD,
+              )}
+            >
+              Unread
+            </NotificationPanelButton>
+          </div>
         </div>
         {notificationViewType === NOTIFICATION_VIEW_TYPE.ALL
           ? getAllNotificationView()

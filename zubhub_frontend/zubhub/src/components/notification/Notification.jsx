@@ -42,67 +42,65 @@ const Notification = ({ notification, onNotificationClick }) => {
   };
 
   return (
-    <>
-      <Link
-        to={notification.link}
-        style={{ textDecoration: 'none', color: 'inherit' }}
+    <Link
+      to={notification.link}
+      style={{ textDecoration: 'none', color: 'inherit', maxWidth: '365px' }}
+    >
+      <ListItem
+        alignItems="center"
+        disableGutters
+        button
+        className={classes.notificationStyle}
+        onClick={() => {
+          if (!notification.viewed) {
+            let obj = new API();
+            obj.viewNotification({
+              id: notification.id,
+              token: token,
+              body: notification,
+            });
+          }
+          onNotificationClick();
+        }}
       >
-        <ListItem
-          alignItems="center"
-          disableGutters
-          button
-          className={classes.notificationStyle}
-          onClick={() => {
-            if (!notification.viewed) {
-              let obj = new API();
-              obj.viewNotification({
-                id: notification.id,
-                token: token,
-                body: notification,
-              });
-            }
-            onNotificationClick();
-          }}
-        >
-          <ListItemAvatar>
-            {notification.sources.length === 1 && (
-              <AvatarGroup className={classes.group}>
-                <Avatar
-                  className={classes.image}
-                  src={notification.sources[0].avatar}
-                />
-              </AvatarGroup>
-            )}
-            {notification.sources.length > 1 && (
-              <AvatarGroup className={classes.group}>
-                <Avatar
-                  className={classes.firstImage}
-                  src={notification.sources[0].avatar}
-                />
-                <Avatar
-                  className={classes.secondImage}
-                  src={notification.sources[1].avatar}
-                />
-              </AvatarGroup>
-            )}
-          </ListItemAvatar>
-          <ListItemText
-            className={classes.text}
-            classes={{ primary: classes.message, secondary: classes.time }}
-            primary={
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: getMessage(),
-                }}
-              ></span>
-            }
-            secondary={st.value + ' ' + st.key + ' ' + 'ago'}
-          />
-          {!notification.viewed && <div className={classes.viewDot}></div>}
-          {notification.viewed && <div className={classes.unviewed}></div>}
-        </ListItem>
-      </Link>
-    </>
+        <ListItemAvatar>
+          {notification.sources.length === 1 && (
+            <AvatarGroup className={classes.group}>
+              <Avatar
+                className={classes.image}
+                src={notification.sources[0].avatar}
+              />
+            </AvatarGroup>
+          )}
+          {notification.sources.length > 1 && (
+            <AvatarGroup className={classes.group}>
+              <Avatar
+                className={classes.firstImage}
+                src={notification.sources[0].avatar}
+              />
+              <Avatar
+                className={classes.secondImage}
+                src={notification.sources[1].avatar}
+              />
+            </AvatarGroup>
+          )}
+        </ListItemAvatar>
+        <ListItemText
+          className={classes.text}
+          classes={{ primary: classes.message, secondary: classes.time }}
+          primary={
+            <span
+              dangerouslySetInnerHTML={{
+                __html: getMessage(),
+              }}
+            ></span>
+          }
+          secondary={st.value + ' ' + st.key + ' ' + 'ago'}
+        />
+        {!notification.viewed && <div className={classes.viewDot}></div>}
+        {notification.viewed && <div className={classes.unviewed}></div>}
+      </ListItem>
+    </Link>
   );
 };
 
