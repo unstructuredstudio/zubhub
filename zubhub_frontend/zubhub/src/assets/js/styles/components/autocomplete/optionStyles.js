@@ -15,13 +15,14 @@ const styles = theme => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    maxWidth: '50%',
+    maxWidth: '80%',
   },
   optionTitleWrapper: {
-    flex: '1 1 max-content',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+    flexShrink: '0',
+    maxWidth: '85%',
   },
   optionTitle: {
     display: 'inline',
@@ -31,6 +32,10 @@ const styles = theme => ({
     fontSize: '12px',
     color: 'gray',
     marginLeft: '10px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    minWidth: '15%',
   },
   optionImageWrapper: {
     display: 'flex',
