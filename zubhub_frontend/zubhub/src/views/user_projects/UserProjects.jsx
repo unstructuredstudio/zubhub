@@ -63,6 +63,10 @@ function UserProjects(props) {
   } else if (projects && projects.length > 0) {
     return (
       <Box className={classes.root}>
+        {console.log(props)}
+        {console.log(state)}
+        {console.log(toast)}
+        {console.log(projects)}
         <Container className={classes.mainContainerStyle}>
           <Grid container>
             <Grid item xs={12}>

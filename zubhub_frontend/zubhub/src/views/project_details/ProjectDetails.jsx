@@ -118,6 +118,9 @@ function ProjectDetails(props) {
     delete_project_dialog_error: null,
   });
 
+  // Note: for testing purposes 
+  const [testProjects, setTestProjects] = React.useState([]);
+
   React.useEffect(() => {
     Promise.resolve(
       props.getProject({
@@ -130,6 +133,20 @@ function ProjectDetails(props) {
         parseComments(obj.project.comments);
       }
       handleSetState(obj);
+    });
+
+    // Note: for testing purposes 
+    Promise.resolve(
+      props.getProject({
+        id: '9ec646d6-69b0-4aac-ab59-67470bca7d96',
+        token: props.auth.token,
+        t: props.t,
+      }),
+    ).then(obj => {
+      if (obj.project) {
+        parseComments(obj.project.comments);
+      }
+      setTestProjects([obj.project, obj.project, obj.project]);
     });
   }, []);
 
@@ -169,7 +186,6 @@ function ProjectDetails(props) {
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
-    const testProjects = [project, project, project];
     return (
       <>
         <Box className={classes.root}>
@@ -459,7 +475,7 @@ function ProjectDetails(props) {
                 </Grid>
               </Grid>
             </Container>
-            <ProjectsBar projects = {testProjects}/>
+            <ProjectsBar projects={testProjects} {...props} />
             <Comments
               context={{ name: 'project', body: project }}
               handleSetState={handleSetState}
