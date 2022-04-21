@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMediaQuery } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
@@ -44,6 +45,7 @@ import {
   toggleFollow,
   isCloudinaryVideo,
   isGdriveORVimeoORYoutube,
+  handleMobileShare,
 } from './projectDetailsScripts';
 
 import {
@@ -107,6 +109,7 @@ const buildTagsComponent = (classes, tags, history) => {
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const mediaQuery = useMediaQuery('(max-width: 600px)');
 
   const [state, setState] = React.useState({
     project: {},
@@ -303,77 +306,92 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
-                  <Box display="flex" justifyContent="flex-end">
-                    <Box className={classes.actionBoxStyle}>
+                  <div
+                    className={mediaQuery ? classes.actionBoxMobileWrapper : ''}
+                  >
+                    {mediaQuery && (
                       <CustomButton
-                        className={classes.actionBoxButtonStyle}
-                        size="small"
-                        aria-label={t(
-                          'projectDetails.ariaLabels.likeButton.label',
-                        )}
-                        variant="extended"
-                        onClick={e =>
-                          handleSetState(toggleLike(e, props, project.id))
-                        }
+                        className={common_classes.marginLeft1em}
+                        style={{ marginLeft: 0 }}
+                        variant="contained"
+                        primaryButtonStyle
+                        onClick={e => handleMobileShare(project)}
                       >
-                        <Box className={classes.iconsBoxStyle}>
-                          {project.likes.includes(props.auth.id) ? (
-                            <ClapIcon
-                              arial-label={t(
-                                'projectDetails.ariaLabels.likeButton.unlilke',
-                              )}
-                            />
-                          ) : (
-                            <ClapBorderIcon
-                              arial-label={t(
-                                'projectDetails.ariaLabels.likeButton.like',
-                              )}
-                            />
+                        Share
+                      </CustomButton>
+                    )}
+                    <Box display="flex" justifyContent="flex-end">
+                      <Box className={classes.actionBoxStyle}>
+                        <CustomButton
+                          className={classes.actionBoxButtonStyle}
+                          size="small"
+                          aria-label={t(
+                            'projectDetails.ariaLabels.likeButton.label',
                           )}
-                        </Box>
-                        <Typography>
-                          {nFormatter(project.likes.length)}
+                          variant="extended"
+                          onClick={e =>
+                            handleSetState(toggleLike(e, props, project.id))
+                          }
+                        >
+                          <Box className={classes.iconsBoxStyle}>
+                            {project.likes.includes(props.auth.id) ? (
+                              <ClapIcon
+                                arial-label={t(
+                                  'projectDetails.ariaLabels.likeButton.unlilke',
+                                )}
+                              />
+                            ) : (
+                              <ClapBorderIcon
+                                arial-label={t(
+                                  'projectDetails.ariaLabels.likeButton.like',
+                                )}
+                              />
+                            )}
+                          </Box>
+                          <Typography>
+                            {nFormatter(project.likes.length)}
+                          </Typography>
+                        </CustomButton>
+                        <CustomButton
+                          className={classes.actionBoxButtonStyle}
+                          size="small"
+                          aria-label={t(
+                            'projectDetails.ariaLabels.saveButton.label',
+                          )}
+                          onClick={e =>
+                            handleSetState(toggleSave(e, props, project.id))
+                          }
+                        >
+                          <Box className={classes.iconsBoxStyle}>
+                            {project.saved_by.includes(props.auth.id) ? (
+                              <BookmarkIcon
+                                aria-label={t(
+                                  'projectDetails.ariaLabels.saveButton.unsave',
+                                )}
+                              />
+                            ) : (
+                              <BookmarkBorderIcon
+                                aria-label={t(
+                                  'projectDetails.ariaLabels.saveButton.save',
+                                )}
+                              />
+                            )}
+                          </Box>
+                        </CustomButton>
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                          className={classes.actionBoxButtonStyle}
+                        >
+                          <Box className={classes.iconsBoxStyle}>
+                            <VisibilityIcon />
+                          </Box>
+                          <Typography>{project.views_count}</Typography>
                         </Typography>
-                      </CustomButton>
-                      <CustomButton
-                        className={classes.actionBoxButtonStyle}
-                        size="small"
-                        aria-label={t(
-                          'projectDetails.ariaLabels.saveButton.label',
-                        )}
-                        onClick={e =>
-                          handleSetState(toggleSave(e, props, project.id))
-                        }
-                      >
-                        <Box className={classes.iconsBoxStyle}>
-                          {project.saved_by.includes(props.auth.id) ? (
-                            <BookmarkIcon
-                              aria-label={t(
-                                'projectDetails.ariaLabels.saveButton.unsave',
-                              )}
-                            />
-                          ) : (
-                            <BookmarkBorderIcon
-                              aria-label={t(
-                                'projectDetails.ariaLabels.saveButton.save',
-                              )}
-                            />
-                          )}
-                        </Box>
-                      </CustomButton>
-                      <Typography
-                        color="textSecondary"
-                        variant="caption"
-                        component="span"
-                        className={classes.actionBoxButtonStyle}
-                      >
-                        <Box className={classes.iconsBoxStyle}>
-                          <VisibilityIcon />
-                        </Box>
-                        <Typography>{project.views_count}</Typography>
-                      </Typography>
+                      </Box>
                     </Box>
-                  </Box>
+                  </div>
                 </Grid>
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">

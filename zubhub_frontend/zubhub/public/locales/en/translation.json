@@ -118,7 +118,8 @@
     "alreadyAMember": "Already a Member ?",
     "login": "Login",
     "errors": {
-      "unexpected": "Uh oh! We couldn't log you in. Maybe try again later?"
+      "unexpected": "Uh oh! We couldn't log you in. Maybe try again later?",
+      "invalidFormFields": "Looks like there are a few errors in the registration form. Review it before clicking Signup!"
     },
     "ariaLabels": {
       "togglePasswordVisibility": "Toggle password visibility"
@@ -253,10 +254,10 @@
 
   "project": {
     "publish": {
-      "draft":"Draft",
-      "preview":"Preview",
-      "authenticated_creators":"Authenticated Creators",
-      "public":"Public"
+      "draft": "Draft",
+      "preview": "Preview",
+      "authenticated_creators": "Authenticated Creators",
+      "public": "Public"
     },
     "errors": {
       "videoPlayerError": "An error occured while trying to play this video"
@@ -356,12 +357,12 @@
       },
       "publish": {
         "label": "What publish option do you want to set for this project?",
-        "topHelperText":"Think about your target audience. Should this project be visible to all creators?, authenticated creators?, or do you want to provide the usernames of creators this project should be visible to?",
+        "topHelperText": "Think about your target audience. Should this project be visible to all creators?, authenticated creators?, or do you want to provide the usernames of creators this project should be visible to?",
         "visibleTo": "Visible To",
         "addUsernames": "Add Usernames",
         "errors": {
-          "visible_to_required":"You must provide the usernames of creators your post should be visible to in preview mode",
-          "visible_to_unsupported":"One of the usernames provided is not a valid username"
+          "visible_to_required": "You must provide the usernames of creators your post should be visible to in preview mode",
+          "visible_to_unsupported": "One of the usernames provided is not a valid username"
         }
       },
       "submit": "Create Project",
@@ -434,10 +435,10 @@
         }
       },
       "publish": {
-        "draft":"Draft",
-        "preview":"Preview",
-        "authenticated_creators":"Authenticated Creators",
-        "public":"Public"
+        "draft": "Draft",
+        "preview": "Preview",
+        "authenticated_creators": "Authenticated Creators",
+        "public": "Public"
       }
     },
     "comment": {

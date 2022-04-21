@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import countryMap from '../../assets/js/countryMap.json';
 import intlTelInput from 'intl-tel-input';
 import { calculateLabelWidth } from '../../assets/js/utils/scripts';
+import { toast } from 'react-toastify';
 
 /**
  * @constant vars
@@ -91,6 +92,8 @@ export const signup = (e, props) => {
             });
           }
         });
+    } else {
+      toast.error(props.t('signup.errors.invalidFormFields'));
     }
   });
 };
