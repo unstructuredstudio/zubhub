@@ -18,13 +18,13 @@ function ProjectsBar({ projects, ...props }) {
   return (
     <Container className={classes.projectsBarWrapperStyle}>
       <Typography variant="h5" className={classes.descriptionHeadingStyle}>
-        Recommended Projects
+        {mediaQuery ? 'Recommended' : 'Recommended Projects'}
       </Typography>
       <Container
         className={
           mediaQuery
-            ? classes.projectsBarInnerWrapperStyle
-            : classes.projectsMobileBarInnerWrapperStyle
+            ? classes.projectsMobileBarInnerWrapperStyle
+            : classes.projectsBarInnerWrapperStyle
         }
       >
         {projects.map(project => (

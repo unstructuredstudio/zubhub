@@ -123,7 +123,6 @@ function ProjectDetails(props) {
   const [testProjects, setTestProjects] = React.useState([]);
 
   React.useEffect(() => {
-
     Promise.resolve(
       props.getProject({
         id: props.match.params.id,
@@ -135,7 +134,7 @@ function ProjectDetails(props) {
         parseComments(obj.project.comments);
       }
       handleSetState(obj);
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
     });
 
     // Note: for testing purposes
@@ -150,7 +149,7 @@ function ProjectDetails(props) {
         parseComments(obj.project.comments);
       }
       setTestProjects([obj.project, obj.project, obj.project]);
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
     });
   }, [id]);
 

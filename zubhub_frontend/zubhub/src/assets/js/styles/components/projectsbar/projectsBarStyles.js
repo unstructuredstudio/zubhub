@@ -23,7 +23,6 @@ const styles = theme => ({
         borderRadius: '15px',
         backgroundColor: '#ffffff',
         justifyContent: 'space-between',
-        overflowX: 'scroll',
     },
     projectsMobileBarInnerWrapperStyle: {
         maxWidth: '1000px',
