@@ -28,7 +28,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 
-import SocialButtons from '../../components/social_share_buttons/social_share_buttons.jsx';
+import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
 import * as UserActions from '../../store/actions/userActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -321,7 +321,9 @@ function ProjectDetails(props) {
                         Share
                       </CustomButton>
                     )}
+                    <SocialButtons />
                     <Box display="flex" justifyContent="flex-end">
+                      <SocialButtons />
                       <Box className={classes.actionBoxStyle}>
                         <CustomButton
                           className={classes.actionBoxButtonStyle}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Button, ButtonGroup } from '@material-ui/core';
+import { ButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkIcon from '@material-ui/icons/Link';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
