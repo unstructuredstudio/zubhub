@@ -9,16 +9,16 @@ import IconButton from '@material-ui/core/IconButton';
 const useStyles = makeStyles({
   buttonGroup: {
     width: '50px',
-    height: '200px',
-    display: 'flex',
-    justifyContent: 'flex',
+    height: '100%',
+    display: 'inherit',
     alignItems: 'center',
+    margin: 'none',
   },
   button: {
     width: '50px',
     height: '50px',
     borderRadius: '50% !important',
-    marginTop: '10px',
+    margin: '5%',
     color: 'white',
   },
 });

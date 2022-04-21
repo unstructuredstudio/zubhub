@@ -134,7 +134,7 @@ function ProjectDetails(props) {
       }
       handleSetState(obj);
     });
-  }, [id]);
+  }, []);
 
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {
@@ -321,9 +321,7 @@ function ProjectDetails(props) {
                         Share
                       </CustomButton>
                     )}
-                    <SocialButtons />
                     <Box display="flex" justifyContent="flex-end">
-                      <SocialButtons />
                       <Box className={classes.actionBoxStyle}>
                         <CustomButton
                           className={classes.actionBoxButtonStyle}
@@ -392,6 +390,7 @@ function ProjectDetails(props) {
                           </Box>
                           <Typography>{project.views_count}</Typography>
                         </Typography>
+                        <SocialButtons />
                       </Box>
                     </Box>
                   </div>
