@@ -28,6 +28,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 
+import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
 import * as UserActions from '../../store/actions/userActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -389,6 +390,7 @@ function ProjectDetails(props) {
                           </Box>
                           <Typography>{project.views_count}</Typography>
                         </Typography>
+                        <SocialButtons />
                       </Box>
                     </Box>
                   </div>
