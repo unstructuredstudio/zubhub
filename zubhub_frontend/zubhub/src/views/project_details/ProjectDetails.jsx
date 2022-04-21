@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -108,6 +108,7 @@ const buildTagsComponent = (classes, tags, history) => {
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const { id } = useParams();
 
   const [state, setState] = React.useState({
     project: {},
@@ -118,10 +119,11 @@ function ProjectDetails(props) {
     delete_project_dialog_error: null,
   });
 
-  // Note: for testing purposes 
+  // Note: for testing purposes
   const [testProjects, setTestProjects] = React.useState([]);
 
   React.useEffect(() => {
+
     Promise.resolve(
       props.getProject({
         id: props.match.params.id,
@@ -133,9 +135,10 @@ function ProjectDetails(props) {
         parseComments(obj.project.comments);
       }
       handleSetState(obj);
+      window.scrollTo(0,0);
     });
 
-    // Note: for testing purposes 
+    // Note: for testing purposes
     Promise.resolve(
       props.getProject({
         id: '9ec646d6-69b0-4aac-ab59-67470bca7d96',
@@ -147,8 +150,9 @@ function ProjectDetails(props) {
         parseComments(obj.project.comments);
       }
       setTestProjects([obj.project, obj.project, obj.project]);
+      window.scrollTo(0,0);
     });
-  }, []);
+  }, [id]);
 
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {
