@@ -3,7 +3,7 @@ from .models import Hero, FAQ, Help, Privacy
 
 
 class HeroSerializer(serializers.ModelSerializer):
-    
+    image_url = serializers.SerializerMethodField()
     class Meta:
         model = Hero
         fields  = [
@@ -12,8 +12,12 @@ class HeroSerializer(serializers.ModelSerializer):
             "description",
             "image_url",
             "activity_url",
-            "explore_ideas_url"
+            "explore_ideas_url",
+            "tinkering_resource_url",
         ]
+
+    def get_image_url(self, instance):
+        return instance.image.name
 
 
 class PrivacySerializer(serializers.ModelSerializer):

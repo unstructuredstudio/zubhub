@@ -77,6 +77,7 @@ const styles = theme => ({
     alignItems: 'center',
   },
   dividerText: {
+    whiteSpace: 'nowrap',
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.2rem',
     },

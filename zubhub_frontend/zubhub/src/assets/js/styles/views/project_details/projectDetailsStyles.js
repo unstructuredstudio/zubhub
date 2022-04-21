@@ -98,14 +98,27 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+
     boxShadow:
       '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
     [theme.breakpoints.down('1080')]: {
       position: 'static',
       height: '3.5em',
-      width: '100%',
+      width: 'fit-content',
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'flex-end',
+      paddingRight: 12,
+    },
+  },
+  actionBoxMobileWrapper: {
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "space-between"
+  },
+  iconsBoxStyle: {
+    [theme.breakpoints.down('1080')]: {
+      display: 'flex',
+      paddingRight: 4,
     },
   },
   actionBoxButtonStyle: {
@@ -117,7 +130,8 @@ const styles = theme => ({
     '& span': { display: 'flex', flexDirection: 'column' },
     [theme.breakpoints.down('1080')]: {
       flexDirection: 'row',
-      marginBottom: '1em',
+      margin: '0.2em',
+      padding: '7px',
       '& span': {
         flexDirection: 'row',
       },
@@ -161,8 +175,12 @@ const styles = theme => ({
     fontSize: '2.2rem',
   },
   descriptionBodyStyle: {
-    fontSize: '1.5rem',
     marginBottom: '0.7em',
+    color: 'rgba(0, 0, 0, 0.54)',
+    '& .ql-editor': {
+      fontSize: '1.5rem',
+      fontFamily: 'Raleway,Roboto,sans-serif',
+    },
   },
   materialsUsedStyle: {
     display: 'inline-block',
@@ -248,6 +266,9 @@ const styles = theme => ({
   },
   error: {
     color: '#a94442',
+  },
+  dialogButtonContainer: {
+    padding: '16px 24px',
   },
 });
 

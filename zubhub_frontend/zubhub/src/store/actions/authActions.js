@@ -48,7 +48,7 @@ export const login = args => {
  */
 export const logout = args => {
   return dispatch => {
-    API.logout(args.token)
+    return API.logout(args.token)
       .then(_ => {
         dispatch({
           type: 'SET_AUTH_USER',
@@ -58,7 +58,7 @@ export const logout = args => {
             id: null,
             avatar: null,
             members_count: null,
-            role: null,
+            tags: [],
           },
         });
       })
@@ -82,24 +82,41 @@ export const getAuthUser = props => {
     return API.getAuthUser(props.auth.token)
       .then(res => {
         if (!res.id) {
+          dispatch(
+            logout({
+              token: props.auth.token,
+              history: props.history,
+              t: props.t,
+            }),
+          ).then(() => {
+            props.history.push('/account-status');
+          });
           throw new Error(props.t('pageWrapper.errors.unexpected'));
+        } else {
+          dispatch({
+            type: 'SET_AUTH_USER',
+            payload: {
+              ...props.auth,
+              username: res.username,
+              id: res.id,
+              avatar: res.avatar,
+              members_count: res.members_count,
+              tags: res.tags,
+            },
+          });
         }
-
-        dispatch({
-          type: 'SET_AUTH_USER',
-          payload: {
-            ...props.auth,
-            username: res.username,
-            id: res.id,
-            avatar: res.avatar,
-            members_count: res.members_count,
-            role: res.role,
-          },
-        });
 
         return res;
       })
       .catch(error => toast.warning(error.message));
+  };
+};
+
+export const AccountStatus = args => {
+  return () => {
+    return API.getAccountStatus(args.token).catch(() => {
+      toast.warning(args.t('pageWrapper.errors.unexpected'));
+    });
   };
 };
 

@@ -1,3 +1,15 @@
+export const SearchType = {
+  CREATORS: 'creators',
+  PROJECTS: 'projects',
+  TAGS: 'tags',
+};
+
+export const ProjectSearchCriteria = {
+  CATEGORY: 0,
+  TAG: 1,
+  TITLE_DESCRIPTION: 2,
+};
+
 /**
  * @function getQueryParams
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -5,15 +17,10 @@
  * @todo - describe function's signature
  */
 export const getQueryParams = url => {
-  const params = url.split('?')[1];
-  let [page, query] = params.split('q=');
-  if (page) {
-    page = page.split('=')[1];
-    page = page.split('&')[0];
-  } else {
-    page = null;
-  }
-  return { page, query };
+  let params = new URL(url);
+  params = new URLSearchParams(params.search);
+
+  return params;
 };
 
 /**
@@ -23,10 +30,31 @@ export const getQueryParams = url => {
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props, query_string, type) => {
-  if (type === 'projects') {
-    return props.searchProjects({ page, query_string, t: props.t, type });
-  } else if (type === 'creators') {
-    return props.searchCreators({ page, query_string, t: props.t, type });
+  if (type === SearchType.PROJECTS) {
+    return props.searchProjects({
+      page,
+      query_string,
+      t: props.t,
+      token: props.auth.token,
+      tab: 'projects',
+    });
+  } else if (type === SearchType.CREATORS) {
+    return props.searchCreators({
+      page,
+      query_string,
+      t: props.t,
+      token: props.auth.token,
+      tab: 'creators',
+    });
+  } else {
+    return props.searchProjects({
+      page,
+      query_string,
+      t: props.t,
+      token: props.auth.token,
+      criteria: ProjectSearchCriteria.TAG,
+      tab: 'tags',
+    });
   }
 };
 

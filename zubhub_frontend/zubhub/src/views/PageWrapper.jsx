@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -33,6 +33,9 @@ import {
   MenuItem,
   Avatar,
   Select,
+  FormGroup,
+  InputBase,
+  TextField,
 } from '@material-ui/core';
 
 import {
@@ -46,6 +49,11 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
+import {
+  getQueryParams,
+  SearchType,
+} from './search_results/searchResultsScripts';
+
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
@@ -56,6 +64,11 @@ import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
+import InputSelect from '../components/input_select/InputSelect';
+import Autocomplete from '../components/autocomplete/Autocomplete';
+import API from '../api';
+import { throttle } from '../utils.js';
+import Option from '../components/autocomplete/Option';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -70,6 +83,11 @@ function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const trigger = useScrollTrigger()
+  const [searchType, setSearchType] = useState(
+    getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
+  );
+  const formRef = useRef();
 
   const [state, setState] = React.useState({
     username: null,
@@ -78,7 +96,60 @@ function PageWrapper(props) {
     open_search_form: false,
   });
 
-  React.useEffect(() => {
+  const [options, setOptions] = useState([]);
+  const [query, setQuery] = useState('');
+  const [queryInput, setQueryInput] = useState('');
+
+  const throttledFetchOptions = useMemo(
+    () =>
+      throttle(async (query, searchType) => {
+        if (query.length === 0) {
+          setOptions([]);
+          return;
+        }
+
+        const api = new API();
+        let completions = [];
+        if (searchType === SearchType.TAGS) {
+          completions = await api.autocompleteTags({ query });
+          completions = completions.map(({ name }) => ({
+            title: name,
+          }));
+        } else if (searchType === SearchType.PROJECTS) {
+          completions = await api.autocompleteProjects({ query });
+          completions = completions.map(({ id, title, creator, images }) => ({
+            title,
+            shortInfo: creator.username,
+            image: images.length > 0 ? images[0].image_url : null,
+            link: `/projects/${id}`,
+          }));
+        } else {
+          completions = await api.autocompleteCreators({ query });
+          completions = completions.map(({ username, avatar }) => ({
+            title: username,
+            image: avatar,
+            link: `/creators/${username}`,
+          }));
+        }
+        setOptions(completions);
+      }, 2),
+    [],
+  );
+
+  useEffect(() => {
+    throttledFetchOptions(
+      query ||
+        (props.location.search &&
+          getQueryParams(window.location.href).get('q')),
+      searchType,
+    );
+  }, [query, searchType]);
+
+  useEffect(() => {
+    throttledFetchOptions.cancel();
+  }, []);
+
+  useEffect(() => {
     handleSetState({ loading: true });
     fetchHero(props)
       .then(() => {
@@ -90,6 +161,10 @@ function PageWrapper(props) {
         handleSetState({ loading: false });
       });
   }, [props.auth.token]);
+  
+  React.useEffect(()=>{
+    handleSetState(handleProfileMenuClose()) 
+  },[trigger])
 
   const handleSetState = obj => {
     if (obj) {
@@ -99,10 +174,41 @@ function PageWrapper(props) {
     }
   };
 
+  const onSearchOptionClick = async (_, option) => {
+    if (!option || !option.title) return;
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+    if (option.link) {
+      window.history.pushState({}, '', option.link);
+      window.location.reload();
+      return;
+    }
+
+    const queryParams = new URLSearchParams({
+      type: searchType,
+      q: option.title,
+    });
+    window.history.pushState({}, '', `/search?${queryParams}`);
+    window.location.reload();
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const queryParams = new URLSearchParams({
+      type: searchType,
+      q: query,
+    });
+
+    window.history.pushState({}, '', `/search?${queryParams}`);
+    window.location.reload();
+  };
+
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
-  const { hero } = props.projects;
+  const { zubhub, hero } = props.projects;
+
   const profileMenuOpen = Boolean(anchor_el);
+
   return (
     <>
       <ToastContainer />
@@ -113,7 +219,7 @@ function PageWrapper(props) {
             <Box className={classes.logoStyle}>
               <Link to="/">
                 <img
-                  src={hero.header_logo_url ? hero.header_logo_url : logo}
+                  src={zubhub?.header_logo_url ? zubhub.header_logo_url : logo}
                   alt="logo"
                 />
               </Link>
@@ -163,6 +269,8 @@ function PageWrapper(props) {
                 action="/search"
                 className={clsx(classes.searchFormStyle, classes.removeOn894)}
                 role="search"
+                onSubmit={handleSubmit}
+                ref={formRef}
               >
                 <FormControl variant="outlined">
                   <InputLabel
@@ -171,28 +279,79 @@ function PageWrapper(props) {
                   >
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
-                  <OutlinedInput
-                    name="q"
-                    id="q"
-                    type="search"
-                    className={clsx(
-                      classes.searchFormInputStyle,
-                      'search-form-input',
-                    )}
-                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                    pattern="(.|\s)*\S(.|\s)*"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          type="submit"
-                          className={classes.searchFormSubmitStyle}
-                          aria-label={t('pageWrapper.inputs.search.label')}
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
+                  <FormGroup row>
+                    <FormControl variant="outlined">
+                      <InputSelect
+                        searchType={searchType}
+                        onSearchTypeChange={setSearchType}
+                        name="type"
+                      >
+                        <MenuItem value={SearchType.PROJECTS}>
+                          Projects
+                        </MenuItem>
+                        <MenuItem value={SearchType.CREATORS}>
+                          Creators
+                        </MenuItem>
+                        <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                      </InputSelect>
+                    </FormControl>
+                    <Autocomplete
+                      options={options}
+                      defaultValue={{
+                        title:
+                          props.location.search &&
+                          getQueryParams(window.location.href).get('q'),
+                      }}
+                      renderOption={(option, { inputValue }) => (
+                        <Option
+                          option={option}
+                          inputValue={inputValue}
+                          onOptionClick={onSearchOptionClick}
+                        />
+                      )}
+                      onChange={onSearchOptionClick}
+                    >
+                      {params => (
+                        <TextField
+                          name="q"
+                          id="q"
+                          type="search"
+                          variant="outlined"
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            className: clsx(
+                              classes.searchFormInputStyle,
+                              'search-form-input',
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  type="submit"
+                                  className={classes.searchFormSubmitStyle}
+                                  aria-label={t(
+                                    'pageWrapper.inputs.search.label',
+                                  )}
+                                >
+                                  <SearchIcon />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                            pattern: '(.|s)*S(.|s)*',
+                            defaultValue: {
+                              title:
+                                props.location.search &&
+                                getQueryParams(window.location.href).get('q'),
+                            },
+                          }}
+                          onChange={e => setQuery(e.target.value)}
+                          placeholder={`${t(
+                            'pageWrapper.inputs.search.label',
+                          )}...`}
+                        />
+                      )}
+                    </Autocomplete>
+                  </FormGroup>
                 </FormControl>
               </form>
             </Box>
@@ -255,6 +414,7 @@ function PageWrapper(props) {
                   />
                   <Menu
                     className={common_classes.addOnSmallScreen}
+                    disableScrollLock={true}
                     id="menu"
                     anchorEl={anchor_el}
                     anchorOrigin={{
@@ -336,6 +496,7 @@ function PageWrapper(props) {
                   />
                   <Menu
                     className={classes.profileMenuStyle}
+                    disableScrollLock={true}
                     id="profile_menu"
                     anchorEl={anchor_el}
                     anchorOrigin={{
@@ -464,7 +625,19 @@ function PageWrapper(props) {
                 action="/search"
                 className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
                 role="search"
+                ref={formRef}
               >
+                <FormControl variant="outlined">
+                  <InputSelect
+                    searchType={searchType}
+                    onSearchTypeChange={setSearchType}
+                    name="type"
+                  >
+                    <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
+                    <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
+                    <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                  </InputSelect>
+                </FormControl>
                 <FormControl variant="outlined">
                   <InputLabel
                     htmlFor="q"
@@ -472,28 +645,56 @@ function PageWrapper(props) {
                   >
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
-                  <OutlinedInput
-                    name="q"
-                    id="q"
-                    type="search"
-                    className={clsx(
-                      classes.smallSearchFormInputStyle,
-                      'search-form-input',
-                    )}
-                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                    pattern="(.|\s)*\S(.|\s)*"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          type="submit"
-                          className={classes.searchFormSubmitStyle}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
+                  <Autocomplete
+                    options={options}
+                    defaultValue={
+                      props.location.search &&
+                      getQueryParams(window.location.href).get('q')
                     }
-                  />
+                    renderOption={(option, { inputValue }) => (
+                      <Option
+                        option={option}
+                        inputValue={inputValue}
+                        onOptionClick={onSearchOptionClick}
+                      />
+                    )}
+                    onChange={onSearchOptionClick}
+                  >
+                    {params => (
+                      <TextField
+                        name="q"
+                        id="q"
+                        type="search"
+                        variant="outlined"
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          className: clsx(
+                            classes.smallSearchFormInputStyle,
+                            'search-form-input',
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                type="submit"
+                                className={classes.searchFormSubmitStyle}
+                                aria-label={t(
+                                  'pageWrapper.inputs.search.label',
+                                )}
+                              >
+                                <SearchIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                          pattern: '(.|s)*S(.|s)*',
+                        }}
+                        placeholder={`${t(
+                          'pageWrapper.inputs.search.label',
+                        )}...`}
+                        onChange={e => setQuery(e.target.value)}
+                      />
+                    )}
+                  </Autocomplete>
                 </FormControl>
               </form>
             </ClickAwayListener>
@@ -509,7 +710,9 @@ function PageWrapper(props) {
           <a href="https://unstructured.studio">
             <img
               src={
-                hero.footer_logo_url ? hero.footer_logo_url : unstructuredLogo
+                zubhub?.footer_logo_url
+                  ? zubhub.footer_logo_url
+                  : unstructuredLogo
               }
               className={classes.footerLogoStyle}
               alt="unstructured-studio-logo"
@@ -630,7 +833,11 @@ function PageWrapper(props) {
             <a
               target="__blank"
               rel="noreferrer"
-              href="http://kriti.unstructured.studio/"
+              href={
+                hero.tinkering_resource_url
+                  ? hero.tinkering_resource_url
+                  :'https://kriti.unstructured.studio/'
+              }
               className={common_classes.textDecorationNone}
             >
               <Typography

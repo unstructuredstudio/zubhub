@@ -58,6 +58,26 @@ tail:  ## Tail logs from the docker-compose containers
 	docker-compose -f docker-compose.yml logs --follow
 .PHONY: tail
 
+tail-web: ## Tail logs from web container
+	docker-compose -f docker-compose.yml logs --follow web
+.PHONY: tail-web
+
+tail-media: ## Tail logs from media container
+	docker-compose -f docker-compose.yml logs --follow media
+.PHONY: tail-media
+
+tail-db: ## Tail logs from db container
+	docker-compose -f docker-compose.yml logs --follow db
+.PHONY: db
+
+tail-rabbit: ## Tail logs from rabbitmq container
+	docker-compose -f docker-compose.yml logs --follow rabbitmq
+.PHONY: tail-rabbit
+
+tail-celery: ## Tail logs from celery container
+	docker-compose -f docker-compose.yml logs --follow celery_worker
+.PHONY: tail-celery
+
 migrations: ## Run `manage.py makemigrations`
 	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py makemigrations"
 .PHONY: migrations
@@ -66,17 +86,35 @@ migrate: ## Run `manage.py migrate`
 	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py migrate"
 .PHONY: migrate
 
+test: ## Run `manage.py test`
+	docker-compose -f docker-compose.yml exec web bash -c "cd zubhub && python manage.py test"
+.PHONY: test
+
 admin-user:
 	@echo "===="
 	@echo "== DANGER: don't forget to delete this user after you have created a proper superuser!!! =="
 	@echo "===="
-	docker-compose -f docker-compose.yml exec web bash  -c "echo 'echo \"import os; from django.contrib.auth import get_user_model;User = get_user_model();superusers = User.objects.filter(is_superuser=True);user = len(superusers) == 0 and User.objects.create_superuser(\\\"dummy\\\", \\\"dummy@mail.com\\\", os.environ[\\\"SUPERUSER_PASSWORD\\\"]);user.is_staff = True;user.save()\" | python /zubhub_backend/zubhub/manage.py shell' > /dummy.sh"
+	docker-compose -f docker-compose.yml exec web bash  -c "echo 'echo \"from django.contrib.auth \
+	import get_user_model;User = get_user_model();superusers = User.objects.filter(is_superuser=True);\
+	user = User.objects.create_superuser(\\\"dummy\\\", \\\"dummy@mail.com\\\", \\\"dummy_password\\\") \
+	if superusers.count() == 0 else superusers.none(); \
+	hasattr(user, \\\"is_staff\\\") and setattr(user, \\\"is_staff\\\", True); \
+	user and user.save(); \
+	print(\\\"new super user created successfully\\\") if hasattr(user, \\\"is_staff\\\") \
+	else print(\\\"superuser already exists\\\");\" | python /zubhub_backend/zubhub/manage.py shell' > /dummy.sh"
+
 	docker-compose -f docker-compose.yml exec web bash /dummy.sh
 	docker-compose -f docker-compose.yml exec web bash -c "rm /dummy.sh"
 .PHONY: admin-user
 
 init: .env start migrate admin-user  ## Initialize docker-compose containers
 .PHONY: init
+
+search-index:
+	docker-compose -f docker-compose.yml exec web bash -c 'echo \
+	"from projects.tasks import update_search_index; update_search_index.delay()"\
+	| python /zubhub_backend/zubhub/manage.py shell'
+.PHONY: search-index
 
 messages:  ## Create/update translatable messages
 	@echo "== Make messages =="

@@ -1,3 +1,5 @@
+import { BASE_TAGS } from '../../assets/js/utils/constants';
+
 /**
  * @function getUserProfile
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -81,6 +83,43 @@ export const toggleFollow = (id, props) => {
   } else {
     return props.toggleFollow({ id, token: props.auth.token, t: props.t });
   }
+};
+
+/**
+ * @function sortTags
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @description a custom sort function that sorts tags
+ * according to some predefined rules.
+ * rule1: if both tags being compared are base tags, use standard reverse sort.
+ * rule2: if tag a is base tag, sort tag a before tag b.
+ * rule3: if tag b is base tag, sort tag b before tag a.
+ * rule4: if both tag a and b are not base tags, use standard sort.
+ * @param {Array} tags - an array containing tag strings
+ * @returns {Array} - sorted array of tags.
+ */
+export const sortTags = tags => {
+  return tags.sort((a, b) => {
+    if (BASE_TAGS.includes(a) && BASE_TAGS.includes(b)) {
+      //standard reverse sort.
+      if (a > b) {
+        return -1;
+      } else {
+        return 1;
+      }
+    } else if (BASE_TAGS.includes(a)) {
+      return -1;
+    } else if (BASE_TAGS.includes(b)) {
+      return 1;
+    } else {
+      //standard sort.
+      if (a > b) {
+        return 1;
+      } else {
+        return -1;
+      }
+    }
+  });
 };
 
 /**

@@ -37,6 +37,7 @@ import {
   copyProfileUrl,
   updateProjects,
   toggleFollow,
+  sortTags,
   handleMoreMenuOpen,
   handleMoreMenuClose,
   handleToggleDeleteAccountModal,
@@ -52,7 +53,7 @@ import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import Comments from '../../components/comments/Comments';
 
-import { parseComments } from '../../assets/js/utils/scripts';
+import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
@@ -136,6 +137,7 @@ function Profile(props) {
                   </CustomButton>
                   <Menu
                     className={classes.moreMenuStyle}
+                    disableScrollLock = {true}
                     id="profile_menu"
                     anchorEl={more_anchor_el}
                     anchorOrigin={{
@@ -221,13 +223,20 @@ function Profile(props) {
                   color="textPrimary"
                 >
                   {profile.username}
-
-                  {profile.role !== 'creator' ? (
-                    <Typography className={classes.roleStyle}>
-                      {profile.role}
-                    </Typography>
-                  ) : null}
                 </Typography>
+                <Box className={classes.tagsContainerStyle}>
+                  {sortTags(profile.tags).map(tag => (
+                    <Typography
+                      key={tag}
+                      className={clsx(common_classes.baseTagStyle, {
+                        [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                      })}
+                      component="h2"
+                    >
+                      {tag}
+                    </Typography>
+                  ))}
+                </Box>
                 {props.auth.username === profile.username ? (
                   <>
                     <Typography className={classes.emailStyle} component="h5">

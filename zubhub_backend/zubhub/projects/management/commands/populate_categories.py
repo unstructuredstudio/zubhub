@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = 'Populate Category table with categories'
 
     def handle(self, *args, **kwargs):
-        if len(Category.objects.all()) < 1:
+        if Category.objects.all().count() < 1:
             with open("./zubhub/projects/management/commands/categories.txt", "r") as categories:
                 categories = categories.readlines()
                 for category in categories:

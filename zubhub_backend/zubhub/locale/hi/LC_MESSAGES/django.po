@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-07 05:13+0000\n"
+"POT-Creation-Date: 2022-03-12 19:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FIRST Ndibe Raymond <ndiberaymond1@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,59 +18,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: zubhub/creators/serializers.py:90 zubhub/creators/serializers.py:107
-#: zubhub/creators/serializers.py:157 zubhub/creators/serializers.py:168
+#: zubhub/creators/serializers.py:82 zubhub/creators/serializers.py:99
+#: zubhub/creators/serializers.py:149 zubhub/creators/serializers.py:160
 msgid "you must provide either email or phone number"
 msgstr ""
 
-#: zubhub/creators/serializers.py:96
+#: zubhub/creators/serializers.py:88
 msgid "a user with that email address already exists"
 msgstr ""
 
-#: zubhub/creators/serializers.py:100 zubhub/creators/serializers.py:121
+#: zubhub/creators/serializers.py:92 zubhub/creators/serializers.py:113
 msgid "to edit this field mail hello@unstructured.studio"
 msgstr ""
 
-#: zubhub/creators/serializers.py:111 zubhub/creators/serializers.py:172
+#: zubhub/creators/serializers.py:103 zubhub/creators/serializers.py:164
 msgid ""
 "Phone number must be entered in the format: '+999999999'. Up to 15 digits "
 "allowed."
 msgstr ""
 
-#: zubhub/creators/serializers.py:117
+#: zubhub/creators/serializers.py:109
 msgid "a user with that phone number already exists"
 msgstr ""
 
-#: zubhub/creators/serializers.py:161
+#: zubhub/creators/serializers.py:153
 msgid "A user with that email address already exists"
 msgstr ""
 
-#: zubhub/creators/serializers.py:176
+#: zubhub/creators/serializers.py:168
 msgid "A user with that phone number already exists"
 msgstr ""
 
-#: zubhub/creators/serializers.py:183
+#: zubhub/creators/serializers.py:175
 msgid "Date of Birth must be less than today's date"
 msgstr "जन्म तिथि आज की तारीख से कम होनी चाहिए"
 
-#: zubhub/creators/serializers.py:188
+#: zubhub/creators/serializers.py:180
 msgid "Location is required"
 msgstr "स्थान की आवश्यकता है"
 
-#: zubhub/creators/serializers.py:223 zubhub/creators/serializers.py:229
+#: zubhub/creators/serializers.py:215 zubhub/creators/serializers.py:221
 msgid ""
 "you must submit group member usernames either through the form or as csv"
 msgstr ""
 
-#: zubhub/creators/views.py:87 zubhub/creators/views.py:229
+#: zubhub/creators/views.py:72
+msgid "Your account is active."
+msgstr ""
+
+#: zubhub/creators/views.py:75
+msgid "Account doesn't exist, is inactive or has been deleted."
+msgstr ""
+
+#: zubhub/creators/views.py:153 zubhub/creators/views.py:357
 msgid "ok"
 msgstr ""
 
-#: zubhub/creators/views.py:344 zubhub/projects/views.py:208
+#: zubhub/creators/views.py:526 zubhub/projects/views.py:351
 msgid "parent comment does not exist"
 msgstr ""
 
-#: zubhub/projects/serializers.py:138 zubhub/projects/serializers.py:144
+#: zubhub/projects/serializers.py:152 zubhub/projects/serializers.py:158
 msgid ""
 "You must provide either image(s), video file, or video URL to create your "
 "project!"
@@ -78,16 +86,37 @@ msgstr ""
 "अपना प्रोजेक्ट बनाने के लिए आपको या तो छवि (छवियों), वीडियो फ़ाइल, या वीडियो URL "
 "प्रदान करना होगा!"
 
-#: zubhub/projects/serializers.py:150 zubhub/projects/serializers.py:159
+#: zubhub/projects/serializers.py:164 zubhub/projects/serializers.py:173
 msgid "tags format not supported"
 msgstr ""
 
-#: zubhub/projects/serializers.py:165
+#: zubhub/projects/serializers.py:179
 msgid "tags support only letters, numbers, spaces, and dashes"
 msgstr ""
 
-#: zubhub/projects/serializers.py:170
+#: zubhub/projects/serializers.py:184
 msgid "tags must not be more than 5"
+msgstr ""
+
+#: zubhub/projects/serializers.py:196
+msgid "publish type is not supported. must be one of 1,2,3 or 4"
+msgstr ""
+
+#: zubhub/projects/serializers.py:201
+msgid "publish visible_to must be a list"
+msgstr ""
+
+#: zubhub/projects/serializers.py:207
+msgid "publish visible_to must not be empty when publish type is Preview"
+msgstr ""
+
+#: zubhub/projects/serializers.py:212
+msgid "publish format is not supported"
+msgstr ""
+
+#: zubhub/projects/views.py:210 zubhub/projects/views.py:262
+#: zubhub/projects/views.py:297 zubhub/projects/views.py:327
+msgid "you are not permitted to view this project"
 msgstr ""
 
 #: zubhub/templates/account/email/email_confirmation_message.txt:6
@@ -334,10 +363,10 @@ msgstr "यह "
 msgid " Team"
 msgstr "टीम"
 
-#: zubhub/zubhub/views.py:58 zubhub/zubhub/views.py:94
+#: zubhub/zubhub/views.py:90 zubhub/zubhub/views.py:154
 msgid "failed to upload file to storage backend"
 msgstr ""
 
-#: zubhub/zubhub/views.py:70
+#: zubhub/zubhub/views.py:112
 msgid "failed to delete file to storage backend"
 msgstr ""
