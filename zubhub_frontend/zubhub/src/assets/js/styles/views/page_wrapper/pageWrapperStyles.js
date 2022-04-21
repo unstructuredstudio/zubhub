@@ -209,7 +209,7 @@ const styles = theme => ({
     backgroundColor: '#dc3545',
     boxSizing: 'border-box',
     width: '100%',
-    textAlign: 'left',
+    textAlign: 'center',
     padding: '45px 50px',
     display: 'flex',
     flexWrap: 'wrap',
