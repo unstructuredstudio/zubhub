@@ -58,44 +58,6 @@ const SocialButtons = () => {
         >
           <LinkIcon />
         </IconButton>
-
-        {/* <Button variant="uncontained" className={classes.button}>
-          <Avatar
-            className={classes.avatar}
-            src={
-              'http://assets.stickpng.com/images/60fea6c83d624000048712b7.png'
-            }
-          />
-        </Button>
-        <Button
-          variant="uncontained"
-          className={classes.button}
-          href={
-            'https://web.whatsapp.com/send?text=' +
-            'Check out this project on ZubHub! ' +
-            ahref
-          }
-        >
-          <Avatar
-            className={classes.whatsapp}
-            src={
-              'https://pnggrid.com/wp-content/uploads/2021/05/WhatsApp-logo-png-White.png'
-            }
-          />
-        </Button>
-
-        <Button
-          variant="uncontained"
-          className={classes.button}
-          onClick={() => {
-            navigator.clipboard.writeText(ahref);
-            alert('Link to this project copied to clipboard!');
-          }}
-        >
-          <Avatar className={classes.avatar}>
-            <LinkIcon />
-          </Avatar>
-        </Button> */}
       </ButtonGroup>
     </>
   );
