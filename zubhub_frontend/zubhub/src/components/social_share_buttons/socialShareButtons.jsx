@@ -24,27 +24,31 @@ const useStyles = makeStyles({
 });
 
 const SocialButtons = () => {
-  const ahref = window.location.href;
   const classes = useStyles();
+  const url = window.location.href;
   return (
     <>
       <ButtonGroup className={classes.buttonGroup} orientation="vertical">
         <IconButton
           className={classes.button}
-          href={
-            'https://www.facebook.com/sharer/sharer.php?u=' +
-            ahref +
-            '&quote=Check%20out%20this%20project%20on%20ZubHub!'
+          onClick={() =>
+            window.open(
+              'https://www.facebook.com/sharer/sharer.php?u=' +
+                url +
+                '&quote=Check%20out%20this%20project%20on%20ZubHub!',
+            )
           }
         >
           <FacebookIcon />
         </IconButton>
         <IconButton
           className={classes.button}
-          href={
-            'https://web.whatsapp.com/send?text=' +
-            'Check out this project on ZubHub! ' +
-            ahref
+          onClick={() =>
+            window.open(
+              'https://web.whatsapp.com/send?text=' +
+                'Check out this project on ZubHub! ' +
+                url,
+            )
           }
         >
           <WhatsAppIcon />
@@ -52,8 +56,14 @@ const SocialButtons = () => {
         <IconButton
           className={classes.button}
           onClick={() => {
-            navigator.clipboard.writeText(ahref);
-            alert('Link to this project copied to clipboard!');
+            navigator.clipboard
+              .writeText(url)
+              .then(() => {
+                alert('Link copied to clipboard: ' + url);
+              })
+              .catch(() => {
+                alert('Something went wrong!');
+              });
           }}
         >
           <LinkIcon />
