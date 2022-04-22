@@ -216,7 +216,6 @@ const styles = theme => ({
     justifyContent: 'space-between',
     flexShrink: 0,
   },
-
   footerSectionStyle: {
     minWidth: '600px',
     margin: '0 2em',
