@@ -5,30 +5,37 @@ import LinkIcon from '@material-ui/icons/Link';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import IconButton from '@material-ui/core/IconButton';
+import { useMediaQuery } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  buttonGroup: {
-    width: '50px',
-    height: '100%',
-    display: 'inherit',
-    alignItems: 'center',
-    margin: 'none',
-  },
+const styles = makeStyles({
   button: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
     width: '50px',
     height: '50px',
     borderRadius: '50% !important',
-    margin: '5%',
     color: 'white',
+  },
+  buttonGroup: {
+    height: '100%',
+    display: 'inherit',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
 const SocialButtons = () => {
-  const classes = useStyles();
+  const classes = styles();
   const url = window.location.href;
+  const mediaQuery = useMediaQuery('(min-width: 1080px)');
   return (
     <>
-      <ButtonGroup className={classes.buttonGroup} orientation="vertical">
+      <ButtonGroup
+        className={classes.buttonGroup}
+        orientation={(mediaQuery && 'vertical') || 'horizontal'}
+      >
         <IconButton
           className={classes.button}
           onClick={() =>

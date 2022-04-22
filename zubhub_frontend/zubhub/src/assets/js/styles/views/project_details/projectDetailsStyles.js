@@ -98,6 +98,7 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: '0.5em 0px 0.5em',
 
     boxShadow:
       '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
@@ -106,8 +107,8 @@ const styles = theme => ({
       height: '3.5em',
       width: 'fit-content',
       flexDirection: 'row',
-      justifyContent: 'flex-end',
-      paddingRight: 12,
+      justifyContent: 'center',
+      padding: '0px 0.5em 0px',
     },
   },
   actionBoxMobileWrapper: {
