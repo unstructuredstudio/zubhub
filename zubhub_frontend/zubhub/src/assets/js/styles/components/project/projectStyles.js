@@ -130,7 +130,7 @@ const styles = theme => ({
   creatorEmailAndTagBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',
-    [theme.breakpoints.down('376')]: {
+    [theme.breakpoints.down('sm')]: {
       '& p': {
         fontSize: '0.66rem',
         marginRight: '0.3em',
