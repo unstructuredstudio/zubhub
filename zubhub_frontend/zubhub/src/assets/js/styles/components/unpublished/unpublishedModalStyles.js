@@ -1,15 +1,19 @@
 const styles = theme => ({
     descriptionHeadingStyle: {
         marginTop: '0.5em',
+        marginBottom: '0.5em',
         fontWeight: 900,
         fontSize: '2.2rem',
+    },
+    unpublishedButtonStyle: {
+        borderRadius: '3px'
     },
     modalStyle: {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '60%',
+        width: '650px',
         backgroundColor: '#ffffff',
         borderRadius: '20px',
         padding: '30px',
@@ -17,7 +21,7 @@ const styles = theme => ({
         p: 4,
     },
     modalBodyStyle: {
-        marginBottom: '0.7em',
+        marginBottom: '1.0em',
         color: 'rgba(0, 0, 0, 0.54)',
         '& .ql-editor': {
             fontSize: '1.5rem',
@@ -38,6 +42,8 @@ const styles = theme => ({
     },
     closeIconStyle: {
         float: 'right',
+        color: 'rgba(196, 196, 196, 1)',
+        fontSize: 40,
     }
 });
 

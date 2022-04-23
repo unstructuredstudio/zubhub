@@ -41,7 +41,7 @@ import CustomButton from '../button/Button';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-function UnpublishedModal() {
+function UnpublishedModal({ violations }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -50,7 +50,8 @@ function UnpublishedModal() {
 
   return (
     <>
-      <CustomButton variant="contained" dangerButtonStyle onClick={handleOpen}>
+      {console.log(violations)}
+      <CustomButton variant="contained" dangerButtonStyle onClick={handleOpen} className = {classes.unpublishedButtonStyle}>
         UNPUBLISHED
       </CustomButton>
       <Modal
@@ -60,16 +61,22 @@ function UnpublishedModal() {
         aria-describedby="modal-modal-description"
       >
         <Box className={classes.modalStyle}>
-          <CloseIcon onClick = {handleClose} className = {classes.closeIconStyle}></CloseIcon>
+          <CloseIcon
+            onClick={handleClose}
+            className={classes.closeIconStyle}
+          ></CloseIcon>
           <Typography variant="h6" className={classes.descriptionHeadingStyle}>
             Your project has been unpublished.
           </Typography>
           <Typography className={classes.modalBodyStyle}>
             This is because your project contains information that:
+          </Typography>
+          {violations.map(violation => (
             <Typography className={classes.violationReasonStyle}>
-              Threatens, harasses, or intimidates any other person, whether that
-              person is a ZubHub user or not
+              {violation}
             </Typography>
+          ))}
+          <Typography className={classes.modalBodyStyle}>
             You must make changes to your project before it can be republished.
           </Typography>
           <CustomButton

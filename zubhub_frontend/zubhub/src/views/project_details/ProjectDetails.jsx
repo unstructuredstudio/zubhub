@@ -162,6 +162,12 @@ function ProjectDetails(props) {
     }
   };
 
+  // For testing purposes, should remove this
+  const testViolations = [
+    'Threatens, harasses, or intimidates any other person, whether that person is a ZubHub user or not',
+    'Contains fould language or personal attacks',
+  ];
+
   const {
     project,
     loading,
@@ -186,7 +192,7 @@ function ProjectDetails(props) {
               >
                 {project.title}
               </Typography>
-              <UnpublishedModal/>
+              <UnpublishedModal violations={testViolations} />
               <Grid container justify="space-around">
                 <Grid item className={classes.creatorProfileStyle}>
                   <Link
