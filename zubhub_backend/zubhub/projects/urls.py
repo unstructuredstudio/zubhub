@@ -42,5 +42,11 @@ urlpatterns = [
     path('staff-picks/', StaffPickListAPIView.as_view(), name="staff_picks"),
     path('staff-picks/<uuid:pk>/',
          StaffPickDetailsAPIView.as_view(),
-         name="staff_pick_details")
+         name="staff_pick_details"),
+    path('violation-reasons/',
+         ViolationReasonsListAPIView.as_view(),
+         name='violation_reasons'),
+    path('<uuid:pk>/clear-violations',
+         ProjectViolationsClearApiView.as_view(),
+         name='project_violations')
 ]

@@ -15,14 +15,15 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from projects.permissions import (IsOwner, IsStaffOrModerator,
                                   SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, CustomUserRateThrottle)
-from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
+from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule, ViolationReason
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
                     get_published_projects_for_user)
 from creators.utils import activity_notification, send_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer,
-                          StaffPickSerializer)
+                          StaffPickSerializer, ViolationSerializer,
+                          ViolationReasonSerializer)
 from .pagination import ProjectNumberPagination
 
 
@@ -586,3 +587,42 @@ class DeleteCommentAPIView(DestroyAPIView):
                 profile.save()
 
             return result
+
+
+class ViolationReasonsListAPIView(ListAPIView):
+    """
+    List all violation reasons.
+
+    Requires authentication and staff or moderator.
+    Returns violations reasons.
+    """
+
+    queryset = ViolationReason.objects.all()
+    serializer_class = type(ViolationReasonSerializer(many=True))
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+
+
+class ProjectViolationsClearApiView(UpdateAPIView):
+    """
+    Clear all violations for a project
+
+    Requires authentication and staff or moderator.
+    Returns project details.
+    """
+
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+
+    def perform_update(self, serializer: ProjectSerializer):
+        try:
+            old = Project.objects.get(pk=self.kwargs.get("pk"))
+        except Project.DoesNotExist:
+            return
+
+        serializer.save(creator=self.request.user, violations=[])
+        self.request.user.save()
+
+        old.publish.delete()
