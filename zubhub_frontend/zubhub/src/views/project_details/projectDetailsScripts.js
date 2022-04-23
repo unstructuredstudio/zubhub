@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 /**
  * @function handleOpenEnlargedImageDialog
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -135,3 +137,16 @@ export const isGdriveORVimeoORYoutube = url => {
     return false;
   }
 };
+
+export const handleMobileShare = async (project) => {
+  const shareData = {
+    title: project.title,
+    text: "Check out this amazing Zubhub project! ",
+    url: ""
+  }
+  try {
+    await navigator.share(shareData);
+  } catch (err) {
+    toast.warning("Failed to share project.");
+  }
+}
