@@ -15,7 +15,7 @@ from math import ceil
 Creator = get_user_model()
 
 
-class ViolationReasonSerializer(serializers.ModelSerialize):
+class ViolationReasonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ViolationReason
