@@ -60,6 +60,8 @@ import styles, {
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
 
+import UnpublishedModal from '../../components/unpublished_project_modal/UnpublishedModal.jsx';
+
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -184,6 +186,7 @@ function ProjectDetails(props) {
               >
                 {project.title}
               </Typography>
+              <UnpublishedModal/>
               <Grid container justify="space-around">
                 <Grid item className={classes.creatorProfileStyle}>
                   <Link
