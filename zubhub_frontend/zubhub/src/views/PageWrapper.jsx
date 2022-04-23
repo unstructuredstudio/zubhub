@@ -48,7 +48,6 @@ import {
   handleChangeLanguage,
   handleToggleSearchForm,
   closeSearchFormOrIgnore,
-  sliceLongName,
 } from './pageWrapperScripts';
 
 import {
@@ -521,7 +520,7 @@ function PageWrapper(props) {
                         component="span"
                         className={classes.profileStyle}
                       >
-                        {props.auth.username.length <=14 ? props.auth.username : sliceLongName(props.auth.username) }
+                        {props.auth.username }
                       </Typography>
                       </Tooltip>
                     </MenuItem>
