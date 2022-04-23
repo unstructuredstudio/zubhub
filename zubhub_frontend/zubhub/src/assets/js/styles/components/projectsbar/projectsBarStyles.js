@@ -35,6 +35,9 @@ const styles = theme => ({
         justifyContent: 'space-between',
         overflowX: 'scroll',
     },
+    projectWrapperMobileStyle: {
+        minWidth: '290px',
+    }
 });
 
 export default styles;

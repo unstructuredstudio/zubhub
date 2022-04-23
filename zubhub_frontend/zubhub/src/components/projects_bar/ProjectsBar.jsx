@@ -28,7 +28,9 @@ function ProjectsBar({ projects, ...props }) {
         }
       >
         {projects.map(project => (
+          <div className = {mediaQuery ? classes.projectWrapperMobileStyle : ''}>
           <Project project={project} key={project.id} {...props} />
+          </div>
         ))}
       </Container>
     </Container>
