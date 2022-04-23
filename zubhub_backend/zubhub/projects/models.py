@@ -265,7 +265,6 @@ class Violation(models.Model):
                           editable=False,
                           unique=True)
     reasons = models.ManyToManyField(ViolationReason,
-                                     null=True,
                                      blank=True,
                                      related_name='violations')
     project = models.ForeignKey(Project,
