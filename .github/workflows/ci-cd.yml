@@ -1,0 +1,27 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on: push
+
+defaults:
+  run:
+    working-directory: ./zubhub_frontend/zubhub
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
+      - uses: actions/cache@v2
+        with:
+          path: client/node_modules
+          key: ${{ runner.os }}-cache
+      - run: npm install
+      - run: yarn format:check
