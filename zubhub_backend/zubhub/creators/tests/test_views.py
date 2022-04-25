@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from creators.models import Creator, Location
+from creators.models import Location
 
 
 creator = get_user_model()
@@ -64,4 +64,4 @@ class FetchAuthUserApiTests(TestCase):
     def test_user_is_not_active(self):
         """Test user is not active"""
         url = self.client.get(reverse("creators:account_status"))
-        self.assertEqual(url.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(url.data, {'detail': "Account doesn't exist, is inactive or has been deleted."})
