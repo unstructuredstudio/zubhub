@@ -39,7 +39,8 @@ class ProjectCreateAPIView(CreateAPIView):
             ],\n
             "video": "string",\n
             "materials_used": "string",\n
-            "category": "string"\n
+            "category": "string",\n
+            "publish": {"type": 4, "visible_to": []}\n
         }\n
     """
     queryset = Project.objects.all()
@@ -71,7 +72,8 @@ class ProjectUpdateAPIView(UpdateAPIView):
             ],\n
             "video": "string",\n
             "materials_used": "string",\n
-            "category": "string"\n
+            "category": "string",\n
+            "publish": {"type": 4, "visible_to": []}\n
         }\n
     """
     queryset = Project.objects.all()
