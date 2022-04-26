@@ -1,46 +1,14 @@
 import React, { useState } from 'react';
 import { useMediaQuery } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import LockIcon from '@material-ui/icons/Lock';
-import PublicIcon from '@material-ui/icons/Public';
-import {
-  Tooltip,
-  Avatar,
-  Box,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Fab,
-  Typography,
-  Modal,
-  Button,
-} from '@material-ui/core';
+import { Box, Typography, Modal } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
-import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
-import CommentIcon from '../../assets/js/icons/CommentIcon';
-import playIcon from '../../assets/images/play-icon.png';
-import {
-  dFormatter,
-  nFormatter,
-  buildVideoThumbnailURL,
-  isBaseTag,
-} from '../../assets/js/utils/scripts';
-import { publish_type } from '../../assets/js/utils/constants';
 import styles from '../../assets/js/styles/components/unpublished/unpublishedModalStyles';
 import commonStyles from '../../assets/js/styles';
 import CustomButton from '../button/Button';
 
 const useStyles = makeStyles(styles);
-const useCommonStyles = makeStyles(commonStyles);
 
 function UnpublishedModal({ violations }) {
   const classes = useStyles();
