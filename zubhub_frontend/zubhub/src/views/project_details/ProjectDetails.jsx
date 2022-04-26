@@ -183,7 +183,7 @@ function ProjectDetails(props) {
     return (
       <>
         <Box className={classes.root}>
-          <Paper className={state.project.creator.id == props.auth.id ? classes.projectDetailHeaderStyle : ''}>
+          <Paper className={classes.projectDetailHeaderStyle}>
             <Container className={classes.headerStyle}>
               <div className={mediaQuery? '' : classes.headerWrapperStyle}>
               {state.project.creator.id == props.auth.id ? <UnpublishedModal violations={testViolations} /> : <></>}
