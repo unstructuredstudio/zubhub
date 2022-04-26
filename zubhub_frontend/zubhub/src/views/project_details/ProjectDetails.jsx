@@ -390,7 +390,7 @@ function ProjectDetails(props) {
                           </Box>
                           <Typography>{project.views_count}</Typography>
                         </Typography>
-                        <SocialButtons />
+                        {!mediaQuery && <SocialButtons />}
                       </Box>
                     </Box>
                   </div>
