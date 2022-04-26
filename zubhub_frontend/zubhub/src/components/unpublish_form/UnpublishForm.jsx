@@ -23,7 +23,7 @@ function UnpublishForm() {
     const classes = useStyles();
     const common_classes = useCommonStyles();
     const [open, setOpen] = useState(false);
-    const [reasons, setReasons] = useState(['hello', 'why', 'unstructured']);
+    const [reasons, setReasons] = useState(['Promotes bigotry, discrimination, hatred, or violence against any individual or group', 'Threatens, harasses, or intimidates any other person, whether that person is a ZubHub user or not', 'Contains foul language or personal attacks']);
 
     // const token = useSelector(state => state.auth.token);
 
@@ -43,11 +43,11 @@ function UnpublishForm() {
 
     return (
         <>
-        <CustomButton
+        <MenuItem
             onClick={() => setOpen(true)}
         >
             Unpublish
-        </CustomButton>
+        </MenuItem>
         <Modal
             open={open}
             onClose={() => setOpen(false)}
@@ -69,7 +69,7 @@ function UnpublishForm() {
             <FormGroup className={classes.descriptionBodyStyle}>
                 {
                     reasons.map(reason => (
-                        <FormControlLabel control={<Checkbox className={classes.checkboxStyle}/>} label={reason}/>
+                        <FormControlLabel className={classes.checkboxStyle} control={<Checkbox className={classes.checkboxStyle}/>} label={reason}/>
                     ))
                 }
             </FormGroup>

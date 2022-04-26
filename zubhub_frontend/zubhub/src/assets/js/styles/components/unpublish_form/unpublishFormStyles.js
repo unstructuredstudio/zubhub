@@ -6,10 +6,8 @@ const styles = theme => ({
         left: '50%',
         transform: 'translate(-50%, -50%)',
         borderRadius: 20,
-        width: '50%',
-        paddingLeft: 30,
-        paddingRight: 30,
-        paddingBottom: 30,
+        width: '40%',
+        padding: 30,
     },
     descriptionHeadingStyle: {
         marginTop: '1em',
@@ -17,7 +15,7 @@ const styles = theme => ({
         fontSize: '2.2rem',
     },
     descriptionBodyStyle: {
-        marginBottom: '0.7em',
+        marginBottom: '1.5em',
         color: 'rgba(0, 0, 0, 0.54)',
         '& .ql-editor': {
           fontSize: '1.5rem',
@@ -28,15 +26,17 @@ const styles = theme => ({
       float: 'right',
     },
     checkboxStyle: {
-      borderRadius: 20,
-      '& .checked': {
-        color: '#9A0036',
+      '& .MuiCheckbox-colorSecondary.Mui-checked': {
+        color: '#DC3545',
+      },
+      '& .MuiCheckbox-root': {
+        color: '#C4C4C4',
       },
       '& .MuiSvgIcon-root': {
-        fontSize: '2rem',
+        fontSize: '3.5rem',
         fontWeight: 900,
-      }
-    },
+      },
+    }
 });
 
 export default styles;

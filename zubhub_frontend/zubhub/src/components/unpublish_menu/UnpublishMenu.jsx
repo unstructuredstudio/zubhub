@@ -24,12 +24,12 @@ function UnpublishMenu() {
     const classes = useStyles();
     const common_classes = useCommonStyles();
 
-    const [open, setOpen] = useState(false);
+    const [menuAnchor, setMenuAnchor] = useState(null);
 
     return (
         <>
             <CustomButton
-                onClick={() => setOpen(true)}
+                onClick={(e) => setMenuAnchor(e.currentTarget)}
                 className={clsx(
                     classes.unpublishMenuButtonStyle,
                 )}
@@ -37,8 +37,13 @@ function UnpublishMenu() {
               <MoreVertIcon />
             </CustomButton>
             <Menu
-                open={open}
-                onClose={()=>setOpen(false)}
+                open={Boolean(menuAnchor)}
+                anchorEl={menuAnchor}
+                onClose={()=>setMenuAnchor(null)}
+                anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
             >
                 <UnpublishForm/>
             </Menu>

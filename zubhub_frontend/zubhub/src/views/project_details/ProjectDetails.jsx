@@ -421,9 +421,6 @@ function ProjectDetails(props) {
                   </Grid>
                 ) : null}
          
-                {auth.tags.includes('staff') || auth.tags.includes('moderator') ? (
-                  <UnpublishMenu/>
-                ) : null} 
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography
                     variant="h5"
