@@ -1,18 +1,26 @@
 const styles = theme => ({
     unpublishModalStyle: {
-        backgroundColor: "#ffffff",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        borderRadius: 20,
-        width: '40%',
-        padding: 30,
+      backgroundColor: "#ffffff",
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      borderRadius: 20,
+      width: '45%',
+      padding: 35,
+      paddingTop: 20,
+    },
+    closeIconStyle: {
+      float: 'right',
+      color: '#C4C4C4',
+      fontSize: 30,
+      strokeWidth: 0.5,
+      stroke: '#ffffff',
     },
     descriptionHeadingStyle: {
-        marginTop: '1em',
+        marginTop: '1.5em',
         fontWeight: 900,
-        fontSize: '2.2rem',
+        fontSize: '2rem',
     },
     descriptionBodyStyle: {
         marginBottom: '1.5em',
@@ -24,6 +32,9 @@ const styles = theme => ({
     },
     hideProjectButtonStyle: {
       float: 'right',
+      backgroundColor: '#DC3545',
+      paddingLeft: 25,
+      paddingRight: 25,
     },
     checkboxStyle: {
       '& .MuiCheckbox-colorSecondary.Mui-checked': {
@@ -35,6 +46,8 @@ const styles = theme => ({
       '& .MuiSvgIcon-root': {
         fontSize: '3.5rem',
         fontWeight: 900,
+        strokeWidth: 0.8,
+        stroke: '#ffffff',
       },
     }
 });

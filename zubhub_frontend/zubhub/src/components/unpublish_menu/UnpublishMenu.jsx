@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-    Modal,
-    Typography,
-    Button,
-    Menu,
-    MenuItem,
+	Modal,
+	Typography,
+	Button,
+	Menu,
+	MenuItem,
   } from '@material-ui/core';
 
 import styles from '../../assets/js/styles/components/unpublish_menu/unpublishMenuStyles';
@@ -21,34 +21,34 @@ const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function UnpublishMenu() {
-    const classes = useStyles();
-    const common_classes = useCommonStyles();
+	const classes = useStyles();
+	const common_classes = useCommonStyles();
 
-    const [menuAnchor, setMenuAnchor] = useState(null);
+	const [menuAnchor, setMenuAnchor] = useState(null);
 
-    return (
-        <>
-            <CustomButton
-                onClick={(e) => setMenuAnchor(e.currentTarget)}
-                className={clsx(
-                    classes.unpublishMenuButtonStyle,
-                )}
-            >
-              <MoreVertIcon />
-            </CustomButton>
-            <Menu
-                open={Boolean(menuAnchor)}
-                anchorEl={menuAnchor}
-                onClose={()=>setMenuAnchor(null)}
-                anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-            >
-                <UnpublishForm/>
-            </Menu>
-        </>
-    );
+	return (
+		<>
+			<CustomButton
+				onClick={(e) => setMenuAnchor(e.currentTarget)}
+				className={clsx(
+					classes.unpublishMenuButtonStyle,
+				)}
+			>
+			  <MoreVertIcon />
+			</CustomButton>
+			<Menu
+				open={Boolean(menuAnchor)}
+				anchorEl={menuAnchor}
+				onClose={()=>setMenuAnchor(null)}
+				anchorOrigin={{
+					vertical: "top",
+					horizontal: "left",
+				  }}
+			>
+				<UnpublishForm/>
+			</Menu>
+		</>
+	);
 }
 
 export default UnpublishMenu;
