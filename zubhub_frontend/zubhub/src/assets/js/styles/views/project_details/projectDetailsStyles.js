@@ -29,6 +29,11 @@ const styles = theme => ({
     fontWeight: 900,
     textAlign: 'center',
   },
+  headerWrapperStyle: {
+    maxWidth: '100vw',
+    display: 'flex',
+    justifyContent: 'center',
+  },
   metaInfoStyle: {
     display: 'flex',
     justifyContent: 'space-between',

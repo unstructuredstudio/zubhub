@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useMediaQuery } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import clsx from 'clsx';
@@ -43,24 +44,26 @@ const useCommonStyles = makeStyles(commonStyles);
 
 function UnpublishedModal({ violations }) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+  const mediaQuery = useMediaQuery('(max-width: 600px)');
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <>
-      {console.log(violations)}
-      <CustomButton variant="contained" dangerButtonStyle onClick={handleOpen} className = {classes.unpublishedButtonStyle}>
-        UNPUBLISHED
-      </CustomButton>
+      <center>
+        <div className={classes.unpublishedLabelStyle}>UNPUBLISHED</div>
+      </center>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box className={classes.modalStyle}>
+        <Box
+          className={mediaQuery ? classes.modalMobileStyle : classes.modalStyle}
+        >
           <CloseIcon
             onClick={handleClose}
             className={classes.closeIconStyle}
