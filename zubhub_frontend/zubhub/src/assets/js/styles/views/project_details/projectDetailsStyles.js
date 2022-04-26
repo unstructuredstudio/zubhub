@@ -85,6 +85,7 @@ const styles = theme => ({
     zIndex: 1,
   },
   actionBoxStyle: {
+    marginRight: '30px',
     backgroundColor: '#00B8C4',
     '&:hover': {
       backgroundColor: '#03848C',

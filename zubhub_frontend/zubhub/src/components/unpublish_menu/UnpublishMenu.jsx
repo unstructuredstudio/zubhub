@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Modal,
     Typography,
+    Button,
     Menu,
     MenuItem,
   } from '@material-ui/core';
@@ -24,10 +25,9 @@ function UnpublishMenu() {
     const common_classes = useCommonStyles();
 
     const [open, setOpen] = useState(false);
-    const [formOpen, setFormOpen] = useState(false);
 
     return (
-        [
+        <>
             <CustomButton
                 onClick={() => setOpen(true)}
                 className={clsx(
@@ -35,23 +35,15 @@ function UnpublishMenu() {
                 )}
             >
               <MoreVertIcon />
-            </CustomButton>,
+            </CustomButton>
             <Menu
                 open={open}
-                anchor={'top'}
                 onClose={()=>setOpen(false)}
             >
-                <MenuItem
-                    onClick={() => setFormOpen(true)}
-                >
-                    Unpublish
-                </MenuItem>
-
-            </Menu>,
-            <UnpublishForm open={formOpen} setOpen={setFormOpen}/>
-        ]
+                <UnpublishForm/>
+            </Menu>
+        </>
     );
-
 }
 
 export default UnpublishMenu;

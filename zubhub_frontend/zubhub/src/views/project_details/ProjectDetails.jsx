@@ -393,6 +393,7 @@ function ProjectDetails(props) {
                           <Typography>{project.views_count}</Typography>
                         </Typography>
                       </Box>
+                      <UnpublishMenu/>
                     </Box>
                   </div>
                 </Grid>

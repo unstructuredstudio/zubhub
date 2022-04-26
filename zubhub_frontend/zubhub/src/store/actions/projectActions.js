@@ -17,6 +17,15 @@ export const setProjects = projects => {
   };
 };
 
+// export const setReasons = token => {
+//   return dispatch => {
+//     return API.getReasons(token)
+//     .then(res => {
+//       return { ...res}
+//     })
+//   };
+// }
+
 /**
  * @function createProject
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
