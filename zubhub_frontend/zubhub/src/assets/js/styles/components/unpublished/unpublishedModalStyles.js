@@ -8,15 +8,20 @@ const styles = theme => ({
     unpublishedLabelStyle: {
         borderRadius: '5px',
         marginRight: '20px',
-        marginTop: '8px',
-        padding: '10px 20px',
+        marginTop: '15px',
+        padding: '5px 20px',
         backgroundColor: 'rgb(221,52,68)',
         color: 'white',
-        fontSize: '0.875rem',
+        fontSize: '0.7rem',
         fontFamily: 'Raleway,Roboto,sans-serif',
         fontWeight: '400!important',
         width: 'fit-content',
         height: 'fit-content',
+        cursor: 'pointer',
+    },
+    overflowWrapper: {
+        maxHeight: '50vh',
+        overflow: 'scroll',
     },
     modalStyle: {
         position: 'absolute',
@@ -29,6 +34,7 @@ const styles = theme => ({
         padding: '30px',
         boxShadow: 24,
         p: 4,
+        maxHeight: '70%',
     },
     modalMobileStyle: {
         position: 'absolute',
@@ -41,6 +47,7 @@ const styles = theme => ({
         padding: '30px',
         boxShadow: 24,
         p: 4,
+        maxHeight: '70%',
     },
     modalBodyStyle: {
         marginBottom: '1.0em',

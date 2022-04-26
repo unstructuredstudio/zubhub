@@ -192,7 +192,6 @@ function ProjectDetails(props) {
                 variant="h3"
                 gutterBottom
               >
-                {/* {state.project.creator.id == props.auth.id ? <UnpublishedModal violations={testViolations} /> : <></>} */}
                 {project.title}
               </Typography>
               </div>

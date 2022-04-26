@@ -53,7 +53,9 @@ function UnpublishedModal({ violations }) {
   return (
     <>
       <center>
-        <div className={classes.unpublishedLabelStyle}>UNPUBLISHED</div>
+        <div onClick={handleOpen} className={classes.unpublishedLabelStyle}>
+          UNPUBLISHED
+        </div>
       </center>
       <Modal
         open={open}
@@ -68,28 +70,34 @@ function UnpublishedModal({ violations }) {
             onClick={handleClose}
             className={classes.closeIconStyle}
           ></CloseIcon>
-          <Typography variant="h6" className={classes.descriptionHeadingStyle}>
-            Your project has been unpublished.
-          </Typography>
-          <Typography className={classes.modalBodyStyle}>
-            This is because your project contains information that:
-          </Typography>
-          {violations.map(violation => (
-            <Typography className={classes.violationReasonStyle}>
-              {violation}
+          <div className={classes.overflowWrapper}>
+            <Typography
+              variant="h6"
+              className={classes.descriptionHeadingStyle}
+            >
+              Your project has been unpublished.
             </Typography>
-          ))}
-          <Typography className={classes.modalBodyStyle}>
-            You must make changes to your project before it can be republished.
-          </Typography>
-          <CustomButton
-            variant="contained"
-            dangerButtonStyle
-            onClick={handleClose}
-            className={classes.understandButtonStyle}
-          >
-            I UNDERSTAND
-          </CustomButton>
+            <Typography className={classes.modalBodyStyle}>
+              This is because your project contains information that:
+            </Typography>
+            {violations.map(violation => (
+              <Typography className={classes.violationReasonStyle}>
+                {violation}
+              </Typography>
+            ))}
+            <Typography className={classes.modalBodyStyle}>
+              You must make changes to your project before it can be
+              republished.
+            </Typography>
+            <CustomButton
+              variant="contained"
+              dangerButtonStyle
+              onClick={handleClose}
+              className={classes.understandButtonStyle}
+            >
+              I UNDERSTAND
+            </CustomButton>
+          </div>
         </Box>
       </Modal>
     </>
