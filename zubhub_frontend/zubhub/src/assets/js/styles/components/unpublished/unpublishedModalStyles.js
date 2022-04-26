@@ -20,7 +20,7 @@ const styles = theme => ({
         cursor: 'pointer',
     },
     overflowWrapper: {
-        maxHeight: '50vh',
+        maxHeight: '60vh',
         overflow: 'scroll',
     },
     modalStyle: {
@@ -30,11 +30,15 @@ const styles = theme => ({
         transform: 'translate(-50%, -50%)',
         width: '650px',
         backgroundColor: '#ffffff',
+        border: 'none',
         borderRadius: '20px',
         padding: '30px',
         boxShadow: 24,
         p: 4,
         maxHeight: '70%',
+        '&:focus': {
+            outline: 0,
+        },
     },
     modalMobileStyle: {
         position: 'absolute',
