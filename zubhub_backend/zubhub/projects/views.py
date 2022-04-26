@@ -449,7 +449,7 @@ class AddCommentAPIView(CreateAPIView):
             send_notification(
                 [result.creator],
                 self.request.user,
-                [{'project': obj.title}],
+                [{'project': result.title}],
                 Notification.Type.COMMENT,
                 f'/projects/{result.pk}'
             )

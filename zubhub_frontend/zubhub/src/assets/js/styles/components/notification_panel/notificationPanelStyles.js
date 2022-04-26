@@ -16,11 +16,18 @@ const styles = theme => ({
   },
   panelHeaderStyle: {
     display: 'flex',
-    flexFlow: 'row nowrap',
+    flexFlow: 'row wrap',
     alignItems: 'center',
     gap: '10px',
     color: '#00B8C4',
-    padding: '2.5px 0px'
+    padding: '2.5px 0px',
+  },
+  panelHeaderButtons: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
   },
   circularProgressStyle: {
     color: '#00B8C4',
@@ -51,6 +58,7 @@ const styles = theme => ({
     top: '0px',
     backgroundColor: 'white',
     margin: '0px',
+    zIndex: 20,
   },
   fullWidth: {
     width: '100%',

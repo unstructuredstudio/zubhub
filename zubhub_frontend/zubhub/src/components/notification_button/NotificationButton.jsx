@@ -32,6 +32,7 @@ const NotificationButton = ({ className, notif }) => {
           open={dropdownOpen}
           anchorEl={buttonRef}
           notif={notif}
+          onClose={() => setDropdownOpen(false)}
         />
       </div>
     </ClickAwayListener>

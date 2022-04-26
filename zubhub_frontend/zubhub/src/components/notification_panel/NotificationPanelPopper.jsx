@@ -31,6 +31,7 @@ const NotificationPanelPopper = ({ open, anchorEl, children }) => {
       modifiers={mediaQuery ? fullscreenModifiers : modifiers}
       placement="bottom-end"
       className={mediaQuery ? classes.popperContainerStyle : ''}
+      style={{ zIndex: mediaQuery ? 2 : 'unset' }}
     >
       {!mediaQuery && (
         <div x-arrow="true" className={classes.popperArrowStyle}></div>
