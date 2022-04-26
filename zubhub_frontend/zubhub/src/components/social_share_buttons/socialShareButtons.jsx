@@ -6,28 +6,14 @@ import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import IconButton from '@material-ui/core/IconButton';
 import { useMediaQuery } from '@material-ui/core';
+import styles from '../../assets/js/styles/components/social_share_buttons/socialShareButtonsStyles';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
-const styles = makeStyles({
-  button: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    width: '50px',
-    height: '50px',
-    borderRadius: '50% !important',
-    color: 'white',
-  },
-  buttonGroup: {
-    height: '100%',
-    display: 'inherit',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
+const useStyles = makeStyles(styles);
 const SocialButtons = () => {
-  const classes = styles();
+  const { t } = useTranslation();
+  const classes = useStyles();
   const url = window.location.href;
   const mediaQuery = useMediaQuery('(min-width: 1080px)');
   return (
@@ -42,7 +28,8 @@ const SocialButtons = () => {
             window.open(
               'https://www.facebook.com/sharer/sharer.php?u=' +
                 url +
-                '&quote=Check%20out%20this%20project%20on%20ZubHub!',
+                '&quote=' +
+                t('projectDetails.socialShare.fbwa'),
             )
           }
         >
@@ -53,7 +40,7 @@ const SocialButtons = () => {
           onClick={() =>
             window.open(
               'https://web.whatsapp.com/send?text=' +
-                'Check out this project on ZubHub! ' +
+                t('projectDetails.socialShare.fbwa') +
                 url,
             )
           }
@@ -66,10 +53,10 @@ const SocialButtons = () => {
             navigator.clipboard
               .writeText(url)
               .then(() => {
-                alert('Link copied to clipboard: ' + url);
+                toast.success(t('projectDetails.socialShare.copySuccess'));
               })
               .catch(() => {
-                alert('Something went wrong!');
+                toast.warning(t('projectDetails.socialShare.copyFail'));
               });
           }}
         >
