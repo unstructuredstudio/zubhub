@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMediaQuery } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -111,6 +111,7 @@ function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
+  const { id } = useParams();
 
   const [state, setState] = React.useState({
     project: {},
@@ -134,7 +135,7 @@ function ProjectDetails(props) {
       }
       handleSetState(obj);
     });
-  }, []);
+  }, [id]);
 
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {
