@@ -61,7 +61,6 @@ import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
 import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
-import Notification from '../components/notification/Notification.jsx';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
@@ -488,10 +487,16 @@ function PageWrapper(props) {
                     <SearchIcon />
                   </IconButton>
                   <NotificationButton
-                    className={clsx(common_classes.marginRight1em)}
+                    className={clsx(
+                      common_classes.marginRight1em,
+                      common_classes.removeOnSmallScreen,
+                    )}
                   />
                   <Avatar
-                    className={classes.avatarStyle}
+                    className={clsx(
+                      classes.avatarStyle,
+                      common_classes.removeOnSmallScreen,
+                    )}
                     aria-label={`${props.auth.username}' Avatar`}
                     aria-controls="profile_menu"
                     aria-haspopup="true"
