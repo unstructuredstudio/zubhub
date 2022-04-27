@@ -52,14 +52,15 @@ class ProjectCreateAPIView(CreateAPIView):
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        obj = serializer.save(creator=self.request.user)
         self.request.user.save()
 
         if self.request.user.followers is not None:
+            print(self.__dict__)
             send_notification(
                 list(self.request.user.followers.all()),
                 self.request.user,
-                [{} for _ in list(self.request.user.followers.all())],
+                [{"project": obj.title} for _ in list(self.request.user.followers.all())],
                 Notification.Type.FOLLOWING_PROJECT,
                 f'/creators/{self.request.user.username}'
             )
