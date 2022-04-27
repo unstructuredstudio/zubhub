@@ -113,6 +113,7 @@ INSTALLED_APPS = [
     'APIS',
     'creators',
     'projects',
+    'notifications'
 ]
 
 # askimet
@@ -292,7 +293,8 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 CELERY_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = 'hello@unstructured.studio'
+EMAIL_SUBJECT_PREFIX = ''
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "hello@unstructured.studio")
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
@@ -301,6 +303,7 @@ EMAIL_USE_SSL = True
 
 
 DEFAULT_FROM_PHONE = os.environ.get("DEFAULT_FROM_PHONE")
+DEFAULT_WHATSAPP_FROM_PHONE = os.environ.get("DEFAULT_WHATSAPP_FROM_PHONE")
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_NOTIFY_SERVICE_SID = os.environ.get("TWILIO_NOTIFY_SERVICE_SID")

@@ -11,7 +11,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
 
 from .managers import PhoneNumberManager
-from .utils import user_phone
+from .model_utils import user_phone
 
 try:
     from allauth.account import app_settings as allauth_settings
@@ -80,9 +80,24 @@ class Creator(AbstractUser):
 
 
 class Setting(models.Model):
+    WHATSAPP = 1
+    EMAIL = 2
+    SMS = 3
+    WEB = 4
+
+    CONTACT_CHOICES = (
+        (WHATSAPP, 'WHATSAPP'),
+        (EMAIL, 'EMAIL'),
+        (SMS, 'SMS'),
+        (WEB, 'WEB')
+    )
+
     creator = models.OneToOneField(
         Creator, on_delete=models.CASCADE, primary_key=True)
     subscribe = models.BooleanField(blank=True, default=False)
+    contact = models.PositiveSmallIntegerField(
+        choices=CONTACT_CHOICES, blank=True, null=True, default=SMS
+    )
 
     def __str__(self):
         return self.creator.username
