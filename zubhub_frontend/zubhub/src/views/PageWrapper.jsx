@@ -71,6 +71,7 @@ import API from '../api';
 import { throttle } from '../utils.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
+import HamburgerMenu from '../components/hamburger_menu/HamburgerMenu.jsx';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -488,10 +489,17 @@ function PageWrapper(props) {
                     <SearchIcon />
                   </IconButton>
                   <NotificationButton
-                    className={clsx(common_classes.marginRight1em)}
+                    className={clsx(
+                      common_classes.marginRight1em,
+                      common_classes.removeOnSmallScreen,
+                    )}
                   />
+                  <HamburgerMenu />
                   <Avatar
-                    className={classes.avatarStyle}
+                    className={clsx(
+                      classes.avatarStyle,
+                      common_classes.removeOnSmallScreen,
+                    )}
                     aria-label={`${props.auth.username}' Avatar`}
                     aria-controls="profile_menu"
                     aria-haspopup="true"
