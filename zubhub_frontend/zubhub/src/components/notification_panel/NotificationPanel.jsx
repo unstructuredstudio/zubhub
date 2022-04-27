@@ -44,6 +44,7 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
   const [page, setPage] = useState(1);
   const [notifications, setNotifications] = useState({});
   const [loading, setLoading] = useState(false);
+  const [topLoading, setTopLoading] = useState(false);
   const [outOfNotifications, setOutOfNotifications] = useState(false);
   const notificationsWrapperRef = useRef();
 
@@ -99,10 +100,41 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
       setLoading(false);
     };
 
-    if (!outOfNotifications && token && page && open) {
+    if (!outOfNotifications && token && page !== 1) {
       getNotifications();
     }
-  }, [open, page, token, outOfNotifications]);
+  }, [page, token, outOfNotifications]);
+
+  useEffect(() => {
+    const getNotifications = async () => {
+      setTopLoading(true);
+      const api = new API();
+
+      const notifications = await api.getNotifications(1, token);
+
+      if (!notifications.results) {
+        setOutOfNotifications(true);
+        setTopLoading(false);
+        return;
+      }
+
+      const newNotifications = notifications.results.reduce(
+        (obj, notification) => ({ ...obj, [notification.id]: notification }),
+        {},
+      );
+
+      /* await new Promise(resolve => setTimeout(resolve, 100)); */
+      setNotifications(currentNotifications => ({
+        ...newNotifications,
+        ...currentNotifications,
+      }));
+      setTopLoading(false);
+    };
+
+    if (token && open) {
+      getNotifications();
+    }
+  }, [open, token]);
 
   const handleScroll = ({ target }) => {
     if (
@@ -145,6 +177,7 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
         {hasNewNotifications && (
           <h2 className={classes.panelSubheadingTextStyle}>New</h2>
         )}
+        {topLoading && getLoadingSpinner()}
         {newNotifications.map(notification => (
           <Notification
             notification={notification}
@@ -160,9 +193,12 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
             onNotificationClick={() => onNotificationClick(notification)}
           />
         ))}
-        {!loading && !hasNewNotifications && !hasEarlierNotifications && (
-          <p>You have no notifications in this category.</p>
-        )}
+        {!topLoading &&
+          !loading &&
+          !hasNewNotifications &&
+          !hasEarlierNotifications && (
+            <p>You have no notifications in this category.</p>
+          )}
         {loading && getLoadingSpinner()}
       </div>
     );

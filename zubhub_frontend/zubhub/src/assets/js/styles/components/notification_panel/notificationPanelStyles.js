@@ -12,6 +12,7 @@ const styles = theme => ({
   fullscreenPopperStyle: {
     width: '100vw',
     height: '100vh',
+    /* height: 'auto', */
     borderRadius: '0px',
   },
   panelHeaderStyle: {
@@ -38,10 +39,12 @@ const styles = theme => ({
     display: 'flex',
     flexFlow: 'column nowrap',
     color: 'black',
-    maxHeight: '450px',
+    [theme.breakpoints.up('600')]: {
+      maxHeight: '450px',
+    },
     overflowY: 'auto',
     [theme.breakpoints.down('600')]: {
-      maxHeight: '100%',
+      height: '86%',
     },
     overscrollBehavior: 'contain',
   },

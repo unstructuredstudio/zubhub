@@ -21,31 +21,8 @@ const Notification = ({ notification, onNotificationClick }) => {
   const { t } = useTranslation();
   const st = dFormatter(JSON.parse('"' + notification.date + '"'));
 
-  const getMessage = () => {
-    let message = '';
-    if (notification.sources.length === 1) {
-      // 50 character message limit + 17 for strong tags being counted as well
-      if (notification.message.length < 67) {
-        message += notification.message;
-      } else {
-        message += notification.message.slice(0, 67) + '...';
-      }
-    } else {
-      if (notification.message.length < 50) {
-        // handles notifications without tags
-        message += notification.message;
-      } else {
-        message += notification.message.slice(0, 50) + '...';
-      }
-    }
-    return message;
-  };
-
   return (
-    <Link
-      to={notification.link}
-      style={{ textDecoration: 'none', color: 'inherit', maxWidth: '365px' }}
-    >
+    <Link to={notification.link} className={classes.notificationLink}>
       <ListItem
         alignItems="center"
         disableGutters
@@ -91,7 +68,7 @@ const Notification = ({ notification, onNotificationClick }) => {
           primary={
             <span
               dangerouslySetInnerHTML={{
-                __html: getMessage(),
+                __html: notification.message,
               }}
             ></span>
           }
