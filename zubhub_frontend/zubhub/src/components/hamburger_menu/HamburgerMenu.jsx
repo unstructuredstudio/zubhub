@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { makeStyles } from '@material-ui/core/styles';
 import styles from '../../assets/js/styles/components/hamburger_menu/hamburgerMenuStyles.js';
 import commonStyles from '../../assets/js/styles';
@@ -16,7 +17,7 @@ import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-const HamburgerMenu = () => {
+const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
@@ -34,9 +35,15 @@ const HamburgerMenu = () => {
       )}
       aria-label="hamburger_menu"
       aria-haspopup="true"
-      onClick={() => setHamburgerMenuOpen(!hamburgerMenuOpen)}
+      onClick={() => {
+        if (!dropdownOpen) {
+          setHamburgerMenuOpen(!hamburgerMenuOpen);
+        }
+        setDropdownOpen(false);
+      }}
+      color="secondary"
     >
-      <MenuIcon />
+      {dropdownOpen ? <KeyboardArrowUpIcon /> : <MenuIcon />}
     </IconButton>,
     <Drawer
       className={classes.hamburgerSidebarStyle}
@@ -80,17 +87,20 @@ const HamburgerMenu = () => {
           </Typography>
         </MenuItem>
       </Link>
-      <Link
+      <div
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
-        onCl
+        onClick={() => {
+          setDropdownOpen(true);
+          setHamburgerMenuOpen(false);
+        }}
       >
         <MenuItem className={classes.paddingItem}>
           <Typography variant="subtitle2" color="textPrimary" component="span">
             Notifications
           </Typography>
         </MenuItem>
-      </Link>
+      </div>
       <Link
         href={`/creators/${auth.username}/projects`}
         className={classes.menuItemStyle}

@@ -36,6 +36,7 @@ import {
   FormGroup,
   InputBase,
   TextField,
+  useMediaQuery,
 } from '@material-ui/core';
 
 import {
@@ -90,7 +91,9 @@ function PageWrapper(props) {
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const formRef = useRef();
+  const mediaQuery = useMediaQuery('(max-width: 555px)');
 
   const [state, setState] = React.useState({
     username: null,
@@ -494,7 +497,6 @@ function PageWrapper(props) {
                       common_classes.removeOnSmallScreen,
                     )}
                   />
-                  <HamburgerMenu />
                   <Avatar
                     className={clsx(
                       classes.avatarStyle,
