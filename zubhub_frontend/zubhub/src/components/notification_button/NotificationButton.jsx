@@ -6,6 +6,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import cn from 'classnames';
 import styles from '../../assets/js/styles/components/notification_button/notificationButtonStyles';
 import { makeStyles } from '@material-ui/core/styles';
+import HamburgerMenu from '../hamburger_menu/HamburgerMenu';
 
 const useStyles = makeStyles(styles);
 
@@ -17,6 +18,10 @@ const NotificationButton = ({ className, notif }) => {
   return (
     <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
       <div>
+        <HamburgerMenu
+          setDropdownOpen={setDropdownOpen}
+          dropdownOpen={dropdownOpen}
+        />
         <CustomButton
           className={cn(className, classes.notificationButtonStyle)}
           variant="contained"
