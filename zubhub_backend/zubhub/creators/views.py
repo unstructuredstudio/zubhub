@@ -37,7 +37,7 @@ from .serializers import (CreatorListSerializer, CreatorMinimalSerializer,
 from .pagination import CreatorNumberPagination
 from .utils import (perform_send_phone_confirmation,
                     perform_send_email_confirmation, process_avatar,
-                    send_group_invite_notification, perform_creator_search)
+                    send_group_invite_notification, perform_creator_search, send_notification)
 from .permissions import IsOwner
 
 Creator = get_user_model()

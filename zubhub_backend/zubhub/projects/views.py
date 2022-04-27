@@ -324,7 +324,7 @@ class ToggleLikeAPIView(RetrieveAPIView):
                     send_notification(
                         [obj.creator],
                         self.request.user,
-                        [{}],
+                        [{'project': obj.title}],
                         Notification.Type.CLAP,
                         f'/projects/{obj.pk}'
                     )
@@ -366,7 +366,7 @@ class ToggleSaveAPIView(RetrieveAPIView):
                     send_notification(
                         [obj.creator],
                         self.request.user,
-                        [{}],
+                        [{'project': obj.title}],
                         Notification.Type.BOOKMARK,
                         f'/projects/{obj.pk}'
                     )
