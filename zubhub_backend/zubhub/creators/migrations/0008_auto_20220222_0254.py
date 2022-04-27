@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('creators', '0002_alter_creator_first_name'),
+        ('creators', '0007_auto_20220308_1140'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='setting',
             name='contact',
-            field=models.PositiveSmallIntegerField(blank=True, choices=[(1, 'WHATSAPP'), (2, 'EMAIL'), (3, 'SMS')], default=3, null=True),
+            field=models.PositiveSmallIntegerField(blank=True, choices=[(1, 'WHATSAPP'), (2, 'EMAIL'), (3, 'SMS'), (4, 'WEB')], default=4, null=True),
         ),
     ]
