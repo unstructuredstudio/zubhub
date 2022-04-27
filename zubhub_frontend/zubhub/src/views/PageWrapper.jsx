@@ -36,7 +36,6 @@ import {
   FormGroup,
   InputBase,
   TextField,
-  useMediaQuery,
 } from '@material-ui/core';
 
 import {
@@ -62,7 +61,6 @@ import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
 import logo from '../assets/images/logos/logo.png';
 import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
-import Notification from '../components/notification/Notification.jsx';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
@@ -72,7 +70,6 @@ import API from '../api';
 import { throttle } from '../utils.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
-import HamburgerMenu from '../components/hamburger_menu/HamburgerMenu.jsx';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -91,9 +88,7 @@ function PageWrapper(props) {
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const formRef = useRef();
-  const mediaQuery = useMediaQuery('(max-width: 555px)');
 
   const [state, setState] = React.useState({
     username: null,
