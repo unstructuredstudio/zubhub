@@ -16,8 +16,6 @@ Creator = get_user_model()
 
 
 class ViolationReasonSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
-    description = serializers.CharField(read_only=True, required=False)
 
     class Meta:
         model = ViolationReason
@@ -27,27 +25,20 @@ class ViolationReasonSerializer(serializers.ModelSerializer):
 class ViolationSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     reasons = ViolationReasonSerializer(many=True)
-    creator = CreatorMinimalSerializer(read_only=True)
     date = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Violation
-        fields = ['id', 'reasons', 'creator', 'date']
-
-    def validate_reasons(self, reasons):
-        print('VALIDATING REASONS', reasons)
-        return reasons
+        fields = ['id', 'reasons', 'creator', 'date', 'project']
 
     def create(self, validated_data):
-        print(validated_data)
-
         with transaction.atomic():
             violation = Violation(creator=validated_data['creator'],
                                   project=validated_data['project'])
-            print(violation)
+            reasons_data = validated_data.pop('reasons')
             reasons = [
-                ViolationReason(**reason_data)
-                for reason_data in validated_data['reasons']
+                ViolationReason.objects.get(**reason_data)
+                for reason_data in reasons_data
             ]
             violation.reasons.set(reasons)
             violation.save()
