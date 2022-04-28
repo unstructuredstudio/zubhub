@@ -618,11 +618,15 @@ class ProjectViolationsClearApiView(APIView):
     permission_classes = [IsAuthenticated, IsOwner]
     throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
-    def post(self, _, *, pk):
+    def post(self, request, *, pk):
         try:
             old = Project.objects.get(pk=pk)
         except Project.DoesNotExist:
-            return
+            return Response('Not found', status=404)
+
+        if not request.user or old.creator.id != request.user.id:
+            return Response('Error', status=403)
+
         old.violations.set([])
         old.save()
         return Response('Success')
