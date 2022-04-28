@@ -16,6 +16,8 @@ Creator = get_user_model()
 
 
 class ViolationReasonSerializer(serializers.ModelSerializer):
+    # id = serializers.UUIDField(read_only=True)
+    description = serializers.CharField(read_only=True, required=False)
 
     class Meta:
         model = ViolationReason
@@ -23,14 +25,29 @@ class ViolationReasonSerializer(serializers.ModelSerializer):
 
 
 class ViolationSerializer(serializers.ModelSerializer):
-    reasons = ViolationReasonSerializer(many=True, read_only=True)
+    id = serializers.UUIDField(read_only=True)
+    reasons = ViolationReasonSerializer(many=True)
     creator = CreatorMinimalSerializer(read_only=True)
     date = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Violation
-        fields = ['id', 'reasons', 'creator'
-                  'date']
+        fields = ['id', 'reasons', 'creator', 'date']
+
+    def validate_reasons(self, reasons):
+        print('VALIDATING REASONS', reasons)
+        return reasons
+
+    def create(self, validated_data):
+        print(validated_data)
+
+        with transaction.atomic():
+            violation = Violation(creator=validated_data['creator'],
+                                  project=validated_data['project'])
+            violation.reasons.set(validated_data['reasons'])
+            violation.save()
+
+        return violation
 
 
 class PublishingRuleSerializer(serializers.ModelSerializer):
@@ -224,10 +241,6 @@ class ProjectSerializer(serializers.ModelSerializer):
                 _("publish format is not supported"))
 
         return publish
-
-    def validate_violations(self, violations):
-        print(self.request, violations)
-        return violations
 
     def create(self, validated_data):
         images_data = validated_data.pop('images')

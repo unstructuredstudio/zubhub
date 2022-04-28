@@ -12,10 +12,11 @@ from rest_framework import status
 from rest_framework.generics import (UpdateAPIView, CreateAPIView, ListAPIView,
                                      RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.exceptions import APIException
 from projects.permissions import (IsOwner, IsStaffOrModerator,
                                   SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, CustomUserRateThrottle)
-from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule, ViolationReason
+from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule, Violation, ViolationReason
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
                     get_published_projects_for_user)
@@ -598,7 +599,7 @@ class ViolationReasonsListAPIView(ListAPIView):
     """
 
     queryset = ViolationReason.objects.all()
-    serializer_class = type(ViolationReasonSerializer(many=True))
+    serializer_class = ViolationReasonSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
     throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
@@ -607,13 +608,13 @@ class ProjectViolationsClearApiView(UpdateAPIView):
     """
     Clear all violations for a project
 
-    Requires authentication and staff or moderator.
+    Requires authentication and owner.
     Returns project details.
     """
 
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+    permission_classes = [IsAuthenticated, IsOwner]
     throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def perform_update(self, serializer: ProjectSerializer):
@@ -623,6 +624,25 @@ class ProjectViolationsClearApiView(UpdateAPIView):
             return
 
         serializer.save(creator=self.request.user, violations=[])
-        self.request.user.save()
-
         old.publish.delete()
+
+
+class ProjectViolationAddApiView(CreateAPIView):
+    """
+    Creates a new violation and adds it to a project.
+
+    Requires authentication and staff or moderator.
+    Returns the violation details.
+    """
+    queryset = Violation.objects.all()
+    serializer_class = ViolationSerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+
+    def perform_create(self, serializer):
+        pk = self.kwargs.get("pk")
+        project = Project.objects.get(id=pk)
+        violation = serializer.save(creator=self.request.user, project=project)
+        project.violations.set(violation)
+        project.save()
+        return violation

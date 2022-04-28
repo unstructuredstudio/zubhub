@@ -46,7 +46,10 @@ urlpatterns = [
     path('violation-reasons/',
          ViolationReasonsListAPIView.as_view(),
          name='violation_reasons'),
+    path('<uuid:pk>/add-violation',
+         ProjectViolationAddApiView.as_view(),
+         name="add_violation"),
     path('<uuid:pk>/clear-violations',
          ProjectViolationsClearApiView.as_view(),
-         name='project_violations')
+         name='clear_violations')
 ]
