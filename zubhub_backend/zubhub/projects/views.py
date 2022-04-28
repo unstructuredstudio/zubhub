@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import TrigramSimilarity, SearchQuery, SearchRank
 from django.core.exceptions import PermissionDenied
-from django.db.models import F
+from django.db.models import F, Func
 from django.db import transaction
 from rest_framework import status
 from rest_framework.generics import (UpdateAPIView, CreateAPIView, ListAPIView,
@@ -17,13 +17,15 @@ from projects.permissions import (IsOwner, IsStaffOrModerator,
 from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
-                    get_published_projects_for_user)
+                    get_published_projects_for_user, recommend_projects, recommend_projects_by_likes)
 from creators.utils import activity_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer,
                           StaffPickSerializer)
 from .pagination import ProjectNumberPagination
+from django.db import models
 
+from django.db.models.functions import Length
 
 class ProjectCreateAPIView(CreateAPIView):
     """
@@ -141,62 +143,66 @@ class ProjectListAPIView(ListAPIView):
         all = Project.objects.prefetch_related('publish__visible_to').all()
         return get_published_projects_for_user(self.request.user, all)
 
-class ProjectRecommendAPIView(RecommendAPIView):
+class ProjectRecommendAPIView(ListAPIView):
     """
     Fetch three projects to recommend
 
     Returns list of three projects
     """
-    serializer_classes = ProjectListSerializer
+
+    serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
     throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
         # get the project we are on
+        # return recommend_projects(Project.objects.get(pk=self.kwargs.get("pk")))
         try:
-            project = Project.objects.get(pk=self.kwargs.get("pk"))
+            return recommend_projects(Project.objects.get(pk=self.kwargs.get("pk")))
         except Project.DoesNotExist:
-            pass 
-
-        # get project category
-        category = getattr(project, 'category')
-
-        #get project tags
-        tags = getattr(project, 'tags')
-
-        projects = Project.objects.none()
+            return recommend_projects_by_likes(Project.objects.none())
         
-        # loop through each tag of the original project
-        for i in tags:
-            # loop through each project in the same category and check if it contains this tag
-            for j in Project.objects.filter(category__name__contains=category):
-                tags_j = getattr(i, 'tags') 
-                # skip original project and any projects already added to projects
-                if j == project or projects.contains(j):
-                    continue:
-                # if the jth project's tags include the ith tag, add to projects
-                if tags_j.contains(i):
-                    projects.union(j)
-                # stop once we have added 3 projects (inner loop)
-                if len(projects) == 3:
-                    break
-                
-            # stop once we have added 3 projects (outer loop)
-            if len(projects) == 3:
-                break
-        # if three projects not found, add from same category
-        for k in Project.objects.filter(category__name__contains=category):
-            if len(projects) == 3: 
-                break:
-            projects.union(k)
+        # # get project category
+        # category = getattr(project, 'category')
 
-        # if three projects still not found, add from most popular by likes
-        for l in Project.objects.all().order_by('likes'):
-            if len(projects) == 3:
-                break:
-            projects.union(l)
+        # # get project tags
+        # tags = list(project.tags.all())
 
-        return projects
+        # projects = list(Project.objects.none())
+        # if len(tags) != 0 and category != None:
+        #     # loop through each tag of the original project
+        #     for i in tags:
+        #         # loop through each project in the same category and check if it contains this tag
+        #         for j in Project.objects.filter(category__name=category).order_by('?'):
+        #             tags_j = list(j.tags.all())
+        #             # skip original project and any projects already added to projects
+        #             if j == project or j in projects:
+        #                 continue
+        #             # if the jth project's tags include the ith tag, add to projects
+        #             if i in tags_j:
+        #                 projects.append(j)
+        #             # stop once we have added 3 projects (inner loop)
+        #             if len(projects) == 3:
+        #                 return projects
+        #         # stop once we have added 3 projects (outer loop)
+        #         if len(projects) == 3:
+        #             return projects
+
+        # # if three projects not found, add from same category
+        # if category!=None:
+        #     for k in Project.objects.filter(category__name=category).order_by('?'):
+        #         if len(projects) == 3: 
+        #             return projects
+        #         if not k in projects and k != project:
+        #             projects.append(k)
+
+        # # if three projects still not found, add from most popular by likes
+        # for l in Project.objects.all().order_by('-likes_count'):
+        #     if len(projects) == 3:
+        #         return projects
+        #     if not l in projects and l != project:
+        #         projects.append(l)
+        # return projects
 
 class ProjectTagSearchAPIView(ListAPIView):
     """

@@ -12,6 +12,7 @@ from django.db.models import prefetch_related_objects
 from django.db.models import F
 from django.conf import settings
 from creators.tasks import send_mass_email, send_mass_text
+from .models import *
 
 Creator = get_user_model()
 
@@ -67,6 +68,7 @@ def update_tags(project, tags_data):
     for tag in tags_data:
         tag, created = Tag.objects.get_or_create(name=tag["name"])
         tag.projects.add(project)
+
 
 
 def send_staff_pick_notification(staff_pick):
@@ -309,6 +311,58 @@ def get_published_projects_for_user(user, all):
 
     return public.union(authenticated).union(visible_to).order_by("-created_on")
 
+
+def recommend_projects_by_likes(projects, project=None):
+    # if three projects still not found, add from most popular by likes
+    Project = apps.get_model('projects.Project')
+    for l in Project.objects.all().order_by('-likes_count'):
+        if len(projects) == 3:
+            return projects
+        if not l in projects and l != project:
+            projects.append(l)
+    return projects
+
+def recommend_projects(project):
+    Project = apps.get_model('projects.Project')
+
+    # get project category
+    category = getattr(project, 'category')
+
+    # get project tags
+    tags = list(project.tags.all())
+
+    projects = list(Project.objects.none())
+
+    if len(tags) != 0 and category != None:
+        # loop through each tag of the original project
+        for i in tags:
+            # loop through each project in the same category in random order and check if it contains this tag
+            for j in Project.objects.filter(category__name=category).order_by('?'):
+                tags_j = list(j.tags.all())
+                # skip original project and any projects already added to projects
+                if j == project or j in projects:
+                    continue
+                # if the jth project's tags include the ith tag, add to projects
+                if i in tags_j:
+                    projects.append(j)
+                # stop once we have added 3 projects (inner loop)
+                if len(projects) == 3:
+                    return projects
+            # stop once we have added 3 projects (outer loop)
+            if len(projects) == 3:
+                return projects
+                
+    # if three projects not found, add random from same category
+    if category!=None:
+        for k in Project.objects.filter(category__name=category).order_by('?'):
+            if len(projects) == 3: 
+                return projects
+            if not k in projects and k != project:
+                projects.append(k)
+
+    # if three projects still not found, add from most popular by likes
+    return recommend_projects_by_likes(projects)
+    
 
 def detect_mentions(kwargs):
     text = kwargs.get("text", None)
