@@ -9,7 +9,7 @@ const useStyles = makeStyles(styles);
 const Option = ({ option, inputValue, onOptionClick }) => {
   const classes = useStyles();
 
-  const matches = match(option.title, inputValue);
+  const matches = match(option.title, inputValue, { insideWords: true });
   const parts = parse(option.title, matches);
 
   const title = parts.map((part, index) => (
