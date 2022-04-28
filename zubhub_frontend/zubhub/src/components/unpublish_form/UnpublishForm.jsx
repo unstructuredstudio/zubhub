@@ -73,7 +73,7 @@ function UnpublishForm() {
 			</FormGroup>
 
 			<CustomButton 
-				dangerButtonStyle className={classes.hideProjectButtonStyle}
+				dangerButtonStyle className={mediaQuery? classes.hideProjectButtonMobileStyle : classes.hideProjectButtonStyle}
 				onClick={() => setOpen(false)}
 			>
 				Hide Project

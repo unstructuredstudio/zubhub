@@ -59,14 +59,13 @@ const styles = theme => ({
     },
     descriptionSubtitleMobileStyle: {
       marginBottom: '1em',
+      marginRight: '1.5em',
+      fontSize: '0.9rem',
       color: 'rgba(0, 0, 0, 0.54)',
       '& .ql-editor': {
         fontSize: '1rem',
         fontFamily: 'Raleway,Roboto,sans-serif',
       },
-      '& .MuiTypography-root': {
-        fontSize: '0.9rem',
-      }
     },
     descriptionBodyStyle: {
       marginBottom: '1.5em',
@@ -95,6 +94,14 @@ const styles = theme => ({
       paddingLeft: 25,
       paddingRight: 25,
       marginRight: 25,
+    },
+    hideProjectButtonMobileStyle: {
+      float: 'right',
+      backgroundColor: '#DC3545',
+      paddingLeft: 25,
+      paddingRight: 25,
+      marginRight: 25,
+      marginBottom: 10,
     },
     checkboxStyle: {
       '& .MuiCheckbox-colorSecondary.Mui-checked': {
