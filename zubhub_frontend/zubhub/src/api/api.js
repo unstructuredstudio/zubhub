@@ -254,10 +254,10 @@ class API {
     }
   };
 
-  // getReasons = ({ token }) => {
-  //   const url = `/api/projects/violations-reasons`;
-  //   return this.request({ url, token }).then(res => res.json());
-  // };
+  getReasons = ({ token }) => {
+    const url = `/api/projects/violations-reasons`;
+    return this.request({ token, url }).then(res => res.json());
+  };
 
   /**
    * @method getUserProjects - get a paginated list of projects
