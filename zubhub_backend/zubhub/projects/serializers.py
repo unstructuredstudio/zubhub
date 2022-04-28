@@ -16,7 +16,7 @@ Creator = get_user_model()
 
 
 class ViolationReasonSerializer(serializers.ModelSerializer):
-    # id = serializers.UUIDField(read_only=True)
+    id = serializers.UUIDField(read_only=True)
     description = serializers.CharField(read_only=True, required=False)
 
     class Meta:
@@ -44,7 +44,12 @@ class ViolationSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             violation = Violation(creator=validated_data['creator'],
                                   project=validated_data['project'])
-            violation.reasons.set(validated_data['reasons'])
+            print(violation)
+            reasons = [
+                ViolationReason(**reason_data)
+                for reason_data in validated_data['reasons']
+            ]
+            violation.reasons.set(reasons)
             violation.save()
 
         return violation
