@@ -36,6 +36,7 @@ const styles = theme => ({
   },
   creatorProfileStyle: {
     display: 'flex',
+    flexDirection: 'start',
     alignItems: 'center',
     marginBottom: '1em',
     '& a': {
@@ -115,6 +116,25 @@ const styles = theme => ({
     flexDirection: "row",
     display: "flex",
     justifyContent: "space-between"
+  },
+  actionBoxWebWrapper: {
+    float: "right",
+  },
+  bottomBarWrapperStyle: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100vw",
+    gridTemplateAreas: `"UserInfoGrid" 
+                        "ActionsBoxGrid"`,
+  },
+  bottomBarWrapperMobileStyle: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100vw",
+    gridTemplateAreas: `"ActionsBoxGrid" 
+    "UserInfoGrid"`,
   },
   iconsBoxStyle: {
     [theme.breakpoints.down('1080')]: {

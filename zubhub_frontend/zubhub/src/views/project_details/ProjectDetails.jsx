@@ -246,93 +246,6 @@ function ProjectDetails(props) {
                       </a>
                     ) : null}
                   </Grid>
-                  <div
-                    className={mediaQuery ? classes.actionBoxMobileWrapper : ''}
-                  >
-                    {mediaQuery && (
-                      <CustomButton
-                        className={common_classes.marginLeft1em}
-                        style={{ marginLeft: 0 }}
-                        variant="contained"
-                        primaryButtonStyle
-                        onClick={e => handleMobileShare(project)}
-                      >
-                        Share
-                      </CustomButton>
-                    )}
-                    <Box display="flex" justifyContent="flex-end">
-                      <Box className={classes.actionBoxStyle}>
-                        <CustomButton
-                          className={classes.actionBoxButtonStyle}
-                          size="small"
-                          aria-label={t(
-                            'projectDetails.ariaLabels.likeButton.label',
-                          )}
-                          variant="extended"
-                          onClick={e =>
-                            handleSetState(toggleLike(e, props, project.id))
-                          }
-                        >
-                          <Box className={classes.iconsBoxStyle}>
-                            {project.likes.includes(props.auth.id) ? (
-                              <ClapIcon
-                                arial-label={t(
-                                  'projectDetails.ariaLabels.likeButton.unlilke',
-                                )}
-                              />
-                            ) : (
-                              <ClapBorderIcon
-                                arial-label={t(
-                                  'projectDetails.ariaLabels.likeButton.like',
-                                )}
-                              />
-                            )}
-                          </Box>
-                          <Typography>
-                            {nFormatter(project.likes.length)}
-                          </Typography>
-                        </CustomButton>
-                        <CustomButton
-                          className={classes.actionBoxButtonStyle}
-                          size="small"
-                          aria-label={t(
-                            'projectDetails.ariaLabels.saveButton.label',
-                          )}
-                          onClick={e =>
-                            handleSetState(toggleSave(e, props, project.id))
-                          }
-                        >
-                          <Box className={classes.iconsBoxStyle}>
-                            {project.saved_by.includes(props.auth.id) ? (
-                              <BookmarkIcon
-                                aria-label={t(
-                                  'projectDetails.ariaLabels.saveButton.unsave',
-                                )}
-                              />
-                            ) : (
-                              <BookmarkBorderIcon
-                                aria-label={t(
-                                  'projectDetails.ariaLabels.saveButton.save',
-                                )}
-                              />
-                            )}
-                          </Box>
-                        </CustomButton>
-                        <Typography
-                          color="textSecondary"
-                          variant="caption"
-                          component="span"
-                          className={classes.actionBoxButtonStyle}
-                        >
-                          <Box className={classes.iconsBoxStyle}>
-                            <VisibilityIcon />
-                          </Box>
-                          <Typography>{project.views_count}</Typography>
-                        </Typography>
-                        {!mediaQuery && <SocialButtons />}
-                      </Box>
-                    </Box>
-                  </div>
                 </Grid>
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
@@ -357,68 +270,179 @@ function ProjectDetails(props) {
                     </Box>
                   </Grid>
                 ) : null}
-                <Container className={classes.headerStyle}>
-                  <Grid container justify="space-around">
-                    <Grid item className={classes.creatorProfileStyle}>
-                      <Link
-                        className={clsx(classes.textDecorationNone)}
-                        to={`/creators/${project.creator.username}`}
-                      >
-                        <Avatar
-                          className={classes.creatorAvatarStyle}
-                          src={project.creator.avatar}
-                          alt={project.creator.username}
-                        />
-                        <Typography color="textSecondary" component="span">
-                          {project.creator.username}
-                        </Typography>
-                      </Link>
-                      {project.creator.id === props.auth.id ? (
-                        <Grid container justify="flex-end">
-                          <Link
-                            className={classes.textDecorationNone}
-                            to={`/projects/${project.id}/edit`}
+                <Grid
+                  container
+                  xs={12}
+                  className={mediaQuery ? classes.bottomBarWrapperStyle : classes.bottomBarWrapperMobileStyle}
+                >
+                  {/* Claps, Bookmarks, and Views Bar */}
+                  <Grid
+                    sx={{ gridArea: 'ActionsBoxGrid' }}
+                    xs={mediaQuery ? 12 : 0}
+                  >
+                    <div
+                      className={
+                        mediaQuery
+                          ? classes.actionBoxMobileWrapper
+                          : classes.actionBoxWebWrapper
+                      }
+                    >
+                      {mediaQuery && (
+                        <CustomButton
+                          className={common_classes.marginLeft1em}
+                          style={{ marginLeft: 0 }}
+                          variant="contained"
+                          primaryButtonStyle
+                          onClick={e => handleMobileShare(project)}
+                        >
+                          Share
+                        </CustomButton>
+                      )}
+                      <Box display="flex" justifyContent="flex-end">
+                        <Box className={classes.actionBoxStyle}>
+                          <CustomButton
+                            className={classes.actionBoxButtonStyle}
+                            size="small"
+                            aria-label={t(
+                              'projectDetails.ariaLabels.likeButton.label',
+                            )}
+                            variant="extended"
+                            onClick={e =>
+                              handleSetState(toggleLike(e, props, project.id))
+                            }
                           >
+                            <Box className={classes.iconsBoxStyle}>
+                              {project.likes.includes(props.auth.id) ? (
+                                <ClapIcon
+                                  arial-label={t(
+                                    'projectDetails.ariaLabels.likeButton.unlilke',
+                                  )}
+                                />
+                              ) : (
+                                <ClapBorderIcon
+                                  arial-label={t(
+                                    'projectDetails.ariaLabels.likeButton.like',
+                                  )}
+                                />
+                              )}
+                            </Box>
+                            <Typography>
+                              {nFormatter(project.likes.length)}
+                            </Typography>
+                          </CustomButton>
+                          <CustomButton
+                            className={classes.actionBoxButtonStyle}
+                            size="small"
+                            aria-label={t(
+                              'projectDetails.ariaLabels.saveButton.label',
+                            )}
+                            onClick={e =>
+                              handleSetState(toggleSave(e, props, project.id))
+                            }
+                          >
+                            <Box className={classes.iconsBoxStyle}>
+                              {project.saved_by.includes(props.auth.id) ? (
+                                <BookmarkIcon
+                                  aria-label={t(
+                                    'projectDetails.ariaLabels.saveButton.unsave',
+                                  )}
+                                />
+                              ) : (
+                                <BookmarkBorderIcon
+                                  aria-label={t(
+                                    'projectDetails.ariaLabels.saveButton.save',
+                                  )}
+                                />
+                              )}
+                            </Box>
+                          </CustomButton>
+                          <Typography
+                            color="textSecondary"
+                            variant="caption"
+                            component="span"
+                            className={classes.actionBoxButtonStyle}
+                          >
+                            <Box className={classes.iconsBoxStyle}>
+                              <VisibilityIcon />
+                            </Box>
+                            <Typography>{project.views_count}</Typography>
+                          </Typography>
+                          {!mediaQuery && <SocialButtons />}
+                        </Box>
+                      </Box>
+                    </div>
+                  </Grid>
+                  {/* Claps, Bookmarks, and Views Bar */}
+                  {/* User Info Grid */}
+                  <Grid sx = {{gridArea: 'ActionsBoxGrid'}} xs={mediaQuery ? 12 : 0}>
+                    <Grid container className={classes.UserInfoGridStyle}>
+                      <Grid item className={classes.creatorProfileStyle}>
+                        <Link
+                          className={clsx(classes.textDecorationNone)}
+                          to={`/creators/${project.creator.username}`}
+                        >
+                          <Avatar
+                            className={classes.creatorAvatarStyle}
+                            src={project.creator.avatar}
+                            alt={project.creator.username}
+                          />
+                          <Typography color="textSecondary" component="span">
+                            {project.creator.username}
+                          </Typography>
+                        </Link>
+                        {project.creator.id === props.auth.id ? (
+                          <Grid container justify="flex-end">
+                            <Link
+                              className={classes.textDecorationNone}
+                              to={`/projects/${project.id}/edit`}
+                            >
+                              <CustomButton
+                                className={common_classes.marginLeft1em}
+                                variant="contained"
+                                primaryButtonStyle
+                              >
+                                {t('projectDetails.project.edit')}
+                              </CustomButton>
+                            </Link>
                             <CustomButton
                               className={common_classes.marginLeft1em}
                               variant="contained"
-                              primaryButtonStyle
+                              dangerButtonStyle
+                              onClick={() =>
+                                handleSetState(
+                                  handleToggleDeleteProjectModal(state),
+                                )
+                              }
                             >
-                              {t('projectDetails.project.edit')}
+                              {t('projectDetails.project.delete.label')}
                             </CustomButton>
-                          </Link>
+                          </Grid>
+                        ) : (
                           <CustomButton
                             className={common_classes.marginLeft1em}
                             variant="contained"
-                            dangerButtonStyle
-                            onClick={() =>
+                            onClick={e =>
                               handleSetState(
-                                handleToggleDeleteProjectModal(state),
+                                toggleFollow(
+                                  e,
+                                  props,
+                                  project.creator.id,
+                                  state,
+                                ),
                               )
                             }
+                            primaryButtonStyle
                           >
-                            {t('projectDetails.project.delete.label')}
+                            {project.creator.followers.includes(props.auth.id)
+                              ? t('projectDetails.project.creator.unfollow')
+                              : t('projectDetails.project.creator.follow')}
                           </CustomButton>
-                        </Grid>
-                      ) : (
-                        <CustomButton
-                          className={common_classes.marginLeft1em}
-                          variant="contained"
-                          onClick={e =>
-                            handleSetState(
-                              toggleFollow(e, props, project.creator.id, state),
-                            )
-                          }
-                          primaryButtonStyle
-                        >
-                          {project.creator.followers.includes(props.auth.id)
-                            ? t('projectDetails.project.creator.unfollow')
-                            : t('projectDetails.project.creator.follow')}
-                        </CustomButton>
-                      )}
+                        )}
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Container>
+                  {/* User Info Grid */}
+                </Grid>
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography
                     variant="h5"
