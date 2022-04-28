@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.search import TrigramSimilarity, SearchQuery, SearchRank
 from django.core.exceptions import PermissionDenied
-from django.db.models import F, Func
+from django.db.models import F
 from django.db import transaction
 from rest_framework import status
 from rest_framework.generics import (UpdateAPIView, CreateAPIView, ListAPIView,
