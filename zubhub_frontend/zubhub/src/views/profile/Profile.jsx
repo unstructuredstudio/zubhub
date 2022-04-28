@@ -137,7 +137,7 @@ function Profile(props) {
                   </CustomButton>
                   <Menu
                     className={classes.moreMenuStyle}
-                    disableScrollLock = {true}
+                    disableScrollLock={true}
                     id="profile_menu"
                     anchorEl={more_anchor_el}
                     anchorOrigin={{
@@ -182,39 +182,11 @@ function Profile(props) {
                 </CustomButton>
               )}
               <Box className={classes.avatarBoxStyle}>
-                <Badge
-                  overlap="circle"
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  badgeContent={
-                    props.auth.id === profile.id ? (
-                      <Tooltip
-                        title={t('profile.tooltips.shareProfile')}
-                        placement="right-start"
-                        arrow
-                      >
-                        <Fab
-                          className={clsx(
-                            classes.secondaryButton,
-                            classes.profileShareButtonStyle,
-                          )}
-                          aria-label={t('profile.ariaLabels.shareProfile')}
-                          onClick={() => copyProfileUrl(profile, props, toast)}
-                        >
-                          <ShareIcon />
-                        </Fab>
-                      </Tooltip>
-                    ) : null
-                  }
-                >
-                  <Avatar
-                    className={classes.avatarStyle}
-                    src={profile.avatar}
-                    alt={profile.username}
-                  />
-                </Badge>
+                <Avatar
+                  className={classes.avatarStyle}
+                  src={profile.avatar}
+                  alt={profile.username}
+                />
               </Box>
               <Box className={classes.ProfileDetailStyle}>
                 <Typography

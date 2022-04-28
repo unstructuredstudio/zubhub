@@ -467,6 +467,11 @@
       "deleteComment": "delete comment dialog"
     },
     "deleteProjectToastSuccess": "Your project was deleted successfully!",
+    "socialShare": {
+      "fbwa": "Check out this project on ZubHub! ",
+      "copySuccess": "Link successfully copied to clipboard!",
+      "copyFail": "Hmmm... something went wrong trying to copy that link :("
+    },
     "errors": {
       "unexpected": "Hmmm..seems like we could not delete the project :( Maybe try again later?",
       "noBrowserSupport": "Your browser does not support the video tag"

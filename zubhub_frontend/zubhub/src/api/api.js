@@ -734,6 +734,19 @@ class API {
   };
 
   /**
+   * @method viewNotification
+   *
+   * @todo - describe method's signature
+   */
+  viewNotification = async ({ id, token, body }) => {
+    const url = `notifications/${id}/update/`;
+    const method = 'PUT';
+    const bodyString = JSON.stringify(body);
+    const res = await this.request({ url, method, body: bodyString, token });
+    return res.json();
+  };
+
+  /**
    * @method addProfileComment
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *
@@ -793,6 +806,18 @@ class API {
     const url = `faqs/`;
 
     return this.request({ url }).then(res => res.json());
+  };
+
+  /**
+   * Gets a user's notifications
+   * @param {number} page the page of notifications to get
+   * @param {string} token the user's auth token
+   * @returns the user's notifications
+   */
+  getNotifications = (page, token) => {
+    const url = 'notifications/?' + new URLSearchParams({ page }).toString();
+
+    return this.request({ url, token }).then(res => res.json());
   };
 
   /**

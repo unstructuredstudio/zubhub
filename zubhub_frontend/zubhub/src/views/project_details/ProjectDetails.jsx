@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMediaQuery } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -29,6 +29,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 
+import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
 import * as UserActions from '../../store/actions/userActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -113,6 +114,7 @@ function ProjectDetails(props) {
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
   const auth = useSelector((state) => state.auth);
+  const { id } = useParams();
 
   const [state, setState] = React.useState({
     project: {},
@@ -136,7 +138,7 @@ function ProjectDetails(props) {
       }
       handleSetState(obj);
     });
-  }, []);
+  }, [id]);
 
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {
@@ -392,6 +394,7 @@ function ProjectDetails(props) {
                           </Box>
                           <Typography>{project.views_count}</Typography>
                         </Typography>
+                        {!mediaQuery && <SocialButtons />}
                       </Box>
                       <UnpublishMenu/>
                     </Box>
