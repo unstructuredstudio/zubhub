@@ -16,6 +16,8 @@ Creator = get_user_model()
 
 
 class ViolationReasonSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField()
+    description = serializers.CharField(read_only=True)
 
     class Meta:
         model = ViolationReason
