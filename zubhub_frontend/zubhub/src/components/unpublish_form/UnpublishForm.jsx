@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector } from 'react-redux';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import { useMediaQuery } from '@material-ui/core';
 import {
 	Modal,
 	Box,
@@ -25,8 +25,8 @@ const useCommonStyles = makeStyles(commonStyles);
 function UnpublishForm() {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
-	const [reasons, setReasons] = useState(['Promotes bigotry, discrimination, hatred, or violence against any individual or group', 'Threatens, harasses, or intimidates any other person, whether that person is a ZubHub user or not', 'Contains foul language or personal attacks', 'Contains sexually explicit or graphically violent material']);
-
+	const [reasons, setReasons] = useState(['Promotes bigotry, discrimination, hatred, or violence against any individual or group', 'Threatens, harasses, or intimidates any other person, whether that person is a ZubHub user or not', 'Contains foul language or personal attacks', 'Contains sexually explicit or graphically violent material', 'Provides instructions on how to commit illegal activities or obtain illegal products', 'Promotes bigotry, discrimination, hatred, or violence against any individual or group', 'Threatens, harasses, or intimidates any other person, whether that person is a ZubHub user or not', 'Contains foul language or personal attacks', 'Contains sexually explicit or graphically violent material', 'Provides instructions on how to commit illegal activities or obtain illegal products']);
+	const mediaQuery = useMediaQuery('(max-width: 600px)');
 	const token = useSelector((state) => state.auth.token);
 
 	// useEffect(() => {
@@ -47,23 +47,24 @@ function UnpublishForm() {
 			aria-lebelledby="modal-modal-title"
 			aria-describedby="modal-modal-description"
 		>
-		  <Box className={classes.unpublishModalStyle}>
+		  <Box className={mediaQuery? classes.unpublishModalMobileStyle : classes.unpublishModalStyle}>
 		  <CloseIcon
-			onClick={() => setOpen(false)}
-			className={classes.closeIconStyle}
-		  ></CloseIcon>
+				onClick={() => setOpen(false)}
+				className={mediaQuery? classes.closeIconMobileStyle : classes.closeIconStyle}
+		  />
+			<div className={classes.overflowWrapper}>
 			<Typography
-				className={classes.descriptionHeadingStyle}
+				className={mediaQuery? classes.descriptionHeadingMobileStyle : classes.descriptionHeadingStyle}
 			>
 				Why are you unpublishing this?
 			</Typography>
 			<Typography
-				className={classes.descriptionBodyStyle}
+				className={mediaQuery? classes.descriptionSubtitleMobileStyle : classes.descriptionBodyStyle}
 			>
 				Please select the terms of use that have been breached.
 			</Typography>
 
-			<FormGroup className={classes.descriptionBodyStyle}>
+			<FormGroup className={mediaQuery? classes.descriptionBodyMobileStyle : classes.descriptionBodyStyle}>
 				{
 					reasons.map(reason => (
 						<FormControlLabel className={classes.checkboxStyle} control={<Checkbox className={classes.checkboxStyle}/>} label={reason}/>
@@ -77,6 +78,7 @@ function UnpublishForm() {
 			>
 				Hide Project
 			</CustomButton>
+			</div>
 		  </Box>
 		</Modal>
 		</>
