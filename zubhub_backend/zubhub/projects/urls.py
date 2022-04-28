@@ -15,6 +15,7 @@ urlpatterns = [
          name='autocomplete_projects'),
     path('search/', ProjectSearchAPIView.as_view(), name='search_projects'),
     path('create/', ProjectCreateAPIView.as_view(), name='create_project'),
+    path('<uuid:pk>/recommend/', ProjectRecommendAPIView.as_view(), name='recommend_projects'),
     path('<uuid:pk>/update/',
          ProjectUpdateAPIView.as_view(),
          name='update_project'),

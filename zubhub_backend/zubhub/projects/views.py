@@ -141,6 +141,62 @@ class ProjectListAPIView(ListAPIView):
         all = Project.objects.prefetch_related('publish__visible_to').all()
         return get_published_projects_for_user(self.request.user, all)
 
+class ProjectRecommendAPIView(RecommendAPIView):
+    """
+    Fetch three projects to recommend
+
+    Returns list of three projects
+    """
+    serializer_classes = ProjectListSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        # get the project we are on
+        try:
+            project = Project.objects.get(pk=self.kwargs.get("pk"))
+        except Project.DoesNotExist:
+            pass 
+
+        # get project category
+        category = getattr(project, 'category')
+
+        #get project tags
+        tags = getattr(project, 'tags')
+
+        projects = Project.objects.none()
+        
+        # loop through each tag of the original project
+        for i in tags:
+            # loop through each project in the same category and check if it contains this tag
+            for j in Project.objects.filter(category__name__contains=category):
+                tags_j = getattr(i, 'tags') 
+                # skip original project and any projects already added to projects
+                if j == project or projects.contains(j):
+                    continue:
+                # if the jth project's tags include the ith tag, add to projects
+                if tags_j.contains(i):
+                    projects.union(j)
+                # stop once we have added 3 projects (inner loop)
+                if len(projects) == 3:
+                    break
+                
+            # stop once we have added 3 projects (outer loop)
+            if len(projects) == 3:
+                break
+        # if three projects not found, add from same category
+        for k in Project.objects.filter(category__name__contains=category):
+            if len(projects) == 3: 
+                break:
+            projects.union(k)
+
+        # if three projects still not found, add from most popular by likes
+        for l in Project.objects.all().order_by('likes'):
+            if len(projects) == 3:
+                break:
+            projects.union(l)
+
+        return projects
 
 class ProjectTagSearchAPIView(ListAPIView):
     """
