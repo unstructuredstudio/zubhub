@@ -193,6 +193,10 @@ const styles = theme => ({
     marginRight: '0.5em',
     marginBottom: '0.5em',
   },
+  materialListstyle: {
+    color: 'black',
+    marginLeft: '2em',
+  },
   tagsBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',

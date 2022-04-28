@@ -73,12 +73,8 @@ const buildMaterialsUsedComponent = (classes, state) => {
   const arr =
     state.project.materials_used && state.project.materials_used.split(',');
   return arr.map((material, index) => (
-    <Typography
-      key={index}
-      component="span"
-      className={classes.materialsUsedStyle}
-    >
-      {material}
+    <Typography className={classes.materialListstyle}>
+      <li>{material}</li>
     </Typography>
   ));
 };
@@ -185,64 +181,6 @@ function ProjectDetails(props) {
               >
                 {project.title}
               </Typography>
-              <Grid container justify="space-around">
-                <Grid item className={classes.creatorProfileStyle}>
-                  <Link
-                    className={clsx(classes.textDecorationNone)}
-                    to={`/creators/${project.creator.username}`}
-                  >
-                    <Avatar
-                      className={classes.creatorAvatarStyle}
-                      src={project.creator.avatar}
-                      alt={project.creator.username}
-                    />
-                    <Typography color="textSecondary" component="span">
-                      {project.creator.username}
-                    </Typography>
-                  </Link>
-                  {project.creator.id === props.auth.id ? (
-                    <Grid container justify="flex-end">
-                      <Link
-                        className={classes.textDecorationNone}
-                        to={`/projects/${project.id}/edit`}
-                      >
-                        <CustomButton
-                          className={common_classes.marginLeft1em}
-                          variant="contained"
-                          primaryButtonStyle
-                        >
-                          {t('projectDetails.project.edit')}
-                        </CustomButton>
-                      </Link>
-                      <CustomButton
-                        className={common_classes.marginLeft1em}
-                        variant="contained"
-                        dangerButtonStyle
-                        onClick={() =>
-                          handleSetState(handleToggleDeleteProjectModal(state))
-                        }
-                      >
-                        {t('projectDetails.project.delete.label')}
-                      </CustomButton>
-                    </Grid>
-                  ) : (
-                    <CustomButton
-                      className={common_classes.marginLeft1em}
-                      variant="contained"
-                      onClick={e =>
-                        handleSetState(
-                          toggleFollow(e, props, project.creator.id, state),
-                        )
-                      }
-                      primaryButtonStyle
-                    >
-                      {project.creator.followers.includes(props.auth.id)
-                        ? t('projectDetails.project.creator.unfollow')
-                        : t('projectDetails.project.creator.follow')}
-                    </CustomButton>
-                  )}
-                </Grid>
-              </Grid>
             </Container>
             <Container className={classes.detailStyle}>
               <Grid container justify="center">
@@ -419,6 +357,68 @@ function ProjectDetails(props) {
                     </Box>
                   </Grid>
                 ) : null}
+                <Container className={classes.headerStyle}>
+                  <Grid container justify="space-around">
+                    <Grid item className={classes.creatorProfileStyle}>
+                      <Link
+                        className={clsx(classes.textDecorationNone)}
+                        to={`/creators/${project.creator.username}`}
+                      >
+                        <Avatar
+                          className={classes.creatorAvatarStyle}
+                          src={project.creator.avatar}
+                          alt={project.creator.username}
+                        />
+                        <Typography color="textSecondary" component="span">
+                          {project.creator.username}
+                        </Typography>
+                      </Link>
+                      {project.creator.id === props.auth.id ? (
+                        <Grid container justify="flex-end">
+                          <Link
+                            className={classes.textDecorationNone}
+                            to={`/projects/${project.id}/edit`}
+                          >
+                            <CustomButton
+                              className={common_classes.marginLeft1em}
+                              variant="contained"
+                              primaryButtonStyle
+                            >
+                              {t('projectDetails.project.edit')}
+                            </CustomButton>
+                          </Link>
+                          <CustomButton
+                            className={common_classes.marginLeft1em}
+                            variant="contained"
+                            dangerButtonStyle
+                            onClick={() =>
+                              handleSetState(
+                                handleToggleDeleteProjectModal(state),
+                              )
+                            }
+                          >
+                            {t('projectDetails.project.delete.label')}
+                          </CustomButton>
+                        </Grid>
+                      ) : (
+                        <CustomButton
+                          className={common_classes.marginLeft1em}
+                          variant="contained"
+                          onClick={e =>
+                            handleSetState(
+                              toggleFollow(e, props, project.creator.id, state),
+                            )
+                          }
+                          primaryButtonStyle
+                        >
+                          {project.creator.followers.includes(props.auth.id)
+                            ? t('projectDetails.project.creator.unfollow')
+                            : t('projectDetails.project.creator.follow')}
+                        </CustomButton>
+                      )}
+                    </Grid>
+                  </Grid>
+                </Container>
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography
                     variant="h5"
