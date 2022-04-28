@@ -313,16 +313,34 @@ def get_published_projects_for_user(user, all):
 
 
 def recommend_projects_by_likes(projects, project=None):
-    # if three projects still not found, add from most popular by likes
+    """
+    Appends most popular projects by likes to an input list, which may be empty
+
+    Params:
+    projects - may be empty or contain 2 or less projects
+    project - original project if it exists, None if original project does not exist
+
+    Returns list containing three projects
+    """
+
+    """ if three projects still not found, add from most popular by likes """
     Project = apps.get_model('projects.Project')
+
     for l in Project.objects.all().order_by('-likes_count'):
         if len(projects) == 3:
             return projects
         if not l in projects and l != project:
             projects.append(l)
+
     return projects
 
 def recommend_projects(project):
+    """
+    Params:
+    project - Project object
+
+    Returns list of three projects to recommend to a user 
+    """
     Project = apps.get_model('projects.Project')
 
     # get project category
