@@ -12,6 +12,7 @@ from django.db.models import prefetch_related_objects
 from django.db.models import F
 from django.conf import settings
 from creators.tasks import send_mass_email, send_mass_text
+from django.db.models import Q
 
 Creator = get_user_model()
 
@@ -276,7 +277,7 @@ def can_view(user, target):
     return False
 
 
-def get_published_projects_for_user(user, all):
+def get_published_projects_for_user(user, all, include_drafts=False):
     """ 
     Get all projects user can view.
 
@@ -297,17 +298,34 @@ def get_published_projects_for_user(user, all):
 
     """ fetch all projects where publishing rule is PUBLIC """
     public = all.filter(publish__type=PublishingRule.PUBLIC)
+    if not public:
+        public = Project.objects.none()
+
+    if not user.is_authenticated:
+        return public
 
     """ fetch all projects where publishing rule is AUTHENTICATED_VIEWERS if user is authenticated """
     authenticated = Project.objects.none()
-    if user.is_authenticated:
-        authenticated = all.filter(publish__type=PublishingRule.AUTHENTICATED_VIEWERS)
+    authenticated = all.filter(publish__type=PublishingRule.AUTHENTICATED_VIEWERS)
+    if not authenticated:
+        authenticated = Project.objects.none()
     
     """ fetch all projects where publishing rule is PREVIEW """
-    visible_to = all.filter(publish__type=PublishingRule.PREVIEW, 
-                            publish__visible_to__id=user.id)
+    visible_to = all.filter(Q(Q(publish__type=PublishingRule.PREVIEW), 
+                            (Q(publish__visible_to__id=user.id) | Q(creator=user))))
+    if not visible_to:
+        visible_to = Project.objects.none()
+    
+    drafts = Project.objects.none()
+    if include_drafts:
+        drafts = all.filter(publish__type=PublishingRule.DRAFT, creator=user)
 
-    return public.union(authenticated).union(visible_to).order_by("-created_on")
+        if not drafts:
+            drafts = Project.objects.none()
+        
+    print(user, public, authenticated, visible_to, all, drafts)
+   
+    return public.union(authenticated).union(visible_to).union(drafts).order_by("-created_on")
 
 
 def detect_mentions(kwargs):

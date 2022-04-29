@@ -6,7 +6,13 @@
  */
 export const fetchPage = (page, props) => {
   const username = props.match.params.username;
-  return props.getUserProjects({ page, username, t: props.t });
+  console.log(props.token);
+  return props.getUserProjects({
+    page,
+    username,
+    t: props.t,
+    token: props.auth.token,
+  });
 };
 
 /**

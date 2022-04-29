@@ -25,7 +25,7 @@ from projects.serializers import CommentSerializer
 from projects.models import Comment, PublishingRule
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
-from projects.utils import detect_mentions
+from projects.utils import detect_mentions, get_published_projects_for_user
 from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, GetAnonRateThrottle,
                                   CustomUserRateThrottle)
@@ -295,13 +295,14 @@ class UserProjectsAPIView(ListAPIView):
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects(limit=limit)
             else:
-                return creator.projects.exclude(publish__type=PublishingRule.DRAFT).order_by(
-                    "-created_on")[:int(limit)]
+                return get_published_projects_for_user(self.request.user, 
+                creator.projects.all(), include_drafts=True)[:int(limit)]
         else:
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects()
             else:
-                return creator.projects.exclude(publish__type=PublishingRule.DRAFT).order_by("-created_on")
+                return get_published_projects_for_user(self.request.user, 
+                creator.projects.all(), include_drafts=True)
 
 class UserDraftsAPIView(ListAPIView):
     """
@@ -337,7 +338,6 @@ class UserDraftsAPIView(ListAPIView):
                 return creator.creatorgroup.get_projects()
             else:
                 return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by("-created_on")
-
 
 class UserFollowersAPIView(ListAPIView):
     """
