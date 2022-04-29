@@ -276,7 +276,7 @@ function ProjectDetails(props) {
                   className={classes.bottomBarWrapperStyle}
                 >
                   {/* Claps, Bookmarks, and Views Bar */}
-                  <Grid xs={12} className={classes.actionGrid}>
+                  <Grid xs={mediaQuery ? 12 : 6} className={classes.actionGrid}>
                     <div
                       className={
                         mediaQuery
@@ -371,7 +371,7 @@ function ProjectDetails(props) {
                   </Grid>
                   {/* Claps, Bookmarks, and Views Bar */}
                   {/* User Info Grid */}
-                  <Grid xs={12} className={classes.userGrid}>
+                  <Grid xs={mediaQuery ? 12 : 6} className={classes.userGrid}>
                     <Grid container>
                       <Grid item className={classes.creatorProfileStyle}>
                         <Link
