@@ -126,6 +126,18 @@ const styles = theme => ({
     justifyContent: "space-between",
     width: "100%",
   },
+  actionGrid: {
+    order: 1,
+    [theme.breakpoints.up("sm")]: {
+      order: 2
+    }
+  },
+  userGrid: {
+    order: 2,
+    [theme.breakpoints.up("sm")]: {
+      order: 1
+    }
+  },
   iconsBoxStyle: {
     [theme.breakpoints.down('1080')]: {
       display: 'flex',
