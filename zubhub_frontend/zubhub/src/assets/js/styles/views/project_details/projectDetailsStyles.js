@@ -120,21 +120,17 @@ const styles = theme => ({
   actionBoxWebWrapper: {
     float: "right",
   },
-  bottomBarWrapperStyle: {
+  bottomBarWrapperWebStyle: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100vw",
-    gridTemplateAreas: `"UserInfoGrid" 
-                        "ActionsBoxGrid"`,
   },
   bottomBarWrapperMobileStyle: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100vw",
-    gridTemplateAreas: `"ActionsBoxGrid" 
-    "UserInfoGrid"`,
   },
   iconsBoxStyle: {
     [theme.breakpoints.down('1080')]: {

@@ -273,13 +273,15 @@ function ProjectDetails(props) {
                 <Grid
                   container
                   xs={12}
-                  className={mediaQuery ? classes.bottomBarWrapperStyle : classes.bottomBarWrapperMobileStyle}
+                  md={12}
+                  className={
+                    mediaQuery
+                      ? classes.bottomBarWrapperWebStyle
+                      : classes.bottomBarWrapperMobileStyle
+                  }
                 >
                   {/* Claps, Bookmarks, and Views Bar */}
-                  <Grid
-                    sx={{ gridArea: 'ActionsBoxGrid' }}
-                    xs={mediaQuery ? 12 : 0}
-                  >
+                  <Grid xs={12} md={4} order={{ xs: 1, md: 2 }}>
                     <div
                       className={
                         mediaQuery
@@ -374,8 +376,8 @@ function ProjectDetails(props) {
                   </Grid>
                   {/* Claps, Bookmarks, and Views Bar */}
                   {/* User Info Grid */}
-                  <Grid sx = {{gridArea: 'ActionsBoxGrid'}} xs={mediaQuery ? 12 : 0}>
-                    <Grid container className={classes.UserInfoGridStyle}>
+                  <Grid xs={12} md={4} order={{ xs: 2, md: 1 }}>
+                    <Grid container>
                       <Grid item className={classes.creatorProfileStyle}>
                         <Link
                           className={clsx(classes.textDecorationNone)}
