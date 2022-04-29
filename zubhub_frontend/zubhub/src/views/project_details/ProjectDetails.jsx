@@ -247,6 +247,7 @@ function ProjectDetails(props) {
                     ) : null}
                   </Grid>
                 </Grid>
+                {!mediaQuery && <SocialButtons />}
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>
@@ -364,7 +365,6 @@ function ProjectDetails(props) {
                             </Box>
                             <Typography>{project.views_count}</Typography>
                           </Typography>
-                          {!mediaQuery && <SocialButtons />}
                         </Box>
                       </Box>
                     </div>

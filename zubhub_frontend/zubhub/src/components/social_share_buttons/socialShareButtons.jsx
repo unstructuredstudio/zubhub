@@ -24,6 +24,7 @@ const SocialButtons = () => {
       >
         <IconButton
           className={classes.button}
+          sx={{ backgroundColor: '#1877f2' }}
           onClick={() =>
             window.open(
               'https://www.facebook.com/sharer/sharer.php?u=' +

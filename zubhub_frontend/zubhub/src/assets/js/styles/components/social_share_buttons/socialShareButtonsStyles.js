@@ -6,7 +6,7 @@ const styles = () => ({
       alignContent: 'center',
       width: '50px',
       height: '50px',
-      borderRadius: '50% !important',
+      borderRadius: '100% !important',
       color: 'white',
     },
     buttonGroup: {
