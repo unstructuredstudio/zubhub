@@ -586,3 +586,6 @@ class DeleteCommentAPIView(DestroyAPIView):
                 profile.save()
 
             return result
+
+
+#TODO: Add violation stuff
