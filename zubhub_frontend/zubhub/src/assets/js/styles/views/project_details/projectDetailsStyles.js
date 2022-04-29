@@ -120,17 +120,11 @@ const styles = theme => ({
   actionBoxWebWrapper: {
     float: "right",
   },
-  bottomBarWrapperWebStyle: {
+  bottomBarWrapperStyle: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100vw",
-  },
-  bottomBarWrapperMobileStyle: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100vw",
+    width: "100%",
   },
   iconsBoxStyle: {
     [theme.breakpoints.down('1080')]: {
