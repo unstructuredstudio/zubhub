@@ -12,7 +12,7 @@ const styles = theme => ({
       paddingRight: 0,
     },
     overflowWrapper: {
-      maxHeight: '90vh',
+      maxHeight: '60vh',
       overflow: 'scroll',
       overflowX: 'hidden',
     },
@@ -24,7 +24,7 @@ const styles = theme => ({
       transform: 'translate(-50%, -50%)',
       borderRadius: 20,
       width: '90%',
-      height: '95%',
+      height: '65%',
       padding: 25,
       paddingRight: 0,
     },
@@ -47,18 +47,18 @@ const styles = theme => ({
       top: 10,
     },
     descriptionHeadingStyle: {
-      marginTop: '1.5em',
+      marginTop: '1rem',
       fontWeight: 900,
       fontSize: '2rem',
     },
     descriptionHeadingMobileStyle: {
-      marginTop: '1.5em',
+      marginTop: '1rem',
       fontWeight: 900,
       fontSize: '1.6rem',
       marginRight: 20,
     },
     descriptionSubtitleMobileStyle: {
-      marginBottom: '1em',
+      marginBottom: '1rem',
       marginRight: '1.5em',
       fontSize: '0.9rem',
       color: 'rgba(0, 0, 0, 0.54)',
@@ -68,7 +68,7 @@ const styles = theme => ({
       },
     },
     descriptionBodyStyle: {
-      marginBottom: '1.5em',
+      marginBottom: '1rem',
       marginRight: '1.5em',
       color: 'rgba(0, 0, 0, 0.54)',
       '& .ql-editor': {
@@ -111,7 +111,7 @@ const styles = theme => ({
         color: '#C4C4C4',
       },
       '& .MuiSvgIcon-root': {
-        fontSize: '3.5rem',
+        fontSize: '3.0rem',
         fontWeight: 900,
         strokeWidth: 0.8,
         stroke: '#ffffff',
