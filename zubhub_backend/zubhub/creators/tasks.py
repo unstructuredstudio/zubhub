@@ -5,6 +5,9 @@ from random import uniform
 from celery import shared_task
 import requests
 from zubhub.utils import upload_file_to_media_server
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__)
 
 try:
     from allauth.account.adapter import get_adapter
@@ -21,19 +24,28 @@ def send_text(self, phone, template_name, ctx):
             uniform(2, 4) ** self.request.retries))
 
 
-@shared_task(name="creators.tasks.send_mass_email", bind=True, acks_late=True, max_retries=10)
-def send_mass_email(self, template_name, ctxs):
+@shared_task(name="creators.tasks.send_whatsapp", bind=True, acks_late=True, max_retries=10)
+def send_whatsapp(self, phone, template_name, ctx):
     try:
-        get_adapter().send_mass_email(template_name, ctxs)
+        get_adapter().send_whatsapp(template_name, phone, ctx)
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
+
+@shared_task(name="creators.tasks.send_mass_email", bind=True, acks_late=True, max_retries=10)
+def send_mass_email(self, template_name, ctxs, full_template=False):
+    try:
+        get_adapter().send_mass_email(template_name, ctxs, full_template)
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
 
 
 @shared_task(name="creators.tasks.send_mass_text", bind=True, acks_late=True, max_retries=10)
-def send_mass_text(self, template_name, ctxs):
+def send_mass_text(self, template_name, ctxs, full_template=False):
     try:
-        get_adapter().send_mass_text(template_name, ctxs)
+        get_adapter().send_mass_text(template_name, ctxs, full_template)
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))

@@ -1,6 +1,7 @@
 import csv
 from io import StringIO
 from django.utils.translation import ugettext_lazy as _
+from notifications.models import Notification
 from rest_framework import status
 from django.http import Http404
 from django.contrib.auth import get_user_model
@@ -36,7 +37,7 @@ from .serializers import (CreatorListSerializer, CreatorMinimalSerializer,
 from .pagination import CreatorNumberPagination
 from .utils import (perform_send_phone_confirmation,
                     perform_send_email_confirmation, process_avatar,
-                    send_group_invite_notification, perform_creator_search)
+                    send_group_invite_notification, perform_creator_search, send_notification)
 from .permissions import IsOwner
 
 Creator = get_user_model()
@@ -361,6 +362,8 @@ class ToggleFollowAPIView(RetrieveAPIView):
         else:
             obj.followers.add(self.request.user)
             obj.save()
+
+            send_notification([obj], self.request.user, [{}], Notification.Type.FOLLOW, f'/creators/{self.request.user.username}')
         self.request.user.save()
 
         return obj
