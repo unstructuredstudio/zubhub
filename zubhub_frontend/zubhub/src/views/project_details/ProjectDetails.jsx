@@ -191,49 +191,65 @@ function ProjectDetails(props) {
                   md={12}
                   className={clsx(classes.positionRelative)}
                 >
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    className={clsx(
-                      classes.videoWrapperStyle,
-                      classes.positionRelative,
-                    )}
-                  >
-                    {project.video ? (
-                      isCloudinaryVideo(project.video) ? (
-                        <video
-                          id="cloudinary-video-player"
-                          controls
-                          className={clsx(
-                            'cld-video-player',
-                            classes.iframeStyle,
-                          )}
-                        ></video>
-                      ) : isGdriveORVimeoORYoutube(project.video) ? (
-                        <iframe
-                          title={project.title}
-                          className={classes.iframeStyle}
-                          src={project.video}
-                        ></iframe>
-                      ) : (
-                        <video
-                          src={project.video}
-                          className={classes.iframeStyle}
-                          controls
-                        >
-                          {t('projectDetails.errors.noBrowserSupport')}
-                        </video>
-                      )
-                    ) : project.images.length > 0 ? (
-                      <img
-                        className={classes.iframeStyle}
-                        src={project.images[0].image_url}
-                        alt={project.title}
-                      />
-                    ) : null}
-                  </Grid>
+                  <div className={classes.topBarWrapper}>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      className={clsx(
+                        classes.videoWrapperStyle,
+                        classes.positionRelative,
+                      )}
+                    >
+                      <Grid container>
+                        <Grid item xs={2}>
+                          ' '
+                        </Grid>
+                        <Grid item xs={8}>
+                          {project.video ? (
+                            isCloudinaryVideo(project.video) ? (
+                              <video
+                                id="cloudinary-video-player"
+                                controls
+                                className={clsx(
+                                  'cld-video-player',
+                                  classes.iframeStyle,
+                                )}
+                              ></video>
+                            ) : isGdriveORVimeoORYoutube(project.video) ? (
+                              <iframe
+                                title={project.title}
+                                className={classes.iframeStyle}
+                                src={project.video}
+                              ></iframe>
+                            ) : (
+                              <video
+                                src={project.video}
+                                className={classes.iframeStyle}
+                                controls
+                              >
+                                {t('projectDetails.errors.noBrowserSupport')}
+                              </video>
+                            )
+                          ) : project.images.length > 0 ? (
+                            <img
+                              className={classes.iframeStyle}
+                              src={project.images[0].image_url}
+                              alt={project.title}
+                            />
+                          ) : null}
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={2}>
+                        {!mediaQuery && (
+                          <div className={classes.socialButtonWrapper}>
+                            <SocialButtons />
+                          </div>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </div>
                   <Grid item xs={12} sm={12} md={12}>
                     {project.video && isVideoFromGdrive(project.video) ? (
                       <a
@@ -247,7 +263,6 @@ function ProjectDetails(props) {
                     ) : null}
                   </Grid>
                 </Grid>
-                {!mediaQuery && <SocialButtons />}
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>

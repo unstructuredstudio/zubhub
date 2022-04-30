@@ -60,6 +60,15 @@ const styles = theme => ({
   detailStyle: {
     maxWidth: '1000px',
   },
+  topBarWrapper: {
+    // display: 'flex',
+    width: '100%',
+  },
+  socialButtonWrapper: {
+    // position: 'absolute',
+    // right: '-1.5em',
+    // top: '0em',
+  },
   videoWrapperStyle: {
     backgroundColor: 'black',
     marginBottom: '1em',

@@ -5,60 +5,59 @@ import LinkIcon from '@material-ui/icons/Link';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import IconButton from '@material-ui/core/IconButton';
-import { useMediaQuery } from '@material-ui/core';
-import styles from '../../assets/js/styles/components/social_share_buttons/socialShareButtonsStyles';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles({
+  buttonGroup: {
+    width: '50px',
+    height: '100%',
+    display: 'inherit',
+    alignItems: 'center',
+    margin: 'none',
+  },
+  button: {
+    width: '50px',
+    height: '50px',
+    borderRadius: '50% !important',
+    margin: '5%',
+    color: 'white',
+  },
+});
+
 const SocialButtons = () => {
-  const { t } = useTranslation();
+  const ahref = window.location.href;
   const classes = useStyles();
-  const url = window.location.href;
-  const mediaQuery = useMediaQuery('(min-width: 1080px)');
   return (
     <>
-      <ButtonGroup
-        className={classes.buttonGroup}
-        orientation={(mediaQuery && 'vertical') || 'horizontal'}
-      >
+      <ButtonGroup className={classes.buttonGroup} orientation="vertical">
         <IconButton
           className={classes.button}
-          sx={{ backgroundColor: '#1877f2' }}
-          onClick={() =>
-            window.open(
-              'https://www.facebook.com/sharer/sharer.php?u=' +
-                url +
-                '&quote=' +
-                t('projectDetails.socialShare.fbwa'),
-            )
+          style={{ backgroundColor: '#1877F2' }}
+          color="error"
+          href={
+            'https://www.facebook.com/sharer/sharer.php?u=' +
+            ahref +
+            '&quote=Check%20out%20this%20project%20on%20ZubHub!'
           }
         >
           <FacebookIcon />
         </IconButton>
         <IconButton
           className={classes.button}
-          onClick={() =>
-            window.open(
-              'https://web.whatsapp.com/send?text=' +
-                t('projectDetails.socialShare.fbwa') +
-                url,
-            )
+          style={{ backgroundColor: '#02A859' }}
+          href={
+            'https://web.whatsapp.com/send?text=' +
+            'Check out this project on ZubHub! ' +
+            ahref
           }
         >
           <WhatsAppIcon />
         </IconButton>
         <IconButton
           className={classes.button}
+          style={{ backgroundColor: '#757575' }}
           onClick={() => {
-            navigator.clipboard
-              .writeText(url)
-              .then(() => {
-                toast.success(t('projectDetails.socialShare.copySuccess'));
-              })
-              .catch(() => {
-                toast.warning(t('projectDetails.socialShare.copyFail'));
-              });
+            navigator.clipboard.writeText(ahref);
+            alert('Link to this project copied to clipboard!');
           }}
         >
           <LinkIcon />
