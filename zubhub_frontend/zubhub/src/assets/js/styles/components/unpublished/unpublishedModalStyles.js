@@ -3,7 +3,7 @@ const styles = theme => ({
         marginTop: '0.5em',
         marginBottom: '0.5em',
         fontWeight: 900,
-        fontSize: '2.2rem',
+        fontSize: '2.2em',
     },
     unpublishedLabelStyle: {
         borderRadius: '5px',
@@ -21,7 +21,9 @@ const styles = theme => ({
     },
     overflowWrapper: {
         maxHeight: '60vh',
-        overflow: 'scroll',
+        overflowY: 'scroll',
+        paddingRight: '20px',
+        paddingBottom: '20px',
     },
     modalStyle: {
         position: 'absolute',
@@ -32,13 +34,14 @@ const styles = theme => ({
         backgroundColor: '#ffffff',
         border: 'none',
         borderRadius: '20px',
-        padding: '30px',
+        padding: '20px',
         boxShadow: 24,
         p: 4,
         maxHeight: '70%',
         '&:focus': {
             outline: 0,
         },
+        marginRight: '20',
     },
     modalMobileStyle: {
         position: 'absolute',
@@ -48,10 +51,11 @@ const styles = theme => ({
         width: '90%',
         backgroundColor: '#ffffff',
         borderRadius: '20px',
-        padding: '30px',
+        padding: '20px',
         boxShadow: 24,
         p: 4,
         maxHeight: '70%',
+        marginRight: '20',
     },
     modalBodyStyle: {
         marginBottom: '1.0em',
@@ -72,6 +76,13 @@ const styles = theme => ({
     understandButtonStyle: {
         float: 'right',
         marginTop: '30px',
+    },
+    closeIconWrapper: {
+        width: '100%',
+    },
+    descriptionWrapper: {
+        marginRight: '-20px',
+        paddingBottom: '20px',
     },
     closeIconStyle: {
         float: 'right',
