@@ -1,4 +1,5 @@
 import { BASE_TAGS } from '../../assets/js/utils/constants';
+import { toast } from 'react-toastify';
 
 /**
  * @function getUserProfile
@@ -161,6 +162,9 @@ export const handleToggleDeleteAccountModal = state => {
  */
 export const deleteAccount = (username_el, props) => {
   if (username_el.current.firstChild.value !== props.auth.username) {
+    console.log(props.auth, 'auth data from props');
+    toast.error(props.t('profile.delete.errors.incorrectUsername'));
+
     return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
   } else {
     return props.deleteAccount({

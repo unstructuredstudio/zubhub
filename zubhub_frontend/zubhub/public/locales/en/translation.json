@@ -505,12 +505,12 @@
       "label": "Delete Account",
       "dialog": {
         "primary": "Delete Account",
-        "secondary": "Are you sure you want to delete your account? You can't undo this action!! If you still want procceed, type your username into the field below and click PROCEED",
+        "secondary": "Are you sure you want to delete your account? You will not be able to undo this action later. If you still want to proceed, type your password into the field below and click DELETE.",
         "inputs": {
           "username": "Your Username"
         },
         "cancel": "Cancel",
-        "procceed": "Procceed"
+        "procceed": "Delete"
       },
       "ariaLabels": {
         "deleteAccount": "delete account"
