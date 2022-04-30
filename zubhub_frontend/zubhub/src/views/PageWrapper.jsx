@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -35,6 +35,7 @@ import {
   Select,
   FormGroup,
   InputBase,
+  TextField,
 } from '@material-ui/core';
 
 import {
@@ -64,6 +65,11 @@ import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
 import InputSelect from '../components/input_select/InputSelect';
+import Autocomplete from '../components/autocomplete/Autocomplete';
+import API from '../api';
+import { throttle } from '../utils.js';
+import Option from '../components/autocomplete/Option';
+import NotificationButton from '../components/notification_button/NotificationButton';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -78,10 +84,11 @@ function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const trigger = useScrollTrigger()
+  const trigger = useScrollTrigger();
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
+  const formRef = useRef();
 
   const [state, setState] = React.useState({
     username: null,
@@ -90,7 +97,60 @@ function PageWrapper(props) {
     open_search_form: false,
   });
 
-  React.useEffect(() => {
+  const [options, setOptions] = useState([]);
+  const [query, setQuery] = useState('');
+  const [queryInput, setQueryInput] = useState('');
+
+  const throttledFetchOptions = useMemo(
+    () =>
+      throttle(async (query, searchType) => {
+        if (query.length === 0) {
+          setOptions([]);
+          return;
+        }
+
+        const api = new API();
+        let completions = [];
+        if (searchType === SearchType.TAGS) {
+          completions = await api.autocompleteTags({ query });
+          completions = completions.map(({ name }) => ({
+            title: name,
+          }));
+        } else if (searchType === SearchType.PROJECTS) {
+          completions = await api.autocompleteProjects({ query });
+          completions = completions.map(({ id, title, creator, images }) => ({
+            title,
+            shortInfo: creator.username,
+            image: images.length > 0 ? images[0].image_url : null,
+            link: `/projects/${id}`,
+          }));
+        } else {
+          completions = await api.autocompleteCreators({ query });
+          completions = completions.map(({ username, avatar }) => ({
+            title: username,
+            image: avatar,
+            link: `/creators/${username}`,
+          }));
+        }
+        setOptions(completions);
+      }, 2),
+    [],
+  );
+
+  useEffect(() => {
+    throttledFetchOptions(
+      query ||
+        (props.location.search &&
+          getQueryParams(window.location.href).get('q')),
+      searchType,
+    );
+  }, [query, searchType]);
+
+  useEffect(() => {
+    throttledFetchOptions.cancel();
+  }, []);
+
+  useEffect(() => {
     handleSetState({ loading: true });
     fetchHero(props)
       .then(() => {
@@ -102,10 +162,10 @@ function PageWrapper(props) {
         handleSetState({ loading: false });
       });
   }, [props.auth.token]);
-  
-  React.useEffect(()=>{
-    handleSetState(handleProfileMenuClose()) 
-  },[trigger])
+
+  React.useEffect(() => {
+    handleSetState(handleProfileMenuClose());
+  }, [trigger]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -115,11 +175,41 @@ function PageWrapper(props) {
     }
   };
 
+  const onSearchOptionClick = async (_, option) => {
+    if (!option || !option.title) return;
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+    if (option.link) {
+      window.history.pushState({}, '', option.link);
+      window.location.reload();
+      return;
+    }
+
+    const queryParams = new URLSearchParams({
+      type: searchType,
+      q: option.title,
+    });
+    window.history.pushState({}, '', `/search?${queryParams}`);
+    window.location.reload();
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const queryParams = new URLSearchParams({
+      type: searchType,
+      q: query,
+    });
+
+    window.history.pushState({}, '', `/search?${queryParams}`);
+    window.location.reload();
+  };
+
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
   const { zubhub, hero } = props.projects;
 
   const profileMenuOpen = Boolean(anchor_el);
+
   return (
     <>
       <ToastContainer />
@@ -180,6 +270,8 @@ function PageWrapper(props) {
                 action="/search"
                 className={clsx(classes.searchFormStyle, classes.removeOn894)}
                 role="search"
+                onSubmit={handleSubmit}
+                ref={formRef}
               >
                 <FormControl variant="outlined">
                   <InputLabel
@@ -204,32 +296,62 @@ function PageWrapper(props) {
                         <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                       </InputSelect>
                     </FormControl>
-                    <OutlinedInput
-                      name="q"
-                      id="q"
-                      type="search"
-                      defaultValue={
-                        props.location.search &&
-                        getQueryParams(window.location.href).get('q')
-                      }
-                      className={clsx(
-                        classes.searchFormInputStyle,
-                        'search-form-input',
+                    <Autocomplete
+                      options={options}
+                      defaultValue={{
+                        title:
+                          props.location.search &&
+                          getQueryParams(window.location.href).get('q'),
+                      }}
+                      renderOption={(option, { inputValue }) => (
+                        <Option
+                          option={option}
+                          inputValue={inputValue}
+                          onOptionClick={onSearchOptionClick}
+                        />
                       )}
-                      placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                      pattern="(.|\s)*\S(.|\s)*"
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            type="submit"
-                            className={classes.searchFormSubmitStyle}
-                            aria-label={t('pageWrapper.inputs.search.label')}
-                          >
-                            <SearchIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
+                      onChange={onSearchOptionClick}
+                    >
+                      {params => (
+                        <TextField
+                          name="q"
+                          id="q"
+                          type="search"
+                          variant="outlined"
+                          {...params}
+                          InputProps={{
+                            ...params.InputProps,
+                            className: clsx(
+                              classes.searchFormInputStyle,
+                              'search-form-input',
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  type="submit"
+                                  className={classes.searchFormSubmitStyle}
+                                  aria-label={t(
+                                    'pageWrapper.inputs.search.label',
+                                  )}
+                                >
+                                  <SearchIcon />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                            pattern: '(.|s)*S(.|s)*',
+                            defaultValue: {
+                              title:
+                                props.location.search &&
+                                getQueryParams(window.location.href).get('q'),
+                            },
+                          }}
+                          onChange={e => setQuery(e.target.value)}
+                          placeholder={`${t(
+                            'pageWrapper.inputs.search.label',
+                          )}...`}
+                        />
+                      )}
+                    </Autocomplete>
                   </FormGroup>
                 </FormControl>
               </form>
@@ -364,8 +486,17 @@ function PageWrapper(props) {
                   >
                     <SearchIcon />
                   </IconButton>
+                  <NotificationButton
+                    className={clsx(
+                      common_classes.marginRight1em,
+                      common_classes.removeOnSmallScreen,
+                    )}
+                  />
                   <Avatar
-                    className={classes.avatarStyle}
+                    className={clsx(
+                      classes.avatarStyle,
+                      common_classes.removeOnSmallScreen,
+                    )}
                     aria-label={`${props.auth.username}' Avatar`}
                     aria-controls="profile_menu"
                     aria-haspopup="true"
@@ -504,8 +635,9 @@ function PageWrapper(props) {
                 action="/search"
                 className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
                 role="search"
+                ref={formRef}
               >
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" style={{ minWidth: 'unset' }}>
                   <InputSelect
                     searchType={searchType}
                     onSearchTypeChange={setSearchType}
@@ -516,35 +648,63 @@ function PageWrapper(props) {
                     <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                   </InputSelect>
                 </FormControl>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" style={{ flex: '1 1 auto', maxWidth: '350px' }}>
                   <InputLabel
                     htmlFor="q"
                     className={classes.searchFormLabelStyle}
                   >
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
-                  <OutlinedInput
-                    name="q"
-                    id="q"
-                    type="search"
-                    className={clsx(
-                      classes.smallSearchFormInputStyle,
-                      'search-form-input',
-                    )}
-                    placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                    pattern="(.|\s)*\S(.|\s)*"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          type="submit"
-                          className={classes.searchFormSubmitStyle}
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
+                  <Autocomplete
+                    options={options}
+                    defaultValue={
+                      props.location.search &&
+                      getQueryParams(window.location.href).get('q')
                     }
-                  />
+                    renderOption={(option, { inputValue }) => (
+                      <Option
+                        option={option}
+                        inputValue={inputValue}
+                        onOptionClick={onSearchOptionClick}
+                      />
+                    )}
+                    onChange={onSearchOptionClick}
+                  >
+                    {params => (
+                      <TextField
+                        name="q"
+                        id="q"
+                        type="search"
+                        variant="outlined"
+                        {...params}
+                        InputProps={{
+                          ...params.InputProps,
+                          className: clsx(
+                            classes.smallSearchFormInputStyle,
+                            'search-form-input',
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                type="submit"
+                                className={classes.searchFormSubmitStyle}
+                                aria-label={t(
+                                  'pageWrapper.inputs.search.label',
+                                )}
+                              >
+                                <SearchIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                          pattern: '(.|s)*S(.|s)*',
+                        }}
+                        placeholder={`${t(
+                          'pageWrapper.inputs.search.label',
+                        )}...`}
+                        onChange={e => setQuery(e.target.value)}
+                      />
+                    )}
+                  </Autocomplete>
                 </FormControl>
               </form>
             </ClickAwayListener>
@@ -686,7 +846,7 @@ function PageWrapper(props) {
               href={
                 hero.tinkering_resource_url
                   ? hero.tinkering_resource_url
-                  :'https://kriti.unstructured.studio/'
+                  : 'https://kriti.unstructured.studio/'
               }
               className={common_classes.textDecorationNone}
             >

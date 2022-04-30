@@ -663,11 +663,9 @@ function CreateProject(props) {
                           labelId="category"
                           id="category"
                           name="category"
-                          multiple={true}
                           className={classes.customInputStyle}
                           value={
-                            [...category]
-                            // props.values.category ? props.values.category : ''
+                            props.values.category ? props.values.category : ''
                           }
                           onChange={props.handleChange}
                           onBlur={props.handleBlur}

@@ -13,6 +13,7 @@ const BootstrapInput = withStyles(theme => ({
     color: 'white',
     transition: 'background-color 250ms ease',
     textAlign: 'center',
+    minHeight: '20px',
     '& ~ svg': {
       color: 'white',
     },
@@ -42,8 +43,6 @@ const InputSelect = ({
 }) => {
   return (
     <Select
-      labelId="demo-customized-select-label"
-      id="demo-customized-select"
       value={searchType}
       onChange={({ target: { value } }) => onSearchTypeChange(value)}
       input={<BootstrapInput />}

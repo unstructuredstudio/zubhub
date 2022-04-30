@@ -1,24 +1,28 @@
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
+from notifications.models import Notification
 from rest_framework.response import Response
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.contrib.postgres.search import TrigramSimilarity, SearchQuery, SearchRank
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
 from django.db import transaction
 from rest_framework import status
-from rest_framework.generics import (UpdateAPIView, CreateAPIView,
-                                     ListAPIView, RetrieveAPIView, DestroyAPIView)
+from rest_framework.generics import (UpdateAPIView, CreateAPIView, ListAPIView,
+                                     RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from projects.permissions import (IsOwner, IsStaffOrModerator, SustainedRateThrottle,
-                                  PostUserRateThrottle, GetUserRateThrottle, CustomUserRateThrottle)
+from projects.permissions import (IsOwner, IsStaffOrModerator,
+                                  SustainedRateThrottle, PostUserRateThrottle,
+                                  GetUserRateThrottle, CustomUserRateThrottle)
 from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
-from .utils import (ProjectSearchCriteria, project_changed, detect_mentions, 
-                    perform_project_search, can_view, get_published_projects_for_user)
-from creators.utils import activity_notification
+from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
+                    perform_project_search, can_view,
+                    get_published_projects_for_user)
+from creators.utils import activity_notification, send_notification
 from .serializers import (ProjectSerializer, ProjectListSerializer,
-                          CommentSerializer, CategorySerializer, TagSerializer, StaffPickSerializer)
+                          CommentSerializer, CategorySerializer, TagSerializer,
+                          StaffPickSerializer)
 from .pagination import ProjectNumberPagination
 
 
@@ -48,9 +52,18 @@ class ProjectCreateAPIView(CreateAPIView):
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        obj = serializer.save(creator=self.request.user)
         self.request.user.save()
 
+        if self.request.user.followers is not None:
+            print(self.__dict__)
+            send_notification(
+                list(self.request.user.followers.all()),
+                self.request.user,
+                [{"project": obj.title} for _ in list(self.request.user.followers.all())],
+                Notification.Type.FOLLOWING_PROJECT,
+                f'/creators/{self.request.user.username}'
+            )
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """
@@ -95,8 +108,8 @@ class ProjectUpdateAPIView(UpdateAPIView):
             }
             activity_notification(["edited_project"], **info)
 
-        # because project_changed still needs to make reference to the 
-        # old publishing rule, it wasn't deleted in the serializer update method, 
+        # because project_changed still needs to make reference to the
+        # old publishing rule, it wasn't deleted in the serializer update method,
         # instead we delete it here after project_changed has done it's part.
         old.publish.delete()
 
@@ -149,14 +162,55 @@ class ProjectTagSearchAPIView(ListAPIView):
 
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
         query_string = self.request.GET.get('q')
         query = SearchQuery(query_string)
         rank = SearchRank(F('search_vector'), query)
-        tags = Tag.objects.annotate(rank=rank).filter(search_vector=query).order_by('-rank')
+        tags = Tag.objects.annotate(rank=rank).filter(
+            search_vector=query).order_by('-rank')
         return tags
+
+
+class ProjectTagAutocompleteAPIView(ListAPIView):
+    """
+    Autocomplete based search of all tags
+
+    Requires query string.
+    Returns list of matching tags
+    """
+
+    serializer_class = TagSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        query_string = self.request.GET.get('q')
+        tags = Tag.objects.annotate(
+            similarity=TrigramSimilarity('name', query_string)).filter(
+                similarity__gt=0.01).order_by('-similarity')[:20]
+        return tags
+
+
+class ProjectAutocompleteAPIView(ListAPIView):
+    """
+    Fulltext search of projects.
+
+    Requires query string.
+    Returns paginated list of matching projects.
+    """
+
+    serializer_class = ProjectListSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        query_string = self.request.GET.get('q')
+        projects = Project.objects.annotate(
+            similarity=TrigramSimilarity('title', query_string)).filter(
+                similarity__gt=0.01).order_by('-similarity')[:20]
+        return projects
 
 
 class ProjectSearchAPIView(ListAPIView):
@@ -169,15 +223,20 @@ class ProjectSearchAPIView(ListAPIView):
 
     serializer_class = ProjectListSerializer
     permission_classes = [AllowAny]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
         try:
-            search_criteria = {ProjectSearchCriteria(int(self.request.GET.get('criteria', '')))}
+            search_criteria = {
+                ProjectSearchCriteria(int(self.request.GET.get('criteria',
+                                                               '')))
+            }
         except (KeyError, ValueError):
             search_criteria = None
-        return perform_project_search(self.request.user, self.request.GET.get("q"), search_criteria)
+        return perform_project_search(self.request.user,
+                                      self.request.GET.get("q"),
+                                      search_criteria)
 
 
 class ProjectDetailsAPIView(RetrieveAPIView):
@@ -191,13 +250,12 @@ class ProjectDetailsAPIView(RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [AllowAny]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         queryset = self.get_queryset()
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(queryset, pk=pk)
-
         """ check if user is permitted to view this project """
         if can_view(self.request.user, obj):
             with transaction.atomic():
@@ -212,7 +270,9 @@ class ProjectDetailsAPIView(RetrieveAPIView):
 
             return obj
         else:
-            raise PermissionDenied(_('you are not permitted to view this project'))
+            raise PermissionDenied(
+                _('you are not permitted to view this project'))
+
 
 class SavedProjectsAPIView(ListAPIView):
     """
@@ -224,11 +284,12 @@ class SavedProjectsAPIView(ListAPIView):
 
     serializer_class = ProjectListSerializer
     permission_classes = [IsAuthenticated, IsOwner]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
-        all = self.request.user.saved_for_future.prefetch_related('publish__visible_to').all()
+        all = self.request.user.saved_for_future.prefetch_related(
+            'publish__visible_to').all()
         return get_published_projects_for_user(self.request.user, all)
 
 
@@ -244,12 +305,11 @@ class ToggleLikeAPIView(RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)
-
         """ check if user is permitted to view this project """
         if can_view(self.request.user, obj):
 
@@ -262,10 +322,18 @@ class ToggleLikeAPIView(RetrieveAPIView):
                     obj.likes.add(self.request.user)
                     obj.save()
 
+                    send_notification(
+                        [obj.creator],
+                        self.request.user,
+                        [{'project': obj.title}],
+                        Notification.Type.CLAP,
+                        f'/projects/{obj.pk}'
+                    )
+
             return obj
         else:
-            raise PermissionDenied(_('you are not permitted to view this project'))            
-
+            raise PermissionDenied(
+                _('you are not permitted to view this project'))
 
 class ToggleSaveAPIView(RetrieveAPIView):
     """
@@ -279,12 +347,11 @@ class ToggleSaveAPIView(RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)
-
         """ check if user is permitted to view this project """
         if can_view(self.request.user, obj):
 
@@ -297,10 +364,18 @@ class ToggleSaveAPIView(RetrieveAPIView):
                     obj.saved_by.add(self.request.user)
                     obj.save()
 
+                    send_notification(
+                        [obj.creator],
+                        self.request.user,
+                        [{'project': obj.title}],
+                        Notification.Type.BOOKMARK,
+                        f'/projects/{obj.pk}'
+                    )
+
             return obj
         else:
-            raise PermissionDenied(_('you are not permitted to view this project'))                        
-
+            raise PermissionDenied(
+                _('you are not permitted to view this project'))
 
 class AddCommentAPIView(CreateAPIView):
     """
@@ -319,25 +394,24 @@ class AddCommentAPIView(CreateAPIView):
     queryset = Project.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
-    throttle_classes = [CustomUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)
-
         """ check if user is permitted to view this project """
         if can_view(self.request.user, obj):
             return obj
         else:
-            raise PermissionDenied(_('you are not permitted to view this project'))    
+            raise PermissionDenied(
+                _('you are not permitted to view this project'))
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=self.request.data)
 
         if not serializer.is_valid():
-            return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
         parent_id = self.request.data.get("parent_id", None)
         text = serializer.validated_data.get("text", None)
@@ -345,8 +419,8 @@ class AddCommentAPIView(CreateAPIView):
         with transaction.atomic():
 
             publishing_rule = PublishingRule.objects.create(
-                            type=PublishingRule.PUBLIC, 
-                            publisher_id = str(self.request.user.id))
+                type=PublishingRule.PUBLIC,
+                publisher_id=str(self.request.user.id))
 
             if parent_id:
 
@@ -355,25 +429,37 @@ class AddCommentAPIView(CreateAPIView):
                 except Comment.DoesNotExist:
                     raise Http404(_("parent comment does not exist"))
 
-                parent_comment.add_child(
-                    project=self.get_object(), 
-                    creator=self.request.user, text=text,
-                    publish=publishing_rule
-                    )
+                parent_comment.add_child(project=self.get_object(),
+                                         creator=self.request.user,
+                                         text=text,
+                                         publish=publishing_rule)
             else:
                 Comment.add_root(project=self.get_object(),
-                                creator=self.request.user, text=text,
-                                publish=publishing_rule)
+                                 creator=self.request.user,
+                                 text=text,
+                                 publish=publishing_rule)
 
         result = self.get_object()
 
         if result:
-            detect_mentions(
-                {"text": text, "project_id": result.pk, "creator": request.user.username})
+            detect_mentions({
+                "text": text,
+                "project_id": result.pk,
+                "creator": request.user.username
+            })
+            send_notification(
+                [result.creator],
+                self.request.user,
+                [{'project': result.title}],
+                Notification.Type.COMMENT,
+                f'/projects/{result.pk}'
+            )
 
-        return Response(
-            ProjectSerializer(result, context={'request': request}).data, 
-            status=status.HTTP_201_CREATED)
+        return Response(ProjectSerializer(result, context={
+            'request': request
+        }).data,
+                        status=status.HTTP_201_CREATED)
+            
 
 
 class CategoryListAPIView(ListAPIView):
@@ -386,7 +472,7 @@ class CategoryListAPIView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [AllowAny]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
 
 class StaffPickListAPIView(ListAPIView):
@@ -409,7 +495,7 @@ class StaffPickListAPIView(ListAPIView):
 
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
         return StaffPick.objects.filter(is_active=True)
@@ -435,14 +521,12 @@ class StaffPickDetailsAPIView(RetrieveAPIView):
     queryset = StaffPick.objects.filter(is_active=True)
     serializer_class = StaffPickSerializer
     permission_classes = [AllowAny]
-    throttle_classes = [GetUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
         queryset = self.get_queryset()
         pk = self.kwargs.get("pk")
-        obj = get_object_or_404(queryset, pk=pk)
-
-        return obj
+        return get_object_or_404(queryset, pk=pk)
 
 
 class UnpublishCommentAPIView(UpdateAPIView):
@@ -455,19 +539,19 @@ class UnpublishCommentAPIView(UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
-    throttle_classes = [CustomUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def perform_update(self, serializer):
         with transaction.atomic():
             old_publishing_rule = self.get_object().publish
 
             publishing_rule = PublishingRule.objects.create(
-                type=PublishingRule.DRAFT, 
+                type=PublishingRule.DRAFT,
                 publisher_id=str(self.request.user.id))
 
             comment = serializer.save(publish=publishing_rule)
             old_publishing_rule.delete()
-            
+
             if comment and comment.project:
                 comment.project.save()
             if comment and comment.profile:
@@ -487,7 +571,7 @@ class DeleteCommentAPIView(DestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
-    throttle_classes = [CustomUserRateThrottle,  SustainedRateThrottle]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def delete(self, request, *args, **kwargs):
         project = self.get_object().project
