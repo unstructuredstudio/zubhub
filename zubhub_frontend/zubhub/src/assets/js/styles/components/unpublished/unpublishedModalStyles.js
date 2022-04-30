@@ -14,7 +14,7 @@ const styles = theme => ({
         color: 'white',
         fontSize: '0.7rem',
         fontFamily: 'Raleway,Roboto,sans-serif',
-        fontWeight: '400!important',
+        fontWeight: '400',
         width: 'fit-content',
         height: 'fit-content',
         cursor: 'pointer',

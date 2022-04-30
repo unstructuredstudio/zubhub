@@ -35,13 +35,13 @@ function UnpublishedModal({ violations }) {
           className={mediaQuery ? classes.modalMobileStyle : classes.modalStyle}
         >
           <Grid container>
-            <Grid item className = {classes.closeIconWrapper}>
+            <Grid item className={classes.closeIconWrapper}>
               <CloseIcon
                 onClick={handleClose}
                 className={classes.closeIconStyle}
               ></CloseIcon>
             </Grid>
-            <Grid item className = {classes.descriptionWrapper}>
+            <Grid item className={classes.descriptionWrapper}>
               <div className={classes.overflowWrapper}>
                 <Typography
                   variant="h6"
@@ -60,19 +60,6 @@ function UnpublishedModal({ violations }) {
                 <Typography className={classes.modalBodyStyle}>
                   You must make changes to your project before it can be
                   republished.
-                  You must make changes to your project before it can be
-                  republished.
-                  You must make changes to your project before it can be
-                  republished.
-                  You must make changes to your project before it can be
-                  republished.
-                  You must make changes to your project before it can be
-                  republished.
-                  You must make changes to your project before it can be
-                  republished.
-                  You must make changes to your project before it can be
-                  republished.
-
                 </Typography>
                 <CustomButton
                   variant="contained"
