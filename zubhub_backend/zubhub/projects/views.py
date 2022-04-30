@@ -646,8 +646,19 @@ class ProjectViolationAddApiView(CreateAPIView):
 
     def perform_create(self, serializer):
         pk = self.kwargs.get("pk")
-        project = Project.objects.get(id=pk)
+        try:
+            project = Project.objects.get(id=pk)
+        except Project.DoesNotExist:
+            return Response('Not found', status=404)
+
         violation = serializer.save(creator=self.request.user, project=project)
         project.violations.add(violation)
         project.save()
+
+        send_notification([project.creator], self.request.user,
+                          [{
+                              "project": project.title
+                          }], Notification.Type.PROJECT_VIOLATION,
+                          f'/projects/{project.id}')
+
         return violation

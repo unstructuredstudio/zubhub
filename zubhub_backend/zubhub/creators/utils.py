@@ -241,6 +241,7 @@ def activity_notification(activities, **kwargs):
     if len(phone_contexts) > 0 and ctx_values:
         send_mass_text.delay(template_name=template_name, ctxs=phone_contexts)
 
+
 def perform_creator_search(user, query_string):
     from creators.models import CreatorTag
     """
@@ -254,26 +255,26 @@ def perform_creator_search(user, query_string):
     rank = SearchRank(F('search_vector'), query)
     result_creators = None
 
-
     # fetch all creators whose creatortag(s) matches the search query
     result_tags = CreatorTag.objects.filter(
         search_vector=query).prefetch_related("creators")
 
     for tag in result_tags:
-        result_creators = tag.creators.filter(is_active=True).annotate(rank=rank).order_by('-rank')
+        result_creators = tag.creators.filter(is_active=True).annotate(
+            rank=rank).order_by('-rank')
     ############################################################
 
     # fetch all creators that matches the search term
     if result_creators:
-        result_creators.union(get_user_model().objects.annotate(rank=rank).filter(
-            search_vector=query, is_active=True ).order_by('-rank'))
+        result_creators.union(get_user_model().objects.annotate(
+            rank=rank).filter(search_vector=query,
+                              is_active=True).order_by('-rank'))
     else:
         result_creators = get_user_model().objects.annotate(rank=rank).filter(
-            search_vector=query,is_active=True ).order_by('-rank')
+            search_vector=query, is_active=True).order_by('-rank')
     ##############################################################
 
     return result_creators
-
 
 
 def custom_set_creatortags_queryset(creator, creatortags):
@@ -298,22 +299,26 @@ def custom_set_creatortags_queryset(creator, creatortags):
 
         tag = CreatorTag.objects.filter(name="staff").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
         tag = CreatorTag.objects.filter(name="moderator").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
         tag = CreatorTag.objects.filter(name="group").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
         tag = CreatorTag.objects.filter(name="creator").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
 
@@ -336,25 +341,29 @@ def enforce_creator__creator_tags_constraints(creator, tag):
 
         if tag.name == "creator":
             """ If tag is 'creator', ensure that 'staff', 'moderator' and 'group' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group", "moderator"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "staff", "group", "moderator"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
-            
+
         elif tag.name == "staff":
             """ If tag is 'staff', ensure that 'creator' and 'group' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "staff", "group"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
 
         elif tag.name == "moderator":
             """ If tag is 'moderator', ensure that 'creator' and 'group' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "group", "moderator"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "group", "moderator"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
 
         elif tag.name == "group":
             """ If tag is 'group', ensure that 'staff', 'creator' and 'moderator' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group", "moderator"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "staff", "group", "moderator"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
 
@@ -368,16 +377,14 @@ def enforce_creator__creator_tags_constraints(creator, tag):
         return creator.tags.all()
 
 
-
+ALL_SETTINGS = {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB}
 enabled_notification_settings: Dict[Notification.Type, Set[int]] = {
     Notification.Type.BOOKMARK: {Setting.WEB},
     Notification.Type.CLAP: {Setting.WEB},
-    Notification.Type.COMMENT:
-    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
-    Notification.Type.FOLLOW:
-    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
-    Notification.Type.FOLLOWING_PROJECT:
-    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+    Notification.Type.COMMENT: ALL_SETTINGS,
+    Notification.Type.FOLLOW: ALL_SETTINGS,
+    Notification.Type.FOLLOWING_PROJECT: ALL_SETTINGS,
+    Notification.Type.PROJECT_VIOLATION: ALL_SETTINGS
 }
 
 
