@@ -15,7 +15,6 @@ const Autocomplete = ({
       freeSolo
       getOptionLabel={option => option.title || ''}
       defaultValue={defaultValue}
-      style={{ width: 300 }}
       renderInput={children}
       renderOption={renderOption}
       {...otherProps}
