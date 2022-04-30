@@ -254,6 +254,11 @@ class API {
     }
   };
 
+  getReasons = ({ token }) => {
+    const url = `/api/projects/violations-reasons`;
+    return this.request({ token, url }).then(res => res.json());
+  };
+
   /**
    * @method getUserProjects - get a paginated list of projects
    *         created by the user with the provided username
