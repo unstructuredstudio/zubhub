@@ -396,7 +396,9 @@ function ProjectDetails(props) {
                         </Typography>
                         {!mediaQuery && <SocialButtons />}
                       </Box>
-                      <UnpublishMenu/>
+                      {auth.tags.includes('staff') || auth.tags.includes('moderator')? (
+                        <UnpublishMenu/>
+                      ): null}
                     </Box>
                   </div>
                 </Grid>
