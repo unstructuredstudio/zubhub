@@ -637,7 +637,7 @@ function PageWrapper(props) {
                 role="search"
                 ref={formRef}
               >
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" style={{ minWidth: 'unset' }}>
                   <InputSelect
                     searchType={searchType}
                     onSearchTypeChange={setSearchType}
@@ -648,7 +648,7 @@ function PageWrapper(props) {
                     <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                   </InputSelect>
                 </FormControl>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" style={{ flex: '1 1 auto', maxWidth: '350px' }}>
                   <InputLabel
                     htmlFor="q"
                     className={classes.searchFormLabelStyle}
