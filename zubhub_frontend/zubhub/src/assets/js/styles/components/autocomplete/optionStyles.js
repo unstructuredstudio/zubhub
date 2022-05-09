@@ -1,27 +1,26 @@
 const styles = theme => ({
   option: {
     display: 'flex',
-    flexFlow: 'row nowrap',
+    flexFlow: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     width: '100%',
     height: '100%',
-    margin: '-10px -15px',
-    padding: '10px 15px',
     textDecoration: 'none',
     color: 'black',
   },
   infoWrapper: {
     display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    maxWidth: '50%',
-  },
-  optionTitleWrapper: {
-    flex: '1 1 max-content',
+    marginLeft: '0.3em',
+    flexFlow: 'column',
+    alignItems: 'flex-start',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    whiteSpace: 'nowrap' ,
+  },
+  optionTitleWrapper: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: '100%',
   },
   optionTitle: {
     display: 'inline',
@@ -30,7 +29,10 @@ const styles = theme => ({
   shortInfo: {
     fontSize: '12px',
     color: 'gray',
-    marginLeft: '10px',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap' ,
   },
   optionImageWrapper: {
     display: 'flex',
@@ -40,10 +42,12 @@ const styles = theme => ({
     height: '40px',
     width: '40px',
     overflow: 'hidden',
-    backgroundColor: 'black',
+    borderRadius: '5px',
+    flexShrink: '0',
   },
   optionImage: {
     height: '40px',
+    width: '40px',
     backgroundColor: 'white',
   },
 });

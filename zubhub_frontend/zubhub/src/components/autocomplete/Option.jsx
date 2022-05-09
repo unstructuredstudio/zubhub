@@ -30,21 +30,21 @@ const Option = ({ option, inputValue, onOptionClick }) => {
       className={classes.option}
       href={option.link}
     >
+      <div className={classes.optionImageWrapper}>
+        {option.image && (
+          <img
+            src={option.image}
+            alt={option.title}
+            className={classes.optionImage}
+          />
+          )}
+        </div>
       <div className={classes.infoWrapper}>
         <span className={classes.optionTitleWrapper}>{title}</span>
         {option.shortInfo && (
           <span className={classes.shortInfo}>{option.shortInfo}</span>
         )}
       </div>
-      {option.image && (
-        <div className={classes.optionImageWrapper}>
-          <img
-            src={option.image}
-            alt={option.title}
-            className={classes.optionImage}
-          />
-        </div>
-      )}
     </OptionWrap>
   );
 };
