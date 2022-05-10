@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMediaQuery } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
@@ -12,6 +12,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import { makeStyles } from '@material-ui/core/styles';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -35,6 +36,7 @@ import CustomButton from '../../components/button/Button';
 import Comments from '../../components/comments/Comments';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
+import UnpublishMenu from '../../components/unpublish_menu/UnpublishMenu';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import {
   handleOpenEnlargedImageDialog,
@@ -111,6 +113,7 @@ function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
+  const auth = useSelector((state) => state.auth);
   const { id } = useParams();
 
   const [state, setState] = React.useState({
@@ -393,6 +396,9 @@ function ProjectDetails(props) {
                         </Typography>
                         {!mediaQuery && <SocialButtons />}
                       </Box>
+                      {auth.tags.includes('staff') || auth.tags.includes('moderator')? (
+                        <UnpublishMenu/>
+                      ): null}
                     </Box>
                   </div>
                 </Grid>
@@ -419,6 +425,7 @@ function ProjectDetails(props) {
                     </Box>
                   </Grid>
                 ) : null}
+         
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography
                     variant="h5"

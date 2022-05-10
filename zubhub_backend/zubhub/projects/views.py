@@ -593,6 +593,7 @@ class DeleteCommentAPIView(DestroyAPIView):
             return result
 
 
+
 class ViolationReasonsListAPIView(ListAPIView):
     """
     List all violation reasons.
@@ -662,3 +663,4 @@ class ProjectViolationAddApiView(CreateAPIView):
                           f'/projects/{project.id}')
 
         return violation
+
