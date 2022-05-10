@@ -62,6 +62,8 @@ import styles, {
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
 
+import UnpublishedModal from '../../components/unpublished_project_modal/UnpublishedModal.jsx';
+
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -164,6 +166,12 @@ function ProjectDetails(props) {
     }
   };
 
+  // For testing purposes, should remove this
+  const testViolations = [
+    'Threatens, harasses, or intimidates any other person, whether that person is a ZubHub user or not',
+    'Contains fould language or personal attacks',
+  ];
+
   const {
     project,
     loading,
@@ -181,6 +189,8 @@ function ProjectDetails(props) {
         <Box className={classes.root}>
           <Paper className={classes.projectDetailHeaderStyle}>
             <Container className={classes.headerStyle}>
+              <div className={mediaQuery? '' : classes.headerWrapperStyle}>
+              {state.project.creator.id == props.auth.id ? <UnpublishedModal violations={testViolations} /> : <></>}
               <Typography
                 className={classes.titleStyle}
                 variant="h3"
@@ -188,6 +198,7 @@ function ProjectDetails(props) {
               >
                 {project.title}
               </Typography>
+              </div>
               <Grid container justify="space-around">
                 <Grid item className={classes.creatorProfileStyle}>
                   <Link
