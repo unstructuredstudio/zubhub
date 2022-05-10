@@ -9,6 +9,7 @@ import {
 } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
+import API from '../../api';
 
 /**
  * @constant vars
@@ -728,6 +729,15 @@ export const uploadProject = async (state, props, handleSetState) => {
     category: props.values.category,
     t: props.t,
   })
+    .then(_ => {
+      if (props.match.params.id) {
+        const api = new API();
+        api.clearViolations({
+          id: props.match.params.id,
+          token: props.auth.token,
+        });
+      }
+    })
     .catch(error => {
       handleSetState({
         media_upload: {

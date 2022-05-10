@@ -115,7 +115,7 @@ function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
-  const auth = useSelector((state) => state.auth);
+  const auth = useSelector(state => state.auth);
   const { id } = useParams();
 
   const [state, setState] = React.useState({
@@ -166,12 +166,6 @@ function ProjectDetails(props) {
     }
   };
 
-  // For testing purposes, should remove this
-  const testViolations = [
-    'Threatens, harasses, or intimidates any other person, whether that person is a ZubHub user or not',
-    'Contains fould language or personal attacks',
-  ];
-
   const {
     project,
     loading,
@@ -184,20 +178,25 @@ function ProjectDetails(props) {
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
+    const violations = state.project.violations[0];
     return (
       <>
         <Box className={classes.root}>
           <Paper className={classes.projectDetailHeaderStyle}>
             <Container className={classes.headerStyle}>
-              <div className={mediaQuery? '' : classes.headerWrapperStyle}>
-              {state.project.creator.id == props.auth.id ? <UnpublishedModal violations={testViolations} /> : <></>}
-              <Typography
-                className={classes.titleStyle}
-                variant="h3"
-                gutterBottom
-              >
-                {project.title}
-              </Typography>
+              <div className={mediaQuery ? '' : classes.headerWrapperStyle}>
+                {state.project.creator.id === props.auth.id && violations ? (
+                  <UnpublishedModal violations={violations.reasons} />
+                ) : (
+                  <></>
+                )}
+                <Typography
+                  className={classes.titleStyle}
+                  variant="h3"
+                  gutterBottom
+                >
+                  {project.title}
+                </Typography>
               </div>
               <Grid container justify="space-around">
                 <Grid item className={classes.creatorProfileStyle}>
@@ -407,12 +406,22 @@ function ProjectDetails(props) {
                         </Typography>
                         {!mediaQuery && <SocialButtons />}
                       </Box>
-                      {auth.tags.includes('staff') || auth.tags.includes('moderator')? (
-                        <UnpublishMenu/>
-                      ): null}
                     </Box>
                   </div>
                 </Grid>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginTop: 10,
+                    width: '100%',
+                  }}
+                >
+                  {auth.tags.includes('staff') ||
+                  auth.tags.includes('moderator') ? (
+                    <UnpublishMenu id={id} />
+                  ) : null}
+                </div>
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>
@@ -436,7 +445,7 @@ function ProjectDetails(props) {
                     </Box>
                   </Grid>
                 ) : null}
-         
+
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography
                     variant="h5"

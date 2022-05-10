@@ -53,8 +53,11 @@ function UnpublishedModal({ violations }) {
                   This is because your project contains information that:
                 </Typography>
                 {violations.map(violation => (
-                  <Typography className={classes.violationReasonStyle}>
-                    {violation}
+                  <Typography
+                    className={classes.violationReasonStyle}
+                    key={violation.id}
+                  >
+                    {violation.description}
                   </Typography>
                 ))}
                 <Typography className={classes.modalBodyStyle}>
