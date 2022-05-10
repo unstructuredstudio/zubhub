@@ -254,24 +254,6 @@ class API {
     }
   };
 
-  getReasons = ({ token }) => {
-    const url = `projects/violation-reasons/`;
-    return this.request({ token, url }).then(res => res.json());
-  };
-
-  addViolation = ({ id, token, body }) => {
-    const url = `projects/${id}/add-violation`;
-    body = JSON.stringify(body);
-    return this.request({ token, url, body, method: 'POST' }).then(res =>
-      res.json(),
-    );
-  };
-
-  clearViolations = ({ id, token }) => {
-    const url = `projects/${id}/clear-violations`;
-    return this.request({ token, url, method: 'POST' }).then(res => res.json());
-  };
-
   /**
    * @method getUserProjects - get a paginated list of projects
    *         created by the user with the provided username

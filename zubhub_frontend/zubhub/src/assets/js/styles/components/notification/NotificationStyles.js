@@ -47,11 +47,6 @@ const styles = theme => ({
     backgroundColor: 'white',
     alignSelf: 'center',
   },
-  warningIconWrapper: { justifyContent: 'center', minWidth: '65px' },
-  warningIcon: {
-    border: 'none',
-    alignSelf: 'center',
-  },
   group: {
     height: '78px',
     width: '68px',

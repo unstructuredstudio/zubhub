@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMediaQuery } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
@@ -12,7 +12,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import { makeStyles } from '@material-ui/core/styles';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -36,7 +35,6 @@ import CustomButton from '../../components/button/Button';
 import Comments from '../../components/comments/Comments';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
-import UnpublishMenu from '../../components/unpublish_menu/UnpublishMenu';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import {
   handleOpenEnlargedImageDialog,
@@ -61,8 +59,6 @@ import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
-
-import UnpublishedModal from '../../components/unpublished_project_modal/UnpublishedModal.jsx';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -115,7 +111,6 @@ function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
-  const auth = useSelector(state => state.auth);
   const { id } = useParams();
 
   const [state, setState] = React.useState({
@@ -178,26 +173,18 @@ function ProjectDetails(props) {
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
-    const violations = state.project.violations[0];
     return (
       <>
         <Box className={classes.root}>
           <Paper className={classes.projectDetailHeaderStyle}>
             <Container className={classes.headerStyle}>
-              <div className={mediaQuery ? '' : classes.headerWrapperStyle}>
-                {state.project.creator.id === props.auth.id && violations ? (
-                  <UnpublishedModal violations={violations.reasons} />
-                ) : (
-                  <></>
-                )}
-                <Typography
-                  className={classes.titleStyle}
-                  variant="h3"
-                  gutterBottom
-                >
-                  {project.title}
-                </Typography>
-              </div>
+              <Typography
+                className={classes.titleStyle}
+                variant="h3"
+                gutterBottom
+              >
+                {project.title}
+              </Typography>
               <Grid container justify="space-around">
                 <Grid item className={classes.creatorProfileStyle}>
                   <Link
@@ -409,19 +396,6 @@ function ProjectDetails(props) {
                     </Box>
                   </div>
                 </Grid>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    marginTop: 10,
-                    width: '100%',
-                  }}
-                >
-                  {auth.tags.includes('staff') ||
-                  auth.tags.includes('moderator') ? (
-                    <UnpublishMenu id={id} />
-                  ) : null}
-                </div>
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>
@@ -445,7 +419,6 @@ function ProjectDetails(props) {
                     </Box>
                   </Grid>
                 ) : null}
-
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography
                     variant="h5"

@@ -2,8 +2,8 @@ from django.contrib import admin
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
 from django.conf import settings
-from .models import (Project, Comment, Image, StaffPick, Category, Tag,
-                     PublishingRule, Violation, ViolationReason)
+from .models import (Project, Comment, Image, StaffPick, 
+                    Category, Tag, PublishingRule)
 from .utils import project_changed, send_staff_pick_notification
 from projects.tasks import delete_file_task
 from creators.utils import activity_notification
@@ -24,22 +24,20 @@ class InlineProjectComments(admin.StackedInline):
 class InlineProject(admin.StackedInline):
     model = Project.staff_picks.through
 
-
 class ImageAdmin(admin.ModelAdmin):
     search_fields = ["project__title", "image_url"]
     list_display = ["image_url"]
     exclude = ["id"]
-    list_per_page = 50  ## paginate when more than 50 items
-
+    list_per_page = 50 ## paginate when more than 50 items
+        
 
 class CommentAdmin(TreeAdmin):
     list_display = ["creator", "text", "created_on", "publish"]
-
-    search_fields = [
-        "project__tite", "creator__username", "text", "created_on"
-    ]
+    
+    search_fields = ["project__tite",
+                     "creator__username", "text", "created_on"]
     list_filter = ["created_on"]
-    list_per_page = 50  ## paginate when more than 50 items
+    list_per_page = 50 ## paginate when more than 50 items
 
     form = movenodeform_factory(Comment)
 
@@ -53,24 +51,18 @@ class CommentAdmin(TreeAdmin):
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = [
-        "title", "creator", "views_count", "likes_count", "comments_count",
-        "created_on", "publish"
-    ]
+    list_display = ["title", "creator", "views_count", "likes_count",
+                    "comments_count", "created_on", "publish"]
 
-    search_fields = [
-        "title", 'creator__username', 'creator__email', "created_on"
-    ]
+    search_fields = ["title", 'creator__username', 'creator__email',
+                     "created_on"]
     list_filter = ['created_on']
     inlines = [InlineProjectImages, InlineProjectComments]
     exclude = ["search_vector"]
-    list_per_page = 50  ## paginate when more than 50 items
+    list_per_page = 50 ## paginate when more than 50 items
 
     def get_readonly_fields(self, request, obj=None):
-        return [
-            "id", "slug", "views_count", "likes_count", "comments_count",
-            "created_on"
-        ]
+        return ["id", "slug", "views_count", "likes_count", "comments_count", "created_on"]
 
     def save_model(self, request, obj, form, change):
         if change:
@@ -80,12 +72,10 @@ class ProjectAdmin(admin.ModelAdmin):
 
         if change:
             new = Project.objects.get(pk=obj.pk)
-            if old.video.find(
-                    "cloudinary.com") > -1 and old.video != new.video:
+            if old.video.find("cloudinary.com") > -1 and old.video != new.video:
                 delete_file_task.delay(old.video)
-            elif old.video.startswith("{0}://{1}".format(
-                    settings.DEFAULT_MEDIA_SERVER_PROTOCOL, settings.
-                    DEFAULT_MEDIA_SERVER_DOMAIN)) and old.video != new.video:
+            elif old.video.startswith("{0}://{1}".format(settings.DEFAULT_MEDIA_SERVER_PROTOCOL,
+                                                         settings.DEFAULT_MEDIA_SERVER_DOMAIN)) and old.video != new.video:
                 delete_file_task.delay(old.video)
             if project_changed(old, new):
                 info = {
@@ -93,6 +83,8 @@ class ProjectAdmin(admin.ModelAdmin):
                     "editor": request.user.username
                 }
                 activity_notification(["edited_project"], **info)
+
+
 
 
 def projects_count(obj):
@@ -144,19 +136,7 @@ class tagAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     readonly_fields = ["slug"]
     exclude = ["id", "search_vector"]
-    list_per_page = 50  ## paginate when more than 50 items
-
-
-class ViolationReasonsAdmin(admin.ModelAdmin):
-    search_fields = ['description']
-    exclude = ["id"]
-    list_per_page = 50
-
-
-class ViolationAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
-    exclude = ["id"]
-    list_per_page = 50
+    list_per_page = 50 ## paginate when more than 50 items
 
 
 admin.site.register(Project, ProjectAdmin)
@@ -165,5 +145,3 @@ admin.site.register(Comment, CommentAdmin)
 admin.site.register(Category, categoryAdmin)
 admin.site.register(Tag, tagAdmin)
 admin.site.register(StaffPick, StaffPickAdmin)
-admin.site.register(ViolationReason, ViolationReasonsAdmin)
-admin.site.register(Violation, ViolationAdmin)
