@@ -277,6 +277,28 @@ class API {
   };
 
   /**
+   * @method getUserDrafts - get a paginated list of drafts
+   *         created by the user with the provided username
+   * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+   *
+   * @todo - describe method's signature
+   */
+  getUserDrafts = ({ username, page, limit, token }) => {
+    let url;
+    if (limit && page) {
+      url = `creators/${username}/drafts/?limit=${limit}&&${page}`;
+    } else if (limit) {
+      url = `creators/${username}/drafts/?limit=${limit}`;
+    } else if (page) {
+      url = `creators/${username}/drafts/?${page}`;
+    } else {
+      url = `creators/${username}/drafts/`;
+    }
+
+    return this.request({ url, token }).then(res => res.json());
+  };
+
+  /**
    * @method searchProjects - perform full-text search of projects
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *
