@@ -57,6 +57,7 @@ import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
+import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -71,6 +72,7 @@ function Profile(props) {
   const username_el = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const username = props.match.params.username || props.auth.username;
 
   const [state, setState] = React.useState({
     results: [],
@@ -79,14 +81,30 @@ function Profile(props) {
     open_delete_account_modal: false,
     dialog_error: null,
     more_anchor_el: null,
+    drafts: [],
   });
 
   React.useEffect(() => {
-    Promise.resolve(getUserProfile(props)).then(obj => {
+    const promises = [getUserProfile(props)];
+    if (username === props.auth.username) {
+      promises.push(
+        ProjectActions.getUserDrafts({
+          username,
+          token: props.auth.token,
+          t: props.t,
+          limit: 4,
+        }),
+      );
+    }
+
+    Promise.all(promises).then(values => {
+      const obj = values[0];
+      const drafts = values[1] || {};
+
       if (obj.profile) {
         parseComments(obj.profile.comments);
       }
-      handleSetState(obj);
+      handleSetState({ ...obj, ...drafts });
     });
   }, []);
 
@@ -105,6 +123,7 @@ function Profile(props) {
     open_delete_account_modal,
     dialog_error,
     more_anchor_el,
+    drafts,
   } = state;
 
   const more_menu_open = Boolean(more_anchor_el);
@@ -292,55 +311,65 @@ function Profile(props) {
                 : t('profile.about.placeholder2')}
             </Paper>
 
-            {profile.projects_count > 0 ? (
-              <Paper className={classes.profileLowerStyle}>
-                <Typography
-                  gutterBottom
-                  component="h2"
-                  variant="h6"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
-                  {t('profile.projects.label')}
-                  <CustomButton
-                    className={clsx(classes.floatRight)}
-                    variant="outlined"
-                    margin="normal"
-                    secondaryButtonStyle
-                    onClick={() =>
-                      props.history.push(
-                        `/creators/${profile.username}/projects`,
-                      )
-                    }
+            {profile.projects_count > 0 || drafts.length > 0 ? (
+              username === props.auth.username ? (
+                <ProjectsDraftsGrid
+                  profile={profile}
+                  projects={projects}
+                  drafts={drafts}
+                  handleSetState={handleSetState}
+                  {...props}
+                />
+              ) : (
+                <Paper className={classes.profileLowerStyle}>
+                  <Typography
+                    gutterBottom
+                    component="h2"
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.titleStyle}
                   >
-                    {t('profile.projects.viewAll')}
-                  </CustomButton>
-                </Typography>
-                <Grid container>
-                  {Array.isArray(projects) &&
-                    projects.map(project => (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={6}
-                        className={classes.projectGridStyle}
-                        align="center"
-                      >
-                        <Project
-                          project={project}
-                          key={project.id}
-                          updateProjects={res =>
-                            handleSetState(
-                              updateProjects(res, state, props, toast),
-                            )
-                          }
-                          {...props}
-                        />
-                      </Grid>
-                    ))}
-                </Grid>
-              </Paper>
+                    {t('profile.projects.label')}
+                    <CustomButton
+                      className={clsx(classes.floatRight)}
+                      variant="outlined"
+                      margin="normal"
+                      secondaryButtonStyle
+                      onClick={() =>
+                        props.history.push(
+                          `/creators/${profile.username}/projects`,
+                        )
+                      }
+                    >
+                      {t('profile.projects.viewAll')}
+                    </CustomButton>
+                  </Typography>
+                  <Grid container>
+                    {Array.isArray(projects) &&
+                      projects.map(project => (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          md={6}
+                          className={classes.projectGridStyle}
+                          align="center"
+                        >
+                          <Project
+                            project={project}
+                            key={project.id}
+                            updateProjects={res =>
+                              handleSetState(
+                                updateProjects(res, state, props, toast),
+                              )
+                            }
+                            {...props}
+                          />
+                        </Grid>
+                      ))}
+                  </Grid>
+                </Paper>
+              )
             ) : null}
             <Comments
               context={{ name: 'profile', body: profile }}

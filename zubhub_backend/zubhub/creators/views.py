@@ -10,6 +10,8 @@ from django.db import transaction
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
+from django.apps import apps
+from django.core.exceptions import PermissionDenied
 from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.views import APIView
 from rest_framework.generics import (UpdateAPIView, RetrieveAPIView,
@@ -293,13 +295,48 @@ class UserProjectsAPIView(ListAPIView):
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects(limit=limit)
             else:
-                return creator.projects.all().order_by(
+                return creator.projects.exclude(publish__type=PublishingRule.DRAFT).order_by(
                     "-created_on")[:int(limit)]
         else:
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects()
             else:
-                return creator.projects.all().order_by("-created_on")
+                return creator.projects.exclude(publish__type=PublishingRule.DRAFT).order_by("-created_on")
+
+class UserDraftsAPIView(ListAPIView):
+    """
+    Get paginated list of all drafts created by user with provided username.
+
+    Requires username.
+    Returns paginated list drafts
+    """
+
+    serializer_class = ProjectListSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+    pagination_class = ProjectNumberPagination
+
+    def get_queryset(self):
+        PublishingRule = apps.get_model('projects.PublishingRule')
+        username = self.kwargs.get("username")
+        limit = self.request.GET.get("limit")
+        creator = Creator.objects.get(username=username)
+
+        if self.request.user.is_anonymous or self.request.user.username != username:
+            raise PermissionDenied(
+            _("you are not permitted to get this project's drafts"))
+            
+        if limit:
+            if hasattr(creator, "creatorgroup"):
+                return creator.creatorgroup.get_projects(limit=limit)
+            else:
+                return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by(
+                    "-created_on")[:int(limit)]
+        else:
+            if hasattr(creator, "creatorgroup"):
+                return creator.creatorgroup.get_projects()
+            else:
+                return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by("-created_on")
 
 
 class UserFollowersAPIView(ListAPIView):

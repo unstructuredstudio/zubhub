@@ -413,6 +413,19 @@
     }
   },
 
+  "userDrafts": {
+    "title": "drafts",
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "errors": {
+      "noUserDrafts": "You don't have any drafts yet! Maybe create some drafts?",
+      "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?"
+    }
+  },
+
   "projectDetails": {
     "project": {
       "creator": {
