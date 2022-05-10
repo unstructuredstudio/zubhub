@@ -9,29 +9,20 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import F
 from django.db import transaction
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.generics import (UpdateAPIView, CreateAPIView, ListAPIView,
                                      RetrieveAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from rest_framework.exceptions import APIException
 from projects.permissions import (IsOwner, IsStaffOrModerator,
                                   SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, CustomUserRateThrottle)
-from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule, Violation, ViolationReason
+from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
                     get_published_projects_for_user)
 from creators.utils import activity_notification, send_notification
-from .serializers import (
-    ProjectSerializer,
-    ProjectListSerializer,
-    CommentSerializer,
-    CategorySerializer,
-    TagSerializer,
-    StaffPickSerializer,
-    ViolationReasonSerializer,
-    ViolationSerializer,
-)
+from .serializers import (ProjectSerializer, ProjectListSerializer,
+                          CommentSerializer, CategorySerializer, TagSerializer,
+                          StaffPickSerializer)
 from .pagination import ProjectNumberPagination
 
 
@@ -67,13 +58,12 @@ class ProjectCreateAPIView(CreateAPIView):
         if self.request.user.followers is not None:
             print(self.__dict__)
             send_notification(
-                list(self.request.user.followers.all()), self.request.user,
-                [{
-                    "project": obj.title
-                } for _ in list(self.request.user.followers.all())],
+                list(self.request.user.followers.all()),
+                self.request.user,
+                [{"project": obj.title} for _ in list(self.request.user.followers.all())],
                 Notification.Type.FOLLOWING_PROJECT,
-                f'/creators/{self.request.user.username}')
-
+                f'/creators/{self.request.user.username}'
+            )
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """
@@ -332,17 +322,18 @@ class ToggleLikeAPIView(RetrieveAPIView):
                     obj.likes.add(self.request.user)
                     obj.save()
 
-                    send_notification([obj.creator], self.request.user,
-                                      [{
-                                          'project': obj.title
-                                      }], Notification.Type.CLAP,
-                                      f'/projects/{obj.pk}')
+                    send_notification(
+                        [obj.creator],
+                        self.request.user,
+                        [{'project': obj.title}],
+                        Notification.Type.CLAP,
+                        f'/projects/{obj.pk}'
+                    )
 
             return obj
         else:
             raise PermissionDenied(
                 _('you are not permitted to view this project'))
-
 
 class ToggleSaveAPIView(RetrieveAPIView):
     """
@@ -373,17 +364,18 @@ class ToggleSaveAPIView(RetrieveAPIView):
                     obj.saved_by.add(self.request.user)
                     obj.save()
 
-                    send_notification([obj.creator], self.request.user,
-                                      [{
-                                          'project': obj.title
-                                      }], Notification.Type.BOOKMARK,
-                                      f'/projects/{obj.pk}')
+                    send_notification(
+                        [obj.creator],
+                        self.request.user,
+                        [{'project': obj.title}],
+                        Notification.Type.BOOKMARK,
+                        f'/projects/{obj.pk}'
+                    )
 
             return obj
         else:
             raise PermissionDenied(
                 _('you are not permitted to view this project'))
-
 
 class AddCommentAPIView(CreateAPIView):
     """
@@ -455,16 +447,19 @@ class AddCommentAPIView(CreateAPIView):
                 "project_id": result.pk,
                 "creator": request.user.username
             })
-            send_notification([result.creator], self.request.user,
-                              [{
-                                  'project': result.title
-                              }], Notification.Type.COMMENT,
-                              f'/projects/{result.pk}')
+            send_notification(
+                [result.creator],
+                self.request.user,
+                [{'project': result.title}],
+                Notification.Type.COMMENT,
+                f'/projects/{result.pk}'
+            )
 
         return Response(ProjectSerializer(result, context={
             'request': request
         }).data,
                         status=status.HTTP_201_CREATED)
+            
 
 
 class CategoryListAPIView(ListAPIView):
@@ -591,76 +586,3 @@ class DeleteCommentAPIView(DestroyAPIView):
                 profile.save()
 
             return result
-
-
-
-class ViolationReasonsListAPIView(ListAPIView):
-    """
-    List all violation reasons.
-
-    Requires authentication and staff or moderator.
-    Returns violations reasons.
-    """
-
-    queryset = ViolationReason.objects.all()
-    serializer_class = ViolationReasonSerializer
-    permission_classes = [IsAuthenticated, IsStaffOrModerator]
-    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
-
-
-class ProjectViolationsClearApiView(APIView):
-    """
-    Clear all violations for a project
-
-    Requires authentication and owner.
-    Returns project details.
-    """
-
-    permission_classes = [IsAuthenticated, IsOwner]
-    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
-
-    def post(self, request, *, pk):
-        try:
-            old = Project.objects.get(pk=pk)
-        except Project.DoesNotExist:
-            return Response('Not found', status=404)
-
-        if not request.user or old.creator.id != request.user.id:
-            return Response('Error', status=403)
-
-        old.violations.set([])
-        old.save()
-        return Response('Success')
-
-
-class ProjectViolationAddApiView(CreateAPIView):
-    """
-    Creates a new violation and adds it to a project.
-
-    Requires authentication and staff or moderator.
-    Returns the violation details.
-    """
-    queryset = Violation.objects.all()
-    serializer_class = ViolationSerializer
-    permission_classes = [IsAuthenticated, IsStaffOrModerator]
-    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
-
-    def perform_create(self, serializer):
-        pk = self.kwargs.get("pk")
-        try:
-            project = Project.objects.get(id=pk)
-        except Project.DoesNotExist:
-            return Response('Not found', status=404)
-
-        violation = serializer.save(creator=self.request.user, project=project)
-        project.violations.add(violation)
-        project.save()
-
-        send_notification([project.creator], self.request.user,
-                          [{
-                              "project": project.title
-                          }], Notification.Type.PROJECT_VIOLATION,
-                          f'/projects/{project.id}')
-
-        return violation
-

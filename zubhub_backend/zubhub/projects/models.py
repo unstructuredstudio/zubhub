@@ -249,31 +249,3 @@ class StaffPick(models.Model):
             uid = uid[0:floor(len(uid) / 6)]
             self.slug = slugify(self.title) + "-" + uid
         super().save(*args, **kwargs)
-
-
-class ViolationReason(models.Model):
-    id = models.UUIDField(primary_key=True,
-                          default=uuid.uuid4,
-                          editable=False,
-                          unique=True)
-    description = models.CharField(max_length=250)
-
-
-class Violation(models.Model):
-    id = models.UUIDField(primary_key=True,
-                          default=uuid.uuid4,
-                          editable=False,
-                          unique=True)
-    reasons = models.ManyToManyField(ViolationReason,
-                                     blank=True,
-                                     related_name='violations')
-    project = models.ForeignKey(Project,
-                                null=True,
-                                blank=True,
-                                on_delete=models.CASCADE,
-                                related_name='violations')
-    creator = models.ForeignKey(Creator,
-                                null=True,
-                                blank=True,
-                                on_delete=models.SET_NULL)
-    date = models.DateTimeField(default=timezone.now)

@@ -1,4 +1,0 @@
-{% load i18n %}
-{% autoescape off %}
-{% blocktrans %}Violation Received on One of Your Projects.{% endblocktrans %}
-{% endautoescape %}
