@@ -256,7 +256,7 @@
     "publish": {
       "draft": "Draft",
       "preview": "Preview",
-      "authenticated_creators": "Authenticated Creators",
+      "authenticated_creators": "ZubHub Users",
       "public": "Public"
     },
     "errors": {
@@ -356,8 +356,8 @@
         }
       },
       "publish": {
-        "label": "What publish option do you want to set for this project?",
-        "topHelperText": "Think about your target audience. Should this project be visible to all creators?, authenticated creators?, or do you want to provide the usernames of creators this project should be visible to?",
+        "label": "Ready to publish your project?",
+        "topHelperText": "Choose an option from the dropdown below",
         "visibleTo": "Visible To",
         "addUsernames": "Add Usernames",
         "errors": {
@@ -450,7 +450,7 @@
       "publish": {
         "draft": "Draft",
         "preview": "Preview",
-        "authenticated_creators": "Authenticated Creators",
+        "authenticated_creators": "ZubHub Users",
         "public": "Public"
       }
     },
