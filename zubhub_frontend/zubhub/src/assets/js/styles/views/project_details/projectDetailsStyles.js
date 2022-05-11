@@ -107,7 +107,8 @@ const styles = theme => ({
       height: '3.5em',
       width: 'fit-content',
       flexDirection: 'row',
-      justifyContent: 'center',
+      justifyContent: 'left',
+      //justifyContent: 'center',
       padding: '0px 0.5em 0px',
     },
   },
@@ -120,6 +121,7 @@ const styles = theme => ({
     [theme.breakpoints.down('1080')]: {
       display: 'flex',
       paddingRight: 4,
+
     },
   },
   actionBoxButtonStyle: {
