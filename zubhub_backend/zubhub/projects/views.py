@@ -210,7 +210,11 @@ class ProjectAutocompleteAPIView(ListAPIView):
         projects = Project.objects.annotate(
             similarity=TrigramSimilarity('title', query_string)).filter(
                 similarity__gt=0.01).order_by('-similarity')[:20]
-        return projects
+        result = []
+        for project in projects:
+            if can_view(self.request.user, project):
+                result.append(project)
+        return result
 
 
 class ProjectSearchAPIView(ListAPIView):

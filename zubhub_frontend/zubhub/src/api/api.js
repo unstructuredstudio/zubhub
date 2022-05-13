@@ -339,22 +339,22 @@ class API {
     return this.request({ url }).then(res => res.json());
   };
 
-  autocompleteTags = ({ query }) => {
+  autocompleteTags = ({ query, token }) => {
     const url = `projects/tags/autocomplete/?q=${query}`;
 
-    return this.request({ url }).then(res => res.json());
+    return this.request({ url, token }).then(res => res.json());
   };
 
-  autocompleteProjects = ({ query }) => {
+  autocompleteProjects = ({ query, token }) => {
     const url = `projects/autocomplete/?q=${query}`;
 
-    return this.request({ url }).then(res => res.json());
+    return this.request({ url, token }).then(res => res.json());
   };
 
-  autocompleteCreators = ({ query }) => {
+  autocompleteCreators = ({ query, token }) => {
     const url = `creators/autocomplete/?q=${query}`;
 
-    return this.request({ url }).then(res => res.json());
+    return this.request({ url, token }).then(res => res.json());
   };
 
   /**
