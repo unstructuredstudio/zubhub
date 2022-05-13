@@ -323,9 +323,12 @@ def get_published_projects_for_user(user, all, include_drafts=False):
         if not drafts:
             drafts = Project.objects.none()
         
-    print(user, public, authenticated, visible_to, all, drafts)
-   
+    print(user, public, authenticated, visible_to, drafts, all, sep='\n')
+    unioned = public.union(drafts)
+    print("union:", unioned.values_list())
+
     return public.union(authenticated).union(visible_to).union(drafts).order_by("-created_on")
+    #return unioned.order_by("-created_on")
 
 
 def detect_mentions(kwargs):

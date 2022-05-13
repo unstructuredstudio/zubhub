@@ -296,7 +296,8 @@ class UserProjectsAPIView(ListAPIView):
                 return creator.creatorgroup.get_projects(limit=limit)
             else:
                 return get_published_projects_for_user(self.request.user, 
-                creator.projects.all(), include_drafts=True)[:int(limit)]
+                creator.projects.all(), include_drafts=True)
+                """ [:int(limit)] """
         else:
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects()
