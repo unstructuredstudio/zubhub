@@ -321,6 +321,7 @@ class UserDraftsAPIView(ListAPIView):
         PublishingRule = apps.get_model('projects.PublishingRule')
         username = self.kwargs.get("username")
         limit = self.request.GET.get("limit")
+        creator = Creator.objects.get(username=username)
 
         if self.request.user.is_anonymous or self.request.user.username != username:
             raise PermissionDenied(
