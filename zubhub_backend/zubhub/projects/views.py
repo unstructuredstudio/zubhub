@@ -56,7 +56,6 @@ class ProjectCreateAPIView(CreateAPIView):
         self.request.user.save()
 
         if self.request.user.followers is not None:
-            print(self.__dict__)
             send_notification(
                 list(self.request.user.followers.all()),
                 self.request.user,
@@ -210,7 +209,11 @@ class ProjectAutocompleteAPIView(ListAPIView):
         projects = Project.objects.annotate(
             similarity=TrigramSimilarity('title', query_string)).filter(
                 similarity__gt=0.01).order_by('-similarity')[:20]
-        return projects
+        result = []
+        for project in projects:
+            if can_view(self.request.user, project):
+                result.append(project)
+        return result
 
 
 class ProjectSearchAPIView(ListAPIView):

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -89,6 +89,7 @@ function PageWrapper(props) {
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
   const formRef = useRef();
+  const token = useSelector(state => state.auth.token);
 
   const [state, setState] = React.useState({
     username: null,
@@ -112,12 +113,12 @@ function PageWrapper(props) {
         const api = new API();
         let completions = [];
         if (searchType === SearchType.TAGS) {
-          completions = await api.autocompleteTags({ query });
+          completions = await api.autocompleteTags({ query, token });
           completions = completions.map(({ name }) => ({
             title: name,
           }));
         } else if (searchType === SearchType.PROJECTS) {
-          completions = await api.autocompleteProjects({ query });
+          completions = await api.autocompleteProjects({ query, token });
           completions = completions.map(({ id, title, creator, images }) => ({
             title,
             shortInfo: creator.username,
@@ -125,7 +126,7 @@ function PageWrapper(props) {
             link: `/projects/${id}`,
           }));
         } else {
-          completions = await api.autocompleteCreators({ query });
+          completions = await api.autocompleteCreators({ query, token });
           completions = completions.map(({ username, avatar }) => ({
             title: username,
             image: avatar,
@@ -648,7 +649,10 @@ function PageWrapper(props) {
                     <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                   </InputSelect>
                 </FormControl>
-                <FormControl variant="outlined" style={{ flex: '1 1 auto', maxWidth: '350px' }}>
+                <FormControl
+                  variant="outlined"
+                  style={{ flex: '1 1 auto', maxWidth: '350px' }}
+                >
                   <InputLabel
                     htmlFor="q"
                     className={classes.searchFormLabelStyle}

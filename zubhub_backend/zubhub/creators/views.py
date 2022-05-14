@@ -25,7 +25,7 @@ from projects.serializers import CommentSerializer
 from projects.models import Comment, PublishingRule
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
-from projects.utils import detect_mentions
+from projects.utils import detect_mentions, get_published_projects_for_user
 from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, GetAnonRateThrottle,
                                   CustomUserRateThrottle)
@@ -295,13 +295,14 @@ class UserProjectsAPIView(ListAPIView):
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects(limit=limit)
             else:
-                return creator.projects.exclude(publish__type=PublishingRule.DRAFT).order_by(
-                    "-created_on")[:int(limit)]
+                all = creator.projects.exclude(publish__type=PublishingRule.DRAFT)
+                return get_published_projects_for_user(self.request.user, all)[:int(limit)]
         else:
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects()
             else:
-                return creator.projects.exclude(publish__type=PublishingRule.DRAFT).order_by("-created_on")
+                all = creator.projects.exclude(publish__type=PublishingRule.DRAFT)
+                return get_published_projects_for_user(self.request.user, all)
 
 class UserDraftsAPIView(ListAPIView):
     """
@@ -327,16 +328,10 @@ class UserDraftsAPIView(ListAPIView):
             _("you are not permitted to get this project's drafts"))
             
         if limit:
-            if hasattr(creator, "creatorgroup"):
-                return creator.creatorgroup.get_projects(limit=limit)
-            else:
-                return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by(
-                    "-created_on")[:int(limit)]
+            return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by(
+                "-created_on")[:int(limit)]
         else:
-            if hasattr(creator, "creatorgroup"):
-                return creator.creatorgroup.get_projects()
-            else:
-                return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by("-created_on")
+            return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by("-created_on")
 
 
 class UserFollowersAPIView(ListAPIView):

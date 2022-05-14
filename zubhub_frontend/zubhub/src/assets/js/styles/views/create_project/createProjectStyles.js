@@ -81,6 +81,7 @@ const styles = theme => ({
       borderBottomRightRadius: 15,
       borderBottomLeftRadius: 15,
       '& .ql-editor': {
+        WebkitUserSelect:'text',
         color: '#000000de',
         fontSize: '1rem',
         fontFamily: 'Raleway,Roboto,sans-serif',
