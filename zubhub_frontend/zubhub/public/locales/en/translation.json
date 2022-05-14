@@ -356,8 +356,14 @@
         }
       },
       "publish": {
-        "label": "What publish option do you want to set for this project?",
-        "topHelperText": "Think about your target audience. Should this project be visible to all creators?, authenticated creators?, or do you want to provide the usernames of creators this project should be visible to?",
+        "label": "Who can see your project after you create it?",
+        "topHelperText": "If you are still working on the project and are unsure if you want to publish this right away, select 'Only me'",
+        "publishTypes": {
+          "authenticatedCreators": "All ZubHub Users",
+          "draft": "Only me for now",
+          "preview": "Only a few ZubHub Users",
+          "public": "Everyone"
+        },
         "visibleTo": "Visible To",
         "addUsernames": "Add Usernames",
         "errors": {
