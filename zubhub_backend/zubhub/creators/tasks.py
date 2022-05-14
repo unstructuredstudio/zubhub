@@ -1,4 +1,5 @@
 from celery import shared_task
+from django.contrib.postgres.search import SearchVector
 from celery.decorators import periodic_task
 from celery.task.schedules import crontab
 from random import uniform
@@ -69,6 +70,19 @@ def upload_file_task(self, user_id, username):
             creator.update(avatar=res)
         else:
             raise Exception()
+
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+
+@shared_task(name="creators.tasks.update_creator_tag_index_task", bind=True, acks_late=True, max_retries=10)
+def update_creator_tag_index_task(self):
+    from creators.models import CreatorTag
+
+    try:
+        CreatorTag.objects.update(
+            search_vector=SearchVector('name')
+        )
 
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
