@@ -127,7 +127,6 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
  * @todo - describe function's signature
  */
 function CreateProject(props) {
-  console.log(props.values.category);
   const [category, setCategory] = React.useState([]);
 
   const classes = useStyles();

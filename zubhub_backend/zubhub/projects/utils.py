@@ -311,13 +311,13 @@ def get_published_projects_for_user(user, all):
     if user.is_authenticated:
         published_by_owner = all.filter(publish__type=PublishingRule.PREVIEW, 
                             creator=user, publish__publisher_id=user.id)
-        visible_to = visible_to.union(published_by_owner)
+        visible_to |= published_by_owner
 
     all = public
     all |= authenticated
     all |= visible_to
     return all.order_by("-created_on")
-    
+
 
 def detect_mentions(kwargs):
     text = kwargs.get("text", None)
