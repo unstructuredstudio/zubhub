@@ -307,6 +307,11 @@ def get_published_projects_for_user(user, all):
     visible_to = all.filter(publish__type=PublishingRule.PREVIEW, 
                             publish__visible_to__id=user.id)
 
+    if user.is_authenticated:
+        published_by_owner = all.filter(publish__type=PublishingRule.PREVIEW, 
+                            creator=user, publish__publisher_id=user.id)
+        visible_to = visible_to.union(published_by_owner)
+
     return public.union(authenticated).union(visible_to).order_by("-created_on")
 
 
