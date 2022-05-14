@@ -277,7 +277,7 @@ def can_view(user, target):
     return False
 
 
-def get_published_projects_for_user(user, all, include_drafts=False):
+def get_published_projects_for_user(user, all):
     """ 
     Get all projects user can view.
 
@@ -298,32 +298,22 @@ def get_published_projects_for_user(user, all, include_drafts=False):
 
     """ fetch all projects where publishing rule is PUBLIC """
     public = all.filter(publish__type=PublishingRule.PUBLIC)
-    if not public:
-        public = Project.objects.none()
-
-    if not user.is_authenticated:
-        return public
 
     """ fetch all projects where publishing rule is AUTHENTICATED_VIEWERS if user is authenticated """
     authenticated = Project.objects.none()
-    authenticated = all.filter(publish__type=PublishingRule.AUTHENTICATED_VIEWERS)
-    if not authenticated:
-        authenticated = Project.objects.none()
+    if user.is_authenticated:
+        authenticated = all.filter(publish__type=PublishingRule.AUTHENTICATED_VIEWERS)
     
     """ fetch all projects where publishing rule is PREVIEW """
-    visible_to = all.filter(Q(Q(publish__type=PublishingRule.PREVIEW), 
-                            (Q(publish__visible_to__id=user.id) | Q(creator=user))))
-    if not visible_to:
-        visible_to = Project.objects.none()
-    
-    drafts = Project.objects.none()
-    if include_drafts:
-        drafts = all.filter(publish__type=PublishingRule.DRAFT, creator=user)
+    visible_to = all.filter(publish__type=PublishingRule.PREVIEW, 
+                            publish__visible_to__id=user.id)
 
-        if not drafts:
-            drafts = Project.objects.none()
+    if user.is_authenticated:
+        published_by_owner = all.filter(publish__type=PublishingRule.PREVIEW, 
+                            creator=user, publish__publisher_id=user.id)
+        visible_to = visible_to.union(published_by_owner)
 
-    return public.union(authenticated).union(visible_to).union(drafts).order_by("-created_on")
+    return public.union(authenticated).union(visible_to).order_by("-created_on")
 
 def detect_mentions(kwargs):
     text = kwargs.get("text", None)

@@ -11,7 +11,7 @@ export const fetchPage = (page, props) => {
     page,
     username,
     t: props.t,
-    token: props.auth.token,
+    token: props.auth.token
   });
 };
 
