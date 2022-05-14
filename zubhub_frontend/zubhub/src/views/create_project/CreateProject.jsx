@@ -879,7 +879,7 @@ function CreateProject(props) {
                         >
                           {publish_types.map(type => (
                             <MenuItem key={type.name} value={type.value}>
-                              {type.name}
+                              {t(`createProject.inputs.publish.publishTypes.${type.name}`)}
                             </MenuItem>
                           ))}
                         </Select>
