@@ -364,23 +364,23 @@ export const buildPublishTypes = ({ projects, values, setFieldValue }) => {
       publish_types: [
         {
           value: publish_type['Authenticated Creators'],
-          name: 'Authenticated Creators',
+          name: 'authenticatedCreators',
         },
-        { value: publish_type['Draft'], name: 'Draft' },
-        { value: publish_type['Preview'], name: 'Preview' },
-        { value: publish_type['Public'], name: 'Public' },
+        { value: publish_type['Draft'], name: 'draft' },
+        { value: publish_type['Preview'], name: 'preview' },
+        { value: publish_type['Public'], name: 'public' },
       ],
     };
   } else {
     publish_types = {
       publish_types: [
-        { value: publish_type['Public'], name: 'Public' },
-        { value: publish_type['Draft'], name: 'Draft' },
+        { value: publish_type['Public'], name: 'public' },
+        { value: publish_type['Draft'], name: 'draft' },
         {
           value: publish_type['Authenticated Creators'],
-          name: 'Authenticated Creators',
+          name: 'authenticatedCreators',
         },
-        { value: publish_type['Preview'], name: 'Preview' },
+        { value: publish_type['Preview'], name: 'preview' },
       ],
     };
   }
