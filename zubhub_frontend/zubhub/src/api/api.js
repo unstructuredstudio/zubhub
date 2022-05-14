@@ -261,7 +261,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  getUserProjects = ({ username, page, limit }) => {
+  getUserProjects = ({ username, page, limit, token }) => {
     let url;
     if (limit && page) {
       url = `creators/${username}/projects/?limit=${limit}&&${page}`;
@@ -273,7 +273,7 @@ class API {
       url = `creators/${username}/projects/`;
     }
 
-    return this.request({ url }).then(res => res.json());
+    return this.request({ url, token }).then(res => res.json());
   };
 
   /**
