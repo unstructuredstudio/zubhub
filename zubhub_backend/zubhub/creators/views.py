@@ -333,6 +333,7 @@ class UserDraftsAPIView(ListAPIView):
         else:
             return creator.projects.filter(publish__type=PublishingRule.DRAFT).order_by("-created_on")
 
+
 class UserFollowersAPIView(ListAPIView):
     """
     Fetch paginated user follower's list.

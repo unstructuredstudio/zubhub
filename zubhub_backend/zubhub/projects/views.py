@@ -56,7 +56,6 @@ class ProjectCreateAPIView(CreateAPIView):
         self.request.user.save()
 
         if self.request.user.followers is not None:
-            print(self.__dict__)
             send_notification(
                 list(self.request.user.followers.all()),
                 self.request.user,
