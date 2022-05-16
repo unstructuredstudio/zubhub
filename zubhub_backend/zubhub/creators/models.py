@@ -10,6 +10,7 @@ from django.dispatch import Signal
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
 
+from .tasks import update_creator_tag_index_task
 from .managers import PhoneNumberManager
 from .model_utils import user_phone
 
@@ -46,6 +47,12 @@ class CreatorTag(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        prev_tag = CreatorTag.objects.filter(id = self.id)
+        if not self.id or (prev_tag.first().name != self.name):
+            update_creator_tag_index_task.delay()
+        super().save(*args, **kwargs)
 
 
 class Creator(AbstractUser):
