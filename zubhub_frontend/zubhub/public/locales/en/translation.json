@@ -360,9 +360,9 @@
         "topHelperText": "If you are still working on the project and are unsure if you want to publish this right away, select 'Only me'",
         "publishTypes": {
           "authenticatedCreators": "Only me",
-          "draft": "With a few friends on ZubHub",
-          "preview": "All ZubHub users",
-          "public": "Everyone - users and non-users of ZubHub"
+          "draft": "Only a few ZubHub users",
+          "preview": "All registered ZubHub users",
+          "public": "Everyone on the internet"
         },
         "visibleTo": "Visible To",
         "addUsernames": "Add Usernames",
