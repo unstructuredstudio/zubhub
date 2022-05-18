@@ -19,6 +19,7 @@ import MovieIcon from '@material-ui/icons/Movie';
 import InsertLinkIcon from '@material-ui/icons/InsertLink';
 import {
   Grid,
+  Paper,
   Box,
   Container,
   Card,
@@ -474,6 +475,27 @@ function CreateProject(props) {
                                 `createProject.inputs.projectImages.errors.${props.errors['project_images']}`,
                               ))}
                         </FormHelperText>
+
+                        {(media_upload.images_to_upload.length > 0) && 
+                        <Grid container spacing={2}>
+                         {
+                         media_upload.images_to_upload.map((image) =>
+                            <Grid item key={image.name} md={4} xs={12} sm={6}>
+                              <Paper key={[image.name,'paper'].join('')}
+                                   className={classes.imagePreviewContainer}
+                              >
+                                <img
+                                   className={classes.imagePreview} 
+                                   src={window.URL.createObjectURL(image)} 
+                                   alt={image.name}/>
+                              </Paper>
+                            </Grid>
+                             )
+                         }
+                        </Grid>
+                        }
+                        
+                         
                       </FormControl>
                     </Grid>
 

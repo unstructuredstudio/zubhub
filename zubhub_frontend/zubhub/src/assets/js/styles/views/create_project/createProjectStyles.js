@@ -9,6 +9,13 @@ const styles = theme => ({
     background:
       'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
+  imagePreview:{
+    width: '100%',
+    height: '100%',
+  },
+  imagePreviewContainer:{
+    height: '130px',
+  },
   containerStyle: {
     maxWidth: '600px',
     [theme.breakpoints.up('1600')]: {
