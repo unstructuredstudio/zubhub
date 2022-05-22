@@ -167,7 +167,12 @@ const styles = theme => ({
       },
     },
   },
-  profileStyle: { fontWeight: 'bold' },
+  profileStyle: { fontWeight: 'bold',
+                  width: '130px',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+  },
   logOutStyle: {
     borderTop: '1px solid #C4C4C4',
   },

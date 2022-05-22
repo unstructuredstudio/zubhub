@@ -36,6 +36,7 @@ import {
   FormGroup,
   InputBase,
   TextField,
+  Tooltip,
 } from '@material-ui/core';
 
 import {
@@ -523,14 +524,16 @@ function PageWrapper(props) {
                     onClose={e => handleSetState(handleProfileMenuClose(e))}
                   >
                     <MenuItem>
+                    <Tooltip title={props.auth.username} placement="top">
                       <Typography
                         variant="subtitle2"
                         color="textPrimary"
                         component="span"
                         className={classes.profileStyle}
                       >
-                        {props.auth.username}
+                        {props.auth.username }
                       </Typography>
+                      </Tooltip>
                     </MenuItem>
                     <MenuItem>
                       <a className={classes.textDecorationNone} href="/profile">
