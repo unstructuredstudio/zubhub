@@ -120,7 +120,6 @@ const styles = theme => ({
     [theme.breakpoints.down('1080')]: {
       display: 'flex',
       paddingRight: 4,
-
     },
   },
   actionBoxButtonStyle: {
