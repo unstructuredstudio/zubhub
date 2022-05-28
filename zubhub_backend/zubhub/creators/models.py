@@ -1,3 +1,4 @@
+from enum import IntEnum
 import uuid
 from math import floor
 from django.utils import timezone
@@ -22,7 +23,7 @@ except ImportError:
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=100, unique = True)
+    name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, max_length=106)
 
     def save(self, *args, **kwargs):
@@ -30,7 +31,7 @@ class Location(models.Model):
             pass
         else:
             uid = str(uuid.uuid4())
-            uid = uid[0: floor(len(uid)/6)]
+            uid = uid[0:floor(len(uid) / 6)]
             self.slug = slugify(self.name) + "-" + uid
         super().save(*args, **kwargs)
 
@@ -39,17 +40,17 @@ class Location(models.Model):
 
 
 class CreatorTag(models.Model):
-    name = models.CharField(max_length=100, unique = True)
+    name = models.CharField(max_length=100, unique=True)
     search_vector = SearchVectorField(null=True)
 
     class Meta:
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["search_vector"]), )
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
-        prev_tag = CreatorTag.objects.filter(id = self.id)
+        prev_tag = CreatorTag.objects.filter(id=self.id)
         if not self.id or (prev_tag.first().name != self.name):
             update_creator_tag_index_task.delay()
         super().save(*args, **kwargs)
@@ -57,24 +58,47 @@ class CreatorTag(models.Model):
 
 class Creator(AbstractUser):
 
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    class NotificationChannel(IntEnum):
+        WHATSAPP = 1
+        EMAIL = 2
+        SMS = 3
+        WEB = 4
+
+    CONTACT_CHOICES = ((NotificationChannel.WHATSAPP,
+                        'WHATSAPP'), (NotificationChannel.EMAIL, 'EMAIL'),
+                       (NotificationChannel.SMS,
+                        'SMS'), (NotificationChannel.WEB, 'WEB'))
+
+    id = models.UUIDField(primary_key=True,
+                          default=uuid.uuid4,
+                          editable=False,
+                          unique=True)
     avatar = models.URLField(max_length=1000, blank=True, null=True)
     phone = models.CharField(max_length=17, blank=True, null=True)
     dateOfBirth = models.DateField(blank=True, null=True)
-    location = models.ForeignKey(
-        Location, null=True, on_delete=models.SET_NULL)
+    location = models.ForeignKey(Location,
+                                 null=True,
+                                 on_delete=models.SET_NULL)
     bio = models.CharField(max_length=255, blank=True, null=True)
-    followers = models.ManyToManyField(
-        "self", symmetrical=False, blank=True, related_name="following")
+    followers = models.ManyToManyField("self",
+                                       symmetrical=False,
+                                       blank=True,
+                                       related_name="following")
     followers_count = models.IntegerField(blank=True, default=0)
     following_count = models.IntegerField(blank=True, default=0)
     projects_count = models.IntegerField(blank=True, default=0)
-    tags = models.ManyToManyField(CreatorTag, blank=True, related_name="creators")
+    tags = models.ManyToManyField(CreatorTag,
+                                  blank=True,
+                                  related_name="creators")
     search_vector = SearchVectorField(null=True)
+    subscribe = models.BooleanField(blank=True, default=False)
+    contact = models.PositiveSmallIntegerField(choices=CONTACT_CHOICES,
+                                               blank=True,
+                                               null=True,
+                                               default=NotificationChannel.WEB)
 
     class Meta:
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["search_vector"]), )
 
     def save(self, *args, **kwargs):
         if not self.avatar:
@@ -86,36 +110,14 @@ class Creator(AbstractUser):
         super().save(*args, **kwargs)
 
 
-class Setting(models.Model):
-    WHATSAPP = 1
-    EMAIL = 2
-    SMS = 3
-    WEB = 4
-
-    CONTACT_CHOICES = (
-        (WHATSAPP, 'WHATSAPP'),
-        (EMAIL, 'EMAIL'),
-        (SMS, 'SMS'),
-        (WEB, 'WEB')
-    )
-
-    creator = models.OneToOneField(
-        Creator, on_delete=models.CASCADE, primary_key=True)
-    subscribe = models.BooleanField(blank=True, default=False)
-    contact = models.PositiveSmallIntegerField(
-        choices=CONTACT_CHOICES, blank=True, null=True, default=SMS
-    )
-
-    def __str__(self):
-        return self.creator.username
-
-
 class CreatorGroup(models.Model):
-    creator = models.OneToOneField(
-        Creator, on_delete=models.CASCADE, primary_key=True)
+    creator = models.OneToOneField(Creator,
+                                   on_delete=models.CASCADE,
+                                   primary_key=True)
     description = models.CharField(max_length=10000, blank=True, null=True)
-    members = models.ManyToManyField(
-        Creator, blank=True, related_name="creator_groups")
+    members = models.ManyToManyField(Creator,
+                                     blank=True,
+                                     related_name="creator_groups")
     created_on = models.DateTimeField(default=timezone.now)
     projects_count = models.IntegerField(blank=True, default=0)
 
@@ -211,25 +213,28 @@ class PhoneNumber(models.Model):
 
 
 class PhoneConfirmationHMAC:
+
     def __init__(self, phone_number):
         self.phone_number = phone_number
 
     @property
     def key(self):
-        return signing.dumps(obj=self.phone_number.pk, salt=allauth_settings.SALT)
+        return signing.dumps(obj=self.phone_number.pk,
+                             salt=allauth_settings.SALT)
 
     @classmethod
     def from_key(cls, key):
         PHONE_CONFIRMATION_EXPIRE_DAYS = 3
         try:
             max_age = 60 * 60 * 24 * PHONE_CONFIRMATION_EXPIRE_DAYS
-            pk = signing.loads(key, max_age=max_age,
+            pk = signing.loads(key,
+                               max_age=max_age,
                                salt=allauth_settings.SALT)
             ret = PhoneConfirmationHMAC(PhoneNumber.objects.get(pk=pk))
         except (
-            signing.SignatureExpired,
-            signing.BadSignature,
-            PhoneNumber.DoesNotExist,
+                signing.SignatureExpired,
+                signing.BadSignature,
+                PhoneNumber.DoesNotExist,
         ):
             ret = None
         return ret
@@ -257,16 +262,17 @@ class PhoneConfirmationHMAC:
 
 
 class GroupInviteConfirmationHMAC:
+
     def __init__(self, creator, group_creator):
         self.creator = creator
         self.group_creator = group_creator
 
     @property
     def key(self):
-        creator_key = signing.dumps(
-            obj=str(self.creator.pk), salt=allauth_settings.SALT)
-        group_creator_key = signing.dumps(
-            obj=str(self.group_creator.pk), salt=allauth_settings.SALT)
+        creator_key = signing.dumps(obj=str(self.creator.pk),
+                                    salt=allauth_settings.SALT)
+        group_creator_key = signing.dumps(obj=str(self.group_creator.pk),
+                                          salt=allauth_settings.SALT)
         return "group_invite".join([creator_key, group_creator_key])
 
     @classmethod
@@ -275,16 +281,17 @@ class GroupInviteConfirmationHMAC:
         try:
             max_age = 60 * 60 * 24 * PHONE_CONFIRMATION_EXPIRE_DAYS
             creator_key, group_creator_key = key.split("group_invite")
-            creator = Creator.objects.get(pk=signing.loads(creator_key, max_age=max_age,
-                                                           salt=allauth_settings.SALT))
+            creator = Creator.objects.get(pk=signing.loads(
+                creator_key, max_age=max_age, salt=allauth_settings.SALT))
             group_creator = Creator.objects.get(pk=signing.loads(
-                group_creator_key, max_age=max_age, salt=allauth_settings.SALT))
+                group_creator_key, max_age=max_age,
+                salt=allauth_settings.SALT))
 
             ret = GroupInviteConfirmationHMAC(creator, group_creator)
         except (
-            signing.SignatureExpired,
-            signing.BadSignature,
-            Creator.DoesNotExist,
+                signing.SignatureExpired,
+                signing.BadSignature,
+                Creator.DoesNotExist,
         ):
             ret = None
         return ret
@@ -294,21 +301,17 @@ class GroupInviteConfirmationHMAC:
         if not self.creator in self.group_creator.creatorgroup.members.all():
             creator = self.creator
             creatorgroup = self.group_creator.creatorgroup
-            get_adapter(request).confirm_group_invite(
-                request, creator, creatorgroup)
-            Signal().send(
-                sender=self.__class__,
-                request=request,
-                creator=creator,
-                creatorgroup=creatorgroup
-            )
+            get_adapter(request).confirm_group_invite(request, creator,
+                                                      creatorgroup)
+            Signal().send(sender=self.__class__,
+                          request=request,
+                          creator=creator,
+                          creatorgroup=creatorgroup)
             return creatorgroup
 
     def send(self, request=None):
         get_adapter(request).send_group_invite_text(self)
         get_adapter(request).send_group_invite_mail(self)
-        Signal().send(
-            sender=self.__class__,
-            request=request,
-            invite_confirmation=self
-        )
+        Signal().send(sender=self.__class__,
+                      request=request,
+                      invite_confirmation=self)

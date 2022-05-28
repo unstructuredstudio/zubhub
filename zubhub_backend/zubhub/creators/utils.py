@@ -8,7 +8,6 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp
-from creators.models import Setting
 from notifications.models import Notification
 from notifications.utils import push_notification, get_notification_template_name
 from creators.models import Creator
@@ -241,6 +240,7 @@ def activity_notification(activities, **kwargs):
     if len(phone_contexts) > 0 and ctx_values:
         send_mass_text.delay(template_name=template_name, ctxs=phone_contexts)
 
+
 def perform_creator_search(user, query_string):
     from creators.models import CreatorTag
     """
@@ -254,26 +254,26 @@ def perform_creator_search(user, query_string):
     rank = SearchRank(F('search_vector'), query)
     result_creators = None
 
-
     # fetch all creators whose creatortag(s) matches the search query
     result_tags = CreatorTag.objects.filter(
         search_vector=query).prefetch_related("creators")
 
     for tag in result_tags:
-        result_creators = tag.creators.filter(is_active=True).annotate(rank=rank).order_by('-rank')
+        result_creators = tag.creators.filter(is_active=True).annotate(
+            rank=rank).order_by('-rank')
     ############################################################
 
     # fetch all creators that matches the search term
     if result_creators:
-        result_creators.union(get_user_model().objects.annotate(rank=rank).filter(
-            search_vector=query, is_active=True ).order_by('-rank'))
+        result_creators.union(get_user_model().objects.annotate(
+            rank=rank).filter(search_vector=query,
+                              is_active=True).order_by('-rank'))
     else:
         result_creators = get_user_model().objects.annotate(rank=rank).filter(
-            search_vector=query,is_active=True ).order_by('-rank')
+            search_vector=query, is_active=True).order_by('-rank')
     ##############################################################
 
     return result_creators
-
 
 
 def custom_set_creatortags_queryset(creator, creatortags):
@@ -298,22 +298,26 @@ def custom_set_creatortags_queryset(creator, creatortags):
 
         tag = CreatorTag.objects.filter(name="staff").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
         tag = CreatorTag.objects.filter(name="moderator").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
         tag = CreatorTag.objects.filter(name="group").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
         tag = CreatorTag.objects.filter(name="creator").first()
         if creatortags.filter(name=tag.name).exists():
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
             creatortags = creatortags.exclude(name=tag.name)
 
 
@@ -336,25 +340,29 @@ def enforce_creator__creator_tags_constraints(creator, tag):
 
         if tag.name == "creator":
             """ If tag is 'creator', ensure that 'staff', 'moderator' and 'group' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group", "moderator"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "staff", "group", "moderator"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
-            
+
         elif tag.name == "staff":
             """ If tag is 'staff', ensure that 'creator' and 'group' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "staff", "group"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
 
         elif tag.name == "moderator":
             """ If tag is 'moderator', ensure that 'creator' and 'group' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "group", "moderator"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "group", "moderator"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
 
         elif tag.name == "group":
             """ If tag is 'group', ensure that 'staff', 'creator' and 'moderator' tags are not in the user's tags list """
-            diff = CreatorTag.objects.filter(name__in=["creator", "staff", "group", "moderator"])
+            diff = CreatorTag.objects.filter(
+                name__in=["creator", "staff", "group", "moderator"])
             tags_to_set = creator.tags.difference(diff)
             return tags_to_set.union(diff.filter(name=tag.name))
 
@@ -368,16 +376,16 @@ def enforce_creator__creator_tags_constraints(creator, tag):
         return creator.tags.all()
 
 
-
-enabled_notification_settings: Dict[Notification.Type, Set[int]] = {
-    Notification.Type.BOOKMARK: {Setting.WEB},
-    Notification.Type.CLAP: {Setting.WEB},
-    Notification.Type.COMMENT:
-    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
-    Notification.Type.FOLLOW:
-    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
-    Notification.Type.FOLLOWING_PROJECT:
-    {Setting.WHATSAPP, Setting.EMAIL, Setting.SMS, Setting.WEB},
+all_settings = {
+    Creator.NotificationChannel.WHATSAPP, Creator.NotificationChannel.EMAIL,
+    Creator.NotificationChannel.SMS, Creator.NotificationChannel.WEB
+}
+enabled_notification_settings: Dict[Notification.Type, Set[Creator.NotificationChannel]] = {
+    Notification.Type.BOOKMARK: {Creator.NotificationChannel.WEB},
+    Notification.Type.CLAP: {Creator.NotificationChannel.WEB},
+    Notification.Type.COMMENT: all_settings,
+    Notification.Type.FOLLOW: all_settings,
+    Notification.Type.FOLLOWING_PROJECT: all_settings,
 }
 
 
@@ -392,42 +400,41 @@ def send_notification(users: List[Creator], source: Creator, contexts,
     sms_contexts = []
 
     for user, context in zip(users, contexts):
-        user_setting = Setting.objects.get(creator=user)
         context.update({'source': source.username})
 
-        if user.email and user_setting.contact == Setting.EMAIL and is_valid_setting(
-                Setting.EMAIL, notification_type):
+        if user.email and user.contact == Creator.NotificationChannel.EMAIL and is_valid_setting(
+                Creator.NotificationChannel.EMAIL, notification_type):
             context.update({"email": user.email})
             email_contexts.append(context)
 
-        if user.phone and user_setting.contact == Setting.SMS and is_valid_setting(
-                Setting.SMS, notification_type):
+        if user.phone and user.contact == Creator.NotificationChannel.SMS and is_valid_setting(
+                Creator.NotificationChannel.SMS, notification_type):
             context.update({"phone": user.phone})
             sms_contexts.append(context)
 
-        if is_valid_setting(Setting.WEB, notification_type):
+        if is_valid_setting(Creator.NotificationChannel.WEB, notification_type):
             successfully_pushed = push_notification(user, source,
                                                     notification_type, link,
                                                     context)
             if not successfully_pushed:
                 return
 
-        if user.phone and user_setting.contact == Setting.WHATSAPP and is_valid_setting(
-                Setting.WHATSAPP, notification_type):
+        if user.phone and user.contact == Creator.NotificationChannel.WHATSAPP and is_valid_setting(
+                Creator.NotificationChannel.WHATSAPP, notification_type):
             context.update({"phone": user.phone})
             send_whatsapp.delay(phone=user.phone,
                                 template_name=get_notification_template_name(
-                                    Setting.WHATSAPP, notification_type),
+                                    Creator.NotificationChannel.WHATSAPP, notification_type),
                                 ctx=context)
 
     if len(email_contexts) > 0:
         send_mass_email.delay(template_name=get_notification_template_name(
-            Setting.EMAIL, notification_type),
+            Creator.NotificationChannel.EMAIL, notification_type),
                               ctxs=email_contexts,
                               full_template=True)
     if len(sms_contexts) > 0:
         send_mass_text.delay(template_name=get_notification_template_name(
-            Setting.SMS, notification_type),
+            Creator.NotificationChannel.SMS, notification_type),
                              ctxs=sms_contexts,
                              full_template=True)
 

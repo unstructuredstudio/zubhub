@@ -1,20 +1,20 @@
 from typing import cast
 from datetime import datetime, timedelta
 from notifications.models import Notification
-from creators.models import Setting
+from creators.models import Creator
 from django.template.loader import render_to_string
 
-html_based_contacts = {Setting.WEB}
+html_based_contacts = {Creator.NotificationChannel.WEB}
 
 
 def get_notification_template_name(
-        contact_method: int, notification_type: Notification.Type) -> str:
+        contact_method: Creator.NotificationChannel, notification_type: Notification.Type) -> str:
     file_extension = '.html' if contact_method in html_based_contacts else '.txt'
-    if contact_method == Setting.EMAIL:
+    if contact_method == Creator.NotificationChannel.EMAIL:
         file_extension = ''
     return (
         f'notifications/{notification_type.name.lower()}'
-        f'/{Setting.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}{file_extension}'
+        f'/{Creator.CONTACT_CHOICES[cast(int, contact_method) - 1][1].lower()}{file_extension}'
     )
 
 
@@ -27,7 +27,7 @@ recent_notification_time = timedelta(hours=1)
 
 def push_notification(recipient, source, notification_type, link,
                       context) -> bool:
-    template_name = get_notification_template_name(Setting.WEB,
+    template_name = get_notification_template_name(Creator.NotificationChannel.WEB,
                                                    notification_type)
 
     check_link = None

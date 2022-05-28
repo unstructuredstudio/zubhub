@@ -71,25 +71,24 @@ def update_tags(project, tags_data):
 
 
 def send_staff_pick_notification(staff_pick):
-    from creators.models import Setting
-    subscribed = Setting.objects.filter(subscribe=True)
+    subscribed = Creator.objects.filter(subscribe=True)
     email_contexts = []
     phone_contexts = []
     template_name = "new_staff_pick_notification"
-    for each in subscribed:
-        if each.creator.email:
+    for creator in subscribed:
+        if creator.email:
             email_contexts.append(
                 {"title": staff_pick.title,
-                 "user": each.creator.username,
-                 "email": each.creator.email,
+                 "user": creator.username,
+                 "email": creator.email,
                  "staff_pick_id": staff_pick.id
                  }
             )
 
-        if each.creator.phone:
+        if creator.phone:
             phone_contexts.append(
                 {
-                    "phone": each.creator.phone,
+                    "phone": creator.phone,
                     "staff_pick_id": staff_pick.id
                 }
             )

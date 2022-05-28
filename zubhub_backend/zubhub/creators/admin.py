@@ -2,16 +2,18 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.db import transaction
-from .models import PhoneNumber, Setting, CreatorGroup, CreatorTag
+from .models import PhoneNumber, CreatorGroup, CreatorTag
 
-from .utils import (send_group_invite_notification, 
+from .utils import (send_group_invite_notification,
                     custom_set_creatortags_queryset,
                     enforce_creator__creator_tags_constraints)
 
 Creator = get_user_model()
 
+
 def active(obj):
     return obj.is_active
+
 
 def tags(obj):
     if obj:
@@ -41,7 +43,7 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     list_display = ["creator", "phone", "verified", "primary"]
     search_fields = ["phone", "user__username"]
     list_filter = ['verified', "primary"]
-    list_per_page = 50 ## paginate when more than 50 items
+    list_per_page = 50  ## paginate when more than 50 items
     actions = ["download_csv"]
 
     def creator(self, obj):
@@ -59,18 +61,21 @@ class PhoneNumberAdmin(admin.ModelAdmin):
 
         writer.writerow(["creator", "phone number", "verified", "primary"])
         for creator in queryset:
-            writer.writerow([creator.user.username, creator.phone,
-                             creator.verified, creator.primary])
+            writer.writerow([
+                creator.user.username, creator.phone, creator.verified,
+                creator.primary
+            ])
 
         f.seek(0)
         response = HttpResponse(f, content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=phone_numbers.csv'
+        response[
+            'Content-Disposition'] = 'attachment; filename=phone_numbers.csv'
         return response
 
 
 class SettingAdmin(admin.ModelAdmin):
     list_filter = ["subscribe"]
-    list_per_page = 50 ## paginate when more than 50 items
+    list_per_page = 50  ## paginate when more than 50 items
 
 
 def used_by(obj):
@@ -79,11 +84,12 @@ def used_by(obj):
     else:
         return 0
 
+
 class CreatorTagAdmin(admin.ModelAdmin):
     list_display = ["name", used_by]
     search_fields = ["name"]
     exclude = ["id", "search_vector"]
-    list_per_page = 50 ## paginate when more than 50 items
+    list_per_page = 50  ## paginate when more than 50 items
 
 
 class CreatorGroupAdmin(admin.ModelAdmin):
@@ -97,13 +103,12 @@ class CreatorGroupAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         submitted_members = form.cleaned_data.get("members")
         creator = form.cleaned_data.get("creator")
-
         """ Ensure that creator tag is 'group' """
         tag = CreatorTag.objects.filter(name="group").first()
         if not creator.tags.filter(name=tag.name).exists():
             creator.tags.add(tag)
-            creator.tags.set(enforce_creator__creator_tags_constraints(creator, tag))
-
+            creator.tags.set(
+                enforce_creator__creator_tags_constraints(creator, tag))
         """
         Send group invite to new members alone.
 
@@ -115,54 +120,40 @@ class CreatorGroupAdmin(admin.ModelAdmin):
             form.cleaned_data.pop("members")
             send_group_invite_notification(obj, new_members)
 
-        super(CreatorGroupAdmin, self).save_model(
-            request, obj, form, change)
+        super(CreatorGroupAdmin, self).save_model(request, obj, form, change)
 
 
 class CreatorAdmin(UserAdmin):
 
-    fieldsets = (
-        ('Personal Info', {
-            'fields': (
-                ('username',),
-                ('first_name',),
-                ('last_name',),
-                ('password',),
-            )
-        }),
-        ('Personal Detail', {
-            'fields': (
-                ('avatar',),
-                ('phone',),
-                ('email',),
-                ('dateOfBirth',),
-                ('location',),
-                ('bio',),
-                ('tags',),
-                ('followers',),
-                ('followers_count',),
-                ('following_count',),
-                ('projects_count',)
-            )
-        }),
-        ('Important Dates', {
-            'fields': (
-                ('date_joined',)
-            )
-        }),
-        ('Permission', {
-            'fields': (
-                ('is_active',),
-                ('is_staff',),
-                ('is_superuser',),
-            )
-        })
+    fieldsets = (('Personal Info', {
+        'fields': (
+            ('username', ),
+            ('first_name', ),
+            ('last_name', ),
+            ('password', ),
+        )
+    }), ('Personal Detail', {
+        'fields': (('avatar', ), ('phone', ), ('email', ), ('dateOfBirth', ),
+                   ('location', ), ('bio', ), ('tags', ), ('followers', ),
+                   ('followers_count', ), ('following_count', ),
+                   ('projects_count', ), ('subscribe', ), ('setting', ))
+    }), ('Important Dates', {
+        'fields': (('date_joined', ))
+    }), ('Permission', {
+        'fields': (
+            ('is_active', ),
+            ('is_staff', ),
+            ('is_superuser', ),
+        )
+    }))
+
+    list_display = UserAdmin.list_display + (
+        tags,
+        active,
     )
-
-
-    list_display = UserAdmin.list_display + (tags, active,)
-    list_per_page = 50 ## paginate when more than 50 items
-    readonly_fields = UserAdmin.readonly_fields + ('avatar',) + ('followers_count',) + ('following_count',) + ('projects_count',)
+    list_per_page = 50  ## paginate when more than 50 items
+    readonly_fields = UserAdmin.readonly_fields + ('avatar', ) + (
+        'followers_count', ) + ('following_count', ) + ('projects_count', )
     actions = ["activate_creators", "deactivate_creators"]
 
     ## disable the ability to add a new creator from the admin for now.
@@ -173,7 +164,7 @@ class CreatorAdmin(UserAdmin):
         for creator in queryset.all():
             creator.is_active = True
             creator.save()
-    
+
     def deactivate_creators(self, request, queryset):
         for creator in queryset.all():
             creator.is_active = False
@@ -182,39 +173,33 @@ class CreatorAdmin(UserAdmin):
     def save_model(self, request, obj, form, change):
 
         if change:
-
             """ Handle setting creatortags manually so we can enforce some constraints"""
             tags = form.cleaned_data.get("tags")
             custom_set_creatortags_queryset(obj, tags)
             form.cleaned_data.pop("tags")
 
-
-
             tag = CreatorTag.objects.filter(name="staff").first()
 
-            if ((form.cleaned_data.get("is_staff") == True) and 
-            (not obj.tags.filter(name=tag.name).exists())):
+            if ((form.cleaned_data.get("is_staff") == True)
+                    and (not obj.tags.filter(name=tag.name).exists())):
                 """
                 Add 'staff' creatortag  to creator.tags if creator is staff 
                 
                 And remove any conflicting tag like 'creator' or 'group'
                 """
                 obj.tags.add(tag)
-                obj.tags.set(enforce_creator__creator_tags_constraints(obj, tag))
+                obj.tags.set(
+                    enforce_creator__creator_tags_constraints(obj, tag))
 
-            elif ((form.cleaned_data.get("is_staff") == False) and 
-            (obj.tags.filter(name=tag.name).exists())):
+            elif ((form.cleaned_data.get("is_staff") == False)
+                  and (obj.tags.filter(name=tag.name).exists())):
                 """ Remove 'staff' creatortag from creator.tags if creator is not staff """
                 obj.tags.remove(tag)
 
-
-        super(CreatorAdmin, self).save_model(
-            request, obj, form, change)
-
+        super(CreatorAdmin, self).save_model(request, obj, form, change)
 
 
 admin.site.register(Creator, CreatorAdmin)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
-admin.site.register(Setting, SettingAdmin)
 admin.site.register(CreatorGroup, CreatorGroupAdmin)
 admin.site.register(CreatorTag, CreatorTagAdmin)
