@@ -207,10 +207,7 @@ class HelpAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
-        obj = self.get_queryset()[:1]
-        if obj:
-            return obj[0]
-        return None
+        return self.get_queryset().last()
 
 
 class PrivacyAPIView(RetrieveAPIView):
@@ -224,10 +221,7 @@ class PrivacyAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
-        obj = self.get_queryset()[:1]
-        if obj:
-            return obj[0]
-        return None
+        return self.get_queryset().last()
 
 
 class FAQAPIView(ListAPIView):

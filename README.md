@@ -30,6 +30,7 @@ Follow the instructions below to set up your local development environment
 7. Setup Backend. ( [jump to section](#setup-backend) )
 8. Setup Frontend. ( [jump to section](#setup-frontend) )
 
+
 <br/>
 <br/>
 
@@ -153,6 +154,7 @@ To stop:
        $ make stop or make down
 ```
 
+You can run test by running `make test`.
 For other make commands: run **make help**
 
 Visit http://localhost:8000 on your browser to access the API documentation.

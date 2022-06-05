@@ -32,6 +32,7 @@ const EditProfile = React.lazy(() =>
 const UserProjects = React.lazy(() =>
   import('./views/user_projects/UserProjects'),
 );
+const UserDrafts = React.lazy(() => import('./views/user_drafts/UserDrafts'));
 const UserFollowers = React.lazy(() =>
   import('./views/user_followers/UserFollowers'),
 );
@@ -190,6 +191,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={UserProjects}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/creators/:username/drafts"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={UserDrafts}
                 {...routeProps}
                 {...props}
               />

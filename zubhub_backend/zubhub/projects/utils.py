@@ -12,6 +12,7 @@ from django.db.models import prefetch_related_objects
 from django.db.models import F
 from django.conf import settings
 from creators.tasks import send_mass_email, send_mass_text
+from django.db.models import Q
 
 Creator = get_user_model()
 
@@ -307,7 +308,15 @@ def get_published_projects_for_user(user, all):
     visible_to = all.filter(publish__type=PublishingRule.PREVIEW, 
                             publish__visible_to__id=user.id)
 
-    return public.union(authenticated).union(visible_to).order_by("-created_on")
+    if user.is_authenticated:
+        published_by_owner = all.filter(publish__type=PublishingRule.PREVIEW, 
+                            creator=user, publish__publisher_id=user.id)
+        visible_to |= published_by_owner
+
+    all = public
+    all |= authenticated
+    all |= visible_to
+    return all.order_by("-created_on")
 
 
 def detect_mentions(kwargs):
