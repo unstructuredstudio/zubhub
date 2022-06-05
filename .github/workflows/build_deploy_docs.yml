@@ -21,7 +21,6 @@ jobs:
           cd ./zubhub_backend/zubhub/docs/
           make build-docs
           mkdocs gh-deploy --dirty --remote-branch gh-pages
-
 # jobs:
 #   deploy:
 #     runs-on: ubuntu-latest
