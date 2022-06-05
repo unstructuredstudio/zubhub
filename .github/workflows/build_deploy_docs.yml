@@ -22,13 +22,6 @@ jobs:
           make build-docs
           mkdocs gh-deploy --dirty --remote-branch gh-pages
 
-      # jobs:
-      #   deploy:
-      #     runs-on: ubuntu-latest
-      #     steps:
-      #       - name: Checkout master
-      #         uses: actions/checkout@v2
-
 # jobs:
 #   deploy:
 #     runs-on: ubuntu-latest
