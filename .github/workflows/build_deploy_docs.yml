@@ -17,4 +17,4 @@ jobs:
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONFIG_FILE: zubhub_backend/zubhub/docs/mkdocs-build.yml
+          CONFIG_FILE: zubhub_backend/zubhub/docs/mkdocs-serve.yml
