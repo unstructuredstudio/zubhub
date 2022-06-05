@@ -17,8 +17,8 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: "3.x"
-          context: ./zubhub_backend/zubhub/docs/
       - run: |
+          cd ./zubhub_backend/zubhub/docs/
           make build-docs
           mkdocs gh-deploy --dirty --remote-branch gh-pages
 
