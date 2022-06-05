@@ -19,6 +19,7 @@ jobs:
           python-version: "3.x"
       - run: |
           cd ./zubhub_backend/zubhub/docs/
+          pip install mkdocs-material
           make build-docs
           mkdocs gh-deploy --dirty --remote-branch gh-pages
 
