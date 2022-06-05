@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}Someone You Are Following Posted a New Project.{% endblocktrans %}
+{% endautoescape %}

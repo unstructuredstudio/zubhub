@@ -118,7 +118,8 @@
     "alreadyAMember": "Already a Member ?",
     "login": "Login",
     "errors": {
-      "unexpected": "Uh oh! We couldn't log you in. Maybe try again later?"
+      "unexpected": "Uh oh! We couldn't log you in. Maybe try again later?",
+      "invalidFormFields": "Looks like there are a few errors in the registration form. Review it before clicking Signup!"
     },
     "ariaLabels": {
       "togglePasswordVisibility": "Toggle password visibility"
@@ -253,10 +254,10 @@
 
   "project": {
     "publish": {
-      "draft":"Draft",
-      "preview":"Preview",
-      "authenticated_creators":"Authenticated Creators",
-      "public":"Public"
+      "draft": "Draft",
+      "preview": "Preview",
+      "authenticated_creators": "Authenticated Creators",
+      "public": "Public"
     },
     "errors": {
       "videoPlayerError": "An error occured while trying to play this video"
@@ -355,13 +356,19 @@
         }
       },
       "publish": {
-        "label": "What publish option do you want to set for this project?",
-        "topHelperText":"Think about your target audience. Should this project be visible to all creators?, authenticated creators?, or do you want to provide the usernames of creators this project should be visible to?",
+        "label": "Who can see your project after you create it?",
+        "topHelperText": "If you are still working on the project and are unsure if you want to publish this right away, select 'Only me'",
+        "publishTypes": {
+          "authenticatedCreators": "Only me",
+          "draft": "Only a few ZubHub users",
+          "preview": "All registered ZubHub users",
+          "public": "Everyone on the internet"
+        },
         "visibleTo": "Visible To",
         "addUsernames": "Add Usernames",
         "errors": {
-          "visible_to_required":"You must provide the usernames of creators your post should be visible to in preview mode",
-          "visible_to_unsupported":"One of the usernames provided is not a valid username"
+          "visible_to_required": "You must provide the usernames of creators your post should be visible to in preview mode",
+          "visible_to_unsupported": "One of the usernames provided is not a valid username"
         }
       },
       "submit": "Create Project",
@@ -412,6 +419,19 @@
     }
   },
 
+  "userDrafts": {
+    "title": "drafts",
+    "prev": "Prev",
+    "next": "Next",
+    "ariaLabels": {
+      "prevNxtButtons": "previous and next page buttons"
+    },
+    "errors": {
+      "noUserDrafts": "You don't have any drafts yet! Maybe create some drafts?",
+      "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?"
+    }
+  },
+
   "projectDetails": {
     "project": {
       "creator": {
@@ -434,10 +454,10 @@
         }
       },
       "publish": {
-        "draft":"Draft",
-        "preview":"Preview",
-        "authenticated_creators":"Authenticated Creators",
-        "public":"Public"
+        "draft": "Draft",
+        "preview": "Preview",
+        "authenticated_creators": "Authenticated Creators",
+        "public": "Public"
       }
     },
     "comment": {
@@ -466,6 +486,11 @@
       "deleteComment": "delete comment dialog"
     },
     "deleteProjectToastSuccess": "Your project was deleted successfully!",
+    "socialShare": {
+      "fbwa": "Check out this project on ZubHub! ",
+      "copySuccess": "Link successfully copied to clipboard!",
+      "copyFail": "Hmmm... something went wrong trying to copy that link :("
+    },
     "errors": {
       "unexpected": "Hmmm..seems like we could not delete the project :( Maybe try again later?",
       "noBrowserSupport": "Your browser does not support the video tag"

@@ -24,6 +24,8 @@ export const getUserProfile = args => {
             ProjectActions.getUserProjects({
               username: res.username,
               limit: 4,
+              token: args.token,
+              t: args.t
             }),
           );
         }
