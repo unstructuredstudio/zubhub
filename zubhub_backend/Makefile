@@ -126,7 +126,7 @@ messages:  ## Create/update translatable messages
 
 erd: ## Draw Entity Relationship Diagram Of the Data Model In PNG format
 	docker-compose -f docker-compose.yml exec web bash -c " \
-	python zubhub/manage.py graph_models --rankdir LR -a -g -o zubhub/docs/erd.png \
+	python zubhub/manage.py graph_models --rankdir LR -a -g -o zubhub/docs/docs/erd.png \
 	"
 .PHONY: erd
 
