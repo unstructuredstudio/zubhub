@@ -6,15 +6,30 @@ on:
     paths:
       - "zubhub_backend/zubhub/docs/**"
   workflow_dispatch:
+
+# mkdocs gh-deploy --config-file ../my-project/mkdocs.yml --remote-branch master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+          context: ./zubhub_backend/zubhub/docs/
+      - run: |
+          make build-docs
+          mkdocs gh-deploy --dirty --remote-branch gh-pages
 
-      - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONFIG_FILE: zubhub_backend/zubhub/docs/mkdocs-serve.yml
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout master
+#         uses: actions/checkout@v2
+#       - name: Deploy docs
+#         uses: mhausenblas/mkdocs-deploy-gh-pages@master
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           CONFIG_FILE: zubhub_backend/zubhub/docs/mkdocs-serve.yml
