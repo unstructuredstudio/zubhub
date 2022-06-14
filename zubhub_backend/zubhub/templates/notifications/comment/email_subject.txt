@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans %}New Comment on Your Project{% endblocktrans %}
+{% endautoescape %}

@@ -89,7 +89,7 @@ def images_to_base64(paths, html):
 
     try:
         for image in paths: # path contains image file names e.g. one.jpg, two.png 
-            image_path = path.join(settings.BASE_DIR, 'docs', image) # get image full path
+            image_path = path.join(settings.BASE_DIR, 'docs', 'docs', image) # get image full path
             with open(image_path, "rb") as file:
                 base64_data = b64encode(file.read())
                 html = html.replace("./" + image, "data:image/png;base64," + base64_data.decode()) #replace image path with base64 string

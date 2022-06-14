@@ -207,10 +207,7 @@ class HelpAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
-        obj = self.get_queryset()[:1]
-        if obj:
-            return obj[0]
-        return None
+        return self.get_queryset().last()
 
 
 class PrivacyAPIView(RetrieveAPIView):
@@ -224,10 +221,7 @@ class PrivacyAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
-        obj = self.get_queryset()[:1]
-        if obj:
-            return obj[0]
-        return None
+        return self.get_queryset().last()
 
 
 class FAQAPIView(ListAPIView):
@@ -263,10 +257,10 @@ def MarkdownToHtmlAPIView(request):
     from .utils import images_to_base64, get_image_paths
 
     paths = {
-        "overview": path.join(settings.BASE_DIR, 'docs', 'overview.md'),
-        "web_container": path.join(settings.BASE_DIR, 'docs', 'web_container.md'),
-        "media_container": path.join(settings.BASE_DIR, 'docs', 'media_container.md'),
-        "others": path.join(settings.BASE_DIR, 'docs', 'others.md')
+        "overview": path.join(settings.BASE_DIR, 'docs', 'docs', 'overview.md'),
+        "web_container": path.join(settings.BASE_DIR, 'docs', 'docs', 'web_container.md'),
+        "media_container": path.join(settings.BASE_DIR, 'docs', 'docs', 'media_container.md'),
+        "others": path.join(settings.BASE_DIR, 'docs', 'docs', 'others.md')
     }
 
     html_files = {

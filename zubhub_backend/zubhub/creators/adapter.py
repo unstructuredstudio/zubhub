@@ -63,6 +63,9 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         creatorgroup.members.add(creator)
         creatorgroup.save()
 
+    def get_whatsapp_from_phone(self):
+        return settings.DEFAULT_WHATSAPP_FROM_PHONE
+
     def get_from_phone(self):
         """
         This is a hook that can be overridden to programatically
@@ -70,13 +73,13 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         """
         return settings.DEFAULT_FROM_PHONE
 
-    def render_text(self, template_name, phone, context):
+    def render_text(self, template_name, phone, context, from_phone=None):
         """
         Renders a text to `text`.  `template_prefix` identifies the
         text that is to be sent, e.g. "account/phone/phone_confirmation"
         """
-
-        from_phone = self.get_from_phone()
+        if from_phone is None:
+            from_phone = self.get_from_phone()
 
         try:
             body = render_to_string(
@@ -96,6 +99,14 @@ class CustomAccountAdapter(DefaultAccountAdapter):
                             settings.TWILIO_AUTH_TOKEN)
             text = self.render_text(template_name, phone, context)
             client.messages.create(**text)
+
+    def send_whatsapp(self, template_name, phone, context):
+        whatsapp_phone = "whatsapp:" + phone
+        client = Client(settings.TWILIO_ACCOUNT_SID,
+                        settings.TWILIO_AUTH_TOKEN)
+        text = self.render_text(template_name, whatsapp_phone, context,
+                                from_phone=self.get_whatsapp_from_phone())
+        client.messages.create(**text)
 
     def send_confirmation_text(self, request, phoneconfirmation, signup):
 
@@ -140,31 +151,32 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             self.send_mail(
                 email_template, group_invite_confirmation.creator.email, ctx)
 
-    def send_mass_email(self, template_prefix, contexts):
-        if settings.ENVIRONMENT == "production" and not settings.DEBUG:
+    def send_mass_email(self, template_prefix, contexts, full_template=False):
+        if not full_template:
             template_prefix = "projects/email/" + template_prefix
-            connection = get_connection(
-                username=None, password=None, fail_silently=False)
-            messages = []
-            for ctx in contexts:
-                msg = self.render_mail(template_prefix, ctx["email"], ctx)
-                messages.append(msg)
+        connection = get_connection(
+            username=None, password=None, fail_silently=False)
+        messages = []
+        for ctx in contexts:
+            msg = self.render_mail(template_prefix, ctx["email"], ctx)
+            messages.append(msg)
 
-            return connection.send_messages(messages)
+        return connection.send_messages(messages)
 
-    def send_mass_text(self, template_prefix, contexts):
-        if settings.ENVIRONMENT == "production" and not settings.DEBUG:
+    def send_mass_text(self, template_prefix, contexts, full_template=False):
+        template_name = template_prefix
+        if not full_template:
             template_name = "projects/phone/" + template_prefix + "_message.txt"
-            client = Client(settings.TWILIO_ACCOUNT_SID,
-                            settings.TWILIO_AUTH_TOKEN)
+        client = Client(settings.TWILIO_ACCOUNT_SID,
+                        settings.TWILIO_AUTH_TOKEN)
 
-            rendered_text = self.render_text(
-                template_name, contexts[0]["phone"], contexts[0])
+        rendered_text = self.render_text(
+            template_name, contexts[0]["phone"], contexts[0])
 
-            bindings = list(map(lambda context: json.dumps(
-                {'binding_type': 'sms', 'address': context["phone"]}), contexts))
+        bindings = list(map(lambda context: json.dumps(
+            {'binding_type': 'sms', 'address': context["phone"]}), contexts))
 
-            client.notify.services(settings.TWILIO_NOTIFY_SERVICE_SID).notifications.create(
-                to_binding=bindings,
-                body=rendered_text["body"]
-            )
+        client.notify.services(settings.TWILIO_NOTIFY_SERVICE_SID).notifications.create(
+            to_binding=bindings,
+            body=rendered_text["body"]
+        )

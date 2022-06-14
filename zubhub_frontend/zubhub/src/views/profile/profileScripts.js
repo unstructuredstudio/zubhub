@@ -1,4 +1,5 @@
 import { BASE_TAGS } from '../../assets/js/utils/constants';
+import { getUserDrafts } from '../../store/actions/projectActions';
 
 /**
  * @function getUserProfile
@@ -46,7 +47,7 @@ export const copyProfileUrl = (profile, props, toast) => {
  *
  * @todo - describe function's signature
  */
-export const updateProjects = (res, { results: projects }, props, toast) => {
+export const updateProjects = (res, projects, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
@@ -54,6 +55,37 @@ export const updateProjects = (res, { results: projects }, props, toast) => {
           project.id === res.project.id ? res.project : project,
         );
         return { results: projects };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(props.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
+};
+
+/**
+ * @function updateProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const updateDrafts = (res, projects, props, toast) => {
+  return res
+    .then(res => {
+      if (res.project && res.project.title) {
+        projects = projects.map(project =>
+          project.id === res.project.id ? res.project : project,
+        );
+        return { drafts: projects };
       } else {
         res = Object.keys(res)
           .map(key => res[key])

@@ -1,0 +1,22 @@
+name: Build And Deploy Docs
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "zubhub_backend/zubhub/docs/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+      - run: |
+          cd ./zubhub_backend/zubhub/docs/
+          pip install mkdocs-material
+          make build-docs
+          mkdocs gh-deploy --dirty --config-file ./mkdocs-build.yml --remote-branch gh-pages --force

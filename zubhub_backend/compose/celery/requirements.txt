@@ -84,3 +84,4 @@ vine>=1.3.0
 watchdog>=0.10.2
 wcwidth>=0.2.5
 whitenoise>=4.1.4
+django-extensions>=1.0.0

@@ -8,7 +8,7 @@ export const ProjectSearchCriteria = {
   CATEGORY: 0,
   TAG: 1,
   TITLE_DESCRIPTION: 2,
-}
+};
 
 /**
  * @function getQueryParams

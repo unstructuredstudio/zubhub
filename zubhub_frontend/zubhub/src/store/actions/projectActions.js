@@ -361,6 +361,39 @@ export const getUserProjects = args => {
 };
 
 /**
+ * @function getUserProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getUserDrafts = args => {
+  return API.getUserDrafts(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        return {
+          drafts: res.results,
+          prev_page: res.previous,
+          next_page: res.next,
+          loading: false,
+        };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
+};
+
+/**
  * @function getSaved
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
