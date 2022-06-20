@@ -7,6 +7,12 @@ const styles = theme => ({
       backgroundColor: '#03848C',
     },
   },
+  primaryButtonStyle2:{
+    backgroundColor: '#FFD73D',
+    '&:hover': {
+      backgroundColor: '#EFBF06',
+    }, 
+  },
   secondaryButtonStyle: {
     borderRadius: 30,
     backgroundColor: 'white',

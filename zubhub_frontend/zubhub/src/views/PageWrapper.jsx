@@ -82,6 +82,7 @@ const useCommonStyles = makeStyles(commonStyles);
  * @todo - describe function's signature
  */
 function PageWrapper(props) {
+  
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -458,6 +459,24 @@ function PageWrapper(props) {
                 </>
               ) : (
                 <>
+                   <Link
+                    className={clsx(
+                      classes.textDecorationNone,
+                      common_classes.marginRight1em,
+                      common_classes.removeOnSmallScreen,
+                    )}
+                    to="/activities"
+                  >
+                    <CustomButton
+                      variant="contained"
+                      primaryButtonStyle
+                      primaryButtonStyle2
+                      customButtonStyle
+                      size="small"
+                    >
+                      {t('BROWSE ACTIVITIES')}
+                    </CustomButton>
+                  </Link>
                   <Link
                     className={clsx(
                       classes.textDecorationNone,
