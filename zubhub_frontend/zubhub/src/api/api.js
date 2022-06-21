@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-
+let jsonActivities = require('./genericActivities.json');
 /**
  * API class containing all the calls to the backend api endpoints
  */
@@ -851,6 +851,9 @@ class API {
     const body = JSON.stringify({ ...args });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
+  getActivities = () => {
+    return jsonActivities
+  }
 }
 
 export default API;

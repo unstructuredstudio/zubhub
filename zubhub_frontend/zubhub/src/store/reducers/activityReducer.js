@@ -13,6 +13,6 @@ const default_state = {
         return state;
     }
   };
-  
+
   export default activities;
   

@@ -1,35 +1,67 @@
-[
+[{
+  "id": 1,
+  "title": "Waving Loom",
+  "viewCount": 12,
+  "savedCount": 2,
+  "demoImage": "url",
+  "category": {
+    "id": 1
+  },
+  "tags": [
     {
       "id": 1,
-      "title": "Waving Loom",
-      "viewCount": 12,
-      "savedCount": 2,
-      "demoImage": "url",
-      "category": {
-        "id": 1
-      },
-      "tags": [
-        {
-          "id": 1,
-          "name": "textile"
-        },
-        {
-          "id": 2,
-          "name": "craft"
-        },
-        {
-          "id": 3,
-          "name": "weaving"
-        }
-      ],
-      "savedBy": [
-        1,
-        2
-      ],
-      "creator": {
-        "id": 3,
-        "name": "nikita",
-        "image": ""
-      }
+      "name": "textile"
+    },
+    {
+      "id": 2,
+      "name": "craft"
+    },
+    {
+      "id": 3,
+      "name": "weaving"
     }
-  ]
+  ],
+  "savedBy": [
+    1,
+    2
+  ],
+  "creator": {
+    "id": 3,
+    "name": "nikita",
+    "image": ""
+  }
+},
+{
+  "id": 2,
+  "title": "Waving Loom2",
+  "viewCount": 12,
+  "savedCount": 2,
+  "demoImage": "url",
+  "category": {
+    "id": 1
+  },
+  "tags": [
+    {
+      "id": 1,
+      "name": "textile"
+    },
+    {
+      "id": 2,
+      "name": "craft"
+    },
+    {
+      "id": 3,
+      "name": "weaving"
+    }
+  ],
+  "savedBy": [
+    1,
+    2
+  ],
+  "creator": {
+    "id": 3,
+    "name": "nikita",
+    "image": ""
+  }
+}
+]
