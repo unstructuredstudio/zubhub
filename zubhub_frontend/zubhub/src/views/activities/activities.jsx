@@ -5,6 +5,7 @@ import {getActivities} from '../../store/actions/activityActions'
 
 function Activities(props) {
    const activities = props.activities.all_activities
+   
    useEffect(() => {
      props.getActivities()
    }, [])
