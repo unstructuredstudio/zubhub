@@ -11,10 +11,21 @@ const styles = theme => ({
   },
   imagePreview:{
     width: '100%',
+    position: 'absolute',
     height: '100%',
+    top: 0,
+    borderRadius: '15px 0px 15px 15px',
   },
   imagePreviewContainer:{
-    height: '130px',
+    position: 'relative',
+    paddingTop: '100%',
+    borderRadius: '15px 0px 15px 15px',
+  },
+  closeIcon:{
+    position: 'absolute',
+    top: -5,
+    right: -10,
+    color: 'red',
   },
   containerStyle: {
     maxWidth: '600px',

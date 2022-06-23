@@ -73,6 +73,11 @@ export const vars = {
   },
 };
 
+export const removeUploadedImage = (image, media_upload) =>{
+  let new_media_upload = {...media_upload, images_to_upload: media_upload.images_to_upload.filter(img => img !== image)}
+  return {media_upload: new_media_upload}
+};
+
 /**
  * @function getCategories
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
