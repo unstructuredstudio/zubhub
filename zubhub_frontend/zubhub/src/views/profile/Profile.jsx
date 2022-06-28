@@ -137,16 +137,30 @@ function Profile(props) {
         <Box className={classes.root}>
           <Paper className={classes.profileHeaderStyle}>
             <Container maxWidth="md">
-              {props.auth.username === profile.username ? (
+            {props.auth.username === profile.username ? (
                 <>
-                  <CustomButton
-                    className={classes.floatRight}
+            <CustomButton
+                    className={classes.verticalOption}
                     onClick={e => handleSetState(handleMoreMenuOpen(e))}
                   >
-                    <MoreVertIcon />
+                  <MoreVertIcon />
                   </CustomButton>
+                </>
+             ) : (<></>)
+            }
+              <Box className={classes.classFlex}>
+              <Box className={classes.avatarBoxStyle}>
+                <Avatar
+                  className={classes.avatarStyle}
+                  src={profile.avatar}
+                  alt={profile.username}
+                />
+                 
+                 <Box>
+                 {props.auth.username === profile.username ? (
+                <>
                   <CustomButton
-                    className={classes.floatRight}
+                    className={classes.secondaryButtonMargin}
                     variant="contained"
                     margin="normal"
                     primaryButtonStyle
@@ -187,7 +201,7 @@ function Profile(props) {
                 </>
               ) : (
                 <CustomButton
-                  className={classes.floatRight}
+                  className={classes.secondaryButtonMargin}
                   variant="outlined"
                   margin="normal"
                   secondaryButtonStyle
@@ -200,14 +214,15 @@ function Profile(props) {
                     : t('profile.follow')}
                 </CustomButton>
               )}
-              <Box className={classes.avatarBoxStyle}>
-                <Avatar
-                  className={classes.avatarStyle}
-                  src={profile.avatar}
-                  alt={profile.username}
-                />
+
+                 </Box>
+
               </Box>
-              <Box className={classes.ProfileDetailStyle}>
+              <Box className={clsx(classes.ProfileDetailStyle,{
+               [classes.centerTag]: props.auth.username !== profile.username,
+              }
+                )}>
+
                 <Typography
                   className={classes.userNameStyle}
                   component="h1"
@@ -221,7 +236,7 @@ function Profile(props) {
                       key={tag}
                       className={clsx(common_classes.baseTagStyle, {
                         [common_classes.extendedTagStyle]: !isBaseTag(tag),
-                      })}
+                      }, classes.removeTagMargin)}
                       component="h2"
                     >
                       {tag}
@@ -238,8 +253,8 @@ function Profile(props) {
                     </Typography>
                   </>
                 ) : null}
-                <Divider className={classes.dividerStyle} />
-                <Box className={classes.moreInfoBoxStyle}>
+              </Box>
+              <Box className={classes.moreInfoBoxStyle}>
                   <Link
                     className={classes.textDecorationNone}
                     to={`/creators/${profile.username}/projects`}
@@ -248,7 +263,12 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.projects_count} {t('profile.projectsCount')}
+                      <box className={classes.moreInfoStyle1}>
+                       {t('profile.projectsCount')} 
+                      </box>
+                      <box className={classes.moreInfoStyle2}>
+                       {profile.projects_count} 
+                      </box>
                     </Typography>
                   </Link>
                   <Link
@@ -259,7 +279,12 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.followers.length} {t('profile.followersCount')}
+                      <box className={classes.moreInfoStyle1}>
+                       {t('profile.followersCount')} 
+                      </box>
+                      <box className={classes.moreInfoStyle2}>
+                       {profile.followers.length}
+                      </box>
                     </Typography>
                   </Link>
                   <Link
@@ -270,7 +295,12 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.following_count} {t('profile.followingCount')}
+                      <box className={classes.moreInfoStyle1}>
+                       {t('profile.followingCount')} 
+                      </box>
+                      <box className={classes.moreInfoStyle2}>
+                       {profile.following_count} 
+                      </box>
                     </Typography>
                   </Link>
                   {profile.members_count !== null ? (
@@ -282,11 +312,16 @@ function Profile(props) {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.members_count} {t('profile.membersCount')}
+                        <box className={classes.moreInfoStyle1}>
+                         {t('profile.membersCount')} 
+                        </box>
+                        <box className={classes.moreInfoStyle2}>
+                         {profile.members_count}
+                        </box>
                       </Typography>
                     </Link>
                   ) : null}
-                </Box>
+              </Box> 
               </Box>
             </Container>
           </Paper>
@@ -341,7 +376,7 @@ function Profile(props) {
                         )
                       }
                     >
-                      {t('profile.projects.viewAll')}
+                     {t('profile.projects.viewAll')}
                     </CustomButton>
                   </Typography>
                   <Grid container>
