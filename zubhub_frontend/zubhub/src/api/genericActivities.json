@@ -3,7 +3,8 @@
   "title": "Waving Loom",
   "viewCount": 12,
   "savedCount": 2,
-  "demoImage": "url",
+  "demoImage": "https://zubhub.sfo2.digitaloceanspaces.com/hero_images/90a8d234-e0c3-4aeb-8a4d-c9b1c3540f24",
+  "video": "https://www.youtube.com/embed/W8V3XUi8mRA",
   "category": {
     "id": 1
   },
@@ -36,7 +37,76 @@
   "title": "Waving Loom2",
   "viewCount": 12,
   "savedCount": 2,
-  "demoImage": "url",
+  "video": "https://www.youtube.com/embed/r08UMfLT8pA",
+  "demoImage": "https://zubhub.sfo2.digitaloceanspaces.com/hero_images/90a8d234-e0c3-4aeb-8a4d-c9b1c3540f24",
+  "category": {
+    "id": 1
+  },
+  "tags": [
+    {
+      "id": 1,
+      "name": "textile"
+    },
+    {
+      "id": 2,
+      "name": "craft"
+    },
+    {
+      "id": 3,
+      "name": "weaving"
+    }
+  ],
+  "savedBy": [
+    1,
+    2
+  ],
+  "creator": {
+    "id": 3,
+    "name": "nikita",
+    "image": ""
+  }
+},
+{
+  "id": 3,
+  "title": "Waving Loom",
+  "viewCount": 12,
+  "savedCount": 2,
+  "demoImage": "https://zubhub.sfo2.digitaloceanspaces.com/hero_images/90a8d234-e0c3-4aeb-8a4d-c9b1c3540f24",
+  "video": "https://www.youtube.com/embed/i88mag2VQSQ",
+  "category": {
+    "id": 1
+  },
+  "tags": [
+    {
+      "id": 1,
+      "name": "textile"
+    },
+    {
+      "id": 2,
+      "name": "craft"
+    },
+    {
+      "id": 3,
+      "name": "weaving"
+    }
+  ],
+  "savedBy": [
+    1,
+    2
+  ],
+  "creator": {
+    "id": 3,
+    "name": "nikita",
+    "image": ""
+  }
+},
+{
+  "id": 4,
+  "title": "Waving Loom",
+  "viewCount": 12,
+  "savedCount": 2,
+  "demoImage": "https://zubhub.sfo2.digitaloceanspaces.com/hero_images/90a8d234-e0c3-4aeb-8a4d-c9b1c3540f24",
+  "video": "https://www.youtube.com/embed/3lvwaiKbjKY",
   "category": {
     "id": 1
   },
