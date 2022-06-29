@@ -1,34 +1,33 @@
 const styles = theme => ({
   sliderVideo :{
-    width: '60%',
+    width: '100%',
     opacity: '0.5',
     borderRadius: '15px',
     border: '3px solid #FFCE0C',
     float: 'none',
     position:'relative',
   },
-  sliderBoxStyle:{
-    width: '90%',
+  sliderBox:{
+    width: '80%',
     margin: 'auto',
-    height: '40vh'
   },
   activeSlideContainer:{
     width: '100%',
-    height: '30vh',
     position: 'relative',
-    paddingTop: '100%'
+    height: '30vh',
+    paddingTop: '75%'
   },
   activeCarouselVideo:{
     position: 'absolute',
     top: '0',
-    left: '0',
     width: '100%',
+    height: '70%!important',
     borderRadius: '15px',
     border: '7px solid #FFCE0C',
   },
-  bannerContainerStyle:{
+  bannerContainer:{
     width: '100%',
-    height: '40vh',
+    height: '35vh',
     backgroundColor: '#DC3545',
   },
   slideContainer:{
@@ -52,7 +51,7 @@ export const sliderSettings = (images_num, func) => ({
 //   centerPadding: '60px',
   dots: false,
   autoplay: false,
-  speed: 1000,
+  //speed: 1000,
   slidesToShow: 3 > images_num ? images_num : 3,
   slidesToScroll: 1,
   focusOnSelect: true,
@@ -72,14 +71,6 @@ export const sliderSettings = (images_num, func) => ({
     {
       breakpoint: 770,
       settings: {
-        slidesToShow: 2 > images_num ? images_num : 2,
-        slidesToScroll: 1,
-        infinite: true,
-      },
-    },
-    {
-      breakpoint: 550,
-      settings: {
         slidesToShow: 1 > images_num ? images_num : 1,
         slidesToScroll: 1,
         infinite: true,
@@ -96,9 +87,8 @@ export function NextArrow(props) {
       style={{
         ...style,
         display: 'flex',
-        height: '25vh',
-        width: '30px',
-        // right: '9%',
+        height: '150px',
+        width: '25px',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '0 15px 15px 0',
@@ -124,9 +114,8 @@ export function PrevArrow(props) {
       style={{
         ...style,
         display: 'flex',
-        height: '25vh',
-        width: '30px',
-        // left: '8%',
+        height: '150px',
+        width: '25px',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '15px 0 0 15px',

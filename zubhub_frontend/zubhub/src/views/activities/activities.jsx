@@ -11,30 +11,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import styled from "styled-components"
 import {
   Box,
-  CardMedia, 
 } from '@material-ui/core';
 import { useState } from 'react';
 const useStyles = makeStyles(styles);
 
-function Activities(props) {
-   const classes = useStyles();
-   const activities = props.activities.all_activities
-   const [activeCarouselIndex,setActiveCarouselIndex] = useState(0)
-   useEffect(() => {
-     props.getActivities()
-   }, [])
-  const activeSlide = (currentSlide) =>{
-    setActiveCarouselIndex(currentSlide)
-  } 
-
-
-  const StyledSlider = styled(Slider)
+ const StyledSlider = styled(Slider)
    `
   .slick-next {
-    top: 30%;
+    top: 16vh!important;
   } 
   .slick-prev {
-    top: 30%;
+    top: 16vh!important;
   }
   .slick-list {
     padding: 0 !important;
@@ -48,10 +35,21 @@ function Activities(props) {
   }
  `;
 
-  return (<div>
-          <div className={classes.bannerContainerStyle}>
+function Activities(props) {
+   const classes = useStyles();
+   const activities = props.activities.all_activities
+   const [activeCarouselIndex,setActiveCarouselIndex] = useState(0)
+   useEffect(() => {
+     props.getActivities()
+   }, [])
+  const activeSlide = (currentSlide) =>{
+    setActiveCarouselIndex(currentSlide)
+  } 
 
-            <Box className={classes.sliderBoxStyle}>
+  return (<div>
+          <div className={classes.bannerContainer}>
+
+            <Box className={classes.sliderBox}>
              <StyledSlider {...sliderSettings(3,activeSlide)} >
                {activities? 
                activities.map((activity,index) => (
@@ -61,17 +59,17 @@ function Activities(props) {
                           id={activity.id}
                           className={classes.activeCarouselVideo}
                           
-                          src={activity.video+`?autoplay=1&muted=1`}
+                          src={activity.video+`?autoplay=1&mute=1`}
                           allow='autoplay; encrypted-media'
                         /> 
                         </div>: 
                     <div className={classes.slideContainer}>    
-                    <img
+                    <iframe
                           id={activity.id}
                           className={classes.sliderVideo}
-                          
-                          src={activity.demoImage}
-                        /> </div>      
+                          src={activity.video}
+                        />
+                    </div>      
                ))
               :'No activities created yet!!'}
              </StyledSlider></Box> 
