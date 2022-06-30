@@ -1,4 +1,12 @@
 const styles = theme => ({
+  activityListContainer:{
+    paddingTop: '4em',
+    width: '90%',
+    margin: 'auto'
+  },
+  activityBoxContainer:{
+    padding: '10px'
+  },
   sliderVideo :{
     width: '100%',
     opacity: '0.5',
@@ -21,7 +29,7 @@ const styles = theme => ({
     position: 'absolute',
     top: '0',
     width: '100%',
-    height: '70%!important',
+   // height: '70%!important',
     borderRadius: '15px',
     border: '7px solid #FFCE0C',
   },

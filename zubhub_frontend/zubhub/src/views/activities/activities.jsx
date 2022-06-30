@@ -4,14 +4,13 @@ import {getActivities} from '../../store/actions/activityActions'
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Activity from '../../components/activity/activity'
 import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/activities/activitiesStyles';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from "styled-components"
-import {
-  Box,
-} from '@material-ui/core';
+import { Grid, Box } from '@material-ui/core';
 import { useState } from 'react';
 const useStyles = makeStyles(styles);
 
@@ -46,9 +45,9 @@ function Activities(props) {
     setActiveCarouselIndex(currentSlide)
   } 
 
-  return (<div>
+  return (
+        <div>
           <div className={classes.bannerContainer}>
-
             <Box className={classes.sliderBox}>
              <StyledSlider {...sliderSettings(3,activeSlide)} >
                {activities? 
@@ -58,7 +57,6 @@ function Activities(props) {
                     <iframe
                           id={activity.id}
                           className={classes.activeCarouselVideo}
-                          
                           src={activity.video+`?autoplay=1&mute=1`}
                           allow='autoplay; encrypted-media'
                         /> 
@@ -72,16 +70,31 @@ function Activities(props) {
                     </div>      
                ))
               :'No activities created yet!!'}
-             </StyledSlider></Box> 
-             
+             </StyledSlider>
+             </Box> 
             </div>
-           
-             {activities? 
-               activities.map(activity => (
-                <h2>{activity.title}</h2>
-               ))
-              :'No activities created yet!!'}
-           </div>
+
+              <Grid container
+              className={classes.activityListContainer}
+              >
+              {activities.map(activity => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={6}
+                  align="center"
+                  className= {classes.activityBoxContainer}
+                >
+                  <Activity
+                    title={activity.title}
+                    key={activity.id}
+                    demoImage={activity.demoImage}
+                  />
+                </Grid>
+              ))}
+             </Grid>
+        </div>
   )
 }
 
