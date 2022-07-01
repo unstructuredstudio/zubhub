@@ -1,11 +1,12 @@
 export const style = {
-  activityCard:{
-    maxWidth: '60%',
-    borderRadius: '15px',
+  activityCardContainer:{
+    position: 'relative',
+    width: '300px'
   },
-  cardMedia: {
-    width: '100%',
-    padding: '0'
+  activityCard:{
+    maxWidth: '100%',
+    borderRadius: '15px',
+    position: 'relative!important'
   },
   activityCardImage: {
     width: '100%',
@@ -36,6 +37,18 @@ export const style = {
       backgroundSize: '100%',
       color: '#747070',
     },
+  },
+  activityCreatorImage: {
+    width: '50px',
+    height: '50px',
+    borderRadius: '50%',
+    boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
+  },
+  activityCreatorImageBox:{
+    position: 'absolute',
+    left: '-1em',
+    top: '-1em',
+    zIndex: '1', 
   },
   activityCardContent: {
      padding: '10px!important',

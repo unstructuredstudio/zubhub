@@ -29,8 +29,8 @@
   ],
   "creator": {
     "id": 3,
-    "name": "nikita",
-    "image": "https://kriti.unstructured.studio/weaving-loom/"
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
   }
 },
 {
@@ -64,7 +64,7 @@
   ],
   "creator": {
     "id": 3,
-    "name": "nikita",
+    "username": "nikita",
     "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
   }
 },
@@ -99,7 +99,7 @@
   ],
   "creator": {
     "id": 3,
-    "name": "nikita",
+    "username": "nikita",
     "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
   }
 },
@@ -134,7 +134,7 @@
   ],
   "creator": {
     "id": 3,
-    "name": "srishti",
+    "username": "srishti",
     "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
   }
 },
@@ -169,7 +169,7 @@
   ],
   "creator": {
     "id": 3,
-    "name": "srishti",
+    "username": "srishti",
     "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
   }
 }

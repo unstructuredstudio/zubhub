@@ -87,12 +87,7 @@ function Activities(props) {
                   className= {classes.activityBoxContainer}
                 >
                   <Activity
-                    title={activity.title}
-                    key={activity.id}
-                    demoImage={activity.demoImage}
-                    projectsCount={activity.projectsCount}
-                    creatorImage={activity.creator.image}
-                    tags= {activity.tags}
+                    activity={activity}
                   />
                 </Grid>
               ))}

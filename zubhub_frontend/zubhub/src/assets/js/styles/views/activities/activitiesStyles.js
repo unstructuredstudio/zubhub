@@ -5,7 +5,8 @@ const styles = theme => ({
     margin: 'auto'
   },
   activityBoxContainer:{
-    padding: '5vh 10px'
+    padding: '5vh 10px',
+    position: 'relative'
   },
   sliderVideo :{
     width: '100%',
