@@ -90,6 +90,9 @@ function Activities(props) {
                     title={activity.title}
                     key={activity.id}
                     demoImage={activity.demoImage}
+                    projectsCount={activity.projectsCount}
+                    creatorImage={activity.creator.image}
+                    tags= {activity.tags}
                   />
                 </Grid>
               ))}

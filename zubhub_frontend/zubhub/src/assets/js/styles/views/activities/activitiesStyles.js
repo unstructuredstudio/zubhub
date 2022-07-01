@@ -1,11 +1,11 @@
 const styles = theme => ({
   activityListContainer:{
-    paddingTop: '4em',
+    padding: '4em 0',
     width: '90%',
     margin: 'auto'
   },
   activityBoxContainer:{
-    padding: '10px'
+    padding: '5vh 10px'
   },
   sliderVideo :{
     width: '100%',
