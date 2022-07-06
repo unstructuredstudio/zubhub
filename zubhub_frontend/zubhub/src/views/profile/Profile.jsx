@@ -58,6 +58,7 @@ import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid';
+import { returnAllTagsTitle } from './DisplayBadges';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -82,6 +83,7 @@ function Profile(props) {
     dialog_error: null,
     more_anchor_el: null,
     drafts: [],
+    badge_tags: [],
   });
 
   React.useEffect(() => {
@@ -100,11 +102,11 @@ function Profile(props) {
     Promise.all(promises).then(values => {
       const obj = values[0];
       const drafts = values[1] || {};
-
+      const badges=returnAllTagsTitle(obj.results)
       if (obj.profile) {
         parseComments(obj.profile.comments);
       }
-      handleSetState({ ...obj, ...drafts });
+      handleSetState({ ...obj, ...drafts, badge_tags:badges });
     });
   }, []);
 
@@ -124,6 +126,7 @@ function Profile(props) {
     dialog_error,
     more_anchor_el,
     drafts,
+    badge_tags,
   } = state;
 
   const more_menu_open = Boolean(more_anchor_el);
@@ -248,7 +251,12 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.projects_count} {t('profile.projectsCount')}
+                      <box className={classes.moreInfoTitle}>
+                       {t('profile.projectsCount')} 
+                      </box>
+                      <box className={classes.moreInfoCount}>
+                       {profile.projects_count} 
+                      </box>
                     </Typography>
                   </Link>
                   <Link
@@ -259,7 +267,12 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.followers.length} {t('profile.followersCount')}
+                      <box className={classes.moreInfoTitle}>
+                       {t('profile.followersCount')} 
+                      </box>
+                      <box className={classes.moreInfoCount}>
+                       {profile.followers.length}
+                      </box>
                     </Typography>
                   </Link>
                   <Link
@@ -270,7 +283,12 @@ function Profile(props) {
                       className={classes.moreInfoStyle}
                       component="h5"
                     >
-                      {profile.following_count} {t('profile.followingCount')}
+                      <box className={classes.moreInfoTitle}>
+                       {t('profile.followingCount')} 
+                      </box>
+                      <box className={classes.moreInfoCount}>
+                       {profile.following_count} 
+                      </box>
                     </Typography>
                   </Link>
                   {profile.members_count !== null ? (
@@ -282,7 +300,12 @@ function Profile(props) {
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.members_count} {t('profile.membersCount')}
+                        <box className={classes.moreInfoTitle}>
+                         {t('profile.membersCount')} 
+                        </box>
+                        <box className={classes.moreInfoCount}>
+                         {profile.members_count}
+                        </box>
                       </Typography>
                     </Link>
                   ) : null}
@@ -310,6 +333,34 @@ function Profile(props) {
                 ? t('profile.about.placeholder1')
                 : t('profile.about.placeholder2')}
             </Paper>
+
+            <Paper className={classes.badgeBox}>
+              <Typography
+                gutterBottom
+                component="h2"
+                variant="h6"
+                color="textPrimary"
+                className={classes.badgeTitleStyle}
+              >
+                {t('profile.badges')}
+
+              </Typography>
+              {!badge_tags.length > 0  ? t('profile.addBadges')
+                :<Box className={classes.tagsContainerStyle}>
+                  {badge_tags.map(tag => 
+                  (
+                    <Typography
+                      key={tag}
+                      className={clsx(classes.badgeStyle)}
+                      component="h2"
+                    >
+                      {tag}
+                    </Typography>
+                  )
+                   )} 
+                </Box>}
+            </Paper>
+            
 
             {profile.projects_count > 0 || drafts.length > 0 ? (
               username === props.auth.username ? (
