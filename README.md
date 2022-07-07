@@ -175,7 +175,7 @@ Visit http://localhost:8000 on your browser to access the API documentation.
 
 - On your terminal/command line, navigate to **./zubhub/zubhub_frontend/zubhub** directory
 
-- Create a file named **.env** in the frontend root folder (same directory with package.json), then copy-past the following lines
+- Create a file named **.env** in the frontend root folder (same directory with package.json), with the following content
 
 ```sh
 #.env
