@@ -27,11 +27,67 @@
     1,
     2
   ],
-  "creator": {
+  "creator": [{
     "id": 3,
     "username": "nikita",
     "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 2,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
+  },
+  {
+    "id": 5,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 4,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
+  },
+  {
+    "id": 3,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 2,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
+  },
+  {
+    "id": 5,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 4,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
+  },
+  {
+    "id": 3,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 2,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
+  },
+  {
+    "id": 5,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 4,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
   }
+]
 },
 {
   "id": 2,
@@ -62,11 +118,12 @@
     1,
     2
   ],
-  "creator": {
+  "creator": [{
     "id": 3,
     "username": "nikita",
     "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
   }
+]
 },
 {
   "id": 3,
@@ -97,11 +154,27 @@
     1,
     2
   ],
-  "creator": {
+  "creator":[{
     "id": 3,
     "username": "nikita",
     "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 2,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
+  },
+  {
+    "id": 5,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 4,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
   }
+]
 },
 {
   "id": 4,
@@ -132,11 +205,27 @@
     1,
     2
   ],
-  "creator": {
+  "creator": [{
     "id": 3,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 2,
+    "username": "srishti",
+    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
+  },
+  {
+    "id": 5,
+    "username": "nikita",
+    "image": "https://kriti.unstructured.studio/content/images/2021/06/nikil_a.jpeg"
+  },
+    {
+    "id": 4,
     "username": "srishti",
     "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
   }
+]
 },
 {
   "id": 5,
@@ -167,10 +256,7 @@
     1,
     2
   ],
-  "creator": {
-    "id": 3,
-    "username": "srishti",
-    "image": "https://unstructured.studio/content/images/2020/06/srishti.JPG"
-  }
+  "creator": [
+]
 }
 ]
