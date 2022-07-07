@@ -4,47 +4,64 @@ const styles = theme => ({
   root: {
     flex: '1 0 auto',
   },
-  profileHeaderStyle: {
-    paddingTop: '1.5em',
-    background: 'rgba(255,204,0,1)',
-    background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    [theme.breakpoints.down('511')]: {
-      paddingTop: '4em',
+  classFlex: {
+    display: 'flex',
+    [theme.breakpoints.down('900')]: {
+      flexDirection: 'column',
+      alignItems: 'center',
     },
   },
+  profileHeaderStyle: {
+    paddingTop: '1.5em',
+    paddingBottom: '1.5em', 
+    background: 'rgba(255,204,0,1)',
+    background:
+    'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+  },
   avatarBoxStyle: {
-    width: '100%',
+    minWidth: '30%',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   profileShareButtonStyle: {
     borderRadius: '50% !important',
   },
   avatarStyle: {
-    width: '100%',
-    height: '100%',
-    paddingTop: '1.5em',
-    paddingBottom: '1.5em',
+    width: '80%',
+    height: '80%',
+    paddingLeft: '1em',
+    paddingRight: '1em',
     '& img': {
-      width: '10em',
+      width: '8em',
       backgroundColor: 'white',
-      height: '10em',
+      height: '8em',
       borderRadius: '50%',
       boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     },
   },
   ProfileDetailStyle: {
-    width: '100%',
+    minWidth: '30%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'start',
+    justifyContent: 'center',
+    marginRight: '1.5em',
+    [theme.breakpoints.down('900')]: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: '1.5em',
+      paddingRight: 0,
+    },
   },
   userNameStyle: {
     fontWeight: 900,
     fontSize: '2rem',
     position: 'relative',
-    [theme.breakpoints.down('470')]: {
+    overflowWrap: 'anywhere',
+    
+    [theme.breakpoints.down('750')]: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -54,24 +71,59 @@ const styles = theme => ({
   tagsContainerStyle: {
     display: 'flex',
     flexWrap: 'wrap',
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em',
+    [theme.breakpoints.down('900')]: {
+      paddingTop: '0',
+      paddingBottom: '0',
+    },
   },
-  emailStyle: { marginBottom: '0.5em' },
+  removeTagMargin: {
+    marginLeft: '0 !important',
+  },
+  centerTag: {
+  justifyContent: 'center',
+  },
+  emailStyle: { 
+    overflowWrap: 'anywhere',
+  },
   dividerStyle: {
-    width: '100vw',
   },
   moreInfoBoxStyle: {
-    height: '3em',
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'end',
+    [theme.breakpoints.down('830')]: {
+      justifyContent: 'none',
+    },
+    
+    [theme.breakpoints.down('900')]: {
+      marginTop: '1.3em',
+      justifyContent: 'center',
+      gap: '1.5em',
+      flexWrap: 'wrap',
+    },
+    width: '100%'
   },
   moreInfoStyle: {
-    marginLeft: '0.5em',
-    marginRight: '0.5em',
-    fontWeight: 'bold',
+    backgroundColor: '#E0F6F7',
+    borderRadius: '10px',
+    padding: '1em',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  moreInfoTitle: {
+    fontWeight: '600',
     fontSize: '0.9rem',
     color: '#00B8C4',
+  },
+  moreInfoCount: {
+    fontWeight: '550',
+    fontSize: '3.5em',
+    color: '#00B8C4',
+    justifyContent: 'start',
   },
   profileLowerStyle: {
     margin: '1em',
@@ -80,6 +132,25 @@ const styles = theme => ({
   titleStyle: {
     fontWeight: 900,
     fontSize: '1.5rem',
+  },
+  badgeBox: {
+    backgroundColor: '#FFF7D4',
+    margin: '1em',
+    padding: '1em',
+  },
+  badgeTitleStyle: {
+    fontWeight: 900,
+    fontSize: '1.5rem',
+    color: '#00B8C4',
+    
+  },
+  badgeStyle: {
+    backgroundColor: '#FFD11A',
+    borderRadius: '50px',
+    color: '#9F861E',
+    fontWeight: 600,
+    padding: '0 0.5em',
+    marginRight: '0.7em',
   },
   cardStyle: {
     border: 0,
@@ -128,7 +199,21 @@ const styles = theme => ({
   textDecorationNone: {
     textDecoration: 'none',
   },
-  floatRight: { float: 'right' },
+  floatRight: 
+  { 
+    float: 'right',
+  },
+  secondaryButtonMargin: 
+  { 
+    marginTop: '1em',
+  },
+  verticalOption: 
+  { 
+    float: 'right' ,
+    [theme.breakpoints.down('900')]: {
+      float: 'none',
+    },
+  },
   displayNone: { display: 'none' },
   largeLabel: {
     fontSize: '1.3rem',
