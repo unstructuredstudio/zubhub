@@ -38,26 +38,7 @@ export const style = {
       color: '#747070',
     },
   },
-  activityCreatorImage: {
-    width: '50px',
-    height: '50px',
-    borderRadius: '50%',
-    boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
-    '&:hover': {
-      width: '70px',
-      height: '70px',
-      border: '2px solid rgba(0, 0, 0, .12)'
-    },
-  },
-  activityCreatorImageBox:{
-    position: 'absolute',
-    left: '-2em',
-    zIndex: '1',
-    '&:hover': {
-      zIndex: '2',
-      left: '-1.7em',
-    }, 
-  },
+  
   activityCardContent: {
      padding: '10px!important',
     width: '100%'
