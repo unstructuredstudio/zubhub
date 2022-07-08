@@ -21,6 +21,30 @@
     {
       "id": 3,
       "name": "weaving"
+    },
+    {
+      "id": 4,
+      "name": "textile1"
+    },
+    {
+      "id": 5,
+      "name": "craft2"
+    },
+    {
+      "id": 6,
+      "name": "weaving3"
+    },
+    {
+      "id": 7,
+      "name": "textile4"
+    },
+    {
+      "id": 8,
+      "name": "craft5"
+    },
+    {
+      "id": 9,
+      "name": "weaving6"
     }
   ],
   "savedBy": [

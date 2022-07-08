@@ -1,12 +1,18 @@
 const styles = theme => ({
   activityListContainer:{
     padding: '4em 0',
-    width: '90%',
-    margin: 'auto'
+    width: '70%',
+    margin: 'auto',
+    [theme.breakpoints.down('900')]: {
+      width: '90%'
+    },
+      [theme.breakpoints.down('400')]: {
+      width: '95%'
+    },
   },
   activityBoxContainer:{
     padding: '5vh 10px',
-    position: 'relative'
+    position: 'relative',
   },
   sliderVideo :{
     width: '100%',
@@ -45,12 +51,6 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  slickList: {
-   // padding: '0 !important'
-  },
-  slickNext: {
-    top: '10vh !important',
-  }
 })
 
 export const sliderSettings = (images_num, func) => ({

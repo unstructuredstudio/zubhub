@@ -1,7 +1,8 @@
 export const style = {
   activityCardContainer:{
     position: 'relative',
-    width: '300px'
+    maxWidth: '350px',
+    minWidth: '300px'
   },
   activityCard:{
     maxWidth: '100%',
@@ -12,7 +13,7 @@ export const style = {
     width: '100%',
     objectFit: 'cover',
     position: 'absolute',
-    height: '17em',
+    height: '100%',
   },
   mediaBoxStyle: {
     width: '100%',
@@ -26,17 +27,37 @@ export const style = {
   activityTagsBox: {
     position: 'absolute',
     top: '10px',
-    right: '10px',
-    display: 'flex'
+    right: '10%',
+    display: 'flex',
   },
   activityTagPill: {
-    backgroundColor: 'transparent',
-    border: '1px solid white',
+    backgroundColor: 'white',
+    color: '#747070',
+    border: '1px solid #747070',
+    '&:hover': {
+      backgroundColor: '#747070',
+      color: 'white',
+      border: '1px solid white',
+    },
+  },
+  activityTagsShowMore: {
     '&:hover': {
       backgroundColor: 'white',
-      backgroundSize: '100%',
       color: '#747070',
+      border: '1px solid white',
     },
+  },
+  tagsShowMoreIconContainer: {
+    //position: 'absolute',
+
+  },
+  tagsShowMoreList: {
+    position: 'absolute', 
+    right: '0%', 
+    backgroundColor: 'white', 
+    maxHeight: '12em',
+    overflow: 'auto', 
+    borderRadius: '10px'
   },
   
   activityCardContent: {
