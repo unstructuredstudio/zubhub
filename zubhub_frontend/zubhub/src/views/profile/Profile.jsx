@@ -58,7 +58,7 @@ import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid';
-import { returnAllTagsTitle } from './DisplayBadges';
+import { allBadgesTitle } from './DisplayBadges';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -102,7 +102,8 @@ function Profile(props) {
     Promise.all(promises).then(values => {
       const obj = values[0];
       const drafts = values[1] || {};
-      const badges=returnAllTagsTitle(obj.results)
+      const badges=allBadgesTitle(obj.results)
+
       if (obj.profile) {
         parseComments(obj.profile.comments);
       }
@@ -140,16 +141,30 @@ function Profile(props) {
         <Box className={classes.root}>
           <Paper className={classes.profileHeaderStyle}>
             <Container maxWidth="md">
-              {props.auth.username === profile.username ? (
+            {props.auth.username === profile.username ? (
                 <>
-                  <CustomButton
-                    className={classes.floatRight}
+            <CustomButton
+                    className={classes.verticalOption}
                     onClick={e => handleSetState(handleMoreMenuOpen(e))}
                   >
-                    <MoreVertIcon />
+                  <MoreVertIcon />
                   </CustomButton>
+                </>
+             ) : (<></>)
+            }
+              <Box className={classes.classFlex}>
+              <Box className={classes.avatarBoxStyle}>
+                <Avatar
+                  className={classes.avatarStyle}
+                  src={profile.avatar}
+                  alt={profile.username}
+                />
+                 
+                 <Box>
+                 {props.auth.username === profile.username ? (
+                <>
                   <CustomButton
-                    className={classes.floatRight}
+                    className={classes.secondaryButtonMargin}
                     variant="contained"
                     margin="normal"
                     primaryButtonStyle
@@ -190,7 +205,7 @@ function Profile(props) {
                 </>
               ) : (
                 <CustomButton
-                  className={classes.floatRight}
+                  className={classes.secondaryButtonMargin}
                   variant="outlined"
                   margin="normal"
                   secondaryButtonStyle
@@ -203,14 +218,14 @@ function Profile(props) {
                     : t('profile.follow')}
                 </CustomButton>
               )}
-              <Box className={classes.avatarBoxStyle}>
-                <Avatar
-                  className={classes.avatarStyle}
-                  src={profile.avatar}
-                  alt={profile.username}
-                />
+                 </Box>
+
               </Box>
-              <Box className={classes.ProfileDetailStyle}>
+              <Box className={clsx(classes.ProfileDetailStyle,{
+               [classes.centerTag]: props.auth.username !== profile.username,
+              }
+                )}>
+
                 <Typography
                   className={classes.userNameStyle}
                   component="h1"
@@ -224,7 +239,7 @@ function Profile(props) {
                       key={tag}
                       className={clsx(common_classes.baseTagStyle, {
                         [common_classes.extendedTagStyle]: !isBaseTag(tag),
-                      })}
+                      }, classes.removeTagMargin)}
                       component="h2"
                     >
                       {tag}
@@ -241,8 +256,8 @@ function Profile(props) {
                     </Typography>
                   </>
                 ) : null}
-                <Divider className={classes.dividerStyle} />
-                <Box className={classes.moreInfoBoxStyle}>
+              </Box>
+              <Box className={classes.moreInfoBoxStyle}>
                   <Link
                     className={classes.textDecorationNone}
                     to={`/creators/${profile.username}/projects`}
@@ -309,58 +324,61 @@ function Profile(props) {
                       </Typography>
                     </Link>
                   ) : null}
-                </Box>
+                </Box> 
               </Box>
             </Container>
           </Paper>
 
           <Container maxWidth="md">
-            <Paper className={classes.profileLowerStyle}>
-              <Typography
-                gutterBottom
-                component="h2"
-                variant="h6"
-                color="textPrimary"
-                className={classes.titleStyle}
-              >
-                {!profile.members_count
-                  ? t('profile.about.label1')
-                  : t('profile.about.label2')}
-              </Typography>
-              {profile.bio
-                ? profile.bio
-                : !profile.members_count
-                ? t('profile.about.placeholder1')
-                : t('profile.about.placeholder2')}
-            </Paper>
+            <Box className={classes.aboutMeBadgeBox}>
+              <Paper className={classes.profileLowerStyle}>
+                <Typography
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
+                  color="textPrimary"
+                  className={classes.titleStyle}
+                >
+                  {!profile.members_count
+                    ? t('profile.about.label1')
+                    : t('profile.about.label2')}
+                </Typography>
+                {profile.bio
+                  ? profile.bio
+                  : !profile.members_count
+                  ? t('profile.about.placeholder1')
+                  : t('profile.about.placeholder2')}
+              </Paper>
 
-            <Paper className={classes.badgeBox}>
-              <Typography
-                gutterBottom
-                component="h2"
-                variant="h6"
-                color="textPrimary"
-                className={classes.badgeTitleStyle}
-              >
-                {t('profile.badges')}
+              <Paper className={classes.badgeBox}>
+                <Typography
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
+                  color="textPrimary"
+                  className={classes.badgeTitleStyle}
+                >
+                  {t('profile.badges')}
 
-              </Typography>
-              {!badge_tags.length > 0  ? t('profile.addBadges')
-                :<Box className={classes.tagsContainerStyle}>
-                  {badge_tags.map(tag => 
-                  (
-                    <Typography
-                      key={tag}
-                      className={clsx(classes.badgeStyle)}
-                      component="h2"
-                    >
-                      {tag}
-                    </Typography>
-                  )
-                   )} 
-                </Box>}
-            </Paper>
-            
+                </Typography>
+                {!badge_tags.length > 0  ? t('profile.addBadges')
+                  : ( 
+                  <Box className={classes.badgeContainerStyle}>
+                    {badge_tags.map(tag => 
+                    (
+                      <Typography
+                        key={tag}
+                        className={clsx(classes.badgeStyle)}
+                        component="h2"
+                      >
+                        {tag}
+                      </Typography>
+                    )
+                    )} 
+                  </Box>
+                  )}
+              </Paper>
+            </Box>
 
             {profile.projects_count > 0 || drafts.length > 0 ? (
               username === props.auth.username ? (
@@ -392,7 +410,7 @@ function Profile(props) {
                         )
                       }
                     >
-                      {t('profile.projects.viewAll')}
+                     {t('profile.projects.viewAll')}
                     </CustomButton>
                   </Typography>
                   <Grid container>

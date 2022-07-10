@@ -126,8 +126,13 @@ const styles = theme => ({
     justifyContent: 'start',
   },
   profileLowerStyle: {
-    margin: '1em',
+    flexGrow: 1, 
+    margin: '1em 0 0 1em',
     padding: '1em',
+    [theme.breakpoints.down('900')]: {
+      margin: '1em',
+      padding: '1em',
+    },
   },
   titleStyle: {
     fontWeight: 900,
@@ -135,8 +140,14 @@ const styles = theme => ({
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',
-    margin: '1em',
+    margin: '1em 1em 0 0',
     padding: '1em',
+    width: '40%',
+    [theme.breakpoints.down('900')]: {
+      width: 'auto',
+      margin: '1em',
+      padding: '1em',
+    },
   },
   badgeTitleStyle: {
     fontWeight: 900,
@@ -144,13 +155,23 @@ const styles = theme => ({
     color: '#00B8C4',
     
   },
+  badgeContainerStyle: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
   badgeStyle: {
     backgroundColor: '#FFD11A',
     borderRadius: '50px',
     color: '#9F861E',
     fontWeight: 600,
     padding: '0 0.5em',
-    marginRight: '0.7em',
+    margin: '0.3em',
+  },
+  aboutMeBadgeBox: {
+    display: 'flex',
+    [theme.breakpoints.down('900')]: {
+      display: 'block',
+    },
   },
   cardStyle: {
     border: 0,
