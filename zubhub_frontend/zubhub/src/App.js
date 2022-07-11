@@ -1,6 +1,7 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import CreateActivity from './views/create_activity/create_activity';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
@@ -87,7 +88,8 @@ function App(props) {
           path="/"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+              {/* <LazyImport LazyComponent={Projects} {...routeProps} {...props} /> */}
+              <CreateActivity />
             </PageWrapper>
           )}
         />
