@@ -549,11 +549,35 @@
     "about": {
       "label1": "About Me",
       "label2": "Description",
-      "placeholder1": "Tell us more about you by clicking on the edit button at the top of the page 😀!",
-      "placeholder2": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
+      "memberPlaceholder": "Tell us more about you by clicking on the edit button at the top of the page 😀!",
+      "groupPlaceholder": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
-    "badges": "Badges",
-    "addBadges": "Seems like you have not created any project yet, add projects to your profile to get badges 😉!",
+    "badge": {
+      "badges": "Badges",
+      "addBadges": "Seems like you have not created any project yet, add projects to your profile to get badges 😉!",
+      "project": {
+        "category1": "Hatchling",
+        "category2": "Flying Bird",
+        "category3": "Master of the sky",
+        "category4": "Expert Builder"
+      },
+      "view": {
+        "category1": "Getting Famous",
+        "category2": "Person of Interest",
+        "category3": "Popular Projects",
+        "category4": "Idea Factory"
+      },
+      "like": {
+        "category1": "Interesting Projects",
+        "category2": "Favourite Kid",
+        "category3": "Captain Project"
+      },
+      "comment": {
+        "category1": "Helping Hand",
+        "category2": "Always Available",
+        "category3": "Expert Advisor"
+      }
+    },
     "projects": {
       "label": "Latest projects",
       "viewAll": "View all >>"

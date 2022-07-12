@@ -1,71 +1,64 @@
-export function allBadgesTitle(projects) {
-    const {comments, likes, views}= addValues(projects);
-    let badges= [];
+export function allBadgesTitle(projects, props) {
+  const { comments, likes, views } = addValues(projects);
+  let badges = [];
 
-    const title_for_projects=projectBadgeTitle(projects.length);
-    const title_for_comments=commentBadgeTitle(comments);
-    const title_for_likes=likeBagdeTitle(likes);
-    const title_for_views=viewBadgeTitle(views);
+  const titleForProjects = projectBadgeTitle(projects.length, props);
+  const titleForComments = commentBadgeTitle(comments, props);
+  const titleForLikes = likeBagdeTitle(likes, props);
+  const titleForViews = viewBadgeTitle(views, props);
 
-    if(title_for_projects)
-    badges.push(title_for_projects);
+  if (titleForProjects) badges.push(titleForProjects);
 
-    if(title_for_comments)
-    badges.push(title_for_comments);
+  if (titleForComments) badges.push(titleForComments);
 
-    if(title_for_likes)
-    badges.push(title_for_likes);
+  if (titleForLikes) badges.push(titleForLikes);
 
-    if(title_for_views)
-    badges.push(title_for_views);
+  if (titleForViews) badges.push(titleForViews);
 
-    return badges;
+  return badges;
 }
 
-function addValues(projects){
-    let total_count= {
-        comments: 0,
-        likes: 0,
-        views: 0
-    };
-        for(let project of projects){
-        
-        total_count.comments+= project.comments_count;
-        total_count.likes+= project.likes.length;
-        total_count.views+= project.views_count;
-       }
-  
-   return total_count;
+function addValues(projects) {
+  const totalCount = {
+    comments: 0,
+    likes: 0,
+    views: 0,
+  };
+  for (let project of projects) {
+    totalCount.comments += project.comments_count;
+    totalCount.likes += project.likes.length;
+    totalCount.views += project.views_count;
+  }
+
+  return totalCount;
 }
 
-
-
-function projectBadgeTitle(count) { 
-    if (count > 100) return 'Expert Builder'
-    else if (count > 50) return 'Master of the sky'
-    else if (count > 10) return 'Flying Bird'
-    else if (count > 0) return 'Hatchling'
-    return '';
+function projectBadgeTitle(count, t) {
+  if (count > 100) return t('profile.badge.project.category4');
+  else if (count > 50) return t('profile.badge.project.category3');
+  else if (count > 10) return t('profile.badge.project.category2');
+  else if (count > 0) return t('profile.badge.project.category1');
+  return '';
 }
 
-function viewBadgeTitle(count) {
-    if (count > 100000) return 'Idea Factory' 
-    else if (count > 5000) return 'Popular Projects'
-    else if (count > 100) return 'Person of Interest'
-    else if (count > 10) return 'Getting Famous'
-    return '';
+function viewBadgeTitle(count, t) {
+  if (count > 100000) return t('profile.badge.view.category4');
+  else if (count > 5000) return t('profile.badge.view.category3');
+  else if (count > 100) return t('profile.badge.view.category2');
+  else if (count > 10) return t('profile.badge.view.category1');
+  return '';
 }
 
-function likeBagdeTitle(count) {
-    if (count > 1000) return 'Captain Project'
-    else if (count > 500) return 'Favourite Kid'
-    else if (count > 100) return 'Interesting Projects'
-    return '';
+function likeBagdeTitle(count, t) {
+  if (count > 1000) return t('profile.badge.like.category3');
+  else if (count > 500) return t('profile.badge.like.category2');
+  else if (count > 100) return t('profile.badge.like.category1');
+  return '';
 }
 
-function commentBadgeTitle(count) {
-    if (count > 1000) return 'Expert Advisor'
-    else if (count > 500) return 'Always Available'
-    else if (count > 100) return 'Helping Hand'
-    return '';
+function commentBadgeTitle(count, t) {
+  if (count > 1000) return t('profile.badge.comment.category3');
+  else if (count > 500) return t('profile.badge.comment.category2');
+  else if (count > 100) return t('profile.badge.comment.category1');
+  return '';
 }

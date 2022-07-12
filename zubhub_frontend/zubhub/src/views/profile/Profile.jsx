@@ -87,28 +87,32 @@ function Profile(props) {
   });
 
   React.useEffect(() => {
-    const promises = [getUserProfile(props)];
-    if (username === props.auth.username) {
-      promises.push(
-        ProjectActions.getUserDrafts({
-          username,
-          token: props.auth.token,
-          t: props.t,
-          limit: 4,
-        }),
-      );
-    }
-
-    Promise.all(promises).then(values => {
-      const obj = values[0];
-      const drafts = values[1] || {};
-      const badges=allBadgesTitle(obj.results)
-
-      if (obj.profile) {
-        parseComments(obj.profile.comments);
+    try {
+      const promises = [getUserProfile(props)];
+      if (username === props.auth.username) {
+        promises.push(
+          ProjectActions.getUserDrafts({
+            username,
+            token: props.auth.token,
+            t: props.t,
+            limit: 4,
+          }),
+        );
       }
-      handleSetState({ ...obj, ...drafts, badge_tags:badges });
-    });
+
+      Promise.all(promises).then(values => {
+        const obj = values[0];
+        const drafts = values[1] || {};
+        const badges = allBadgesTitle(obj.results, props.t);
+
+        if (obj.profile) {
+          parseComments(obj.profile.comments);
+        }
+        handleSetState({ ...obj, ...drafts, badge_tags: badges });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const handleSetState = obj => {
@@ -141,123 +145,130 @@ function Profile(props) {
         <Box className={classes.root}>
           <Paper className={classes.profileHeaderStyle}>
             <Container maxWidth="md">
-            {props.auth.username === profile.username ? (
+              {props.auth.username === profile.username ? (
                 <>
-            <CustomButton
+                  <CustomButton
                     className={classes.verticalOption}
                     onClick={e => handleSetState(handleMoreMenuOpen(e))}
                   >
-                  <MoreVertIcon />
+                    <MoreVertIcon />
                   </CustomButton>
-                </>
-             ) : (<></>)
-            }
-              <Box className={classes.classFlex}>
-              <Box className={classes.avatarBoxStyle}>
-                <Avatar
-                  className={classes.avatarStyle}
-                  src={profile.avatar}
-                  alt={profile.username}
-                />
-                 
-                 <Box>
-                 {props.auth.username === profile.username ? (
-                <>
-                  <CustomButton
-                    className={classes.secondaryButtonMargin}
-                    variant="contained"
-                    margin="normal"
-                    primaryButtonStyle
-                    onClick={() => props.history.push('/edit-profile')}
-                  >
-                    {t('profile.edit')}
-                  </CustomButton>
-                  <Menu
-                    className={classes.moreMenuStyle}
-                    disableScrollLock={true}
-                    id="profile_menu"
-                    anchorEl={more_anchor_el}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={more_menu_open}
-                    onClose={e => handleSetState(handleMoreMenuClose(e))}
-                  >
-                    <MenuItem>
-                      <Typography
-                        variant="subtitle2"
-                        className={common_classes.colorRed}
-                        component="span"
-                        onClick={() =>
-                          handleSetState(handleToggleDeleteAccountModal(state))
-                        }
-                      >
-                        {t('profile.delete.label')}
-                      </Typography>
-                    </MenuItem>
-                  </Menu>
                 </>
               ) : (
-                <CustomButton
-                  className={classes.secondaryButtonMargin}
-                  variant="outlined"
-                  margin="normal"
-                  secondaryButtonStyle
-                  onClick={() =>
-                    handleSetState(toggleFollow(profile.id, props))
-                  }
-                >
-                  {profile.followers.includes(props.auth.id)
-                    ? t('profile.unfollow')
-                    : t('profile.follow')}
-                </CustomButton>
+                <></>
               )}
-                 </Box>
+              <Box className={classes.classFlex}>
+                <Box className={classes.avatarBoxStyle}>
+                  <Avatar
+                    className={classes.avatarStyle}
+                    src={profile.avatar}
+                    alt={profile.username}
+                  />
 
-              </Box>
-              <Box className={clsx(classes.ProfileDetailStyle,{
-               [classes.centerTag]: props.auth.username !== profile.username,
-              }
-                )}>
-
-                <Typography
-                  className={classes.userNameStyle}
-                  component="h1"
-                  color="textPrimary"
-                >
-                  {profile.username}
-                </Typography>
-                <Box className={classes.tagsContainerStyle}>
-                  {sortTags(profile.tags).map(tag => (
-                    <Typography
-                      key={tag}
-                      className={clsx(common_classes.baseTagStyle, {
-                        [common_classes.extendedTagStyle]: !isBaseTag(tag),
-                      }, classes.removeTagMargin)}
-                      component="h2"
-                    >
-                      {tag}
-                    </Typography>
-                  ))}
+                  <Box>
+                    {props.auth.username === profile.username ? (
+                      <>
+                        <CustomButton
+                          className={classes.secondaryButtonMargin}
+                          variant="contained"
+                          margin="normal"
+                          primaryButtonStyle
+                          onClick={() => props.history.push('/edit-profile')}
+                        >
+                          {t('profile.edit')}
+                        </CustomButton>
+                        <Menu
+                          className={classes.moreMenuStyle}
+                          disableScrollLock={true}
+                          id="profile_menu"
+                          anchorEl={more_anchor_el}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                          }}
+                          keepMounted
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                          }}
+                          open={more_menu_open}
+                          onClose={e => handleSetState(handleMoreMenuClose(e))}
+                        >
+                          <MenuItem>
+                            <Typography
+                              variant="subtitle2"
+                              className={common_classes.colorRed}
+                              component="span"
+                              onClick={() =>
+                                handleSetState(
+                                  handleToggleDeleteAccountModal(state),
+                                )
+                              }
+                            >
+                              {t('profile.delete.label')}
+                            </Typography>
+                          </MenuItem>
+                        </Menu>
+                      </>
+                    ) : (
+                      <CustomButton
+                        className={classes.secondaryButtonMargin}
+                        variant="outlined"
+                        margin="normal"
+                        secondaryButtonStyle
+                        onClick={() =>
+                          handleSetState(toggleFollow(profile.id, props))
+                        }
+                      >
+                        {profile.followers.includes(props.auth.id)
+                          ? t('profile.unfollow')
+                          : t('profile.follow')}
+                      </CustomButton>
+                    )}
+                  </Box>
                 </Box>
-                {props.auth.username === profile.username ? (
-                  <>
-                    <Typography className={classes.emailStyle} component="h5">
-                      {profile.email}
-                    </Typography>
-                    <Typography className={classes.emailStyle} component="h5">
-                      {profile.phone}
-                    </Typography>
-                  </>
-                ) : null}
-              </Box>
-              <Box className={classes.moreInfoBoxStyle}>
+                <Box
+                  className={clsx(classes.ProfileDetailStyle, {
+                    [classes.centerTag]:
+                      props.auth.username !== profile.username,
+                  })}
+                >
+                  <Typography
+                    className={classes.userNameStyle}
+                    component="h1"
+                    color="textPrimary"
+                  >
+                    {profile.username}
+                  </Typography>
+                  <Box className={classes.tagsContainerStyle}>
+                    {sortTags(profile.tags).map(tag => (
+                      <Typography
+                        key={tag}
+                        className={clsx(
+                          common_classes.baseTagStyle,
+                          {
+                            [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                          },
+                          classes.removeTagMargin,
+                        )}
+                        component="h2"
+                      >
+                        {tag}
+                      </Typography>
+                    ))}
+                  </Box>
+                  {props.auth.username === profile.username ? (
+                    <>
+                      <Typography className={classes.emailStyle} component="h5">
+                        {profile.email}
+                      </Typography>
+                      <Typography className={classes.emailStyle} component="h5">
+                        {profile.phone}
+                      </Typography>
+                    </>
+                  ) : null}
+                </Box>
+                <Box className={classes.moreInfoBoxStyle}>
                   <Link
                     className={classes.textDecorationNone}
                     to={`/creators/${profile.username}/projects`}
@@ -267,10 +278,10 @@ function Profile(props) {
                       component="h5"
                     >
                       <box className={classes.moreInfoTitle}>
-                       {t('profile.projectsCount')} 
+                        {t('profile.projectsCount')}
                       </box>
                       <box className={classes.moreInfoCount}>
-                       {profile.projects_count} 
+                        {profile.projects_count}
                       </box>
                     </Typography>
                   </Link>
@@ -283,10 +294,10 @@ function Profile(props) {
                       component="h5"
                     >
                       <box className={classes.moreInfoTitle}>
-                       {t('profile.followersCount')} 
+                        {t('profile.followersCount')}
                       </box>
                       <box className={classes.moreInfoCount}>
-                       {profile.followers.length}
+                        {profile.followers.length}
                       </box>
                     </Typography>
                   </Link>
@@ -299,10 +310,10 @@ function Profile(props) {
                       component="h5"
                     >
                       <box className={classes.moreInfoTitle}>
-                       {t('profile.followingCount')} 
+                        {t('profile.followingCount')}
                       </box>
                       <box className={classes.moreInfoCount}>
-                       {profile.following_count} 
+                        {profile.following_count}
                       </box>
                     </Typography>
                   </Link>
@@ -316,15 +327,15 @@ function Profile(props) {
                         component="h5"
                       >
                         <box className={classes.moreInfoTitle}>
-                         {t('profile.membersCount')} 
+                          {t('profile.membersCount')}
                         </box>
                         <box className={classes.moreInfoCount}>
-                         {profile.members_count}
+                          {profile.members_count}
                         </box>
                       </Typography>
                     </Link>
                   ) : null}
-                </Box> 
+                </Box>
               </Box>
             </Container>
           </Paper>
@@ -346,8 +357,8 @@ function Profile(props) {
                 {profile.bio
                   ? profile.bio
                   : !profile.members_count
-                  ? t('profile.about.placeholder1')
-                  : t('profile.about.placeholder2')}
+                  ? t('profile.about.memberPlaceholder')
+                  : t('profile.about.groupPlaceholder')}
               </Paper>
 
               <Paper className={classes.badgeBox}>
@@ -358,14 +369,13 @@ function Profile(props) {
                   color="textPrimary"
                   className={classes.badgeTitleStyle}
                 >
-                  {t('profile.badges')}
-
+                  {t('profile.badge.badges')}
                 </Typography>
-                {!badge_tags.length > 0  ? t('profile.addBadges')
-                  : ( 
+                {!badge_tags.length > 0 ? (
+                  t('profile.badge.addBadges')
+                ) : (
                   <Box className={classes.badgeContainerStyle}>
-                    {badge_tags.map(tag => 
-                    (
+                    {badge_tags.map(tag => (
                       <Typography
                         key={tag}
                         className={clsx(classes.badgeStyle)}
@@ -373,10 +383,9 @@ function Profile(props) {
                       >
                         {tag}
                       </Typography>
-                    )
-                    )} 
+                    ))}
                   </Box>
-                  )}
+                )}
               </Paper>
             </Box>
 
@@ -410,7 +419,7 @@ function Profile(props) {
                         )
                       }
                     >
-                     {t('profile.projects.viewAll')}
+                      {t('profile.projects.viewAll')}
                     </CustomButton>
                   </Typography>
                   <Grid container>

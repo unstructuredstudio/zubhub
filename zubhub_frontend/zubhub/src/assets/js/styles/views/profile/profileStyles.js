@@ -13,10 +13,10 @@ const styles = theme => ({
   },
   profileHeaderStyle: {
     paddingTop: '1.5em',
-    paddingBottom: '1.5em', 
+    paddingBottom: '1.5em',
     background: 'rgba(255,204,0,1)',
     background:
-    'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
   avatarBoxStyle: {
     minWidth: '30%',
@@ -34,9 +34,9 @@ const styles = theme => ({
     paddingLeft: '1em',
     paddingRight: '1em',
     '& img': {
-      width: '8em',
+      width: '10rem',
       backgroundColor: 'white',
-      height: '8em',
+      height: '10rem',
       borderRadius: '50%',
       boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     },
@@ -60,7 +60,7 @@ const styles = theme => ({
     fontSize: '2rem',
     position: 'relative',
     overflowWrap: 'anywhere',
-    
+
     [theme.breakpoints.down('750')]: {
       display: 'flex',
       flexDirection: 'column',
@@ -82,13 +82,12 @@ const styles = theme => ({
     marginLeft: '0 !important',
   },
   centerTag: {
-  justifyContent: 'center',
+    justifyContent: 'center',
   },
-  emailStyle: { 
+  emailStyle: {
     overflowWrap: 'anywhere',
   },
-  dividerStyle: {
-  },
+  dividerStyle: {},
   moreInfoBoxStyle: {
     display: 'flex',
     flexDirection: 'row',
@@ -97,14 +96,14 @@ const styles = theme => ({
     [theme.breakpoints.down('830')]: {
       justifyContent: 'none',
     },
-    
+
     [theme.breakpoints.down('900')]: {
       marginTop: '1.3em',
       justifyContent: 'center',
       gap: '1.5em',
       flexWrap: 'wrap',
     },
-    width: '100%'
+    width: '100%',
   },
   moreInfoStyle: {
     backgroundColor: '#E0F6F7',
@@ -126,7 +125,7 @@ const styles = theme => ({
     justifyContent: 'start',
   },
   profileLowerStyle: {
-    flexGrow: 1, 
+    flexGrow: 1,
     margin: '1em 0 0 1em',
     padding: '1em',
     [theme.breakpoints.down('900')]: {
@@ -140,7 +139,7 @@ const styles = theme => ({
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',
-    margin: '1em 1em 0 0',
+    margin: '1em 0 0 0',
     padding: '1em',
     width: '40%',
     [theme.breakpoints.down('900')]: {
@@ -153,7 +152,6 @@ const styles = theme => ({
     fontWeight: 900,
     fontSize: '1.5rem',
     color: '#00B8C4',
-    
   },
   badgeContainerStyle: {
     display: 'flex',
@@ -220,17 +218,14 @@ const styles = theme => ({
   textDecorationNone: {
     textDecoration: 'none',
   },
-  floatRight: 
-  { 
+  floatRight: {
     float: 'right',
   },
-  secondaryButtonMargin: 
-  { 
+  secondaryButtonMargin: {
     marginTop: '1em',
   },
-  verticalOption: 
-  { 
-    float: 'right' ,
+  verticalOption: {
+    float: 'right',
     [theme.breakpoints.down('900')]: {
       float: 'none',
     },
