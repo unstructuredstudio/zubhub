@@ -474,7 +474,7 @@ function PageWrapper(props) {
                       customButtonStyle
                       size="small"
                     >
-                      {t('BROWSE ACTIVITIES')}
+                      {t('pageWrapper.navbar.browseActivities')}
                     </CustomButton>
                   </Link>
                   <Link

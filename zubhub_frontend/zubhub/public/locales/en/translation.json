@@ -25,7 +25,8 @@
       "followers": "Followers",
       "following": "Following",
       "savedProjects": "Bookmarks",
-      "logout": "Logout"
+      "logout": "Logout",
+      "browseActivities": "BROWSE ACTIVITIES"
     },
 
     "footer": {
