@@ -6,8 +6,17 @@ import { connect } from 'react-redux';
 import { withFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+
 import 'react-toastify/dist/ReactToastify.css';
+
 import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import ImageIcon from '@material-ui/icons/Image';
+import VideoIcon from '@material-ui/icons/Movie';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
+import MovieIcon from '@material-ui/icons/Movie';
+import InsertLinkIcon from '@material-ui/icons/InsertLink';
 import {
   Grid,
   Box,
@@ -36,17 +45,11 @@ const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-function CreateActivityStep1(props) {
+function CreateActivityStep2(props) {
     const classes = useProjectStyles()
     const activity_classes = useStyles()
     const common_classes = useCommonStyles()
-    const newActivity = props.newActivity
     const {id} = {...props}
-    const handleSetCreateActivityState = props.handleSetState
-
-    const validateStep1 = () =>{
-        handleSetCreateActivityState({step: 1})
-    }
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <form>
@@ -69,7 +72,7 @@ function CreateActivityStep1(props) {
                             )}
                           >
                             <Box className={classes.fieldNumberStyle}>1</Box>
-                            {'createActivity.inputs.title.label'}
+                            {'createActivity.inputs.titleStep2.label'}
                           </Typography>
                         </label>
                         <OutlinedInput
@@ -78,7 +81,7 @@ function CreateActivityStep1(props) {
                           id="title"
                           name="title"
                           type="text"
-                          onBlur={e => handleSetCreateActivityState({newActivity: e.target.value}) }
+                         // onChange={e => handleTextFieldChange(e, props)}
                          // onBlur={e => handleTextFieldBlur(e, props)}
                         />
                         {/* <FormHelperText
@@ -280,7 +283,6 @@ function CreateActivityStep1(props) {
                         primaryButtonStyle
                         customButtonStyle
                         size="small"
-                        onClick= {validateStep1} 
                         >
                         {'Next ->'}
                         </CustomButton> 
@@ -291,4 +293,4 @@ function CreateActivityStep1(props) {
   )
 }
 
-export default CreateActivityStep1
+export default CreateActivityStep2

@@ -7,5 +7,5 @@ import activities from './activityReducer';
 export default combineReducers({
   auth,
   projects,
-  activities
+  activities,
 });

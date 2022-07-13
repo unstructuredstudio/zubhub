@@ -19,4 +19,4 @@ export const getActivities = () => {
         payload: { all_activities: activities },
       });
     };  
-  };  
+  };

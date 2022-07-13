@@ -2,6 +2,9 @@ const styles = theme => ({
   marginTop1em: {
     marginTop: '1em',
   },
+  marginTop3em: {
+    marginTop: '3em',
+  },
   marginBottom1em: {
     marginBottom: '1em',
   },
@@ -37,6 +40,9 @@ const styles = theme => ({
   },
   alignCenter: {
     alignItems: 'center',
+  },
+  justifyRight: {
+    justifyContent: 'right',
   },
   addOnSmallScreen: {
     [theme.breakpoints.up('555')]: {
@@ -79,6 +85,15 @@ const styles = theme => ({
   extendedTagStyle: {
     backgroundColor: 'grey',
   },
+  Right: {
+    right: '0'
+  },
+  Left: {
+    left: '0'
+  },
+  selfCenter: {
+    left: '50%'
+  }
 });
 
 export default styles;
