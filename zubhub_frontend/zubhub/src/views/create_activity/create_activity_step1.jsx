@@ -45,7 +45,7 @@ function CreateActivityStep1(props) {
     const handleSetCreateActivityState = props.handleSetState
 
     const validateStep1 = () =>{
-        handleSetCreateActivityState({step: 1})
+        handleSetCreateActivityState({step: 2})
     }
   return (
     <div className={activity_classes.createActivityStepContainer}>

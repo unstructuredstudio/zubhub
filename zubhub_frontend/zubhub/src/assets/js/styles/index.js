@@ -85,15 +85,6 @@ const styles = theme => ({
   extendedTagStyle: {
     backgroundColor: 'grey',
   },
-  Right: {
-    right: '0'
-  },
-  Left: {
-    left: '0'
-  },
-  selfCenter: {
-    left: '50%'
-  }
 });
 
 export default styles;

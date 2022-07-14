@@ -50,6 +50,10 @@ function CreateActivityStep2(props) {
     const activity_classes = useStyles()
     const common_classes = useCommonStyles()
     const {id} = {...props}
+    const handleSetCreateActivityState = props.handleSetState
+    const validateStep2 = () => {
+      handleSetCreateActivityState({step: 3})
+    }
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <form>
@@ -283,6 +287,7 @@ function CreateActivityStep2(props) {
                         primaryButtonStyle
                         customButtonStyle
                         size="small"
+                        onClick = { validateStep2 }
                         >
                         {'Next ->'}
                         </CustomButton> 
