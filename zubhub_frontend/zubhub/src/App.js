@@ -89,7 +89,11 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               {/* <LazyImport LazyComponent={Projects} {...routeProps} {...props} /> */}
-              <CreateActivity />
+              <LazyImport
+                LazyComponent={CreateActivity}
+                {...routeProps}
+                {...props}
+              />
             </PageWrapper>
           )}
         />
@@ -132,7 +136,19 @@ function App(props) {
             </PageWrapper>
           )}
         />
-
+        
+        <Route
+          path="/activities/create"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateActivity}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
         <Route
           path="/password-reset"
           render={routeProps => (

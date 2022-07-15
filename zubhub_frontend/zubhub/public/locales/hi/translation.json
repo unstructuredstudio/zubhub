@@ -26,7 +26,8 @@
       "following": "निम्नलिखित",
       "savedProjects": "बुकमार्क",
       "logout": "लॉग आउट",
-      "browseActivities": "ब्राउज़ गतिविधियां"
+      "browseActivities": "ब्राउज़ गतिविधियां",
+      "createActivity": "गतिविधि बनाएं"
     },
 
     "footer": {
@@ -740,6 +741,27 @@
     "answer": "उत्तर",
     "errors": {
       "page_empty": "यह पेज खाली है"
+    }
+  },
+
+  "createActivity": {
+     "welcomeMsg": {
+      "primary": "गतिविधि बनाएं"
+    },
+    "inputs": {
+      "title": {
+        "label": "अपनी गतिविधि को नाम दें"
+      },
+      "motivation": {
+        "label": "प्रेरणा",
+        "helperText": "प्रेरणा पाठ जोड़ें",
+        "placeholder": "प्रेरणा पाठ जोड़ें"
+      },
+      "learningGoals": {
+        "label": "सीखने के लक्ष्य जोड़ें",
+        "helperText": "इस गतिविधि के कुछ सीखने के लक्ष्यों की सूची बनाएं",
+        "placeholder": "इस गतिविधि के कुछ सीखने के लक्ष्यों की सूची बनाएं"
+      }
     }
   }
 }

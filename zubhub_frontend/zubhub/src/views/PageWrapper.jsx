@@ -541,7 +541,21 @@ function PageWrapper(props) {
                     }}
                     open={profileMenuOpen}
                     onClose={e => handleSetState(handleProfileMenuClose(e))}
-                  >
+                  >  
+                     <MenuItem className={common_classes.addOnSmallScreen}>
+                      <Link
+                        className={classes.textDecorationNone}
+                        to="/activities/create"
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.createActivity')}
+                        </Typography>
+                      </Link>
+                    </MenuItem>
                     <MenuItem>
                     <Tooltip title={props.auth.username} placement="top">
                       <Typography

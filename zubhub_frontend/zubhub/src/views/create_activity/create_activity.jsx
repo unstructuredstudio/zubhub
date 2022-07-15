@@ -2,23 +2,8 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
 import {
-  Grid,
   Box,
-  Container,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Dialog,
-  Select,
-  MenuItem,
   Typography,
-  CircularProgress,
-  OutlinedInput,
-  FormHelperText,
-  FormControl,
-  InputLabel,
-  ClickAwayListener,
 } from '@material-ui/core';
 import CreateActivityStep1 from './create_activity_step1';
 import CreateActivityStep2 from './create_activity_step2';
@@ -29,6 +14,7 @@ const useCommonStyles = makeStyles(commonStyles);
 
 
 function CreateActivity(props) {
+  const { t } = props
   const classes = useStyles()
   const common_classes = useCommonStyles()
   const [state, setState] = useState(
@@ -55,15 +41,23 @@ function CreateActivity(props) {
           className={classes.createActivityContainerTitle
         }
         >
-          Create Activity
+          {t('createActivity.welcomeMsg.primary')}
         </Typography>
         <MultiStepProgressBar step={state.step} stepCount={4} />
         <Box 
-        
+
           className={classes.CreateActivityFormContainer}>
           {state.step === 1?
-            <CreateActivityStep1 handleSetState= {handleSetState} newActivity= {state.newActivity} /> :
-            <CreateActivityStep2 handleSetState={handleSetState} />
+            <CreateActivityStep1 
+              handleSetState= {handleSetState} 
+              newActivity= {state.newActivity} 
+              t= {t}
+              /> :
+            <CreateActivityStep2 
+              handleSetState= {handleSetState} 
+              newActivity= {state.newActivity} 
+              t= {t}
+              />
           }
           
         </Box>
@@ -71,22 +65,5 @@ function CreateActivity(props) {
     </div>
   )
 }
-
-// const mapStateToProps = state => {
-//   return {
-//     activityCreationReducer: state.activity,
-//   };
-// };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     setStep1Status: () => {
-//       return dispatch(setStep1Status());
-//     },
-//     setStep2Status: () => {
-//       return dispatch(setStep2Status());
-//     }
-//   };
-//};
 
 export default CreateActivity;

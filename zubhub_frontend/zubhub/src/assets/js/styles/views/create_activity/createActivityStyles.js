@@ -43,5 +43,7 @@ export const styles = theme => ({
     height: '100%',
     borderRadius: '10px'
   },
-
+  reactQuillStyle: {
+    borderRadius: '15px'
+  }
 })

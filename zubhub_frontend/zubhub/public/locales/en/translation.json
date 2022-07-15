@@ -26,11 +26,8 @@
       "following": "Following",
       "savedProjects": "Bookmarks",
       "logout": "Logout",
-      "browseActivities": "BROWSE ACTIVITIES"
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
+      "browseActivities": "BROWSE ACTIVITIES",
+      "createActivity": "Create Activity"
     },
 
     "footer": {
@@ -760,6 +757,27 @@
     "answer": "Answer",
     "errors": {
       "page_empty": "This page is empty"
+    }
+  },
+
+  "createActivity": {
+    "welcomeMsg": {
+      "primary": "Create Activity"
+    },
+    "inputs": {
+      "title": {
+        "label": "Name your Activity"
+      },
+      "motivation": {
+        "label": "motivation",
+        "helperText": "Add motivation text",
+        "placeholder": "Add motivation text"
+      },
+      "learningGoals": {
+        "label": "Add Learning Goals",
+        "helperText": "List some of this activity's learning goals",
+        "placeholder": "List some of this activity's learning goals"
+      }
     }
   }
 }

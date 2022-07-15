@@ -11,7 +11,6 @@ const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function MultiStepProgressBar(props) {
-  console.log('progressBar props::', props)
   const [state, setState] = useState({...props})
   useEffect(() => {
     setState({...props})
@@ -19,12 +18,7 @@ function MultiStepProgressBar(props) {
     
   const classes = useStyles()
   const common_classes = useCommonStyles()
-  console.log('multi progressbar state', state)
-//   const  stepCountpercent = (100*(state.step - 1))/state.stepCount
-//   console.log('stepsss count percent:', stepCountpercent)
-  
-//   console.log('left', [(100 * 1) / (state.stepCount - 1), '%'].join(''))
-  
+
   return (
     <div>
         <Box className={classes.activityCreationProgressBar} >

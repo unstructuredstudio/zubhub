@@ -171,7 +171,7 @@ function CreateProject(props) {
     props.errors['video'],
     props.touched['video'],
   ]);
-
+   
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -194,6 +194,7 @@ function CreateProject(props) {
   } = state;
   const { t } = props;
   const id = props.match.params.id;
+  console.log(' create project props', props)
   if (!props.auth.token) {
     return <ErrorPage error={t('createProject.errors.notLoggedIn')} />;
   } else {

@@ -1,9 +1,5 @@
-import React from 'react'
+import React, {useState} from 'react'
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-
-import { withFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,14 +20,14 @@ import {
   OutlinedInput,
   FormHelperText,
   FormControl,
-  InputLabel,
   ClickAwayListener,
 } from '@material-ui/core';
+import { vars } from '../create_project/createProjectScripts';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
 import commonStyles from '../../assets/js/styles';
-
+import {validateStep} from './createActivityScripts'
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -40,12 +36,23 @@ function CreateActivityStep1(props) {
     const classes = useProjectStyles()
     const activity_classes = useStyles()
     const common_classes = useCommonStyles()
-    const newActivity = props.newActivity
-    const {id} = {...props}
+    const [newActivity, setNewActivity] = useState(props.newActivity) 
+    const {t} = {...props}
     const handleSetCreateActivityState = props.handleSetState
+    const setFieldValue = (value, field) => {
+      const fieldObject = {}
+      fieldObject[field] = value
+      setNewActivity((prevactivity) => ({ ...prevactivity, ...fieldObject }))
+    }
+    const setMotivation = (value) => {
+      setNewActivity((prevactivity) => ({ ...prevactivity, motivation: value}))
+    }
 
+    const setLearningGoals = (value) => {
+      setNewActivity((prevactivity) => ({ ...prevactivity, learningGoals: value}))
+    }
     const validateStep1 = () =>{
-        handleSetCreateActivityState({step: 2})
+      props.handleSetState({step: 2, newActivity: newActivity})      
     }
   return (
     <div className={activity_classes.createActivityStepContainer}>
@@ -69,29 +76,16 @@ function CreateActivityStep1(props) {
                             )}
                           >
                             <Box className={classes.fieldNumberStyle}>1</Box>
-                            {'createActivity.inputs.title.label'}
+                            {t('createActivity.inputs.title.label')}
                           </Typography>
                         </label>
                         <OutlinedInput
-                          //ref={refs.title_el}
                           className={classes.customInputStyle}
                           id="title"
                           name="title"
                           type="text"
-                          onBlur={e => handleSetCreateActivityState({newActivity: e.target.value}) }
-                         // onBlur={e => handleTextFieldBlur(e, props)}
+                          onBlur={e => setFieldValue( e.target.value, 'title') }
                         />
-                        {/* <FormHelperText
-                          error
-                          className={classes.fieldHelperTextStyle}
-                        >
-                          {(props.status && props.status['title']) ||
-                            (props.touched['title'] &&
-                              props.errors['title'] &&
-                              t(
-                                `createProject.inputs.title.errors.${props.errors['title']}`,
-                              ))}
-                        </FormHelperText> */}
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} className={common_classes.marginTop1em}>
@@ -111,7 +105,7 @@ function CreateActivityStep1(props) {
                             )}
                           >
                             <Box className={classes.fieldNumberStyle}>2</Box>
-                            {'createActivity.inputs.motivation.label'}
+                            {t('createActivity.inputs.motivation.label')}
                           </Typography>
                         </label>
                         <Typography
@@ -123,62 +117,22 @@ function CreateActivityStep1(props) {
                             common_classes.marginBottom1em,
                           )}
                         >
-                          {'createActivity.inputs.motivation.helperText'}
+                          {t('createActivity.inputs.motivation.helperText')}
                         </Typography>
                         <ClickAwayListener
-                        //   onClickAway={() =>
-                        //     handleSetState({ desc_input_is_focused: false })
-                        //   }
+                          // onClickAway={setNewActivity()}
                         >
                           <ReactQuill
-                            // ref={refs.desc_el}
-                            // className={clsx(
-                            //   classes.descInputStyle,
-                            //   {
-                            //     [classes.descInputFocusStyle]:
-                            //       desc_input_is_focused,
-                            //   },
-                            //   {
-                            //     [classes.descInputErrorStyle]:
-                            //       (props.status &&
-                            //         props.status['description']) ||
-                            //       (props.touched['description'] &&
-                            //         props.errors['description']),
-                            //   },
-                            // )}
-                            // modules={vars.quill.modules}
-                            // formats={vars.quill.formats}
-                            defaultValue={''}
+                            className= {activity_classes.reactQuillStyle}
+                            modules={vars.quill.modules}
+                            formats={vars.quill.formats}
                             placeholder={
-                              'createActivity.inputs.motivation.placeholder'
+                              t('createActivity.inputs.motivation.placeholder')
                             }
-                            // onChange={value =>
-                            //   handleDescFieldChange(
-                            //     value,
-                            //     props,
-                            //     handleSetState,
-                            //   )
-                            // }
-                            // onFocus={() =>
-                            //   handleDescFieldFocusChange(
-                            //     null,
-                            //     props,
-                            //     handleSetState,
-                            //   )
-                            // }
+                            value={ newActivity.motivation? newActivity.motivation : '' }
+                            onChange={setMotivation}
                           />
                         </ClickAwayListener>
-                        {/* <FormHelperText
-                          error
-                          className={classes.fieldHelperTextStyle}
-                        >
-                          {(props.status && props.status['description']) ||
-                            (props.touched['description'] &&
-                              props.errors['description'] &&
-                              t(
-                                `createProject.inputs.description.errors.${props.errors['description']}`,
-                              ))}
-                        </FormHelperText> */}
                       </FormControl>
                     </Grid> 
 
@@ -199,7 +153,7 @@ function CreateActivityStep1(props) {
                             )}
                           >
                             <Box className={classes.fieldNumberStyle}>3</Box>
-                            {'createActivity.inputs.learningGoals.label'}
+                            {t('createActivity.inputs.learningGoals.label')}
                           </Typography>
                         </label>
                         <Typography
@@ -211,62 +165,18 @@ function CreateActivityStep1(props) {
                             common_classes.marginBottom1em,
                           )}
                         >
-                          {'createActivity.inputs.learningGoals.helperText'}
+                          {t('createActivity.inputs.learningGoals.helperText')}
                         </Typography>
-                        <ClickAwayListener
-                        //   onClickAway={() =>
-                        //     handleSetState({ desc_input_is_focused: false })
-                        //   }
-                        >
                           <ReactQuill
-                            // ref={refs.desc_el}
-                            // className={clsx(
-                            //   classes.descInputStyle,
-                            //   {
-                            //     [classes.descInputFocusStyle]:
-                            //       desc_input_is_focused,
-                            //   },
-                            //   {
-                            //     [classes.descInputErrorStyle]:
-                            //       (props.status &&
-                            //         props.status['description']) ||
-                            //       (props.touched['description'] &&
-                            //         props.errors['description']),
-                            //   },
-                            // )}
-                            // modules={vars.quill.modules}
-                            // formats={vars.quill.formats}
+                            modules={vars.quill.modules}
+                            formats={vars.quill.formats}
                             defaultValue={''}
                             placeholder={
-                              'createActivity.inputs.learningGoals.placeholder'
+                              t('createActivity.inputs.learningGoals.placeholder')
                             }
-                            // onChange={value =>
-                            //   handleDescFieldChange(
-                            //     value,
-                            //     props,
-                            //     handleSetState,
-                            //   )
-                            // }
-                            // onFocus={() =>
-                            //   handleDescFieldFocusChange(
-                            //     null,
-                            //     props,
-                            //     handleSetState,
-                            //   )
-                            // }
+                            value={ newActivity.learningGoals? newActivity.learningGoals : '' }
+                            onChange={setLearningGoals}
                           />
-                        </ClickAwayListener>
-                        {/* <FormHelperText
-                          error
-                          className={classes.fieldHelperTextStyle}
-                        >
-                          {(props.status && props.status['description']) ||
-                            (props.touched['description'] &&
-                              props.errors['description'] &&
-                              t(
-                                `createProject.inputs.description.errors.${props.errors['description']}`,
-                              ))}
-                        </FormHelperText> */}
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} 
