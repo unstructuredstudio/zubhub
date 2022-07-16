@@ -34,7 +34,10 @@ function CreateActivity(props) {
 
   return (
     <div className={classes.createActivityContainer} >
-      <Box className={classes.createActivityBoxContainer}>
+      <Box 
+        className={classes.createActivityBoxContainer}
+        disableScrollLock
+        >
         <Typography
           variant="h3"
           component="h2"

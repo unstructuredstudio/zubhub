@@ -777,7 +777,24 @@
         "label": "Add Learning Goals",
         "helperText": "List some of this activity's learning goals",
         "placeholder": "List some of this activity's learning goals"
+      },
+      "materialsUsed": {
+      "label": "what materials did you use?",
+      "helperText": "List some of the essential materials used to create this activity",
+      "encouragingText": "We stronglly encorage you to upload an image containing all materials and tools used to create this activity",
+      "images": {
+        "label": "Add Images"
       }
+      },
+      "FacilitationTips": {
+        "label": "Facilitation tips",
+        "helperText": "List some helpful facilitation tips",
+        "placeholder": "Facilitation tips"
+      }
+      
+    },
+    "buttons": {
+      "Next": "Next->"
     }
   }
 }
