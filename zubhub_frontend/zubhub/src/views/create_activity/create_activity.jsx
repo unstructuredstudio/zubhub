@@ -31,7 +31,9 @@ function CreateActivity(props) {
         });
     }
   };
-
+  const validateStep = (step, newActivity) =>{
+      handleSetState({step: step, newActivity: newActivity})      
+    }
   return (
     <div className={classes.createActivityContainer} >
       <Box 
@@ -53,7 +55,8 @@ function CreateActivity(props) {
           {state.step === 1?
             <CreateActivityStep1 
               handleSetState= {handleSetState} 
-              newActivity= {state.newActivity} 
+              newActivity= {state.newActivity}
+              validateStep= {validateStep} 
               t= {t}
               /> :
             <CreateActivityStep2 

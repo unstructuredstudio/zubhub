@@ -1,7 +1,5 @@
 import React, {useState} from 'react'
 import clsx from 'clsx';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -27,7 +25,7 @@ import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
 import commonStyles from '../../assets/js/styles';
-import {validateStep} from './createActivityScripts'
+import InputText from '../../components/inputText/inputText';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -37,18 +35,11 @@ function CreateActivityStep1(props) {
     const activity_classes = useStyles()
     const common_classes = useCommonStyles()
     const [newActivity, setNewActivity] = useState(props.newActivity) 
-    const {t} = {...props}
+    const {t, validateStep} = {...props}
     const setFieldValue = (value, field) => {
       const fieldObject = {}
       fieldObject[field] = value
       setNewActivity((prevactivity) => ({ ...prevactivity, ...fieldObject }))
-    }
-    const setMotivation = (value) => {
-      setNewActivity((prevactivity) => ({ ...prevactivity, motivation: value}))
-    }
-
-    const setLearningGoals = (value) => {
-      setNewActivity((prevactivity) => ({ ...prevactivity, learningGoals: value}))
     }
     const validateStep1 = () =>{
       props.handleSetState({step: 2, newActivity: newActivity})      
@@ -87,91 +78,34 @@ function CreateActivityStep1(props) {
               </FormControl>
             </Grid>
             <Grid item xs={12} className={common_classes.marginTop1em}>
-              <FormControl
-                className={clsx(classes.margin, classes.textField)}
-                variant="outlined"
-                size="small"
-                fullWidth
-                margin="small"
-              >
-                <label htmlFor="motivation">
-                  <Typography
-                    color="textSecondary"
-                    className={clsx(
-                      classes.customLabelStyle,
-                      common_classes.marginBottom1em,
-                    )}
-                  >
-                    <Box className={classes.fieldNumberStyle}>2</Box>
-                    {t('createActivity.inputs.motivation.label')}
-                  </Typography>
-                </label>
-                <Typography
-                  color="textSecondary"
-                  variant="caption"
-                  component="span"
-                  className={clsx(
-                    classes.fieldHelperTextStyle,
-                    common_classes.marginBottom1em,
-                  )}
-                >
-                  {t('createActivity.inputs.motivation.helperText')}
-                </Typography>
-                  <ReactQuill
-                    className= {activity_classes.reactQuillStyle}
-                    modules={vars.quill.modules}
-                    formats={vars.quill.formats}
-                    placeholder={
-                      t('createActivity.inputs.motivation.placeholder')
-                    }
-                    value={ newActivity.motivation? newActivity.motivation : '' }
-                    onChange={setMotivation}
-                  />
-              </FormControl>
+              <InputText 
+                classes={classes} 
+                common_classes={common_classes}
+                activity_classes={activity_classes}
+                value={newActivity.motivation} 
+                label={'motivation'}
+                fieldLabel={t('createActivity.inputs.motivation.label')} 
+                helperText={t('createActivity.inputs.motivation.helperText')} 
+                placeholder={t('createActivity.inputs.motivation.placeholder')} 
+                inputOrder={2}
+                setValue={setNewActivity}
+                vars={vars}
+              />
             </Grid> 
-
             <Grid item xs={12} className={common_classes.marginTop1em}>
-              <FormControl
-                className={clsx(classes.margin, classes.textField)}
-                variant="outlined"
-                size="small"
-                fullWidth
-                margin="small"
-              >
-                <label htmlFor="learningGoals">
-                  <Typography
-                    color="textSecondary"
-                    className={clsx(
-                      classes.customLabelStyle,
-                      common_classes.marginBottom1em,
-                    )}
-                  >
-                    <Box className={classes.fieldNumberStyle}>3</Box>
-                    {t('createActivity.inputs.learningGoals.label')}
-                  </Typography>
-                </label>
-                <Typography
-                  color="textSecondary"
-                  variant="caption"
-                  component="span"
-                  className={clsx(
-                    classes.fieldHelperTextStyle,
-                    common_classes.marginBottom1em,
-                  )}
-                >
-                  {t('createActivity.inputs.learningGoals.helperText')}
-                </Typography>
-                  <ReactQuill
-                    modules={vars.quill.modules}
-                    formats={vars.quill.formats}
-                    defaultValue={''}
-                    placeholder={
-                      t('createActivity.inputs.learningGoals.placeholder')
-                    }
-                    value={ newActivity.learningGoals? newActivity.learningGoals : '' }
-                    onChange={setLearningGoals}
-                  />
-              </FormControl>
+              <InputText 
+                classes={classes} 
+                common_classes={common_classes}
+                activity_classes={activity_classes}
+                value={newActivity.learningGoals} 
+                label={'learningGoals'}
+                fieldLabel={t('createActivity.inputs.learningGoals.label')} 
+                helperText={t('createActivity.inputs.learningGoals.helperText')} 
+                placeholder={t('createActivity.inputs.learningGoals.placeholder')} 
+                inputOrder={3}
+                setValue={setNewActivity}
+                vars={vars}
+              />
             </Grid>
             <Grid item xs={12} 
               className={common_classes.marginTop3em+' '
@@ -184,7 +118,7 @@ function CreateActivityStep1(props) {
                 primaryButtonStyle
                 customButtonStyle
                 size="small"
-                onClick= {validateStep1} 
+                onClick= {() => validateStep(2, newActivity)} 
                 >
                 {t('createActivity.buttons.Next')}
                 </CustomButton> 
