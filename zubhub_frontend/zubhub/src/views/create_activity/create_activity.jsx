@@ -8,7 +8,7 @@ import {
 import CreateActivityStep1 from './create_activity_step1';
 import CreateActivityStep2 from './create_activity_step2';
 import commonStyles from '../../assets/js/styles';
-import MultiStepProgressBar from '../../components/multi_step_progress_bar/multiStepProgressBar'
+import MultiStepProgressBar from '../../components/multi_step_progress_bar/multiStepProgressBar';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -38,7 +38,7 @@ function CreateActivity(props) {
     <div className={classes.createActivityContainer} >
       <Box 
         className={classes.createActivityBoxContainer}
-        disableScrollLock
+        disableScrollLock={false}
         >
         <Typography
           variant="h3"
@@ -68,6 +68,7 @@ function CreateActivity(props) {
           
         </Box>
       </Box>
+      
     </div>
   )
 }

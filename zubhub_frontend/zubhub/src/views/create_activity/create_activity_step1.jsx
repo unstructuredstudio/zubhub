@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import clsx from 'clsx';
 import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,6 +26,7 @@ import projectStyles from '../../assets/js/styles/views/create_project/createPro
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
 import commonStyles from '../../assets/js/styles';
 import InputText from '../../components/inputText/inputText';
+import { prototype } from 'aws-sdk/clients/clouddirectory';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -34,8 +35,8 @@ function CreateActivityStep1(props) {
     const classes = useProjectStyles()
     const activity_classes = useStyles()
     const common_classes = useCommonStyles()
-    const [newActivity, setNewActivity] = useState(props.newActivity) 
-    const {t, validateStep} = {...props}
+    const [newActivity, setNewActivity] = useState(props.newActivity)
+    const {t, validateStep} = {...props} 
     const setFieldValue = (value, field) => {
       const fieldObject = {}
       fieldObject[field] = value
@@ -44,6 +45,7 @@ function CreateActivityStep1(props) {
     const validateStep1 = () =>{
       props.handleSetState({step: 2, newActivity: newActivity})      
     }
+    console.log('newActivity', newActivity)
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <form>
