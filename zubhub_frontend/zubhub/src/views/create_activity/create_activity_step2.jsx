@@ -1,38 +1,10 @@
 import React, {useState} from 'react'
 import clsx from 'clsx';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import InputText from '../../components/inputText/inputText'
 import 'react-toastify/dist/ReactToastify.css';
 import {vars} from '../create_project/createProjectScripts'
 import { makeStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import ImageIcon from '@material-ui/icons/Image';
-import VideoIcon from '@material-ui/icons/Movie';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import MovieIcon from '@material-ui/icons/Movie';
-import InsertLinkIcon from '@material-ui/icons/InsertLink';
-import AddMore from '../../components/addMore/addMore'
-import {
-  Grid,
-  Box,
-  Container,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Dialog,
-  Select,
-  MenuItem,
-  Typography,
-  CircularProgress,
-  OutlinedInput,
-  FormHelperText,
-  FormControl,
-  InputLabel,
-  ClickAwayListener,
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
@@ -43,29 +15,6 @@ const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-// const buildMaterialUsedNodes = ( materialsUsedList, classes, common_classes, setMaterialsUsedList ) => {
-//   const handleMaterialsUsedFieldBlur = (value) => {
-//     setMaterialsUsedList((prevValues) => [...prevValues, value])
-//   }
-//   const handleAddMaterialFieldChange = (index, value) => {
-    
-//   }
-//   return materialsUsedList.map((material, index) => (
-//     <OutlinedInput
-//       key={index}
-//       className={clsx(
-//         classes.customInputStyle,
-//         common_classes.marginTop1em,
-//       )}
-//       type="text"
-//       onBlur={(e) => handleMaterialsUsedFieldBlur(e.target.value)}
-//       //onChange={e => handleAddMaterialFieldChange(index, e.target.value)}
-//       value={material}
-//       placeholder={`${index + 1}.`}
-//     />    
-//   ));
-// };
-
 function CreateActivityStep2(props) {
     const classes = useProjectStyles()
     const activity_classes = useStyles()
@@ -73,14 +22,6 @@ function CreateActivityStep2(props) {
     const [newActivity, setNewActivity] = useState(props.newActivity)
     const [materialsUsedList, setMaterialsUsedList] = useState(newActivity.materialsUsed? newActivity.materialsUsed : ['','',''] ) 
     const {t} = {...props}
-    const setFieldValue = (value, field) => {
-      const fieldObject = {}
-      fieldObject[field] = value
-      setNewActivity((prevactivity) => ({ ...prevactivity, ...fieldObject }))
-    }
-    const setFacilitationTips = (value) => {
-      setNewActivity((prevactivity) => ({ ...prevactivity, facilitationTips: value}))
-    }
 
     const validateStep2 = () =>{
       props.handleSetState({step: 3, newActivity: newActivity})      
@@ -120,11 +61,12 @@ function CreateActivityStep2(props) {
               />
             </Grid> 
           <Grid item xs={12} 
-            className={common_classes.marginTop3em+' '
-                        +common_classes.marginBottom1em+' '
-                        +common_classes.displayFlex+' '
-                        +common_classes.justifyRight
-                        }>
+            className={clsx(
+              common_classes.marginTop3em, 
+              common_classes.marginBottom1em, 
+              common_classes.displayFlex, 
+              common_classes.justifyRight
+              )}>
               <CustomButton
               variant="contained"
               primaryButtonStyle
