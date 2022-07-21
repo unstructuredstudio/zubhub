@@ -4,18 +4,18 @@ import InputText from '../../components/inputText/inputText'
 import 'react-toastify/dist/ReactToastify.css';
 import {vars} from '../create_project/createProjectScripts'
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, FormControl, Box, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
 import commonStyles from '../../assets/js/styles';
 import MaterialsUsed from '../../components/materialsUsed/materialsUsed'
-import UploadFile from '../../components/upload_file/uploadFile'
+
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-function CreateActivityStep2(props) {
+function CreateActivityStep3(props) {
     const classes = useProjectStyles()
     const activity_classes = useStyles()
     const common_classes = useCommonStyles()
@@ -23,8 +23,8 @@ function CreateActivityStep2(props) {
     const [materialsUsedList, setMaterialsUsedList] = useState(newActivity.materialsUsed? newActivity.materialsUsed : ['','',''] ) 
     const {t} = {...props}
 
-    const validateStep2 = () =>{
-      props.handleSetState({step: 3, newActivity: newActivity})      
+    const validateStep3 = () =>{
+      props.handleSetState({step: 4, newActivity: newActivity})      
     }
     console.log('newActivity 2', newActivity)
   return (
@@ -61,36 +61,6 @@ function CreateActivityStep2(props) {
                 vars={vars}
               />
             </Grid> 
-          <Grid item xs={6} md={4} className={common_classes.marginTop1em}>
-            <FormControl
-                className={clsx(classes.margin, classes.textField)}
-                variant="outlined"
-                size="small"
-                fullWidth
-                margin="small"
-              >
-                <label htmlFor="ActivityImages">
-                  <Typography
-                    color="textSecondary"
-                    className={clsx(
-                      classes.customLabelStyle,
-                      common_classes.marginBottom1em,
-                    )}
-                  >
-                    <Box className={classes.fieldNumberStyle}>6</Box>
-                    {t('createActivity.inputs.images.label')}
-                  </Typography>
-                </label>
-                <UploadFile 
-                  id={'ActivityImages'} 
-                  fileType={'image/*'}
-                  uploadButtonLabel={t('createActivity.inputs.materialsUsed.images.label')}
-                  classes={classes}
-                  common_classes={common_classes}
-                  t={props.t}
-                />
-              </FormControl>
-          </Grid>  
           <Grid item xs={12} 
             className={clsx(
               common_classes.marginTop3em, 
@@ -103,7 +73,7 @@ function CreateActivityStep2(props) {
               primaryButtonStyle
               customButtonStyle
               size="small"
-              onClick= {validateStep2} 
+              onClick= {validateStep3} 
               >
               {t('createActivity.buttons.Next')}
               </CustomButton> 
@@ -114,4 +84,4 @@ function CreateActivityStep2(props) {
   )
 }
 
-export default CreateActivityStep2
+export default CreateActivityStep3

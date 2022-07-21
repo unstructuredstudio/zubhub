@@ -14,11 +14,9 @@ function InputText(props) {
             common_classes,
             activity_classes, 
             value, 
-            label,
-            fieldLabel, 
+            label, 
             helperText, 
             placeholder, 
-            inputOrder,
             setValue,
             vars
             } = props 
@@ -36,18 +34,6 @@ function InputText(props) {
                 fullWidth
                 margin="small"
               >
-                <label htmlFor={label}>
-                  <Typography
-                    color="textSecondary"
-                    className={clsx(
-                      classes.customLabelStyle,
-                      common_classes.marginBottom1em,
-                    )}
-                  >
-                    <Box className={classes.fieldNumberStyle}>{inputOrder}</Box>
-                    {fieldLabel}
-                  </Typography>
-                </label>
                 <Typography
                   color="textSecondary"
                   variant="caption"

@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
+import { withFormik } from 'formik';
+import { validationSchema } from './createActivityScripts'
 import {
   Box,
   Typography,
 } from '@material-ui/core';
 import CreateActivityStep1 from './create_activity_step1';
 import CreateActivityStep2 from './create_activity_step2';
+import CreateActivityStep3 from './create_activity_step3';
 import commonStyles from '../../assets/js/styles';
 import MultiStepProgressBar from '../../components/multi_step_progress_bar/multiStepProgressBar';
 const useStyles = makeStyles(styles);
@@ -48,28 +51,42 @@ function CreateActivity(props) {
           {t('createActivity.welcomeMsg.primary')}
         </Typography>
         <MultiStepProgressBar step={state.step} stepCount={4} />
-        <Box 
-
-          className={classes.CreateActivityFormContainer}>
-          {state.step === 1?
-            <CreateActivityStep1 
-              handleSetState= {handleSetState} 
-              newActivity= {state.newActivity}
-              validateStep= {validateStep} 
-              t= {t}
-              /> :
-            <CreateActivityStep2 
-              handleSetState= {handleSetState} 
-              newActivity= {state.newActivity} 
-              t= {t}
-              />
-          }
-          
-        </Box>
+        <form>
+          <Box 
+            className={classes.CreateActivityFormContainer}>
+            {state.step === 1?
+              <CreateActivityStep1 
+                handleSetState= {handleSetState} 
+                newActivity= {state.newActivity}
+                validateStep= {validateStep} 
+                t= {t}
+                {...props}
+                /> :state.step === 2?
+              <CreateActivityStep2 
+                handleSetState= {handleSetState} 
+                newActivity= {state.newActivity} 
+                t= {t}
+                />
+                :
+              <CreateActivityStep3
+                handleSetState= {handleSetState} 
+                newActivity= {state.newActivity} 
+                t= {t}
+                />  
+            }
+            
+          </Box>
+        </form>
       </Box>
       
     </div>
   )
 }
 
-export default CreateActivity;
+export default withFormik({
+    mapPropsToValue: () => ({
+      title: '',
+      motivation: '',
+    }),
+    validationSchema,
+  })(CreateActivity);

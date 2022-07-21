@@ -23,10 +23,13 @@ import {
   InputLabel,
   ClickAwayListener,
 } from '@material-ui/core';
+import {handleImageFieldChange} from '../../views/create_activity/createActivityScripts';
+import UploadFile from '../../components/upload_file/uploadFile';
 
 function MaterialsUsed(props) {
   const refs = {
     imageInput: React.useRef(null),
+    image_count_el: React.useRef(null),
   }
   const {
         classes, 
@@ -41,8 +44,7 @@ function MaterialsUsed(props) {
         materialsUsedList,
         setNewActivity
         } = props;
-  const [materials, setMaterials] = useState(materialsUsedList)
-  const [openImageInput, setOpenImageInput] = useState('false')      
+  const [materials, setMaterials] = useState(materialsUsedList)     
   const handleMaterialsUsedFieldBlur = () => {
     setNewActivity(prev => ({...prev, materialsUsed: materials}))
   }
@@ -53,7 +55,7 @@ function MaterialsUsed(props) {
     setMaterials(mt)
   }
   const handleImageButtonClick = (e) => {
-    refs.image_el.current.click()
+    refs.imageInput.current.click()
   } 
   
   return (
@@ -111,8 +113,7 @@ function MaterialsUsed(props) {
         />
       </Grid>  
     </Grid>
-    <Grid item xs={12} className={common_classes.marginTop1em}> 
-      <FormControl>
+    <Grid item xs={12} className={common_classes.marginTop3em}> 
         <Typography
           color="textSecondary"
           variant="caption"
@@ -126,38 +127,19 @@ function MaterialsUsed(props) {
         {encouragingText}
       </Typography>
       <Grid container spacing={1}>
-        <Grid item xs={12} sm={6} md={6}>
-          <CustomButton
-            variant="outlined"
-            size="large"
-            margin="normal"
-            id="image_upload_button"
-            startIcon={<ImageIcon />}
-            onClick={e =>
-              handleImageButtonClick(e)
-            }
-            secondaryButtonStyle
-            mediaUploadButtonStyle
-            customButtonStyle
-            fullWidth
-          >
-            {imagesLabel}
-          </CustomButton>
-        </Grid>
-        </Grid>
-        <input
-          ref={refs.image_el}
-          className={classes.displayNone}
-          aria-hidden="true"
-          type="file"
-          accept="image/*"
-          id="activityMaterialsUsedImage"
-          name="activityMaterialsUsedImage"
-          multiple
-        />
-      </FormControl>
-      </Grid>
-    </div>
+        <Grid item xs={12} sm={4} md={4}>
+          <UploadFile 
+              id={'ActivityMaterialsUsedImages'} 
+              fileType={'image/*'}
+              uploadButtonLabel={props.t('createActivity.inputs.materialsUsed.images.label')}
+              classes={classes}
+              common_classes={common_classes}
+              t={props.t}
+            />
+          </Grid>
+          </Grid>  
+    </Grid>
+  </div>
   )
 };
 

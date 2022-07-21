@@ -790,6 +790,9 @@
         "label": "Facilitation tips",
         "helperText": "List some helpful facilitation tips",
         "placeholder": "Facilitation tips"
+      },
+      "images": {
+        "label": "Let's add some pictures"
       }
       
     },

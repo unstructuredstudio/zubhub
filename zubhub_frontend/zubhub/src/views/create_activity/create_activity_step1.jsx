@@ -20,13 +20,14 @@ import {
   FormControl,
   ClickAwayListener,
 } from '@material-ui/core';
-import { vars } from '../create_project/createProjectScripts';
+import { vars, handleTextFieldChange } from '../create_project/createProjectScripts';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
 import commonStyles from '../../assets/js/styles';
 import InputText from '../../components/inputText/inputText';
-import { prototype } from 'aws-sdk/clients/clouddirectory';
+//import { prototype } from 'aws-sdk/clients/clouddirectory';
+import FormLabel from '../../components/form_labels/formLabel'
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -45,7 +46,7 @@ function CreateActivityStep1(props) {
     const validateStep1 = () =>{
       props.handleSetState({step: 2, newActivity: newActivity})      
     }
-    console.log('newActivity', newActivity)
+    console.log('step1 props', props)
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <form>
@@ -57,54 +58,74 @@ function CreateActivityStep1(props) {
                 size="small"
                 fullWidth
                 margin="small"
+                error={
+                        (props.touched['title'] && props.errors['title'])
+                      }
               >
-                <label htmlFor="title">
-                  <Typography
-                    color="textSecondary"
-                    className={clsx(
-                      classes.customLabelStyle,
-                      common_classes.marginBottom1em,
-                    )}
-                  >
-                    <Box className={classes.fieldNumberStyle}>1</Box>
-                    {t('createActivity.inputs.title.label')}
-                  </Typography>
-                </label>
+                <FormLabel 
+                  label={"title"}
+                  classes={classes}
+                  common_classes={common_classes}
+                  inputOrder={1}
+                  fieldLabel={t('createActivity.inputs.title.label')}
+                />
+                
                 <OutlinedInput
                   className={classes.customInputStyle}
                   id="title"
                   name="title"
                   type="text"
                   onBlur={e => setFieldValue( e.target.value, 'title') }
+                  onChange= {(e) => handleTextFieldChange(e, props)}
                 />
+                <FormHelperText
+                  error
+                  className={classes.fieldHelperTextStyle}
+                >
+                  {(props.touched['title'] &&
+                    props.errors['title'] &&
+                    t(
+                      `createProject.inputs.title.errors.${props.errors['title']}`,
+                    ))}
+                </FormHelperText>
               </FormControl>
             </Grid>
             <Grid item xs={12} className={common_classes.marginTop1em}>
-              <InputText 
+              <FormLabel 
+                  label={'motivation'}
+                  classes={classes}
+                  common_classes={common_classes}
+                  inputOrder={2}
+                  fieldLabel={t('createActivity.inputs.motivation.label')}
+                />
+              <InputText
+                label={'motivation'} 
                 classes={classes} 
                 common_classes={common_classes}
                 activity_classes={activity_classes}
                 value={newActivity.motivation} 
-                label={'motivation'}
-                fieldLabel={t('createActivity.inputs.motivation.label')} 
                 helperText={t('createActivity.inputs.motivation.helperText')} 
                 placeholder={t('createActivity.inputs.motivation.placeholder')} 
-                inputOrder={2}
                 setValue={setNewActivity}
                 vars={vars}
               />
             </Grid> 
             <Grid item xs={12} className={common_classes.marginTop1em}>
+              <FormLabel 
+                  label={'learningGoals'}
+                  classes={classes}
+                  common_classes={common_classes}
+                  inputOrder={3}
+                  fieldLabel={t('createActivity.inputs.learningGoals.label')}
+                />
               <InputText 
                 classes={classes} 
                 common_classes={common_classes}
                 activity_classes={activity_classes}
                 value={newActivity.learningGoals} 
-                label={'learningGoals'}
-                fieldLabel={t('createActivity.inputs.learningGoals.label')} 
+                label={'learningGoals'} 
                 helperText={t('createActivity.inputs.learningGoals.helperText')} 
                 placeholder={t('createActivity.inputs.learningGoals.placeholder')} 
-                inputOrder={3}
                 setValue={setNewActivity}
                 vars={vars}
               />
