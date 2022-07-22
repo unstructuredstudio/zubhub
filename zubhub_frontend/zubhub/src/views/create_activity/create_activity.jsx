@@ -58,22 +58,20 @@ function CreateActivity(props) {
                 handleSetState= {handleSetState} 
                 newActivity= {state.newActivity}
                 validateStep= {validateStep} 
-                t= {t}
                 {...props}
                 /> :state.step === 2?
               <CreateActivityStep2 
                 handleSetState= {handleSetState} 
                 newActivity= {state.newActivity} 
-                t= {t}
+                {...props}
                 />
                 :
               <CreateActivityStep3
                 handleSetState= {handleSetState} 
                 newActivity= {state.newActivity} 
-                t= {t}
+                {...props}
                 />  
             }
-            
           </Box>
         </form>
       </Box>
@@ -87,8 +85,11 @@ export default withFormik({
       title: '',
       motivation: '',
       learningGoals: '',
-      materialsUsed: [],
-      FacilitationTips: '',
+      facilitationTips: '',
+      creationSteps: [],
+      inspiringArtist: '',
+      inspiringExemplesDescriptions: [],
+      inspiringExemplesCredits: []
 
     }),
     validationSchema,

@@ -88,6 +88,11 @@ const styles = theme => ({
   extendedTagStyle: {
     backgroundColor: 'grey',
   },
+  outlined: {
+    border: '2px solid #00B8C4',
+    borderRadius: '15px',
+    padding: '1em'
+  }
 });
 
 export default styles;

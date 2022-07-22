@@ -11,6 +11,7 @@ import { styles } from '../../assets/js/styles/views/create_activity/createActiv
 import commonStyles from '../../assets/js/styles';
 import MaterialsUsed from '../../components/materialsUsed/materialsUsed';
 import UploadFile from '../../components/upload_file/uploadFile';
+import FormLabel from '../../components/form_labels/formLabel';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -29,7 +30,6 @@ function CreateActivityStep2(props) {
     console.log('newActivity 2', newActivity)
   return (
     <div className={activity_classes.createActivityStepContainer}>
-      <form>
         <Grid container spacing={3}>
           <Grid item xs={12} className={common_classes.marginTop1em}>
             <MaterialsUsed 
@@ -48,16 +48,20 @@ function CreateActivityStep2(props) {
             />
           </Grid>
           <Grid item xs={12} className={common_classes.marginTop1em}>
+              <FormLabel 
+                  label={'facilitationTips'}
+                  classes={classes}
+                  common_classes={common_classes}
+                  inputOrder={5}
+                  fieldLabel={t('createActivity.inputs.facilitationTips.label')} 
+                />
               <InputText 
                 classes={classes} 
                 common_classes={common_classes}
                 activity_classes={activity_classes}
-                value={newActivity.FacilitationTips} 
-                label={'FacilitationTips'}
-                fieldLabel={t('createActivity.inputs.FacilitationTips.label')} 
-                helperText={t('createActivity.inputs.FacilitationTips.helperText')} 
-                placeholder={t('createActivity.inputs.FacilitationTips.placeholder')} 
-                inputOrder={2}
+                label={'facilitationTips'}
+                helperText={t('createActivity.inputs.facilitationTips.helperText')} 
+                placeholder={t('createActivity.inputs.facilitationTips.placeholder')} 
                 vars={vars}
                 {...props}
               />
@@ -99,6 +103,16 @@ function CreateActivityStep2(props) {
               common_classes.displayFlex, 
               common_classes.justifySpaceBetween
               )}>
+              
+              <CustomButton
+              variant="contained"
+              primaryButtonStyle
+              customButtonStyle
+              size="small"
+              >
+              {t('createActivity.buttons.Prev')}
+              </CustomButton> 
+
               <CustomButton
               variant="contained"
               primaryButtonStyle
@@ -108,18 +122,8 @@ function CreateActivityStep2(props) {
               >
               {t('createActivity.buttons.Next')}
               </CustomButton>
-              <CustomButton
-              variant="contained"
-              primaryButtonStyle
-              customButtonStyle
-              size="small"
-              onClick= {validateStep2} 
-              >
-              {t('createActivity.buttons.Prev')}
-              </CustomButton> 
           </Grid>
         </Grid>
-      </form>
     </div>
   )
 }

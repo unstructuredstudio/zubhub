@@ -44,6 +44,11 @@ export const handleInputTextFieldChange = (label,value, props) => {
   props.setFieldTouched(label, true);
 };
 
+export const handleInputTextFieldBlur = (label,value, props) => {
+  
+};
+
+
 // export const handleDescFieldFocusChange = (value, props, handleSetState) => {
 //   props.setFieldTouched('description');
 //   if (!value) {

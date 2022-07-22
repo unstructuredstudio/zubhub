@@ -26,8 +26,8 @@ import projectStyles from '../../assets/js/styles/views/create_project/createPro
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
 import commonStyles from '../../assets/js/styles';
 import InputText from '../../components/inputText/inputText';
-//import { prototype } from 'aws-sdk/clients/clouddirectory';
-import FormLabel from '../../components/form_labels/formLabel'
+import FormLabel from '../../components/form_labels/formLabel';
+import Input from '../../components/input/input';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -58,7 +58,12 @@ function CreateActivityStep1(props) {
                   inputOrder={1}
                   fieldLabel={t('createActivity.inputs.title.label')}
                 />
-                <FormControl
+                <Input 
+                  classes= {classes}
+                  label={'title'}
+                  {...props}
+                />
+                {/* <FormControl
                   className={clsx(classes.margin, classes.textField)}
                   variant="outlined"
                   size="small"
@@ -87,7 +92,7 @@ function CreateActivityStep1(props) {
                       ))
                     }
                   </FormHelperText>
-              </FormControl>
+              </FormControl> */}
             </Grid>
             <Grid item xs={12} className={common_classes.marginTop1em}>
               <FormLabel 
@@ -102,7 +107,6 @@ function CreateActivityStep1(props) {
                 classes={classes} 
                 common_classes={common_classes}
                 activity_classes={activity_classes}
-                //value={newActivity.motivation} 
                 helperText={t('createActivity.inputs.motivation.helperText')} 
                 placeholder={t('createActivity.inputs.motivation.placeholder')} 
                 vars={vars}
