@@ -766,22 +766,34 @@
     },
     "inputs": {
       "title": {
-        "label": "Name your Activity"
+        "label": "Name your Activity",
+        "errors": {
+          "max": "your title shouldn't be more than 100 characters",
+          "required": "This field is required"
+        }
       },
       "motivation": {
         "label": "motivation",
         "helperText": "Add motivation text",
-        "placeholder": "Add motivation text"
+        "placeholder": "Add motivation text",
+        "errors": {
+          "max": "your motivation shouldn't be more than 10,000 characters",
+          "required": "This field is required"
+        }
       },
       "learningGoals": {
         "label": "Add Learning Goals",
         "helperText": "List some of this activity's learning goals",
-        "placeholder": "List some of this activity's learning goals"
+        "placeholder": "List some of this activity's learning goals",
+        "errors": {
+          "max": "your learning goals shouldn't be more than 10,000 characters",
+          "required": "This field is required"
+        }
       },
       "materialsUsed": {
       "label": "what materials did you use?",
       "helperText": "List some of the essential materials used to create this activity",
-      "encouragingText": "We stronglly encorage you to upload an image containing all materials and tools used to create this activity",
+      "encouragingText": "We strongly encourage you to upload an image containing all materials and tools used to create this activity",
       "images": {
         "label": "Add Images"
       }
@@ -789,7 +801,11 @@
       "FacilitationTips": {
         "label": "Facilitation tips",
         "helperText": "List some helpful facilitation tips",
-        "placeholder": "Facilitation tips"
+        "placeholder": "Facilitation tips",
+        "errors": {
+          "max": "your facilitation tips shouldn't be more than 10,000 characters",
+          "required": "This field is required"
+        }
       },
       "images": {
         "label": "Let's add some pictures"
@@ -797,7 +813,8 @@
       
     },
     "buttons": {
-      "Next": "Next->"
+      "Next": "Next->",
+      "Prev": "<-Prev"
     }
   }
 }

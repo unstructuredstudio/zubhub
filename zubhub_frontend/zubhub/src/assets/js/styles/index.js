@@ -44,6 +44,9 @@ const styles = theme => ({
   justifyRight: {
     justifyContent: 'right',
   },
+  justifySpaceBetween: {
+    justifyContent: 'space-between'
+  },
   addOnSmallScreen: {
     [theme.breakpoints.up('555')]: {
       display: 'none',

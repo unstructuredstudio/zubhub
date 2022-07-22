@@ -1,16 +1,16 @@
 import React, {useState} from 'react'
 import clsx from 'clsx';
-import InputText from '../../components/inputText/inputText'
+import InputText from '../../components/inputText/inputText';
 import 'react-toastify/dist/ReactToastify.css';
-import {vars} from '../create_project/createProjectScripts'
+import {vars} from '../create_project/createProjectScripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, FormControl, Box, Typography } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
-import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
+import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
 import commonStyles from '../../assets/js/styles';
-import MaterialsUsed from '../../components/materialsUsed/materialsUsed'
-import UploadFile from '../../components/upload_file/uploadFile'
+import MaterialsUsed from '../../components/materialsUsed/materialsUsed';
+import UploadFile from '../../components/upload_file/uploadFile';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -44,6 +44,7 @@ function CreateActivityStep2(props) {
               materialsUsedList={materialsUsedList}
               setNewActivity={setNewActivity}
               t={t}
+              {...props}
             />
           </Grid>
           <Grid item xs={12} className={common_classes.marginTop1em}>
@@ -57,8 +58,8 @@ function CreateActivityStep2(props) {
                 helperText={t('createActivity.inputs.FacilitationTips.helperText')} 
                 placeholder={t('createActivity.inputs.FacilitationTips.placeholder')} 
                 inputOrder={2}
-                setValue={setNewActivity}
                 vars={vars}
+                {...props}
               />
             </Grid> 
           <Grid item xs={6} md={4} className={common_classes.marginTop1em}>
@@ -96,7 +97,7 @@ function CreateActivityStep2(props) {
               common_classes.marginTop3em, 
               common_classes.marginBottom1em, 
               common_classes.displayFlex, 
-              common_classes.justifyRight
+              common_classes.justifySpaceBetween
               )}>
               <CustomButton
               variant="contained"
@@ -106,6 +107,15 @@ function CreateActivityStep2(props) {
               onClick= {validateStep2} 
               >
               {t('createActivity.buttons.Next')}
+              </CustomButton>
+              <CustomButton
+              variant="contained"
+              primaryButtonStyle
+              customButtonStyle
+              size="small"
+              onClick= {validateStep2} 
+              >
+              {t('createActivity.buttons.Prev')}
               </CustomButton> 
           </Grid>
         </Grid>

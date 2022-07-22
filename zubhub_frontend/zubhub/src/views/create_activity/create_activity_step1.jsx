@@ -20,7 +20,7 @@ import {
   FormControl,
   ClickAwayListener,
 } from '@material-ui/core';
-import { vars, handleTextFieldChange } from '../create_project/createProjectScripts';
+import { vars, handleTextFieldChange, handleTextFieldBlur} from '../create_project/createProjectScripts';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
@@ -46,22 +46,11 @@ function CreateActivityStep1(props) {
     const validateStep1 = () =>{
       props.handleSetState({step: 2, newActivity: newActivity})      
     }
-    console.log('step1 props', props)
   return (
     <div className={activity_classes.createActivityStepContainer}>
-      <form>
           <Grid container spacing={3}>
             <Grid item xs={12} className={common_classes.marginTop1em}>
-              <FormControl
-                className={clsx(classes.margin, classes.textField)}
-                variant="outlined"
-                size="small"
-                fullWidth
-                margin="small"
-                error={
-                        (props.touched['title'] && props.errors['title'])
-                      }
-              >
+              
                 <FormLabel 
                   label={"title"}
                   classes={classes}
@@ -69,25 +58,35 @@ function CreateActivityStep1(props) {
                   inputOrder={1}
                   fieldLabel={t('createActivity.inputs.title.label')}
                 />
-                
-                <OutlinedInput
-                  className={classes.customInputStyle}
-                  id="title"
-                  name="title"
-                  type="text"
-                  onBlur={e => setFieldValue( e.target.value, 'title') }
-                  onChange= {(e) => handleTextFieldChange(e, props)}
-                />
-                <FormHelperText
-                  error
-                  className={classes.fieldHelperTextStyle}
-                >
-                  {(props.touched['title'] &&
-                    props.errors['title'] &&
-                    t(
-                      `createProject.inputs.title.errors.${props.errors['title']}`,
-                    ))}
-                </FormHelperText>
+                <FormControl
+                  className={clsx(classes.margin, classes.textField)}
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  margin="small"
+                  error={props.status && props.status['title']  && 
+                     props.errors['title']}
+                >  
+                  <OutlinedInput
+                    className={classes.customInputStyle}
+                    id="title"
+                    name="title"
+                    type="text"
+                    onBlur={e => handleTextFieldBlur( e, props) }
+                    onChange= {(e) => handleTextFieldChange(e, props)}
+                  />
+                  <FormHelperText
+                    error
+                    className={classes.fieldHelperTextStyle}
+                  >
+                    { (props.status && props.status['title']) || 
+                    ( props.errors['title'] && props.touched['title']) &&
+                      
+                     (t(
+                        `createActivity.inputs.title.errors.${props.errors['title']}`,
+                      ))
+                    }
+                  </FormHelperText>
               </FormControl>
             </Grid>
             <Grid item xs={12} className={common_classes.marginTop1em}>
@@ -103,11 +102,11 @@ function CreateActivityStep1(props) {
                 classes={classes} 
                 common_classes={common_classes}
                 activity_classes={activity_classes}
-                value={newActivity.motivation} 
+                //value={newActivity.motivation} 
                 helperText={t('createActivity.inputs.motivation.helperText')} 
                 placeholder={t('createActivity.inputs.motivation.placeholder')} 
-                setValue={setNewActivity}
                 vars={vars}
+                {...props}
               />
             </Grid> 
             <Grid item xs={12} className={common_classes.marginTop1em}>
@@ -122,20 +121,21 @@ function CreateActivityStep1(props) {
                 classes={classes} 
                 common_classes={common_classes}
                 activity_classes={activity_classes}
-                value={newActivity.learningGoals} 
+                //value={newActivity.learningGoals} 
                 label={'learningGoals'} 
                 helperText={t('createActivity.inputs.learningGoals.helperText')} 
                 placeholder={t('createActivity.inputs.learningGoals.placeholder')} 
-                setValue={setNewActivity}
+                // setValue={setNewActivity}
                 vars={vars}
+                {...props}
               />
             </Grid>
             <Grid item xs={12} 
-              className={common_classes.marginTop3em+' '
-                          +common_classes.marginBottom1em+' '
-                          +common_classes.displayFlex+' '
-                          +common_classes.justifyRight
-                          }>
+              className={clsx(common_classes.marginTop3em, 
+                common_classes.marginBottom1em, 
+                common_classes.displayFlex,
+                common_classes.justifyRight
+                )}>
                 <CustomButton
                 variant="contained"
                 primaryButtonStyle
@@ -147,7 +147,6 @@ function CreateActivityStep1(props) {
                 </CustomButton> 
             </Grid>
           </Grid>
-      </form>
     </div>
   )
 }

@@ -25,8 +25,7 @@ function CreateActivity(props) {
       step: 1,
       newActivity: {},
     }
-    )
-  console.log('create activity state:::', state)  
+    ) 
   const handleSetState = obj => {
       if (obj) {
         Promise.resolve(obj).then(obj => {
@@ -87,6 +86,10 @@ export default withFormik({
     mapPropsToValue: () => ({
       title: '',
       motivation: '',
+      learningGoals: '',
+      materialsUsed: [],
+      FacilitationTips: '',
+
     }),
     validationSchema,
   })(CreateActivity);
