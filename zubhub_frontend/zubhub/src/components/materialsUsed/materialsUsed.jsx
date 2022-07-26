@@ -64,13 +64,13 @@ function MaterialsUsed(props) {
     <Grid container >
       <Grid item xs={12} md={6} >
         {materials.map((value,index) => 
-          {
-         return  <Input 
+          <Input 
             label={`materialsUsed[${index}]`}
+            defaultValue={props.newActivity['materialsUsed']? props.newActivity.materialsUsed[index] : ''}
             classes= {classes}
             {...props}
           />
-         })
+         )
         }    
       </Grid>
       <Grid 
@@ -102,7 +102,7 @@ function MaterialsUsed(props) {
         {encouragingText}
       </Typography>
       <Grid container spacing={1}>
-        <Grid item xs={12} sm={4} md={4}>
+        <Grid item xs={12} sm={12} md={4}>
           <UploadFile 
               id={'ActivityMaterialsUsedImages'} 
               fileType={'image/*'}

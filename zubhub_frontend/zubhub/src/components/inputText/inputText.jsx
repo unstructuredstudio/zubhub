@@ -43,7 +43,7 @@ function InputText(props) {
             >
             <ClickAwayListener
               onClickAway={() =>
-                handleInputTextFieldBlur( props )
+                handleInputTextFieldBlur( label, props )
               }
             >  
             <ReactQuill
@@ -53,7 +53,7 @@ function InputText(props) {
               modules={vars.quill.modules}
               formats={vars.quill.formats}
               placeholder={placeholder? placeholder : ''}
-              //defaultValue={''}
+              defaultValue={props.newActivity[label]? props.newActivity[label] : ''}
               onChange={value => handleInputTextFieldChange(label, value, props)}
             />
             </ClickAwayListener>

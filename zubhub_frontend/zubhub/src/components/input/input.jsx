@@ -10,6 +10,7 @@ import { handleTextFieldChange, handleTextFieldBlur} from '../../views/create_ac
 function Input(props) {
     const {
       label,
+      defaultValue,
       classes, 
     }=props
    // console.log( 'inside the input component',label)
@@ -29,6 +30,7 @@ function Input(props) {
             id={label}
             name={label}
             type="text"
+            defaultValue={defaultValue? defaultValue : ''}
             onBlur={(e) => handleTextFieldBlur( label, props) }
             onChange= {(e) => handleTextFieldChange(label, e.target.value, props)}
             />

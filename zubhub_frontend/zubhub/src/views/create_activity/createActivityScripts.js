@@ -28,20 +28,20 @@ export const validationSchema =  Yup.object().shape({
 export const handleTextFieldChange = (label, value, props) => {
   props.setStatus({ ...props.status, [label]: '' });
   props.setFieldTouched(label, true);
-  //props.setFieldValue(label, value, true);
   props.setFieldValue(label, value, true);
 
 };
 
 export const handleTextFieldBlur = (label, props) => {
-  props.setStatus({ ...props.status, [label]: '' });
-  props.validateSteps(props.verifiedStep)
- // props.handleBlur(e);
+  let labelRoot = label.split('[')[0]
+  console.log('labelRoot', labelRoot)
+  props.setStatus({ ...props.status, [labelRoot]: '' });
+  props.handleSetState({newActivity: { ...props.newActivity,[labelRoot]: props.values[labelRoot]}})
+  props.validateSteps()
 };
 
 export const handleInputTextFieldChange = (label,value, props) => {
   if (value && value !== '<p><br></p>') {
-    // second conditional is a guide for when quill is cleared.
     props.setStatus({ ...props.status, [label]: '' });
     props.setFieldValue(label, value, true);
   } else {
@@ -50,14 +50,8 @@ export const handleInputTextFieldChange = (label,value, props) => {
   props.setFieldTouched(label, true);
 };
 
-export const handleInputTextFieldBlur = ( props ) => {
-  props.validateSteps(props.verifiedStep)
+export const handleInputTextFieldBlur = (label,props ) => {
+  props.validateSteps()
+  props.handleSetState({newActivity: { ...props.newActivity,[label]: props.values[label]}})
 };
 
-
-// export const handleDescFieldFocusChange = (value, props, handleSetState) => {
-//   props.setFieldTouched('description');
-//   if (!value) {
-//     handleSetState({ desc_input_is_focused: true });
-//   }
-// };

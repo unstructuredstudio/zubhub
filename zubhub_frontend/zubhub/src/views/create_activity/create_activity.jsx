@@ -35,7 +35,7 @@ function CreateActivity(props) {
       newActivity: {},
     }
     )
-  const [disableSubmit, setdisableSubmit] = useState(state.verifiedStep > 3? false : true) 
+
   const handleSetState = obj => {
       if (obj) {
         Promise.resolve(obj).then(obj => {
@@ -43,22 +43,21 @@ function CreateActivity(props) {
         });
     }
   };
-  props= {...props, 'newActivity': state.newActivity, 'verifiedStep': state.verifiedStep}  
-  
-  
-
+ 
   const requireFieldByStep = [['title', 'motivation', 'learningGoals'], 
-    ['materialsUsed', 'facilitationTips'], ['creationSteps', 'inspiringExemplesDescriptions', 'inspiringExemplesCredits']
+    ['materialsUsed', 'facilitationTips'], 
+    ['creationSteps', 'inspiringExemplesDescriptions', 'inspiringExemplesCredits']
     ]
-  const validateSteps = (currentVerified) => {
-    console.log('verify step:', currentVerified)
+  const validateSteps = () => {
     let stepVerified = true
-    for(let i = currentVerified - 1; i < requireFieldByStep.length ; i++){
+    for(let i = 0; i < requireFieldByStep.length ; i++){
       stepVerified = true
       requireFieldByStep[i].map(field => {
-        if(!(props.touched[field] && !props.errors[field])){stepVerified = false}  
+        if(!(props.touched[field] && !props.errors[field])){
+          stepVerified = false
+          state.verifiedStep = i + 1
+        }  
       })
-      console.log('i and stepVerified', i, stepVerified, props)
       if(stepVerified){
         handleSetState({verifiedStep: i + 2})
       }else {
@@ -66,8 +65,13 @@ function CreateActivity(props) {
       }   
     }
   }
-  
-  props ={...props, 'validateSteps': validateSteps}
+  props= {...props, 
+    'newActivity': state.newActivity, 
+    'verifiedStep': state.verifiedStep, 
+    'validateSteps': validateSteps,
+    'handleSetState': handleSetState 
+  }
+
   const visitePrev = () => {
     handleSetState({step: state.step - 1})
   }
@@ -88,7 +92,7 @@ function CreateActivity(props) {
       'inspiringExemplesCredits': props.values.inspiringExemplesCredits
     }})
   } 
-  //console.log('create activity ====>',state.newActivity, props) 
+  console.log('newActivity', state.newActivity)
   return (
     <div className={classes.createActivityContainer} >
       <Box 

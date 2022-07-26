@@ -58,6 +58,7 @@ function CreateActivityStep1(props) {
                 />
                 <Input 
                   classes= {classes}
+                  defaultValue={props.newActivity['title']? props.newActivity.title : ''}
                   label={'title'}
                   {...props}
                 />
