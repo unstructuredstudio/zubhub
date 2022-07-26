@@ -16,10 +16,11 @@ from projects.permissions import (IsOwner, IsStaffOrModerator,
                                   SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, CustomUserRateThrottle)
 from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
+from creators.models import Creator
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
                     get_published_projects_for_user)
-from creators.utils import activity_notification, send_notification
+from creators.utils import activity_notification, send_notification, set_badge_like_category, set_badge_project_category, set_badge_view_category, set_badge_comment_category
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer,
                           StaffPickSerializer)
@@ -56,6 +57,9 @@ class ProjectCreateAPIView(CreateAPIView):
         obj = serializer.save(creator=self.request.user)
         self.request.user.save()
 
+        creator = Creator.objects.get(id = obj.creator_id)
+        project_count= creator.projects_count
+        set_badge_project_category(creator, project_count)
         if self.request.user.followers is not None:
             send_notification(
                 list(self.request.user.followers.all()),
@@ -130,9 +134,12 @@ class ProjectDeleteAPIView(DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         project = self.get_object()
+        creator = Creator.objects.get(id = project.creator_id)
         if project:
             result = self.destroy(request, *args, **kwargs)
+            project_count= creator.projects_count -1
             request.user.save()
+            set_badge_project_category(creator, project_count)
             return result
 
 
@@ -272,6 +279,8 @@ class ProjectDetailsAPIView(RetrieveAPIView):
                         obj.views.add(self.request.user)
                         obj.views_count += 1
                         obj.save()
+                creator = Creator.objects.get(id = obj.creator_id)
+                set_badge_view_category(creator)
 
             return obj
         else:
@@ -335,6 +344,9 @@ class ToggleLikeAPIView(RetrieveAPIView):
                         f'/projects/{obj.pk}'
                     )
 
+                creator = Creator.objects.get(id = obj.creator_id)
+                set_badge_like_category(creator)
+           
             return obj
         else:
             raise PermissionDenied(
@@ -446,6 +458,10 @@ class AddCommentAPIView(CreateAPIView):
 
         result = self.get_object()
 
+        creator_str= self.request.user.username
+        creator_id= Creator.objects.get(username= creator_str).id
+        creator= Creator.objects.get(id = creator_id)
+        set_badge_comment_category(creator)
         if result:
             detect_mentions({
                 "text": text,

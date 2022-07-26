@@ -54,6 +54,12 @@ class CreatorTag(models.Model):
             update_creator_tag_index_task.delay()
         super().save(*args, **kwargs)
 
+class Badge(models.Model):
+    badge_title = models.CharField(blank=False, default="", max_length=225)
+    created_on = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.badge_title
 
 class Creator(AbstractUser):
 
@@ -72,6 +78,7 @@ class Creator(AbstractUser):
     projects_count = models.IntegerField(blank=True, default=0)
     tags = models.ManyToManyField(CreatorTag, blank=True, related_name="creators")
     search_vector = SearchVectorField(null=True)
+    badges = models.ManyToManyField(Badge, blank=True, related_name="creators" )
 
     class Meta:
         indexes = (GinIndex(fields=["search_vector"]),)

@@ -25,14 +25,17 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(slug_field="name",
                                         read_only=True,
                                         many=True)
+    badges = serializers.SlugRelatedField(slug_field="badge_title",
+                                        read_only=True,
+                                        many=True) 
 
     class Meta:
         model = Creator
 
         fields = ('id', 'username', 'avatar', 'comments', 'bio', 'followers',
-                  'following_count', 'projects_count', 'members_count', 'tags')
+                  'following_count', 'projects_count', 'members_count', 'tags', 'badges',)
 
-    read_only_fields = ["id", "projects_count", "following_count", "tags"]
+    read_only_fields = ["id", "projects_count", "following_count", "tags", "badges"]
 
     def get_members_count(self, obj):
         if hasattr(obj, "creatorgroup"):
@@ -80,16 +83,19 @@ class CreatorSerializer(CreatorMinimalSerializer):
     tags = serializers.SlugRelatedField(slug_field="name",
                                         read_only=True,
                                         many=True)
+    badges = serializers.SlugRelatedField(slug_field="badge_title",
+                                        read_only=True,
+                                        many=True)                                    
 
     class Meta:
         model = Creator
 
         fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
                   'comments', 'dateOfBirth', 'bio', 'followers',
-                  'following_count', 'projects_count', 'members_count', 'tags')
+                  'following_count', 'projects_count', 'members_count', 'tags', 'badges')
 
     read_only_fields = [
-        "id", "projects_count", "following_count", "dateOfBirth", "tags"
+        "id", "projects_count", "following_count", "dateOfBirth", "tags", "badges"
     ]
 
     def validate_email(self, email):

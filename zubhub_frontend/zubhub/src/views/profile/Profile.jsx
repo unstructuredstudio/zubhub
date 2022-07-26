@@ -58,7 +58,6 @@ import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid';
-import { allBadgesTitle } from './DisplayBadges';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -103,7 +102,7 @@ function Profile(props) {
       Promise.all(promises).then(values => {
         const obj = values[0];
         const drafts = values[1] || {};
-        const badges = allBadgesTitle(obj.results, props.t);
+        const badges = obj.profile.badges;
 
         if (obj.profile) {
           parseComments(obj.profile.comments);

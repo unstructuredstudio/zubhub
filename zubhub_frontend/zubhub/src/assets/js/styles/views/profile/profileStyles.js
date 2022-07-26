@@ -139,7 +139,7 @@ const styles = theme => ({
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',
-    margin: '1em 0 0 0',
+    margin: '1em 1em 0 0',
     padding: '1em',
     width: '40%',
     [theme.breakpoints.down('900')]: {
