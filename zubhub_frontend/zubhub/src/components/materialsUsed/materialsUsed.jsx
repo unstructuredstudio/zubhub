@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import ImageIcon from '@material-ui/icons/Image';
 import AddIcon from '@material-ui/icons/Add';
 import CustomButton from '../../components/button/Button';
+import Input from '../input/input'
 import {
   Grid,
   Box,
@@ -34,26 +35,26 @@ function MaterialsUsed(props) {
   const {
         classes, 
         common_classes, 
-        label,  
-        fieldLabel, 
         addMoreLabel,
         imagesLabel, 
-        inputOrder,
         encouragingText,
         setValue,
         materialsUsedList,
         setNewActivity
         } = props;
   const [materials, setMaterials] = useState(materialsUsedList)     
-  const handleMaterialsUsedFieldBlur = () => {
-    setNewActivity(prev => ({...prev, materialsUsed: materials}))
-  }
-  const handleMaterialsUsedFieldChange = (index, value) => {
-    console.log('onchange', index, value)
-    const mt = materials.map(v => v)
-    mt[index] = value
-    setMaterials(mt)
-  }
+  // const handleMaterialsUsedFieldBlur = () => {
+  //   setNewActivity(prev => ({...prev, materialsUsed: materials}))
+  // }
+  // const handleMaterialsUsedFieldChange = (index, e, props) => {
+  //   props.setStatus({ ...props.status, [e.target.id]: '' });
+  //   props.setFieldTouched(e.target.id, true);
+  //   props.handleChange(e);
+  //   //console.log('onchange', index, e.target.value)
+  //   const mt = materials.map(v => v)
+  //   mt[index] = e.target.value
+  //   setMaterials(mt)
+  // }
   const handleImageButtonClick = (e) => {
     refs.imageInput.current.click()
   } 
@@ -62,40 +63,14 @@ function MaterialsUsed(props) {
     <div>
     <Grid container >
       <Grid item xs={12} md={6} >
-        <label htmlFor={label}>
-          <Typography
-            color="textSecondary"
-            className={clsx(
-              classes.customLabelStyle,
-              common_classes.marginBottom1em,
-            )}
-          >
-            <Box className={classes.fieldNumberStyle}>{inputOrder}</Box>
-            {fieldLabel}
-          </Typography>
-        </label>
-        {materials.map((value,index) => (
-          <FormControl
-            className={clsx(classes.margin, classes.textField)}
-            variant="outlined"
-            size="small"
-            fullWidth
-            margin="small"
-            >
-            <OutlinedInput
-            key={`${index}materialsUsed`}
-            className={clsx(
-                classes.customInputStyle,
-                common_classes.marginTop1em,
-            )}
-            type="text"
-            onBlur={e => handleMaterialsUsedFieldBlur()}
-            onChange={e => handleMaterialsUsedFieldChange(index, e.target.value)}
-            value={materials[index]}
-            placeholder={`${index + 1}.`}
-            />    
-          </FormControl>
-          ))
+        {materials.map((value,index) => 
+          {
+         return  <Input 
+            label={`materialsUsed[${index}]`}
+            classes= {classes}
+            {...props}
+          />
+         })
         }    
       </Grid>
       <Grid 

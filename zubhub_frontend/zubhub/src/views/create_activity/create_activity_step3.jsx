@@ -32,7 +32,6 @@ function CreateActivityStep3(props) {
     }
   return (
     <div className={activity_classes.createActivityStepContainer}>
-      <form>
         <Grid container spacing={3}>
           <Grid item xs={12} className={common_classes.marginTop1em}>
               <FormLabel 
@@ -137,7 +136,7 @@ function CreateActivityStep3(props) {
                   fieldLabel={t('createActivity.inputs.inspiringExemples.label')} 
                 /> 
               {inspiringExemples.map((inspiringExemple, index) => (
-                <Grid container direction='Column'  className={common_classes.marginTop1em} spacing={3}>
+                <Grid container direction='column'  className={common_classes.marginTop1em} spacing={3}>
                   <Grid item xs={6} md={4} sm={4}>
                     <Input 
                       label={`inspiringExemplesDescriptions[${index}]`}
@@ -186,35 +185,8 @@ function CreateActivityStep3(props) {
                 />
               </Grid> 
             </Grid>
-          <Grid container direction="column"  
-            className={clsx(
-              common_classes.marginTop3em, 
-              common_classes.marginBottom1em, 
-              )}>
-              <Grid item xs={3} md={3} sm={3}>  
-                <CustomButton
-                variant="contained"
-                primaryButtonStyle
-                customButtonStyle
-                size="small"
-                >
-                {t('createActivity.buttons.Prev')}
-                </CustomButton>
-              </Grid>
-              <Grid item xs={8} md={8} sm={8}>
-                <CustomButton
-                variant="contained"
-                primaryButtonStyle
-                customButtonStyle
-                fullWidth
-                size="large"
-                >
-                {t('createActivity.buttons.Submit')}
-                </CustomButton> 
-              </Grid>
-          </Grid>
+          
         </Grid>
-      </form>
     </div>
   )
 }

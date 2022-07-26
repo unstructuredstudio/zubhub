@@ -8,7 +8,8 @@ export const styles = theme => ({
   },
   CreateActivityFormContainer: {
     backgroundColor: 'white',
-    borderRadius: '15px'
+    borderRadius: '15px',
+    paddingBottom: '1em',
   },
   progressNumberStyle: {
     height: '30px',

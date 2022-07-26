@@ -43,9 +43,7 @@ function CreateActivityStep1(props) {
       fieldObject[field] = value
       setNewActivity((prevactivity) => ({ ...prevactivity, ...fieldObject }))
     }
-    const validateStep1 = () =>{
-      props.handleSetState({step: 2, newActivity: newActivity})      
-    }
+    
   return (
     <div className={activity_classes.createActivityStepContainer}>
           <Grid container spacing={3}>
@@ -63,36 +61,7 @@ function CreateActivityStep1(props) {
                   label={'title'}
                   {...props}
                 />
-                {/* <FormControl
-                  className={clsx(classes.margin, classes.textField)}
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  margin="small"
-                  error={props.status && props.status['title']  && 
-                     props.errors['title']}
-                >  
-                  <OutlinedInput
-                    className={classes.customInputStyle}
-                    id="title"
-                    name="title"
-                    type="text"
-                    onBlur={e => handleTextFieldBlur( e, props) }
-                    onChange= {(e) => handleTextFieldChange(e, props)}
-                  />
-                  <FormHelperText
-                    error
-                    className={classes.fieldHelperTextStyle}
-                  >
-                    { (props.status && props.status['title']) || 
-                    ( props.errors['title'] && props.touched['title']) &&
-                      
-                     (t(
-                        `createActivity.inputs.title.errors.${props.errors['title']}`,
-                      ))
-                    }
-                  </FormHelperText>
-              </FormControl> */}
+                
             </Grid>
             <Grid item xs={12} className={common_classes.marginTop1em}>
               <FormLabel 
@@ -134,22 +103,7 @@ function CreateActivityStep1(props) {
                 {...props}
               />
             </Grid>
-            <Grid item xs={12} 
-              className={clsx(common_classes.marginTop3em, 
-                common_classes.marginBottom1em, 
-                common_classes.displayFlex,
-                common_classes.justifyRight
-                )}>
-                <CustomButton
-                variant="contained"
-                primaryButtonStyle
-                customButtonStyle
-                size="small"
-                onClick= {() => validateStep(2, newActivity)} 
-                >
-                {t('createActivity.buttons.Next')}
-                </CustomButton> 
-            </Grid>
+            
           </Grid>
     </div>
   )

@@ -3,12 +3,13 @@ import clsx from 'clsx';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
-import {handleInputTextFieldChange} from '../../views/create_activity/createActivityScripts'
+import { handleInputTextFieldChange, handleInputTextFieldBlur } from '../../views/create_activity/createActivityScripts'
 import {
   Box,
   Typography,
   FormControl,
-  FormHelperText
+  FormHelperText,
+  ClickAwayListener
 } from '@material-ui/core';
 
 function InputText(props) {
@@ -20,7 +21,6 @@ function InputText(props) {
             placeholder, 
             vars
             } = props 
-    console.log('text input props', props)        
     return (
       <div>
           <Typography
@@ -39,8 +39,13 @@ function InputText(props) {
             variant="outlined"
             size="small"
             fullWidth
-            margin="small"
+            margin="none"
             >
+            <ClickAwayListener
+              onClickAway={() =>
+                handleInputTextFieldBlur( props )
+              }
+            >  
             <ReactQuill
               name={label}
               id={`${label}_id`}
@@ -51,6 +56,7 @@ function InputText(props) {
               //defaultValue={''}
               onChange={value => handleInputTextFieldChange(label, value, props)}
             />
+            </ClickAwayListener>
             <FormHelperText
               error
               className={classes.fieldHelperTextStyle}

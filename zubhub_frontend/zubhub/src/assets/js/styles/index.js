@@ -1,4 +1,7 @@
 const styles = theme => ({
+  margin: {
+   margin: '1em',
+  },
   marginTop1em: {
     marginTop: '1em',
   },
@@ -7,6 +10,9 @@ const styles = theme => ({
   },
   marginBottom1em: {
     marginBottom: '1em',
+  },
+  marginBottom3em: {
+    marginBottom: '3em!important',
   },
   marginLeft1em: {
     marginLeft: '1em',

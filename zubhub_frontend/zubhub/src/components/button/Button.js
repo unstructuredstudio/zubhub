@@ -31,6 +31,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     fullWidth,
     className,
     muiClasses,
+    disabled,
     ...rest
   } = props;
   const btnClasses = classNames({
@@ -46,7 +47,7 @@ const CustomButton = React.forwardRef((props, ref) => {
   });
 
   return (
-    <Button ref={ref} {...rest} classes={muiClasses} className={btnClasses}>
+    <Button ref={ref} {...rest} classes={muiClasses} className={btnClasses} disabled={disabled? disabled : false}>
       {children}
     </Button>
   );

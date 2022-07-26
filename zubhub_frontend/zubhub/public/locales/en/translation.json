@@ -796,6 +796,11 @@
       "encouragingText": "We strongly encourage you to upload an image containing all materials and tools used to create this activity",
       "images": {
         "label": "Add Images"
+      },
+      "errors": {
+        "max": "your material shouldn't be more than 50 characters",
+        "required": "this field is required",
+        "required1": "Enter at least one material!"
       }
       },
       "facilitationTips": {
@@ -847,7 +852,7 @@
     "buttons": {
       "Next": "Next->",
       "Prev": "<-Prev",
-      "Submit": "Submit"
+      "Submit": "Submit For Review"
     }
   }
 }

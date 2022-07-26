@@ -20,17 +20,23 @@ export const validationSchema =  Yup.object().shape({
   motivation: Yup.string().max(10000, 'max').required('required'),
   learningGoals: Yup.string().max(10000, 'max').required('required'),
   facilitationTips: Yup.string().max(10000, 'max').required('required'),
+  materialsUsed: Yup.array().of(Yup.string().max(100, 'max')),
+  //'materialsUsed[0]': Yup.string().max(100, 'max').required('required1'),
+
 }) 
 
-export const handleTextFieldChange = (e, props) => {
-  props.setStatus({ ...props.status, [e.target.id]: '' });
-  props.setFieldTouched(e.target.id, true);
-  props.handleChange(e);
+export const handleTextFieldChange = (label, value, props) => {
+  props.setStatus({ ...props.status, [label]: '' });
+  props.setFieldTouched(label, true);
+  //props.setFieldValue(label, value, true);
+  props.setFieldValue(label, value, true);
+
 };
 
-export const handleTextFieldBlur = (e, props) => {
-  props.setStatus({ ...props.status, [e.target.id]: '' });
-  props.handleBlur(e);
+export const handleTextFieldBlur = (label, props) => {
+  props.setStatus({ ...props.status, [label]: '' });
+  props.validateSteps(props.verifiedStep)
+ // props.handleBlur(e);
 };
 
 export const handleInputTextFieldChange = (label,value, props) => {
@@ -44,8 +50,8 @@ export const handleInputTextFieldChange = (label,value, props) => {
   props.setFieldTouched(label, true);
 };
 
-export const handleInputTextFieldBlur = (label,value, props) => {
-  
+export const handleInputTextFieldBlur = ( props ) => {
+  props.validateSteps(props.verifiedStep)
 };
 
 

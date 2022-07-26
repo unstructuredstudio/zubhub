@@ -27,20 +27,24 @@ function CreateActivityStep2(props) {
     const validateStep2 = () =>{
       props.handleSetState({step: 3, newActivity: newActivity})      
     }
-    console.log('newActivity 2', newActivity)
+    //console.log('newActivity 2', newActivity)
   return (
     <div className={activity_classes.createActivityStepContainer}>
         <Grid container spacing={3}>
           <Grid item xs={12} className={common_classes.marginTop1em}>
+            <FormLabel 
+              label={"materialsUsed"}
+              classes={classes}
+              common_classes={common_classes}
+              inputOrder={4}
+              fieldLabel={t('createActivity.inputs.materialsUsed.label')}
+            />
             <MaterialsUsed 
               classes={classes}
-              common_classes={common_classes} 
-              label={"materialsUsed"}
-              fieldLabel={t('createActivity.inputs.materialsUsed.label')}
+              common_classes={common_classes}  
               addMoreLabel={t('createProject.inputs.materialsUsed.addMore')}
               encouragingText={t('createActivity.inputs.materialsUsed.encouragingText')}
               imagesLabel={t('createActivity.inputs.materialsUsed.images.label')} 
-              inputOrder={4}
               materialsUsedList={materialsUsedList}
               setNewActivity={setNewActivity}
               t={t}
@@ -96,33 +100,7 @@ function CreateActivityStep2(props) {
                 />
               </FormControl>
           </Grid>  
-          <Grid item xs={12} 
-            className={clsx(
-              common_classes.marginTop3em, 
-              common_classes.marginBottom1em, 
-              common_classes.displayFlex, 
-              common_classes.justifySpaceBetween
-              )}>
-              
-              <CustomButton
-              variant="contained"
-              primaryButtonStyle
-              customButtonStyle
-              size="small"
-              >
-              {t('createActivity.buttons.Prev')}
-              </CustomButton> 
-
-              <CustomButton
-              variant="contained"
-              primaryButtonStyle
-              customButtonStyle
-              size="small"
-              onClick= {validateStep2} 
-              >
-              {t('createActivity.buttons.Next')}
-              </CustomButton>
-          </Grid>
+          
         </Grid>
     </div>
   )
