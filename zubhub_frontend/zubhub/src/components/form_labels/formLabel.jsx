@@ -8,7 +8,8 @@ function FormLabel(props) {
     classes,
     common_classes,
     inputOrder,
-    fieldLabel
+    fieldLabel,
+    required
     } = props
   return (
     <label htmlFor={label}>
@@ -21,6 +22,7 @@ function FormLabel(props) {
         >
         <Box className={classes.fieldNumberStyle}>{inputOrder}</Box>
         {fieldLabel}
+        {required? <p className={classes.requiredLabelStyle}>*</p> : ''}
         </Typography>
     </label>
   )

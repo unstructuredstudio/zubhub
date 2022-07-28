@@ -13,7 +13,6 @@ function Input(props) {
       defaultValue,
       classes, 
     }=props
-   // console.log( 'inside the input component',label)
   return (
     <div>
         <FormControl
@@ -22,8 +21,7 @@ function Input(props) {
             size="small"
             fullWidth
             margin="none"
-            error={props.status && props.status[label]  && 
-              props.errors[label]? true : false}
+            error={props.errors[label]? true: false}
             >  
             <OutlinedInput
             className={classes.customInputStyle}
@@ -31,22 +29,23 @@ function Input(props) {
             name={label}
             type="text"
             defaultValue={defaultValue? defaultValue : ''}
-            onBlur={(e) => handleTextFieldBlur( label, props) }
-            onChange= {(e) => handleTextFieldChange(label, e.target.value, props)}
+            onBlur={(e) => handleTextFieldBlur(e, props) }
+            onChange= {(e) => props.handleChange(e)}
             />
             <FormHelperText
             error
             className={classes.fieldHelperTextStyle}
             >
-                    { (props.status && props.status[label]) || 
+                    {
                     ( props.touched[label] && props.errors[label] ) &&
                     
                     (props.t(
                         `createActivity.inputs.${label}.errors.${props.errors[label]}`,
                     ))
                     }
-            </FormHelperText> 
+            </FormHelperText>  
         </FormControl>
+
     </div>
   )
 }

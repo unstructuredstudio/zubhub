@@ -32,10 +32,10 @@ function CreateActivity(props) {
     {
       step: 1,
       verifiedStep: 1,
-      newActivity: {},
-    }
+      newActivity: {}  
+    }  
     )
-
+ 
   const handleSetState = obj => {
       if (obj) {
         Promise.resolve(obj).then(obj => {
@@ -43,7 +43,9 @@ function CreateActivity(props) {
         });
     }
   };
- 
+  const handleSetNewActivity = obj => {
+          setState(state => ({ ...state,newActivity: {...state.newActivity ,...obj }}));
+  };
   const requireFieldByStep = [['title', 'motivation', 'learningGoals'], 
     ['materialsUsed', 'facilitationTips'], 
     ['creationSteps', 'inspiringExemplesDescriptions', 'inspiringExemplesCredits']
@@ -69,7 +71,8 @@ function CreateActivity(props) {
     'newActivity': state.newActivity, 
     'verifiedStep': state.verifiedStep, 
     'validateSteps': validateSteps,
-    'handleSetState': handleSetState 
+    'handleSetState': handleSetState,
+    'handleSetNewActivity': handleSetNewActivity,
   }
 
   const visitePrev = () => {
@@ -175,7 +178,8 @@ export default withFormik({
       materialsUsed: [],
       inspiringArtist: '',
       inspiringExemplesDescriptions: [],
-      inspiringExemplesCredits: []
+      inspiringExemplesCredits: [],
+      activityImages: [],
     }),
     validationSchema,
   })(CreateActivity);

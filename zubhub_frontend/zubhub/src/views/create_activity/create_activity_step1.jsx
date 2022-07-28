@@ -4,21 +4,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Grid,
-  Box,
-  Container,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Dialog,
-  Select,
-  MenuItem,
-  Typography,
-  CircularProgress,
-  OutlinedInput,
-  FormHelperText,
-  FormControl,
-  ClickAwayListener,
 } from '@material-ui/core';
 import { vars, handleTextFieldChange, handleTextFieldBlur} from '../create_project/createProjectScripts';
 import CustomButton from '../../components/button/Button';
@@ -37,7 +22,7 @@ function CreateActivityStep1(props) {
     const activity_classes = useStyles()
     const common_classes = useCommonStyles()
     const [newActivity, setNewActivity] = useState(props.newActivity)
-    const {t, validateStep} = {...props} 
+    const {t} = {...props} 
     const setFieldValue = (value, field) => {
       const fieldObject = {}
       fieldObject[field] = value
@@ -51,6 +36,7 @@ function CreateActivityStep1(props) {
               
                 <FormLabel 
                   label={"title"}
+                  required= {true}
                   classes={classes}
                   common_classes={common_classes}
                   inputOrder={1}
@@ -58,7 +44,7 @@ function CreateActivityStep1(props) {
                 />
                 <Input 
                   classes= {classes}
-                  defaultValue={props.newActivity['title']? props.newActivity.title : ''}
+                  defaultValue={props.values['title']? props.values.title : ''}
                   label={'title'}
                   {...props}
                 />
@@ -67,6 +53,7 @@ function CreateActivityStep1(props) {
             <Grid item xs={12} className={common_classes.marginTop1em}>
               <FormLabel 
                   label={'motivation'}
+                  required= {true}
                   classes={classes}
                   common_classes={common_classes}
                   inputOrder={2}
@@ -86,6 +73,7 @@ function CreateActivityStep1(props) {
             <Grid item xs={12} className={common_classes.marginTop1em}>
               <FormLabel 
                   label={'learningGoals'}
+                  required={true}
                   classes={classes}
                   common_classes={common_classes}
                   inputOrder={3}

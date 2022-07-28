@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -21,6 +21,8 @@ function InputText(props) {
             placeholder, 
             vars
             } = props 
+    const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false)
+    props = {...props, inputTextFieldFocused, setInputTextFieldFocused}         
     return (
       <div>
           <Typography
@@ -43,7 +45,10 @@ function InputText(props) {
             >
             <ClickAwayListener
               onClickAway={() =>
-                handleInputTextFieldBlur( label, props )
+                {if (inputTextFieldFocused){
+                  console.log('blur event from :', label)
+                  handleInputTextFieldBlur( label, props )
+                }}
               }
             >  
             <ReactQuill
@@ -53,7 +58,7 @@ function InputText(props) {
               modules={vars.quill.modules}
               formats={vars.quill.formats}
               placeholder={placeholder? placeholder : ''}
-              defaultValue={props.newActivity[label]? props.newActivity[label] : ''}
+              defaultValue={props.values[label]? props.values[label] : ''}
               onChange={value => handleInputTextFieldChange(label, value, props)}
             />
             </ClickAwayListener>

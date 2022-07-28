@@ -800,7 +800,8 @@
       "errors": {
         "max": "your material shouldn't be more than 50 characters",
         "required": "this field is required",
-        "required1": "Enter at least one material!"
+        "required1": "Enter at least one material!",
+        "min": "your material should be at least 2 characters"
       }
       },
       "facilitationTips": {
@@ -813,7 +814,7 @@
         }
 
       },
-      "images": {
+      "activityImages": {
         "label": "Let's add some pictures"
       },
       "creationSteps": {
@@ -847,7 +848,11 @@
         "image": {
           "label": "Add Exemple Image"
         }
-      }  
+      },
+      "image": "Image added",
+      "images": "Images added",
+      "videoFile": "Video file added",
+      "videoURL": "Video URL added"  
     },
     "buttons": {
       "Next": "Next->",

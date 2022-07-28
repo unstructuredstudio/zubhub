@@ -61,34 +61,39 @@ function MaterialsUsed(props) {
   
   return (
     <div>
-    <Grid container >
-      <Grid item xs={12} md={6} >
-        {materials.map((value,index) => 
-          <Input 
-            label={`materialsUsed[${index}]`}
-            defaultValue={props.newActivity['materialsUsed']? props.newActivity.materialsUsed[index] : ''}
-            classes= {classes}
-            {...props}
-          />
-         )
-        }    
+      <Grid container>
+        <Grid item xs={12} md={6}>
+          {materials.map((value, index) => (
+            <Input
+              label={`materialsUsed[${index}]`}
+              defaultValue={
+                props.newActivity['materialsUsed']
+                  ? props.newActivity.materialsUsed[index]
+                  : ''
+              }
+              classes={classes}
+              {...props}
+            />
+          ))}
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          spacing={3}
+          container
+          direction="row"
+          alignItems="flex-end"
+          justifyContent="center"
+        >
+          <AddMore setNodeList={setMaterials} label={addMoreLabel} />
+        </Grid>
       </Grid>
-      <Grid 
-        item xs={12} 
-        md={6}
-        spacing={3}
-        container
-        direction="row"
-        alignItems="flex-end"
-        justifyContent="center"
-        >                        
-        <AddMore 
-          setNodeList={setMaterials}
-          label={addMoreLabel}
-        />
-      </Grid>  
-    </Grid>
-    <Grid item xs={12} className={common_classes.marginTop3em}> 
+      {(props.status && props.status['materialsUsed']) ||
+        (props.touched['materialsUsed'] &&
+          props.errors['materialsUsed'] === 'required1' &&
+          props.t(`createActivity.inputs.materialsUsed.errors.required1`))}
+      <Grid item xs={12} className={common_classes.marginTop3em}>
         <Typography
           color="textSecondary"
           variant="caption"
@@ -99,23 +104,32 @@ function MaterialsUsed(props) {
             common_classes.marginTop1em,
           )}
         >
-        {encouragingText}
-      </Typography>
-      <Grid container spacing={1}>
-        <Grid item xs={12} sm={12} md={4}>
-          <UploadFile 
-              id={'ActivityMaterialsUsedImages'} 
+          {encouragingText}
+        </Typography>
+        <Grid container spacing={1}>
+          <Grid item xs={12} sm={4} md={4}>
+            <UploadFile
+              id={'ActivityMaterialsUsedImages'}
               fileType={'image/*'}
-              uploadButtonLabel={props.t('createActivity.inputs.materialsUsed.images.label')}
+              uploadButtonLabel={props.t(
+                'createActivity.inputs.materialsUsed.images.label',
+              )}
               classes={classes}
-              common_classes={common_classes}
+              wraperState={props.newActivity}
+              setWraperState={props.handleSetNewActivity}
               t={props.t}
+              setFieldValue={props.setFieldValue}
+              setStatus={props.setStatus}
+              countFilesText={[
+                props.t('createProject.inputs.image'),
+                props.t('createProject.inputs.images'),
+              ]}
             />
           </Grid>
-          </Grid>  
-    </Grid>
-  </div>
-  )
+        </Grid>
+      </Grid>
+    </div>
+  );
 };
 
 export default MaterialsUsed
