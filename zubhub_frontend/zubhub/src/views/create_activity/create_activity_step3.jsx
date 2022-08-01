@@ -65,7 +65,7 @@ function CreateActivityStep3(props) {
                 vars={vars}
                 {...props}
               />
-              <Grid
+              {/* <Grid
                 item
                 xs={12}
                 md={3}
@@ -83,13 +83,14 @@ function CreateActivityStep3(props) {
                   setWraperState={props.handleSetNewActivity}
                   t={props.t}
                   setFieldValue={props.setFieldValue}
+                  setFieldTouched={props.setFieldTouched}
                   setStatus={props.setStatus}
                   countFilesText={[
                     props.t('createActivity.inputs.image'),
                     props.t('createActivity.inputs.images'),
                   ]}
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
           ))}
           <Grid
@@ -160,6 +161,9 @@ function CreateActivityStep3(props) {
                 setWraperState={props.handleSetNewActivity}
                 t={props.t}
                 setFieldValue={props.setFieldValue}
+                setFieldTouched={props.setFieldTouched}
+                touched={props.touched}
+                errors={props.errors}
                 setStatus={props.setStatus}
                 countFilesText={[
                   props.t('createActivity.inputs.image'),
@@ -210,7 +214,7 @@ function CreateActivityStep3(props) {
                 </Grid>
                 <Grid item xs={12} md={3} sm={6}>
                   <UploadFile
-                    id={'inspiringExempleImage'}
+                    id={'inspiringExemplesImages'}
                     fileType={'image/*'}
                     uploadButtonLabel={t(
                       'createActivity.inputs.inspiringExemples.image.label',
@@ -221,6 +225,9 @@ function CreateActivityStep3(props) {
                     setWraperState={props.handleSetNewActivity}
                     t={props.t}
                     setFieldValue={props.setFieldValue}
+                    setFieldTouched={props.setFieldTouched}
+                    touched={props.touched}
+                    errors={props.errors}
                     setStatus={props.setStatus}
                     countFilesText={[
                       props.t('createActivity.inputs.image'),

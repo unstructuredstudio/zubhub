@@ -98,6 +98,10 @@ function CreateActivityStep2(props) {
             setWraperState={props.handleSetNewActivity}
             t={props.t}
             setFieldValue={props.setFieldValue}
+            setFieldTouched={props.setFieldTouched}
+            touched={props.touched}
+            errors={props.errors}
+            multiple={true}
             setStatus={props.setStatus}
             countFilesText={[
               props.t('createActivity.inputs.image'),

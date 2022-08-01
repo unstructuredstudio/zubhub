@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import clsx from 'clsx'
+import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import ImageIcon from '@material-ui/icons/Image';
 import CustomButton from '../button/Button';
 import {
@@ -7,23 +7,14 @@ import {
   handleImageFieldChange,
 } from './uploadFileScripts.js';
 import { Typography, FormControl, FormHelperText } from '@material-ui/core';
-import { ErrorMessage } from 'formik';
 
 function UploadFile(props) {
-  const {
-    id, 
-    fileType,
-    uploadButtonLabel,
-    classes,
-    countFilesText,
-    wraperState,
-    setWraperState
-  } = props
+  const { id, fileType, uploadButtonLabel, classes, countFilesText, multiple, wraperState } =
+    props;
 
   const uploadFileRefs = {
-    file_count_el: React.useRef(null),
-    fileInput: React.useRef(null) 
-  }
+    fileInput: React.useRef(null),
+  };
   const [state, setState] = useState({
     media_upload: {
       upload_dialog: false,
@@ -36,17 +27,12 @@ function UploadFile(props) {
     },
   });
   const handleSetState = obj => {
-      if (obj) {
-          setState(state => ({ ...state, ...obj }));
+    if (obj) {
+      setState(state => ({ ...state, ...obj }));
     }
   };
-  
-  // useEffect(() => {
-  //   setWraperState({[id]: state})
-  // }, [state]);
 
-  props = {...props, state: state, handleSetState: handleSetState}
-  console.log('uploadFile state', state)
+  props = { ...props, state: state, handleSetState: handleSetState };
   return (
     <div>
       <CustomButton
@@ -78,39 +64,35 @@ function UploadFile(props) {
           accept={fileType}
           id={id}
           name={id}
-          multiple
+          multiple={multiple ? multiple : ''}
           onChange={() => handleImageFieldChange(id, uploadFileRefs, props)}
         />
-        <ErrorMessage name={id} />
-        {/* <FormHelperText
-        error
-        className={classes.fieldHelperTextStyle}
+        <Typography
+          color="textSecondary"
+          variant="caption"
+          component="span"
+          id={[id, 'file_count_el'].join('')}
         >
-        {
-        ( props.touched[id] && props.errors[id] ) && 
-        (props.t(
-            `createActivity.inputs.${id}.errors.${props.errors[id]}`,
-        ))
-        }
-      </FormHelperText>  */}
+          {wraperState[id] &&
+          wraperState[id].media_upload.images_to_upload.length > 0
+            ? `${wraperState[id].media_upload.images_to_upload.length}
+         ${
+           wraperState[id].media_upload.images_to_upload.length < 2
+             ? countFilesText[0]
+             : countFilesText[1]
+         }`
+            : ''}
+        </Typography>
+        <FormHelperText error className={classes.fieldHelperTextStyle}>
+          {props.touched[id] &&
+            props.errors[id] &&
+            props.t(
+              `createActivity.inputs.activityImages.errors.${props.errors[id]}`,
+            )}
+        </FormHelperText>
       </FormControl>
-      <Typography
-        color="textSecondary"
-        variant="caption"
-        component="span"
-        id={[id, 'file_count_el'].join('')}
-        ref={uploadFileRefs.file_count_el}
-      >
-        { state.media_upload.images_to_upload.length > 0?
-        `${state.media_upload.images_to_upload.length}
-         ${state.media_upload.images_to_upload.length < 2
-              ? countFilesText[0]
-              : countFilesText[1]
-          }`
-        : ''}
-      </Typography>
     </div>
   );
 }
 
-export default UploadFile
+export default UploadFile;

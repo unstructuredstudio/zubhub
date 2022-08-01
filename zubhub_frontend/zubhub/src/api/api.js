@@ -852,8 +852,39 @@ class API {
     return this.request({ url, method, token, body }).then(res => res.json());
   };
   getActivities = () => {
-    return jsonActivities
-  }
+    return jsonActivities;
+  };
+
+  createActivity = ({
+    token,
+    title,
+    motivation,
+    learningGoals,
+    materials_used,
+    materials_used_image,
+    facilitationTips,
+    activity_images,
+    creationSteps,
+    inspiringArtist
+  }) => {
+    const url = 'activity/create/';
+    const method = 'POST';
+
+    const body = JSON.stringify({
+      token,
+      title,
+      motivation,
+      learningGoals,
+      materials_used,
+      materials_used_image,
+      facilitationTips,
+      activity_images,
+      creationSteps,
+      inspiringArtist,
+    });
+    console.log('api json object', body)
+    //return this.request({ url, method, token, body }).then(res => res.json());
+  };
 }
 
 export default API;

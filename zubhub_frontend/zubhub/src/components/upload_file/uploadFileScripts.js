@@ -1,5 +1,7 @@
-import { s3 as DO, Compress } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
+import {
+  Compress,
+} from '../../assets/js/utils/scripts';
 
 export const handleFileButtonClick = (refs, label) => {
   refs.fileInput.current.click();
@@ -14,7 +16,8 @@ export const removeMetaData = (images, state, handleSetState) => {
 };
 
 export const handleImageFieldChange = (label, refs, props) => {
-  //vars.image_field_touched = true
+  props.setFieldTouched(label,true)
+  
   props.setFieldValue(label, refs.fileInput.current.files).then(errors => {
     if (!errors[label]) {
       removeMetaData(
@@ -27,3 +30,4 @@ export const handleImageFieldChange = (label, refs, props) => {
   });
   props.setStatus({ ...props.status, [label]: '' });
 };
+

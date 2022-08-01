@@ -96,7 +96,6 @@ const shouldSetImages = (compressed, images, state, handleSetState) => {
   if (compressed.length === images.length) {
     const { media_upload } = state;
     media_upload.images_to_upload = compressed;
-    console.log('souldSetImages', media_upload)
     handleSetState(media_upload)
   }
 };
@@ -144,7 +143,6 @@ export const countComments = comments => {
  */
 export const Compress = (images, state, handleSetState) => {
   let compressed = [];
-  console.log('state from compress::::', state)
   for (let index = 0; index < images.length; index += 1) {
     let image = images[index];
 

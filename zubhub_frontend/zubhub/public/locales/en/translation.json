@@ -815,7 +815,13 @@
 
       },
       "activityImages": {
-        "label": "Let's add some pictures"
+        "label": "Add Images of your activity",
+        "errors": {
+          "onlyImages": "Only images are allowed for this field",
+          "imageOrVideo": "You must provide either image(s), video file, or video url to create your activity!",
+          "imageSizeTooLarge": "One or more of your images is larger than 10 MB in size! Upload smaller images",
+          "tooManyImages": "Too many images uploaded! We only support 10 images per activity :("
+        }
       },
       "creationSteps": {
         "label": "Creation Steps",

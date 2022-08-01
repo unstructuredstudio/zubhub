@@ -107,7 +107,7 @@ function MaterialsUsed(props) {
           {encouragingText}
         </Typography>
         <Grid container spacing={1}>
-          <Grid item xs={12} sm={4} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <UploadFile
               id={'ActivityMaterialsUsedImages'}
               fileType={'image/*'}
@@ -119,6 +119,9 @@ function MaterialsUsed(props) {
               setWraperState={props.handleSetNewActivity}
               t={props.t}
               setFieldValue={props.setFieldValue}
+              setFieldTouched={props.setFieldTouched}
+              touched={props.touched}
+              errors={props.errors}
               setStatus={props.setStatus}
               countFilesText={[
                 props.t('createProject.inputs.image'),

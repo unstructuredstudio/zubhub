@@ -916,7 +916,6 @@ export const uploadImageToLocal = (image, state, props, handleSetState) => {
   const formData = new FormData();
   formData.append('file', image);
   formData.append('key', `project_images/${nanoid()}`);
-
   return new Promise((resolve, reject) => {
     const um = new UploadMedia(
       'image',
@@ -1441,7 +1440,6 @@ export class UploadMedia {
 
   upload = () => {
     this.xhr.open('POST', this.url);
-
     if (!this.url.startsWith(process.env.REACT_APP_VIDEO_UPLOAD_URL)) {
       this.xhr.xsrfCookieName = 'csrftoken';
       this.xhr.xsrfHeaderName = 'X-CSRFToken';

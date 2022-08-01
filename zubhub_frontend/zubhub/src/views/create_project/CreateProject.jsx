@@ -194,7 +194,7 @@ function CreateProject(props) {
   } = state;
   const { t } = props;
   const id = props.match.params.id;
-  console.log(' create project props', props)
+  console.log(' create project props and state', props, state)
   if (!props.auth.token) {
     return <ErrorPage error={t('createProject.errors.notLoggedIn')} />;
   } else {
