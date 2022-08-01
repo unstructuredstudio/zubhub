@@ -800,7 +800,7 @@
       "errors": {
         "max": "your material shouldn't be more than 50 characters",
         "required": "this field is required",
-        "required1": "Enter at least one material!",
+        "required1": "At least one material is required!",
         "min": "your material should be at least 2 characters"
       }
       },

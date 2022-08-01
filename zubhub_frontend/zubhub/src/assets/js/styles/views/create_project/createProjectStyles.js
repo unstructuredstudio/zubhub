@@ -284,6 +284,9 @@ const styles = theme => ({
   requiredLabelStyle: {
     display: 'inline-block',
     color: 'red'
+  },
+  errorMessage: {
+    color: 'red'
   }
 });
 

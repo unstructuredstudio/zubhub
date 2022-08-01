@@ -49,17 +49,40 @@ const imageSizeTooLarge = (value) => {
     return true;
   }
 };
+
+const allEmpty = (arr) => {
+  console.log('allEmpty value', arr)
+  let allEmptyValues = true
+  if(arr){
+    arr.forEach(value => {
+      if(value && value !== ''){
+        console.log('from condition', value)
+        allEmptyValues = false
+      }})
+    return !allEmptyValues
+  }else {
+    return true
+  }
+}
 // file validation functions /$
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
   motivation: Yup.string().max(10000, 'max').required('required'),
   learningGoals: Yup.string().max(10000, 'max').required('required'),
   facilitationTips: Yup.string().max(10000, 'max').required('required'),
-  materialsUsed: Yup.mixed().test('at least one material', value => {
+  creationSteps: Yup.mixed().test('required1', value => {
     return value ? value.length > 0 : false;
   }),
+  inspiringArtist: Yup.string().max(10000, 'max').required('required'),
+  inspiringExemplesDescriptions: Yup.string()
+    .max(100, 'max')
+    .required('required'),
+  inspiringExemplesCredits: Yup.string().max(100, 'max').required('required'),
+  materialsUsed: Yup.mixed().test('required1', 'required1', value =>
+    allEmpty(value),
+  ),
   activityImages: Yup.mixed()
-    .test('image_is_empty', function (value) {
+    .test('image_is_empty', 'image_is_empty', function (value) {
       return !value ? false : true;
     })
     .test('not_an_image', 'onlyImages', value => isImage(value))
@@ -68,7 +91,7 @@ export const validationSchema = Yup.object().shape({
       imageSizeTooLarge(value),
     ),
   ActivityMaterialsUsedImages: Yup.mixed()
-    .test('image_is_empty', function (value) {
+    .test('image_is_empty', 'image_is_empty', function (value) {
       return !value ? false : true;
     })
     .test('not_an_image', 'onlyImages', value => isImage(value))
@@ -77,7 +100,7 @@ export const validationSchema = Yup.object().shape({
       imageSizeTooLarge(value),
     ),
   inspiringExemplesImages: Yup.mixed()
-    .test('image_is_empty', function (value) {
+    .test('image_is_empty','image_is_empty', function (value) {
       return !value ? false : true;
     })
     .test('not_an_image', 'onlyImages', value => isImage(value))
@@ -86,7 +109,7 @@ export const validationSchema = Yup.object().shape({
       imageSizeTooLarge(value),
     ),
   inspiringArtistImage: Yup.mixed()
-    .test('image_is_empty', function (value) {
+    .test('image_is_empty', 'image_is_empty', function (value) {
       return !value ? false : true;
     })
     .test('not_an_image', 'onlyImages', value => isImage(value))

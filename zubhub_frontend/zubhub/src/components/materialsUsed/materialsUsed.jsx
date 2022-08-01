@@ -43,18 +43,6 @@ function MaterialsUsed(props) {
         setNewActivity
         } = props;
   const [materials, setMaterials] = useState(materialsUsedList)     
-  // const handleMaterialsUsedFieldBlur = () => {
-  //   setNewActivity(prev => ({...prev, materialsUsed: materials}))
-  // }
-  // const handleMaterialsUsedFieldChange = (index, e, props) => {
-  //   props.setStatus({ ...props.status, [e.target.id]: '' });
-  //   props.setFieldTouched(e.target.id, true);
-  //   props.handleChange(e);
-  //   //console.log('onchange', index, e.target.value)
-  //   const mt = materials.map(v => v)
-  //   mt[index] = e.target.value
-  //   setMaterials(mt)
-  // }
   const handleImageButtonClick = (e) => {
     refs.imageInput.current.click()
   } 
@@ -89,10 +77,11 @@ function MaterialsUsed(props) {
           <AddMore setNodeList={setMaterials} label={addMoreLabel} />
         </Grid>
       </Grid>
-      {(props.status && props.status['materialsUsed']) ||
-        (props.touched['materialsUsed'] &&
+      <p className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}>
+        {props.touched['materialsUsed'] &&
           props.errors['materialsUsed'] === 'required1' &&
-          props.t(`createActivity.inputs.materialsUsed.errors.required1`))}
+          props.t(`createActivity.inputs.materialsUsed.errors.required1`)}
+      </p>
       <Grid item xs={12} className={common_classes.marginTop3em}>
         <Typography
           color="textSecondary"
