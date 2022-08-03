@@ -51,7 +51,6 @@ const imageSizeTooLarge = (value) => {
 };
 
 const allEmpty = (arr) => {
-  console.log('allEmpty value', arr)
   let allEmptyValues = true
   if(arr){
     arr.forEach(value => {

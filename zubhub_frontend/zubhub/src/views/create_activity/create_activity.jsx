@@ -50,10 +50,14 @@ function CreateActivity(props) {
     }
   };
   const handleSetNewActivity = obj => {
-    setState(state => ({
-      ...state,
-      newActivity: { ...state.newActivity, ...obj },
-    }));
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({
+          ...state,
+          newActivity: { ...state.newActivity, ...obj },
+        }));
+      });
+    }
   };
   const requireFieldByStep = [
     ['title', 'motivation', 'learningGoals'],
@@ -96,7 +100,7 @@ function CreateActivity(props) {
   const visiteNext = () => {
     handleSetState({ step: state.step + 1 });
   };
-  console.log('props', props)
+  // console.log('props', props);
   console.log('neActivity', state.newActivity);
   return (
     <div className={classes.createActivityContainer}>
@@ -154,7 +158,7 @@ function CreateActivity(props) {
                     variant="contained"
                     primaryButtonStyle
                     customButtonStyle
-                    disabled={state.verifiedStep > 2 ? false : true}
+                    disabled={state.verifiedStep > 0 ? false : true}
                     fullWidth
                     size="large"
                     type="submit"
@@ -211,7 +215,7 @@ export default connect(
       inspiringExemplesCredits: [],
       inspiringExemplesImages: '',
       activityImages: '',
-      inspiringArtistImage: ''
+      inspiringArtistImage: '',
     }),
     validationSchema,
   })(CreateActivity),

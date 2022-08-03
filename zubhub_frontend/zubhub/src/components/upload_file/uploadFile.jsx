@@ -7,17 +7,24 @@ import {
   handleImageFieldChange,
 } from './uploadFileScripts.js';
 import { Typography, FormControl, FormHelperText } from '@material-ui/core';
-import {getFieldAndIndex} from '../../assets/js/utils/scripts'
-import { isEmptyArray } from 'formik';
+import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function UploadFile(props) {
-  const { id, fileType, uploadButtonLabel, classes, countFilesText, multiple, wraperState } =
-    props;
-  
-  const { field, index } =  getFieldAndIndex(id);
+  const {
+    id,
+    fileType,
+    uploadButtonLabel,
+    classes,
+    countFilesText,
+    multiple,
+    wraperState,
+  } = props;
+
+  const { field, index } = getFieldAndIndex(id);
   const uploadFileRefs = {
     fileInput: React.useRef(null),
   };
+
   const [state, setState] = useState({
     media_upload: {
       upload_dialog: false,
@@ -29,15 +36,18 @@ function UploadFile(props) {
       uploaded_videos_url: [],
     },
   });
+
   const handleSetUploadFileState = obj => {
     if (obj) {
-      setState(state => ({ ...state, ...obj }));
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
     }
   };
-
+  
   props = {
     ...props,
-    state: state,
+    UploadFilestate: state,
     handleSetUploadFileState: handleSetUploadFileState,
   };
   return (
@@ -80,9 +90,11 @@ function UploadFile(props) {
           component="span"
           id={[id, 'file_count_el'].join('')}
         >
-          {index !== null? (wraperState[field] &&
+          {index !== null
+            ? wraperState[field] &&
               wraperState[field].media_upload?.images_to_upload &&
-              wraperState[field].media_upload.images_to_upload[index])? `1 image added`
+              wraperState[field].media_upload.images_to_upload[index]
+              ? `1 image added`
               : ''
             : wraperState[id] &&
               wraperState[id].media_upload?.images_to_upload.length > 0
