@@ -64,6 +64,14 @@ const allEmpty = (arr) => {
     return true
   }
 }
+const imageValidationSchema = Yup.mixed()
+  .test('image_is_empty', 'image_is_empty', function (value) {
+    return !value ? false : true;
+  })
+  .test('not_an_image', 'onlyImages', value => isImage(value))
+  .test('image_size_too_large', 'imageSizeTooLarge', value =>
+    imageSizeTooLarge(value),
+  );
 // file validation functions /$
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
@@ -99,15 +107,12 @@ export const validationSchema = Yup.object().shape({
     .test('image_size_too_large', 'imageSizeTooLarge', value =>
       imageSizeTooLarge(value),
     ),
-  inspiringExemplesImages: Yup.mixed()
-    .test('image_is_empty','image_is_empty', function (value) {
-      return !value ? false : true;
-    })
-    .test('not_an_image', 'onlyImages', value => isImage(value))
-    .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
-    .test('image_size_too_large', 'imageSizeTooLarge', value =>
-      imageSizeTooLarge(value),
-    ),
+  inspiringExemplesImages: Yup.lazy((value) => {
+  if (Array.isArray(value)) {
+    return Yup.array().of(imageValidationSchema);
+  }
+  return imageValidationSchema;
+  }) ,
   inspiringArtistImage: Yup.mixed()
     .test('image_is_empty', 'image_is_empty', function (value) {
       return !value ? false : true;
@@ -164,62 +169,62 @@ export const createActivity = props => {
   };
 };
 
-export const uploadActivity = async (state, props, handleSetState) => {
-  const materials_used = props.values['materialsUsed']
-    ?.split(',')
-    .filter(value => (value ? true : false))
-    .join(',');
+// export const uploadActivity = async (state, props, handleSetState) => {
+//   const materials_used = props.values['materialsUsed']
+//     ?.split(',')
+//     .filter(value => (value ? true : false))
+//     .join(',');
 
-  const create_or_update = props.match.params.id
-    ? props.updateActivity
-    : createActivity;
+//   const create_or_update = props.match.params.id
+//     ? props.updateActivity
+//     : createActivity;
 
-  create_or_update({
-    token: props.auth.token,
-    title: state.title,
-    motivation: state.motivation,
-    learningGoals: state.learningGoals,
-    materials_used: materials_used,
-    materials_used_image:
-      state.materials_used_image.media_upload.uploaded_images_url,
-    facilitationTips: state.facilitationTips,
-    activity_images: state.activityImages.media_upload.uploaded_images_url,
-    creationSteps: state.creationSteps,
-    inspiringArtist: state.inspiringArtist,
-    id: props.match.params.id,
-    video: state.media_upload.uploaded_videos_url[0]
-      ? state.media_upload.uploaded_videos_url[0]
-      : '',
-    t: props.t,
-  })
-    .catch(error => {
-      // handleSetState({
-      //   media_upload: {
-      //     ...state.media_upload,
-      //     upload_dialog: false,
-      //   },
-      // });
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        const server_errors = {};
-        Object.keys(messages).forEach(key => {
-          if (key === 'non_field_errors') {
-            server_errors['non_field_errors'] = messages[key][0];
-          } else {
-            server_errors[key] = messages[key][0];
-          }
-        });
-        props.setStatus({ ...server_errors });
-      } else {
-        props.setStatus({
-          non_field_errors: props.t('createProject.errors.unexpected'),
-        });
-      }
-    })
-    .finally(() => {
-      vars.upload_in_progress = false; // flag to prevent attempting to upload a project when an upload is already in progress
-    });
-};
+//   create_or_update({
+//     token: props.auth.token,
+//     title: state.title,
+//     motivation: state.motivation,
+//     learningGoals: state.learningGoals,
+//     materials_used: materials_used,
+//     materials_used_image:
+//       state.materials_used_image.media_upload.uploaded_images_url,
+//     facilitationTips: state.facilitationTips,
+//     activity_images: state.activityImages.media_upload.uploaded_images_url,
+//     creationSteps: state.creationSteps,
+//     inspiringArtist: state.inspiringArtist,
+//     id: props.match.params.id,
+//     video: state.media_upload.uploaded_videos_url[0]
+//       ? state.media_upload.uploaded_videos_url[0]
+//       : '',
+//     t: props.t,
+//   })
+//     .catch(error => {
+//       // handleSetState({
+//       //   media_upload: {
+//       //     ...state.media_upload,
+//       //     upload_dialog: false,
+//       //   },
+//       // });
+//       const messages = JSON.parse(error.message);
+//       if (typeof messages === 'object') {
+//         const server_errors = {};
+//         Object.keys(messages).forEach(key => {
+//           if (key === 'non_field_errors') {
+//             server_errors['non_field_errors'] = messages[key][0];
+//           } else {
+//             server_errors[key] = messages[key][0];
+//           }
+//         });
+//         props.setStatus({ ...server_errors });
+//       } else {
+//         props.setStatus({
+//           non_field_errors: props.t('createProject.errors.unexpected'),
+//         });
+//       }
+//     })
+//     .finally(() => {
+//       vars.upload_in_progress = false; // flag to prevent attempting to upload a project when an upload is already in progress
+//     });
+// };
 
 export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();

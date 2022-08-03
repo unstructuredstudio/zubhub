@@ -7,11 +7,14 @@ import {
   handleImageFieldChange,
 } from './uploadFileScripts.js';
 import { Typography, FormControl, FormHelperText } from '@material-ui/core';
+import {getFieldAndIndex} from '../../assets/js/utils/scripts'
+import { isEmptyArray } from 'formik';
 
 function UploadFile(props) {
   const { id, fileType, uploadButtonLabel, classes, countFilesText, multiple, wraperState } =
     props;
-
+  
+  const { field, index } =  getFieldAndIndex(id);
   const uploadFileRefs = {
     fileInput: React.useRef(null),
   };
@@ -26,13 +29,17 @@ function UploadFile(props) {
       uploaded_videos_url: [],
     },
   });
-  const handleSetState = obj => {
+  const handleSetUploadFileState = obj => {
     if (obj) {
       setState(state => ({ ...state, ...obj }));
     }
   };
 
-  props = { ...props, state: state, handleSetState: handleSetState };
+  props = {
+    ...props,
+    state: state,
+    handleSetUploadFileState: handleSetUploadFileState,
+  };
   return (
     <div>
       <CustomButton
@@ -73,22 +80,34 @@ function UploadFile(props) {
           component="span"
           id={[id, 'file_count_el'].join('')}
         >
-          {wraperState[id] &&
-          wraperState[id].media_upload.images_to_upload.length > 0
+          {index !== null? (wraperState[field] &&
+              wraperState[field].media_upload?.images_to_upload &&
+              wraperState[field].media_upload.images_to_upload[index])? `1 image added`
+              : ''
+            : wraperState[id] &&
+              wraperState[id].media_upload?.images_to_upload.length > 0
             ? `${wraperState[id].media_upload.images_to_upload.length}
-         ${
-           wraperState[id].media_upload.images_to_upload.length < 2
-             ? countFilesText[0]
-             : countFilesText[1]
-         }`
+              ${
+                wraperState[id].media_upload.images_to_upload.length < 2
+                  ? countFilesText[0]
+                  : countFilesText[1]
+              }`
             : ''}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {props.touched[id] &&
-            props.errors[id] &&
-            props.t(
-              `createActivity.inputs.activityImages.errors.${props.errors[id]}`,
-            )}
+          {index !== null
+            ? props.touched[field] &&
+              props.touched[field][index] &&
+              props.errors[field] &&
+              props.errors[field][index] &&
+              props.t(
+                `createActivity.inputs.activityImages.errors.${props.errors[field][index]}`,
+              )
+            : props.touched[id] &&
+              props.errors[id] &&
+              props.t(
+                `createActivity.inputs.activityImages.errors.${props.errors[id]}`,
+              )}
         </FormHelperText>
       </FormControl>
     </div>

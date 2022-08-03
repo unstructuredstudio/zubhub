@@ -313,3 +313,10 @@ export const calculateLabelWidth = (text, document) => {
 export const isBaseTag = tag => {
   return BASE_TAGS.includes(tag);
 };
+
+export const getFieldAndIndex = str => {
+  let arr = str.split('[');
+  return arr.length > 1
+    ? { field: arr[0], index: parseInt(arr[1].split('')[0]) }
+    : { field: arr[0], index: null };
+};

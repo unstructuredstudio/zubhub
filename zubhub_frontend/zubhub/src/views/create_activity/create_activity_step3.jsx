@@ -214,7 +214,7 @@ function CreateActivityStep3(props) {
                 </Grid>
                 <Grid item xs={12} md={3} sm={6}>
                   <UploadFile
-                    id={'inspiringExemplesImages'}
+                    id={`inspiringExemplesImages[${index}]`}
                     fileType={'image/*'}
                     uploadButtonLabel={t(
                       'createActivity.inputs.inspiringExemples.image.label',
