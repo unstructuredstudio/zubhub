@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import InputText from '../../components/inputText/inputText';
 import 'react-toastify/dist/ReactToastify.css';
-import {vars} from '../create_project/createProjectScripts';
+import { vars } from '../create_project/createProjectScripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, FormControl, Box, Typography } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
@@ -13,19 +13,29 @@ import MaterialsUsed from '../../components/materialsUsed/materialsUsed';
 import UploadFile from '../../components/upload_file/uploadFile';
 import FormLabel from '../../components/form_labels/formLabel';
 import AddMore from '../../components/addMore/addMore';
-import Input from '../../components/input/input'
+import Input from '../../components/input/input';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivityStep3(props) {
-    const classes = useProjectStyles()
-    const activity_classes = useStyles()
-    const common_classes = useCommonStyles()
-    const [newActivity, setNewActivity] = useState(props.newActivity)
-    const [creationSteps, setCreationSteps] = useState(newActivity.creationSteps? newActivity.creationSteps : [''] ) 
-    const [inspiringExemples, setInspiringExemples] = useState(newActivity.inspiringExemples? newActivity.inspiringExemples : [''])
-    const {t, newActivityObject, setNewActivityObject, formikProps, validateSteps } = props;
+  const classes = useProjectStyles();
+  const activity_classes = useStyles();
+  const common_classes = useCommonStyles();
+  const [newActivity, setNewActivity] = useState(props.newActivity);
+  const [creationSteps, setCreationSteps] = useState(
+    newActivity.creationSteps ? newActivity.creationSteps : [''],
+  );
+  const [inspiringExemples, setInspiringExemples] = useState(
+    newActivity.inspiringExemples ? newActivity.inspiringExemples : [''],
+  );
+  const {
+    t,
+    newActivityObject,
+    setNewActivityObject,
+    formikProps,
+    validateSteps,
+  } = props;
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
@@ -54,17 +64,23 @@ function CreateActivityStep3(props) {
                 common_classes.outlined,
               )}
             >
-              {/* <InputText
+              <InputText
+                name={`creationSteps[${index}]`}
                 classes={classes}
                 common_classes={common_classes}
                 activity_classes={activity_classes}
-                label={`creationSteps[${index}]`}
+                helperText={''}
                 placeholder={`${t(
                   'createActivity.inputs.creationSteps.placeholder',
                 )} ${index + 1}`}
+                formikProps={props.formikProps}
+                newActivityObject={props.newActivityObject}
+                setNewActivityObject={props.setNewActivityObject}
+                validateSteps={props.validateSteps}
                 vars={vars}
-                {...props}
-              /> */}
+                t={props.t}
+              />
+
               {/* <Grid
                 item
                 xs={12}
@@ -131,6 +147,22 @@ function CreateActivityStep3(props) {
               common_classes.outlined,
             )}
           >
+            <InputText
+              name={`inspiringArtist`}
+              classes={classes}
+              common_classes={common_classes}
+              activity_classes={activity_classes}
+              helperText={''}
+              placeholder={t(
+                'createActivity.inputs.inspiringArtist.placeholder',
+              )}
+              formikProps={props.formikProps}
+              newActivityObject={props.newActivityObject}
+              setNewActivityObject={props.setNewActivityObject}
+              validateSteps={props.validateSteps}
+              vars={vars}
+              t={props.t}
+            />
             {/* <InputText
               classes={classes}
               common_classes={common_classes}
@@ -266,4 +298,4 @@ function CreateActivityStep3(props) {
   );
 }
 
-export default CreateActivityStep3
+export default CreateActivityStep3;

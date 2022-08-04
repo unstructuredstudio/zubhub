@@ -1,20 +1,14 @@
-import React from 'react'
-import clsx from 'clsx'
-import {  
-    FormControl,  
-    OutlinedInput,
-    FormHelperText,
-} from '@material-ui/core';
-import { handleTextFieldBlur} from '../../views/create_activity/createActivityScripts';
+import React from 'react';
+import clsx from 'clsx';
+import { FormControl, OutlinedInput, FormHelperText } from '@material-ui/core';
+import { handleTextFieldBlur } from '../../views/create_activity/createActivityScripts';
+import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function Input(props) {
-    const {
-      name,
-      classes,
-      formikProps,
-      validateSteps,
-      setNewActivityObject,
-    } = props;
+  const { name, classes, formikProps, validateSteps, setNewActivityObject } =
+    props;
+  const { field, index } = getFieldAndIndex(name);
+
   return (
     <div>
       <FormControl
@@ -23,7 +17,7 @@ function Input(props) {
         size="small"
         fullWidth
         margin="none"
-        error={props.errors[name] ? true : false}
+        error={formikProps.errors[field] ? true : false}
       >
         <OutlinedInput
           className={classes.customInputStyle}
@@ -31,10 +25,30 @@ function Input(props) {
           name={name}
           type="text"
           defaultValue={
-            formikProps.formikValues[name] ? formikProps.formikValues[name] : ''
+            formikProps.formikValues[field]
+              ? index !== null
+                ? formikProps.formikValues[field][index]
+                : formikProps.formikValues[field]
+              : ''
           }
-          onBlur={e =>
-            handleTextFieldBlur(e, setNewActivityObject, formikProps.handleBlur, validateSteps)
+          onBlur={
+            e => {
+              {
+                formikProps.handleBlur(e);
+                setNewActivityObject(newActivity => ({
+                  ...newActivity,
+                  [field]: formikProps.formikValues[field],
+                }));
+                validateSteps();
+              }
+            }
+            // handleTextFieldBlur(
+            //   e,
+            //   setNewActivityObject,
+            //   formikProps.handleBlur,
+            //   formikProps.formikValues,
+            //   validateSteps,
+            // )
           }
           onChange={e => formikProps.handleChange(e)}
         />
@@ -50,4 +64,4 @@ function Input(props) {
   );
 }
 
-export default Input
+export default Input;

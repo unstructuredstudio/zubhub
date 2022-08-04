@@ -14,6 +14,7 @@ import {
   FormHelperText,
   ClickAwayListener,
 } from '@material-ui/core';
+import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function InputText(props) {
   const {
@@ -27,7 +28,7 @@ function InputText(props) {
     vars,
   } = props;
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
-  props = { ...props, inputTextFieldFocused, setInputTextFieldFocused };
+  const { field, index } = getFieldAndIndex(name);
   return (
     <div>
       <Typography
@@ -53,7 +54,7 @@ function InputText(props) {
             if (inputTextFieldFocused) {
               console.log('blur event from :', name);
               handleInputTextFieldBlur(
-                name,
+                field,
                 formikProps.formikValues,
                 props.setNewActivityObject,
                 setInputTextFieldFocused,
@@ -64,14 +65,16 @@ function InputText(props) {
         >
           <ReactQuill
             name={name}
-            id={`${name}_id`}
+            id={`${field}_id`}
             className={activity_classes.reactQuillStyle}
             modules={vars.quill.modules}
             formats={vars.quill.formats}
             placeholder={placeholder ? placeholder : ''}
             defaultValue={
-              formikProps.formikValues[name]
-                ? formikProps.formikValues[name]
+              formikProps.formikValues[field]
+                ? index !== null
+                  ? formikProps.formikValues[field][index]
+                  : formikProps.formikValues[field]
                 : ''
             }
             onChange={value =>
@@ -86,11 +89,19 @@ function InputText(props) {
           />
         </ClickAwayListener>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {formikProps.touched[name] &&
-            formikProps.errors[name] &&
-            props.t(
-              `createActivity.inputs.${name}.errors.${formikProps.errors[name]}`,
-            )}
+          {index !== null
+            ? formikProps.touched[field] &&
+              formikProps.touched[field][index] &&
+              formikProps.errors[field] &&
+              formikProps.errors[field][index] &&
+              props.t(
+                `createActivity.inputs.${field}.errors.${formikProps.errors[field][index]}`,
+              )
+            : formikProps.touched[field] &&
+              formikProps.errors[field] &&
+              props.t(
+                `createActivity.inputs.${field}.errors.${formikProps.errors[field]}`,
+              )}
         </FormHelperText>
       </FormControl>
     </div>

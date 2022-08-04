@@ -82,9 +82,8 @@ export const validationSchema = Yup.object().shape({
   }),
   inspiringArtist: Yup.string().max(10000, 'max').required('required'),
   inspiringExemplesDescriptions: Yup.string()
-    .max(100, 'max')
-    .required('required'),
-  inspiringExemplesCredits: Yup.string().max(100, 'max').required('required'),
+    .max(100, 'max'),
+  inspiringExemplesCredits: Yup.string().max(100, 'max'),
   materialsUsed: Yup.mixed().test('required1', 'required1', value =>
     allEmpty(value),
   ),
@@ -123,16 +122,17 @@ export const validationSchema = Yup.object().shape({
     ),
 });
 
-export const handleTextFieldBlur = (
-  e,
-  setNewActivityObject,
-  handleBlur,
-  validateSteps,
-) => {
-  handleBlur(e);
-  setNewActivityObject(newActivity => ({...newActivity, [e.target.name]: e.target.value}))
-  validateSteps();
-};
+// export const handleTextFieldBlur = (
+//   e,
+//   setNewActivityObject,
+//   handleBlur,
+//   formikValues,
+//   validateSteps,
+// ) => {
+//   handleBlur(e);
+//   setNewActivityObject(newActivity => ({...newActivity, [e.target.name]: e.target.value}))
+//   validateSteps();
+// };
 
 export const handleInputTextFieldChange = (
   name,

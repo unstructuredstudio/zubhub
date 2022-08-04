@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import InputText from '../../components/inputText/inputText';
 import 'react-toastify/dist/ReactToastify.css';
-import {vars} from '../create_project/createProjectScripts';
+import { vars } from '../create_project/createProjectScripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, FormControl, Box, Typography } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
@@ -17,13 +17,20 @@ const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivityStep2(props) {
-    const classes = useProjectStyles()
-    const activity_classes = useStyles()
-    const common_classes = useCommonStyles()
-    const [newActivity, setNewActivity] = useState(props.newActivity)
-    const [materialsUsedList, setMaterialsUsedList] = useState(newActivity.materialsUsed? newActivity.materialsUsed : ['','',''] ) 
-    const {t} = {...props}
-    //console.log('newActivity 2', newActivity)
+  const classes = useProjectStyles();
+  const activity_classes = useStyles();
+  const common_classes = useCommonStyles();
+  const [newActivity, setNewActivity] = useState(props.newActivity);
+  
+  const {
+    t,
+    newActivityObject,
+    setNewActivityObject,
+    formikProps,
+    validateSteps,
+  } = props;
+  
+  //console.log('newActivity 2', newActivity)
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
@@ -43,11 +50,12 @@ function CreateActivityStep2(props) {
             encouragingText={t(
               'createActivity.inputs.materialsUsed.encouragingText',
             )}
-            imagesLabel={t('createActivity.inputs.materialsUsed.images.label')}
-            materialsUsedList={materialsUsedList}
-            setNewActivity={setNewActivity}
+            imagesButtonLabel={t('createActivity.inputs.materialsUsed.images.label')}
+            newActivityObject={newActivityObject}
+            setNewActivityObject={setNewActivityObject}
+            formikProps={formikProps}
+            validateSteps={validateSteps}
             t={t}
-            {...props}
           />
         </Grid>
         <Grid item xs={12} className={common_classes.marginTop1em}>
@@ -59,18 +67,22 @@ function CreateActivityStep2(props) {
             inputOrder={5}
             fieldLabel={t('createActivity.inputs.facilitationTips.label')}
           />
-          {/* <InputText
+          <InputText
+            name={'facilitationTips'}
             classes={classes}
             common_classes={common_classes}
             activity_classes={activity_classes}
-            label={'facilitationTips'}
             helperText={t('createActivity.inputs.facilitationTips.helperText')}
             placeholder={t(
               'createActivity.inputs.facilitationTips.placeholder',
             )}
+            formikProps={props.formikProps}
+            newActivityObject={props.newActivityObject}
+            setNewActivityObject={props.setNewActivityObject}
+            validateSteps={props.validateSteps}
             vars={vars}
-            {...props}
-          /> */}
+            t={props.t}
+          />
         </Grid>
         <Grid
           item
@@ -114,4 +126,4 @@ function CreateActivityStep2(props) {
   );
 }
 
-export default CreateActivityStep2
+export default CreateActivityStep2;
