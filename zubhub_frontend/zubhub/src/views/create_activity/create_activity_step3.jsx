@@ -54,7 +54,7 @@ function CreateActivityStep3(props) {
                 common_classes.outlined,
               )}
             >
-              <InputText
+              {/* <InputText
                 classes={classes}
                 common_classes={common_classes}
                 activity_classes={activity_classes}
@@ -64,7 +64,7 @@ function CreateActivityStep3(props) {
                 )} ${index + 1}`}
                 vars={vars}
                 {...props}
-              />
+              /> */}
               {/* <Grid
                 item
                 xs={12}
@@ -131,7 +131,7 @@ function CreateActivityStep3(props) {
               common_classes.outlined,
             )}
           >
-            <InputText
+            {/* <InputText
               classes={classes}
               common_classes={common_classes}
               activity_classes={activity_classes}
@@ -141,7 +141,7 @@ function CreateActivityStep3(props) {
               )}
               vars={vars}
               {...props}
-            />
+            /> */}
             <Grid
               item
               xs={12}

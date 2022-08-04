@@ -59,7 +59,7 @@ function CreateActivityStep2(props) {
             inputOrder={5}
             fieldLabel={t('createActivity.inputs.facilitationTips.label')}
           />
-          <InputText
+          {/* <InputText
             classes={classes}
             common_classes={common_classes}
             activity_classes={activity_classes}
@@ -70,7 +70,7 @@ function CreateActivityStep2(props) {
             )}
             vars={vars}
             {...props}
-          />
+          /> */}
         </Grid>
         <Grid
           item

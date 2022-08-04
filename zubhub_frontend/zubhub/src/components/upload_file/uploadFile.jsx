@@ -39,16 +39,17 @@ function UploadFile(props) {
 
   const handleSetUploadFileState = obj => {
     if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
+      //  Promise.resolve(obj).then(obj => {
+      setState(state => ({ ...state, ...obj }));
+      //  });
     }
   };
-  
+
   props = {
     ...props,
     UploadFilestate: state,
     handleSetUploadFileState: handleSetUploadFileState,
+    setState1: setState,
   };
   return (
     <div>

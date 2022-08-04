@@ -26,6 +26,19 @@ function CreateActivity(props) {
     2: props => <CreateActivityStep2 {...props} />,
     3: props => <CreateActivityStep3 {...props} />,
   };
+  const [step, setStep] = useState(1);
+  const [verifiedStep, setVerifiedStep] = useState(1);
+  const [newActivityObject, setNewActivityObject] = useState({
+    media_upload: {
+      upload_dialog: false,
+      images_to_upload: [],
+      videos_to_upload: [],
+      upload_info: {},
+      upload_percent: 0,
+      uploaded_images_url: [],
+      uploaded_videos_url: [],
+    },
+  });
   const [state, setState] = useState({
     step: 1,
     verifiedStep: 1,
@@ -51,12 +64,12 @@ function CreateActivity(props) {
   };
   const handleSetNewActivity = obj => {
     if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({
-          ...state,
-          newActivity: { ...state.newActivity, ...obj },
-        }));
-      });
+      //  Promise.resolve(obj).then(obj => {
+      setState(state => ({
+        ...state,
+        newActivity: { ...state.newActivity, ...obj },
+      }));
+      //  });
     }
   };
   const requireFieldByStep = [
@@ -75,11 +88,11 @@ function CreateActivity(props) {
       requireFieldByStep[i].map(field => {
         if (!(props.touched[field] && !props.errors[field])) {
           stepVerified = false;
-          state.verifiedStep = i + 1;
+          setVerifiedStep(i + 1);
         }
       });
       if (stepVerified) {
-        handleSetState({ verifiedStep: i + 2 });
+        setVerifiedStep(i + 2);
       } else {
         break;
       }
@@ -87,21 +100,24 @@ function CreateActivity(props) {
   };
   props = {
     ...props,
+    newActivityObject: newActivityObject,
+    setNewActivityObject: setNewActivityObject,
     newActivity: state.newActivity,
-    verifiedStep: state.verifiedStep,
+    verifiedStep: verifiedStep,
     validateSteps: validateSteps,
     handleSetState: handleSetState,
     handleSetNewActivity: handleSetNewActivity,
   };
 
   const visitePrev = () => {
-    handleSetState({ step: state.step - 1 });
+    setStep(step => step - 1);
   };
   const visiteNext = () => {
-    handleSetState({ step: state.step + 1 });
+    setStep(step => step + 1);
   };
   // console.log('props', props);
-  console.log('neActivity', state.newActivity);
+  // console.log('neActivity', state.newActivity);
+  console.log('newActivityObject', props, newActivityObject);
   return (
     <div className={classes.createActivityContainer}>
       <Box className={classes.createActivityBoxContainer}>
@@ -112,10 +128,10 @@ function CreateActivity(props) {
         >
           {t('createActivity.welcomeMsg.primary')}
         </Typography>
-        <MultiStepProgressBar step={state.verifiedStep} stepCount={4} />
+        <MultiStepProgressBar step={verifiedStep} stepCount={4} />
 
         <Box className={classes.CreateActivityFormContainer}>
-          <form>{stepComponentsMap[state.step]({ ...props })}</form>
+          <form>{stepComponentsMap[step]({ ...props })}</form>
           <Box className={clsx(common_classes.margin)}>
             <Grid
               item
@@ -124,12 +140,12 @@ function CreateActivity(props) {
               className={clsx(
                 common_classes.marginTop3em,
                 common_classes.displayFlex,
-                state.step === 1
+                step === 1
                   ? common_classes.justifyRight
                   : common_classes.justifySpaceBetween,
               )}
             >
-              {state.step > 1 ? (
+              {step > 1 ? (
                 <CustomButton
                   variant="contained"
                   primaryButtonStyle
@@ -142,7 +158,7 @@ function CreateActivity(props) {
               ) : (
                 ''
               )}
-              {state.step < 3 ? (
+              {step < 3 ? (
                 <CustomButton
                   variant="contained"
                   primaryButtonStyle
@@ -158,7 +174,7 @@ function CreateActivity(props) {
                     variant="contained"
                     primaryButtonStyle
                     customButtonStyle
-                    disabled={state.verifiedStep > 0 ? false : true}
+                    disabled={verifiedStep > 2 ? false : true}
                     fullWidth
                     size="large"
                     type="submit"

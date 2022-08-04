@@ -50,7 +50,7 @@ function CreateActivityStep1(props) {
                 />
                 
             </Grid>
-            <Grid item xs={12} className={common_classes.marginTop1em}>
+            {/* <Grid item xs={12} className={common_classes.marginTop1em}>
               <FormLabel 
                   label={'motivation'}
                   required= {true}
@@ -69,7 +69,7 @@ function CreateActivityStep1(props) {
                 vars={vars}
                 {...props}
               />
-            </Grid> 
+            </Grid>  */}
             <Grid item xs={12} className={common_classes.marginTop1em}>
               <FormLabel 
                   label={'learningGoals'}
@@ -84,10 +84,12 @@ function CreateActivityStep1(props) {
                 common_classes={common_classes}
                 activity_classes={activity_classes}
                 //value={newActivity.learningGoals} 
-                label={'learningGoals'} 
+                name={'learningGoals'} 
                 helperText={t('createActivity.inputs.learningGoals.helperText')} 
                 placeholder={t('createActivity.inputs.learningGoals.placeholder')} 
                 // setValue={setNewActivity}
+                newActivityObject={props.newActivityObject}
+                setNewActivityObject={props.setNewActivityObject}
                 vars={vars}
                 {...props}
               />

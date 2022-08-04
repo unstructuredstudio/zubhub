@@ -15,7 +15,7 @@ function MultiStepProgressBar(props) {
   useEffect(() => {
     setState({...props})
   }, [props])
-    
+  console.log('verified step:', props.step) 
   const classes = useStyles()
   const common_classes = useCommonStyles()
 
@@ -23,18 +23,18 @@ function MultiStepProgressBar(props) {
     <div>
         <Box className={classes.activityCreationProgressBar} >
           <Box className={classes.activityCreationProgressBarScroller}
-              style={{width:  widthToColorPercent(state.step, state.stepCount)}}
+              style={{width:  widthToColorPercent(props.step, props.stepCount)}}
           />
-          {arrayFromStepCount(state.stepCount).map((step,index) => (
+          {arrayFromStepCount(props.stepCount).map((step,index) => (
               
               <Box className={classes.progressNumberStyle}
                 key={index}
-                style={{backgroundColor: isCompleted(step, state.step)? '#00B8C4' : 'white', 
-                       color: isCompleted(step, state.step)? 'white' : '#00B8C4',
-                       left: `calc(${calcAlignLeft(step - 1, state.stepCount)} - 15px) `
+                style={{backgroundColor: isCompleted(step, props.step)? '#00B8C4' : 'white', 
+                       color: isCompleted(step, props.step)? 'white' : '#00B8C4',
+                       left: `calc(${calcAlignLeft(step - 1, props.stepCount)} - 15px) `
                     }}
               >  
-                {isCompleted(step, state.step)? `\u2713` : step}
+                {isCompleted(step, props.step)? `\u2713` : step}
               </Box>
           ))} 
         </Box>

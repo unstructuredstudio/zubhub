@@ -136,23 +136,33 @@ export const handleTextFieldBlur = (e, props) => {
   props.validateSteps();
 };
 
-export const handleInputTextFieldChange = (label, value, props) => {
-  props.setInputTextFieldFocused(true);
+export const handleInputTextFieldChange = (
+  name,
+  value,
+  setInputTextFieldFocused,
+  setFieldValue,
+  setFieldTouched,
+) => {
+  setInputTextFieldFocused(true);
   if (value && value !== '<p><br></p>') {
-    props.setStatus({ ...props.status, [label]: '' });
-    props.setFieldValue(label, value, true);
+    //props.setStatus({ ...props.status, [label]: '' });
+    setFieldValue(name, value, true);
   } else {
-    props.setFieldValue(label, undefined, true);
+    setFieldValue(name, undefined, true);
   }
-  props.setFieldTouched(label, true);
+  setFieldTouched(name, true);
 };
 
-export const handleInputTextFieldBlur = (label, props) => {
-  props.validateSteps();
-  props.handleSetState({
-    newActivity: { ...props.newActivity, [label]: props.values[label] },
-  });
-  props.setInputTextFieldFocused(false);
+export const handleInputTextFieldBlur = (
+  name,
+  formikValues,
+  setNewActivityObject,
+  setInputTextFieldFocused,
+  validateSteps,
+) => {
+  validateSteps();
+  setNewActivityObject(newActivity => ({...newActivity, [name]: formikValues[name]}));
+  setInputTextFieldFocused(false);
 };
 
 export const createActivity = props => {
