@@ -23,6 +23,7 @@ function InputText(props) {
     name,
     helperText,
     placeholder,
+    formikProps,
     vars,
   } = props;
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
@@ -53,7 +54,7 @@ function InputText(props) {
               console.log('blur event from :', name);
               handleInputTextFieldBlur(
                 name,
-                props.values,
+                formikProps.formikValues,
                 props.setNewActivityObject,
                 setInputTextFieldFocused,
                 props.validateSteps,
@@ -68,25 +69,28 @@ function InputText(props) {
             modules={vars.quill.modules}
             formats={vars.quill.formats}
             placeholder={placeholder ? placeholder : ''}
-            defaultValue={props.values[name] ? props.values[name] : ''}
+            defaultValue={
+              formikProps.formikValues[name]
+                ? formikProps.formikValues[name]
+                : ''
+            }
             onChange={value =>
               handleInputTextFieldChange(
                 name,
                 value,
                 setInputTextFieldFocused,
-                props.setFieldValue,
-                props.setFieldTouched,
+                formikProps.setFieldValue,
+                formikProps.setFieldTouched,
               )
             }
           />
         </ClickAwayListener>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {(props.status && props.status[name]) ||
-            (props.touched[name] &&
-              props.errors[name] &&
-              props.t(
-                `createActivity.inputs.${name}.errors.${props.errors[name]}`,
-              ))}
+          {formikProps.touched[name] &&
+            formikProps.errors[name] &&
+            props.t(
+              `createActivity.inputs.${name}.errors.${formikProps.errors[name]}`,
+            )}
         </FormHelperText>
       </FormControl>
     </div>

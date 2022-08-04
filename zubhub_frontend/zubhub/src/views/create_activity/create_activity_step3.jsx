@@ -25,7 +25,7 @@ function CreateActivityStep3(props) {
     const [newActivity, setNewActivity] = useState(props.newActivity)
     const [creationSteps, setCreationSteps] = useState(newActivity.creationSteps? newActivity.creationSteps : [''] ) 
     const [inspiringExemples, setInspiringExemples] = useState(newActivity.inspiringExemples? newActivity.inspiringExemples : [''])
-    const {t} = {...props}
+    const {t, newActivityObject, setNewActivityObject, formikProps, validateSteps } = props;
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
@@ -200,16 +200,24 @@ function CreateActivityStep3(props) {
               <Grid container direction="row" spacing={3}>
                 <Grid item xs={12} md={4} sm={6}>
                   <Input
-                    label={`inspiringExemplesDescriptions[${index}]`}
                     classes={classes}
-                    {...props}
+                    formikProps={formikProps}
+                    validateSteps={validateSteps}
+                    t={t}
+                    newActivityObject={newActivityObject}
+                    setNewActivityObject={setNewActivityObject}
+                    name={`inspiringExemplesDescriptions[${index}]`}
                   />
                 </Grid>
                 <Grid item xs={12} md={3} sm={6}>
                   <Input
-                    label={`inspiringExemplesCredits[${index}]`}
+                    name={`inspiringExemplesCredits[${index}]`}
                     classes={classes}
-                    {...props}
+                    formikProps={formikProps}
+                    validateSteps={validateSteps}
+                    t={t}
+                    newActivityObject={newActivityObject}
+                    setNewActivityObject={setNewActivityObject}
                   />
                 </Grid>
                 <Grid item xs={12} md={3} sm={6}>

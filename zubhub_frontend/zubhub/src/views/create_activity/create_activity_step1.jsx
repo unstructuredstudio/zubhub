@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
 import {
-  Grid,
-} from '@material-ui/core';
-import { vars, handleTextFieldChange, handleTextFieldBlur} from '../create_project/createProjectScripts';
+  vars,
+  handleTextFieldChange,
+  handleTextFieldBlur,
+} from '../create_project/createProjectScripts';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
-import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles'
+import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
 import commonStyles from '../../assets/js/styles';
 import InputText from '../../components/inputText/inputText';
 import FormLabel from '../../components/form_labels/formLabel';
@@ -18,86 +20,90 @@ const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivityStep1(props) {
-    const classes = useProjectStyles()
-    const activity_classes = useStyles()
-    const common_classes = useCommonStyles()
-    const [newActivity, setNewActivity] = useState(props.newActivity)
-    const {t} = {...props} 
-    const setFieldValue = (value, field) => {
-      const fieldObject = {}
-      fieldObject[field] = value
-      setNewActivity((prevactivity) => ({ ...prevactivity, ...fieldObject }))
-    }
-    
+  const classes = useProjectStyles();
+  const activity_classes = useStyles();
+  const common_classes = useCommonStyles();
+  const [newActivity, setNewActivity] = useState(props.newActivity);
+  const { t, formikProps, newActivityObject, setNewActivityObject, validateSteps } = props;
+  // const setFieldValue = (value, field) => {
+  //   const fieldObject = {}
+  //   fieldObject[field] = value
+  //   setNewActivity((prevactivity) => ({ ...prevactivity, ...fieldObject }))
+  // }
+
   return (
     <div className={activity_classes.createActivityStepContainer}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} className={common_classes.marginTop1em}>
-              
-                <FormLabel 
-                  label={"title"}
-                  required= {true}
-                  classes={classes}
-                  common_classes={common_classes}
-                  inputOrder={1}
-                  fieldLabel={t('createActivity.inputs.title.label')}
-                />
-                <Input 
-                  classes= {classes}
-                  defaultValue={props.values['title']? props.values.title : ''}
-                  label={'title'}
-                  {...props}
-                />
-                
-            </Grid>
-            {/* <Grid item xs={12} className={common_classes.marginTop1em}>
-              <FormLabel 
-                  label={'motivation'}
-                  required= {true}
-                  classes={classes}
-                  common_classes={common_classes}
-                  inputOrder={2}
-                  fieldLabel={t('createActivity.inputs.motivation.label')}
-                />
-              <InputText
-                label={'motivation'} 
-                classes={classes} 
-                common_classes={common_classes}
-                activity_classes={activity_classes}
-                helperText={t('createActivity.inputs.motivation.helperText')} 
-                placeholder={t('createActivity.inputs.motivation.placeholder')} 
-                vars={vars}
-                {...props}
-              />
-            </Grid>  */}
-            <Grid item xs={12} className={common_classes.marginTop1em}>
-              <FormLabel 
-                  label={'learningGoals'}
-                  required={true}
-                  classes={classes}
-                  common_classes={common_classes}
-                  inputOrder={3}
-                  fieldLabel={t('createActivity.inputs.learningGoals.label')}
-                />
-              <InputText 
-                classes={classes} 
-                common_classes={common_classes}
-                activity_classes={activity_classes}
-                //value={newActivity.learningGoals} 
-                name={'learningGoals'} 
-                helperText={t('createActivity.inputs.learningGoals.helperText')} 
-                placeholder={t('createActivity.inputs.learningGoals.placeholder')} 
-                // setValue={setNewActivity}
-                newActivityObject={props.newActivityObject}
-                setNewActivityObject={props.setNewActivityObject}
-                vars={vars}
-                {...props}
-              />
-            </Grid>
-            
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12} className={common_classes.marginTop1em}>
+          <FormLabel
+            label={'title'}
+            required={true}
+            classes={classes}
+            common_classes={common_classes}
+            inputOrder={1}
+            fieldLabel={t('createActivity.inputs.title.label')}
+          />
+          <Input
+            classes={classes}
+            name={'title'}
+            formikProps={formikProps}
+            validateSteps={validateSteps}
+            t={t}
+            newActivityObject={newActivityObject}
+            setNewActivityObject={setNewActivityObject}
+          />
+        </Grid>
+        <Grid item xs={12} className={common_classes.marginTop1em}>
+          <FormLabel
+            label={'motivation'}
+            required={true}
+            classes={classes}
+            common_classes={common_classes}
+            inputOrder={2}
+            fieldLabel={t('createActivity.inputs.motivation.label')}
+          />
+          <InputText
+            name={'motivation'}
+            classes={classes}
+            common_classes={common_classes}
+            activity_classes={activity_classes}
+            helperText={t('createActivity.inputs.motivation.helperText')}
+            placeholder={t('createActivity.inputs.motivation.placeholder')}
+            formikProps={props.formikProps}
+            newActivityObject={props.newActivityObject}
+            setNewActivityObject={props.setNewActivityObject}
+            validateSteps={props.validateSteps}
+            vars={vars}
+            t={props.t}
+          />
+        </Grid>
+        <Grid item xs={12} className={common_classes.marginTop1em}>
+          <FormLabel
+            label={'learningGoals'}
+            required={true}
+            classes={classes}
+            common_classes={common_classes}
+            inputOrder={3}
+            fieldLabel={t('createActivity.inputs.learningGoals.label')}
+          />
+          <InputText
+            classes={classes}
+            common_classes={common_classes}
+            activity_classes={activity_classes}
+            name={'learningGoals'}
+            helperText={t('createActivity.inputs.learningGoals.helperText')}
+            placeholder={t('createActivity.inputs.learningGoals.placeholder')}
+            newActivityObject={props.newActivityObject}
+            setNewActivityObject={props.setNewActivityObject}
+            formikProps={props.formikProps}
+            validateSteps={props.validateSteps}
+            vars={vars}
+            t={props.t}
+          />
+        </Grid>
+      </Grid>
     </div>
-  )
+  );
 }
 
-export default CreateActivityStep1
+export default CreateActivityStep1;

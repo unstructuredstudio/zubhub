@@ -123,17 +123,15 @@ export const validationSchema = Yup.object().shape({
     ),
 });
 
-export const handleTextFieldChange = (label, e, props) => {
-  props.handleChange(e);
-  // e.preventDefault();
-  // props.setStatus({ ...props.status, [label]: '' });
-  // props.setFieldTouched(label, true);
-  // props.setFieldValue(label, e.target.value, false);
-};
-
-export const handleTextFieldBlur = (e, props) => {
-  props.handleBlur(e);
-  props.validateSteps();
+export const handleTextFieldBlur = (
+  e,
+  setNewActivityObject,
+  handleBlur,
+  validateSteps,
+) => {
+  handleBlur(e);
+  setNewActivityObject(newActivity => ({...newActivity, [e.target.name]: e.target.value}))
+  validateSteps();
 };
 
 export const handleInputTextFieldChange = (

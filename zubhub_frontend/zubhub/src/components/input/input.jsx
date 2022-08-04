@@ -5,14 +5,16 @@ import {
     OutlinedInput,
     FormHelperText,
 } from '@material-ui/core';
-import { handleTextFieldChange, handleTextFieldBlur} from '../../views/create_activity/createActivityScripts';
+import { handleTextFieldBlur} from '../../views/create_activity/createActivityScripts';
 
 function Input(props) {
     const {
-      label,
-      defaultValue,
-      classes, 
-    }=props
+      name,
+      classes,
+      formikProps,
+      validateSteps,
+      setNewActivityObject,
+    } = props;
   return (
     <div>
       <FormControl
@@ -21,33 +23,31 @@ function Input(props) {
         size="small"
         fullWidth
         margin="none"
-        error={props.errors[label]? true: false}
-        >  
+        error={props.errors[name] ? true : false}
+      >
         <OutlinedInput
-        className={classes.customInputStyle}
-        id={label}
-        name={label}
-        type="text"
-        defaultValue={defaultValue? defaultValue : ''}
-        onBlur={(e) => handleTextFieldBlur(e, props) }
-        onChange= {(e) => props.handleChange(e)}
-        />
-        <FormHelperText
-        error
-        className={classes.fieldHelperTextStyle}
-        >
-          {
-          ( props.touched[label] && props.errors[label] ) &&
-          
-          (props.t(
-              `createActivity.inputs.${label}.errors.${props.errors[label]}`,
-          ))
+          className={classes.customInputStyle}
+          id={`${name}_id`}
+          name={name}
+          type="text"
+          defaultValue={
+            formikProps.formikValues[name] ? formikProps.formikValues[name] : ''
           }
-        </FormHelperText>  
+          onBlur={e =>
+            handleTextFieldBlur(e, setNewActivityObject, formikProps.handleBlur, validateSteps)
+          }
+          onChange={e => formikProps.handleChange(e)}
+        />
+        <FormHelperText error className={classes.fieldHelperTextStyle}>
+          {formikProps.touched[name] &&
+            formikProps.errors[name] &&
+            props.t(
+              `createActivity.inputs.${name}.errors.${formikProps.errors[name]}`,
+            )}
+        </FormHelperText>
       </FormControl>
-
     </div>
-  )
+  );
 }
 
 export default Input

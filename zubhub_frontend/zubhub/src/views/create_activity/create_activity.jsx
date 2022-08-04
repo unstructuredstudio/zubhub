@@ -98,10 +98,18 @@ function CreateActivity(props) {
       }
     }
   };
+  const formikProps = {
+    formikValues: props.values,
+    touched: props.touched,
+    errors: props.errors,
+    setFieldValue: props.setFieldValue,
+    setFieldTouched: props.setFieldTouched,
+    handleChange: props.handleChange,
+    handleBlur: props.handleBlur,
+  };
   props = {
     ...props,
-    newActivityObject: newActivityObject,
-    setNewActivityObject: setNewActivityObject,
+    
     newActivity: state.newActivity,
     verifiedStep: verifiedStep,
     validateSteps: validateSteps,
@@ -131,7 +139,15 @@ function CreateActivity(props) {
         <MultiStepProgressBar step={verifiedStep} stepCount={4} />
 
         <Box className={classes.CreateActivityFormContainer}>
-          <form>{stepComponentsMap[step]({ ...props })}</form>
+          <form>
+            {stepComponentsMap[step]({
+              ...props,
+              formikProps: formikProps,
+              validateSteps: validateSteps,
+              newActivityObject: newActivityObject,
+              setNewActivityObject: setNewActivityObject,
+            })}
+          </form>
           <Box className={clsx(common_classes.margin)}>
             <Grid
               item
