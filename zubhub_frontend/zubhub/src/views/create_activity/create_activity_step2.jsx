@@ -21,7 +21,7 @@ function CreateActivityStep2(props) {
   const activity_classes = useStyles();
   const common_classes = useCommonStyles();
   const [newActivity, setNewActivity] = useState(props.newActivity);
-  
+
   const {
     t,
     newActivityObject,
@@ -29,7 +29,7 @@ function CreateActivityStep2(props) {
     formikProps,
     validateSteps,
   } = props;
-  
+
   //console.log('newActivity 2', newActivity)
   return (
     <div className={activity_classes.createActivityStepContainer}>
@@ -50,7 +50,9 @@ function CreateActivityStep2(props) {
             encouragingText={t(
               'createActivity.inputs.materialsUsed.encouragingText',
             )}
-            imagesButtonLabel={t('createActivity.inputs.materialsUsed.images.label')}
+            imagesButtonLabel={t(
+              'createActivity.inputs.materialsUsed.images.label',
+            )}
             newActivityObject={newActivityObject}
             setNewActivityObject={setNewActivityObject}
             formikProps={formikProps}
@@ -100,21 +102,18 @@ function CreateActivityStep2(props) {
             fieldLabel={t('createActivity.inputs.activityImages.label')}
           />
           <UploadFile
-            id={'activityImages'}
+            name={'activityImages'}
             fileType={'image/*'}
             uploadButtonLabel={t(
               'createActivity.inputs.materialsUsed.images.label',
             )}
             classes={classes}
-            wraperState={props.newActivity}
-            setWraperState={props.handleSetNewActivity}
-            t={props.t}
-            setFieldValue={props.setFieldValue}
-            setFieldTouched={props.setFieldTouched}
-            touched={props.touched}
-            errors={props.errors}
+            newActivityObject={newActivityObject}
+            setNewActivityObject={setNewActivityObject}
+            formikProps={formikProps}
+            validateSteps={validateSteps}
+            t={t}
             multiple={true}
-            setStatus={props.setStatus}
             countFilesText={[
               props.t('createActivity.inputs.image'),
               props.t('createActivity.inputs.images'),

@@ -18,7 +18,7 @@ const vars = {
 };
 
 // ^/file validation functions
-const isImage = (value) => {
+const isImage = value => {
   if (value) {
     let not_an_image = false;
     for (let index = 0; index < value.length; index++) {
@@ -26,17 +26,17 @@ const isImage = (value) => {
         not_an_image = true;
       }
     }
-    return !not_an_image
+    return !not_an_image;
   } else {
     return true;
   }
 };
 
-const tooManyImages = (value) => {
-  return value? value.length <= 10 : true
+const tooManyImages = value => {
+  return value ? value.length <= 10 : true;
 };
 
-const imageSizeTooLarge = (value) => {
+const imageSizeTooLarge = value => {
   if (value) {
     let image_size_too_large = false;
     for (let index = 0; index < value.length; index++) {
@@ -44,25 +44,26 @@ const imageSizeTooLarge = (value) => {
         image_size_too_large = true;
       }
     }
-    return !image_size_too_large
+    return !image_size_too_large;
   } else {
     return true;
   }
 };
 
-const allEmpty = (arr) => {
-  let allEmptyValues = true
-  if(arr){
+const allEmpty = arr => {
+  let allEmptyValues = true;
+  if (arr) {
     arr.forEach(value => {
-      if(value && value !== ''){
-        console.log('from condition', value)
-        allEmptyValues = false
-      }})
-    return !allEmptyValues
-  }else {
-    return true
+      if (value && value !== '') {
+        console.log('from condition', value);
+        allEmptyValues = false;
+      }
+    });
+    return !allEmptyValues;
+  } else {
+    return true;
   }
-}
+};
 const imageValidationSchema = Yup.mixed()
   .test('image_is_empty', 'image_is_empty', function (value) {
     return !value ? false : true;
@@ -81,36 +82,29 @@ export const validationSchema = Yup.object().shape({
     return value ? value.length > 0 : false;
   }),
   inspiringArtist: Yup.string().max(10000, 'max').required('required'),
-  inspiringExemplesDescriptions: Yup.string()
-    .max(100, 'max'),
+  inspiringExemplesDescriptions: Yup.string().max(100, 'max'),
   inspiringExemplesCredits: Yup.string().max(100, 'max'),
   materialsUsed: Yup.mixed().test('required1', 'required1', value =>
     allEmpty(value),
   ),
   activityImages: Yup.mixed()
-    .test('image_is_empty', 'image_is_empty', function (value) {
-      return !value ? false : true;
-    })
     .test('not_an_image', 'onlyImages', value => isImage(value))
     .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
     .test('image_size_too_large', 'imageSizeTooLarge', value =>
       imageSizeTooLarge(value),
     ),
   ActivityMaterialsUsedImages: Yup.mixed()
-    .test('image_is_empty', 'image_is_empty', function (value) {
-      return !value ? false : true;
-    })
     .test('not_an_image', 'onlyImages', value => isImage(value))
     .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
     .test('image_size_too_large', 'imageSizeTooLarge', value =>
       imageSizeTooLarge(value),
     ),
-  inspiringExemplesImages: Yup.lazy((value) => {
-  if (Array.isArray(value)) {
-    return Yup.array().of(imageValidationSchema);
-  }
-  return imageValidationSchema;
-  }) ,
+  inspiringExemplesImages: Yup.lazy(value => {
+    if (Array.isArray(value)) {
+      return Yup.array().of(imageValidationSchema);
+    }
+    return imageValidationSchema;
+  }),
   inspiringArtistImage: Yup.mixed()
     .test('image_is_empty', 'image_is_empty', function (value) {
       return !value ? false : true;
@@ -122,17 +116,6 @@ export const validationSchema = Yup.object().shape({
     ),
 });
 
-// export const handleTextFieldBlur = (
-//   e,
-//   setNewActivityObject,
-//   handleBlur,
-//   formikValues,
-//   validateSteps,
-// ) => {
-//   handleBlur(e);
-//   setNewActivityObject(newActivity => ({...newActivity, [e.target.name]: e.target.value}))
-//   validateSteps();
-// };
 
 export const handleInputTextFieldChange = (
   name,
@@ -158,8 +141,12 @@ export const handleInputTextFieldBlur = (
   setInputTextFieldFocused,
   validateSteps,
 ) => {
+  console.log('textIput formikValues', formikValues);
   validateSteps();
-  setNewActivityObject(newActivity => ({...newActivity, [name]: formikValues[name]}));
+  setNewActivityObject(newActivity => ({
+    ...newActivity,
+    [name]: formikValues[name],
+  }));
   setInputTextFieldFocused(false);
 };
 
@@ -233,8 +220,17 @@ export const createActivity = props => {
 //     });
 // };
 
+export const removeMetaData = (images, state, handleSetState) => {
+  const newWorker = worker();
+  newWorker.removeMetaData(images);
+  newWorker.addEventListener('message', e => {
+    Compress(e.data, state, handleSetState);
+  });
+};
+
 export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();
+  
   console.log('initupload props', props);
   console.log('initUpload state ', state);
   if (!props.auth.token) {

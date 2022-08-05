@@ -28,50 +28,40 @@ function CreateActivity(props) {
   };
   const [step, setStep] = useState(1);
   const [verifiedStep, setVerifiedStep] = useState(1);
-  const [newActivityObject, setNewActivityObject] = useState({
-    media_upload: {
-      upload_dialog: false,
-      images_to_upload: [],
-      videos_to_upload: [],
-      upload_info: {},
-      upload_percent: 0,
-      uploaded_images_url: [],
-      uploaded_videos_url: [],
-    },
-  });
-  const [state, setState] = useState({
-    step: 1,
-    verifiedStep: 1,
-    newActivity: {
-      media_upload: {
-        upload_dialog: false,
-        images_to_upload: [],
-        videos_to_upload: [],
-        upload_info: {},
-        upload_percent: 0,
-        uploaded_images_url: [],
-        uploaded_videos_url: [],
-      },
-    },
-  });
+  const [newActivityObject, setNewActivityObject] = useState({});
+  // const [state, setState] = useState({
+  //   step: 1,
+  //   verifiedStep: 1,
+  //   newActivity: {
+  //     media_upload: {
+  //       upload_dialog: false,
+  //       images_to_upload: [],
+  //       videos_to_upload: [],
+  //       upload_info: {},
+  //       upload_percent: 0,
+  //       uploaded_images_url: [],
+  //       uploaded_videos_url: [],
+  //     },
+  //   },
+  // });
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
-  const handleSetNewActivity = obj => {
-    if (obj) {
-      //  Promise.resolve(obj).then(obj => {
-      setState(state => ({
-        ...state,
-        newActivity: { ...state.newActivity, ...obj },
-      }));
-      //  });
-    }
-  };
+  // const handleSetState = obj => {
+  //   if (obj) {
+  //     Promise.resolve(obj).then(obj => {
+  //       setState(state => ({ ...state, ...obj }));
+  //     });
+  //   }
+  // };
+  // const handleSetNewActivity = obj => {
+  //   if (obj) {
+  //     //  Promise.resolve(obj).then(obj => {
+  //     setState(state => ({
+  //       ...state,
+  //       newActivity: { ...state.newActivity, ...obj },
+  //     }));
+  //     //  });
+  //   }
+  // };
   const requireFieldByStep = [
     ['title', 'motivation', 'learningGoals'],
     ['materialsUsed', 'facilitationTips'],
@@ -107,15 +97,15 @@ function CreateActivity(props) {
     handleChange: props.handleChange,
     handleBlur: props.handleBlur,
   };
-  props = {
-    ...props,
-    
-    newActivity: state.newActivity,
-    verifiedStep: verifiedStep,
-    validateSteps: validateSteps,
-    handleSetState: handleSetState,
-    handleSetNewActivity: handleSetNewActivity,
-  };
+  // props = {
+  //   ...props,
+
+  //   newActivity: state.newActivity,
+  //   verifiedStep: verifiedStep,
+  //   validateSteps: validateSteps,
+  //   handleSetState: handleSetState,
+  //   handleSetNewActivity: handleSetNewActivity,
+  // };
 
   const visitePrev = () => {
     setStep(step => step - 1);
@@ -197,9 +187,9 @@ function CreateActivity(props) {
                     onClick={e =>
                       initUpload(
                         e,
-                        state.newActivity,
+                        newActivityObject,
                         props,
-                        handleSetNewActivity,
+                        setNewActivityObject,
                       )
                     }
                   >

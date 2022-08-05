@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import ImageIcon from '@material-ui/icons/Image';
+import MovieIcon from '@material-ui/icons/Movie';
 import CustomButton from '../button/Button';
 import {
   handleFileButtonClick,
@@ -11,55 +12,60 @@ import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function UploadFile(props) {
   const {
-    id,
+    name,
     fileType,
     uploadButtonLabel,
     classes,
     countFilesText,
     multiple,
-    wraperState,
+    newActivityObject,
+    setNewActivityObject,
+    formikProps,
+    validateSteps,
+    t,
   } = props;
 
-  const { field, index } = getFieldAndIndex(id);
-  const uploadFileRefs = {
-    fileInput: React.useRef(null),
-  };
-
-  const [state, setState] = useState({
+  const { field, index } = getFieldAndIndex(name);
+  console.log('field, index', field, index);
+  const fileInputRef = React.useRef(null);
+  // upload_dialog: false,
+  //     images_to_upload: [],
+  //     videos_to_upload: [],
+  //     upload_info: {},
+  //     upload_percent: 0,
+  //     uploaded_images_url: [],
+  //     uploaded_videos_url: [],
+  const [uploadFilestate, setUploadFilestate] = useState({
     media_upload: {
-      upload_dialog: false,
-      images_to_upload: [],
-      videos_to_upload: [],
-      upload_info: {},
-      upload_percent: 0,
-      uploaded_images_url: [],
-      uploaded_videos_url: [],
+      files_to_upload: [],
     },
   });
-
-  const handleSetUploadFileState = obj => {
-    if (obj) {
-      //  Promise.resolve(obj).then(obj => {
-      setState(state => ({ ...state, ...obj }));
-      //  });
+  const [filesUploaded, setFilesUploaded] = useState(false);
+  useEffect(() => {
+    console.log('handleBlur values', formikProps.formikValues);
+    if (filesUploaded) {
+      setNewActivityObject(state => {
+        console.log('state from setUploadState', state);
+        const media_upload = { files_to_upload: [] };
+        media_upload['files_to_upload'] = formikProps.formikValues[field];
+        return {
+          ...state,
+          [field]: { media_upload: media_upload },
+        };
+      });
     }
-  };
+  }, [filesUploaded]);
 
-  props = {
-    ...props,
-    UploadFilestate: state,
-    handleSetUploadFileState: handleSetUploadFileState,
-    setState1: setState,
-  };
+  console.log('uploadfilestate', uploadFilestate, newActivityObject);
   return (
     <div>
       <CustomButton
         variant="outlined"
         size="large"
         margin="normal"
-        id={[id, 'Button'].join('')}
-        startIcon={<ImageIcon />}
-        onClick={() => handleFileButtonClick(uploadFileRefs, id)}
+        id={`${name}_button`}
+        startIcon={fileType === 'image/*' ? <ImageIcon /> : <MovieIcon />}
+        onClick={() => handleFileButtonClick(fileInputRef, name)}
         secondaryButtonStyle
         mediaUploadButtonStyle
         customButtonStyle
@@ -75,51 +81,68 @@ function UploadFile(props) {
         margin="none"
       >
         <input
-          ref={uploadFileRefs.fileInput}
+          ref={fileInputRef}
           className={classes.displayNone}
           aria-hidden="true"
           type="file"
           accept={fileType}
-          id={id}
-          name={id}
+          id={`${name}_id`}
+          name={name}
           multiple={multiple ? multiple : ''}
-          onChange={() => handleImageFieldChange(id, uploadFileRefs, props)}
+          onChange={() =>
+            handleImageFieldChange(
+              name,
+              fileInputRef,
+              uploadFilestate,
+              setUploadFilestate,
+              setNewActivityObject,
+              formikProps,
+              formikProps.formikValues,
+              setFilesUploaded,
+            )
+          }
         />
         <Typography
           color="textSecondary"
           variant="caption"
           component="span"
-          id={[id, 'file_count_el'].join('')}
+          id={`${name}_file_count_el`}
         >
+          {/* //still need to handle when an index has an error */}
           {index !== null
-            ? wraperState[field] &&
-              wraperState[field].media_upload?.images_to_upload &&
-              wraperState[field].media_upload.images_to_upload[index]
-              ? `1 image added`
-              : ''
-            : wraperState[id] &&
-              wraperState[id].media_upload?.images_to_upload.length > 0
-            ? `${wraperState[id].media_upload.images_to_upload.length}
-              ${
-                wraperState[id].media_upload.images_to_upload.length < 2
-                  ? countFilesText[0]
-                  : countFilesText[1]
-              }`
+            ? newActivityObject[field] &&
+              newActivityObject[field]['media_upload'] &&
+              !formikProps.errors[field] &&
+              newActivityObject[field].media_upload.files_to_upload &&
+              newActivityObject[field].media_upload.files_to_upload[index] &&
+              `1 ${countFilesText[0]}`
+            : newActivityObject[field] &&
+              newActivityObject[field]['media_upload'] &&
+              !formikProps.errors[field] &&
+              newActivityObject[field].media_upload.files_to_upload &&
+              newActivityObject[field].media_upload.files_to_upload.length > 0
+            ? `${newActivityObject[field].media_upload.files_to_upload.length}
+                ${
+                  newActivityObject[field].media_upload.files_to_upload.length <
+                  2
+                    ? countFilesText[0]
+                    : countFilesText[1]
+                }`
             : ''}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {index !== null
-            ? props.touched[field] &&
-              props.touched[field][index] &&
-              props.errors[field] &&
-              props.errors[field][index] &&
-              props.t(
-                `createActivity.inputs.activityImages.errors.${props.errors[field][index]}`,
+            ? formikProps.touched[field] &&
+              formikProps.errors[field] &&
+              formikProps.touched[field][index] &&
+              formikProps.errors[field][index] &&
+              t(
+                `createActivity.inputs.activityImages.errors.${formikProps.errors[field][index]}`,
               )
-            : props.touched[id] &&
-              props.errors[id] &&
-              props.t(
-                `createActivity.inputs.activityImages.errors.${props.errors[id]}`,
+            : formikProps.touched[field] &&
+              formikProps.errors[field] &&
+              t(
+                `createActivity.inputs.activityImages.errors.${formikProps.errors[field]}`,
               )}
         </FormHelperText>
       </FormControl>
