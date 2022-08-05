@@ -44,9 +44,10 @@ function UploadFile(props) {
   useEffect(() => {
     console.log('handleBlur values', formikProps.formikValues);
     if (filesUploaded) {
+
       setNewActivityObject(state => {
         console.log('state from setUploadState', state);
-        const media_upload = { files_to_upload: [] };
+        const media_upload = { files_to_upload: [] , files_to_upload_urls: []};
         media_upload['files_to_upload'] = formikProps.formikValues[field];
         return {
           ...state,

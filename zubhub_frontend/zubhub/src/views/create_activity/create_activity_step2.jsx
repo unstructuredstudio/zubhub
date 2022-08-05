@@ -120,6 +120,38 @@ function CreateActivityStep2(props) {
             ]}
           />
         </Grid>
+        <Grid
+          item
+          xs={12}
+          md={4}
+          sm={6}
+          className={common_classes.marginTop1em}
+        >
+          <FormLabel
+            label={'ActivityVideo'}
+            required={true}
+            classes={classes}
+            common_classes={common_classes}
+            inputOrder={6}
+            fieldLabel={'Add a video if provided'}
+          />
+          <UploadFile
+            name={'activityVideo'}
+            fileType={'video/*'}
+            uploadButtonLabel={'Upload Video'}
+            classes={classes}
+            newActivityObject={newActivityObject}
+            setNewActivityObject={setNewActivityObject}
+            formikProps={formikProps}
+            validateSteps={validateSteps}
+            t={t}
+            multiple={true}
+            countFilesText={[
+              props.t('createActivity.inputs.image'),
+              props.t('createActivity.inputs.images'),
+            ]}
+          />
+        </Grid>
       </Grid>
     </div>
   );

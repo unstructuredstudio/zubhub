@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^12.2.2",
     "autosuggest-highlight": "^3.2.1",
     "aws-sdk": "^2.813.0",
+    "axios": "^0.27.2",
     "classnames": "^2.2.6",
     "compressorjs": "^1.0.7",
     "date-fns": "^2.16.1",
