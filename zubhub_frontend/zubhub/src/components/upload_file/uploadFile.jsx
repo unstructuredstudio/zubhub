@@ -28,13 +28,7 @@ function UploadFile(props) {
   const { field, index } = getFieldAndIndex(name);
   console.log('field, index', field, index);
   const fileInputRef = React.useRef(null);
-  // upload_dialog: false,
-  //     images_to_upload: [],
-  //     videos_to_upload: [],
-  //     upload_info: {},
-  //     upload_percent: 0,
-  //     uploaded_images_url: [],
-  //     uploaded_videos_url: [],
+
   const [uploadFilestate, setUploadFilestate] = useState({
     media_upload: {
       files_to_upload: [],
@@ -44,10 +38,9 @@ function UploadFile(props) {
   useEffect(() => {
     console.log('handleBlur values', formikProps.formikValues);
     if (filesUploaded) {
-
       setNewActivityObject(state => {
         console.log('state from setUploadState', state);
-        const media_upload = { files_to_upload: [] , files_to_upload_urls: []};
+        const media_upload = { files_to_upload: [], files_to_upload_urls: [] };
         media_upload['files_to_upload'] = formikProps.formikValues[field];
         return {
           ...state,
@@ -56,7 +49,20 @@ function UploadFile(props) {
       });
     }
   }, [filesUploaded]);
-
+  const handleFileInputChange = () => {
+    //if (fileType === 'image/*'){
+    handleImageFieldChange(
+      name,
+      fileInputRef,
+      uploadFilestate,
+      setUploadFilestate,
+      setNewActivityObject,
+      formikProps,
+      formikProps.formikValues,
+      setFilesUploaded,
+    );
+    // }
+  };
   console.log('uploadfilestate', uploadFilestate, newActivityObject);
   return (
     <div>
@@ -90,18 +96,7 @@ function UploadFile(props) {
           id={`${name}_id`}
           name={name}
           multiple={multiple ? multiple : ''}
-          onChange={() =>
-            handleImageFieldChange(
-              name,
-              fileInputRef,
-              uploadFilestate,
-              setUploadFilestate,
-              setNewActivityObject,
-              formikProps,
-              formikProps.formikValues,
-              setFilesUploaded,
-            )
-          }
+          onChange={() => handleFileInputChange()}
         />
         <Typography
           color="textSecondary"

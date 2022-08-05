@@ -146,10 +146,7 @@ function CreateActivityStep2(props) {
             validateSteps={validateSteps}
             t={t}
             multiple={true}
-            countFilesText={[
-              props.t('createActivity.inputs.image'),
-              props.t('createActivity.inputs.images'),
-            ]}
+            countFilesText={['video added', 'videos added']}
           />
         </Grid>
       </Grid>
