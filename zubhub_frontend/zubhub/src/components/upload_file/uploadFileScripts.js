@@ -17,16 +17,14 @@ export const removeMetaData = (images, state, handleSetState) => {
 export const handleImageFieldChange = (
   name,
   fileInputRef,
-  uploadFilestate,
-  setUploadFilestate,
-  setNewActivityObject,
   formikProps,
-  formikValues,
   setFilesUploaded,
 ) => {
   //using name since formik takes care of multiple fields with indexed names and combine data for the same field
-  formikProps.setFieldTouched(name, true);
-  const { field, index } = getFieldAndIndex(name);
+  formikProps.setFieldTouched(name, true); 
+  formikProps.setFieldValue(name, fileInputRef.current.files).then(errors => {
+    setFilesUploaded(true);
+  });
   formikProps.setFieldValue(name, fileInputRef.current.files).then(errors => {
     setFilesUploaded(true);
   });

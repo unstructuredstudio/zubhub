@@ -141,7 +141,6 @@ export const handleInputTextFieldBlur = (
   setInputTextFieldFocused,
   validateSteps,
 ) => {
-  console.log('textIput formikValues', formikValues);
   validateSteps();
   setNewActivityObject(newActivity => ({
     ...newActivity,
@@ -263,14 +262,15 @@ export const createActivity = props => {
 
 export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();
-
-  console.log('initupload props', props);
-  console.log('initUpload state ', state);
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
     // upload images
-    const fileFieldNames = ['activityImages'];
+    const fileFieldNames = [
+      'activityImages',
+      'inspiringExemplesImages',
+      'activityVideo',
+    ];
     fileFieldNames.forEach(fileFieldName => {
       const promises = [];
       if (state[fileFieldName]) {
@@ -326,7 +326,7 @@ export const uploadImage = (image, state, props, handleSetState, label) => {
 
   return API.shouldUploadToLocal(args).then(res => {
     if (res && res.local === true) {
-      return uploadImageToLocal(image, state, props.auth, handleSetState);
+      return uploadImageToLocal(image, props.auth.token);
     } else if (res && res.local === false) {
       return uploadImageToDO(image, state, props, handleSetState, label);
     }
@@ -335,9 +335,7 @@ export const uploadImage = (image, state, props, handleSetState, label) => {
 
 export const uploadImageToLocal = async (
   image,
-  state,
-  auth,
-  handleSetState,
+  token, 
 ) => {
   let url =
     process.env.REACT_APP_NODE_ENV === 'production'
@@ -351,13 +349,51 @@ export const uploadImageToLocal = async (
 
   const result = await axios.post(url, formData, {
     headers: {
-      Authorization: `Token ${auth.token}`,
+      Authorization: `Token ${token}`,
+    },
+    onUploadProgress: e => {
+      
+      console.log(
+        'upload progress',
+        Math.round((e.loaded / e.total) * 100) + '%',
+      );
     },
   });
   console.log('result', result);
   return { image_url: result.data.Location, public_id: result.data.Key };
-
 };
+
+//**** HANDLE MULTIPLE UPLOADS PROGRESS*//
+// const updateTotalUploadPercent = (file_name, loaded, total, upload_info) => {
+//   const progress = Math.round((loaded * 100.0) / total);
+//   upload_info[file_name] = progress;
+//   let total = 0;
+//   let upload_info_files = Object.keys(upload_info)
+//   upload_info_files.forEach(each => {
+//     total = total + upload_info[each];
+//   });
+//   total = total / upload_info_files.length;
+//   return {updated_upload_info: upload_info, percent: total };
+// };
+// const progress = Math.round((e.loaded * 100.0) / e.total);
+// const { media_upload } = state;
+// const upload_info = JSON.parse(JSON.stringify(media_upload.upload_info));
+// upload_info[image.name] = progress;
+
+// let total = 0;
+// Object.keys(upload_info).forEach(each => {
+//   total = total + upload_info[each];
+// });
+
+// total = total / Object.keys(upload_info).length;
+
+// handleSetState({
+//   media_upload: {
+//     ...media_upload,
+//     upload_info,
+//     upload_percent: total,
+//   },
+// });
 
 export const uploadImageToDO = (image, state, props, handleSetState, label) => {
   return new Promise((resolve, reject) => {
@@ -411,4 +447,3 @@ export const uploadImageToDO = (image, state, props, handleSetState, label) => {
       });
   });
 };
-

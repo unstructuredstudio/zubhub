@@ -16,7 +16,7 @@ function MultiStepProgressBar(props) {
   // useEffect(() => {
   //   setState({...props})
   // }, [props])
-  console.log('verified step:', props.step);
+  
   const classes = useStyles();
 
   return (

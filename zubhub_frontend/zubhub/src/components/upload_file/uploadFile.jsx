@@ -26,22 +26,20 @@ function UploadFile(props) {
   } = props;
 
   const { field, index } = getFieldAndIndex(name);
-  console.log('field, index', field, index);
   const fileInputRef = React.useRef(null);
 
-  const [uploadFilestate, setUploadFilestate] = useState({
-    media_upload: {
-      files_to_upload: [],
-    },
-  });
   const [filesUploaded, setFilesUploaded] = useState(false);
   useEffect(() => {
-    console.log('handleBlur values', formikProps.formikValues);
     if (filesUploaded) {
+      const formik_files = [];
+      if (index !== null) {
+        Object.keys(formikProps.formikValues[field]).forEach(index => {
+          formik_files.push(formikProps.formikValues[field][index][0]);
+        });
+      }
       setNewActivityObject(state => {
-        console.log('state from setUploadState', state);
         const media_upload = { files_to_upload: [], files_to_upload_urls: [] };
-        media_upload['files_to_upload'] = formikProps.formikValues[field];
+        media_upload['files_to_upload'] = formik_files;
         return {
           ...state,
           [field]: { media_upload: media_upload },
@@ -51,19 +49,9 @@ function UploadFile(props) {
   }, [filesUploaded]);
   const handleFileInputChange = () => {
     //if (fileType === 'image/*'){
-    handleImageFieldChange(
-      name,
-      fileInputRef,
-      uploadFilestate,
-      setUploadFilestate,
-      setNewActivityObject,
-      formikProps,
-      formikProps.formikValues,
-      setFilesUploaded,
-    );
+    handleImageFieldChange(name, fileInputRef, formikProps, setFilesUploaded);
     // }
   };
-  console.log('uploadfilestate', uploadFilestate, newActivityObject);
   return (
     <div>
       <CustomButton

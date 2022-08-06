@@ -123,8 +123,8 @@ function CreateActivityStep2(props) {
         <Grid
           item
           xs={12}
-          md={4}
-          sm={6}
+          md={12}
+          sm={12}
           className={common_classes.marginTop1em}
         >
           <FormLabel
@@ -135,6 +135,13 @@ function CreateActivityStep2(props) {
             inputOrder={6}
             fieldLabel={'Add a video if provided'}
           />
+          <Grid
+          item
+          xs={12}
+          md={4}
+          sm={4}
+          className={common_classes.marginTop1em}
+        >
           <UploadFile
             name={'activityVideo'}
             fileType={'video/*'}
@@ -148,6 +155,7 @@ function CreateActivityStep2(props) {
             multiple={true}
             countFilesText={['video added', 'videos added']}
           />
+          </Grid>
         </Grid>
       </Grid>
     </div>

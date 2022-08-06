@@ -849,10 +849,10 @@
         }
       },
       "inspiringExemples": {
-        "label": "inspiring Exemples",
-        "addMore": "Add Exemple",
+        "label": "inspiring Examples",
+        "addMore": "Add Example",
         "image": {
-          "label": "Add Exemple Image"
+          "label": "Add Example Image"
         }
       },
       "image": "Image added",
