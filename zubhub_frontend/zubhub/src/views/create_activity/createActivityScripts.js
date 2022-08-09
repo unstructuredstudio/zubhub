@@ -262,7 +262,11 @@ export const createActivity = props => {
 //   });
 // };
 
-export const refactorNewActivityObject = formikProps => {
+export const refactorNewActivityObject = (
+  formikProps,
+  handleSetState,
+  submitButtonRef,
+) => {
   const fileFieldNames = [
     'activityImages',
     'inspiringExemplesImages',
@@ -342,21 +346,21 @@ export const refactorNewActivityObject = formikProps => {
       filesObject.media_upload_progress = media_upload_progress;
     }
   });
-  return filesObject;
+  handleSetState(state => merge(state, filesObject));
+  submitButtonRef.current.click();
 };
 
-const uploadFieldFiles = (
-  media_upload,
-  auth,
-  handleSetState,
-  fileFieldName,
-) => {
+const uploadFieldFiles = (state, auth, handleSetState, fileFieldName) => {
   const promises = [];
-  for (let index = 0; index < media_upload.files_to_upload.length; index++) {
-    if (media_upload.files_to_upload[index]) {
+  for (
+    let index = 0;
+    index < state[fileFieldName].media_upload.files_to_upload.length;
+    index++
+  ) {
+    if (state[fileFieldName].media_upload.files_to_upload[index]) {
       promises.push(
         uploadFile(
-          media_upload.files_to_upload[index],
+          state[fileFieldName].media_upload.files_to_upload[index],
           auth,
           handleSetState,
           fileFieldName,
@@ -366,9 +370,11 @@ const uploadFieldFiles = (
   }
   Promise.all(promises)
     .then(all => {
-      //const uploaded_images_url = media_upload.files_to_upload_urls;
+      const uploaded_images_url =
+        state[fileFieldName].media_upload.files_to_upload_urls;
       all.forEach(each => {
-        media_upload.files_to_upload_urls.push(each);
+        console.log('each url', each);
+        uploaded_images_url.push(each);
       });
     })
     .catch(error => {
@@ -400,11 +406,11 @@ export const initUpload = (e, state, props, handleSetState, formikProps) => {
       'inspiringExemplesImages',
       'activityVideo',
     ];
-    const newState = refactorNewActivityObject(formikProps);
-    handleSetState(state => merge(state, newState));
+    //const newState = refactorNewActivityObject(formikProps);
+    //handleSetState(state => merge(state, newState));
     console.log(
       'initUpload call after setting the state !!!!!!!!=========>>>>>>>>>>>>>>>>>>>>>>>>>',
-      newState,
+      state,
     );
     const allUploadsPromises = [];
     // handleSetState(state => {
@@ -433,46 +439,41 @@ export const initUpload = (e, state, props, handleSetState, formikProps) => {
     //   };
     // });
     fileFieldNames.forEach(fileFieldName => {
-      if (newState[fileFieldName]) {
-        allUploadsPromises.push(
-          uploadFieldFiles(
-            newState[fileFieldName].media_upload,
-            props.auth,
-            handleSetState,
-            fileFieldName,
-          ),
-        );
+      if (state[fileFieldName]) {
+        // allUploadsPromises.push(
+        uploadFieldFiles(state, props.auth, handleSetState, fileFieldName);
+        // );
       }
     });
 
-    Promise.all(allUploadsPromises)
-      .then(all => {
-        handleSetState(state => {
-          let media_upload_progress = state.media_upload_progress;
-          media_upload_progress['loading'] = false;
-          return {
-            ...state,
-            // [fileFieldName]: media_upload,
-            media_upload_progress: media_upload_progress,
-          };
-        });
-      })
-      .catch(error => {
-        // settimeout is used to delay closing the upload_dialog until
-        // state have reflected all prior attempts to set state.
-        // This is to ensure nothing overwrites the dialog closing.
-        // A better approach would be to refactor the app and use
-        // redux for most complex state interactions.
-        // setTimeout(
-        //   () =>
-        //     handleSetState({
-        //       media_upload: { ...state.media_upload, upload_dialog: false },
-        //     }),
-        //   1000,
-        // );
+    // Promise.all(allUploadsPromises)
+    //   .then(all => {
+    //     handleSetState(state => {
+    //       let media_upload_progress = state.media_upload_progress;
+    //       media_upload_progress['loading'] = false;
+    //       return {
+    //         ...state,
+    //         // [fileFieldName]: media_upload,
+    //         media_upload_progress: media_upload_progress,
+    //       };
+    //     });
+    //   })
+    //   .catch(error => {
+    //     // settimeout is used to delay closing the upload_dialog until
+    //     // state have reflected all prior attempts to set state.
+    //     // This is to ensure nothing overwrites the dialog closing.
+    //     // A better approach would be to refactor the app and use
+    //     // redux for most complex state interactions.
+    //     // setTimeout(
+    //     //   () =>
+    //     //     handleSetState({
+    //     //       media_upload: { ...state.media_upload, upload_dialog: false },
+    //     //     }),
+    //     //   1000,
+    //     // );
 
-        if (error) console.log('initUploadError', error);
-      });
+    //     if (error) console.log('initUploadError', error);
+    //   });
   }
 };
 
@@ -546,7 +547,7 @@ export const uploadFileToLocal = async (
       });
     },
   });
-  console.log('result', result);
+  console.log('request result axios::::::', result);
   if (result.data['Location']) {
     return { file_url: result.data.Location, public_id: result.data.Key };
   } else {

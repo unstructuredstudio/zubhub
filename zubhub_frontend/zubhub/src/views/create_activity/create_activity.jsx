@@ -42,6 +42,7 @@ function CreateActivity(props) {
       readyToUpload: false,
     },
   });
+  const submitButtonRef = React.useRef(null);
   // useEffect(() => {
   //   if (newActivityObject.activityImages && newActivityObject.activityVideo) {
   //    // initUpload(newActivityObject, props, setNewActivityObject);
@@ -157,19 +158,31 @@ function CreateActivity(props) {
                     disabled={verifiedStep > 0 ? false : true}
                     fullWidth
                     size="large"
+                    //type="submit"
+                    onClick={() => {
+                      refactorNewActivityObject(
+                        formikProps,
+                        setNewActivityObject,
+                        submitButtonRef,
+                      );
+                    }}
+                  >
+                    {t('createActivity.buttons.Submit')}
+                  </CustomButton>
+                  <button
                     type="submit"
-                    onClick={e => {
+                    style={{ display: 'none' }}
+                    ref={submitButtonRef}
+                    onClick={e =>
                       initUpload(
                         e,
                         newActivityObject,
                         props,
                         setNewActivityObject,
                         formikProps,
-                      );
-                    }}
-                  >
-                    {t('createActivity.buttons.Submit')}
-                  </CustomButton>
+                      )
+                    }
+                  ></button>
                 </Grid>
               )}
             </Grid>
