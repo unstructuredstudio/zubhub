@@ -7,6 +7,30 @@ from math import floor
 
 Creator = get_user_model()
 
+class Category(MP_Node):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=1000, blank=True, null=True)
+    slug = models.SlugField(unique=True, max_length=1000)
+    search_vector = SearchVectorField(null=True)
+
+    node_order_by = ['name']
+
+    class Meta:
+        verbose_name_plural = "categories"
+        indexes = (GinIndex(fields=["search_vector"]), )
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.slug:
+            pass
+        else:
+            uid = str(uuid.uuid4())
+            uid = uid[0:floor(len(uid) / 6)]
+            self.slug = slugify(self.name) + "-" + uid
+        super().save(*args, **kwargs)
+
 class Image(models.Model):
     image_url = models.URLField(max_length=1000)
     public_id = models.CharField(max_length=1000, null=True, blank=True)
@@ -30,6 +54,11 @@ class Activity(models.Model):
     learning_goals = models.CharField(max_length=10000, blank=True, null=True)
     facilitation_tips = models.CharField(max_length=10000, blank=True, null=True)
     motivation = models.CharField(max_length=10000, blank=True, null=True)
+    category = models.ForeignKey(Category,
+                                 on_delete=models.SET_NULL,
+                                 null=True,
+                                 blank=True,
+                                 related_name="activities")
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000)
     materials_used_image = models.ForeignKey(Image,
@@ -108,6 +137,7 @@ class ActivityMakingSteps(models.Model):
                                 related_name="image",
                                 blank=True)
     description = models.CharField(max_length=10000, blank=True, null=True)
+    order = models.IntegerField(min=1, max=20)
 
     def __str__(self):
         return self.description        
