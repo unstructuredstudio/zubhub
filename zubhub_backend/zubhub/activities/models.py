@@ -42,6 +42,19 @@ class Image(models.Model):
             image = ''
         return "Photo <%s:%s>" % (self.public_id, image)    
 
+class InspiringArtist(models.Model):
+    '''this should be having more fields to distinguish an artist '''
+    image = models.ForeignKey(Image,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                related_name="image",
+                                blank=True)
+    short_biography = models.CharField(max_length=10000, null=True, blank=True)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        
+        return self.name
 class Activity(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
@@ -65,6 +78,11 @@ class Activity(models.Model):
                                 on_delete=models.CASCADE,
                                 null=True,
                                 related_name="image",
+                                blank=True)
+    inspiring_artist = models.ForeignKey(InspiringArtist,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                related_name="inspiring_artist",
                                 blank=True)
     views = models.ManyToManyField(Creator,
                                    blank=True,
@@ -98,17 +116,16 @@ class InspiringExamples(models.Model):
                                 null=True,
                                 related_name="activity",
                                 blank=True)
-    image_url = models.URLField(max_length=1000)
-    public_id = models.CharField(max_length=1000, null=True, blank=True)
     description = models.CharField(max_length=10000, null=True, blank=True)
     credit = models.CharField(max_length=1000, null=True, blank=True)
-    
+    image = models.ForeignKey(Image,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                related_name="image",
+                                blank=True)
+
     def __str__(self):
-        try:
-            image = self.image_url
-        except AttributeError:
-            image = ''
-        return "Photo <%s:%s>" % (self.public_id, image)
+        return self.image.image_url
 
 class ActivityImages(models.Model):
     activity = models.ForeignKey(Activity,
@@ -123,7 +140,7 @@ class ActivityImages(models.Model):
                                 blank=True)
 
     def __str__(self):
-        return self.image        
+        return self.image.image_url       
 
 class ActivityMakingSteps(models.Model):
     activity = models.ForeignKey(Activity,
@@ -141,3 +158,4 @@ class ActivityMakingSteps(models.Model):
 
     def __str__(self):
         return self.description        
+    
