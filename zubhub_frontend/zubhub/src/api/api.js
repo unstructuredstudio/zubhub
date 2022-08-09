@@ -851,6 +851,11 @@ class API {
     const body = JSON.stringify({ ...args });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
+  getActivities = () => {
+    //const url = page ? `projects/?${page}` : `projects/`;
+    const url = 'activities/';
+    return this.request({ url, method: 'GET' }).then(res => res.json());
+  };
 }
 
 export default API;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import API from './api';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
@@ -75,13 +76,28 @@ const LazyImport = props => {
   );
 };
 
+const myApi = new API();
 function App(props) {
+  const [myactivities, setMyActivities] = React.useState('');
+  // React.useEffect(() => {
+  //   myApi.getActivities().then(resp => {
+  //     console.log('resp', resp);
+  //     setMyActivities(resp);
+  //   });
+  // }, []);
+
   return (
     <Router>
       <Switch>
         <Route
           exact={true}
           path="/"
+          // render={props => (
+          //   <div>
+          //     <h1>Hello</h1>
+          //     {myactivities.message ? myactivities.message : 'not yet!'}
+          //   </div>
+          // )}
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Projects} {...routeProps} {...props} />

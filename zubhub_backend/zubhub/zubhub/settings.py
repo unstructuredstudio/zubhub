@@ -113,7 +113,8 @@ INSTALLED_APPS = [
     'APIS',
     'creators',
     'projects',
-    'notifications'
+    'notifications',
+    'activities',
 ]
 
 # askimet
