@@ -19,19 +19,48 @@ export const handleImageFieldChange = (
   fileInputRef,
   formikProps,
   setFilesUploaded,
+  setNewActivityObject,
 ) => {
   //using name since formik takes care of multiple fields with indexed names and combine data for the same field
-  formikProps.setFieldTouched(name, true); 
-  formikProps.setFieldValue(name, fileInputRef.current.files).then(errors => {
-    setFilesUploaded(true);
-  });
-  formikProps.setFieldValue(name, fileInputRef.current.files).then(errors => {
-    setFilesUploaded(true);
-  });
+  formikProps.setFieldTouched(name, true);
+  const { field, index } = getFieldAndIndex(name);
+  formikProps
+    .setFieldValue(name, fileInputRef.current.files)
+    .then((errors, res) => {
+      console.log('setfieldvalue errors, res', errors, res);
+      // setFilesUploaded(true);
+    });
   if (!fileInputRef.current.autofocus) {
-    setFilesUploaded(false);
+    // setFilesUploaded(false);
   }
 };
+
+//  if(index!==null){
+//       if (errors[field] && errors[field][index]) {
+//         setNewActivityObject(oldState => {
+//           const media_upload = {};
+//           if (oldState[field]) {
+//             return {
+//               ...oldState,
+//               field: {
+//                 media_upload: {
+//                   files_to_upload: [
+//                     ...oldState.media_upload.files_to_upload,
+//                     undefined,
+//                   ],
+//                 },
+//               },
+//             };
+//           } else {
+//             return {
+//               ...oldState,
+//               field: { media_upload: { files_to_upload: [undefined] } },
+//             };
+//           }
+//         });
+//       }
+//     }else{
+//     if (errors[field])
 // export const handleImageFieldChangeold = (
 //   name,
 //   fileInputRef,

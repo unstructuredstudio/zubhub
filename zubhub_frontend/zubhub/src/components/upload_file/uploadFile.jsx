@@ -29,24 +29,46 @@ function UploadFile(props) {
   const fileInputRef = React.useRef(null);
 
   const [filesUploaded, setFilesUploaded] = useState(false);
-  useEffect(() => {
-    if (filesUploaded) {
-      const formik_files = [];
-      if (index !== null) {
-        Object.keys(formikProps.formikValues[field]).forEach(index => {
-          formik_files.push(formikProps.formikValues[field][index][0]);
-        });
-      }
-      setNewActivityObject(state => {
-        const media_upload = { files_to_upload: [], files_to_upload_urls: [] };
-        media_upload['files_to_upload'] = formik_files;
-        return {
-          ...state,
-          [field]: { media_upload: media_upload },
-        };
-      });
-    }
-  }, [filesUploaded]);
+  // useEffect(() => {
+  //   if (filesUploaded) {
+  //     console.log('useEffect uploadFile');
+  //     let formik_files = [];
+  //     //let media_upload_progress = newActivityObject['media_upload_progress'];
+  //     if (index !== null) {
+  //       Object.keys(formikProps.formikValues[field]).forEach((item, idx) => {
+  //         if (formikProps.errors[field] && formikProps.errors[field][idx]) {
+  //           formik_files.push(undefined);
+  //         } else {
+  //           formik_files.push(formikProps.formikValues[field][item][0]);
+  //           // media_upload_progress['total'] +=
+  //           //   formikProps.formikValues[field][item][0].size;
+  //         }
+  //       });
+  //     } else {
+  //       if (!formikProps.errors[field]) {
+  //         // Object.keys(formikProps.formikValues[field]).forEach(
+  //         //   key =>
+  //         //     (media_upload_progress['total'] +=
+  //         //       formikProps.formikValues[field][key].size),
+  //         // );
+  //         formik_files = formikProps.formikValues[field];
+  //       }
+  //     }
+  //     setNewActivityObject(state => {
+  //       const media_upload = {
+  //         files_to_upload: [],
+  //         files_to_upload_urls: [],
+  //         upload_progress: { loaded_percent: 0 },
+  //       };
+  //       media_upload['files_to_upload'] = formik_files;
+  //       return {
+  //         ...state,
+  //         [field]: { media_upload: media_upload },
+  //         // media_upload_progress: media_upload_progress,
+  //       };
+  //     });
+  //   }
+  // }, [filesUploaded]);
   const handleFileInputChange = () => {
     //if (fileType === 'image/*'){
     handleImageFieldChange(name, fileInputRef, formikProps, setFilesUploaded);
@@ -93,7 +115,7 @@ function UploadFile(props) {
           id={`${name}_file_count_el`}
         >
           {/* //still need to handle when an index has an error */}
-          {index !== null
+          {/* {index !== null
             ? newActivityObject[field] &&
               newActivityObject[field]['media_upload'] &&
               !formikProps.errors[field] &&
@@ -112,7 +134,7 @@ function UploadFile(props) {
                     ? countFilesText[0]
                     : countFilesText[1]
                 }`
-            : ''}
+            : ''} */}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {index !== null

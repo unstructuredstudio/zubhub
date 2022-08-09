@@ -3,6 +3,8 @@ import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import axios from 'axios';
+import merge from 'lodash/merge';
+
 import {
   s3 as DO,
   doConfig,
@@ -260,8 +262,135 @@ export const createActivity = props => {
 //   });
 // };
 
-export const initUpload = (e, state, props, handleSetState) => {
-  e.preventDefault();
+export const refactorNewActivityObject = formikProps => {
+  const fileFieldNames = [
+    'activityImages',
+    'inspiringExemplesImages',
+    'activityVideo',
+  ];
+  const filesObject = {};
+  fileFieldNames.forEach((fileField, fileFieldIndex) => {
+    if (formikProps.formikValues[fileField]) {
+      let formik_files = [];
+      let media_upload_progress = {
+        loading: false,
+        loaded: 0,
+        total: 0,
+        readyToUpload: false,
+      };
+      if (Array.isArray(formikProps.formikValues[fileField])) {
+        Object.keys(formikProps.formikValues[fileField]).forEach(
+          (item, idx) => {
+            if (
+              formikProps.errors[fileField] &&
+              formikProps.errors[fileField][idx]
+            ) {
+              formik_files.push(undefined);
+            } else {
+              formik_files.push(formikProps.formikValues[fileField][item][0]);
+              media_upload_progress['total'] +=
+                formikProps.formikValues[fileField][item][0].size;
+            }
+          },
+        );
+      } else {
+        if (!formikProps.errors[fileField]) {
+          Object.keys(formikProps.formikValues[fileField]).forEach(key => {
+            media_upload_progress['total'] +=
+              formikProps.formikValues[fileField][key].size;
+          });
+          formik_files = formikProps.formikValues[fileField];
+        }
+      }
+      // if (fileFieldIndex === fileFieldNames.length - 1) {
+      //   const media_upload = {
+      //     files_to_upload: [],
+      //     files_to_upload_urls: [],
+      //     upload_progress: { loaded_percent: 0 },
+      //   };
+      //   media_upload['files_to_upload'] = formik_files;
+      //   setNewActivityObject(
+      //     state => ({
+      //       ...state,
+      //       [fileField]: { media_upload: media_upload },
+      //       media_upload_progress: media_upload_progress,
+      //     }),
+      //     //() => initUpload(e, this.state, props, setNewActivityObject),
+      //   );
+      // }
+      // setNewActivityObject(state => {
+      //   const media_upload = {
+      //     files_to_upload: [],
+      //     files_to_upload_urls: [],
+      //     upload_progress: { loaded_percent: 0 },
+      //   };
+      //   media_upload['files_to_upload'] = formik_files;
+      //   return {
+      //     ...state,
+      //     [fileField]: { media_upload: media_upload },
+      //     media_upload_progress: media_upload_progress,
+      //   };
+      // });
+      const media_upload = {
+        files_to_upload: [],
+        files_to_upload_urls: [],
+        upload_progress: { loaded_percent: 0 },
+      };
+      media_upload['files_to_upload'] = formik_files;
+
+      filesObject[fileField] = { media_upload: media_upload };
+      filesObject.media_upload_progress = media_upload_progress;
+    }
+  });
+  return filesObject;
+};
+
+const uploadFieldFiles = (
+  media_upload,
+  auth,
+  handleSetState,
+  fileFieldName,
+) => {
+  const promises = [];
+  for (let index = 0; index < media_upload.files_to_upload.length; index++) {
+    if (media_upload.files_to_upload[index]) {
+      promises.push(
+        uploadFile(
+          media_upload.files_to_upload[index],
+          auth,
+          handleSetState,
+          fileFieldName,
+        ),
+      );
+    }
+  }
+  Promise.all(promises)
+    .then(all => {
+      //const uploaded_images_url = media_upload.files_to_upload_urls;
+      all.forEach(each => {
+        media_upload.files_to_upload_urls.push(each);
+      });
+    })
+    .catch(error => {
+      // settimeout is used to delay closing the upload_dialog until
+      // state have reflected all prior attempts to set state.
+      // This is to ensure nothing overwrites the dialog closing.
+      // A better approach would be to refactor the app and use
+      // redux for most complex state interactions.
+      // setTimeout(
+      //   () =>
+      //     handleSetState({
+      //       media_upload: { ...state.media_upload, upload_dialog: false },
+      //     }),
+      //   1000,
+      // );
+
+      if (error) console.log('initUploadError', error);
+    });
+};
+
+export const initUpload = (e, state, props, handleSetState, formikProps) => {
+  //e.preventDefault();
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
@@ -271,96 +400,158 @@ export const initUpload = (e, state, props, handleSetState) => {
       'inspiringExemplesImages',
       'activityVideo',
     ];
+    const newState = refactorNewActivityObject(formikProps);
+    handleSetState(state => merge(state, newState));
+    console.log(
+      'initUpload call after setting the state !!!!!!!!=========>>>>>>>>>>>>>>>>>>>>>>>>>',
+      newState,
+    );
+    const allUploadsPromises = [];
+    // handleSetState(state => {
+    //   let media_upload_progress = JSON.parse(
+    //     JSON.stringify(state.media_upload_progress),
+    //   );
+    //   media_upload_progress['loading'] = true;
+    //   let totalSize = 0;
+    //   fileFieldNames.forEach(fileField => {
+    //     if (
+    //       state[fileField] &&
+    //       state[fileField].media_upload.files_to_upload.length > 0
+    //     ) {
+    //       state[fileField].media_upload.files_to_upload.forEach(file => {
+    //         if (file) {
+    //           totalSize += file.size;
+    //         }
+    //       });
+    //     }
+    //   });
+    //   media_upload_progress['total'] = totalSize;
+    //   return {
+    //     ...state,
+    //     // [fileFieldName]: media_upload,
+    //     media_upload_progress: media_upload_progress,
+    //   };
+    // });
     fileFieldNames.forEach(fileFieldName => {
-      const promises = [];
-      if (state[fileFieldName]) {
-        for (
-          let index = 0;
-          index < state[fileFieldName].media_upload.files_to_upload.length;
-          index++
-        ) {
-          promises.push(
-            uploadImage(
-              state[fileFieldName].media_upload.files_to_upload[index],
-              state,
-              props,
-              handleSetState,
-              fileFieldName,
-            ),
-          );
-        }
-        Promise.all(promises)
-          .then(all => {
-            const uploaded_images_url =
-              state[fileFieldName].media_upload.files_to_upload_urls;
-            all.forEach(each => {
-              uploaded_images_url.push(each);
-            });
-          })
-          .catch(error => {
-            // settimeout is used to delay closing the upload_dialog until
-            // state have reflected all prior attempts to set state.
-            // This is to ensure nothing overwrites the dialog closing.
-            // A better approach would be to refactor the app and use
-            // redux for most complex state interactions.
-            // setTimeout(
-            //   () =>
-            //     handleSetState({
-            //       media_upload: { ...state.media_upload, upload_dialog: false },
-            //     }),
-            //   1000,
-            // );
-
-            if (error) console.log('initUploadError', error);
-          });
+      if (newState[fileFieldName]) {
+        allUploadsPromises.push(
+          uploadFieldFiles(
+            newState[fileFieldName].media_upload,
+            props.auth,
+            handleSetState,
+            fileFieldName,
+          ),
+        );
       }
     });
+
+    Promise.all(allUploadsPromises)
+      .then(all => {
+        handleSetState(state => {
+          let media_upload_progress = state.media_upload_progress;
+          media_upload_progress['loading'] = false;
+          return {
+            ...state,
+            // [fileFieldName]: media_upload,
+            media_upload_progress: media_upload_progress,
+          };
+        });
+      })
+      .catch(error => {
+        // settimeout is used to delay closing the upload_dialog until
+        // state have reflected all prior attempts to set state.
+        // This is to ensure nothing overwrites the dialog closing.
+        // A better approach would be to refactor the app and use
+        // redux for most complex state interactions.
+        // setTimeout(
+        //   () =>
+        //     handleSetState({
+        //       media_upload: { ...state.media_upload, upload_dialog: false },
+        //     }),
+        //   1000,
+        // );
+
+        if (error) console.log('initUploadError', error);
+      });
   }
 };
 
-export const uploadImage = (image, state, props, handleSetState, label) => {
+export const uploadFile = (image, auth, handleSetState, fileFieldName) => {
   const args = {
-    t: props.t,
-    token: props.auth.token,
+    token: auth.token,
   };
 
   return API.shouldUploadToLocal(args).then(res => {
     if (res && res.local === true) {
-      return uploadImageToLocal(image, props.auth.token);
+      return uploadFileToLocal(
+        image,
+        auth.token,
+        auth.username,
+        handleSetState,
+        fileFieldName,
+      );
     } else if (res && res.local === false) {
-      return uploadImageToDO(image, state, props, handleSetState, label);
+      // return uploadImageToDO(image, state, props, handleSetState, label);
     }
   });
 };
 
-export const uploadImageToLocal = async (
-  image,
-  token, 
+export const uploadFileToLocal = async (
+  file,
+  token,
+  username,
+  handleSetState,
+  fileFieldName,
 ) => {
+  console.log('file', file);
   let url =
     process.env.REACT_APP_NODE_ENV === 'production'
       ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
       : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
   url = url + 'upload-file-to-local/';
+  let key = nanoid();
+  if (file.type.split('/')[0] === 'image') {
+    key = `project_images/${key}`;
+  } else {
+    key = key.slice(0, Math.floor(key.length / 3));
+    key = `videos/${slugify(username)}-${slugify(file.name)}-${key}`;
+  }
 
   const formData = new FormData();
-  formData.append('file', image);
-  formData.append('key', `project_images/${nanoid()}`);
+  formData.append('file', file);
+  formData.append('key', key);
 
   const result = await axios.post(url, formData, {
     headers: {
       Authorization: `Token ${token}`,
     },
     onUploadProgress: e => {
-      
+      console.log('loaded and total', e.loaded, e.total);
       console.log(
         'upload progress',
         Math.round((e.loaded / e.total) * 100) + '%',
       );
+      handleSetState(state => {
+        // let media_upload = state[fileFieldName].media_upload;
+        // media_upload['upload_progress']['loaded_percent'] = e.loaded;
+        let media_upload_progress = state.media_upload_progress;
+        media_upload_progress['loaded'] = Math.round(
+          (e.loaded / media_upload_progress.total) * 100,
+        );
+        return {
+          ...state,
+          // [fileFieldName]: media_upload,
+          media_upload_progress: media_upload_progress,
+        };
+      });
     },
   });
   console.log('result', result);
-  return { image_url: result.data.Location, public_id: result.data.Key };
+  if (result.data['Location']) {
+    return { file_url: result.data.Location, public_id: result.data.Key };
+  } else {
+    return { file_url: result.data.secure_url };
+  }
 };
 
 //**** HANDLE MULTIPLE UPLOADS PROGRESS*//

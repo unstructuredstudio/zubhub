@@ -55,6 +55,7 @@ function MaterialsUsed(props) {
         <Grid item xs={12} md={6}>
           {materialsUsedList.map((value, index) => (
             <Input
+              key={`materialsUsedKey[${index}]`}
               classes={classes}
               formikProps={formikProps}
               validateSteps={validateSteps}

@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
 import { withFormik } from 'formik';
 import clsx from 'clsx';
 import CustomButton from '../../components/button/Button';
-import { validationSchema, initUpload } from './createActivityScripts';
+import {
+  validationSchema,
+  initUpload,
+  refactorNewActivityObject,
+} from './createActivityScripts';
 import * as UserActions from '../../store/actions/userActions';
 import * as AuthActions from '../../store/actions/authActions';
 import { Grid, Box, Typography } from '@material-ui/core';
@@ -26,10 +30,23 @@ function CreateActivity(props) {
     2: props => <CreateActivityStep2 {...props} />,
     3: props => <CreateActivityStep3 {...props} />,
   };
-  const [step, setStep] = useState(1);
-  const [verifiedStep, setVerifiedStep] = useState(1);
-  const [newActivityObject, setNewActivityObject] = useState({});
 
+  const [step, setStep] = useState(1);
+  const [readyToUpload, setReadyToUpload] = useState(false);
+  const [verifiedStep, setVerifiedStep] = useState(1);
+  const [newActivityObject, setNewActivityObject] = useState({
+    media_upload_progress: {
+      loading: false,
+      loaded: 0,
+      total: 0,
+      readyToUpload: false,
+    },
+  });
+  // useEffect(() => {
+  //   if (newActivityObject.activityImages && newActivityObject.activityVideo) {
+  //    // initUpload(newActivityObject, props, setNewActivityObject);
+  //   }
+  // }, [newActivityObject]);
   const requireFieldByStep = [
     ['title', 'motivation', 'learningGoals'],
     ['materialsUsed', 'facilitationTips'],
@@ -141,14 +158,15 @@ function CreateActivity(props) {
                     fullWidth
                     size="large"
                     type="submit"
-                    onClick={e =>
+                    onClick={e => {
                       initUpload(
                         e,
                         newActivityObject,
                         props,
                         setNewActivityObject,
-                      )
-                    }
+                        formikProps,
+                      );
+                    }}
                   >
                     {t('createActivity.buttons.Submit')}
                   </CustomButton>
