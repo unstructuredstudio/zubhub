@@ -6,6 +6,18 @@ from django.utils import timezone
 from math import floor
 
 Creator = get_user_model()
+
+class Image(models.Model):
+    image_url = models.URLField(max_length=1000)
+    public_id = models.CharField(max_length=1000, null=True, blank=True)
+
+    def __str__(self):
+        try:
+            image = self.image_url
+        except AttributeError:
+            image = ''
+        return "Photo <%s:%s>" % (self.public_id, image)    
+
 class Activity(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
@@ -20,7 +32,11 @@ class Activity(models.Model):
     motivation = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000)
-    materials_used_image = 
+    materials_used_image = models.ForeignKey(Image,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                related_name="image",
+                                blank=True)
     views = models.ManyToManyField(Creator,
                                    blank=True,
                                    related_name="activities_viewed")
@@ -46,16 +62,6 @@ class Activity(models.Model):
     def __str__(self):
         return self.title
     
-class Image(models.Model):
-    image_url = models.URLField(max_length=1000)
-    public_id = models.CharField(max_length=1000, null=True, blank=True)
-
-    def __str__(self):
-        try:
-            image = self.image_url
-        except AttributeError:
-            image = ''
-        return "Photo <%s:%s>" % (self.public_id, image)    
 
 class InspiringExamples(models.Model):
     activity = models.ForeignKey(Activity,
