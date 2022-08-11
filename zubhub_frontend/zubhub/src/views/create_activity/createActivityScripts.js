@@ -477,7 +477,7 @@ export const initUpload = (e, state, props, handleSetState, formikProps) => {
   }
 };
 
-export const uploadFile = (image, auth, handleSetState, fileFieldName) => {
+export const uploadFile = (file, auth, handleSetState, fileFieldName) => {
   const args = {
     token: auth.token,
   };
@@ -485,7 +485,7 @@ export const uploadFile = (image, auth, handleSetState, fileFieldName) => {
   return API.shouldUploadToLocal(args).then(res => {
     if (res && res.local === true) {
       return uploadFileToLocal(
-        image,
+        file,
         auth.token,
         auth.username,
         handleSetState,

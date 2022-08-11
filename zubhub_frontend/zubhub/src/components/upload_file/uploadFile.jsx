@@ -71,7 +71,14 @@ function UploadFile(props) {
   // }, [filesUploaded]);
   const handleFileInputChange = () => {
     //if (fileType === 'image/*'){
-    handleImageFieldChange(name, fileInputRef, formikProps, setFilesUploaded);
+    handleImageFieldChange(
+      name,
+      fileInputRef,
+      formikProps,
+      newActivityObject,
+      setFilesUploaded,
+      setNewActivityObject,
+    );
     // }
   };
   return (

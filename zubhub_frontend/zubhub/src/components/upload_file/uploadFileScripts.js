@@ -14,25 +14,81 @@ export const removeMetaData = (images, state, handleSetState) => {
   });
 };
 
+let formik_files = [];
+//     //let media_upload_progress = newActivityObject['media_upload_progress'];
+//     if (index !== null) {
+//       Object.keys(formikProps.formikValues[field]).forEach((item, idx) => {
+//         if (formikProps.errors[field] && formikProps.errors[field][idx]) {
+//           formik_files.push(undefined);
+//         } else {
+//           formik_files.push(formikProps.formikValues[field][item][0]);
+//           // media_upload_progress['total'] +=
+//           //   formikProps.formikValues[field][item][0].size;
+//         }
+//       });
+//     } else {
+//       if (!formikProps.errors[field]) {
+//         // Object.keys(formikProps.formikValues[field]).forEach(
+//         //   key =>
+//         //     (media_upload_progress['total'] +=
+//         //       formikProps.formikValues[field][key].size),
+//         // );
+//         formik_files = formikProps.formikValues[field];
+//       }
+//     }
+//     setNewActivityObject(state => {
+//       const media_upload = {
+//         files_to_upload: [],
+//         files_to_upload_urls: [],
+//         upload_progress: { loaded_percent: 0 },
+//       };
+//       media_upload['files_to_upload'] = formik_files;
+//       return {
+//         ...state,
+//         [field]: { media_upload: media_upload },
+//         // media_upload_progress: media_upload_progress,
+//       };
+//     });
+
 export const handleImageFieldChange = (
   name,
   fileInputRef,
   formikProps,
+  newActivityObject,
   setFilesUploaded,
   setNewActivityObject,
 ) => {
   //using name since formik takes care of multiple fields with indexed names and combine data for the same field
   formikProps.setFieldTouched(name, true);
   const { field, index } = getFieldAndIndex(name);
-  formikProps
-    .setFieldValue(name, fileInputRef.current.files)
-    .then((errors, res) => {
-      console.log('setfieldvalue errors, res', errors, res);
-      // setFilesUploaded(true);
-    });
-  if (!fileInputRef.current.autofocus) {
-    // setFilesUploaded(false);
-  }
+  let selected_files = fileInputRef.current.files;
+  // initialize media upload objects 
+  let media_upload_progress = newActivityObject['media_upload_progress']
+    ? newActivityObject['media_upload_progress']
+    : {
+        loading: false,
+        loaded: 0,
+        total: 0,
+        readyToUpload: false,
+      };
+  let media_upload = newActivityObject[field]
+    ? newActivityObject[field]
+    : {
+        files_to_upload: [],
+        files_to_upload_urls: [],
+        upload_progress: { loaded_percent: 0 },
+      };
+  formikProps.setFieldValue(name, selected_files).then(errors => {
+    if (index === null) {
+      if (!errors[field]) {
+        selected_files.forEach(file => {
+          media_upload_progress['total'] += file.size
+          media_upload.files_to_upload.push(file)
+        })
+        
+      }
+    }
+  });
 };
 
 //  if(index!==null){
