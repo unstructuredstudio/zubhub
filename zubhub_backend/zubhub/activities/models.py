@@ -4,36 +4,37 @@ from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.utils import timezone
 from math import floor
+from projects.models import Category
 
 Creator = get_user_model()
 
-class Category(MP_Node):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.CharField(max_length=1000, blank=True, null=True)
-    slug = models.SlugField(unique=True, max_length=1000)
-    search_vector = SearchVectorField(null=True)
+# class Category(MP_Node):
+#     name = models.CharField(max_length=100, unique=True)
+#     description = models.CharField(max_length=1000, blank=True, null=True)
+#     slug = models.SlugField(unique=True, max_length=1000)
+#     search_vector = SearchVectorField(null=True)
 
-    node_order_by = ['name']
+#     node_order_by = ['name']
 
-    class Meta:
-        verbose_name_plural = "categories"
-        indexes = (GinIndex(fields=["search_vector"]), )
+#     class Meta:
+#         verbose_name_plural = "categories"
+#         indexes = (GinIndex(fields=["search_vector"]), )
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
-    def save(self, *args, **kwargs):
-        if self.slug:
-            pass
-        else:
-            uid = str(uuid.uuid4())
-            uid = uid[0:floor(len(uid) / 6)]
-            self.slug = slugify(self.name) + "-" + uid
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         if self.slug:
+#             pass
+#         else:
+#             uid = str(uuid.uuid4())
+#             uid = uid[0:floor(len(uid) / 6)]
+#             self.slug = slugify(self.name) + "-" + uid
+#         super().save(*args, **kwargs)
 
 class Image(models.Model):
     image_url = models.URLField(max_length=1000)
-    public_id = models.CharField(max_length=1000, null=True, blank=True)
+    public_id = models.CharField(max_length=1000, blank=True)
 
     def __str__(self):
         try:
@@ -47,9 +48,8 @@ class InspiringArtist(models.Model):
     image = models.ForeignKey(Image,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="image",
                                 blank=True)
-    short_biography = models.CharField(max_length=10000, null=True, blank=True)
+    short_biography = models.TextField(max_length=10000, blank=True)
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -61,12 +61,11 @@ class Activity(models.Model):
                           editable=False,
                           unique=True)
     creators = models.ManyToManyField(Creator,
-                                on_delete=models.CASCADE,
-                                related_name="activities_created")
+                                      related_name="activities_created")
     title = models.CharField(max_length=1000)
-    learning_goals = models.CharField(max_length=10000, blank=True, null=True)
-    facilitation_tips = models.CharField(max_length=10000, blank=True, null=True)
-    motivation = models.CharField(max_length=10000, blank=True, null=True)
+    learning_goals = models.TextField(max_length=10000, blank=True)
+    facilitation_tips = models.TextField(max_length=10000, blank=True)
+    motivation = models.TextField(max_length=10000, blank=True)
     category = models.ForeignKey(Category,
                                  on_delete=models.SET_NULL,
                                  null=True,
@@ -77,12 +76,11 @@ class Activity(models.Model):
     materials_used_image = models.ForeignKey(Image,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="image",
                                 blank=True)
     inspiring_artist = models.ForeignKey(InspiringArtist,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="inspiring_artist",
+                                related_name="inspiring_artist_activities",
                                 blank=True)
     views = models.ManyToManyField(Creator,
                                    blank=True,
@@ -91,12 +89,11 @@ class Activity(models.Model):
     saved_count = models.IntegerField(blank=True, default=0)
     saved_by = models.ManyToManyField(Creator,
                                       blank=True,
-                                      related_name="saved_for_future")
+                                      related_name="activities_saved")
     created_on = models.DateTimeField(default=timezone.now)
-    publish = models.models.BooleanField(default=False)
+    publish = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        
         if self.slug:
             pass
         else:
@@ -114,47 +111,44 @@ class InspiringExamples(models.Model):
     activity = models.ForeignKey(Activity,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="activity",
+                                related_name="inspiring_examples",
                                 blank=True)
-    description = models.CharField(max_length=10000, null=True, blank=True)
-    credit = models.CharField(max_length=1000, null=True, blank=True)
+    description = models.TextField(max_length=10000, blank=True)
+    credit = models.CharField(max_length=1000, blank=True)
     image = models.ForeignKey(Image,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="image",
                                 blank=True)
 
     def __str__(self):
-        return self.image.image_url
+        return self.image
 
 class ActivityImages(models.Model):
     activity = models.ForeignKey(Activity,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="activity",
+                                related_name="activity_images",
                                 blank=True)
     image = models.ForeignKey(Image,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="image",
                                 blank=True)
 
     def __str__(self):
-        return self.image.image_url       
+        return self.image       
 
 class ActivityMakingSteps(models.Model):
     activity = models.ForeignKey(Activity,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="activity",
+                                related_name="making_steps",
                                 blank=True)
     image = models.ForeignKey(Image,
                                 on_delete=models.CASCADE,
                                 null=True,
-                                related_name="image",
                                 blank=True)
-    description = models.CharField(max_length=10000, blank=True, null=True)
-    order = models.IntegerField(min=1, max=20)
+    description = models.TextField(max_length=10000, blank=True)
+    order = models.IntegerField()
 
     def __str__(self):
         return self.description        
