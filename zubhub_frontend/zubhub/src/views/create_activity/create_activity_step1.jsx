@@ -44,6 +44,7 @@ function CreateActivityStep1(props) {
             fieldLabel={t('createActivity.inputs.title.label')}
           />
           <Input
+            label={'title'}
             classes={classes}
             name={'title'}
             formikProps={formikProps}

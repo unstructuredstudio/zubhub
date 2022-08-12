@@ -150,6 +150,17 @@ function CreateActivityStep3(props) {
               common_classes.outlined,
             )}
           >
+            <Input
+              label={'ArtistFullName'}
+              key={`inspiringArtistFullNameKey`}
+              name={`inspiringArtistFullName`}
+              classes={classes}
+              formikProps={formikProps}
+              validateSteps={validateSteps}
+              t={t}
+              newActivityObject={newActivityObject}
+              setNewActivityObject={setNewActivityObject}
+            />
             <InputText
               name={`inspiringArtist`}
               classes={classes}
@@ -223,6 +234,8 @@ function CreateActivityStep3(props) {
               <Grid container direction="row" spacing={3}>
                 <Grid item xs={12} md={4} sm={6}>
                   <Input
+                    label={`Img-${index + 1} desc`}
+                    multiline={true}
                     key={`inspiringExemplesDescriptionsKey[${index}]`}
                     name={`inspiringExemplesDescriptions[${index}]`}
                     classes={classes}
@@ -235,6 +248,7 @@ function CreateActivityStep3(props) {
                 </Grid>
                 <Grid item xs={12} md={3} sm={6}>
                   <Input
+                    label={`Img-${index + 1} credit`}
                     key={`inspiringExemplesCreditsKey[${index}]`}
                     name={`inspiringExemplesCredits[${index}]`}
                     classes={classes}

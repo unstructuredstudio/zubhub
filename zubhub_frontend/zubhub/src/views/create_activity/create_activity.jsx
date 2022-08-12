@@ -35,12 +35,6 @@ function CreateActivity(props) {
   const [readyToUpload, setReadyToUpload] = useState(false);
   const [verifiedStep, setVerifiedStep] = useState(1);
   const [newActivityObject, setNewActivityObject] = useState({
-    media_upload_progress: {
-      loading: false,
-      loaded: 0,
-      total: 0,
-      readyToUpload: false,
-    },
   });
   const submitButtonRef = React.useRef(null);
   // useEffect(() => {

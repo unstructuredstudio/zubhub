@@ -55,6 +55,7 @@ function MaterialsUsed(props) {
         <Grid item xs={12} md={6}>
           {materialsUsedList.map((value, index) => (
             <Input
+              label={`material-${index + 1}`}
               key={`materialsUsedKey[${index}]`}
               classes={classes}
               formikProps={formikProps}
@@ -99,24 +100,23 @@ function MaterialsUsed(props) {
         </Typography>
         <Grid container spacing={1}>
           <Grid item xs={12} sm={6} md={4}>
-            {/* <UploadFile
-              id={'ActivityMaterialsUsedImages'}
+            <UploadFile
+              name={'ActivityMaterialsUsedImages'}
               fileType={'image/*'}
-              uploadButtonLabel={imagesButtonLabel}
+              uploadButtonLabel={t(
+                'createActivity.inputs.materialsUsed.images.label',
+              )}
               classes={classes}
-              wraperState={props.newActivity}
-              setWraperState={props.handleSetNewActivity}
-              t={props.t}
-              setFieldValue={props.setFieldValue}
-              setFieldTouched={props.setFieldTouched}
-              touched={props.touched}
-              errors={props.errors}
-              setStatus={props.setStatus}
+              newActivityObject={newActivityObject}
+              setNewActivityObject={setNewActivityObject}
+              formikProps={formikProps}
+              validateSteps={validateSteps}
+              t={t}
               countFilesText={[
-                t('createProject.inputs.image'),
-                t('createProject.inputs.images'),
+                props.t('createActivity.inputs.image'),
+                props.t('createActivity.inputs.images'),
               ]}
-            /> */}
+            />
           </Grid>
         </Grid>
       </Grid>

@@ -320,5 +320,5 @@ export const getFieldAndIndex = str => {
   let arr = str.split('[');
   return arr.length > 1
     ? { field: arr[0], index: parseInt(arr[1].split('')[0]) }
-    : { field: arr[0], index: null };
+    : { field: arr[0], index: parseInt('-1', 10) };
 };

@@ -14,43 +14,86 @@ export const removeMetaData = (images, state, handleSetState) => {
   });
 };
 
-let formik_files = [];
-//     //let media_upload_progress = newActivityObject['media_upload_progress'];
-//     if (index !== null) {
-//       Object.keys(formikProps.formikValues[field]).forEach((item, idx) => {
-//         if (formikProps.errors[field] && formikProps.errors[field][idx]) {
-//           formik_files.push(undefined);
-//         } else {
-//           formik_files.push(formikProps.formikValues[field][item][0]);
-//           // media_upload_progress['total'] +=
-//           //   formikProps.formikValues[field][item][0].size;
-//         }
-//       });
-//     } else {
-//       if (!formikProps.errors[field]) {
-//         // Object.keys(formikProps.formikValues[field]).forEach(
-//         //   key =>
-//         //     (media_upload_progress['total'] +=
-//         //       formikProps.formikValues[field][key].size),
-//         // );
-//         formik_files = formikProps.formikValues[field];
-//       }
-//     }
-//     setNewActivityObject(state => {
-//       const media_upload = {
-//         files_to_upload: [],
-//         files_to_upload_urls: [],
-//         upload_progress: { loaded_percent: 0 },
-//       };
-//       media_upload['files_to_upload'] = formik_files;
-//       return {
-//         ...state,
-//         [field]: { media_upload: media_upload },
-//         // media_upload_progress: media_upload_progress,
-//       };
-//     });
+class FileField {
+  constructor() {
+    this.files = {};
+    this.size = 0;
+    this.length = 0;
+    this.urls = {};
+  }
 
-export const handleImageFieldChange = (
+  addFile(file, index) {
+    console.log('index', index);
+    this.length += 1;
+    if (this.files[index]) {
+      this.size -= this.files[index].size;
+      this.length -= 1;
+    }
+    this.files[index] = file;
+    this.size += file.size;
+  }
+  //index is index of input in list of this fields inputs otherwise
+  //is index in liste of files if filed has one input that  accepts multiple
+  deleteFile(index) {
+    this.size -= this.files[index].size;
+    delete this.files[index];
+    this.length -= 1;
+  }
+
+  deleteAll() {
+    this.files = {};
+    this.length = 0;
+    this.size = 0;
+  }
+}
+
+class MediaUpload {
+  constructor(fileFields = {}, totalFilesSize = 0, loaded = 0) {
+    this.fileFields = fileFields;
+    this.totalFilesSize = totalFilesSize;
+    this.loaded = loaded;
+  }
+
+  createFileField(field, files, inputIndex) {
+    let fileField = new FileField();
+    if (inputIndex >= 0) {
+      fileField.addFile(files[0], inputIndex);
+    } else {
+      Object.keys(files).forEach(key => {
+        console.log('from createFileField index', key);
+        fileField.addFile(files[key], key);
+      });
+    }
+    this.fileFields[field] = fileField;
+    this.totalFilesSize += fileField.size;
+  }
+
+  updateFileField(field, files, inputIndex) {
+    this.totalFilesSize -= this.fileFields[field].size;
+    if (inputIndex >= 0) {
+      this.fileFields[field].addFile(files[0], inputIndex);
+    } else {
+      this.fileFields[field].deleteAll();
+      Object.keys(files).forEach(key => {
+        this.fileFields[field].addFile(files[key], key);
+      });
+    }
+    this.totalFilesSize += this.fileFields[field].size;
+  }
+
+  deleteFileFromField(field, index) {
+    this.totalFilesSize -= this.fileFields[field].size;
+    this.fileFields[field].deleteFile(index);
+    this.totalFilesSize += this.fileFields[field].size;
+  }
+
+  deleteAllFromField(field) {
+    this.totalFilesSize -= this.fileFields[field].size;
+    this.fileFields[field].deleteAll();
+  }
+}
+
+export const handleFileFieldChange = (
   name,
   fileInputRef,
   formikProps,
@@ -58,188 +101,40 @@ export const handleImageFieldChange = (
   setFilesUploaded,
   setNewActivityObject,
 ) => {
-  //using name since formik takes care of multiple fields with indexed names and combine data for the same field
   formikProps.setFieldTouched(name, true);
   const { field, index } = getFieldAndIndex(name);
-  let selected_files = fileInputRef.current.files;
-  // initialize media upload objects 
-  let media_upload_progress = newActivityObject['media_upload_progress']
-    ? newActivityObject['media_upload_progress']
-    : {
-        loading: false,
-        loaded: 0,
-        total: 0,
-        readyToUpload: false,
-      };
-  let media_upload = newActivityObject[field]
-    ? newActivityObject[field]
-    : {
-        files_to_upload: [],
-        files_to_upload_urls: [],
-        upload_progress: { loaded_percent: 0 },
-      };
-  formikProps.setFieldValue(name, selected_files).then(errors => {
-    if (index === null) {
+  console.log('name and field then index', name, field, index);
+
+  let selectedFiles = fileInputRef.current.files;
+  // initialize media upload objects
+  let mediaUpload = newActivityObject['mediaUpload']
+    ? newActivityObject['mediaUpload']
+    : new MediaUpload();
+  formikProps.setFieldValue(name, selectedFiles).then(errors => {
+    console.log('files and inputIndex', selectedFiles, index);
+    if (!mediaUpload.fileFields[field]) {
       if (!errors[field]) {
-        selected_files.forEach(file => {
-          media_upload_progress['total'] += file.size
-          media_upload.files_to_upload.push(file)
-        })
-        
+        mediaUpload.createFileField(field, selectedFiles, index);
+      }
+    } else {
+      if (!errors[field]) {
+        mediaUpload.updateFileField(field, selectedFiles, index);
+      } else {
+        if (index < 0) {
+          mediaUpload.deleteAllFromField(field);
+        } else {
+          if (errors[field][index]) {
+            if (mediaUpload.fileFields[field].files[index]) {
+              mediaUpload.deleteFileFromField(field, index);
+            }
+          } else {
+            mediaUpload.updateFileField(field, selectedFiles, index);
+          }
+        }
       }
     }
+    setNewActivityObject(prevActivity => {
+      return { ...prevActivity, mediaUpload: mediaUpload };
+    });
   });
 };
-
-//  if(index!==null){
-//       if (errors[field] && errors[field][index]) {
-//         setNewActivityObject(oldState => {
-//           const media_upload = {};
-//           if (oldState[field]) {
-//             return {
-//               ...oldState,
-//               field: {
-//                 media_upload: {
-//                   files_to_upload: [
-//                     ...oldState.media_upload.files_to_upload,
-//                     undefined,
-//                   ],
-//                 },
-//               },
-//             };
-//           } else {
-//             return {
-//               ...oldState,
-//               field: { media_upload: { files_to_upload: [undefined] } },
-//             };
-//           }
-//         });
-//       }
-//     }else{
-//     if (errors[field])
-// export const handleImageFieldChangeold = (
-//   name,
-//   fileInputRef,
-//   UploadFilestate,
-//   setUploadFilestate,
-//   handleSetUploadFileState,
-//   setNewActivityObject,
-//   formikProps,
-//   props,
-// ) => {
-//   formikProps.setFieldTouched(name, true);
-//   const { field, index } = getFieldAndIndex(label);
-//   props.setFieldValue(label, refs.fileInput.current.files).then(errors => {
-//     if (index !== null) {
-//       if (errors[field]) {
-//         if (!errors[field][index]) {
-//           removeMetaData(
-//             refs.fileInput.current.files,
-//             props.UploadFilestate,
-//             props.handleSetUploadFileState,
-//           );
-//           if (props.wraperState[field]) {
-//             let { media_upload } = props.wraperState[field];
-//             media_upload['images_to_upload'] =
-//               media_upload.images_to_upload.concat(
-//                 props.UploadFilestate.media_upload.images_to_upload,
-//               );
-//             props.setWraperState({ [field]: media_upload });
-//           } else {
-//             let { media_upload } = props.wraperState['media_upload'];
-//             media_upload['images_to_upload'] = props.UploadFilestate;
-//             props.setWraperState({ [field]: media_upload });
-//           }
-//         } else {
-//           let { media_upload } = props.wraperState['media_upload'];
-//           media_upload['images_to_upload'] =
-//             props.media_upload.images_to_upload.push('');
-//           props.setWraperState({ [field]: media_upload });
-//         }
-//       } else {
-//         console.log('no errors');
-//         removeMetaData(
-//           refs.fileInput.current.files,
-//           props.UploadFilestate,
-//           props.handleSetUploadFileState,
-//         );
-//         // props.setState1(oldUploadState => {
-//         console.log('setState');
-//         props.setWraperState(oldWrapperState => {
-//           if (oldWrapperState[field]) {
-//             const newWrapperState = { ...oldWrapperState };
-//             const media_upload = newWrapperState[field];
-//             media_upload.media_upload['images_to_upload'] =
-//               media_upload.media_upload['images_to_upload'].concat(
-//                 props.UploadFilestate.media_upload.images_to_upload,
-//               );
-//             console.log('Wrapper', newWrapperState, props.UploadFilestate);
-//             return newWrapperState;
-//           } else {
-//             console.log('Wrapper', props.UploadFilestate);
-//             return { ...props.UploadFilestate };
-//           }
-//         });
-//         //   return oldUploadState;
-//         // });
-//         // if (props.wraperState[field]) {
-//         //   props.setState1(oldUploadState => {
-//         //     props.setWraperState(oldState => {
-//         //       const media_upload = { ...oldState[field] };
-//         //       media_upload.media_upload['images_to_upload'] =
-//         //         media_upload.media_upload['images_to_upload'].concat(
-//         //           oldUploadState.media_upload.images_to_upload,
-//         //         );
-//         //       console.log(
-//         //         'old Uplpoadstate and oldstate',
-//         //         oldUploadState,
-//         //         oldState,
-//         //       );
-//         //       return {
-//         //         ...oldState,
-//         //         [field]: media_upload,
-//         //       };
-//         //     });
-//         //     return oldUploadState;
-//         //   });
-//         //   console.log(
-//         //     'wraper',
-//         //     props.UploadFilestate.media_upload.images_to_upload,
-//         //   );
-//         //   // const media_upload = { ...props.wraperState[field] };
-//         //   // media_upload.media_upload['images_to_upload'] =
-//         //   //   media_upload.media_upload['images_to_upload'].concat(
-//         //   //     props.UploadFilestate.media_upload.images_to_upload,
-//         //   //   );
-
-//         //   // props.setWraperState({
-//         //   //   [field]: media_upload,
-//         //   // });
-//         // } else {
-//         //   const testVariable = { ...props.UploadFilestate };
-//         //   props.setState1(oldState => {
-//         //     console.log('oldState', oldState);
-//         //     return oldState;
-//         //   });
-//         //   console.log(
-//         //     'save exemple first image',
-//         //     props.UploadFilestate.media_upload.images_to_upload.map(v => v),
-//         //     testVariable,
-//         //     testVariable.media_upload.images_to_upload,
-//         //   );
-//         //   props.setWraperState({ [field]: props.UploadFilestate });
-//         // }
-//       }
-//     } else {
-//       if (!errors[label]) {
-//         removeMetaData(
-//           refs.fileInput.current.files,
-//           props.UploadFilestate,
-//           props.handleSetUploadFileState,
-//         );
-//         props.setWraperState({ [label]: props.UploadFilestate });
-//       }
-//     }
-//   });
-//   // props.setStatus({ ...props.status, [label]: '' });
-// };

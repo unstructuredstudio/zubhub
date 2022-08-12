@@ -5,7 +5,7 @@ import MovieIcon from '@material-ui/icons/Movie';
 import CustomButton from '../button/Button';
 import {
   handleFileButtonClick,
-  handleImageFieldChange,
+  handleFileFieldChange,
 } from './uploadFileScripts.js';
 import { Typography, FormControl, FormHelperText } from '@material-ui/core';
 import { getFieldAndIndex } from '../../assets/js/utils/scripts';
@@ -27,51 +27,11 @@ function UploadFile(props) {
 
   const { field, index } = getFieldAndIndex(name);
   const fileInputRef = React.useRef(null);
-
   const [filesUploaded, setFilesUploaded] = useState(false);
-  // useEffect(() => {
-  //   if (filesUploaded) {
-  //     console.log('useEffect uploadFile');
-  //     let formik_files = [];
-  //     //let media_upload_progress = newActivityObject['media_upload_progress'];
-  //     if (index !== null) {
-  //       Object.keys(formikProps.formikValues[field]).forEach((item, idx) => {
-  //         if (formikProps.errors[field] && formikProps.errors[field][idx]) {
-  //           formik_files.push(undefined);
-  //         } else {
-  //           formik_files.push(formikProps.formikValues[field][item][0]);
-  //           // media_upload_progress['total'] +=
-  //           //   formikProps.formikValues[field][item][0].size;
-  //         }
-  //       });
-  //     } else {
-  //       if (!formikProps.errors[field]) {
-  //         // Object.keys(formikProps.formikValues[field]).forEach(
-  //         //   key =>
-  //         //     (media_upload_progress['total'] +=
-  //         //       formikProps.formikValues[field][key].size),
-  //         // );
-  //         formik_files = formikProps.formikValues[field];
-  //       }
-  //     }
-  //     setNewActivityObject(state => {
-  //       const media_upload = {
-  //         files_to_upload: [],
-  //         files_to_upload_urls: [],
-  //         upload_progress: { loaded_percent: 0 },
-  //       };
-  //       media_upload['files_to_upload'] = formik_files;
-  //       return {
-  //         ...state,
-  //         [field]: { media_upload: media_upload },
-  //         // media_upload_progress: media_upload_progress,
-  //       };
-  //     });
-  //   }
-  // }, [filesUploaded]);
+
   const handleFileInputChange = () => {
     //if (fileType === 'image/*'){
-    handleImageFieldChange(
+    handleFileFieldChange(
       name,
       fileInputRef,
       formikProps,
@@ -121,30 +81,29 @@ function UploadFile(props) {
           component="span"
           id={`${name}_file_count_el`}
         >
-          {/* //still need to handle when an index has an error */}
-          {/* {index !== null
-            ? newActivityObject[field] &&
-              newActivityObject[field]['media_upload'] &&
+          {index < 0
+            ? formikProps.touched[field] &&
               !formikProps.errors[field] &&
-              newActivityObject[field].media_upload.files_to_upload &&
-              newActivityObject[field].media_upload.files_to_upload[index] &&
-              `1 ${countFilesText[0]}`
-            : newActivityObject[field] &&
-              newActivityObject[field]['media_upload'] &&
-              !formikProps.errors[field] &&
-              newActivityObject[field].media_upload.files_to_upload &&
-              newActivityObject[field].media_upload.files_to_upload.length > 0
-            ? `${newActivityObject[field].media_upload.files_to_upload.length}
+              newActivityObject.mediaUpload &&
+              newActivityObject.mediaUpload.fileFields[field] &&
+              `${newActivityObject.mediaUpload.fileFields[field].length}
                 ${
-                  newActivityObject[field].media_upload.files_to_upload.length <
-                  2
+                  newActivityObject.mediaUpload.fileFields[field].length < 2
                     ? countFilesText[0]
                     : countFilesText[1]
                 }`
-            : ''} */}
+            : formikProps.touched[field] &&
+              formikProps.touched[field][index] &&
+              (!formikProps.errors[field] ||
+                (formikProps.errors[field] &&
+                  !formikProps.errors[field][index])) &&
+              newActivityObject.mediaUpload &&
+              newActivityObject.mediaUpload.fileFields[field] &&
+              newActivityObject.mediaUpload.fileFields[field].files[index] &&
+              `1 ${countFilesText[0]}`}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {index !== null
+          {index >= 0
             ? formikProps.touched[field] &&
               formikProps.errors[field] &&
               formikProps.touched[field][index] &&
