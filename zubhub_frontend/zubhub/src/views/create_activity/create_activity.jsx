@@ -34,8 +34,7 @@ function CreateActivity(props) {
   const [step, setStep] = useState(1);
   const [readyToUpload, setReadyToUpload] = useState(false);
   const [verifiedStep, setVerifiedStep] = useState(1);
-  const [newActivityObject, setNewActivityObject] = useState({
-  });
+  const [newActivityObject, setNewActivityObject] = useState({});
   const submitButtonRef = React.useRef(null);
   // useEffect(() => {
   //   if (newActivityObject.activityImages && newActivityObject.activityVideo) {
@@ -153,11 +152,12 @@ function CreateActivity(props) {
                     fullWidth
                     size="large"
                     //type="submit"
-                    onClick={() => {
-                      refactorNewActivityObject(
-                        formikProps,
+                    onClick={e => {
+                      initUpload(
+                        e,
+                        newActivityObject,
+                        props,
                         setNewActivityObject,
-                        submitButtonRef,
                       );
                     }}
                   >
@@ -220,6 +220,7 @@ export default connect(
       inspiringExemplesImages: '',
       activityImages: '',
       inspiringArtistImage: '',
+      inspiringArtistFullName: '',
     }),
     validationSchema,
   })(CreateActivity),

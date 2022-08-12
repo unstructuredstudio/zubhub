@@ -83,7 +83,6 @@ function UploadFile(props) {
         >
           {index < 0
             ? formikProps.touched[field] &&
-              !formikProps.errors[field] &&
               newActivityObject.mediaUpload &&
               newActivityObject.mediaUpload.fileFields[field] &&
               `${newActivityObject.mediaUpload.fileFields[field].length}
