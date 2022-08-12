@@ -1,12 +1,24 @@
 import React from 'react';
 import clsx from 'clsx';
-import { FormControl, OutlinedInput, FormHelperText } from '@material-ui/core';
+import {
+  FormControl,
+  OutlinedInput,
+  FormHelperText,
+  InputLabel,
+} from '@material-ui/core';
 import { handleTextFieldBlur } from '../../views/create_activity/createActivityScripts';
 import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function Input(props) {
-  const { name, classes, formikProps, validateSteps, setNewActivityObject } =
-    props;
+  const {
+    label,
+    multiline,
+    name,
+    classes,
+    formikProps,
+    validateSteps,
+    setNewActivityObject,
+  } = props;
   const { field, index } = getFieldAndIndex(name);
 
   return (
@@ -19,10 +31,14 @@ function Input(props) {
         margin="none"
         error={formikProps.errors[field] ? true : false}
       >
+        {label && <InputLabel htmlFor="display-name">{label}</InputLabel>}
+
         <OutlinedInput
           className={classes.customInputStyle}
           id={`${name}_id`}
           name={name}
+          label={label ? label : null}
+          multiline={multiline? multiline : false}
           type="text"
           defaultValue={
             formikProps.formikValues[field]
@@ -31,25 +47,16 @@ function Input(props) {
                 : formikProps.formikValues[field]
               : ''
           }
-          onBlur={
-            e => {
-              {
-                formikProps.handleBlur(e);
-                setNewActivityObject(newActivity => ({
-                  ...newActivity,
-                  [field]: formikProps.formikValues[field],
-                }));
-                validateSteps();
-              }
+          onBlur={e => {
+            {
+              formikProps.handleBlur(e);
+              setNewActivityObject(newActivity => ({
+                ...newActivity,
+                [field]: formikProps.formikValues[field],
+              }));
+              validateSteps();
             }
-            // handleTextFieldBlur(
-            //   e,
-            //   setNewActivityObject,
-            //   formikProps.handleBlur,
-            //   formikProps.formikValues,
-            //   validateSteps,
-            // )
-          }
+          }}
           onChange={e => formikProps.handleChange(e)}
         />
         <FormHelperText error className={classes.fieldHelperTextStyle}>
