@@ -10,6 +10,8 @@ from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp
 from creators.models import Setting
 from notifications.models import Notification
+from activitylog.models import Activitylog
+from activitylog.utils import push_activity
 from notifications.utils import push_notification, get_notification_template_name
 from creators.models import Creator
 from django.template.loader import render_to_string
@@ -367,6 +369,12 @@ def enforce_creator__creator_tags_constraints(creator, tag):
     else:
         return creator.tags.all()
 
+def activity_log(target: List[Creator], source: Creator, contexts, activity_type: Activitylog.Type, link: str):
+    for user, context in zip(target, contexts):
+        context.update({'source': source.username})
+        context.update({'target': user.username})
+
+    push_activity(user, source, context, activity_type, link)
 
 
 enabled_notification_settings: Dict[Notification.Type, Set[int]] = {

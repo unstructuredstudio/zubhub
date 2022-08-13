@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
+import API from '../../api'
 
 import { makeStyles } from '@material-ui/core/styles';
 import ShareIcon from '@material-ui/icons/Share';
@@ -58,6 +59,7 @@ import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid';
+import UserActivitylog from '../../components/user_activitylog/UserActivitylog';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -73,6 +75,11 @@ function Profile(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const username = props.match.params.username || props.auth.username;
+  console.log(username, "username@")
+  const [page, setPage] = useState(1);
+  const [userActivity, setUserActivity] = useState([])
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [nextPage, setNextPage] = useState(false)
 
   const [state, setState] = React.useState({
     results: [],
@@ -85,7 +92,9 @@ function Profile(props) {
   });
 
   React.useEffect(() => {
-    const promises = [getUserProfile(props)];
+  try{
+    let obj1= new API()
+    const promises = [getUserProfile(props), obj1.getUserActivity(username, page)];
     if (username === props.auth.username) {
       promises.push(
         ProjectActions.getUserDrafts({
@@ -99,14 +108,21 @@ function Profile(props) {
 
     Promise.all(promises).then(values => {
       const obj = values[0];
-      const drafts = values[1] || {};
+      const activity = values[1] || {};
+      const drafts = values[2] || {};
 
       if (obj.profile) {
         parseComments(obj.profile.comments);
       }
       handleSetState({ ...obj, ...drafts });
+      setUserActivity(userActivity   => ([...userActivity, ...activity.results]))
+      const nextPageExist= activity.next? true : false 
+      setNextPage(nextPageExist)
     });
-  }, []);
+  } catch (error) {
+    console.log(error);
+  }
+  }, [page]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -128,6 +144,13 @@ function Profile(props) {
 
   const more_menu_open = Boolean(more_anchor_el);
   const { t } = props;
+
+  const handleScroll = (e) => {
+    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottom && nextPage) { 
+            setPage(page => page + 1)
+    }
+ }
 
   if (loading) {
     return <LoadingPage />;
@@ -309,6 +332,29 @@ function Profile(props) {
                 : !profile.members_count
                 ? t('profile.about.placeholder1')
                 : t('profile.about.placeholder2')}
+            </Paper>
+
+            <Paper   className= {classes.profileLowerStyle}>
+            <Typography
+             gutterBottom
+             component="h2"
+             variant="h6"
+             color="textPrimary"
+             className= {classes.titleStyle}
+            >
+            {t('profile.activityLog')}
+            </Typography>
+                  <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
+
+                    {
+                      userActivity.map(activity => (
+                        <UserActivitylog 
+                        activity={activity}
+                        key={activity.id}
+                        />
+                        ))
+                      }
+                  </div>
             </Paper>
 
             {profile.projects_count > 0 || drafts.length > 0 ? (

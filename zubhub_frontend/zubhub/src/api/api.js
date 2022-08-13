@@ -276,6 +276,12 @@ class API {
     return this.request({ url, token }).then(res => res.json());
   };
 
+  getUserActivity = (username, page) => {
+    let url = `activitylog/${username}/?page=${page}`;
+
+    return this.request({url}).then(res => res.json());
+  }
+
   /**
    * @method getUserDrafts - get a paginated list of drafts
    *         created by the user with the provided username
