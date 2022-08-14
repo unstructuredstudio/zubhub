@@ -81,6 +81,48 @@ const styles = theme => ({
     fontWeight: 900,
     fontSize: '1.5rem',
   },
+  badgeTitleStyle: {
+    fontWeight: 900,
+    fontSize: '1.5rem',
+    color: '#00B8C4',
+  },
+  aboutMeBadgeBox: {
+    display: 'flex',
+    [theme.breakpoints.down('900')]: {
+      display: 'block',
+    },
+  },
+  aboutMeBox: {
+    flexGrow: 1,
+    padding: '1em',
+    margin: '1em 0 0 1em',
+    [theme.breakpoints.down('900')]: {
+      margin: '1em',
+    },
+  },
+  badgeBox: {
+    backgroundColor: '#FFF7D4',
+    margin: '1em 1em 0 0',
+    padding: '1em',
+    width: '40%',
+    [theme.breakpoints.down('900')]: {
+      width: 'auto',
+      margin: '1em',
+      padding: '1em',
+    },
+  },
+  badgeContainerStyle: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  badgeStyle: {
+    backgroundColor: '#FFD11A',
+    borderRadius: '50px',
+    color: '#9F861E',
+    fontWeight: 600,
+    padding: '0 0.5em',
+    margin: '0.3em',
+  },
   cardStyle: {
     border: 0,
     borderRadius: 15,

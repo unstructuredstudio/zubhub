@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.db import transaction
-from .models import PhoneNumber, Setting, CreatorGroup, CreatorTag
+from .models import PhoneNumber, Setting, CreatorGroup, CreatorTag, Badge
 
 from .utils import (send_group_invite_notification, 
                     custom_set_creatortags_queryset,
@@ -21,6 +21,13 @@ def tags(obj):
         return ", ".join(tags)
     return None
 
+def badges(obj):
+    if obj:
+        badges = []
+        for badge in obj.badges.all():
+            badges.append(badge.badge_title)
+        return ", ". join(badges)
+    return None
 
 def group_projects(obj):
     if obj:
@@ -142,7 +149,10 @@ class CreatorAdmin(UserAdmin):
                 ('followers',),
                 ('followers_count',),
                 ('following_count',),
-                ('projects_count',)
+                ('projects_count',),
+                ('total_likes',),
+                ('total_views',),
+                ('badges',),
             )
         }),
         ('Important Dates', {
@@ -160,9 +170,9 @@ class CreatorAdmin(UserAdmin):
     )
 
 
-    list_display = UserAdmin.list_display + (tags, active,)
+    list_display = UserAdmin.list_display + (tags, active, badges)
     list_per_page = 50 ## paginate when more than 50 items
-    readonly_fields = UserAdmin.readonly_fields + ('avatar',) + ('followers_count',) + ('following_count',) + ('projects_count',)
+    readonly_fields = UserAdmin.readonly_fields + ('avatar',) + ('followers_count',) + ('following_count',) + ('projects_count',) + ('total_likes',) + ('total_views',)
     actions = ["activate_creators", "deactivate_creators"]
 
     ## disable the ability to add a new creator from the admin for now.
@@ -211,10 +221,18 @@ class CreatorAdmin(UserAdmin):
         super(CreatorAdmin, self).save_model(
             request, obj, form, change)
 
+class BadgeAdmin(admin.ModelAdmin):
+    list_display = ["badge_title", "created_on", used_by]
+    search_fields = ["badge_title", "created_on"]
+    list_filter = ["created_on"]
+    list_per_page = 50
 
+    def get_readonly_fields(self, request, obj=None):
+        return ["created_on"]
 
 admin.site.register(Creator, CreatorAdmin)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(CreatorGroup, CreatorGroupAdmin)
 admin.site.register(CreatorTag, CreatorTagAdmin)
+admin.site.register(Badge, BadgeAdmin)

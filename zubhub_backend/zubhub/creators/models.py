@@ -13,6 +13,7 @@ from django.contrib.postgres.indexes import GinIndex
 from .tasks import update_creator_tag_index_task
 from .managers import PhoneNumberManager
 from .model_utils import user_phone
+from django.db.models import Sum
 
 try:
     from allauth.account import app_settings as allauth_settings
@@ -54,6 +55,12 @@ class CreatorTag(models.Model):
             update_creator_tag_index_task.delay()
         super().save(*args, **kwargs)
 
+class Badge(models.Model):
+    badge_title = models.CharField(blank=False, default="", max_length=225)
+    created_on = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.badge_title
 
 class Creator(AbstractUser):
 
@@ -72,10 +79,20 @@ class Creator(AbstractUser):
     projects_count = models.IntegerField(blank=True, default=0)
     tags = models.ManyToManyField(CreatorTag, blank=True, related_name="creators")
     search_vector = SearchVectorField(null=True)
-
+    badges = models.ManyToManyField(Badge, blank=True, related_name="creators" )
     class Meta:
         indexes = (GinIndex(fields=["search_vector"]),)
 
+    @property
+    def total_likes(self):
+            total_likes= self.projects.aggregate(Sum("likes_count"))["likes_count__sum"]
+            return total_likes
+
+    @property
+    def total_views(self):
+            total_views= self.projects.aggregate(Sum("views_count"))["views_count__sum"]
+            return total_views
+            
     def save(self, *args, **kwargs):
         if not self.avatar:
             self.avatar = 'https://robohash.org/{0}'.format(self.username)

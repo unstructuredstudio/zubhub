@@ -82,6 +82,7 @@ function Profile(props) {
     dialog_error: null,
     more_anchor_el: null,
     drafts: [],
+    badge_tags: [],
   });
 
   React.useEffect(() => {
@@ -100,11 +101,12 @@ function Profile(props) {
     Promise.all(promises).then(values => {
       const obj = values[0];
       const drafts = values[1] || {};
+      const badges = obj.profile.badges;
 
       if (obj.profile) {
         parseComments(obj.profile.comments);
       }
-      handleSetState({ ...obj, ...drafts });
+      handleSetState({ ...obj, ...drafts, badge_tags: badges });
     });
   }, []);
 
@@ -124,6 +126,7 @@ function Profile(props) {
     dialog_error,
     more_anchor_el,
     drafts,
+    badge_tags,
   } = state;
 
   const more_menu_open = Boolean(more_anchor_el);
@@ -292,25 +295,53 @@ function Profile(props) {
           </Paper>
 
           <Container maxWidth="md">
-            <Paper className={classes.profileLowerStyle}>
-              <Typography
-                gutterBottom
-                component="h2"
-                variant="h6"
-                color="textPrimary"
-                className={classes.titleStyle}
-              >
-                {!profile.members_count
-                  ? t('profile.about.label1')
-                  : t('profile.about.label2')}
-              </Typography>
-              {profile.bio
-                ? profile.bio
-                : !profile.members_count
-                ? t('profile.about.placeholder1')
-                : t('profile.about.placeholder2')}
-            </Paper>
+            <div className= {classes.aboutMeBadgeBox}>
+              <Paper className={classes.aboutMeBox}>
+                <Typography
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
+                  color="textPrimary"
+                  className={classes.titleStyle}
+                >
+                  {!profile.members_count
+                    ? t('profile.about.label1')
+                    : t('profile.about.label2')}
+                </Typography>
+                {profile.bio
+                  ? profile.bio
+                  : !profile.members_count
+                  ? t('profile.about.placeholder1')
+                  : t('profile.about.placeholder2')}
+              </Paper>
 
+              <Paper className={classes.badgeBox}>
+                <Typography
+                    gutterBottom
+                    component="h2"
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.badgeTitleStyle}
+                  >
+                    {t('profile.badge.badges')}
+                  </Typography>
+                  {!badge_tags.length > 0 ? (
+                    t('profile.badge.addBadges')
+                  ) : (
+                    <Box className={classes.badgeContainerStyle}>
+                      {badge_tags.map(tag => (
+                        <Typography
+                          key={tag}
+                          className={clsx(classes.badgeStyle)}
+                          component="h2"
+                        >
+                          {tag}
+                        </Typography>
+                      ))}
+                    </Box>
+                  )}
+              </Paper>
+            </div>
             {profile.projects_count > 0 || drafts.length > 0 ? (
               username === props.auth.username ? (
                 <ProjectsDraftsGrid

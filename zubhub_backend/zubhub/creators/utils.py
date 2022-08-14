@@ -11,8 +11,10 @@ from creators.tasks import upload_file_task, send_mass_email, send_mass_text, se
 from creators.models import Setting
 from notifications.models import Notification
 from notifications.utils import push_notification, get_notification_template_name
-from creators.models import Creator
+from creators.models import Creator, Badge
+from projects.models import Project, Comment
 from django.template.loader import render_to_string
+from django.db.models import Sum
 
 try:
     from allauth.account.adapter import get_adapter
@@ -456,3 +458,90 @@ def send_notification(users: List[Creator], source: Creator, contexts,
 #         EmailAddress.objects.create(
 #             user=user, email=email, primary=False, verified=False
 #         )
+
+def set_badge_view_category(creator):
+    views_count= Project.objects.filter(creator= creator).aggregate(Sum(('views_count')))["views_count__sum"]
+
+    List = ["Getting Famous", "Person of Interest", "Popular Projects", "Idea Factory"]
+
+    creator.badges.remove(Badge.objects.get(badge_title = List[3]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[2]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[1]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[0]))
+    
+    if(views_count > 100000):
+        creator.badges.add(Badge.objects.get(badge_title = List[3]))
+
+    elif(views_count > 5000):
+        creator.badges.add(Badge.objects.get(badge_title = List[2]))
+
+    elif(views_count > 100):
+        creator.badges.add(Badge.objects.get(badge_title = List[1]))
+
+    elif(views_count > 10):
+        creator.badges.add(Badge.objects.get(badge_title = List[0]))
+    
+def set_badge_like_category(creator):
+    likes_count= Project.objects.filter(creator= creator).aggregate(Sum(('likes_count')))["likes_count__sum"]
+    List= ["Interesting Projects", "Favourite Kid", "Captain Projects"]
+
+    creator.badges.remove(Badge.objects.get(badge_title = List[2]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[1]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[0]))
+
+    if(likes_count > 1000):
+        creator.badges.add(Badge.objects.get(badge_title = List[2]))
+
+    elif(likes_count > 500):
+        creator.badges.add(Badge.objects.get(badge_title = List[1]))
+
+    elif(likes_count > 10):
+        creator.badges.add(Badge.objects.get(badge_title = List[0]))
+
+def set_badge_comment_category(creator):
+    creator_id= creator.id
+    comments_count = Comment.objects.filter(creator__id= creator_id).count()
+
+    List = ["Helping Hand", "Always Available", "Expert Advisor"]
+
+    creator.badges.remove(Badge.objects.get(badge_title = List[2]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[1]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[0]))
+
+    if(comments_count > 1000):
+        creator.badges.add(Badge.objects.get(badge_title = List[2]))
+
+    elif(comments_count > 500):
+        creator.badges.add(Badge.objects.get(badge_title = List[1]))
+
+    elif(comments_count > 10):
+        creator.badges.add(Badge.objects.get(badge_title = List[0]))
+
+def set_badge_project_category(creator, projects_count):
+    project_count_before_del = creator.projects_count
+    if(projects_count < project_count_before_del):
+          queryset=Project.objects.filter(creator= creator)
+          if( queryset.exists()):
+                set_badge_view_category(creator)
+                set_badge_like_category(creator)
+                set_badge_comment_category(creator)
+
+    List = ["Hatchling", "Flying Bird", "Master of the sky", "Expert Builder"]
+    
+    creator.badges.remove(Badge.objects.get(badge_title = List[3]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[2]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[1]))
+    creator.badges.remove(Badge.objects.get(badge_title = List[0]))
+
+    if(projects_count > 100):
+        creator.badges.add(Badge.objects.get(badge_title = List[3]))
+
+    elif(projects_count > 50):
+        creator.badges.add(Badge.objects.get(badge_title = List[2]))
+
+    elif(projects_count > 10):
+        creator.badges.add(Badge.objects.get(badge_title = List[1]))
+
+    elif(projects_count > 0):
+        creator.badges.add(Badge.objects.get(badge_title = List[0]))
+    
