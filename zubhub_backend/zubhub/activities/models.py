@@ -8,33 +8,9 @@ from projects.models import Category
 
 Creator = get_user_model()
 
-# class Category(MP_Node):
-#     name = models.CharField(max_length=100, unique=True)
-#     description = models.CharField(max_length=1000, blank=True, null=True)
-#     slug = models.SlugField(unique=True, max_length=1000)
-#     search_vector = SearchVectorField(null=True)
-
-#     node_order_by = ['name']
-
-#     class Meta:
-#         verbose_name_plural = "categories"
-#         indexes = (GinIndex(fields=["search_vector"]), )
-
-#     def __str__(self):
-#         return self.name
-
-#     def save(self, *args, **kwargs):
-#         if self.slug:
-#             pass
-#         else:
-#             uid = str(uuid.uuid4())
-#             uid = uid[0:floor(len(uid) / 6)]
-#             self.slug = slugify(self.name) + "-" + uid
-#         super().save(*args, **kwargs)
-
 class Image(models.Model):
     image_url = models.URLField(max_length=1000)
-    public_id = models.CharField(max_length=1000, blank=True)
+    public_id = models.TextField(max_length=1000, blank=True)
 
     def __str__(self):
         try:
@@ -53,8 +29,8 @@ class InspiringArtist(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        
         return self.name
+    
 class Activity(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
@@ -62,7 +38,7 @@ class Activity(models.Model):
                           unique=True)
     creators = models.ManyToManyField(Creator,
                                       related_name="activities_created")
-    title = models.CharField(max_length=1000)
+    title = models.CharField(max_length=500)
     learning_goals = models.TextField(max_length=10000, blank=True)
     facilitation_tips = models.TextField(max_length=10000, blank=True)
     motivation = models.TextField(max_length=10000, blank=True)
@@ -72,7 +48,7 @@ class Activity(models.Model):
                                  blank=True,
                                  related_name="activities")
     video = models.URLField(max_length=1000, blank=True, null=True)
-    materials_used = models.CharField(max_length=5000)
+    materials_used = models.TextField(max_length=5000)
     materials_used_image = models.ForeignKey(Image,
                                 on_delete=models.CASCADE,
                                 null=True,
@@ -90,8 +66,8 @@ class Activity(models.Model):
     saved_by = models.ManyToManyField(Creator,
                                       blank=True,
                                       related_name="activities_saved")
-    created_on = models.DateTimeField(default=timezone.now)
-    publish = models.BooleanField(default=False)
+    created_on = models.DateTimeField(default=timezone.now, null=True)
+    publish = models.BooleanField(default=False, null= True)
 
     def save(self, *args, **kwargs):
         if self.slug:
@@ -107,14 +83,14 @@ class Activity(models.Model):
         return self.title
     
 
-class InspiringExamples(models.Model):
+class InspiringExample(models.Model):
     activity = models.ForeignKey(Activity,
                                 on_delete=models.CASCADE,
                                 null=True,
                                 related_name="inspiring_examples",
                                 blank=True)
     description = models.TextField(max_length=10000, blank=True)
-    credit = models.CharField(max_length=1000, blank=True)
+    credit = models.TextField(max_length=1000, blank=True)
     image = models.ForeignKey(Image,
                                 on_delete=models.CASCADE,
                                 null=True,
@@ -123,7 +99,7 @@ class InspiringExamples(models.Model):
     def __str__(self):
         return self.image
 
-class ActivityImages(models.Model):
+class ActivityImage(models.Model):
     activity = models.ForeignKey(Activity,
                                 on_delete=models.CASCADE,
                                 null=True,
@@ -137,7 +113,7 @@ class ActivityImages(models.Model):
     def __str__(self):
         return self.image       
 
-class ActivityMakingSteps(models.Model):
+class ActivityMakingStep(models.Model):
     activity = models.ForeignKey(Activity,
                                 on_delete=models.CASCADE,
                                 null=True,
@@ -148,7 +124,7 @@ class ActivityMakingSteps(models.Model):
                                 null=True,
                                 blank=True)
     description = models.TextField(max_length=10000, blank=True)
-    order = models.IntegerField()
+    step_order = models.IntegerField()
 
     def __str__(self):
         return self.description        

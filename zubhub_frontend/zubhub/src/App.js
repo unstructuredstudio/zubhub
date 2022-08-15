@@ -79,12 +79,12 @@ const LazyImport = props => {
 const myApi = new API();
 function App(props) {
   const [myactivities, setMyActivities] = React.useState('');
-  // React.useEffect(() => {
-  //   myApi.getActivities().then(resp => {
-  //     console.log('resp', resp);
-  //     setMyActivities(resp);
-  //   });
-  // }, []);
+  React.useEffect(() => {
+    myApi.getActivities().then(resp => {
+      console.log('resp', resp);
+      setMyActivities(resp);
+    });
+  }, []);
 
   return (
     <Router>
@@ -92,17 +92,26 @@ function App(props) {
         <Route
           exact={true}
           path="/"
-          // render={props => (
-          //   <div>
-          //     <h1>Hello</h1>
-          //     {myactivities.message ? myactivities.message : 'not yet!'}
-          //   </div>
-          // )}
-          render={routeProps => (
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
-            </PageWrapper>
+          render={props => (
+            <div>
+              <h1>Hello</h1>
+              {myactivities
+                ? myactivities.map(activity => (
+                    <div>
+                      <p>{activity.title}</p>
+                      <p>{activity.motivation}</p>
+                      <p>{activity.publish}</p>
+                    
+                    </div>
+                  ))
+                : 'not yet!'}
+            </div>
           )}
+          // render={routeProps => (
+          //   <PageWrapper {...routeProps} {...props}>
+          //     <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+          //   </PageWrapper>
+          // )}
         />
 
         <Route

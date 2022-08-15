@@ -4,7 +4,7 @@ from .views import *
 app_name = "activities"
 
 urlpatterns = [
-    path('', index, name='index')
+    path('', ActivityListAPIView.as_view(), name='index')
 ]
 
 
