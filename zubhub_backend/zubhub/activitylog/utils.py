@@ -6,8 +6,6 @@ from django.template.loader import render_to_string
 
 def get_activity_template_name(activity_type):
     file_extension='.html'
-    print(f'activitylog/{activity_type.name.lower()}{file_extension}', "@fileextension")
-    # activitylog/clap.html 
     return f'activitylog/{activity_type.name.lower()}{file_extension}'
 
 
@@ -21,3 +19,4 @@ def push_activity(user, source, context, activity_type, link):
                                           link= link)
     
     activity.save()
+    

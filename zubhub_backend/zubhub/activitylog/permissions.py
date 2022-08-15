@@ -9,3 +9,4 @@ class SustainedRateThrottle(UserRateThrottle):
         if settings.DEBUG:
             return True
         return super().allow_request(request, view)
+        

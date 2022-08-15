@@ -48,8 +48,6 @@ const UserActivity = (props) => {
       <Link to={props.activity.link} className={classes.activityLink}>
           <ListItem className={classes.activityStyle}>
             
-            <div>
-            </div>
             {props.activity.type == 1 &&
               <div className= {classes.iconStyle}>
                 <ClapIcon />

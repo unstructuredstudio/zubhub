@@ -7,6 +7,4 @@ urlpatterns = [
     path('',AllUsersActivitylogAPIView.as_view(), name='all-activitylogs' ),
     path('<str:username>/',
          UserActivitylogAPIView.as_view(), name='user-activitylog')
-    # path('<str:username>',
-    #      UserActivitylogAPIView.as_view(), name='user-activitylog')
 ]
