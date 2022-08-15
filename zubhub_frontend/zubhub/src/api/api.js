@@ -851,9 +851,9 @@ class API {
     const body = JSON.stringify({ ...args });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
-  getActivities = () => {
-    return jsonActivities;
-  };
+  // getActivities = () => {
+  //   return jsonActivities;
+  // };
 
   createActivity = ({
     token,
@@ -884,6 +884,11 @@ class API {
     });
     console.log('api json object', body)
     //return this.request({ url, method, token, body }).then(res => res.json());
+  };
+  getActivities = () => {
+    //const url = page ? `projects/?${page}` : `projects/`;
+    const url = 'activities/';
+    return this.request({ url, method: 'GET' }).then(res => res.json());
   };
 }
 

@@ -59,6 +59,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/rest-auth/password/reset/confirm/', PasswordResetConfirmView.as_view()),
             path('api/creators/', include('creators.urls')),
             path('api/projects/', include('projects.urls')),
+            path('api/activities/', include('activities.urls')),
             path('api/upload-file/', UploadFileAPIView),
             path('api/delete-file/', DeleteFileAPIView),
             path('api/upload-file-to-local/', UploadFileToLocalAPIView),
@@ -66,7 +67,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/help/', HelpAPIView.as_view()),
             path('api/privacy/', PrivacyAPIView.as_view()),
             path('api/faqs/', FAQAPIView.as_view()),
-            path('api/signature/', SigGenAPIView)
+            path('api/signature/', SigGenAPIView),
             ]
 
     urlpatterns = urlpatterns + [

@@ -8,6 +8,7 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('creators/', include('creators.urls', namespace="creators")),
     path('projects/', include('projects.urls', namespace="projects")),
+    path('activities/', include('activities.urls', namespace="activities")),
     path('notifications/', include('notifications.urls', namespace="notifications")),
     path('upload-file/', UploadFileAPIView, name="upload_file"),
     path('delete-file/', DeleteFileAPIView, name="delete_file"),

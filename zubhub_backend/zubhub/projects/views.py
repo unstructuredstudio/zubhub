@@ -129,10 +129,12 @@ class ProjectDeleteAPIView(DestroyAPIView):
     throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
     def delete(self, request, *args, **kwargs):
+        print(request)
         project = self.get_object()
         if project:
             result = self.destroy(request, *args, **kwargs)
             request.user.save()
+            
             return result
 
 
@@ -313,6 +315,7 @@ class ToggleLikeAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
+        print(self.request.user,'toggle_like_backend_user')
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)
         """ check if user is permitted to view this project """
