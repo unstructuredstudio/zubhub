@@ -9,12 +9,12 @@ from projects.models import Category
 Creator = get_user_model()
 
 class Image(models.Model):
-    image_url = models.URLField(max_length=1000)
+    file_url = models.URLField(max_length=1000)
     public_id = models.TextField(max_length=1000, blank=True)
 
     def __str__(self):
         try:
-            image = self.image_url
+            image = self.file_url
         except AttributeError:
             image = ''
         return "Photo <%s:%s>" % (self.public_id, image)    
@@ -68,7 +68,8 @@ class Activity(models.Model):
                                       related_name="activities_saved")
     created_on = models.DateTimeField(default=timezone.now, null=True)
     publish = models.BooleanField(default=False, null= True)
-
+    slug = models.SlugField(unique=True, max_length=1000)
+    
     def save(self, *args, **kwargs):
         if self.slug:
             pass

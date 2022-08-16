@@ -1,5 +1,3 @@
-
-#from typing_extensions import Required
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import *
@@ -14,13 +12,13 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = [
-            "image_url",
+            "file_url",
             "public_id"
         ]
 
 
 class InspiringArtistSerializer(serializers.ModelSerializer):
-    image = ImageSerializer()    
+    image = ImageSerializer(required=False)    
     
     class Meta:
         model = InspiringArtist
@@ -43,7 +41,7 @@ class ActivityImageSerializer(serializers.ModelSerializer):
         
         
 class ActivityMakingStepSerializer(serializers.ModelSerializer):
-    image = ImageSerializer()
+    image = ImageSerializer(required=False, allow_null=True)
     step_order = serializers.IntegerField()
     
     class Meta:
@@ -54,13 +52,12 @@ class ActivityMakingStepSerializer(serializers.ModelSerializer):
         
         
 class InspiringExampleSerializer(serializers.ModelSerializer):
-    image = ImageSerializer()
-    order = serializers.IntegerField()   
+    image = ImageSerializer()   
     
     class Meta:
         model= InspiringExample
         fields = [
-           "image","description","order"
+           "image","description","credit"
         ]               
 
 
@@ -74,8 +71,8 @@ class ActivitySerializer(serializers.ModelSerializer):
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
     saved_count = serializers.IntegerField(read_only=True)
-    publish =  serializers.BooleanField()
-    inspiring_artist = InspiringArtistSerializer()
+    publish =  serializers.BooleanField(required=False)
+    inspiring_artist = InspiringArtistSerializer(required=False)
     making_steps = ActivityMakingStepSerializer(many=True, required=False)
     inspiring_examples = InspiringExampleSerializer(many=True, required=False)
     
@@ -104,28 +101,29 @@ class ActivitySerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         print(validated_data, 'activity_validated_data')
-        # images_data = validated_data.pop('images')
-        # category = None
-        # # if validated_data.get('category', None):
-        # #     category = validated_data.pop('category')
+        inspiring_artist_data = validated_data.pop('inspiring_artist')
+        print('inspiringArtistData',inspiring_artist_data)
+        inspiring_artist_data['image'] = Image.objects.create(**inspiring_artist_data['image'])
         
-        # artist_image = Image.objects.create()
-        # activity = Activity.objects.create(**validated_data)
-
-        # for image in images_data:
-        #     Image.objects.create(project=project, **image)
-
-        # for tag in tags_data:
-        #     tag, _ = Tag.objects.get_or_create(name=tag["name"])
-        #     project.tags.add(tag)
-
-        # if category:
-        #     category.projects.add(project)
-
-        # if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
-        #     update_video_url_if_transform_ready.delay(
-        #         {"url": project.video, "project_id": project.id})
-
+        validated_data['inspiring_artist'] = InspiringArtist.objects.create(**inspiring_artist_data)
+         
+        activity_images  = validated_data.pop('activity_images')  
+        making_steps = validated_data.pop('making_steps')
+        inspiring_examples = validated_data.pop('inspiring_examples')
+        print('afterArtistStor', validated_data)
+        activity = Activity.objects.create(**validated_data)
+        for activity_image in activity_images:
+            saved_image = Image.objects.create(**activity_image['image'])
+            ActivityImage.objects.create(activity= activity,image= saved_image)
+        for step in making_steps:
+            if(step['image']):
+                saved_image = Image.objects.create(**step['image'])
+                step['image'] = saved_image
+            ActivityMakingStep.objects.create(activity= activity,**step)
+        for example in inspiring_examples:
+            saved_image = Image.objects.create(**example['image'])
+            example['image'] = saved_image
+            InspiringExample.objects.create(activity= activity,**example)        
         return activity
 
    

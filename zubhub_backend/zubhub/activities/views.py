@@ -55,3 +55,30 @@ class ActivityListAPIView(ListAPIView):
     #         raise PermissionDenied(
     #             _('you are not permitted to view this project'))
     
+
+class ActivityCreateAPIView(CreateAPIView):
+    """
+    Create new Project.\n
+
+    Requires authentication. Returns project details.\n
+    Request body format:\n
+        {\n
+            "title": "string",\n
+            "description": "string",\n
+            "images": [\n
+                {\n
+                "image_url": "string",\n
+                "public_id": "string"\n
+                }\n
+            ],\n
+            "video": "string",\n
+            "materials_used": "string",\n
+            "category": "string",\n
+            "publish": {"type": 4, "visible_to": []}\n
+        }\n
+    """
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+    #permission_classes = [IsAuthenticated]
+    #throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+    
