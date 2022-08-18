@@ -5,6 +5,7 @@ import {
   OutlinedInput,
   FormHelperText,
   InputLabel,
+  TextField,
 } from '@material-ui/core';
 import { handleInputBlur } from './inputScripts';
 import { getFieldAndIndex } from '../../assets/js/utils/scripts';
@@ -21,7 +22,16 @@ function Input(props) {
     setNewActivityObject,
   } = props;
   const { field, index } = getFieldAndIndex(name);
-
+  console.log(
+    'from input field',
+    field,
+    typeof field,
+    newActivityObject[field]
+      ? index !== null
+        ? newActivityObject[field][index]
+        : newActivityObject[field]
+      : '',
+  );
   return (
     <div>
       <FormControl
@@ -32,20 +42,24 @@ function Input(props) {
         margin="none"
         error={formikProps.errors[field] ? true : false}
       >
-        {label && <InputLabel htmlFor="display-name">{label}</InputLabel>}
-
         <OutlinedInput
           className={classes.customInputStyle}
           id={`${name}_id`}
           name={name}
-          label={label ? label : null}
           multiline={multiline ? multiline : false}
           type="text"
+          // value={
+          //   formikProps.formikValues[field]
+          //     ? index !== null
+          //       ? formikProps.formikValues[field][index]
+          //       : formikProps.formikValues[field]
+          //     : ''
+          // }
           defaultValue={
-            newActivityObject[field]
+            formikProps.formikValues[field]
               ? index !== null
-                ? newActivityObject[field][index]
-                : newActivityObject[field]
+                ? formikProps.formikValues[field][index]
+                : formikProps.formikValues[field]
               : ''
           }
           onBlur={e =>
@@ -59,6 +73,32 @@ function Input(props) {
           }
           onChange={e => formikProps.handleChange(e)}
         />
+
+        {/* <TextField
+          id={`outlined-${name}`}
+          label={label}
+          // className={classes.customInputStyle}
+          name={name}
+          multiline={multiline ? multiline : false}
+          type="text"
+          value={
+            formikProps.formikValues[field]
+              ? index !== null
+                ? formikProps.formikValues[field][index]
+                : formikProps.formikValues[field]
+              : ''
+          }
+          onBlur={e =>
+            handleInputBlur(
+              e,
+              formikProps,
+              field,
+              setNewActivityObject,
+              validateSteps,
+            )
+          }
+          onChange={e => formikProps.handleChange(e)}
+        /> */}
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {formikProps.touched[name] &&
             formikProps.errors[name] &&
