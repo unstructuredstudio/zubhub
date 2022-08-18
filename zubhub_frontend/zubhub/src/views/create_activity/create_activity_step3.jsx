@@ -83,35 +83,35 @@ function CreateActivityStep3(props) {
                 vars={vars}
                 t={props.t}
               />
+              <Grid
+                item
+                xs={12}
+                md={3}
+                sm={6}
+                className={common_classes.marginTop1em}
+              >
+                <UploadFile
+                  key={`makingStepsImagesKey[${index}]`}
+                  name={`makingStepsImages[${index}]`}
+                  fileType={'image/*'}
+                  uploadButtonLabel={t(
+                    'createActivity.inputs.creationSteps.image.label',
+                  )}
+                  classes={classes}
+                  newActivityObject={newActivityObject}
+                  setNewActivityObject={setNewActivityObject}
+                  formikProps={formikProps}
+                  validateSteps={validateSteps}
+                  t={t}
+                  multiple={false}
+                  countFilesText={[
+                    props.t('createActivity.inputs.image'),
+                    props.t('createActivity.inputs.images'),
+                  ]}
+                />
+              </Grid>
             </Grid>
           ))}
-          {/* <Grid
-            item
-            xs={12}
-            md={3}
-            sm={6}
-            className={common_classes.marginTop1em}
-          >
-            <UploadFile
-              key={`ActivityStepsImagesKey`}
-              name={`ActivityStepsImages`}
-              fileType={'image/*'}
-              uploadButtonLabel={t(
-                'createActivity.inputs.creationSteps.image.label',
-              )}
-              classes={classes}
-              newActivityObject={newActivityObject}
-              setNewActivityObject={setNewActivityObject}
-              formikProps={formikProps}
-              validateSteps={validateSteps}
-              t={t}
-              multiple={false}
-              countFilesText={[
-                props.t('createActivity.inputs.image'),
-                props.t('createActivity.inputs.images'),
-              ]}
-            />
-          </Grid> */}
           <Grid
             item
             spacing={3}

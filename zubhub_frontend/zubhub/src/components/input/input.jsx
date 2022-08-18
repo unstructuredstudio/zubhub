@@ -6,7 +6,7 @@ import {
   FormHelperText,
   InputLabel,
 } from '@material-ui/core';
-import { handleTextFieldBlur } from '../../views/create_activity/createActivityScripts';
+import { handleInputBlur } from './inputScripts';
 import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function Input(props) {
@@ -17,6 +17,7 @@ function Input(props) {
     classes,
     formikProps,
     validateSteps,
+    newActivityObject,
     setNewActivityObject,
   } = props;
   const { field, index } = getFieldAndIndex(name);
@@ -38,25 +39,24 @@ function Input(props) {
           id={`${name}_id`}
           name={name}
           label={label ? label : null}
-          multiline={multiline? multiline : false}
+          multiline={multiline ? multiline : false}
           type="text"
           defaultValue={
-            formikProps.formikValues[field]
+            newActivityObject[field]
               ? index !== null
-                ? formikProps.formikValues[field][index]
-                : formikProps.formikValues[field]
+                ? newActivityObject[field][index]
+                : newActivityObject[field]
               : ''
           }
-          onBlur={e => {
-            {
-              formikProps.handleBlur(e);
-              setNewActivityObject(newActivity => ({
-                ...newActivity,
-                [field]: formikProps.formikValues[field],
-              }));
-              validateSteps();
-            }
-          }}
+          onBlur={e =>
+            handleInputBlur(
+              e,
+              formikProps,
+              field,
+              setNewActivityObject,
+              validateSteps,
+            )
+          }
           onChange={e => formikProps.handleChange(e)}
         />
         <FormHelperText error className={classes.fieldHelperTextStyle}>

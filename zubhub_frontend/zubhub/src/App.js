@@ -63,9 +63,7 @@ const ProjectDetails = React.lazy(() =>
 const StaffPickDetails = React.lazy(() =>
   import('./views/staff_pick_details/StaffPickDetails'),
 );
-const Activities = React.lazy(() => 
-  import('./views/activities/activities'),
-);
+const Activities = React.lazy(() => import('./views/activities/activities'));
 const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
 const TermsOfUse = React.lazy(() => import('./views/terms_of_use/TermsOfUse'));
 const About = React.lazy(() => import('./views/about/About'));
@@ -96,26 +94,30 @@ function App(props) {
         <Route
           exact={true}
           path="/"
-          render={props => (
-            <div>
-              <h1>Hello</h1>
-              {myactivities
-                ? myactivities.map(activity => (
-              {/*       <div>
-                      <p>{activity.title}</p>
-                      <p>{activity.motivation}</p>
-                      <p>{activity.publish}</p>
-                    
-                    </div> */}
-              // <LazyImport
-              //   LazyComponent={CreateActivity}
-              //   {...routeProps}
-              //   {...props}
-              // />
-                  ))
-                : 'not yet!'}
-            </div>
-          )}
+          // render={props => (
+          //   <LazyImport
+          //     LazyComponent={CreateActivity}
+          //     {...routeProps}
+          //     {...props}
+          //   />
+            render={routeProps => (
+              <PageWrapper {...routeProps} {...props}>
+                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
+              </PageWrapper>
+            )}
+            // <div>
+            //   <h1>Hello</h1>
+            //   {myactivities
+            //     ? myactivities.map(activity => (
+            //         <div>
+            //           <p>{activity.title}</p>
+            //           <p>{activity.motivation}</p>
+            //           <p>{activity.publish}</p>
+            //         </div>
+            //       ))
+            //     : 'not yet!'}
+            // </div>
+          
           // render={routeProps => (
           //   <PageWrapper {...routeProps} {...props}>
           //     <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
@@ -157,11 +159,15 @@ function App(props) {
           path="/activities"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Activities} {...routeProps} {...props} />
+              <LazyImport
+                LazyComponent={Activities}
+                {...routeProps}
+                {...props}
+              />
             </PageWrapper>
           )}
         />
-        
+
         <Route
           path="/activities/create"
           render={routeProps => (

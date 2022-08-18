@@ -100,6 +100,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         ]
     
     def create(self, validated_data):
+        print('user_from_serializer',self.context["request"].user)
         print(validated_data, 'activity_validated_data')
         inspiring_artist_data = validated_data.pop('inspiring_artist')
         print('inspiringArtistData',inspiring_artist_data)
@@ -123,7 +124,8 @@ class ActivitySerializer(serializers.ModelSerializer):
         for example in inspiring_examples:
             saved_image = Image.objects.create(**example['image'])
             example['image'] = saved_image
-            InspiringExample.objects.create(activity= activity,**example)        
+            InspiringExample.objects.create(activity= activity,**example)  
+        activity.creators.add(self.context["request"].user)           
         return activity
 
    

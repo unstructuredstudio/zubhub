@@ -38,7 +38,6 @@ class FileField {
   }
 
   addFile(file, index) {
-    console.log('index', index);
     this.length += 1;
     if (this.files[index]) {
       this.size -= this.files[index].size;
@@ -79,7 +78,6 @@ class MediaUpload {
       fileField.addFile(files[0], inputIndex);
     } else {
       Object.keys(files).forEach(key => {
-        console.log('from createFileField index', key);
         fileField.addFile(files[key], key);
       });
     }
@@ -105,7 +103,6 @@ class MediaUpload {
     let fileValues = Object.values(this.fileFields[field].files).concat(
       Object.values(files),
     );
-    console.log('after concatenation', fileValues);
     this.fileFields[field].deleteAll();
     fileValues.forEach((file, index) => {
       this.fileFields[field].addFile(file, index);
@@ -147,9 +144,7 @@ export const handleFileFieldChange = (
 
   selectedFiles = fileInputRef.current.files;
 
-  console.log('files to upload', selectedFiles);
   formikProps.setFieldValue(name, selectedFiles).then(errors => {
-    console.log('files and inputIndex', selectedFiles, index);
     if (!mediaUpload.fileFields[field]) {
       if (!errors[field]) {
         mediaUpload.createFileField(field, selectedFiles, index);
@@ -233,7 +228,6 @@ export const uploadFileToLocal = async (
   field,
   index,
 ) => {
-  console.log('file', file);
   let url =
     process.env.REACT_APP_NODE_ENV === 'production'
       ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
@@ -256,11 +250,6 @@ export const uploadFileToLocal = async (
       Authorization: `Token ${token}`,
     },
     onUploadProgress: e => {
-      console.log('loaded and total for file', e.loaded, e.total);
-      console.log(
-        'upload progress',
-        Math.round((e.loaded / e.total) * 100) + '%',
-      );
       handleSetState(state => {
         let mediaUpload = state.mediaUpload;
         mediaUpload.updateLoaded(
@@ -274,7 +263,6 @@ export const uploadFileToLocal = async (
       });
     },
   });
-  console.log('request result axios::::::', result);
   if (result.data['Location']) {
     return {
       field: field,

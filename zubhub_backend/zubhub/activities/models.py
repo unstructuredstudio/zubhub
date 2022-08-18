@@ -57,7 +57,8 @@ class Activity(models.Model):
                                 on_delete=models.CASCADE,
                                 null=True,
                                 related_name="inspiring_artist_activities",
-                                blank=True)
+                                blank=True,
+                                )
     views = models.ManyToManyField(Creator,
                                    blank=True,
                                    related_name="activities_viewed")

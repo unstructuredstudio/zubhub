@@ -855,35 +855,39 @@ class API {
   //   return jsonActivities;
   // };
 
-  createActivity = ({
-    token,
-    title,
-    motivation,
-    learningGoals,
-    materials_used,
-    materials_used_image,
-    facilitationTips,
-    activity_images,
-    creationSteps,
-    inspiringArtist
-  }) => {
-    const url = 'activity/create/';
+  createActivity = (token, args) => {
+    console.log('args from api', args);
+    const url = 'activities/create/';
     const method = 'POST';
-
-    const body = JSON.stringify({
-      token,
+    const {
       title,
       motivation,
-      learningGoals,
+      learning_goals,
       materials_used,
       materials_used_image,
-      facilitationTips,
-      activity_images,
-      creationSteps,
-      inspiringArtist,
+      facilitation_tips,
+      images,
+      making_steps,
+      inspiring_examples,
+      inspiring_artist,
+      video,
+    } = args;
+
+    const body = JSON.stringify({
+      title: title,
+      motivation: motivation,
+      learning_goals: learning_goals,
+      materials_used: materials_used,
+      materials_used_image: materials_used_image,
+      facilitation_tips: facilitation_tips,
+      images: images,
+      making_steps: making_steps,
+      inspiring_examples: inspiring_examples,
+      inspiring_artist: inspiring_artist,
+      video: video,
     });
-    console.log('api json object', body)
-    //return this.request({ url, method, token, body }).then(res => res.json());
+    console.log('api json object', body);
+    return this.request({ url, method, token, body }).then(res => res.json());
   };
   getActivities = () => {
     //const url = page ? `projects/?${page}` : `projects/`;
