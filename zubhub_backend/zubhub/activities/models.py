@@ -50,11 +50,11 @@ class Activity(models.Model):
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.TextField(max_length=5000)
     materials_used_image = models.ForeignKey(Image,
-                                on_delete=models.CASCADE,
+                                on_delete=models.SET_NULL,
                                 null=True,
                                 blank=True)
     inspiring_artist = models.ForeignKey(InspiringArtist,
-                                on_delete=models.CASCADE,
+                                on_delete=models.SET_NULL,
                                 null=True,
                                 related_name="inspiring_artist_activities",
                                 blank=True,

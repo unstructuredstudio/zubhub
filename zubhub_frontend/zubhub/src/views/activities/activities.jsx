@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { getActivities } from '../../store/actions/activityActions';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -11,7 +11,6 @@ import styles, {
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import { Grid, Box } from '@material-ui/core';
-import { useState } from 'react';
 const useStyles = makeStyles(styles);
 
 const StyledSlider = styled(Slider)`
@@ -35,18 +34,21 @@ const StyledSlider = styled(Slider)`
 
 function Activities(props) {
   const classes = useStyles();
-  const activities = props.activities.all_activities;
+
   const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
+  const [activities, setActivities] = useState([]);
   useEffect(() => {
     props.getActivities();
+    setActivities(props.activities.all_activities);
   }, []);
   const activeSlide = currentSlide => {
     setActiveCarouselIndex(currentSlide);
   };
 
+  console.log('api response activities', activities);
   return (
     <div>
-      <div className={classes.bannerContainer}>
+      {/* <div className={classes.bannerContainer}>
         <Box className={classes.sliderBox}>
           <StyledSlider {...sliderSettings(3, activeSlide)}>
             {activities
@@ -73,11 +75,12 @@ function Activities(props) {
               : 'No activities created yet!!'}
           </StyledSlider>
         </Box>
-      </div>
+      </div> */}
 
       <Grid container className={classes.activityListContainer}>
-        {activities.map(activity => (
+        {activities.map((activity, index) => (
           <Grid
+            key={`activityContainer-${index}`}
             item
             xs={12}
             sm={6}
@@ -85,7 +88,7 @@ function Activities(props) {
             align="center"
             className={classes.activityBoxContainer}
           >
-            <Activity activity={activity} />
+            <Activity key={`activity-${index}`} activity={activity} />
           </Grid>
         ))}
       </Grid>

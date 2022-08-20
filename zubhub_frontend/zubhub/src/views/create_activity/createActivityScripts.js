@@ -1,25 +1,11 @@
 import * as Yup from 'yup';
 import ZubhubAPI from '../../api';
-import { toast } from 'react-toastify';
-import { nanoid } from 'nanoid';
-import axios from 'axios';
-import merge from 'lodash/merge';
-import { FormMediaUpload } from '../../components/upload_file/uploadFileScripts';
-
 import {
-  s3 as DO,
-  doConfig,
-  Compress,
-  slugify,
-} from '../../assets/js/utils/scripts';
-
+  FormMediaUpload,
+  MediaUpload,
+  FileField,
+} from '../../components/upload_file/uploadFileScripts';
 const API = new ZubhubAPI();
-
-const vars = {
-  activityImages_field_touched: false,
-  inspiringExemplesImages_field_touched: false,
-  upload_in_progress: false,
-};
 
 // ^/file validation functions
 const isImage = value => {
@@ -97,7 +83,7 @@ export const validationSchema = Yup.object().shape({
     .test('image_size_too_large', 'imageSizeTooLarge', value =>
       imageSizeTooLarge(value),
     ),
-  ActivityMaterialsUsedImages: Yup.mixed()
+  materialsUsedImages: Yup.mixed()
     .test('not_an_image', 'onlyImages', value => isImage(value))
     .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
     .test('image_size_too_large', 'imageSizeTooLarge', value =>
@@ -152,18 +138,7 @@ export const handleInputTextFieldBlur = (
   setInputTextFieldFocused(false);
 };
 
-// export const createActivity = props => {
-//   return () => {
-//     return API.createActivity(props).then(res => {
-//       if (!res.id) {
-//         throw new Error(JSON.stringify(res));
-//       } else {
-//         toast.success(props.t('createProject.createToastSuccess'));
-//         // return props.history.push('/profile');
-//       }
-//     });
-//   };
-// };
+//////////////// serialize activity object for the backend /////////////////////////
 
 const fieldHasUrls = (mediaUpload, field) => {
   return mediaUpload.fileFields[field] &&
@@ -258,6 +233,80 @@ const refactorFieldsData = (state, mediaUpload) => {
   return createActivityArgs;
 };
 
+///////////////////////////////// deserialize activity object to be displayed for update in form fields //////////////////////
+
+export const deserializeFieldsData = activity => {
+  let state = {};
+  let mediaUpload = new MediaUpload();
+  if (Object.keys(activity['inspiring_artist']).length > 0) {
+    state['inspiringArtistFullName'] = activity.inspiring_artist.name;
+    state['inspiringArtist'] = activity.inspiring_artist.short_biography;
+    let artistFileField = new FileField();
+    artistFileField.addUrl(activity.inspiring_artist.image, 0);
+    artistFileField.updateLength(1);
+    mediaUpload.fileFields['inspiringArtistImage'] = artistFileField;
+  }
+
+  if (activity['making_steps'].length > 0) {
+    let makingStepsFileField = new FileField();
+    state['creationSteps'] = [];
+    activity.making_steps.map((step, index) => {
+      state['creationSteps'][index] = step.description;
+      if (step.image) {
+        makingStepsFileField.addUrl(step.image, index);
+        makingStepsFileField.updateLength(1);
+      }
+    });
+    mediaUpload.fileFields['makingStepsImages'] = makingStepsFileField;
+  }
+
+  if (activity['inspiring_examples'].length > 0) {
+    let inspiringExamplesFileField = new FileField();
+    state['inspiringExemplesDescriptions'] = [];
+    state['inspiringExemplesCredits'] = [];
+    activity.inspiring_examples.map((example, index) => {
+      state['inspiringExemplesDescriptions'][index] = example.description;
+      state['inspiringExemplesCredits'][index] = example.credit;
+      if (example.image) {
+        inspiringExamplesFileField.addUrl(example.image, index);
+        inspiringExamplesFileField.updateLength(1);
+      }
+    });
+    mediaUpload.fileFields['inspiringExemplesImages'] =
+      inspiringExamplesFileField;
+  }
+
+  if (activity['images'].length > 0) {
+    let activityImagesFileField = new FileField();
+    activity.images.map((image, index) => {
+      activityImagesFileField.addUrl(image, index);
+      activityImagesFileField.updateLength(1);
+    });
+    mediaUpload.fileFields['activityImages'] = activityImagesFileField;
+  }
+
+  if (activity['video'] !== '') {
+    let videoFileField = new FileField();
+    videoFileField.addUrl(activity.video, 0);
+    videoFileField.updateLength(1);
+    mediaUpload.fileFields['video'] = videoFileField;
+  }
+
+  if (activity['materials_used_image'] !== null) {
+    let materialsUsedImageFileField = new FileField();
+    materialsUsedImageFileField.addUrl(activity['materials_used_image'], 0);
+    materialsUsedImageFileField.updateLength(1);
+    mediaUpload.fileFields['materialsUsedImage'] = materialsUsedImageFileField;
+  }
+  state['title'] = activity['title'];
+  state['motivation'] = activity['motivation'];
+  state['learningGoals'] = activity['learning_goals'];
+  state['facilitationTips'] = activity['facilitation_tips'];
+  state['materialsUsed'] = activity['materials_used'];
+  state['mediaUpload'] = mediaUpload;
+  return state;
+};
+
 export const initUpload = async (e, state, props, handleSetState) => {
   e.preventDefault();
   if (!props.auth.token) {
@@ -280,18 +329,5 @@ export const initUpload = async (e, state, props, handleSetState) => {
     const args = refactorFieldsData(state, mediaUpload);
     const apiResponse = await API.createActivity(props.auth.token, args);
     console.log('api response', apiResponse);
-    // .then(res => {
-    //   let mediaUpload = state.mediaUpload;
-    //   res.forEach(each => {
-    //     console.log('each and uploadMedia', each, mediaUpload);
-    //     mediaUpload.addUrlToField(each.field, each.url, each.index);
-    //   });
-    //   handleSetState(state => {
-    //     return { ...state, mediaUpload: mediaUpload };
-    //   });
-    // })
-    // .catch(error => {
-    //   console.log('upload error', error);
-    // });
   }
 };

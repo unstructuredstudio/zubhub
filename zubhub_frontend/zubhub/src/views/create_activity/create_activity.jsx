@@ -9,8 +9,9 @@ import {
   validationSchema,
   initUpload,
   refactorNewActivityObject,
+  deserializeFieldsData,
 } from './createActivityScripts';
-import * as UserActions from '../../store/actions/userActions';
+
 import * as AuthActions from '../../store/actions/authActions';
 import { Grid, Box, Typography } from '@material-ui/core';
 import CreateActivityStep1 from './create_activity_step1';
@@ -23,6 +24,7 @@ const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivity(props) {
   const { t } = props;
+  const { id } = props.match.params;
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const stepComponentsMap = {
@@ -35,12 +37,18 @@ function CreateActivity(props) {
   const [readyToUpload, setReadyToUpload] = useState(false);
   const [verifiedStep, setVerifiedStep] = useState(1);
   const [newActivityObject, setNewActivityObject] = useState({});
+  useEffect(() => {
+    if (id) {
+      const activityToUpdate = props.activities?.all_activities.filter(
+        item => item.id === id,
+      )[0];
+      setNewActivityObject(state => {
+        return { ...state, ...deserializeFieldsData(activityToUpdate) };
+      });
+    }
+  }, []);
+
   const submitButtonRef = React.useRef(null);
-  // useEffect(() => {
-  //   if (newActivityObject.activityImages && newActivityObject.activityVideo) {
-  //    // initUpload(newActivityObject, props, setNewActivityObject);
-  //   }
-  // }, [newActivityObject]);
   const requireFieldByStep = [
     ['title', 'motivation', 'learningGoals'],
     ['materialsUsed', 'facilitationTips'],
@@ -190,6 +198,7 @@ function CreateActivity(props) {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    activities: state.activities,
   };
 };
 
@@ -213,7 +222,7 @@ export default connect(
       facilitationTips: '',
       creationSteps: [],
       materialsUsed: [],
-      materialsUsedImages: '',
+      materialsUsedImage: '',
       inspiringArtist: '',
       inspiringExemplesDescriptions: [],
       inspiringExemplesCredits: [],

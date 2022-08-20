@@ -29,8 +29,8 @@ function Activity(props) {
 
   return (
     <div className={classes.activityCardContainer}>
-      {activity.creator?.length > 0
-        ? activity.creator.map((creator, index) => (
+      {activity.creators?.length > 0
+        ? activity.creators.map((creator, index) => (
             <Creator
               key={index}
               creator={creator}
@@ -38,95 +38,97 @@ function Activity(props) {
             />
           ))
         : ''}
-      <Card className={classes.activityCard}>
-        <CardMedia title={activity.title} className={classes.mediaBoxStyle}>
-          <img
-            src={activity.demoImage}
-            alt={activity.title}
-            className={classes.activityCardImage}
-          />
+      <Link to={`/activities/${activity.id}`}>
+        <Card className={classes.activityCard}>
+          <CardMedia title={activity.title} className={classes.mediaBoxStyle}>
+            <img
+              src={activity.images[0] ? activity.images[0].image.file_url : ''}
+              alt={activity.title}
+              className={classes.activityCardImage}
+            />
 
-          <Box className={classes.activityTagsBox}>
-            {activity.tags?.length > 0
-              ? activity.tags.slice(0, 3).map(tag => (
+            <Box className={classes.activityTagsBox}>
+              {activity.tags?.length > 0
+                ? activity.tags.slice(0, 3).map(tag => (
+                    <Typography
+                      className={
+                        common_classes.baseTagStyle +
+                        ' ' +
+                        classes.activityTagPill
+                      }
+                      key={tag.id}
+                    >
+                      {tag.name}
+                    </Typography>
+                  ))
+                : ''}
+              {activity.tags?.length > 3 ? (
+                <div
+                  className={classes.tagsShowMoreIconContainer}
+                  onMouseOver={() => setTagsShowMore(true)}
+                  onMouseOut={() => setTagsShowMore(false)}
+                >
                   <Typography
                     className={
                       common_classes.baseTagStyle +
                       ' ' +
-                      classes.activityTagPill
+                      classes.activityTagsShowMore
                     }
-                    key={tag.id}
+                    key="activityTagsShowMore"
                   >
-                    {tag.name}
+                    {['+', activity.tags.length - 3].join('')}
                   </Typography>
-                ))
-              : ''}
-            {activity.tags?.length > 3 ? (
-              <div
-                className={classes.tagsShowMoreIconContainer}
-                onMouseOver={() => setTagsShowMore(true)}
-                onMouseOut={() => setTagsShowMore(false)}
+                </div>
+              ) : (
+                ''
+              )}
+            </Box>
+
+            {tagsShowMore ? (
+              <Box
+                className={classes.tagsShowMoreList}
+                onMouseEnter={() => setTagsShowMore(true)}
+                onMouseLeave={() => setTagsShowMore(false)}
               >
-                <Typography
-                  className={
-                    common_classes.baseTagStyle +
-                    ' ' +
-                    classes.activityTagsShowMore
-                  }
-                  key="activityTagsShowMore"
+                <List
+                  sx={{
+                    width: '100%',
+                    maxWidth: '150px',
+                    backgroundColor: 'background.paper',
+
+                    '& ul': { padding: 0 },
+                  }}
                 >
-                  {['+', activity.tags.length - 3].join('')}
-                </Typography>
-              </div>
+                  {activity.tags?.map(tag => (
+                    <ListItem key={`tag-${tag.id}`}>
+                      <ListItemText primary={tag.name} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
             ) : (
               ''
             )}
-          </Box>
-
-          {tagsShowMore ? (
-            <Box
-              className={classes.tagsShowMoreList}
-              onMouseEnter={() => setTagsShowMore(true)}
-              onMouseLeave={() => setTagsShowMore(false)}
-            >
-              <List
-                sx={{
-                  width: '100%',
-                  maxWidth: '150px',
-                  backgroundColor: 'background.paper',
-
-                  '& ul': { padding: 0 },
-                }}
-              >
-                {activity.tags?.map(tag => (
-                  <ListItem key={`tag-${tag.id}`}>
-                    <ListItemText primary={tag.name} />
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          ) : (
-            ''
-          )}
-        </CardMedia>
-        <CardActions>
-          <CardContent className={classes.activityCardContent}>
-            <Box className={classes.activityCardInfoBox}>
-              <Typography
-                variant="h5"
-                component="h4"
-                className={classes.activityTitle}
-              >
-                {activity.title}
-              </Typography>
-              <Typography component="h6" className={classes.projectsCount}>
-                <ProjectsCountIcon />
-                {activity.projectsCount}
-              </Typography>
-            </Box>
-          </CardContent>
-        </CardActions>
-      </Card>
+          </CardMedia>
+          <CardActions>
+            <CardContent className={classes.activityCardContent}>
+              <Box className={classes.activityCardInfoBox}>
+                <Typography
+                  variant="h5"
+                  component="h4"
+                  className={classes.activityTitle}
+                >
+                  {activity.title}
+                </Typography>
+                <Typography component="h6" className={classes.projectsCount}>
+                  <ProjectsCountIcon />
+                  {activity.views_count}
+                </Typography>
+              </Box>
+            </CardContent>
+          </CardActions>
+        </Card>
+      </Link>
     </div>
   );
 }

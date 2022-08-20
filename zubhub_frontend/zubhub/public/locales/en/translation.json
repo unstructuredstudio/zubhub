@@ -865,5 +865,34 @@
       "Prev": "<-Prev",
       "Submit": "Submit For Review"
     }
+  },
+
+  "activityDetails": {
+    "activity": {
+      "creator": {
+        "follow": "Follow",
+        "unfollow": "Unfollow"
+      },
+      "description": "Description",
+      "materials": "Materials Used",
+      "category": "Category",
+      "tags": "Tags",
+      "none": "None",
+      "edit": "Edit",
+      "delete": {
+        "label": "Delete",
+        "dialog": {
+          "primary": "Delete Project",
+          "secondary": "Are you sure you want to delete this project? You can't undo this action!!",
+          "cancel": "Cancel",
+          "proceed": "Proceed"
+        }
+      }
+    },
+      "saveButton": {
+        "label": "save button",
+        "save": "save",
+        "unsave": "unsave"
+      }
   }
 }

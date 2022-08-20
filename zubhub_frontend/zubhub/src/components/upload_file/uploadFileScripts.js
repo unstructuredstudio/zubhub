@@ -25,12 +25,16 @@ export const removeMetaData = (images, state, handleSetState) => {
   });
 };
 
-class FileField {
+export class FileField {
   constructor() {
     this.files = {};
     this.size = 0;
     this.length = 0;
     this.urls = {};
+  }
+  
+  updateLength(num) {
+    this.length += num;
   }
 
   addUrl(url, index) {
@@ -61,7 +65,7 @@ class FileField {
   }
 }
 
-class MediaUpload {
+export class MediaUpload {
   constructor(fileFields = {}, totalFilesSize = 0, loaded = 0) {
     this.fileFields = fileFields;
     this.totalFilesSize = totalFilesSize;
@@ -152,7 +156,7 @@ export const handleFileFieldChange = (
     } else {
       if (!errors[field]) {
         if (fileInputRef.current.multiple && index < 0) {
-          mediaUpload.appendToFileField(field, selectedFiles);
+          mediaUpload.updateFileField(field, selectedFiles, index);
         } else {
           mediaUpload.updateFileField(field, selectedFiles, index);
         }

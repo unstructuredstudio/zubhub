@@ -852,6 +852,7 @@ class API {
     return this.request({ url, method, token, body }).then(res => res.json());
   };
   // getActivities = () => {
+  //   console.log('json activities', jsonActivities);
   //   return jsonActivities;
   // };
 
@@ -890,7 +891,7 @@ class API {
     return this.request({ url, method, token, body }).then(res => res.json());
   };
   getActivities = () => {
-    //const url = page ? `projects/?${page}` : `projects/`;
+    console.log('api getactivities triggered');
     const url = 'activities/';
     return this.request({ url, method: 'GET' }).then(res => res.json());
   };

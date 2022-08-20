@@ -814,5 +814,27 @@
       "Prev": "<-पिछला",
       "Submit": "समीक्षा हेतु सबमिट करें"
     }
+  },
+
+   "activityDetails": {
+    "activity": {
+      "creator": {
+        "follow": "का पालन करें",
+        "unfollow": "करें"
+      },
+      "description": "विवरण",
+      "materials": "उपयोग किया गया सामन",
+      "category": "वर्ग",
+      "tags": "टैग",
+      "none": "कोई नहीं",
+      "edit": "संपादित करें"
+    },
+    "ariaLabels": {
+      "saveButton": {
+        "label": "बटन सहेजें",
+        "save": "सहेजें",
+        "unsave": "बिना सोचे समझे"
+      }
+    }
   }
 }

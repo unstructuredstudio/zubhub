@@ -75,7 +75,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     inspiring_artist = InspiringArtistSerializer(required=False)
     making_steps = ActivityMakingStepSerializer(many=True, required=False)
     inspiring_examples = InspiringExampleSerializer(many=True, required=False)
-    
+    materials_used_image = ImageSerializer(required=False)
     class Meta:
         model = Activity
         fields = [
@@ -96,7 +96,8 @@ class ActivitySerializer(serializers.ModelSerializer):
             "created_on",
             "publish",
             "making_steps",
-            "inspiring_examples"
+            "inspiring_examples",
+            "materials_used_image"
         ]
     
     def create(self, validated_data):
@@ -107,7 +108,9 @@ class ActivitySerializer(serializers.ModelSerializer):
         inspiring_artist_data['image'] = Image.objects.create(**inspiring_artist_data['image'])
         
         validated_data['inspiring_artist'] = InspiringArtist.objects.create(**inspiring_artist_data)
-         
+        materials_used_image = validated_data['materials_used_image']
+        if(materials_used_image):
+            validated_data['materials_used_image'] = Image.objects.create(**materials_used_image)
         activity_images  = validated_data.pop('activity_images')  
         making_steps = validated_data.pop('making_steps')
         inspiring_examples = validated_data.pop('inspiring_examples')

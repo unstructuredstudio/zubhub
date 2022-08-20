@@ -34,8 +34,13 @@ function CreateActivityStep3(props) {
     newActivityObject.creationSteps ? newActivityObject.creationSteps : [''],
   );
   const [inspiringExemples, setInspiringExemples] = useState(
-    newActivityObject.inspiringExemples
-      ? newActivityObject.inspiringExemples
+    newActivityObject.mediaUpload?.fileFields.inspiringExemplesImages
+      ? [
+          ...Array(
+            newActivityObject.mediaUpload.fileFields.inspiringExemplesImages
+              .length,
+          ),
+        ]
       : [''],
   );
 
@@ -68,6 +73,7 @@ function CreateActivityStep3(props) {
               )}
             >
               <InputText
+                key={`creationStepsKey[${index}]`}
                 name={`creationSteps[${index}]`}
                 classes={classes}
                 common_classes={common_classes}

@@ -46,7 +46,9 @@ function MaterialsUsed(props) {
   } = props;
   const [materialsUsedList, setMaterialsUsedList] = useState(
     newActivityObject.materialsUsed
-      ? newActivityObject.materialsUsed
+      ? typeof newActivityObject.materialsUsed === 'string'
+        ? newActivityObject.materialsUsed.split(',')
+        : newActivityObject.materialsUsed
       : ['', '', ''],
   );
   return (
@@ -101,7 +103,7 @@ function MaterialsUsed(props) {
         <Grid container spacing={1}>
           <Grid item xs={12} sm={6} md={4}>
             <UploadFile
-              name={'ActivityMaterialsUsedImages'}
+              name={'materialsUsedImage'}
               fileType={'image/*'}
               uploadButtonLabel={t(
                 'createActivity.inputs.materialsUsed.images.label',

@@ -82,7 +82,6 @@ const useCommonStyles = makeStyles(commonStyles);
  * @todo - describe function's signature
  */
 function PageWrapper(props) {
-  
   const backToTopEl = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -459,13 +458,13 @@ function PageWrapper(props) {
                 </>
               ) : (
                 <>
-                   <Link
+                  <Link
                     className={clsx(
                       classes.textDecorationNone,
                       common_classes.marginRight1em,
                       common_classes.removeOnSmallScreen,
                     )}
-                    to="/activities"
+                    to="/activities/all"
                   >
                     <CustomButton
                       variant="contained"
@@ -541,8 +540,8 @@ function PageWrapper(props) {
                     }}
                     open={profileMenuOpen}
                     onClose={e => handleSetState(handleProfileMenuClose(e))}
-                  >  
-                     <MenuItem className={common_classes.addOnSmallScreen}>
+                  >
+                    <MenuItem className={common_classes.addOnSmallScreen}>
                       <Link
                         className={classes.textDecorationNone}
                         to="/activities/create"
@@ -557,15 +556,15 @@ function PageWrapper(props) {
                       </Link>
                     </MenuItem>
                     <MenuItem>
-                    <Tooltip title={props.auth.username} placement="top">
-                      <Typography
-                        variant="subtitle2"
-                        color="textPrimary"
-                        component="span"
-                        className={classes.profileStyle}
-                      >
-                        {props.auth.username }
-                      </Typography>
+                      <Tooltip title={props.auth.username} placement="top">
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                          className={classes.profileStyle}
+                        >
+                          {props.auth.username}
+                        </Typography>
                       </Tooltip>
                     </MenuItem>
                     <MenuItem>

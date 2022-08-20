@@ -64,6 +64,9 @@ const StaffPickDetails = React.lazy(() =>
   import('./views/staff_pick_details/StaffPickDetails'),
 );
 const Activities = React.lazy(() => import('./views/activities/activities'));
+const ActivityDetails = React.lazy(() =>
+  import('./views/activity_details/activity_details'),
+);
 const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
 const TermsOfUse = React.lazy(() => import('./views/terms_of_use/TermsOfUse'));
 const About = React.lazy(() => import('./views/about/About'));
@@ -80,14 +83,6 @@ const LazyImport = props => {
 
 const myApi = new API();
 function App(props) {
-  const [myactivities, setMyActivities] = React.useState('');
-  React.useEffect(() => {
-    myApi.getActivities().then(resp => {
-      console.log('resp', resp);
-      setMyActivities(resp);
-    });
-  }, []);
-
   return (
     <Router>
       <Switch>
@@ -100,24 +95,28 @@ function App(props) {
           //     {...routeProps}
           //     {...props}
           //   />
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-            // <div>
-            //   <h1>Hello</h1>
-            //   {myactivities
-            //     ? myactivities.map(activity => (
-            //         <div>
-            //           <p>{activity.title}</p>
-            //           <p>{activity.motivation}</p>
-            //           <p>{activity.publish}</p>
-            //         </div>
-            //       ))
-            //     : 'not yet!'}
-            // </div>
-          
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateActivity}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+          // <div>
+          //   <h1>Hello</h1>
+          //   {myactivities
+          //     ? myactivities.map(activity => (
+          //         <div>
+          //           <p>{activity.title}</p>
+          //           <p>{activity.motivation}</p>
+          //           <p>{activity.publish}</p>
+          //         </div>
+          //       ))
+          //     : 'not yet!'}
+          // </div>
+
           // render={routeProps => (
           //   <PageWrapper {...routeProps} {...props}>
           //     <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
@@ -156,7 +155,7 @@ function App(props) {
           )}
         />
         <Route
-          path="/activities"
+          path="/activities/all"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
@@ -471,6 +470,32 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={FAQs} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities/:id/edit"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateActivity}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities/:id"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={ActivityDetails}
+                {...routeProps}
+                {...props}
+              />
             </PageWrapper>
           )}
         />
