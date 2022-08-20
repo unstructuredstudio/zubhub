@@ -25,6 +25,7 @@ function InputText(props) {
     helperText,
     placeholder,
     formikProps,
+    newActivityObject,
     vars,
   } = props;
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
@@ -71,10 +72,10 @@ function InputText(props) {
             formats={vars.quill.formats}
             placeholder={placeholder ? placeholder : ''}
             defaultValue={
-              formikProps.formikValues[field]
-                ? index !== null
-                  ? formikProps.formikValues[field][index]
-                  : formikProps.formikValues[field]
+              newActivityObject[field]
+                ? index >= 0
+                  ? newActivityObject[field][index]
+                  : newActivityObject[field]
                 : ''
             }
             onChange={value =>

@@ -25,9 +25,8 @@ function Input(props) {
   console.log(
     'from input field',
     field,
-    typeof field,
     newActivityObject[field]
-      ? index !== null
+      ? index >= 0
         ? newActivityObject[field][index]
         : newActivityObject[field]
       : '',
@@ -42,24 +41,19 @@ function Input(props) {
         margin="none"
         error={formikProps.errors[field] ? true : false}
       >
+        <InputLabel htmlFor={label}>{label}</InputLabel>
         <OutlinedInput
           className={classes.customInputStyle}
           id={`${name}_id`}
+          label={label ? label : ''}
           name={name}
           multiline={multiline ? multiline : false}
           type="text"
-          // value={
-          //   formikProps.formikValues[field]
-          //     ? index !== null
-          //       ? formikProps.formikValues[field][index]
-          //       : formikProps.formikValues[field]
-          //     : ''
-          // }
-          defaultValue={
-            formikProps.formikValues[field]
-              ? index !== null
-                ? formikProps.formikValues[field][index]
-                : formikProps.formikValues[field]
+          value={
+            newActivityObject[field]
+              ? index >= 0
+                ? newActivityObject[field][index]
+                : newActivityObject[field]
               : ''
           }
           onBlur={e =>
@@ -77,15 +71,15 @@ function Input(props) {
         {/* <TextField
           id={`outlined-${name}`}
           label={label}
-          // className={classes.customInputStyle}
+          className={classes.customInputStyle}
           name={name}
           multiline={multiline ? multiline : false}
           type="text"
           value={
-            formikProps.formikValues[field]
-              ? index !== null
-                ? formikProps.formikValues[field][index]
-                : formikProps.formikValues[field]
+            newActivityObject[field]
+              ? index >= 0
+                ? newActivityObject[field][index]
+                : newActivityObject[field]
               : ''
           }
           onBlur={e =>

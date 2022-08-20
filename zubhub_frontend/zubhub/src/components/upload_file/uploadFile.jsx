@@ -81,7 +81,8 @@ function UploadFile(props) {
           component="span"
           id={`${name}_file_count_el`}
         >
-          {index < 0
+          
+          {/* {index < 0
             ? formikProps.touched[field] &&
               newActivityObject.mediaUpload &&
               newActivityObject.mediaUpload.fileFields[field] &&
@@ -99,7 +100,7 @@ function UploadFile(props) {
               newActivityObject.mediaUpload &&
               newActivityObject.mediaUpload.fileFields[field] &&
               newActivityObject.mediaUpload.fileFields[field].files[index] &&
-              `1 ${countFilesText[0]}`}
+              `1 ${countFilesText[0]}`} */}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {index >= 0

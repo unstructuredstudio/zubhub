@@ -47,7 +47,7 @@ function MaterialsUsed(props) {
   const [materialsUsedList, setMaterialsUsedList] = useState(
     newActivityObject.materialsUsed
       ? typeof newActivityObject.materialsUsed === 'string'
-        ? newActivityObject.materialsUsed.split(',')
+        ? newActivityObject.materialsUsed
         : newActivityObject.materialsUsed
       : ['', '', ''],
   );

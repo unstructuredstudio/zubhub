@@ -302,7 +302,7 @@ export const deserializeFieldsData = activity => {
   state['motivation'] = activity['motivation'];
   state['learningGoals'] = activity['learning_goals'];
   state['facilitationTips'] = activity['facilitation_tips'];
-  state['materialsUsed'] = activity['materials_used'];
+  state['materialsUsed'] = activity['materials_used'].split(',');
   state['mediaUpload'] = mediaUpload;
   return state;
 };
