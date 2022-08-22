@@ -6,6 +6,7 @@ import CustomButton from '../button/Button';
 import {
   handleFileButtonClick,
   handleFileFieldChange,
+  selectedFilesCount,
 } from './uploadFileScripts.js';
 import { Typography, FormControl, FormHelperText } from '@material-ui/core';
 import { getFieldAndIndex } from '../../assets/js/utils/scripts';
@@ -81,7 +82,13 @@ function UploadFile(props) {
           component="span"
           id={`${name}_file_count_el`}
         >
-          
+          {newActivityObject.mediaUpload?.fileFields[field] &&
+            selectedFilesCount(
+              field,
+              index,
+              newActivityObject.mediaUpload,
+              countFilesText,
+            )}
           {/* {index < 0
             ? formikProps.touched[field] &&
               newActivityObject.mediaUpload &&

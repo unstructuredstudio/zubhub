@@ -138,7 +138,7 @@ export const handleInputTextFieldBlur = (
   setInputTextFieldFocused(false);
 };
 
-//////////////// serialize activity object for the backend /////////////////////////
+//////////////// serialize activity object to the expected format in backend /////////////////////////
 
 const fieldHasUrls = (mediaUpload, field) => {
   return mediaUpload.fileFields[field] &&
@@ -235,74 +235,142 @@ const refactorFieldsData = (state, mediaUpload) => {
 
 ///////////////////////////////// deserialize activity object to be displayed for update in form fields //////////////////////
 
-export const deserializeFieldsData = activity => {
+const simpleFieldsMap = {
+  title: { key: 'title', type: 'simple', field: 'text' },
+  motivation: { key: 'motivation', type: 'simple', field: 'text' },
+  learningGoals: { key: 'learning_goals', type: 'simple', field: 'text' },
+  facilitationTips: { key: 'facilitation_tips', type: 'simple', field: 'text' },
+  inspiringArtistFullName: {
+    key: 'inspiring_artist',
+    type: 'simple',
+    field: 'text',
+    subKey: 'name',
+  },
+  inspiringArtist: {
+    key: 'inspiring_artist',
+    type: 'simple',
+    field: 'text',
+    subKey: 'short_biography',
+  },
+  inspiringExemplesDescriptions: {
+    key: 'inspiring_examples',
+    type: 'multiple',
+    field: 'text',
+    subKey: 'description',
+  },
+  inspiringExemplesCredits: {
+    key: 'inspiring_examples',
+    type: 'multiple',
+    field: 'text',
+    subKey: 'credit',
+  },
+  creationSteps: {
+    key: 'making_steps',
+    type: 'multiple',
+    field: 'text',
+    subKey: 'description',
+  },
+};
+
+const mediaFieldMap = {
+  video: {
+    key: 'video',
+    type: 'simple',
+    field: 'file',
+    count: 'single',
+  },
+  materialsUsedImage: {
+    key: 'materials_used_image',
+    type: 'simple',
+    field: 'file',
+    count: 'single',
+  },
+  activityImages: {
+    key: 'images',
+    type: 'simple',
+    field: 'file',
+    count: 'multiple',
+    subKey: 'image',
+  },
+  inspiringArtistImage: {
+    key: 'inspiring_artist',
+    type: 'simple',
+    field: 'file',
+    subKey: 'image',
+    count: 'single',
+  },
+  inspiringExemplesImages: {
+    key: 'inspiring_examples',
+    type: 'multiple',
+    field: 'file',
+    subKey: 'image',
+    count: 'multiple',
+  },
+  makingStepsImages: {
+    key: 'making_steps',
+    type: 'multiple',
+    field: 'file',
+    subKey: 'image',
+    count: 'multiple',
+  },
+};
+
+export const deserializeFieldsData = (
+  activity,
+  setFieldValue,
+  setFieldTouched,
+) => {
   let state = {};
   let mediaUpload = new MediaUpload();
-  if (Object.keys(activity['inspiring_artist']).length > 0) {
-    state['inspiringArtistFullName'] = activity.inspiring_artist.name;
-    state['inspiringArtist'] = activity.inspiring_artist.short_biography;
-    let artistFileField = new FileField();
-    artistFileField.addUrl(activity.inspiring_artist.image, 0);
-    artistFileField.updateLength(1);
-    mediaUpload.fileFields['inspiringArtistImage'] = artistFileField;
-  }
 
-  if (activity['making_steps'].length > 0) {
-    let makingStepsFileField = new FileField();
-    state['creationSteps'] = [];
-    activity.making_steps.map((step, index) => {
-      state['creationSteps'][index] = step.description;
-      if (step.image) {
-        makingStepsFileField.addUrl(step.image, index);
-        makingStepsFileField.updateLength(1);
+  Object.entries(mediaFieldMap).forEach(([fieldName, fieldInObject]) => {
+    if (fieldInObject.count === 'single') {
+      let image = fieldInObject.subKey
+        ? activity[fieldInObject.key][fieldInObject.subKey]
+        : activity[fieldInObject.key];
+      if (image !== null && image !== '') {
+        mediaUpload.serializeImage(fieldName, image, 0);
       }
-    });
-    mediaUpload.fileFields['makingStepsImages'] = makingStepsFileField;
-  }
+    } else {
+      activity[fieldInObject.key].forEach((object, index) => {
+        let image = fieldInObject.subKey
+          ? object[fieldInObject.subKey]
+          : object;
+        if (image !== null && image !== '') {
+          mediaUpload.serializeImage(fieldName, image, index);
+        }
+      });
+      // if (fieldInObject.type === 'simple') {
+      //   mediaUpload.fileFields[fieldName].updateLength(
+      //     activity[fieldInObject.key].length - 1,
+      //     0,
+      //   );
+      // }
+    }
+  });
 
-  if (activity['inspiring_examples'].length > 0) {
-    let inspiringExamplesFileField = new FileField();
-    state['inspiringExemplesDescriptions'] = [];
-    state['inspiringExemplesCredits'] = [];
-    activity.inspiring_examples.map((example, index) => {
-      state['inspiringExemplesDescriptions'][index] = example.description;
-      state['inspiringExemplesCredits'][index] = example.credit;
-      if (example.image) {
-        inspiringExamplesFileField.addUrl(example.image, index);
-        inspiringExamplesFileField.updateLength(1);
+  Object.entries(simpleFieldsMap).forEach(([key, value]) => {
+    if (value.type === 'simple') {
+      if (value.subKey) {
+        state[key] = activity[value.key][value.subKey];
+        setFieldValue(key, activity[value.key][value.subKey], true);
+      } else {
+        state[key] = activity[value.key];
+        setFieldValue(key, activity[value.key], true);
       }
-    });
-    mediaUpload.fileFields['inspiringExemplesImages'] =
-      inspiringExamplesFileField;
-  }
+    } else {
+      state[key] = [];
+      activity[value.key].forEach((item, index) => {
+        state[key][index] = item[value.subKey];
+        setFieldValue(`${key}[${index}]`, item[value.subKey], true);
+      });
+    }
+  });
 
-  if (activity['images'].length > 0) {
-    let activityImagesFileField = new FileField();
-    activity.images.map((image, index) => {
-      activityImagesFileField.addUrl(image, index);
-      activityImagesFileField.updateLength(1);
-    });
-    mediaUpload.fileFields['activityImages'] = activityImagesFileField;
-  }
-
-  if (activity['video'] !== '') {
-    let videoFileField = new FileField();
-    videoFileField.addUrl(activity.video, 0);
-    videoFileField.updateLength(1);
-    mediaUpload.fileFields['video'] = videoFileField;
-  }
-
-  if (activity['materials_used_image'] !== null) {
-    let materialsUsedImageFileField = new FileField();
-    materialsUsedImageFileField.addUrl(activity['materials_used_image'], 0);
-    materialsUsedImageFileField.updateLength(1);
-    mediaUpload.fileFields['materialsUsedImage'] = materialsUsedImageFileField;
-  }
-  state['title'] = activity['title'];
-  state['motivation'] = activity['motivation'];
-  state['learningGoals'] = activity['learning_goals'];
-  state['facilitationTips'] = activity['facilitation_tips'];
   state['materialsUsed'] = activity['materials_used'].split(',');
+  state['materialsUsed'].forEach((value, index) => {
+    setFieldValue(`materialsUsed[${index}]`, value, true);
+  });
   state['mediaUpload'] = mediaUpload;
   return state;
 };
@@ -327,7 +395,10 @@ export const initUpload = async (e, state, props, handleSetState) => {
     });
     console.log('media upload after loading', mediaUpload);
     const args = refactorFieldsData(state, mediaUpload);
-    const apiResponse = await API.createActivity(props.auth.token, args);
-    console.log('api response', apiResponse);
+    if (!state.id) {
+      const apiResponse = await API.createActivity(props.auth.token, args);
+      console.log('api response', apiResponse);
+    } else {
+    }
   }
 };

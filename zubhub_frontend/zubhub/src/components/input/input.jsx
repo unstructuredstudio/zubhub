@@ -7,7 +7,7 @@ import {
   InputLabel,
   TextField,
 } from '@material-ui/core';
-import { handleInputBlur } from './inputScripts';
+import { handleInputBlur, handleInputChange } from './inputScripts';
 import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function Input(props) {
@@ -39,7 +39,9 @@ function Input(props) {
         size="small"
         fullWidth
         margin="none"
-        error={formikProps.errors[field] ? true : false}
+        error={
+          formikProps.touched[name] && formikProps.errors[field] ? true : false
+        }
       >
         <InputLabel htmlFor={label}>{label}</InputLabel>
         <OutlinedInput
@@ -50,10 +52,10 @@ function Input(props) {
           multiline={multiline ? multiline : false}
           type="text"
           value={
-            newActivityObject[field]
+            formikProps.formikValues[field]
               ? index >= 0
-                ? newActivityObject[field][index]
-                : newActivityObject[field]
+                ? formikProps.formikValues[field][index]
+                : formikProps.formikValues[field]
               : ''
           }
           onBlur={e =>
@@ -65,7 +67,9 @@ function Input(props) {
               validateSteps,
             )
           }
-          onChange={e => formikProps.handleChange(e)}
+          onChange={e =>
+            handleInputChange(e, formikProps, field, setNewActivityObject)
+          }
         />
 
         {/* <TextField

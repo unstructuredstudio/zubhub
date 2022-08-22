@@ -29,12 +29,15 @@ export class FileField {
   constructor() {
     this.files = {};
     this.size = 0;
-    this.length = 0;
+    this.length = [0];
     this.urls = {};
   }
-  
-  updateLength(num) {
-    this.length += num;
+
+  updateLength(num, index) {
+    if (!this.length[index]) {
+      this.length[index] = 0;
+    }
+    this.length[index] += num;
   }
 
   addUrl(url, index) {
@@ -42,10 +45,13 @@ export class FileField {
   }
 
   addFile(file, index) {
-    this.length += 1;
+    // this.updateLength(1, index);
+    if (!this.length[index]) {
+      // length instead of files
+      this.updateLength(1, index);
+    }
     if (this.files[index]) {
       this.size -= this.files[index].size;
-      this.length -= 1;
     }
     this.files[index] = file;
     this.size += file.size;
@@ -55,12 +61,12 @@ export class FileField {
   deleteFile(index) {
     this.size -= this.files[index].size;
     delete this.files[index];
-    this.length -= 1;
+    this.updateLength(-1, index);
   }
 
   deleteAll() {
     this.files = {};
-    this.length = 0;
+    this.length = [0];
     this.size = 0;
   }
 }
@@ -127,7 +133,35 @@ export class MediaUpload {
     this.totalFilesSize -= this.fileFields[field].size;
     this.fileFields[field].deleteAll();
   }
+
+  serializeImage = (fieldName, url, index) => {
+    let fileField = this.fileFields[fieldName]
+      ? this.fileFields[fieldName]
+      : new FileField();
+    fileField.addUrl(url, index);
+    fileField.updateLength(1, index);
+    this.fileFields[fieldName] = fileField;
+  };
 }
+
+export const selectedFilesCount = (
+  field,
+  index,
+  mediaUpload,
+  countFilesText,
+) => {
+  let filesCount =
+    index < 0
+      ? mediaUpload.fileFields[field].length.length
+      : mediaUpload.fileFields[field].length[index];
+  if (filesCount) {
+    return filesCount > 1
+      ? `${filesCount} ${countFilesText[1]}`
+      : `${filesCount} ${countFilesText[0]}`;
+  } else {
+    return '';
+  }
+};
 
 export const handleFileFieldChange = (
   name,

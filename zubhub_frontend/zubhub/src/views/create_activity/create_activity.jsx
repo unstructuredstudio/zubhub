@@ -37,13 +37,30 @@ function CreateActivity(props) {
   const [readyToUpload, setReadyToUpload] = useState(false);
   const [verifiedStep, setVerifiedStep] = useState(1);
   const [newActivityObject, setNewActivityObject] = useState({});
+  const formikProps = {
+    formikValues: props.values,
+    touched: props.touched,
+    errors: props.errors,
+    setFieldValue: props.setFieldValue,
+    setFieldTouched: props.setFieldTouched,
+    handleChange: props.handleChange,
+    handleBlur: props.handleBlur,
+  };
   useEffect(() => {
     if (id) {
       const activityToUpdate = props.activities?.all_activities.filter(
         item => item.id === id,
       )[0];
       setNewActivityObject(state => {
-        return { ...state, ...deserializeFieldsData(activityToUpdate) };
+        const args = deserializeFieldsData(
+          activityToUpdate,
+          formikProps.setFieldValue,
+          formikProps.setFieldTouched,
+        );
+        return {
+          ...state,
+          ...args,
+        };
       });
     }
   }, []);
@@ -74,15 +91,6 @@ function CreateActivity(props) {
         break;
       }
     }
-  };
-  const formikProps = {
-    formikValues: props.values,
-    touched: props.touched,
-    errors: props.errors,
-    setFieldValue: props.setFieldValue,
-    setFieldTouched: props.setFieldTouched,
-    handleChange: props.handleChange,
-    handleBlur: props.handleBlur,
   };
 
   const visitePrev = () => {
