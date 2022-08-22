@@ -460,55 +460,43 @@ def send_notification(users: List[Creator], source: Creator, contexts,
 #         )
 
 
-def remove_initial_titles(creator, titles):
-    for title in titles:
-        creator.badges.remove(Badge.objects.get(badge_title = title))
+def remove_initial_titles(creator, ids):
+    for id in ids:
+        creator.badges.remove(Badge.objects.get(id= id))
 
-def add_titles(creator, count, dict):
-    for badge, value in dict.items():
+def add_titles(creator, count, ids):
+    for id in ids:
+        value = Badge.objects.get(id= id).threshold_value
         if count > value:
-            creator.badges.add(Badge.objects.get(badge_title = badge))
+            creator.badges.add(Badge.objects.get(id = id))
             break
 
-def set_badge_view_category(creator):
-    views_count = (Project.objects.filter(creator= creator).aggregate(
-                    Sum(('views_count')))["views_count__sum"])
-
-    badge_dict = {
-        "Idea Factory": 100000,
-        "Popular Projects": 5000,
-        "Person of Interest": 100,
-        "Getting Famous": 10
-    }
-
-    remove_initial_titles(creator, badge_dict.keys())
-    add_titles(creator, views_count, badge_dict)
-    
 def set_badge_like_category(creator):
     likes_count = (Project.objects.filter(creator= creator)
                 .aggregate(Sum(('likes_count')))["likes_count__sum"])
    
-    badge_dict = {
-        "Captain Projects": 1000,
-        "Favourite Kid": 500,
-        "Interesting Projects": 10
-    }
+    badge_ids = [14, 13, 12]
 
-    remove_initial_titles(creator, badge_dict.keys())
-    add_titles(creator, likes_count, badge_dict)
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, likes_count, badge_ids)
+    
+def set_badge_view_category(creator):
+    views_count = (Project.objects.filter(creator= creator).aggregate(
+                    Sum(('views_count')))["views_count__sum"])
+
+    badge_ids = [11, 10, 9, 8]
+
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, views_count, badge_ids)
 
 def set_badge_comment_category(creator):
     creator_id = creator.id
     comments_count = Comment.objects.filter(creator__id= creator_id).count()
 
-    badge_dict = {
-        "Expert Advisor": 1000,
-        "Always Available": 500,
-        "Helping Hand": 10
-    }
+    badge_ids = [7, 6, 5]
 
-    remove_initial_titles(creator, badge_dict.keys())
-    add_titles(creator, comments_count, badge_dict)
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, comments_count, badge_ids)
 
 def set_badge_project_category(creator, projects_count):
     project_count_before_del = creator.projects_count
@@ -520,12 +508,7 @@ def set_badge_project_category(creator, projects_count):
                 set_badge_like_category(creator)
                 set_badge_comment_category(creator)
 
-    badge_dict = {
-        "Expert Builder": 100,
-        "Master of the sky": 50,
-        "Flying Bird": 10,
-        "Hatchling": 0
-    }
+    badge_ids = [4, 3, 2, 1]
 
-    remove_initial_titles(creator, badge_dict.keys())
-    add_titles(creator, projects_count, badge_dict)
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, projects_count, badge_ids)

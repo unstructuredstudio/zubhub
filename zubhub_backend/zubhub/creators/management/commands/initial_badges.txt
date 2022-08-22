@@ -1,14 +1,14 @@
-Getting Famous
-Person of Interest
-Popular Projects
-Idea Factory
-Interesting Projects
-Favourite Kid
-Captain Projects
-Helping Hand
-Always Available
-Expert Advisor
-Hatchling
-Flying Bird
-Master of the sky
-Expert Builder
+Hatchling:0:1
+Flying Bird:10:1
+Master of the sky:50:1
+Expert Builder:100:1
+Helping Hand:10:2
+Always Available:500:2
+Expert Advisor:1000:2
+Getting Famous:10:3
+Person of Interest:100:3
+Popular Projects:5000:3
+Idea Factory:100000:3
+Interesting Projects:10:4
+Favourite Kid:500:4
+Captain Projects:1000:4

@@ -56,8 +56,17 @@ class CreatorTag(models.Model):
         super().save(*args, **kwargs)
 
 class Badge(models.Model):
+    class Type(models.IntegerChoices):
+        PROJECTS = 1
+        COMMENTS = 2
+        VIEWS = 3
+        LIKES = 4
+
+    type = models.PositiveSmallIntegerField(
+        choices=Type.choices,
+    )  
+    threshold_value = models.IntegerField(blank=True, default=0)
     badge_title = models.CharField(blank=False, default="", max_length=225)
-    created_on = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.badge_title

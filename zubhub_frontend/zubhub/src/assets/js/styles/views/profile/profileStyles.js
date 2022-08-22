@@ -96,8 +96,10 @@ const styles = theme => ({
     flexGrow: 1,
     padding: '1em',
     margin: '1em 0 0 1em',
+    borderRadius: '4px 0 0 4px',
     [theme.breakpoints.down('900')]: {
       margin: '1em',
+    borderRadius: '4px',
     },
   },
   badgeBox: {
@@ -105,10 +107,12 @@ const styles = theme => ({
     margin: '1em 1em 0 0',
     padding: '1em',
     width: '40%',
+    borderRadius: '0 4px 4px 0',
     [theme.breakpoints.down('900')]: {
       width: 'auto',
       margin: '1em',
       padding: '1em',
+      borderRadius: '4px',
     },
   },
   badgeContainerStyle: {

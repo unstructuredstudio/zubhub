@@ -222,13 +222,17 @@ class CreatorAdmin(UserAdmin):
             request, obj, form, change)
 
 class BadgeAdmin(admin.ModelAdmin):
-    list_display = ["badge_title", "created_on", used_by]
-    search_fields = ["badge_title", "created_on"]
-    list_filter = ["created_on"]
-    list_per_page = 50
+    list_display= ["badge_title", "type", "threshold_value", "id", used_by]
+    fields = ('type', 'badge_title', 'threshold_value', 'id',)
+    readonly_fields= ( 'id', 'type',)
 
-    def get_readonly_fields(self, request, obj=None):
-        return ["created_on"]
+    def has_delete_permission(self, request, obj=None):
+        # Disable delete
+        return False
+
+    # disable the ability to add a new badge from the admin for now.
+    def has_add_permission(self, request, obj=None):
+        return False
 
 admin.site.register(Creator, CreatorAdmin)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
