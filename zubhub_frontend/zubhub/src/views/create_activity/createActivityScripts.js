@@ -324,46 +324,50 @@ export const deserializeFieldsData = (
   let mediaUpload = new MediaUpload();
 
   Object.entries(mediaFieldMap).forEach(([fieldName, fieldInObject]) => {
-    if (fieldInObject.count === 'single') {
-      let image = fieldInObject.subKey
-        ? activity[fieldInObject.key][fieldInObject.subKey]
-        : activity[fieldInObject.key];
-      if (image !== null && image !== '') {
-        mediaUpload.serializeImage(fieldName, image, 0);
-      }
-    } else {
-      activity[fieldInObject.key].forEach((object, index) => {
+    if (activity[fieldInObject.key]) {
+      if (fieldInObject.count === 'single') {
         let image = fieldInObject.subKey
-          ? object[fieldInObject.subKey]
-          : object;
+          ? activity[fieldInObject.key][fieldInObject.subKey]
+          : activity[fieldInObject.key];
         if (image !== null && image !== '') {
-          mediaUpload.serializeImage(fieldName, image, index);
+          mediaUpload.serializeImage(fieldName, image, 0);
         }
-      });
-      // if (fieldInObject.type === 'simple') {
-      //   mediaUpload.fileFields[fieldName].updateLength(
-      //     activity[fieldInObject.key].length - 1,
-      //     0,
-      //   );
-      // }
+      } else {
+        activity[fieldInObject.key].forEach((object, index) => {
+          let image = fieldInObject.subKey
+            ? object[fieldInObject.subKey]
+            : object;
+          if (image !== null && image !== '') {
+            mediaUpload.serializeImage(fieldName, image, index);
+          }
+        });
+        // if (fieldInObject.type === 'simple') {
+        //   mediaUpload.fileFields[fieldName].updateLength(
+        //     activity[fieldInObject.key].length - 1,
+        //     0,
+        //   );
+        // }
+      }
     }
   });
 
   Object.entries(simpleFieldsMap).forEach(([key, value]) => {
-    if (value.type === 'simple') {
-      if (value.subKey) {
-        state[key] = activity[value.key][value.subKey];
-        setFieldValue(key, activity[value.key][value.subKey], true);
+    if (activity[value.key]) {
+      if (value.type === 'simple') {
+        if (value.subKey) {
+          state[key] = activity[value.key][value.subKey];
+          setFieldValue(key, activity[value.key][value.subKey], true);
+        } else {
+          state[key] = activity[value.key];
+          setFieldValue(key, activity[value.key], true);
+        }
       } else {
-        state[key] = activity[value.key];
-        setFieldValue(key, activity[value.key], true);
+        state[key] = [];
+        activity[value.key].forEach((item, index) => {
+          state[key][index] = item[value.subKey];
+          setFieldValue(`${key}[${index}]`, item[value.subKey], true);
+        });
       }
-    } else {
-      state[key] = [];
-      activity[value.key].forEach((item, index) => {
-        state[key][index] = item[value.subKey];
-        setFieldValue(`${key}[${index}]`, item[value.subKey], true);
-      });
     }
   });
 
@@ -373,6 +377,10 @@ export const deserializeFieldsData = (
   });
   state['mediaUpload'] = mediaUpload;
   return state;
+};
+
+export const deleteActivity = (token, id) => {
+  API.deleteActivity({ token: token, id: id });
 };
 
 export const initUpload = async (e, state, props, handleSetState) => {
@@ -399,6 +407,12 @@ export const initUpload = async (e, state, props, handleSetState) => {
       const apiResponse = await API.createActivity(props.auth.token, args);
       console.log('api response', apiResponse);
     } else {
+      const apiResponse = await API.updateActivity(
+        props.auth.token,
+        state.id,
+        args,
+      );
+      console.log('api response', apiResponse);
     }
   }
 };

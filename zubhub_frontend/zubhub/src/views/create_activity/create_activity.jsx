@@ -34,7 +34,6 @@ function CreateActivity(props) {
   };
 
   const [step, setStep] = useState(1);
-  const [readyToUpload, setReadyToUpload] = useState(false);
   const [verifiedStep, setVerifiedStep] = useState(1);
   const [newActivityObject, setNewActivityObject] = useState({});
   const formikProps = {
@@ -59,6 +58,7 @@ function CreateActivity(props) {
         );
         return {
           ...state,
+          id: id,
           ...args,
         };
       });
@@ -108,7 +108,7 @@ function CreateActivity(props) {
           component="h2"
           className={classes.createActivityContainerTitle}
         >
-          {t('createActivity.welcomeMsg.primary')}
+          {t(`createActivity.welcomeMsg.${id ? 'edit' : 'primary'}`)}
         </Typography>
         <MultiStepProgressBar step={verifiedStep} stepCount={4} />
 
@@ -177,7 +177,7 @@ function CreateActivity(props) {
                       );
                     }}
                   >
-                    {t('createActivity.buttons.Submit')}
+                    {t(`createActivity.buttons.${id ? 'Edit' : 'Submit'}`)}
                   </CustomButton>
                   <button
                     type="submit"

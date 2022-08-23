@@ -762,7 +762,8 @@
 
   "createActivity": {
     "welcomeMsg": {
-      "primary": "Create Activity"
+      "primary": "Create Activity",
+      "edit": "Update Activity"
     },
     "inputs": {
       "title": {
@@ -863,7 +864,8 @@
     "buttons": {
       "Next": "Next->",
       "Prev": "<-Prev",
-      "Submit": "Submit For Review"
+      "Submit": "Submit For Review",
+      "Edit": "Save Changes"
     }
   },
 

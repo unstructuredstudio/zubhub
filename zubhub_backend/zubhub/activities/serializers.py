@@ -1,8 +1,10 @@
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import *
 from projects.serializers import CategorySerializer
 from creators.serializers import CreatorMinimalSerializer
+from .utils import *
 
 Creator = get_user_model()
 
@@ -28,6 +30,7 @@ class InspiringArtistSerializer(serializers.ModelSerializer):
             "short_biography",
             "image"
         ]
+    
         
 
 class ActivityImageSerializer(serializers.ModelSerializer):
@@ -130,5 +133,57 @@ class ActivitySerializer(serializers.ModelSerializer):
             InspiringExample.objects.create(activity= activity,**example)  
         activity.creators.add(self.context["request"].user)           
         return activity
+    
+    def update(self, activity,validated_data):
+        print('activity_to_update', activity)
+        print('validated_data_from_update', validated_data)
+        inspiring_artist_new = validated_data.pop('inspiring_artist')
+        inspiring_artist_old = activity.inspiring_artist
+        print('inspiring_artist_object', type(inspiring_artist_old))
+        if (inspiring_artist_old is not None or inspiring_artist_new is not None): ## no changes
+            if(inspiring_artist_old is not None):
+                if(inspiring_artist_new is not None):
+                    inspiring_artist_old.image = update_image(inspiring_artist_old.image,inspiring_artist_new['image'])
+                    print('updated image',inspiring_artist_old.image)
+                    inspiring_artist_old.name = inspiring_artist_new['name']
+                    inspiring_artist_old.short_biography = inspiring_artist_new['short_biography']
+                    inspiring_artist_old.save()
+                    print('after_inspiring_artist_update', inspiring_artist_old)
+                else:
+                    inspiring_artist_old.delete()
+                    activity.inspiring_artist = None
+            else :
+                inspiring_artist_new['image'] = Image.objects.create(**inspiring_artist_new['image'])
+                activity.inspiring_artist = InspiringArtist.objects.create(**inspiring_artist_new)    
+                print('new_artist_in_validated_data',activity)
+        if(activity.materials_used_image is not None or validated_data['materials_used_image'] is not None):
+            if (activity.materials_used_image is None):
+                activity.materials_used_image = Image.objects.create(**validated_data['materials_used_image'])       
+            else :
+                if(validated_data['materials_used_image'] is not None):
+                    image = {**validated_data['materials_used_image']}
+                    print('image_of_materials', image)
+                    activity.materials_used_image.file_url = image['file_url']
+                    activity.materials_used_image.public_id = image['public_id']
+                    activity.materials_used_image.save()
+                else:    
+                    activity.materials_used_image.delete()
+                    activity.materials_used_image = None
+                    
+        update_activity_images(activity, validated_data.pop('activity_images'))
+        update_making_steps(activity, validated_data.pop('making_steps'))
+        update_inspiring_examples(activity , validated_data.pop('inspiring_examples')) 
+        activity.title = validated_data.pop('title')
+        activity.motivation = validated_data.pop('motivation')
+        activity.facilitation_tips = validated_data.pop('facilitation_tips')
+        activity.learning_goals = validated_data.pop('learning_goals')
+        activity.materials_used = validated_data.pop('materials_used')
+        activity.video = validated_data.pop('video')  
+        activity.save()     
+        return activity
+    
+
+
+    
 
    

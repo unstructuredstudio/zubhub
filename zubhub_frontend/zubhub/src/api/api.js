@@ -890,6 +890,50 @@ class API {
     console.log('api json object', body);
     return this.request({ url, method, token, body }).then(res => res.json());
   };
+
+  updateActivity = (token, id, args) => {
+    console.log('args from api', args);
+    const url = `activities/${id}/update/`;
+    const method = 'PATCH';
+    const {
+      title,
+      motivation,
+      learning_goals,
+      materials_used,
+      materials_used_image,
+      facilitation_tips,
+      images,
+      making_steps,
+      inspiring_examples,
+      inspiring_artist,
+      video,
+    } = args;
+
+    const body = JSON.stringify({
+      title: title,
+      motivation: motivation,
+      learning_goals: learning_goals,
+      materials_used: materials_used,
+      materials_used_image: materials_used_image,
+      facilitation_tips: facilitation_tips,
+      images: images,
+      making_steps: making_steps,
+      inspiring_examples: inspiring_examples,
+      inspiring_artist: inspiring_artist,
+      video: video,
+    });
+    console.log('api json object', body);
+    return this.request({ url, method, token, body }).then(res => res.json());
+  };
+
+  deleteActivity = ({ token, id }) => {
+    const url = `activities/${id}/delete/`;
+    const method = 'DELETE';
+    return this.request({ url, method, token }).then(res =>
+      Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
+    );
+  };
+
   getActivities = () => {
     console.log('api getactivities triggered');
     const url = 'activities/';

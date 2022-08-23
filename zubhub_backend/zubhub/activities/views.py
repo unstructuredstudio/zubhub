@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.generics import (ListAPIView, CreateAPIView, RetrieveAPIView)
+from rest_framework.generics import (ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView)
 from rest_framework.permissions import AllowAny
 from .models import *
 from .serializers import *
@@ -58,9 +58,9 @@ class ActivityListAPIView(ListAPIView):
 
 class ActivityCreateAPIView(CreateAPIView):
     """
-    Create new Project.\n
+    Create new Activity.\n
 
-    Requires authentication. Returns project details.\n
+    Requires authentication. Returns activity details.\n
     Request body format:\n
         {\n
             "title": "string",\n
@@ -81,4 +81,74 @@ class ActivityCreateAPIView(CreateAPIView):
     serializer_class = ActivitySerializer
     #permission_classes = [IsAuthenticated]
     #throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+
+
+class ActivityUpdateAPIView(UpdateAPIView):
+    """
+    Update activity.
+
+    Requires authentication.\n
+    Requires project id.\n
+    Returns project details.\n
+    request body format:\n
+        {\n
+            "title": "string",\n
+            "description": "string",\n
+            "images": [\n
+                {\n
+                "image_url": "string",\n
+                "public_id": "string"\n
+                }\n
+            ],\n
+            "video": "string",\n
+            "materials_used": "string",\n
+            "category": "string",\n
+            "publish": {"type": 4, "visible_to": []}\n
+        }\n
+    """
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+    # permission_classes = [IsAuthenticated, IsOwner]
+    # throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+
+    # def perform_update(self, serializer):
+    #     try:
+    #         old = Activity.objects.get(pk=self.kwargs.get("pk"))
+    #     except Activity.DoesNotExist:
+    #         pass
+
+    #     new = serializer.save(creator=self.request.user)
+        # self.request.user.save()
+
+        # if project_changed(old, new):
+        #     info = {
+        #         "project_id": str(new.pk),
+        #         "editor": self.request.user.username
+        #     }
+        #     activity_notification(["edited_project"], **info)
+
+        # # because project_changed still needs to make reference to the
+        # # old publishing rule, it wasn't deleted in the serializer update method,
+        # # instead we delete it here after project_changed has done it's part.
+        # old.publish.delete()
+        
     
+class ActivityDeleteAPIView(DestroyAPIView):
+    """
+    Delete a activity and related objects from database.
+
+    Requires authentication.
+    Requires activity id.
+    Returns {details: "ok"}
+    """
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+   # permission_classes = [IsAuthenticated, IsOwner]
+
+    def delete(self, request, *args, **kwargs):
+        print(request)
+        activity = self.get_object()
+        if activity:
+            result = self.destroy(request, *args, **kwargs)
+            request.user.save()    
+            return result        
