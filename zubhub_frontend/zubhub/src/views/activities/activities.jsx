@@ -37,18 +37,20 @@ function Activities(props) {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
-  const [activities, setActivities] = useState([]);
+
   useEffect(async () => {
     setLoading(true);
     const res = await props.getActivities();
-    setActivities(props.activities.all_activities);
+
     setLoading(false);
   }, []);
+
+  const { activities } = useSelector(state => state);
+
   const activeSlide = currentSlide => {
     setActiveCarouselIndex(currentSlide);
   };
-
-  console.log('api response activities', activities);
+  console.log('from activities view', activities);
   return (
     <div>
       {/* <div className={classes.bannerContainer}>
@@ -79,12 +81,11 @@ function Activities(props) {
           </StyledSlider>
         </Box>
       </div> */}
-  {loading ? (
-          <LoadingPage />
-        ) : 
-      <Grid container className={classes.activityListContainer}>
-      
-          {activities.map((activity, index) => (
+      {loading ? (
+        <LoadingPage />
+      ) : (
+        <Grid container className={classes.activityListContainer}>
+          {activities.all_activities.map((activity, index) => (
             <Grid
               key={`activityContainer-${index}`}
               item
@@ -97,9 +98,8 @@ function Activities(props) {
               <Activity key={`activity-${index}`} activity={activity} />
             </Grid>
           ))}
-        
-      </Grid>
-    }
+        </Grid>
+      )}
     </div>
   );
 }
