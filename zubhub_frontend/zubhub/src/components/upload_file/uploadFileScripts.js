@@ -152,7 +152,9 @@ export const selectedFilesCount = (
 ) => {
   let filesCount =
     index < 0
-      ? mediaUpload.fileFields[field].length.length
+      ? mediaUpload.fileFields[field].length
+          .filter(item => item !== undefined)
+          .reduce((sum, record) => sum + record)
       : mediaUpload.fileFields[field].length[index];
   if (filesCount) {
     return filesCount > 1
@@ -196,7 +198,7 @@ export const handleFileFieldChange = (
         }
       } else {
         if (index < 0) {
-          // mediaUpload.deleteAllFromField(field);
+          mediaUpload.deleteAllFromField(field);
         } else {
           if (errors[field][index]) {
             if (mediaUpload.fileFields[field].files[index]) {
