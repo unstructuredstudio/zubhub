@@ -8,6 +8,7 @@ import Activity from '../../components/activity/activity';
 import styles, {
   sliderSettings,
 } from '../../assets/js/styles/views/activities/activitiesStyles';
+import LoadingPage from '../loading/LoadingPage';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 import { Grid, Box } from '@material-ui/core';
@@ -34,12 +35,14 @@ const StyledSlider = styled(Slider)`
 
 function Activities(props) {
   const classes = useStyles();
-
+  const [loading, setLoading] = useState(false);
   const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
   const [activities, setActivities] = useState([]);
-  useEffect(() => {
-    props.getActivities();
+  useEffect(async () => {
+    setLoading(true);
+    const res = await props.getActivities();
     setActivities(props.activities.all_activities);
+    setLoading(false);
   }, []);
   const activeSlide = currentSlide => {
     setActiveCarouselIndex(currentSlide);
@@ -76,22 +79,27 @@ function Activities(props) {
           </StyledSlider>
         </Box>
       </div> */}
-
+  {loading ? (
+          <LoadingPage />
+        ) : 
       <Grid container className={classes.activityListContainer}>
-        {activities.map((activity, index) => (
-          <Grid
-            key={`activityContainer-${index}`}
-            item
-            xs={12}
-            sm={6}
-            md={6}
-            align="center"
-            className={classes.activityBoxContainer}
-          >
-            <Activity key={`activity-${index}`} activity={activity} />
-          </Grid>
-        ))}
+      
+          {activities.map((activity, index) => (
+            <Grid
+              key={`activityContainer-${index}`}
+              item
+              xs={12}
+              sm={6}
+              md={6}
+              align="center"
+              className={classes.activityBoxContainer}
+            >
+              <Activity key={`activity-${index}`} activity={activity} />
+            </Grid>
+          ))}
+        
       </Grid>
+    }
     </div>
   );
 }

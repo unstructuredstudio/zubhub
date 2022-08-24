@@ -20,6 +20,10 @@ function ActivityDetails(props) {
 
   const activity = activities.all_activities.filter(item => item.id === id)[0];
   console.log('activity_details', activities, activity);
+  const handleDelete = () => {
+    console.log('delete clicked')
+    deleteActivity({ token: auth.token, id: id, history: history });
+  };
   return (
     <div>
       Activity_details
@@ -37,9 +41,7 @@ function ActivityDetails(props) {
         className={common_classes.marginLeft1em}
         variant="contained"
         primaryButtonStyle
-        onClick={e => {
-          deleteActivity({ token: auth.token, id: id, history: history });
-        }}
+        onClick={() => handleDelete()}
       >
         {t('activityDetails.activity.delete.label')}
       </CustomButton>

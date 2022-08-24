@@ -12,14 +12,12 @@ export const setActivities = activities => {
 };
 
 export const getActivities = () => {
-  console.log('activity actions triggered');
-  return dispatch => {
-    ActivityAPI.getActivities().then(res => {
-      console.log('from reducer actions', res);
-      dispatch({
-        type: at.SET_ACTIVITIES,
-        payload: { all_activities: res },
-      });
+  return async dispatch => {
+    const res = await ActivityAPI.getActivities();
+    console.log('from reducer actions', res);
+    dispatch({
+      type: at.SET_ACTIVITIES,
+      payload: { all_activities: res },
     });
   };
 };
