@@ -169,7 +169,8 @@ const combineInspiringExamplesData = (descriptions, credits, urls) => {
 const combineMakingStepsData = (descriptions, urls) => {
   let makingSteps = [];
   console.log('descriptions and urls,', descriptions, urls);
-  descriptions.forEach((item, index) => {
+
+  descriptions?.forEach((item, index) => {
     let step = {};
     step['image'] = urls[index] ? urls[index] : null;
     step['description'] = descriptions[index];

@@ -52,7 +52,8 @@ class Activity(models.Model):
     materials_used_image = models.ForeignKey(Image,
                                 on_delete=models.SET_NULL,
                                 null=True,
-                                blank=True)
+                                blank=True,
+                                )
     inspiring_artist = models.ForeignKey(InspiringArtist,
                                 on_delete=models.SET_NULL,
                                 null=True,
