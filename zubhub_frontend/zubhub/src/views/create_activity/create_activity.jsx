@@ -164,7 +164,7 @@ function CreateActivity(props) {
                     variant="contained"
                     primaryButtonStyle
                     customButtonStyle
-                    disabled={verifiedStep > 0 ? false : true}
+                    disabled={verifiedStep > 3 ? false : true}
                     fullWidth
                     size="large"
                     //type="submit"

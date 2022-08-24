@@ -90,7 +90,7 @@ function InputText(props) {
           />
         </ClickAwayListener>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {index !== null
+          {index >= null
             ? formikProps.touched[field] &&
               formikProps.touched[field][index] &&
               formikProps.errors[field] &&

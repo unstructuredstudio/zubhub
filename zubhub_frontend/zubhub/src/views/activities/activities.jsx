@@ -41,7 +41,6 @@ function Activities(props) {
   useEffect(async () => {
     setLoading(true);
     const res = await props.getActivities();
-
     setLoading(false);
   }, []);
 
