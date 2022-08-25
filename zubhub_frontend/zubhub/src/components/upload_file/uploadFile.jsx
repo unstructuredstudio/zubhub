@@ -8,7 +8,13 @@ import {
   handleFileFieldChange,
   selectedFilesCount,
 } from './uploadFileScripts.js';
-import { Typography, FormControl, FormHelperText } from '@material-ui/core';
+import {
+  Typography,
+  FormControl,
+  FormHelperText,
+  Grid,
+  Paper,
+} from '@material-ui/core';
 import { getFieldAndIndex } from '../../assets/js/utils/scripts';
 
 function UploadFile(props) {
@@ -17,6 +23,7 @@ function UploadFile(props) {
     fileType,
     uploadButtonLabel,
     classes,
+    activity_classes,
     countFilesText,
     multiple,
     newActivityObject,
@@ -89,25 +96,6 @@ function UploadFile(props) {
               newActivityObject.mediaUpload,
               countFilesText,
             )}
-          {/* {index < 0
-            ? formikProps.touched[field] &&
-              newActivityObject.mediaUpload &&
-              newActivityObject.mediaUpload.fileFields[field] &&
-              `${newActivityObject.mediaUpload.fileFields[field].length}
-                ${
-                  newActivityObject.mediaUpload.fileFields[field].length < 2
-                    ? countFilesText[0]
-                    : countFilesText[1]
-                }`
-            : formikProps.touched[field] &&
-              formikProps.touched[field][index] &&
-              (!formikProps.errors[field] ||
-                (formikProps.errors[field] &&
-                  !formikProps.errors[field][index])) &&
-              newActivityObject.mediaUpload &&
-              newActivityObject.mediaUpload.fileFields[field] &&
-              newActivityObject.mediaUpload.fileFields[field].files[index] &&
-              `1 ${countFilesText[0]}`} */}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {index >= 0
@@ -124,6 +112,38 @@ function UploadFile(props) {
                 `createActivity.inputs.activityImages.errors.${formikProps.errors[field]}`,
               )}
         </FormHelperText>
+
+        {newActivityObject.mediaUpload?.fileFields[field] && (
+          <Grid container spacing={2}>
+            {Object.entries(
+              newActivityObject.mediaUpload?.fileFields[
+                field
+              ].imagesToPreview(),
+            ).map(([index, image]) => (
+              <Grid item key={`imagePreview${index}`} md={4} xs={6} sm={6}>
+                <Paper
+                  key={`imagePaper${index}`}
+                  className={activity_classes.imagePreviewContainer}
+                >
+                  <img
+                    className={activity_classes.imagePreview}
+                    src={
+                      image.type === 'file'
+                        ? window.URL.createObjectURL(image.image)
+                        : image.image.file_url
+                    }
+                    alt={`imageAlt${index}`}
+                  />
+                  <i
+                    className={
+                      'fas fa-times-circle ' + activity_classes.closeIcon
+                    }
+                  ></i>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </FormControl>
     </div>
   );

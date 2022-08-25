@@ -69,6 +69,20 @@ export class FileField {
     this.length = [0];
     this.size = 0;
   }
+
+  imagesToPreview() {
+    let imagesToPreview = {};
+    if (this.length.length > 0) {
+      this.length.map((value, index) => {
+        if (value) {
+          imagesToPreview[index] = this.files[index]
+            ? { image: this.files[index], type: 'file' }
+            : { image: this.urls[index], type: 'url' };
+        }
+      });
+    }
+    return imagesToPreview;
+  }
 }
 
 export class MediaUpload {

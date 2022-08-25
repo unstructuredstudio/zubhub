@@ -108,6 +108,7 @@ function CreateActivityStep2(props) {
               'createActivity.inputs.materialsUsed.images.label',
             )}
             classes={classes}
+            activity_classes={activity_classes}
             newActivityObject={newActivityObject}
             setNewActivityObject={setNewActivityObject}
             formikProps={formikProps}

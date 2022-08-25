@@ -1,10 +1,10 @@
 export const styles = theme => ({
   createActivityContainer: {
     backgroundColor: '#FFCD06',
-    padding: '5vh 10%'
+    padding: '5vh 10%',
   },
   createActivityContainerTitle: {
-    color: 'white'
+    color: 'white',
   },
   CreateActivityFormContainer: {
     backgroundColor: 'white',
@@ -18,7 +18,7 @@ export const styles = theme => ({
     color: '#00B8C4',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',    
+    justifyContent: 'center',
     borderRadius: '50%',
     fontWeight: 'bold',
     fontSize: '1.3rem',
@@ -28,7 +28,7 @@ export const styles = theme => ({
   },
   createActivityStepContainer: {
     width: '90%',
-    margin: 'auto'
+    margin: 'auto',
   },
   activityCreationProgressBar: {
     width: '90%',
@@ -37,14 +37,32 @@ export const styles = theme => ({
     backgroundColor: 'white',
     borderRadius: '10px',
     position: 'relative',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   activityCreationProgressBarScroller: {
     backgroundColor: '#00B8C4',
     height: '100%',
-    borderRadius: '10px'
+    borderRadius: '10px',
   },
   reactQuillStyle: {
-    borderRadius: '15px'
-  }
-})
+    borderRadius: '15px',
+  },
+  imagePreview: {
+    width: '100%',
+    position: 'absolute',
+    height: '100%',
+    top: 0,
+    borderRadius: '15px 0px 15px 15px',
+  },
+  imagePreviewContainer: {
+    position: 'relative',
+    paddingTop: '100%',
+    borderRadius: '15px 0px 15px 15px',
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: -5,
+    right: -10,
+    color: 'red',
+  },
+});
