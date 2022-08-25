@@ -5,13 +5,13 @@ export const handleInputBlur = (
   setNewActivityObject,
   validateSteps,
 ) => {
- // formikProps.setFieldValue(field, e.target.value, true);
+  // formikProps.setFieldValue(field, e.target.value, true);
   formikProps.handleBlur(e);
   setNewActivityObject(newActivity => ({
     ...newActivity,
     [field]: formikProps.formikValues[field],
   }));
-  validateSteps();
+  // validateSteps();
 };
 
 export const handleInputChange = (

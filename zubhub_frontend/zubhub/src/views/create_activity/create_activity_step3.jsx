@@ -104,6 +104,7 @@ function CreateActivityStep3(props) {
                     'createActivity.inputs.creationSteps.image.label',
                   )}
                   classes={classes}
+                  activity_classes={activity_classes}
                   newActivityObject={newActivityObject}
                   setNewActivityObject={setNewActivityObject}
                   formikProps={formikProps}
@@ -199,6 +200,7 @@ function CreateActivityStep3(props) {
                   'createActivity.inputs.inspiringArtist.image.label',
                 )}
                 classes={classes}
+                activity_classes={activity_classes}
                 newActivityObject={newActivityObject}
                 setNewActivityObject={setNewActivityObject}
                 formikProps={formikProps}
@@ -274,6 +276,7 @@ function CreateActivityStep3(props) {
                       'createActivity.inputs.inspiringExemples.image.label',
                     )}
                     classes={classes}
+                    activity_classes={activity_classes}
                     newActivityObject={newActivityObject}
                     setNewActivityObject={setNewActivityObject}
                     formikProps={formikProps}

@@ -61,8 +61,8 @@ export const styles = theme => ({
   },
   closeIcon: {
     position: 'absolute',
-    top: -5,
+    top: -10,
     right: -10,
-    color: 'red',
+    color: '#DC3545',
   },
 });

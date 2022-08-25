@@ -70,17 +70,28 @@ export class FileField {
     this.size = 0;
   }
 
-  imagesToPreview() {
+  imagesToPreview(inputIndex) {
+    
     let imagesToPreview = {};
-    if (this.length.length > 0) {
-      this.length.map((value, index) => {
-        if (value) {
-          imagesToPreview[index] = this.files[index]
-            ? { image: this.files[index], type: 'file' }
-            : { image: this.urls[index], type: 'url' };
+    
+      if (this.length.length > 0) {
+        if(inputIndex >= 0){
+          if(this.length[inputIndex]){
+            imagesToPreview[inputIndex] = this.files[inputIndex]
+              ? { image: this.files[inputIndex], type: 'file' }
+              : { image: this.urls[inputIndex], type: 'url' };
+          }
+        }else {
+          this.length.map((value, index) => {
+            if (value) {
+              imagesToPreview[index] = this.files[index]
+                ? { image: this.files[index], type: 'file' }
+                : { image: this.urls[index], type: 'url' };
+            }
+          });
         }
-      });
-    }
+      }
+    
     return imagesToPreview;
   }
 }

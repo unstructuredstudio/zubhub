@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import ImageIcon from '@material-ui/icons/Image';
 import MovieIcon from '@material-ui/icons/Movie';
+import CancelIcon from '@material-ui/icons/Cancel';
 import CustomButton from '../button/Button';
 import {
   handleFileButtonClick,
@@ -116,9 +117,9 @@ function UploadFile(props) {
         {newActivityObject.mediaUpload?.fileFields[field] && (
           <Grid container spacing={2}>
             {Object.entries(
-              newActivityObject.mediaUpload?.fileFields[
-                field
-              ].imagesToPreview(),
+              newActivityObject.mediaUpload?.fileFields[field].imagesToPreview(
+                index,
+              ),
             ).map(([index, image]) => (
               <Grid item key={`imagePreview${index}`} md={4} xs={6} sm={6}>
                 <Paper
@@ -134,11 +135,15 @@ function UploadFile(props) {
                     }
                     alt={`imageAlt${index}`}
                   />
-                  <i
+                  <CancelIcon
+                    className={activity_classes.closeIcon}
+                    fontSize="small"
+                  />
+                  {/* <i
                     className={
                       'fas fa-times-circle ' + activity_classes.closeIcon
                     }
-                  ></i>
+                  ></i> */}
                 </Paper>
               </Grid>
             ))}

@@ -77,10 +77,11 @@ function CreateActivity(props) {
   ];
   const validateSteps = () => {
     let stepVerified = true;
+    props.validateForm();
     for (let i = 0; i < requireFieldByStep.length; i++) {
       stepVerified = true;
       requireFieldByStep[i].map(field => {
-        if (!(props.touched[field] && !props.errors[field])) {
+        if (props.errors[field]) {
           stepVerified = false;
           setVerifiedStep(i + 1);
         }

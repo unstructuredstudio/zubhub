@@ -45,6 +45,7 @@ function CreateActivityStep2(props) {
           />
           <MaterialsUsed
             classes={classes}
+            activity_classes={activity_classes}
             common_classes={common_classes}
             addMoreLabel={t('createProject.inputs.materialsUsed.addMore')}
             encouragingText={t(
@@ -137,25 +138,26 @@ function CreateActivityStep2(props) {
             fieldLabel={'Add a video if provided'}
           />
           <Grid
-          item
-          xs={12}
-          md={4}
-          sm={4}
-          className={common_classes.marginTop1em}
-        >
-          <UploadFile
-            name={'activityVideo'}
-            fileType={'video/*'}
-            uploadButtonLabel={'Upload Video'}
-            classes={classes}
-            newActivityObject={newActivityObject}
-            setNewActivityObject={setNewActivityObject}
-            formikProps={formikProps}
-            validateSteps={validateSteps}
-            t={t}
-            multiple={true}
-            countFilesText={['video added', 'videos added']}
-          />
+            item
+            xs={12}
+            md={4}
+            sm={4}
+            className={common_classes.marginTop1em}
+          >
+            <UploadFile
+              name={'activityVideo'}
+              fileType={'video/*'}
+              uploadButtonLabel={'Upload Video'}
+              classes={classes}
+              activity_classes={activity_classes}
+              newActivityObject={newActivityObject}
+              setNewActivityObject={setNewActivityObject}
+              formikProps={formikProps}
+              validateSteps={validateSteps}
+              t={t}
+              multiple={true}
+              countFilesText={['video added', 'videos added']}
+            />
           </Grid>
         </Grid>
       </Grid>

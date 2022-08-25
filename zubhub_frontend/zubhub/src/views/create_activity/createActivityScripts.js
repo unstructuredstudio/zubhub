@@ -120,7 +120,7 @@ export const handleInputTextFieldChange = (
   } else {
     setFieldValue(name, undefined, true);
   }
-  setFieldTouched(name, true);
+  // setFieldTouched(name, true);
 };
 
 export const handleInputTextFieldBlur = (
@@ -357,16 +357,19 @@ export const deserializeFieldsData = (
       if (value.type === 'simple') {
         if (value.subKey) {
           state[key] = activity[value.key][value.subKey];
-          setFieldValue(key, activity[value.key][value.subKey], true);
+          setFieldValue(key, activity[value.key][value.subKey], false);
+          // setFieldTouched(key, true);
         } else {
           state[key] = activity[value.key];
-          setFieldValue(key, activity[value.key], true);
+          setFieldValue(key, activity[value.key], false);
+          // setFieldTouched(key, true);
         }
       } else {
         state[key] = [];
         activity[value.key].forEach((item, index) => {
           state[key][index] = item[value.subKey];
-          setFieldValue(`${key}[${index}]`, item[value.subKey], true);
+          setFieldValue(`${key}[${index}]`, item[value.subKey], false);
+          // setFieldTouched(`${key}[${index}]`, true);
         });
       }
     }
@@ -374,7 +377,7 @@ export const deserializeFieldsData = (
 
   state['materialsUsed'] = activity['materials_used'].split(',');
   state['materialsUsed'].forEach((value, index) => {
-    setFieldValue(`materialsUsed[${index}]`, value, true);
+    setFieldValue(`materialsUsed[${index}]`, value, false);
   });
   state['mediaUpload'] = mediaUpload;
   return state;

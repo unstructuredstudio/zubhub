@@ -34,6 +34,7 @@ function MaterialsUsed(props) {
   };
   const {
     classes,
+    activity_classes,
     common_classes,
     addMoreLabel,
     imagesButtonLabel,
@@ -109,6 +110,7 @@ function MaterialsUsed(props) {
                 'createActivity.inputs.materialsUsed.images.label',
               )}
               classes={classes}
+              activity_classes={activity_classes}
               newActivityObject={newActivityObject}
               setNewActivityObject={setNewActivityObject}
               formikProps={formikProps}
