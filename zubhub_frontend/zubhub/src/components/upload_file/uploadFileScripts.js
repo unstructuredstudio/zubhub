@@ -29,15 +29,15 @@ export class FileField {
   constructor() {
     this.files = {};
     this.size = 0;
-    this.length = [0];
+    this.length = {};
     this.urls = {};
   }
 
-  updateLength(num, index) {
-    if (!this.length[index]) {
-      this.length[index] = 0;
-    }
-    this.length[index] += num;
+  updateLength(value, index) {
+    // if (!this.length[index]) {
+    //   this.length[index] = 0;
+    // }
+    this.length[index] = value;
   }
 
   addUrl(url, index) {
@@ -59,40 +59,61 @@ export class FileField {
   //index is index of input in list of this fields inputs otherwise
   //is index in liste of files if filed has one input that  accepts multiple
   deleteFile(index) {
-    this.size -= this.files[index].size;
+    if (this.files[index]) {
+      this.size -= this.files[index].size;
+    }
     delete this.files[index];
-    this.updateLength(-1, index);
+    delete this.urls[index];
+    delete this.length[index];
   }
 
   deleteAll() {
     this.files = {};
-    this.length = [0];
+    this.length = {};
+    this.urls = {};
     this.size = 0;
   }
 
   imagesToPreview(inputIndex) {
-    
     let imagesToPreview = {};
-    
-      if (this.length.length > 0) {
-        if(inputIndex >= 0){
-          if(this.length[inputIndex]){
-            imagesToPreview[inputIndex] = this.files[inputIndex]
-              ? { image: this.files[inputIndex], type: 'file' }
-              : { image: this.urls[inputIndex], type: 'url' };
-          }
-        }else {
-          this.length.map((value, index) => {
-            if (value) {
-              imagesToPreview[index] = this.files[index]
-                ? { image: this.files[index], type: 'file' }
-                : { image: this.urls[index], type: 'url' };
-            }
-          });
+
+    if (Object.keys(this.length).length > 0) {
+      if (inputIndex >= 0) {
+        if (this.length[inputIndex]) {
+          imagesToPreview[inputIndex] = this.files[inputIndex]
+            ? { image: this.files[inputIndex], type: 'file' }
+            : { image: this.urls[inputIndex], type: 'url' };
         }
+      } else {
+        Object.entries(this.length).map(([index, value]) => {
+          if (value && value > 0) {
+            imagesToPreview[index] = this.files[index]
+              ? { image: this.files[index], type: 'file' }
+              : { image: this.urls[index], type: 'url' };
+          }
+        });
       }
-    
+    }
     return imagesToPreview;
+  }
+
+  selectedFilesCount(index, countFilesText) {
+    let filesCount = 0;
+    if (index < 0 && Object.keys(this.length).length !== 0) {
+      filesCount = Object.values(this.length).reduce(
+        (sum, record) => sum + record,
+        0,
+      );
+    } else {
+      filesCount = this.length[index];
+    }
+    if (filesCount) {
+      return filesCount > 1
+        ? `${filesCount} ${countFilesText[1]}`
+        : `${filesCount} ${countFilesText[0]}`;
+    } else {
+      return '';
+    }
   }
 }
 
@@ -169,27 +190,6 @@ export class MediaUpload {
   };
 }
 
-export const selectedFilesCount = (
-  field,
-  index,
-  mediaUpload,
-  countFilesText,
-) => {
-  let filesCount =
-    index < 0
-      ? mediaUpload.fileFields[field].length
-          .filter(item => item !== undefined)
-          .reduce((sum, record) => sum + record)
-      : mediaUpload.fileFields[field].length[index];
-  if (filesCount) {
-    return filesCount > 1
-      ? `${filesCount} ${countFilesText[1]}`
-      : `${filesCount} ${countFilesText[0]}`;
-  } else {
-    return '';
-  }
-};
-
 export const handleFileFieldChange = (
   name,
   fileInputRef,
@@ -197,6 +197,7 @@ export const handleFileFieldChange = (
   newActivityObject,
   setFilesUploaded,
   setNewActivityObject,
+  validateSteps
 ) => {
   formikProps.setFieldTouched(name, true);
   const { field, index } = getFieldAndIndex(name);
@@ -239,6 +240,7 @@ export const handleFileFieldChange = (
       return { ...prevActivity, mediaUpload: mediaUpload };
     });
   });
+  validateSteps();
 };
 
 ///////////////////////////////////////////////////////////////////////

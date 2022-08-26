@@ -38,18 +38,19 @@ function UploadFile(props) {
   const fileInputRef = React.useRef(null);
   const [filesUploaded, setFilesUploaded] = useState(false);
 
-  const handleFileInputChange = () => {
-    //if (fileType === 'image/*'){
-    handleFileFieldChange(
-      name,
-      fileInputRef,
-      formikProps,
-      newActivityObject,
-      setFilesUploaded,
-      setNewActivityObject,
-    );
-    // }
-  };
+  // const handleFileInputChange = () => {
+  //   //if (fileType === 'image/*'){
+  //   handleFileFieldChange(
+  //     name,
+  //     fileInputRef,
+  //     formikProps,
+  //     newActivityObject,
+  //     setFilesUploaded,
+  //     setNewActivityObject,
+  //     validateSteps
+  //   );
+  //   // }
+  // };
   return (
     <div>
       <CustomButton
@@ -82,7 +83,17 @@ function UploadFile(props) {
           id={`${name}_id`}
           name={name}
           multiple={multiple ? multiple : ''}
-          onChange={() => handleFileInputChange()}
+          onChange={() =>
+            handleFileFieldChange(
+              name,
+              fileInputRef,
+              formikProps,
+              newActivityObject,
+              setFilesUploaded,
+              setNewActivityObject,
+              validateSteps,
+            )
+          }
         />
         <Typography
           color="textSecondary"
@@ -91,10 +102,8 @@ function UploadFile(props) {
           id={`${name}_file_count_el`}
         >
           {newActivityObject.mediaUpload?.fileFields[field] &&
-            selectedFilesCount(
-              field,
+            newActivityObject.mediaUpload?.fileFields[field].selectedFilesCount(
               index,
-              newActivityObject.mediaUpload,
               countFilesText,
             )}
         </Typography>
@@ -107,11 +116,18 @@ function UploadFile(props) {
               t(
                 `createActivity.inputs.activityImages.errors.${formikProps.errors[field][index]}`,
               )
-            : formikProps.touched[field] &&
-              formikProps.errors[field] &&
-              t(
+            : formikProps.touched[field] && formikProps.errors[field]
+            ? t(
                 `createActivity.inputs.activityImages.errors.${formikProps.errors[field]}`,
-              )}
+              )
+            : field === 'activityImages' &&
+              formikProps.touched[field] &&
+              newActivityObject.mediaUpload &&
+              newActivityObject.mediaUpload.fileFields[field] &&
+              Object.keys(
+                newActivityObject.mediaUpload.fileFields[field].length,
+              ).length === 0 &&
+              t(`createActivity.inputs.activityImages.errors.required`)}
         </FormHelperText>
 
         {newActivityObject.mediaUpload?.fileFields[field] && (
@@ -121,7 +137,7 @@ function UploadFile(props) {
                 index,
               ),
             ).map(([index, image]) => (
-              <Grid item key={`imagePreview${index}`} md={4} xs={6} sm={6}>
+              <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
                 <Paper
                   key={`imagePaper${index}`}
                   className={activity_classes.imagePreviewContainer}
@@ -138,6 +154,16 @@ function UploadFile(props) {
                   <CancelIcon
                     className={activity_classes.closeIcon}
                     fontSize="small"
+                    onClick={e =>
+                      setNewActivityObject(state => {
+                        let mediaUpload = state.mediaUpload;
+                        mediaUpload.fileFields[field].deleteFile(index);
+                        return {
+                          ...state,
+                          mediaUpload: mediaUpload,
+                        };
+                      })
+                    }
                   />
                   {/* <i
                     className={

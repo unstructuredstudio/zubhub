@@ -104,7 +104,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         ]
     
     def create(self, validated_data):
-        print('request body', self.context["request"].body)
+        print('request body', self.context["request"])
         print('user_from_serializer',self.context["request"].user)
         print(validated_data, 'activity_validated_data')
         inspiring_artist_data = validated_data.pop('inspiring_artist')

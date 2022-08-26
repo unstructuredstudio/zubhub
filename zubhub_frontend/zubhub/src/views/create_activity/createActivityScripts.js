@@ -54,9 +54,9 @@ const allEmpty = arr => {
   }
 };
 const imageValidationSchema = Yup.mixed()
-  .test('image_is_empty', 'image_is_empty', function (value) {
-    return !value ? false : true;
-  })
+  // .test('image_is_empty', 'image_is_empty', function (value) {
+  //   return !value ? false : true;
+  // })
   .test('not_an_image', 'onlyImages', value => isImage(value))
   .test('image_size_too_large', 'imageSizeTooLarge', value =>
     imageSizeTooLarge(value),
@@ -83,27 +83,18 @@ export const validationSchema = Yup.object().shape({
     .test('image_size_too_large', 'imageSizeTooLarge', value =>
       imageSizeTooLarge(value),
     ),
-  materialsUsedImages: Yup.mixed()
-    .test('not_an_image', 'onlyImages', value => isImage(value))
-    .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
-    .test('image_size_too_large', 'imageSizeTooLarge', value =>
-      imageSizeTooLarge(value),
-    ),
+  materialsUsedImage: Yup.lazy(value => {
+    return imageValidationSchema;
+  }),
   inspiringExemplesImages: Yup.lazy(value => {
     if (Array.isArray(value)) {
       return Yup.array().of(imageValidationSchema);
     }
     return imageValidationSchema;
   }),
-  inspiringArtistImage: Yup.mixed()
-    .test('image_is_empty', 'image_is_empty', function (value) {
-      return !value ? false : true;
-    })
-    .test('not_an_image', 'onlyImages', value => isImage(value))
-    .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
-    .test('image_size_too_large', 'imageSizeTooLarge', value =>
-      imageSizeTooLarge(value),
-    ),
+  inspiringArtistImage: Yup.lazy(value => {
+    return imageValidationSchema;
+  }),
 });
 
 export const handleInputTextFieldChange = (
@@ -120,7 +111,7 @@ export const handleInputTextFieldChange = (
   } else {
     setFieldValue(name, undefined, true);
   }
-  // setFieldTouched(name, true);
+  setFieldTouched(name, true);
 };
 
 export const handleInputTextFieldBlur = (
@@ -332,6 +323,7 @@ export const deserializeFieldsData = (
           : activity[fieldInObject.key];
         if (image !== null && image !== '') {
           mediaUpload.serializeImage(fieldName, image, 0);
+          setFieldTouched(fieldName, true, false);
         }
       } else {
         activity[fieldInObject.key].forEach((object, index) => {
@@ -340,14 +332,9 @@ export const deserializeFieldsData = (
             : object;
           if (image !== null && image !== '') {
             mediaUpload.serializeImage(fieldName, image, index);
+            setFieldTouched(`${fieldName}[${index}]`, true, false);
           }
         });
-        // if (fieldInObject.type === 'simple') {
-        //   mediaUpload.fileFields[fieldName].updateLength(
-        //     activity[fieldInObject.key].length - 1,
-        //     0,
-        //   );
-        // }
       }
     }
   });
