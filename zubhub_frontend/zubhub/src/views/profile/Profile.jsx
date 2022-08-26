@@ -136,17 +136,20 @@ function Profile(props) {
       <>
         <Box className={classes.root}>
           <Paper className={classes.profileHeaderStyle}>
-            <Container maxWidth="md">
-              {props.auth.username === profile.username ? (
+            <Container maxWidth="md"
+            style={{padding: '0 3em'}}
+            >
+              <Box className= {classes.flexClass}>
+                <Box className={classes.avatarBoxStyle}>
+                  <Avatar
+                    className={classes.avatarStyle}
+                    src={profile.avatar}
+                    alt={profile.username}
+                  />
+                  {props.auth.username === profile.username ? (
                 <>
                   <CustomButton
-                    className={classes.floatRight}
-                    onClick={e => handleSetState(handleMoreMenuOpen(e))}
-                  >
-                    <MoreVertIcon />
-                  </CustomButton>
-                  <CustomButton
-                    className={classes.floatRight}
+                    className={classes.editButton}
                     variant="contained"
                     margin="normal"
                     primaryButtonStyle
@@ -154,40 +157,10 @@ function Profile(props) {
                   >
                     {t('profile.edit')}
                   </CustomButton>
-                  <Menu
-                    className={classes.moreMenuStyle}
-                    disableScrollLock={true}
-                    id="profile_menu"
-                    anchorEl={more_anchor_el}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={more_menu_open}
-                    onClose={e => handleSetState(handleMoreMenuClose(e))}
-                  >
-                    <MenuItem>
-                      <Typography
-                        variant="subtitle2"
-                        className={common_classes.colorRed}
-                        component="span"
-                        onClick={() =>
-                          handleSetState(handleToggleDeleteAccountModal(state))
-                        }
-                      >
-                        {t('profile.delete.label')}
-                      </Typography>
-                    </MenuItem>
-                  </Menu>
                 </>
               ) : (
                 <CustomButton
-                  className={classes.floatRight}
+                  className={classes.followButton}
                   variant="outlined"
                   margin="normal"
                   secondaryButtonStyle
@@ -200,94 +173,108 @@ function Profile(props) {
                     : t('profile.follow')}
                 </CustomButton>
               )}
-              <Box className={classes.avatarBoxStyle}>
-                <Avatar
-                  className={classes.avatarStyle}
-                  src={profile.avatar}
-                  alt={profile.username}
-                />
-              </Box>
-              <Box className={classes.ProfileDetailStyle}>
-                <Typography
-                  className={classes.userNameStyle}
-                  component="h1"
-                  color="textPrimary"
-                >
-                  {profile.username}
-                </Typography>
-                <Box className={classes.tagsContainerStyle}>
-                  {sortTags(profile.tags).map(tag => (
-                    <Typography
-                      key={tag}
-                      className={clsx(common_classes.baseTagStyle, {
-                        [common_classes.extendedTagStyle]: !isBaseTag(tag),
-                      })}
-                      component="h2"
-                    >
-                      {tag}
-                    </Typography>
-                  ))}
                 </Box>
-                {props.auth.username === profile.username ? (
-                  <>
-                    <Typography className={classes.emailStyle} component="h5">
-                      {profile.email}
-                    </Typography>
-                    <Typography className={classes.emailStyle} component="h5">
-                      {profile.phone}
-                    </Typography>
-                  </>
-                ) : null}
-                <Divider className={classes.dividerStyle} />
-                <Box className={classes.moreInfoBoxStyle}>
-                  <Link
-                    className={classes.textDecorationNone}
-                    to={`/creators/${profile.username}/projects`}
+                <Box className={classes.ProfileNameStyle}>
+                  <Typography
+                    className={classes.userNameStyle}
+                    component="h1"
+                    color="textPrimary"
                   >
-                    <Typography
-                      className={classes.moreInfoStyle}
-                      component="h5"
-                    >
-                      {profile.projects_count} {t('profile.projectsCount')}
-                    </Typography>
-                  </Link>
-                  <Link
-                    to={`/creators/${profile.username}/followers`}
-                    className={classes.textDecorationNone}
-                  >
-                    <Typography
-                      className={classes.moreInfoStyle}
-                      component="h5"
-                    >
-                      {profile.followers.length} {t('profile.followersCount')}
-                    </Typography>
-                  </Link>
-                  <Link
-                    to={`/creators/${profile.username}/following`}
-                    className={classes.textDecorationNone}
-                  >
-                    <Typography
-                      className={classes.moreInfoStyle}
-                      component="h5"
-                    >
-                      {profile.following_count} {t('profile.followingCount')}
-                    </Typography>
-                  </Link>
-                  {profile.members_count !== null ? (
+                    {profile.username}
+                  </Typography>
+                  <Box className={classes.tagsContainerStyle}>
+                    {sortTags(profile.tags).map(tag => (
+                      <Typography
+                        key={tag}
+                        className={clsx(common_classes.baseTagStyle, {
+                          [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                        })}
+                        component="h2"
+                      >
+                        {tag}
+                      </Typography>
+                    ))}
+                  </Box>
+                  {props.auth.username === profile.username ? (
+                    <>
+                      <Typography className={classes.emailStyle} component="h5">
+                        {profile.email}
+                      </Typography>
+                      <Typography className={classes.emailStyle} component="h5">
+                        {profile.phone}
+                      </Typography>
+                    </>
+                  ) : null}
+                </Box> 
+                  <Box className={classes.moreInfoBoxStyle}>
                     <Link
-                      to={`/creators/${profile.username}/members`}
+                      className={classes.textDecorationNone}
+                      to={`/creators/${profile.username}/projects`}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        <div className={classes.moreInfoTitleStyle}>
+                        {t('profile.projectsCount')}
+                        </div>
+                        <div className={classes.moreInfoCountStyle}>
+                        {profile.projects_count}
+                        </div>
+                      </Typography>
+                    </Link>
+                    <Link
+                      to={`/creators/${profile.username}/followers`}
                       className={classes.textDecorationNone}
                     >
                       <Typography
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.members_count} {t('profile.membersCount')}
+                        <div className={classes.moreInfoTitleStyle}>
+                        {t('profile.followersCount')}
+                        </div>
+                        <div className={classes.moreInfoCountStyle}>
+                        {profile.followers.length} 
+                        </div>
                       </Typography>
                     </Link>
-                  ) : null}
-                </Box>
-              </Box>
+                    <Link
+                      to={`/creators/${profile.username}/following`}
+                      className={classes.textDecorationNone}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        <div className={classes.moreInfoTitleStyle}>
+                        {t('profile.followingCount')}
+                        </div>
+                        <div className={classes.moreInfoCountStyle}>
+                        {profile.following_count} 
+                        </div>
+                      </Typography>
+                    </Link>
+                    {profile.members_count !== null ? (
+                      <Link
+                        to={`/creators/${profile.username}/members`}
+                        className={classes.textDecorationNone}
+                      >
+                        <Typography
+                          className={classes.moreInfoStyle}
+                          component="h5"
+                        >
+                          <div className={classes.moreInfoTitleStyle}>
+                          {t('profile.membersCount')}
+                          </div>
+                          <div className={classes.moreInfoCountStyle}>
+                          {profile.members_count} 
+                          </div>
+                        </Typography>
+                      </Link>
+                    ) : null}
+                  </Box>
+              </Box> 
             </Container>
           </Paper>
 
