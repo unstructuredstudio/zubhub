@@ -20,8 +20,8 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class InspiringArtistSerializer(serializers.ModelSerializer):
-    image = ImageSerializer(required=False)    
-    
+    image = ImageSerializer(required=False)
+
     class Meta:
         model = InspiringArtist
         fields = [
@@ -30,55 +30,56 @@ class InspiringArtistSerializer(serializers.ModelSerializer):
             "short_biography",
             "image"
         ]
-    
-        
+
 
 class ActivityImageSerializer(serializers.ModelSerializer):
     image = ImageSerializer()
-    
+
     class Meta:
         model = ActivityImage
         fields = [
             "image"
         ]
-        
-        
+
+
 class ActivityMakingStepSerializer(serializers.ModelSerializer):
     image = ImageSerializer(required=False, allow_null=True)
     step_order = serializers.IntegerField()
-    
+
     class Meta:
-        model= ActivityMakingStep
+        model = ActivityMakingStep
         fields = [
-           "image","description","step_order"
-        ]   
-        
-        
+            "image", "description", "step_order"
+        ]
+
+
 class InspiringExampleSerializer(serializers.ModelSerializer):
-    image = ImageSerializer()   
-    
+    image = ImageSerializer()
+
     class Meta:
-        model= InspiringExample
+        model = InspiringExample
         fields = [
-           "image","description","credit"
-        ]               
+            "image", "description", "credit"
+        ]
 
 
 class ActivitySerializer(serializers.ModelSerializer):
     creators = CreatorMinimalSerializer(read_only=True, many=True)
     saved_by = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
-    images = ActivityImageSerializer(many=True, required=False, source="activity_images")
+    images = ActivityImageSerializer(
+        many=True, required=False, source="activity_images")
     category = serializers.SlugRelatedField(
         slug_field="name", queryset=Category.objects.all(), required=False)
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
     saved_count = serializers.IntegerField(read_only=True)
-    publish =  serializers.BooleanField(required=False)
+    publish = serializers.BooleanField(required=False)
     inspiring_artist = InspiringArtistSerializer(required=False)
     making_steps = ActivityMakingStepSerializer(many=True, required=False)
     inspiring_examples = InspiringExampleSerializer(many=True, required=False)
     materials_used_image = ImageSerializer(required=False)
+
     class Meta:
         model = Activity
         fields = [
@@ -102,89 +103,89 @@ class ActivitySerializer(serializers.ModelSerializer):
             "inspiring_examples",
             "materials_used_image"
         ]
-    
+
     def create(self, validated_data):
-        print('request body', self.context["request"])
-        print('user_from_serializer',self.context["request"].user)
-        print(validated_data, 'activity_validated_data')
-        inspiring_artist_data = validated_data.pop('inspiring_artist')
-        print('inspiringArtistData',inspiring_artist_data)
-        inspiring_artist_data['image'] = Image.objects.create(**inspiring_artist_data['image'])
-        
-        validated_data['inspiring_artist'] = InspiringArtist.objects.create(**inspiring_artist_data)
-        materials_used_image = validated_data['materials_used_image']
-        if(materials_used_image):
-            validated_data['materials_used_image'] = Image.objects.create(**materials_used_image)
-        activity_images  = validated_data.pop('activity_images')  
-        making_steps = validated_data.pop('making_steps')
-        inspiring_examples = validated_data.pop('inspiring_examples')
-        print('afterArtistStor', validated_data)
+        if 'inspiring_artist' in validated_data:
+            validated_data['inspiring_artist'] = create_inspiring_artist(
+                validated_data.pop('inspiring_artist'))
+        if 'materials_used_image' in validated_data:
+            validated_data['materials_used_image'] = Image.objects.create(
+                **validated_data['materials_used_image'])
+        if 'activity_images' in validated_data:
+            activity_images = validated_data.pop('activity_images')
+        if 'making_steps' in validated_data:
+            making_steps = validated_data.pop('making_steps')
+        if 'inspiring_examples' in validated_data:
+            inspiring_examples = validated_data.pop('inspiring_examples')
         activity = Activity.objects.create(**validated_data)
-        for activity_image in activity_images:
-            saved_image = Image.objects.create(**activity_image['image'])
-            ActivityImage.objects.create(activity= activity,image= saved_image)
-        for step in making_steps:
-            if(step['image']):
-                saved_image = Image.objects.create(**step['image'])
-                step['image'] = saved_image
-            ActivityMakingStep.objects.create(activity= activity,**step)
-        for example in inspiring_examples:
-            saved_image = Image.objects.create(**example['image'])
-            example['image'] = saved_image
-            InspiringExample.objects.create(activity= activity,**example)  
-        activity.creators.add(self.context["request"].user)           
+        create_making_steps(activity, making_steps)
+        create_inspiring_examples(
+            activity, inspiring_examples)
+        create_activity_images(activity, activity_images)
+        activity.creators.add(self.context["request"].user)
         return activity
-    
-    def update(self, activity,validated_data):
+
+    def update(self, activity, validated_data):
         print('activity_to_update', activity)
         print('validated_data_from_update', validated_data)
-        inspiring_artist_new = validated_data.pop('inspiring_artist')
-        inspiring_artist_old = activity.inspiring_artist
-        print('inspiring_artist_object', type(inspiring_artist_old))
-        if (inspiring_artist_old is not None or inspiring_artist_new is not None): ## no changes
-            if(inspiring_artist_old is not None):
-                if(inspiring_artist_new is not None):
-                    inspiring_artist_old.image = update_image(inspiring_artist_old.image,inspiring_artist_new['image'])
-                    print('updated image',inspiring_artist_old.image)
-                    inspiring_artist_old.name = inspiring_artist_new['name']
-                    inspiring_artist_old.short_biography = inspiring_artist_new['short_biography']
-                    inspiring_artist_old.save()
-                    print('after_inspiring_artist_update', inspiring_artist_old)
+        # if 'inspiring_artist' in validated_data:
+        #     inspiring_artist_new = validated_data.pop('inspiring_artist')
+        # inspiring_artist_old = activity.inspiring_artist
+        # print('inspiring_artist_object', type(inspiring_artist_old))
+        # no changes
+        if (activity.inspiring_artist is not None or 'inspiring_artist' in validated_data):
+            if(activity.inspiring_artist is not None):
+                if('inspiring_artist' in validated_data):
+                    # if('image' in validated_data['inspiring_artist']):
+                    activity.inspiring_artist.image = update_image(
+                        activity.inspiring_artist.image, validated_data['inspiring_artist'].get('image'))
+
+                    print('updated image', activity.inspiring_artist.image)
+                    # if 'name' in validated_data['inspiring_artist']:
+                    activity.inspiring_artist.name = validated_data['inspiring_artist'].get(
+                        'name')
+                    # if 'short_biography' in validated_data['inspiring_artist']:
+                    activity.inspiring_artist.short_biography = validated_data[
+                        'inspiring_artist'].get('short_biography')
+                    activity.inspiring_artist.save()
+                    print('after_inspiring_artist_update',
+                          activity.inspiring_artist)
                 else:
-                    inspiring_artist_old.delete()
+                    activity.inspiring_artist.delete()
                     activity.inspiring_artist = None
-            else :
-                inspiring_artist_new['image'] = Image.objects.create(**inspiring_artist_new['image'])
-                activity.inspiring_artist = InspiringArtist.objects.create(**inspiring_artist_new)    
-                print('new_artist_in_validated_data',activity)
-        if(activity.materials_used_image is not None or validated_data['materials_used_image'] is not None):
+            else:
+                if('image' in validated_data['inspiring_artist']):
+                    validated_data['inspiring_artist']['image'] = Image.objects.create(
+                        **validated_data['inspiring_artist']['image'])
+                activity.inspiring_artist = InspiringArtist.objects.create(
+                    **validated_data['inspiring_artist'])
+                print('new_artist_in_validated_data', activity)
+        if(activity.materials_used_image is not None or 'materials_used_image' in validated_data):
             if (activity.materials_used_image is None):
-                activity.materials_used_image = Image.objects.create(**validated_data['materials_used_image'])       
-            else :
-                if(validated_data['materials_used_image'] is not None):
+                activity.materials_used_image = Image.objects.create(
+                    **validated_data['materials_used_image'])
+            else:
+                if('materials_used_image' in validated_data):
                     image = {**validated_data['materials_used_image']}
                     print('image_of_materials', image)
                     activity.materials_used_image.file_url = image['file_url']
                     activity.materials_used_image.public_id = image['public_id']
                     activity.materials_used_image.save()
-                else:    
+                else:
                     activity.materials_used_image.delete()
                     activity.materials_used_image = None
-                    
-        update_activity_images(activity, validated_data.pop('activity_images'))
-        update_making_steps(activity, validated_data.pop('making_steps'))
-        update_inspiring_examples(activity , validated_data.pop('inspiring_examples')) 
+        if 'activity_images' in validated_data:
+            update_activity_images(
+                activity, validated_data.pop('activity_images'))
+        if 'making_steps' in validated_data:
+            update_making_steps(activity, validated_data.pop('making_steps'))
+        update_inspiring_examples(
+            activity, validated_data.pop('inspiring_examples'))
         activity.title = validated_data.pop('title')
         activity.motivation = validated_data.pop('motivation')
         activity.facilitation_tips = validated_data.pop('facilitation_tips')
         activity.learning_goals = validated_data.pop('learning_goals')
         activity.materials_used = validated_data.pop('materials_used')
-        activity.video = validated_data.pop('video')  
-        activity.save()     
+        activity.video = validated_data.pop('video')
+        activity.save()
         return activity
-    
-
-
-    
-
-   

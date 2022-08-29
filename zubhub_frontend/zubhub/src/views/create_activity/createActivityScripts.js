@@ -121,12 +121,12 @@ export const handleInputTextFieldBlur = (
   setInputTextFieldFocused,
   validateSteps,
 ) => {
-  validateSteps();
   setNewActivityObject(newActivity => ({
     ...newActivity,
     [name]: formikValues[name],
   }));
   setInputTextFieldFocused(false);
+  validateSteps();
 };
 
 //////////////// serialize activity object to the expected format in backend /////////////////////////
@@ -173,15 +173,20 @@ const combineMakingStepsData = (descriptions, urls) => {
 
 const combineInspiringArtistData = (state, mediaUpload) => {
   let inspiringArtist = {};
-  inspiringArtist['name'] = state['inspiringArtistFullName']
-    ? state['inspiringArtistFullName']
-    : '';
-  inspiringArtist['short_biography'] = state['inspiringArtist']
-    ? state['inspiringArtist']
-    : '';
-  inspiringArtist['image'] = fieldHasUrls(mediaUpload, 'inspiringArtistImage')
-    ? getFieldUrls(mediaUpload, 'inspiringArtistImage')[0]
-    : null;
+  if (state['inspiringArtistFullName']) {
+    inspiringArtist['name'] = state['inspiringArtistFullName'];
+  }
+  if (state['inspiringArtist']) {
+    inspiringArtist['short_biography'] = state['inspiringArtist'];
+  }
+  //: '';
+  if (fieldHasUrls(mediaUpload, 'inspiringArtistImage')) {
+    inspiringArtist['image'] = getFieldUrls(
+      mediaUpload,
+      'inspiringArtistImage',
+    )[0];
+  }
+  // : null;
   return inspiringArtist;
 };
 
@@ -197,17 +202,19 @@ const refactorFieldsData = (state, mediaUpload) => {
   createActivityArgs['video'] = fieldHasUrls(mediaUpload, 'video')
     ? getFieldUrls(mediaUpload, 'video')[0]
     : '';
-  createActivityArgs['materials_used_image'] = fieldHasUrls(
-    mediaUpload,
-    'materialsUsedImage',
-  )
-    ? getFieldUrls(mediaUpload, 'materialsUsedImage')[0]
-    : null;
-  createActivityArgs['images'] = fieldHasUrls(mediaUpload, 'activityImages')
-    ? Object.values(getFieldUrls(mediaUpload, 'activityImages')).map(image => ({
-        image: image,
-      }))
-    : null;
+  if (fieldHasUrls(mediaUpload, 'materialsUsedImage')) {
+    createActivityArgs['materials_used_image'] = getFieldUrls(
+      mediaUpload,
+      'materialsUsedImage',
+    )[0];
+  }
+  if (fieldHasUrls(mediaUpload, 'activityImages')) {
+    createActivityArgs['images'] = Object.values(
+      getFieldUrls(mediaUpload, 'activityImages'),
+    ).map(image => ({
+      image: image,
+    }));
+  }
   createActivityArgs['making_steps'] = combineMakingStepsData(
     state.creationSteps,
     getFieldUrls(mediaUpload, 'makingStepsImages'),
@@ -217,10 +224,16 @@ const refactorFieldsData = (state, mediaUpload) => {
     state.inspiringExemplesCredits,
     getFieldUrls(mediaUpload, 'inspiringExemplesImages'),
   );
-  createActivityArgs['inspiring_artist'] = combineInspiringArtistData(
-    state,
-    mediaUpload,
-  );
+  if (Object.keys(combineInspiringArtistData(state, mediaUpload)).length > 0) {
+    console.log(
+      'artist not empty',
+      combineInspiringArtistData(state, mediaUpload),
+    );
+    createActivityArgs['inspiring_artist'] = combineInspiringArtistData(
+      state,
+      mediaUpload,
+    );
+  }
   console.log('refactor args', createActivityArgs);
   return createActivityArgs;
 };
@@ -374,8 +387,11 @@ export const deleteActivity = (token, id) => {
   API.deleteActivity({ token: token, id: id });
 };
 
-export const initUpload = async (e, state, props, handleSetState) => {
+export const initUpload = async (e, state, props, handleSetState, history) => {
   e.preventDefault();
+  handleSetState(state => {
+    return { ...state, ['submitting']: true };
+  });
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
@@ -397,6 +413,10 @@ export const initUpload = async (e, state, props, handleSetState) => {
     if (!state.id) {
       const apiResponse = await API.createActivity(props.auth.token, args);
       console.log('api response', apiResponse);
+      handleSetState(state => {
+        return { ...state, ['submitting']: false };
+      });
+      return props.history.push('/activities/all/');
     } else {
       const apiResponse = await API.updateActivity(
         props.auth.token,
@@ -404,6 +424,10 @@ export const initUpload = async (e, state, props, handleSetState) => {
         args,
       );
       console.log('api response', apiResponse);
+      handleSetState(state => {
+        return { ...state, ['submitting']: false };
+      });
+      return props.history.push('/activities/all/');
     }
   }
 };

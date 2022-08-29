@@ -197,11 +197,10 @@ export const handleFileFieldChange = (
   newActivityObject,
   setFilesUploaded,
   setNewActivityObject,
-  validateSteps
+  validateSteps,
 ) => {
-  formikProps.setFieldTouched(name, true);
   const { field, index } = getFieldAndIndex(name);
-
+  formikProps.setFieldTouched(name, true);
   // initialize media upload objects
   let mediaUpload = newActivityObject['mediaUpload']
     ? newActivityObject['mediaUpload']

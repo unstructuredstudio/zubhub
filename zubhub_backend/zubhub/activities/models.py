@@ -25,7 +25,7 @@ class InspiringArtist(models.Model):
                                 on_delete=models.CASCADE,
                                 null=True,
                                 blank=True)
-    short_biography = models.TextField(max_length=10000, blank=True)
+    short_biography = models.TextField(max_length=10000, blank=True, null= True)
     name = models.CharField(max_length=100)
 
     def __str__(self):

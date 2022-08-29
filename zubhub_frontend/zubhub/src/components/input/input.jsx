@@ -67,9 +67,7 @@ function Input(props) {
               validateSteps,
             )
           }
-          onChange={e =>
-            handleInputChange(e, formikProps, field, setNewActivityObject)
-          }
+          onChange={e => formikProps.handleChange(e)}
         />
 
         {/* <TextField

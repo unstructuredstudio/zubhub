@@ -37,8 +37,10 @@ function CreateActivityStep3(props) {
     newActivityObject.mediaUpload?.fileFields.inspiringExemplesImages
       ? [
           ...Array(
-            newActivityObject.mediaUpload.fileFields.inspiringExemplesImages
-              .length.length,
+            Object.keys(
+              newActivityObject.mediaUpload.fileFields.inspiringExemplesImages
+                .length,
+            ).length,
           ),
         ]
       : [''],
