@@ -262,6 +262,11 @@ export const handleFileFieldChange = (
 };
 
 export const getErrors = (route, field, index, errors, touched) => {
+  // if (route && errors[route] && typeof touched[route] === 'boolean') {
+  //   console.log('route has error triggered', route, field);
+  //   return errors[route];
+  // }
+
   return route
     ? index < 0
       ? errors[route] &&

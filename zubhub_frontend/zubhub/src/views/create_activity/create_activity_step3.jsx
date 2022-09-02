@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import InputText from '../../components/inputText/inputText';
 import 'react-toastify/dist/ReactToastify.css';
 import { vars } from '../create_project/createProjectScripts';
+import { getMakingStepsRequiredError } from './createActivityScripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, FormControl, Box, Typography } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
@@ -153,7 +154,26 @@ function CreateActivityStep3(props) {
               label={t('createActivity.inputs.creationSteps.addMore')}
             />
           </Grid>
+          <Typography
+            variant="h10"
+            className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}
+          >
+            {getMakingStepsRequiredError(
+              'making_steps',
+              formikProps.errors,
+              formikProps.touched,
+            )
+              ? t(
+                  `createActivity.inputs.making_steps.errors.${getMakingStepsRequiredError(
+                    'making_steps',
+                    formikProps.errors,
+                    formikProps.touched,
+                  )}`,
+                )
+              : ''}
+          </Typography>
         </Grid>
+
         <Grid
           item
           xs={12}

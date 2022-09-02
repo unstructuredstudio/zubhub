@@ -23,7 +23,7 @@ function Input(props) {
     setNewActivityObject,
   } = props;
   const { route, field, index } = getRouteFieldIndex(name);
-  console.log('input route field index',route, field, index)
+
   // console.log(
   //   'from input field',
   //   field,

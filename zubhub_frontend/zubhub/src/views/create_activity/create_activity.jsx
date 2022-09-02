@@ -53,7 +53,7 @@ function CreateActivity(props) {
     handleBlur: props.handleBlur,
   };
 
-  const requireFieldByStep = [
+  const requiredFieldsByStep = [
     ['title', 'motivation', 'learning_goals'],
     ['materials_used', 'facilitation_tips', 'activity_images'],
     ['making_steps'],
@@ -61,9 +61,9 @@ function CreateActivity(props) {
   const validateSteps = () => {
     let stepVerified = true;
     //props.validateForm();
-    for (let i = 0; i < requireFieldByStep.length; i++) {
+    for (let i = 0; i < requiredFieldsByStep.length; i++) {
       stepVerified = true;
-      requireFieldByStep[i].map(field => {
+      requiredFieldsByStep[i].map(field => {
         if (props.errors[field]) {
           stepVerified = false;
           setVerifiedStep(i + 1);
@@ -128,13 +128,21 @@ function CreateActivity(props) {
   //     submitButtonRef.current.click();
   //   }
   // }, [readyForSubmit]);
-  console.log('state', newActivityObject);
+  console.log('state', props, newActivityObject);
   const visitePrev = () => {
     setStep(step => step - 1);
   };
   const visiteNext = () => {
     //validateSteps();
-    setStep(step => step + 1);
+    setStep(step => {
+      if (step === 1) {
+        requiredFieldsByStep[0].map(item => props.setFieldTouched(item));
+      } else {
+        requiredFieldsByStep[1].map(item => props.setFieldTouched(item));
+        props.setFieldTouched('making_steps');
+      }
+      return step + 1;
+    });
   };
 
   return (

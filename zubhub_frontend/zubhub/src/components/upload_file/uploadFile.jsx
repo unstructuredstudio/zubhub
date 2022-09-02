@@ -42,12 +42,6 @@ function UploadFile(props) {
   const { route, field, index } = getRouteFieldIndex(name);
   const fileInputRef = React.useRef(null);
   const [filesUploaded, setFilesUploaded] = useState(false);
-  console.log(
-    'upload file route , subname, field , index',
-    route,
-    field,
-    index,
-  );
   let fieldErrors = null;
   // const handleFileInputChange = () => {
   //   //if (fileType === 'image/*'){

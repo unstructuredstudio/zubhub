@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -15,7 +15,7 @@ import {
   ClickAwayListener,
 } from '@material-ui/core';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
-
+import { getErrors } from '../upload_file/uploadFileScripts';
 function InputText(props) {
   const {
     classes,
@@ -27,10 +27,22 @@ function InputText(props) {
     formikProps,
     newActivityObject,
     vars,
+    t,
   } = props;
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
   const { route, field, index } = getRouteFieldIndex(name);
-  console.log('inputText route field index', route, field, index);
+  let fieldErrors = '';
+  // useEffect(() => {
+  //     fieldErrors = getErrors(
+  //     route,
+  //     field,
+  //     index,
+  //     formikProps.errors,
+  //     formikProps.touched,
+  //   );
+  //   console.log('input text getErrors', fieldErrors);
+  // }, []);
+
   return (
     <div>
       <Typography
@@ -72,15 +84,6 @@ function InputText(props) {
             modules={vars.quill.modules}
             formats={vars.quill.formats}
             placeholder={placeholder ? placeholder : ''}
-            // defaultValue={
-            //   // fieldType.simple
-            //   //   ? fieldType.array
-            //   //     ? formikProps.formikValues[field][index]
-            //   //     : formikProps.formikValues[field]
-            //   //   : fieldType.array
-            //   //   ? formikProps.formikValues[route][field][index]
-            //   //   : formikProps.formikValues[route][field]
-            // }
             onChange={value =>
               handleInputTextFieldChange(
                 name,
@@ -93,7 +96,19 @@ function InputText(props) {
           />
         </ClickAwayListener>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {index >= null
+          {
+            (fieldErrors = getErrors(
+              route,
+              field,
+              index,
+              formikProps.errors,
+              formikProps.touched,
+            ))
+          }
+          {fieldErrors
+            ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
+            : ''}
+          {/* {index >= null
             ? formikProps.touched[field] &&
               formikProps.touched[field][index] &&
               formikProps.errors[field] &&
@@ -105,7 +120,7 @@ function InputText(props) {
               formikProps.errors[field] &&
               props.t(
                 `createActivity.inputs.${field}.errors.${formikProps.errors[field]}`,
-              )}
+              )} */}
         </FormHelperText>
       </FormControl>
     </div>

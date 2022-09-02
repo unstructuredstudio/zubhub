@@ -69,9 +69,9 @@ const imageValidationSchema = Yup.mixed()
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
   motivation: Yup.string().max(10000, 'max').required('required'),
-  learningGoals: Yup.string().max(10000, 'max').required('required'),
-  facilitationTips: Yup.string().max(10000, 'max').required('required'),
-  makingSteps: Yup.array()
+  learning_goals: Yup.string().max(10000, 'max').required('required'),
+  facilitation_tips: Yup.string().max(10000, 'max').required('required'),
+  making_steps: Yup.array()
     .of(
       Yup.object().shape({
         description: Yup.string().max(10000, 'max'),
@@ -84,7 +84,7 @@ export const validationSchema = Yup.object().shape({
       message: 'required1',
       test: arr => allEmpty(arr),
     }),
-  inspiringArtist: Yup.object().shape({
+  inspiring_artist: Yup.object().shape({
     name: Yup.string().max(100, 'max'),
     short_biography: Yup.string().max(10000, 'max'),
     image: Yup.lazy(value => {
@@ -92,7 +92,7 @@ export const validationSchema = Yup.object().shape({
     }),
   }),
 
-  inspiringExamples: Yup.array().of(
+  inspiring_examples: Yup.array().of(
     Yup.object().shape({
       description: Yup.string().max(1000, 'max'),
       credit: Yup.string().max(100, 'max'),
@@ -102,19 +102,23 @@ export const validationSchema = Yup.object().shape({
     }),
   ),
 
-  materialsUsed: Yup.array()
+  materials_used: Yup.array()
     .of(Yup.string().max(100, 'max'))
     .test({
       message: 'required1',
       test: arr => allEmpty(arr),
     }),
-  activityImages: Yup.mixed()
+  activity_images: Yup.mixed()
     .test('not_an_image', 'onlyImages', value => isImage(value))
     .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
     .test('image_size_too_large', 'imageSizeTooLarge', value =>
       imageSizeTooLarge(value),
-    ),
-  materialsUsedImage: Yup.lazy(value => {
+    )
+    .test({
+      message: 'required1',
+      test: arr => allEmpty(arr),
+    }),
+  materials_used_image: Yup.lazy(value => {
     return imageValidationSchema;
   }),
 
@@ -158,6 +162,13 @@ export const handleInputTextFieldBlur = (
   }));
   setInputTextFieldFocused(false);
   validateSteps();
+};
+
+export const getMakingStepsRequiredError = (route, errors, touched) => {
+  if (route && errors[route] && typeof touched[route] === 'boolean') {
+    console.log('route has error triggered', route);
+    return errors[route];
+  }
 };
 
 //////////////// serialize activity object to the expected format in backend /////////////////////////
@@ -221,53 +232,53 @@ const combineInspiringArtistData = (state, mediaUpload) => {
   return inspiringArtist;
 };
 
-const refactorFieldsData = (state, mediaUpload) => {
-  const createActivityArgs = {};
-  createActivityArgs['title'] = state.title;
-  createActivityArgs['motivation'] = state.motivation;
-  createActivityArgs['learning_goals'] = state.learningGoals;
-  createActivityArgs['materials_used'] = state.materialsUsed
-    ? state.materialsUsed.join(',')
-    : '';
-  createActivityArgs['facilitation_tips'] = state.facilitationTips;
-  createActivityArgs['video'] = fieldHasUrls(mediaUpload, 'video')
-    ? getFieldUrls(mediaUpload, 'video')[0]
-    : '';
-  if (fieldHasUrls(mediaUpload, 'materialsUsedImage')) {
-    createActivityArgs['materials_used_image'] = getFieldUrls(
-      mediaUpload,
-      'materialsUsedImage',
-    )[0];
-  }
-  if (fieldHasUrls(mediaUpload, 'activityImages')) {
-    createActivityArgs['images'] = Object.values(
-      getFieldUrls(mediaUpload, 'activityImages'),
-    ).map(image => ({
-      image: image,
-    }));
-  }
-  createActivityArgs['making_steps'] = combineMakingStepsData(
-    state.creationSteps,
-    getFieldUrls(mediaUpload, 'makingStepsImages'),
-  );
-  createActivityArgs['inspiring_examples'] = combineInspiringExamplesData(
-    state.inspiringExemplesDescriptions,
-    state.inspiringExemplesCredits,
-    getFieldUrls(mediaUpload, 'inspiringExemplesImages'),
-  );
-  if (Object.keys(combineInspiringArtistData(state, mediaUpload)).length > 0) {
-    console.log(
-      'artist not empty',
-      combineInspiringArtistData(state, mediaUpload),
-    );
-    createActivityArgs['inspiring_artist'] = combineInspiringArtistData(
-      state,
-      mediaUpload,
-    );
-  }
-  console.log('refactor args', createActivityArgs);
-  return createActivityArgs;
-};
+// const refactorFieldsData = (state, mediaUpload) => {
+//   const createActivityArgs = {};
+//   createActivityArgs['title'] = state.title;
+//   createActivityArgs['motivation'] = state.motivation;
+//   createActivityArgs['learning_goals'] = state.learningGoals;
+//   createActivityArgs['materials_used'] = state.materialsUsed
+//     ? state.materialsUsed.join(',')
+//     : '';
+//   createActivityArgs['facilitation_tips'] = state.facilitationTips;
+//   createActivityArgs['video'] = fieldHasUrls(mediaUpload, 'video')
+//     ? getFieldUrls(mediaUpload, 'video')[0]
+//     : '';
+//   if (fieldHasUrls(mediaUpload, 'materialsUsedImage')) {
+//     createActivityArgs['materials_used_image'] = getFieldUrls(
+//       mediaUpload,
+//       'materialsUsedImage',
+//     )[0];
+//   }
+//   if (fieldHasUrls(mediaUpload, 'activityImages')) {
+//     createActivityArgs['images'] = Object.values(
+//       getFieldUrls(mediaUpload, 'activityImages'),
+//     ).map(image => ({
+//       image: image,
+//     }));
+//   }
+//   createActivityArgs['making_steps'] = combineMakingStepsData(
+//     state.creationSteps,
+//     getFieldUrls(mediaUpload, 'makingStepsImages'),
+//   );
+//   createActivityArgs['inspiring_examples'] = combineInspiringExamplesData(
+//     state.inspiringExemplesDescriptions,
+//     state.inspiringExemplesCredits,
+//     getFieldUrls(mediaUpload, 'inspiringExemplesImages'),
+//   );
+//   if (Object.keys(combineInspiringArtistData(state, mediaUpload)).length > 0) {
+//     console.log(
+//       'artist not empty',
+//       combineInspiringArtistData(state, mediaUpload),
+//     );
+//     createActivityArgs['inspiring_artist'] = combineInspiringArtistData(
+//       state,
+//       mediaUpload,
+//     );
+//   }
+//   console.log('refactor args', createActivityArgs);
+//   return createActivityArgs;
+// };
 
 ///////////////////////////////// deserialize activity object to be displayed for update in form fields //////////////////////
 
