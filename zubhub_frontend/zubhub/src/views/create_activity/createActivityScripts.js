@@ -10,11 +10,26 @@ const API = new ZubhubAPI();
 // ^/file validation functions
 const isImage = value => {
   if (value) {
+    console.log('value from validations', value);
     let not_an_image = false;
-    for (let index = 0; index < value.length; index++) {
-      if (value[index]) {
-        if (value[index].type.split('/')[0] !== 'image') {
-          not_an_image = true;
+    if (value['length']) {
+      for (let index = 0; index < value.length; index++) {
+        console.log('value from validations array ', value);
+        if (value[index]) {
+          if (!value[index]['file_url']) {
+            if (value[index].type.split('/')[0] !== 'image') {
+              not_an_image = true;
+            }
+          }
+        }
+      }
+    } else {
+      if (value) {
+        console.log('value from validations not array', value);
+        if (!value['file_url']) {
+          if (value.type.split('/')[0] !== 'image') {
+            not_an_image = true;
+          }
         }
       }
     }
@@ -31,10 +46,12 @@ const tooManyImages = value => {
 const imageSizeTooLarge = value => {
   if (value) {
     let image_size_too_large = false;
-    for (let index = 0; index < value.length; index++) {
-      if (value[index]) {
-        if (value[index].size / 1000 > 10240) {
-          image_size_too_large = true;
+    if (!value['file_url']) {
+      for (let index = 0; index < value.length; index++) {
+        if (value[index]) {
+          if (value[index].size / 1000 > 10240) {
+            image_size_too_large = true;
+          }
         }
       }
     }
@@ -116,7 +133,11 @@ export const validationSchema = Yup.object().shape({
     )
     .test({
       message: 'required1',
-      test: arr => allEmpty(arr),
+      test: arr => {
+        if (arr) {
+          return arr.length > 0;
+        }
+      },
     }),
   materials_used_image: Yup.lazy(value => {
     return imageValidationSchema;
@@ -166,7 +187,6 @@ export const handleInputTextFieldBlur = (
 
 export const getMakingStepsRequiredError = (route, errors, touched) => {
   if (route && errors[route] && typeof touched[route] === 'boolean') {
-    console.log('route has error triggered', route);
     return errors[route];
   }
 };
@@ -201,8 +221,6 @@ const combineInspiringExamplesData = (descriptions, credits, urls) => {
 
 const combineMakingStepsData = (descriptions, urls) => {
   let makingSteps = [];
-  console.log('descriptions and urls,', descriptions, urls);
-
   descriptions?.forEach((item, index) => {
     let step = {};
     step['image'] = urls[index] ? urls[index] : null;
@@ -362,68 +380,147 @@ const mediaFieldMap = {
   },
 };
 
-export const deserializeFieldsData = (
-  activity,
-  setFieldValue,
-  setFieldTouched,
-) => {
-  let state = {};
-  let mediaUpload = new MediaUpload();
+const activityFieldMap = [
+  'facilitation_tips',
+  'learning_goals',
+  'materials_used',
+  'materials_used_image',
+  'motivation',
+  'title',
+  'video',
+];
+//   facilitation_tips:
+//   //images:'activity_images',
+//   //inspiring_artist: 'inspiring_artist',
+//  // inspiring_examples: 'inspiring_examples',
+//   learning_goals:
+//   //making_steps: 'making_steps',
+//   materials_used:
+//   materials_used_image:
+//   motivation:
+//   title:
+//   video:
+// }
 
-  Object.entries(mediaFieldMap).forEach(([fieldName, fieldInObject]) => {
-    if (activity[fieldInObject.key]) {
-      if (fieldInObject.count === 'single') {
-        let image = fieldInObject.subKey
-          ? activity[fieldInObject.key][fieldInObject.subKey]
-          : activity[fieldInObject.key];
-        if (image !== null && image !== '') {
-          mediaUpload.serializeImage(fieldName, image, 0);
-          setFieldTouched(fieldName, true, false);
-        }
-      } else {
-        activity[fieldInObject.key].forEach((object, index) => {
-          let image = fieldInObject.subKey
-            ? object[fieldInObject.subKey]
-            : object;
-          if (image !== null && image !== '') {
-            mediaUpload.serializeImage(fieldName, image, index);
-            setFieldTouched(`${fieldName}[${index}]`, true, false);
-          }
-        });
-      }
-    }
-  });
-
-  Object.entries(simpleFieldsMap).forEach(([key, value]) => {
-    if (activity[value.key]) {
-      if (value.type === 'simple') {
-        if (value.subKey) {
-          state[key] = activity[value.key][value.subKey];
-          setFieldValue(key, activity[value.key][value.subKey], false);
-          // setFieldTouched(key, true);
+export const deserialize = (activity, setFieldValue) => {
+  if (activity['making_steps']) {
+    activity['making_steps'].forEach((item, index) => {
+      Object.entries(item).forEach(([key, value]) => {
+        if (value === null) {
+          setFieldValue(`making_steps[${index}][${key}]`, undefined);
         } else {
-          state[key] = activity[value.key];
-          setFieldValue(key, activity[value.key], false);
-          // setFieldTouched(key, true);
+          setFieldValue(`making_steps[${index}][${key}]`, value);
         }
+      });
+    });
+  }
+
+  if (activity['inspiring_examples']) {
+    activity['inspiring_examples'].forEach((item, index) => {
+      Object.entries(item).forEach(([key, value]) => {
+        if (value === null) {
+          setFieldValue(`inspiring_examples[${index}][${key}]`, undefined);
+        } else {
+          setFieldValue(`inspiring_examples[${index}][${key}]`, value);
+        }
+      });
+    });
+  }
+
+  if (activity['images']) {
+    let images = [];
+    activity['images'].forEach((item, index) => {
+      Object.entries(item).forEach(([key, value]) => {
+        images.push(value);
+      });
+    });
+    setFieldValue('activity_images', images);
+  }
+
+  if (activity['inspiring_artist']) {
+    Object.entries(activity['inspiring_artist']).forEach(([key, value]) => {
+      if (value === null) {
+        setFieldValue(`inspiring_artist[${key}]`, undefined);
       } else {
-        state[key] = [];
-        activity[value.key].forEach((item, index) => {
-          state[key][index] = item[value.subKey];
-          setFieldValue(`${key}[${index}]`, item[value.subKey], false);
-          // setFieldTouched(`${key}[${index}]`, true);
-        });
+        setFieldValue(`inspiring_artist[${key}]`, value);
+      }
+    });
+  }
+
+  activityFieldMap.forEach(item => {
+    if (activity[item] !== null) {
+      if (item === 'materials_used') {
+        setFieldValue('materials_used', activity['materials_used'].split(','));
+      } else {
+        setFieldValue(item, activity[item]);
       }
     }
   });
-
-  state['materialsUsed'] = activity['materials_used'].split(',');
-  state['materialsUsed'].forEach((value, index) => {
-    setFieldValue(`materialsUsed[${index}]`, value, false);
-  });
-  state['mediaUpload'] = mediaUpload;
-  return state;
+  setFieldValue(`id`, activity.id, false);
 };
+
+// export const deserializeFieldsData = (
+//   activity,
+//   setFieldValue,
+//   setFieldTouched,
+// ) => {
+//   let state = {};
+//   let mediaUpload = new MediaUpload();
+
+//   Object.entries(mediaFieldMap).forEach(([fieldName, fieldInObject]) => {
+//     if (activity[fieldInObject.key]) {
+//       if (fieldInObject.count === 'single') {
+//         let image = fieldInObject.subKey
+//           ? activity[fieldInObject.key][fieldInObject.subKey]
+//           : activity[fieldInObject.key];
+//         if (image !== null && image !== '') {
+//           mediaUpload.serializeImage(fieldName, image, 0);
+//           setFieldTouched(fieldName, true, false);
+//         }
+//       } else {
+//         activity[fieldInObject.key].forEach((object, index) => {
+//           let image = fieldInObject.subKey
+//             ? object[fieldInObject.subKey]
+//             : object;
+//           if (image !== null && image !== '') {
+//             mediaUpload.serializeImage(fieldName, image, index);
+//             setFieldTouched(`${fieldName}[${index}]`, true, false);
+//           }
+//         });
+//       }
+//     }
+//   });
+
+//   Object.entries(simpleFieldsMap).forEach(([key, value]) => {
+//     if (activity[value.key]) {
+//       if (value.type === 'simple') {
+//         if (value.subKey) {
+//           state[key] = activity[value.key][value.subKey];
+//           setFieldValue(key, activity[value.key][value.subKey], false);
+//           // setFieldTouched(key, true);
+//         } else {
+//           state[key] = activity[value.key];
+//           setFieldValue(key, activity[value.key], false);
+//           // setFieldTouched(key, true);
+//         }
+//       } else {
+//         state[key] = [];
+//         activity[value.key].forEach((item, index) => {
+//           state[key][index] = item[value.subKey];
+//           setFieldValue(`${key}[${index}]`, item[value.subKey], false);
+//           // setFieldTouched(`${key}[${index}]`, true);
+//         });
+//       }
+//     }
+//   });
+
+//   state['materialsUsed'] = activity['materials_used'].split(',');
+//   state['materialsUsed'].forEach((value, index) => {
+//     setFieldValue(`materialsUsed[${index}]`, value, false);
+//   });
+//   state['mediaUpload'] = mediaUpload;
+//   return state;
+// };
 
 export const deleteActivity = (token, id) => {
   API.deleteActivity({ token: token, id: id });
@@ -464,7 +561,6 @@ export const initUpload = async (
       handleSetState,
       formikProps.formikValues,
     );
-    console.log(uploadedMediaPromises);
 
     const result = await Promise.all(uploadedMediaPromises);
     console.log('result of upload', result);
@@ -540,7 +636,10 @@ export const initUpload = async (
           // );
           handleSetState(state => {
             let field = state.values[each.route];
-            field[each.index][each.field] = each.url;
+            field[each.index] = {
+              ...field[each.index],
+              [each.field]: each.url,
+            };
             return {
               ...state,
               ['values']: {
@@ -558,15 +657,38 @@ export const initUpload = async (
     });
 
     handleSetState(async state => {
-      const apiResponse = await API.createActivity(
-        props.auth.token,
-        state.values,
-      );
-      console.log('apiresponse', apiResponse);
-      if (apiResponse) {
-        return props.history.push('/activities/all/');
+      if (props.values.id) {
+        let field = [];
+        Array.isArray(state.values.activity_images)
+          ? state.values.activity_images.forEach(image => {
+              field.push({ image: image });
+            })
+          : Object.entries(state.values.activity_images).forEach(
+              ([key, image]) => {
+                field.push({ image: image });
+              },
+            );
+        let values = { ...state.values, ['activity_images']: field };
+        console.log('edit');
+        const apiResponse = await API.updateActivity(
+          props.auth.token,
+          props.values.id,
+          values,
+        );
+        console.log('apiresponse', apiResponse);
+        if (apiResponse) {
+          return props.history.push('/activities/all/');
+        }
+      } else {
+        const apiResponse = await API.createActivity(
+          props.auth.token,
+          state.values,
+        );
+        console.log('apiresponse', apiResponse);
+        if (apiResponse) {
+          return props.history.push('/activities/all/');
+        }
       }
-
       return { ...state, ['submitting']: false };
     });
 

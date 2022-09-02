@@ -8,13 +8,11 @@ const useStyles = makeStyles(style);
 
 function Creator(props) {
   const { creator, top } = props;
-  console.log('creator of activity', creator);
+
   const classes = useStyles();
   return (
     <Box className={classes.creatorImageBox} style={{ top: top }}>
-      <Link
-        to={`/creators/${creator.username}`}
-      >
+      <Link to={`/creators/${creator.username}`}>
         <img
           className={classes.creatorImage}
           src={creator.avatar}

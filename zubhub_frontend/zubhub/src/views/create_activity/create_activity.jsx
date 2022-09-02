@@ -11,6 +11,7 @@ import {
   initUpload,
   refactorNewActivityObject,
   deserializeFieldsData,
+  deserialize,
   create,
 } from './createActivityScripts';
 
@@ -97,27 +98,13 @@ function CreateActivity(props) {
   const submitButtonRef = React.useRef(null);
   const [readyForSubmit, setReadyForSubmit] = useState(false);
   useEffect(() => {
-    console.log('ref', submitButtonRef);
-    // if (readyForSubmit) {
-    //   submitButtonRef.current.click();
-    // }
     if (id) {
       const activityToUpdate = props.activities?.all_activities.filter(
         item => item.id === id,
       )[0];
-      setNewActivityObject(state => {
-        const args = deserializeFieldsData(
-          activityToUpdate,
-          formikProps.setFieldValue,
-          formikProps.setFieldTouched,
-        );
-        return {
-          ...state,
-          id: id,
-          ...args,
-        };
-      });
-      validateSteps();
+      deserialize(activityToUpdate, props.setFieldValue);
+
+      //validateSteps();
       setDeserializingForEdit(false);
     }
   }, []);
@@ -128,6 +115,7 @@ function CreateActivity(props) {
   //     submitButtonRef.current.click();
   //   }
   // }, [readyForSubmit]);
+  
   console.log('state', props, newActivityObject);
   const visitePrev = () => {
     setStep(step => step - 1);
@@ -136,10 +124,14 @@ function CreateActivity(props) {
     //validateSteps();
     setStep(step => {
       if (step === 1) {
-        requiredFieldsByStep[0].map(item => props.setFieldTouched(item));
+        requiredFieldsByStep[0].map(item =>
+          props.setFieldTouched(item, true, false),
+        );
       } else {
-        requiredFieldsByStep[1].map(item => props.setFieldTouched(item));
-        props.setFieldTouched('making_steps');
+        requiredFieldsByStep[1].map(item =>
+          props.setFieldTouched(item, true, false),
+        );
+        props.setFieldTouched('making_steps', true, false);
       }
       return step + 1;
     });

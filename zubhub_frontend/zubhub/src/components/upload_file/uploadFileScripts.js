@@ -211,7 +211,7 @@ export const handleFileFieldChange = (
   let selectedFiles = {};
 
   selectedFiles = fileInputRef.current.files;
-  console.log('handle change uploadFile', name, selectedFiles);
+
   if (selectedFiles.length > 0) {
     formikProps.setFieldValue(name, selectedFiles).then(errors => {
       route
@@ -293,16 +293,23 @@ export const getErrors = (route, field, index, errors, touched) => {
 export const imagesToPreview = files => {
   let imagesToPreview = {};
   if (files) {
-    Object.entries(files).map(([index, value]) => {
-      if (index !== 'length') {
-        imagesToPreview[index] =
-          typeof value === 'string'
-            ? { image: value, type: 'url' }
-            : { image: value, type: 'file' };
-      }
-    });
-    console.log('images to preview', imagesToPreview);
+    if (files['length']) {
+      Object.entries(files).map(([index, value]) => {
+        if (index !== 'length') {
+          imagesToPreview[index] =
+            value instanceof Blob
+              ? { image: value, type: 'file' }
+              : { image: value, type: 'url' };
+        }
+      });
+    } else {
+      imagesToPreview['0'] =
+        files instanceof Blob
+          ? { image: files, type: 'file' }
+          : { image: files, type: 'url' };
+    }
   }
+  console.log('images to preview', imagesToPreview);
   return imagesToPreview;
 };
 
@@ -375,12 +382,14 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
         getFilesFromNested(formikValues['inspiring_examples']),
     },
   ];
-  console.log('filefields from upload', fileFields);
+
   let totalSize = 0;
   fileFields.map(item => {
     if (item.files) {
+      console.log('FORMMEDIAUPLOAD', item.files);
       Object.entries(item.files).forEach(([index, file]) => {
-        if (index !== 'length' && typeof file !== 'string') {
+        console.log('FORMMEDIAUPLOAD file', file);
+        if (index !== 'length' && file instanceof Blob) {
           totalSize += file.size;
           promises.push(
             uploadFile(
