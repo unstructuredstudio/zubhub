@@ -105,23 +105,28 @@ class ActivitySerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        print('validated_data===>', validated_data)
         if 'inspiring_artist' in validated_data:
             validated_data['inspiring_artist'] = create_inspiring_artist(
                 validated_data.pop('inspiring_artist'))
         if 'materials_used_image' in validated_data:
             validated_data['materials_used_image'] = Image.objects.create(
                 **validated_data['materials_used_image'])
-        if 'activity_images' in validated_data:
-            activity_images = validated_data.pop('activity_images')
-        if 'making_steps' in validated_data:
-            making_steps = validated_data.pop('making_steps')
-        if 'inspiring_examples' in validated_data:
-            inspiring_examples = validated_data.pop('inspiring_examples')
+
+        activity_images = validated_data.pop('activity_images', None)
+
+        making_steps = validated_data.pop('making_steps', None)
+
+        inspiring_examples = validated_data.pop('inspiring_examples', None)
+
         activity = Activity.objects.create(**validated_data)
-        create_making_steps(activity, making_steps)
-        create_inspiring_examples(
-            activity, inspiring_examples)
-        create_activity_images(activity, activity_images)
+        if making_steps:
+            create_making_steps(activity, making_steps)
+        if inspiring_examples:
+            create_inspiring_examples(
+                activity, inspiring_examples)
+        if activity_images:
+            create_activity_images(activity, activity_images)
         activity.creators.add(self.context["request"].user)
         return activity
 

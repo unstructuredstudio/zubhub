@@ -11,6 +11,7 @@ import {
   initUpload,
   refactorNewActivityObject,
   deserializeFieldsData,
+  create,
 } from './createActivityScripts';
 
 import * as AuthActions from '../../store/actions/authActions';
@@ -39,6 +40,8 @@ function CreateActivity(props) {
   const [verifiedStep, setVerifiedStep] = useState(1);
   const [newActivityObject, setNewActivityObject] = useState({
     submitting: false,
+    totalToUpLoad: 0,
+    sizeUploaded: 0,
   });
   const formikProps = {
     formikValues: props.values,
@@ -51,9 +54,9 @@ function CreateActivity(props) {
   };
 
   const requireFieldByStep = [
-    ['title', 'motivation', 'learningGoals'],
-    ['materialsUsed', 'facilitationTips', 'activityImages'],
-    ['creationSteps'],
+    ['title', 'motivation', 'learning_goals'],
+    ['materials_used', 'facilitation_tips', 'activity_images'],
+    ['making_steps'],
   ];
   const validateSteps = () => {
     let stepVerified = true;
@@ -65,20 +68,20 @@ function CreateActivity(props) {
           stepVerified = false;
           setVerifiedStep(i + 1);
         }
-        if (field === 'activityImages') {
-          if (
-            !newActivityObject.mediaUpload?.fileFields?.activityImages ||
-            (newActivityObject.mediaUpload?.fileFields?.activityImages &&
-              Object.keys(
-                newActivityObject.mediaUpload?.fileFields?.activityImages
-                  .length,
-              ).length === 0)
-          ) {
-            console.log('images verification', newActivityObject.mediaUpload);
-            stepVerified = false;
-            setVerifiedStep(i + 1);
-          }
-        }
+        // if (field === 'activityImages') {
+        //   if (
+        //     !newActivityObject.mediaUpload?.fileFields?.activityImages ||
+        //     (newActivityObject.mediaUpload?.fileFields?.activityImages &&
+        //       Object.keys(
+        //         newActivityObject.mediaUpload?.fileFields?.activityImages
+        //           .length,
+        //       ).length === 0)
+        //   ) {
+        //     console.log('images verification', newActivityObject.mediaUpload);
+        //     stepVerified = false;
+        //     setVerifiedStep(i + 1);
+        //   }
+        // }
       });
       if (stepVerified) {
         setVerifiedStep(i + 2);
@@ -90,7 +93,14 @@ function CreateActivity(props) {
   const [deserializingForEdit, setDeserializingForEdit] = useState(
     id ? true : false,
   );
+
+  const submitButtonRef = React.useRef(null);
+  const [readyForSubmit, setReadyForSubmit] = useState(false);
   useEffect(() => {
+    console.log('ref', submitButtonRef);
+    // if (readyForSubmit) {
+    //   submitButtonRef.current.click();
+    // }
     if (id) {
       const activityToUpdate = props.activities?.all_activities.filter(
         item => item.id === id,
@@ -112,8 +122,13 @@ function CreateActivity(props) {
     }
   }, []);
 
-  const submitButtonRef = React.useRef(null);
-
+  // useEffect(() => {
+  //   if (readyForSubmit) {
+  //     console.log('into useEffect', props.values, readyForSubmit);
+  //     submitButtonRef.current.click();
+  //   }
+  // }, [readyForSubmit]);
+  console.log('state', newActivityObject);
   const visitePrev = () => {
     setStep(step => step - 1);
   };
@@ -121,7 +136,7 @@ function CreateActivity(props) {
     //validateSteps();
     setStep(step => step + 1);
   };
-  console.log('newActivityObject', props, newActivityObject);
+
   return (
     <>
       {deserializingForEdit || newActivityObject.submitting ? (
@@ -147,6 +162,20 @@ function CreateActivity(props) {
                   setNewActivityObject: setNewActivityObject,
                   t: props.t,
                 })}
+                <button
+                  ref={submitButtonRef}
+                  type="submit"
+                  id={'submitButton'}
+                  name={'submitButton'}
+                  style={{ display: 'none' }}
+                  onClick={e =>
+                    create(
+                      props.auth,
+                      formikProps.formikValues,
+                      setReadyForSubmit,
+                    )
+                  }
+                ></button>
               </form>
               <Box className={clsx(common_classes.margin)}>
                 <Grid
@@ -200,26 +229,14 @@ function CreateActivity(props) {
                             newActivityObject,
                             props,
                             setNewActivityObject,
+                            history,
+                            formikProps,
+                            setReadyForSubmit,
                           );
                         }}
                       >
                         {t(`createActivity.buttons.${id ? 'Edit' : 'Submit'}`)}
                       </CustomButton>
-                      <button
-                        type="submit"
-                        style={{ display: 'none' }}
-                        ref={submitButtonRef}
-                        onClick={e =>
-                          initUpload(
-                            e,
-                            newActivityObject,
-                            props,
-                            setNewActivityObject,
-                            formikProps,
-                            history,
-                          )
-                        }
-                      ></button>
                     </Grid>
                   )}
                 </Grid>
@@ -255,18 +272,29 @@ export default connect(
     mapPropsToValue: () => ({
       title: '',
       motivation: '',
-      learningGoals: '',
-      facilitationTips: '',
-      creationSteps: [],
-      materialsUsed: [],
-      materialsUsedImage: '',
-      inspiringArtist: '',
-      inspiringExemplesDescriptions: [],
-      inspiringExemplesCredits: [],
-      inspiringExemplesImages: '',
-      activityImages: '',
-      inspiringArtistImage: '',
-      inspiringArtistFullName: '',
+      learning_goals: '',
+      facilitation_tips: '',
+      making_steps: [
+        {
+          description: '',
+          image: '',
+        },
+      ],
+      materials_used: [],
+      materials_used_image: '',
+      inspiring_examples: [
+        {
+          description: '',
+          credit: '',
+          image: '',
+        },
+      ],
+      activity_images: '',
+      inspiring_artist: {
+        image: '',
+        name: '',
+        short_biography: '',
+      },
     }),
     validationSchema,
   })(CreateActivity),

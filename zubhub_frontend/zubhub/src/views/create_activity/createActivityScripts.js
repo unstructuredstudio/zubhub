@@ -12,8 +12,10 @@ const isImage = value => {
   if (value) {
     let not_an_image = false;
     for (let index = 0; index < value.length; index++) {
-      if (value[index].type.split('/')[0] !== 'image') {
-        not_an_image = true;
+      if (value[index]) {
+        if (value[index].type.split('/')[0] !== 'image') {
+          not_an_image = true;
+        }
       }
     }
     return !not_an_image;
@@ -30,8 +32,10 @@ const imageSizeTooLarge = value => {
   if (value) {
     let image_size_too_large = false;
     for (let index = 0; index < value.length; index++) {
-      if (value[index].size / 1000 > 10240) {
-        image_size_too_large = true;
+      if (value[index]) {
+        if (value[index].size / 1000 > 10240) {
+          image_size_too_large = true;
+        }
       }
     }
     return !image_size_too_large;
@@ -44,13 +48,13 @@ const allEmpty = arr => {
   let allEmptyValues = true;
   if (arr) {
     arr.forEach(value => {
-      if (value && value !== '') {
+      if ((value && value !== '') || (value && Object.keys(value).length > 0)) {
         allEmptyValues = false;
       }
     });
     return !allEmptyValues;
   } else {
-    return true;
+    return false;
   }
 };
 const imageValidationSchema = Yup.mixed()
@@ -67,16 +71,43 @@ export const validationSchema = Yup.object().shape({
   motivation: Yup.string().max(10000, 'max').required('required'),
   learningGoals: Yup.string().max(10000, 'max').required('required'),
   facilitationTips: Yup.string().max(10000, 'max').required('required'),
-  creationSteps: Yup.mixed().test('required1', value => {
-    return value ? value.length > 0 : false;
+  makingSteps: Yup.array()
+    .of(
+      Yup.object().shape({
+        description: Yup.string().max(10000, 'max'),
+        image: Yup.lazy(value => {
+          return imageValidationSchema;
+        }),
+      }),
+    )
+    .test({
+      message: 'required1',
+      test: arr => allEmpty(arr),
+    }),
+  inspiringArtist: Yup.object().shape({
+    name: Yup.string().max(100, 'max'),
+    short_biography: Yup.string().max(10000, 'max'),
+    image: Yup.lazy(value => {
+      return imageValidationSchema;
+    }),
   }),
-  inspiringArtistFullName: Yup.string().max(100, 'max'),
-  inspiringArtist: Yup.string().max(10000, 'max').required('required'),
-  inspiringExemplesDescriptions: Yup.string().max(100, 'max'),
-  inspiringExemplesCredits: Yup.string().max(100, 'max'),
-  materialsUsed: Yup.mixed().test('required1', 'required1', value =>
-    allEmpty(value),
+
+  inspiringExamples: Yup.array().of(
+    Yup.object().shape({
+      description: Yup.string().max(1000, 'max'),
+      credit: Yup.string().max(100, 'max'),
+      image: Yup.lazy(value => {
+        return imageValidationSchema;
+      }),
+    }),
   ),
+
+  materialsUsed: Yup.array()
+    .of(Yup.string().max(100, 'max'))
+    .test({
+      message: 'required1',
+      test: arr => allEmpty(arr),
+    }),
   activityImages: Yup.mixed()
     .test('not_an_image', 'onlyImages', value => isImage(value))
     .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
@@ -86,15 +117,15 @@ export const validationSchema = Yup.object().shape({
   materialsUsedImage: Yup.lazy(value => {
     return imageValidationSchema;
   }),
-  inspiringExemplesImages: Yup.lazy(value => {
-    if (Array.isArray(value)) {
-      return Yup.array().of(imageValidationSchema);
-    }
-    return imageValidationSchema;
-  }),
-  inspiringArtistImage: Yup.lazy(value => {
-    return imageValidationSchema;
-  }),
+
+  // inspiringExemplesDescriptions: Yup.string().max(100, 'max'),
+  // inspiringExemplesCredits: Yup.string().max(100, 'max'),
+  // inspiringExemplesImages: Yup.lazy(value => {
+  //   if (Array.isArray(value)) {
+  //     return Yup.array().of(imageValidationSchema);
+  //   }
+  //   return imageValidationSchema;
+  // }),
 });
 
 export const handleInputTextFieldChange = (
@@ -387,10 +418,31 @@ export const deleteActivity = (token, id) => {
   API.deleteActivity({ token: token, id: id });
 };
 
-export const initUpload = async (e, state, props, handleSetState, history) => {
+export const initUpload = async (
+  e,
+  state,
+  props,
+  handleSetState,
+  history,
+  formikProps,
+  setReadyForSubmit,
+) => {
   e.preventDefault();
   handleSetState(state => {
-    return { ...state, ['submitting']: true };
+    let values = { ...formikProps.formikValues };
+    if (values['making_steps']) {
+      let making_steps = values.making_steps;
+      making_steps.forEach((step, idx) => {
+        step['step_order'] = idx + 1;
+      });
+      values['making_steps'] = making_steps;
+    }
+    if (values['materials_used']) {
+      let materials_used = values.materials_used;
+      materials_used = materials_used.join(',');
+      values['materials_used'] = materials_used;
+    }
+    return { ...state, ['submitting']: true, values: { ...values } };
   });
   if (!props.auth.token) {
     props.history.push('/login');
@@ -399,35 +451,155 @@ export const initUpload = async (e, state, props, handleSetState, history) => {
       state,
       props.auth,
       handleSetState,
+      formikProps.formikValues,
     );
     console.log(uploadedMediaPromises);
 
     const result = await Promise.all(uploadedMediaPromises);
     console.log('result of upload', result);
-    let mediaUpload = state.mediaUpload;
+    // let mediaUpload = state.mediaUpload;
+    let formikpromises = [];
     result.forEach(each => {
-      mediaUpload.addUrlToField(each.field, each.url, each.index);
+      let activityImages = {};
+      //let dt = new DataTransfer();
+
+      switch (each.fieldType) {
+        case 'simple':
+          //formikpromises.push(
+          // formikProps.setFieldValue(each.field, each.url, false);
+          handleSetState(state => {
+            let field = state.values[each.field];
+            field = each.url;
+            return {
+              ...state,
+              ['values']: { ...state.values, [each.field]: field },
+            };
+          });
+          // );
+          break;
+        case 'array':
+          // formikpromises.push(
+          // formikProps.setFieldValue(
+          //   `${each.field}.${each.index}`,
+          //   each.url,
+          //   false,
+          // );
+          handleSetState(state => {
+            let field = state.values[each.field];
+            if (!Array.isArray(field)) {
+              field = [];
+            }
+            field.push({ image: each.url });
+            return {
+              ...state,
+              ['values']: { ...state.values, [each.field]: field },
+            };
+          });
+          // );
+          //activityImages[each.index] = each.url;
+          // dt.items.add(each.url);
+          break;
+        case 'object':
+          // formikpromises.push(
+          // formikProps.setFieldValue(
+          //   `${each.route}.${each.field}`,
+          //   each.url,
+          //   false,
+          // );
+          handleSetState(state => {
+            return {
+              ...state,
+              ['values']: {
+                ...state.values,
+                [each.route]: {
+                  ...state.values[each.route],
+                  image: each.url,
+                },
+              },
+            };
+          });
+          //);
+          break;
+        case 'objectsArray':
+          //formikpromises.push(
+          // formikProps.setFieldValue(
+          //   `${each.route}.${each.index}.${each.field}`,
+          //   each.url,
+          //   false,
+          // );
+          handleSetState(state => {
+            let field = state.values[each.route];
+            field[each.index][each.field] = each.url;
+            return {
+              ...state,
+              ['values']: {
+                ...state.values,
+                [each.route]: field,
+              },
+            };
+          });
+
+          //);
+          break;
+        default:
+          break;
+      }
     });
-    console.log('media upload after loading', mediaUpload);
-    const args = refactorFieldsData(state, mediaUpload);
-    if (!state.id) {
-      const apiResponse = await API.createActivity(props.auth.token, args);
-      console.log('api response', apiResponse);
-      handleSetState(state => {
-        return { ...state, ['submitting']: false };
-      });
-      return props.history.push('/activities/all/');
-    } else {
-      const apiResponse = await API.updateActivity(
+
+    handleSetState(async state => {
+      const apiResponse = await API.createActivity(
         props.auth.token,
-        state.id,
-        args,
+        state.values,
       );
-      console.log('api response', apiResponse);
-      handleSetState(state => {
-        return { ...state, ['submitting']: false };
-      });
-      return props.history.push('/activities/all/');
-    }
+      console.log('apiresponse', apiResponse);
+      if (apiResponse) {
+        return props.history.push('/activities/all/');
+      }
+
+      return { ...state, ['submitting']: false };
+    });
+
+    //const formikresp = await Promise.all(formikpromises);
+    //console.log('formik promise response', formikresp);
+    // handleSetState(state => {
+    //   return {
+    //     ...state,
+    //     ['submitting']: true,
+    //     values: formikProps.formikValues,
+    //   };
+    // });
+    //console.log('ref', submitButtonRef);
+
+    //   console.log('api response', apiResponse);
+    // console.log('media upload after loading', mediaUpload);
+    // const args = refactorFieldsData(state, mediaUpload);
+    // if (!state.id) {
+    //   const apiResponse = await API.createActivity(props.auth.token, args);
+    //   console.log('api response', apiResponse);
+    //   handleSetState(state => {
+    //     return { ...state, ['submitting']: false };
+    //   });
+    //   return props.history.push('/activities/all/');
+    // } else {
+    //   const apiResponse = await API.updateActivity(
+    //     props.auth.token,
+    //     state.id,
+    //     args,
+    //   );
+    //   console.log('api response', apiResponse);
+    //   handleSetState(state => {
+    //     return { ...state, ['submitting']: false };
+    //   });
+    //   return props.history.push('/activities/all/');
+    // }
   }
+};
+
+export const create = async (auth, args) => {
+  const apiResponse = await API.createActivity(auth.token, args);
+  // console.log('response', apiResponse);
+  // setReadyForSubmit(rev => {
+  //   return false;
+  // });
+  return apiResponse;
 };

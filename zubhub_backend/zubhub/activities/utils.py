@@ -11,7 +11,7 @@ def create_inspiring_artist(inspiring_artist_data):
 
 def create_making_steps(activity, making_steps):
     for step in making_steps:
-        if(step['image']):
+        if(step.get('image')):
             saved_image = Image.objects.create(**step['image'])
             step['image'] = saved_image
         ActivityMakingStep.objects.create(activity=activity, **step)
@@ -25,6 +25,7 @@ def create_inspiring_examples(activity, inspiring_examples):
 
 
 def create_activity_images(activity, images):
+    print('activity_serialized_images', images)
     for image in images:
         saved_image = Image.objects.create(**image['image'])
         ActivityImage.objects.create(activity=activity, image=saved_image)

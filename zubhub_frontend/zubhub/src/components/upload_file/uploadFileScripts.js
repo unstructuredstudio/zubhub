@@ -192,6 +192,9 @@ export class MediaUpload {
 
 export const handleFileFieldChange = (
   name,
+  route,
+  field,
+  inputIndex,
   fileInputRef,
   formikProps,
   newActivityObject,
@@ -199,73 +202,227 @@ export const handleFileFieldChange = (
   setNewActivityObject,
   validateSteps,
 ) => {
-  const { field, index } = getFieldAndIndex(name);
+  //const { field, index } = getFieldAndIndex(name);
   formikProps.setFieldTouched(name, true);
   // initialize media upload objects
-  let mediaUpload = newActivityObject['mediaUpload']
-    ? newActivityObject['mediaUpload']
-    : new MediaUpload();
+  // let mediaUpload = newActivityObject['mediaUpload']
+  //   ? newActivityObject['mediaUpload']
+  //   : new MediaUpload();
   let selectedFiles = {};
 
   selectedFiles = fileInputRef.current.files;
-
-  formikProps.setFieldValue(name, selectedFiles).then(errors => {
-    if (!mediaUpload.fileFields[field]) {
-      if (!errors[field]) {
-        mediaUpload.createFileField(field, selectedFiles, index);
-      }
-    } else {
-      if (!errors[field]) {
-        if (fileInputRef.current.multiple && index < 0) {
-          mediaUpload.updateFileField(field, selectedFiles, index);
-        } else {
-          mediaUpload.updateFileField(field, selectedFiles, index);
-        }
-      } else {
-        if (index < 0) {
-          mediaUpload.deleteAllFromField(field);
-        } else {
-          if (errors[field][index]) {
-            if (mediaUpload.fileFields[field].files[index]) {
-              mediaUpload.deleteFileFromField(field, index);
-            }
-          } else {
-            mediaUpload.updateFileField(field, selectedFiles, index);
-          }
-        }
-      }
-    }
-    setNewActivityObject(prevActivity => {
-      return { ...prevActivity, mediaUpload: mediaUpload };
+  console.log('handle change uploadFile', name, selectedFiles);
+  if (selectedFiles.length > 0) {
+    formikProps.setFieldValue(name, selectedFiles).then(errors => {
+      route
+        ? inputIndex >= 0
+          ? errors[route] &&
+            errors[route][inputIndex] &&
+            errors[route][inputIndex][field] &&
+            formikProps.setFieldValue(name, undefined, false)
+          : errors[route] &&
+            errors[route][field] &&
+            formikProps.setFieldValue(name, undefined, false)
+        : inputIndex >= 0
+        ? errors[field] &&
+          errors[field][inputIndex] &&
+          formikProps.setFieldValue(name, undefined, false)
+        : errors[field] && formikProps.setFieldValue(name, undefined, false);
+      // if (!mediaUpload.fileFields[field]) {
+      //   if (!errors[field]) {
+      //     mediaUpload.createFileField(field, selectedFiles, index);
+      //   }
+      // } else {
+      //   if (!errors[field]) {
+      //     if (fileInputRef.current.multiple && index < 0) {
+      //       mediaUpload.updateFileField(field, selectedFiles, index);
+      //     } else {
+      //       mediaUpload.updateFileField(field, selectedFiles, index);
+      //     }
+      //   } else {
+      //     if (index < 0) {
+      //       mediaUpload.deleteAllFromField(field);
+      //     } else {
+      //       if (errors[field][index]) {
+      //         if (mediaUpload.fileFields[field].files[index]) {
+      //           mediaUpload.deleteFileFromField(field, index);
+      //         }
+      //       } else {
+      //         mediaUpload.updateFileField(field, selectedFiles, index);
+      //       }
+      //     }
+      //   }
+      // }
+      // setNewActivityObject(prevActivity => {
+      //   return { ...prevActivity, mediaUpload: mediaUpload };
+      // });
     });
-  });
+  }
   validateSteps();
 };
 
-///////////////////////////////////////////////////////////////////////
+export const getErrors = (route, field, index, errors, touched) => {
+  return route
+    ? index < 0
+      ? errors[route] &&
+        errors[route][field] &&
+        touched[route] &&
+        touched[route][field] &&
+        errors[route][field]
+      : errors[route] &&
+        errors[route][field] &&
+        errors[route][field][index] &&
+        touched[route] &&
+        touched[route][field] &&
+        touched[route][field][index] &&
+        errors[route][field][index]
+    : index < 0
+    ? errors[field] && touched[field] && errors[field]
+    : errors[field] &&
+      errors[field][index] &&
+      touched[field] &&
+      touched[field][index] &&
+      errors[field][index];
+};
 
-export const FormMediaUpload = (state, auth, handleSetState) => {
+export const imagesToPreview = files => {
+  let imagesToPreview = {};
+  if (files) {
+    Object.entries(files).map(([index, value]) => {
+      if (index !== 'length') {
+        imagesToPreview[index] =
+          typeof value === 'string'
+            ? { image: value, type: 'url' }
+            : { image: value, type: 'file' };
+      }
+    });
+    console.log('images to preview', imagesToPreview);
+  }
+  return imagesToPreview;
+};
+
+export const deleteImage = (setFieldValue, fieldName) => {
+  console.log('delete triggered', fieldName);
+  setFieldValue(fieldName, undefined, true);
+};
+
+export const deleteImageAtIndex = (formikProps, field, index) => {
+  let files = {};
+  Object.entries(formikProps.formikValues[field]).forEach(([key, value]) => {
+    if (key !== index) {
+      files[key] = value;
+    }
+  });
+  files['length'] = formikProps.formikValues[field].length - 1;
+  console.log('delete at index triggered', index, files);
+  formikProps.setFieldValue(field, files, true);
+};
+
+///////////////////////////////////////////////////////////////////////
+const getFilesFromNested = nestedObject => {
+  let files = {};
+  Object.entries(nestedObject).map(([index, value]) => {
+    if (value['image']) {
+      files[index] = value.image[0];
+    }
+  });
+  return files;
+};
+export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
   let promises = [];
-  let filesByField = state.mediaUpload.fileFields;
-  Object.keys(filesByField).forEach(field => {
-    if (filesByField[field].files) {
-      Object.keys(filesByField[field].files).forEach(index => {
-        promises.push(
-          uploadFile(
-            filesByField[field].files[index],
-            auth,
-            handleSetState,
-            field,
-            index,
-          ),
-        );
+  let fileFields = [
+    {
+      field: 'materials_used_image',
+      type: 'simple',
+      files:
+        formikValues['materials_used_image'] &&
+        formikValues['materials_used_image'],
+    },
+    {
+      field: 'activity_images',
+      type: 'array',
+      files: formikValues['activity_images'] && formikValues['activity_images'],
+    },
+    { field: 'video', files: formikValues['video'] && formikValues['video'] },
+    {
+      route: 'inspiring_artist',
+      field: 'inspiring_artist.image',
+      type: 'object',
+      files:
+        formikValues['inspiring_artist'] &&
+        formikValues['inspiring_artist']['image'] &&
+        formikValues['inspiring_artist']['image'],
+    },
+    {
+      route: 'making_steps',
+      field: 'image',
+      type: 'objectsArray',
+      files:
+        formikValues['making_steps'] &&
+        getFilesFromNested(formikValues['making_steps']),
+    },
+    {
+      route: 'inspiring_examples',
+      field: 'image',
+      type: 'objectsArray',
+      files:
+        formikValues['inspiring_examples'] &&
+        getFilesFromNested(formikValues['inspiring_examples']),
+    },
+  ];
+  console.log('filefields from upload', fileFields);
+  let totalSize = 0;
+  fileFields.map(item => {
+    if (item.files) {
+      Object.entries(item.files).forEach(([index, file]) => {
+        if (index !== 'length' && typeof file !== 'string') {
+          totalSize += file.size;
+          promises.push(
+            uploadFile(
+              file,
+              auth,
+              handleSetState,
+              item.route,
+              item.field,
+              item.type,
+              index,
+            ),
+          );
+        }
       });
     }
   });
+  handleSetState(state => {
+    return { ...state, totalToUpLoad: totalSize };
+  });
+  // let filesByField = state.mediaUpload.fileFields;
+  // Object.keys(filesByField).forEach(field => {
+  //   if (filesByField[field].files) {
+  //     Object.keys(filesByField[field].files).forEach(index => {
+  //       promises.push(
+  //         uploadFile(
+  //           filesByField[field].files[index],
+  //           auth,
+  //           handleSetState,
+  //           field,
+  //           index,
+  //         ),
+  //       );
+  //     });
+  //   }
+  // });
   return promises;
 };
 
-export const uploadFile = (file, auth, handleSetState, field, index) => {
+export const uploadFile = (
+  file,
+  auth,
+  handleSetState,
+  route,
+  field,
+  fieldType,
+  index,
+) => {
   const args = {
     token: auth.token,
   };
@@ -277,7 +434,9 @@ export const uploadFile = (file, auth, handleSetState, field, index) => {
         auth.token,
         auth.username,
         handleSetState,
+        route,
         field,
+        fieldType,
         index,
       );
     } else if (res && res.local === false) {
@@ -291,7 +450,9 @@ export const uploadFileToLocal = async (
   token,
   username,
   handleSetState,
+  route,
   field,
+  fieldType,
   index,
 ) => {
   let url =
@@ -317,21 +478,20 @@ export const uploadFileToLocal = async (
     },
     onUploadProgress: e => {
       handleSetState(state => {
-        let mediaUpload = state.mediaUpload;
-        mediaUpload.updateLoaded(
-          //Math.round((e.loaded / mediaUpload.totalFilesSize) * 100),
-          e.loaded,
-        );
+        let sizeUploaded = state.sizeUploaded;
+        sizeUploaded += e.loaded;
         return {
           ...state,
-          mediaUpload: mediaUpload,
+          sizeUploaded: sizeUploaded,
         };
       });
     },
   });
   if (result.data['Location']) {
     return {
+      route: route,
       field: field,
+      fieldType,
       index: index,
       url: {
         file_url: result.data.Location,
@@ -341,7 +501,9 @@ export const uploadFileToLocal = async (
     };
   } else {
     return {
+      route: route,
       field: field,
+      fieldType,
       index: index,
       url: { file_url: result.data.secure_url, fileName: file.name },
     };

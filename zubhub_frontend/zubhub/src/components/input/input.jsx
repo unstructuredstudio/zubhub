@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { handleInputBlur, handleInputChange } from './inputScripts';
-import { getFieldAndIndex } from '../../assets/js/utils/scripts';
+import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
 
 function Input(props) {
   const {
@@ -16,21 +16,23 @@ function Input(props) {
     multiline,
     name,
     classes,
+    fieldType,
     formikProps,
     validateSteps,
     newActivityObject,
     setNewActivityObject,
   } = props;
-  const { field, index } = getFieldAndIndex(name);
-  console.log(
-    'from input field',
-    field,
-    newActivityObject[field]
-      ? index >= 0
-        ? newActivityObject[field][index]
-        : newActivityObject[field]
-      : '',
-  );
+  const { route, field, index } = getRouteFieldIndex(name);
+  console.log('input route field index',route, field, index)
+  // console.log(
+  //   'from input field',
+  //   field,
+  //   newActivityObject[field]
+  //     ? index >= 0
+  //       ? newActivityObject[field][index]
+  //       : newActivityObject[field]
+  //     : '',
+  // );
   return (
     <div>
       <FormControl
@@ -52,11 +54,22 @@ function Input(props) {
           multiline={multiline ? multiline : false}
           type="text"
           value={
-            formikProps.formikValues[field]
-              ? index >= 0
-                ? formikProps.formikValues[field][index]
+            fieldType.simple
+              ? fieldType.array
+                ? formikProps.formikValues[field] &&
+                  formikProps.formikValues[field][index]
                 : formikProps.formikValues[field]
-              : ''
+              : fieldType.array
+              ? formikProps.formikValues[route] &&
+                formikProps.formikValues[route][field] &&
+                formikProps.formikValues[route][field][index]
+              : formikProps.formikValues[route] &&
+                formikProps.formikValues[route][field]
+            // formikProps.formikValues[field]
+            //   ? index >= 0
+            //     ? formikProps.formikValues[field][index]
+            //     : formikProps.formikValues[field]
+            //   : ''
           }
           onBlur={e =>
             handleInputBlur(

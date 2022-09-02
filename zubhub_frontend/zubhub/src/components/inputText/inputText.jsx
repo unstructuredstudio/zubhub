@@ -14,7 +14,7 @@ import {
   FormHelperText,
   ClickAwayListener,
 } from '@material-ui/core';
-import { getFieldAndIndex } from '../../assets/js/utils/scripts';
+import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
 
 function InputText(props) {
   const {
@@ -29,7 +29,8 @@ function InputText(props) {
     vars,
   } = props;
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
-  const { field, index } = getFieldAndIndex(name);
+  const { route, field, index } = getRouteFieldIndex(name);
+  console.log('inputText route field index', route, field, index);
   return (
     <div>
       <Typography
@@ -71,13 +72,15 @@ function InputText(props) {
             modules={vars.quill.modules}
             formats={vars.quill.formats}
             placeholder={placeholder ? placeholder : ''}
-            defaultValue={
-              newActivityObject[field]
-                ? index >= 0
-                  ? newActivityObject[field][index]
-                  : newActivityObject[field]
-                : ''
-            }
+            // defaultValue={
+            //   // fieldType.simple
+            //   //   ? fieldType.array
+            //   //     ? formikProps.formikValues[field][index]
+            //   //     : formikProps.formikValues[field]
+            //   //   : fieldType.array
+            //   //   ? formikProps.formikValues[route][field][index]
+            //   //   : formikProps.formikValues[route][field]
+            // }
             onChange={value =>
               handleInputTextFieldChange(
                 name,

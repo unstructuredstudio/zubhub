@@ -62,11 +62,12 @@ function MaterialsUsed(props) {
               key={`materialsUsedKey[${index}]`}
               classes={classes}
               formikProps={formikProps}
+              fieldType={{ simple: true, nested: false, array: true }}
               validateSteps={validateSteps}
               t={t}
               newActivityObject={newActivityObject}
               setNewActivityObject={setNewActivityObject}
-              name={`materialsUsed[${index}]`}
+              name={`materials_used[${index}]`}
             />
           ))}
         </Grid>
@@ -84,8 +85,8 @@ function MaterialsUsed(props) {
         </Grid>
       </Grid>
       <p className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}>
-        {formikProps.touched['materialsUsed'] &&
-          formikProps.errors['materialsUsed'] === 'required1' &&
+        {formikProps.touched['materials_used'] &&
+          formikProps.errors['materials_used'] === 'required1' &&
           t(`createActivity.inputs.materialsUsed.errors.required1`)}
       </p>
       <Grid item xs={12} className={common_classes.marginTop3em}>
@@ -104,12 +105,13 @@ function MaterialsUsed(props) {
         <Grid container spacing={1}>
           <Grid item xs={12} sm={6} md={4}>
             <UploadFile
-              name={'materialsUsedImage'}
+              name={'materials_used_image'}
               fileType={'image/*'}
               uploadButtonLabel={t(
                 'createActivity.inputs.materialsUsed.images.label',
               )}
               classes={classes}
+              fieldType={{ simple: true, nested: false, array: false }}
               activity_classes={activity_classes}
               newActivityObject={newActivityObject}
               setNewActivityObject={setNewActivityObject}

@@ -71,10 +71,11 @@ function CreateActivityStep2(props) {
             fieldLabel={t('createActivity.inputs.facilitationTips.label')}
           />
           <InputText
-            name={'facilitationTips'}
+            name={'facilitation_tips'}
             classes={classes}
             common_classes={common_classes}
             activity_classes={activity_classes}
+            fieldType={{ simple: true, nested: false, array: false }}
             helperText={t('createActivity.inputs.facilitationTips.helperText')}
             placeholder={t(
               'createActivity.inputs.facilitationTips.placeholder',
@@ -103,13 +104,14 @@ function CreateActivityStep2(props) {
             fieldLabel={t('createActivity.inputs.activityImages.label')}
           />
           <UploadFile
-            name={'activityImages'}
+            name={'activity_images'}
             fileType={'image/*'}
             uploadButtonLabel={t(
               'createActivity.inputs.materialsUsed.images.label',
             )}
             classes={classes}
             activity_classes={activity_classes}
+            fieldType={{ simple: true, nested: false, array: false }}
             newActivityObject={newActivityObject}
             setNewActivityObject={setNewActivityObject}
             formikProps={formikProps}
@@ -149,6 +151,7 @@ function CreateActivityStep2(props) {
               fileType={'video/*'}
               uploadButtonLabel={'Upload Video'}
               classes={classes}
+              fieldType={{ simple: true, nested: false, array: false }}
               activity_classes={activity_classes}
               newActivityObject={newActivityObject}
               setNewActivityObject={setNewActivityObject}

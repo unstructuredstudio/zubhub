@@ -8,6 +8,10 @@ import {
   handleFileButtonClick,
   handleFileFieldChange,
   selectedFilesCount,
+  imagesToPreview,
+  deleteImageAtIndex,
+  deleteImage,
+  getErrors,
 } from './uploadFileScripts.js';
 import {
   Typography,
@@ -16,12 +20,13 @@ import {
   Grid,
   Paper,
 } from '@material-ui/core';
-import { getFieldAndIndex } from '../../assets/js/utils/scripts';
+import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
 
 function UploadFile(props) {
   const {
     name,
     fileType,
+    fieldType,
     uploadButtonLabel,
     classes,
     activity_classes,
@@ -34,10 +39,16 @@ function UploadFile(props) {
     t,
   } = props;
 
-  const { field, index } = getFieldAndIndex(name);
+  const { route, field, index } = getRouteFieldIndex(name);
   const fileInputRef = React.useRef(null);
   const [filesUploaded, setFilesUploaded] = useState(false);
-
+  console.log(
+    'upload file route , subname, field , index',
+    route,
+    field,
+    index,
+  );
+  let fieldErrors = null;
   // const handleFileInputChange = () => {
   //   //if (fileType === 'image/*'){
   //   handleFileFieldChange(
@@ -86,6 +97,9 @@ function UploadFile(props) {
           onChange={() =>
             handleFileFieldChange(
               name,
+              route,
+              field,
+              index,
               fileInputRef,
               formikProps,
               newActivityObject,
@@ -101,80 +115,107 @@ function UploadFile(props) {
           component="span"
           id={`${name}_file_count_el`}
         >
-          {newActivityObject.mediaUpload?.fileFields[field] &&
+          {/* {newActivityObject.mediaUpload?.fileFields[field] &&
             newActivityObject.mediaUpload?.fileFields[field].selectedFilesCount(
               index,
               countFilesText,
-            )}
+            )} */}
+          {fieldType.simple
+            ? fieldType.array
+              ? formikProps.formikValues[field] &&
+                formikProps.formikValues[field][index] &&
+                `${formikProps.formikValues[field][index].length} ${
+                  formikProps.formikValues[field][index].length > 1
+                    ? countFilesText[1]
+                    : countFilesText[0]
+                }`
+              : formikProps.formikValues[field] &&
+                `${formikProps.formikValues[field].length} ${
+                  formikProps.formikValues[field].length > 1
+                    ? countFilesText[1]
+                    : countFilesText[0]
+                }`
+            : fieldType.array
+            ? formikProps.formikValues[route] &&
+              formikProps.formikValues[route][index] &&
+              formikProps.formikValues[route][index][field] &&
+              formikProps.formikValues[route][index][field] &&
+              `${formikProps.formikValues[route][index][field].length} ${
+                formikProps.formikValues[route][index][field].length > 1
+                  ? countFilesText[1]
+                  : countFilesText[0]
+              }`
+            : formikProps.formikValues[route] &&
+              formikProps.formikValues[route][field] &&
+              `${formikProps.formikValues[route][field].length} ${
+                formikProps.formikValues[route][field].length > 1
+                  ? countFilesText[1]
+                  : countFilesText[0]
+              }`}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {index >= 0
-            ? formikProps.touched[field] &&
-              formikProps.errors[field] &&
-              formikProps.touched[field][index] &&
-              formikProps.errors[field][index] &&
-              t(
-                `createActivity.inputs.activityImages.errors.${formikProps.errors[field][index]}`,
-              )
-            : formikProps.touched[field] && formikProps.errors[field]
-            ? t(
-                `createActivity.inputs.activityImages.errors.${formikProps.errors[field]}`,
-              )
-            : field === 'activityImages' &&
-              formikProps.touched[field] &&
-              newActivityObject.mediaUpload &&
-              newActivityObject.mediaUpload.fileFields[field] &&
-              Object.keys(
-                newActivityObject.mediaUpload.fileFields[field].length,
-              ).length === 0 &&
-              t(`createActivity.inputs.activityImages.errors.required`)}
+          {
+            (fieldErrors = getErrors(
+              route,
+              field,
+              index,
+              formikProps.errors,
+              formikProps.touched,
+            ))
+          }
+          {fieldErrors
+            ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
+            : ''}
         </FormHelperText>
 
-        {newActivityObject.mediaUpload?.fileFields[field] && (
-          <Grid container spacing={2}>
-            {Object.entries(
-              newActivityObject.mediaUpload?.fileFields[field].imagesToPreview(
-                index,
-              ),
-            ).map(([index, image]) => (
-              <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
-                <Paper
-                  key={`imagePaper${index}`}
-                  className={activity_classes.imagePreviewContainer}
-                >
-                  <img
-                    className={activity_classes.imagePreview}
-                    src={
-                      image.type === 'file'
-                        ? window.URL.createObjectURL(image.image)
-                        : image.image.file_url
-                    }
-                    alt={`imageAlt${index}`}
-                  />
-                  <CancelIcon
-                    className={activity_classes.closeIcon}
-                    fontSize="small"
-                    onClick={e =>
-                      setNewActivityObject(state => {
-                        let mediaUpload = state.mediaUpload;
-                        mediaUpload.fileFields[field].deleteFile(index);
-                        return {
-                          ...state,
-                          mediaUpload: mediaUpload,
-                        };
-                      })
-                    }
-                  />
-                  {/* <i
-                    className={
-                      'fas fa-times-circle ' + activity_classes.closeIcon
-                    }
-                  ></i> */}
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-        )}
+        <Grid container spacing={2}>
+          {Object.entries(
+            imagesToPreview(
+              fieldType.simple
+                ? fieldType.array
+                  ? formikProps.formikValues[field] &&
+                    formikProps.formikValues[field][index] &&
+                    formikProps.formikValues[field][index]
+                  : formikProps.formikValues[field] &&
+                    formikProps.formikValues[field]
+                : fieldType.array
+                ? formikProps.formikValues[route] &&
+                  formikProps.formikValues[route][index] &&
+                  formikProps.formikValues[route][index][field] &&
+                  formikProps.formikValues[route][index][field] &&
+                  formikProps.formikValues[route][index][field]
+                : formikProps.formikValues[route] &&
+                  formikProps.formikValues[route][field] &&
+                  formikProps.formikValues[route][field],
+            ),
+          ).map(([index, image]) => (
+            <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
+              <Paper
+                key={`imagePaper${index}`}
+                className={activity_classes.imagePreviewContainer}
+              >
+                <img
+                  className={activity_classes.imagePreview}
+                  src={
+                    image.type === 'file'
+                      ? window.URL.createObjectURL(image.image)
+                      : image.image.file_url
+                  }
+                  alt={`imageAlt${index}`}
+                />
+                <CancelIcon
+                  className={activity_classes.closeIcon}
+                  fontSize="small"
+                  onClick={e => {
+                    fieldType.simple
+                      ? deleteImageAtIndex(formikProps, field, index)
+                      : deleteImage(formikProps.setFieldValue, name);
+                  }}
+                />
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
       </FormControl>
     </div>
   );

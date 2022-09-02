@@ -47,6 +47,7 @@ function CreateActivityStep1(props) {
             label={'title'}
             classes={classes}
             name={'title'}
+            fieldType={{ simple: true, nested: false, array: false }}
             formikProps={formikProps}
             validateSteps={validateSteps}
             t={t}
@@ -68,6 +69,7 @@ function CreateActivityStep1(props) {
             classes={classes}
             common_classes={common_classes}
             activity_classes={activity_classes}
+            fieldType={{ simple: true, nested: false, array: false }}
             helperText={t('createActivity.inputs.motivation.helperText')}
             placeholder={t('createActivity.inputs.motivation.placeholder')}
             formikProps={props.formikProps}
@@ -91,7 +93,8 @@ function CreateActivityStep1(props) {
             classes={classes}
             common_classes={common_classes}
             activity_classes={activity_classes}
-            name={'learningGoals'}
+            name={'learning_goals'}
+            fieldType={{ simple: true, nested: false, array: false }}
             helperText={t('createActivity.inputs.learningGoals.helperText')}
             placeholder={t('createActivity.inputs.learningGoals.placeholder')}
             newActivityObject={props.newActivityObject}

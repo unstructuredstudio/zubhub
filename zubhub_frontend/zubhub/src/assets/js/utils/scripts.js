@@ -316,6 +316,26 @@ export const isBaseTag = tag => {
   return BASE_TAGS.includes(tag);
 };
 
+export const getRouteFieldIndex = str => {
+  let arr = str.split('.');
+  let { route, index } = getRouteAndIndex(arr[0]);
+  return arr.length > 1
+    ? { route: route, field: arr[1], index: index }
+    : { field: route, index: index };
+};
+
+export const getRouteAndIndex = str => {
+  let arr = str.split('[');
+  return arr.length > 1
+    ? { route: arr[0], index: parseInt(arr[1].split('')[0]) }
+    : { route: arr[0], index: parseInt('-1', 10) };
+};
+
+export const getIndexFromFieldName = fieldName => {
+  let arr = fieldName.split('[');
+  return arr.length > 1 ? parseInt(arr[1].split('')[0]) : parseInt('-1', 10);
+};
+
 export const getFieldAndIndex = str => {
   let arr = str.split('[');
   return arr.length > 1
