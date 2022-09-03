@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import InputText from '../../components/inputText/inputText';
+import CancelIcon from '@material-ui/icons/Cancel';
 import 'react-toastify/dist/ReactToastify.css';
 import { vars } from '../create_project/createProjectScripts';
-import { getMakingStepsRequiredError } from './createActivityScripts';
+import {
+  getMakingStepsRequiredError,
+  deleteItem,
+} from './createActivityScripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, FormControl, Box, Typography } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
@@ -30,19 +34,19 @@ function CreateActivityStep3(props) {
   const classes = useProjectStyles();
   const activity_classes = useStyles();
   const common_classes = useCommonStyles();
-  const [makingSteps, setMakingSteps] = useState(
-    formikProps.formikValues.makingSteps
-      ? formikProps.formikValues.makingSteps
-      : [
-          {
-            description: '',
-            image: null,
-          },
-        ],
-  );
+  const [makingSteps, setMakingSteps] = useState([]);
+  //   formikProps.formikValues.making_steps
+  //     ? formikProps.formikValues.making_steps
+  //     : [
+  //         {
+  //           description: '',
+  //           image: null,
+  //         },
+  //       ],
+  // );
   const [inspiringExamples, setInspiringExamples] = useState(
-    formikProps.formikValues.inspiringExamples
-      ? formikProps.formikValues.inspiringExamples
+    formikProps.formikValues.inspiring_examples
+      ? formikProps.formikValues.inspiring_examples
       : [
           {
             description: '',
@@ -51,18 +55,26 @@ function CreateActivityStep3(props) {
           },
         ],
   );
-  // const [inspiringExemples, setInspiringExemples] = useState(
-  //   newActivityObject.mediaUpload?.fileFields.inspiringExemplesImages
-  //     ? [
-  //         ...Array(
-  //           Object.keys(
-  //             newActivityObject.mediaUpload.fileFields.inspiringExemplesImages
-  //               .length,
-  //           ).length,
-  //         ),
-  //       ]
-  //     : [''],
-  // );
+  const newObject = values => {
+    let newValues = { ...values };
+    delete newValues['length'];
+    return newValues;
+  };
+  useEffect(() => {
+    setMakingSteps(
+      formikProps.formikValues.making_steps
+        ? newObject(formikProps.formikValues.making_steps)
+        : [
+            {
+              description: '',
+              image: null,
+            },
+          ],
+    );
+  }, [props]);
+  Object.entries(makingSteps).map(([key, item]) => {
+    console.log('making steps', key);
+  });
 
   return (
     <div className={activity_classes.createActivityStepContainer}>
@@ -81,20 +93,28 @@ function CreateActivityStep3(props) {
             inputOrder={7}
             fieldLabel={t('createActivity.inputs.creationSteps.label')}
           />
-          {makingSteps.map((makingStep, index) => (
+          {Object.keys(makingSteps).map(key => (
             <Grid
               item
               xs={12}
               md={12}
               sm={12}
               className={clsx(
+                activity_classes.itemContainer,
                 common_classes.marginTop1em,
                 common_classes.outlined,
               )}
             >
+              <CancelIcon
+                className={activity_classes.closeIcon}
+                fontSize="small"
+                onClick={e => {
+                  deleteItem(formikProps.setFieldValue, `making_steps[${key}]`);
+                }}
+              />
               <InputText
-                key={`makingSteps[${index}].descriptionKey`}
-                name={`making_steps[${index}].description`}
+                key={`makingSteps[${key}].descriptionKey`}
+                name={`making_steps[${key}].description`}
                 classes={classes}
                 common_classes={common_classes}
                 activity_classes={activity_classes}
@@ -102,7 +122,7 @@ function CreateActivityStep3(props) {
                 helperText={''}
                 placeholder={`${t(
                   'createActivity.inputs.creationSteps.placeholder',
-                )} ${index + 1}`}
+                )} ${key + 1}`}
                 formikProps={props.formikProps}
                 newActivityObject={props.newActivityObject}
                 setNewActivityObject={props.setNewActivityObject}
@@ -118,8 +138,8 @@ function CreateActivityStep3(props) {
                 className={common_classes.marginTop1em}
               >
                 <UploadFile
-                  key={`makingSteps[${index}].imageKey`}
-                  name={`making_steps[${index}].image`}
+                  key={`makingSteps[${key}].imageKey`}
+                  name={`making_steps[${key}].image`}
                   fileType={'image/*'}
                   uploadButtonLabel={t(
                     'createActivity.inputs.creationSteps.image.label',

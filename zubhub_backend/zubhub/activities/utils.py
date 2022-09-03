@@ -19,8 +19,9 @@ def create_making_steps(activity, making_steps):
 
 def create_inspiring_examples(activity, inspiring_examples):
     for example in inspiring_examples:
-        saved_image = Image.objects.create(**example['image'])
-        example['image'] = saved_image
+        if 'image' in example:
+            saved_image = Image.objects.create(**example['image'])
+            example['image'] = saved_image
         InspiringExample.objects.create(activity=activity, **example)
 
 

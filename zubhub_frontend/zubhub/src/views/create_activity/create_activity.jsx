@@ -9,10 +9,7 @@ import CustomButton from '../../components/button/Button';
 import {
   validationSchema,
   initUpload,
-  refactorNewActivityObject,
-  deserializeFieldsData,
   deserialize,
-  create,
 } from './createActivityScripts';
 
 import * as AuthActions from '../../store/actions/authActions';
@@ -115,7 +112,7 @@ function CreateActivity(props) {
   //     submitButtonRef.current.click();
   //   }
   // }, [readyForSubmit]);
-  
+
   console.log('state', props, newActivityObject);
   const visitePrev = () => {
     setStep(step => step - 1);
@@ -162,7 +159,7 @@ function CreateActivity(props) {
                   setNewActivityObject: setNewActivityObject,
                   t: props.t,
                 })}
-                <button
+                {/* <button
                   ref={submitButtonRef}
                   type="submit"
                   id={'submitButton'}
@@ -175,7 +172,7 @@ function CreateActivity(props) {
                       setReadyForSubmit,
                     )
                   }
-                ></button>
+                ></button> */}
               </form>
               <Box className={clsx(common_classes.margin)}>
                 <Grid

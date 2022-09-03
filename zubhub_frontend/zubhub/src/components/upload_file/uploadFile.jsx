@@ -13,6 +13,7 @@ import {
   deleteImage,
   getErrors,
 } from './uploadFileScripts.js';
+import { getValue } from '../../views/create_activity/createActivityScripts';
 import {
   Typography,
   FormControl,
@@ -43,6 +44,13 @@ function UploadFile(props) {
   const fileInputRef = React.useRef(null);
   const [filesUploaded, setFilesUploaded] = useState(false);
   let fieldErrors = null;
+  let fieldValue = getValue(
+    route,
+    field,
+    index,
+    fieldType,
+    formikProps.formikValues,
+  );
   // const handleFileInputChange = () => {
   //   //if (fileType === 'image/*'){
   //   handleFileFieldChange(
@@ -109,43 +117,12 @@ function UploadFile(props) {
           component="span"
           id={`${name}_file_count_el`}
         >
-          {/* {newActivityObject.mediaUpload?.fileFields[field] &&
-            newActivityObject.mediaUpload?.fileFields[field].selectedFilesCount(
-              index,
-              countFilesText,
-            )} */}
-          {fieldType.simple
-            ? fieldType.array
-              ? formikProps.formikValues[field] &&
-                formikProps.formikValues[field][index] &&
-                `${formikProps.formikValues[field][index].length} ${
-                  formikProps.formikValues[field][index].length > 1
-                    ? countFilesText[1]
-                    : countFilesText[0]
-                }`
-              : formikProps.formikValues[field] &&
-                `${formikProps.formikValues[field].length} ${
-                  formikProps.formikValues[field].length > 1
-                    ? countFilesText[1]
-                    : countFilesText[0]
-                }`
-            : fieldType.array
-            ? formikProps.formikValues[route] &&
-              formikProps.formikValues[route][index] &&
-              formikProps.formikValues[route][index][field] &&
-              formikProps.formikValues[route][index][field] &&
-              `${formikProps.formikValues[route][index][field].length} ${
-                formikProps.formikValues[route][index][field].length > 1
-                  ? countFilesText[1]
-                  : countFilesText[0]
+          {fieldValue
+            ? fieldValue.length &&
+              `${fieldValue.length} ${
+                fieldValue.length > 1 ? countFilesText[1] : countFilesText[0]
               }`
-            : formikProps.formikValues[route] &&
-              formikProps.formikValues[route][field] &&
-              `${formikProps.formikValues[route][field].length} ${
-                formikProps.formikValues[route][field].length > 1
-                  ? countFilesText[1]
-                  : countFilesText[0]
-              }`}
+            : ''}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {
@@ -163,26 +140,7 @@ function UploadFile(props) {
         </FormHelperText>
 
         <Grid container spacing={2}>
-          {Object.entries(
-            imagesToPreview(
-              fieldType.simple
-                ? fieldType.array
-                  ? formikProps.formikValues[field] &&
-                    formikProps.formikValues[field][index] &&
-                    formikProps.formikValues[field][index]
-                  : formikProps.formikValues[field] &&
-                    formikProps.formikValues[field]
-                : fieldType.array
-                ? formikProps.formikValues[route] &&
-                  formikProps.formikValues[route][index] &&
-                  formikProps.formikValues[route][index][field] &&
-                  formikProps.formikValues[route][index][field] &&
-                  formikProps.formikValues[route][index][field]
-                : formikProps.formikValues[route] &&
-                  formikProps.formikValues[route][field] &&
-                  formikProps.formikValues[route][field],
-            ),
-          ).map(([index, image]) => (
+          {Object.entries(imagesToPreview(fieldValue)).map(([index, image]) => (
             <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
               <Paper
                 key={`imagePaper${index}`}

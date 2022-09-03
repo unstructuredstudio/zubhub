@@ -59,6 +59,10 @@ export const styles = theme => ({
     paddingTop: '100%',
     borderRadius: '15px 0px 15px 15px',
   },
+  itemContainer: {
+    position: 'relative',
+  },
+
   closeIcon: {
     position: 'absolute',
     top: -10,

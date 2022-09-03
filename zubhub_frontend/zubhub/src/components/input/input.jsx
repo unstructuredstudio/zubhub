@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { handleInputBlur, handleInputChange } from './inputScripts';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
+import {getValue} from '../../views/create_activity/createActivityScripts'
 
 function Input(props) {
   const {
@@ -54,17 +55,7 @@ function Input(props) {
           multiline={multiline ? multiline : false}
           type="text"
           value={
-            fieldType.simple
-              ? fieldType.array
-                ? formikProps.formikValues[field] &&
-                  formikProps.formikValues[field][index]
-                : formikProps.formikValues[field]
-              : fieldType.array
-              ? formikProps.formikValues[route] &&
-                formikProps.formikValues[route][field] &&
-                formikProps.formikValues[route][field][index]
-              : formikProps.formikValues[route] &&
-                formikProps.formikValues[route][field]
+            getValue(route, field, index, fieldType, formikProps.formikValues)
             // formikProps.formikValues[field]
             //   ? index >= 0
             //     ? formikProps.formikValues[field][index]

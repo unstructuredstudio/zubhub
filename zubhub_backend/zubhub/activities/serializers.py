@@ -133,11 +133,6 @@ class ActivitySerializer(serializers.ModelSerializer):
     def update(self, activity, validated_data):
         print('activity_to_update', activity)
         print('validated_data_from_update', validated_data)
-        # if 'inspiring_artist' in validated_data:
-        #     inspiring_artist_new = validated_data.pop('inspiring_artist')
-        # inspiring_artist_old = activity.inspiring_artist
-        # print('inspiring_artist_object', type(inspiring_artist_old))
-        # no changes
         if (activity.inspiring_artist is not None or 'inspiring_artist' in validated_data):
             if(activity.inspiring_artist is not None):
                 if('inspiring_artist' in validated_data):
@@ -184,8 +179,9 @@ class ActivitySerializer(serializers.ModelSerializer):
                 activity, validated_data.pop('activity_images'))
         if 'making_steps' in validated_data:
             update_making_steps(activity, validated_data.pop('making_steps'))
-        update_inspiring_examples(
-            activity, validated_data.pop('inspiring_examples'))
+        if 'inspiring_examples' in validated_data:
+            update_inspiring_examples(
+                activity, validated_data.pop('inspiring_examples'))
         activity.title = validated_data.pop('title')
         activity.motivation = validated_data.pop('motivation')
         activity.facilitation_tips = validated_data.pop('facilitation_tips')

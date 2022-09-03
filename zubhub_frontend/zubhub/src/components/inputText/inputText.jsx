@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   handleInputTextFieldChange,
   handleInputTextFieldBlur,
+  getValue,
 } from '../../views/create_activity/createActivityScripts';
 import {
   Box,
@@ -21,6 +22,7 @@ function InputText(props) {
     classes,
     common_classes,
     activity_classes,
+    fieldType,
     name,
     helperText,
     placeholder,
@@ -32,17 +34,6 @@ function InputText(props) {
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
   const { route, field, index } = getRouteFieldIndex(name);
   let fieldErrors = '';
-  // useEffect(() => {
-  //     fieldErrors = getErrors(
-  //     route,
-  //     field,
-  //     index,
-  //     formikProps.errors,
-  //     formikProps.touched,
-  //   );
-  //   console.log('input text getErrors', fieldErrors);
-  // }, []);
-
   return (
     <div>
       <Typography
@@ -84,6 +75,13 @@ function InputText(props) {
             modules={vars.quill.modules}
             formats={vars.quill.formats}
             placeholder={placeholder ? placeholder : ''}
+            defaultValue={getValue(
+              route,
+              field,
+              index,
+              fieldType,
+              formikProps.formikValues,
+            )}
             onChange={value =>
               handleInputTextFieldChange(
                 name,
@@ -108,19 +106,6 @@ function InputText(props) {
           {fieldErrors
             ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
             : ''}
-          {/* {index >= null
-            ? formikProps.touched[field] &&
-              formikProps.touched[field][index] &&
-              formikProps.errors[field] &&
-              formikProps.errors[field][index] &&
-              props.t(
-                `createActivity.inputs.${field}.errors.${formikProps.errors[field][index]}`,
-              )
-            : formikProps.touched[field] &&
-              formikProps.errors[field] &&
-              props.t(
-                `createActivity.inputs.${field}.errors.${formikProps.errors[field]}`,
-              )} */}
         </FormHelperText>
       </FormControl>
     </div>

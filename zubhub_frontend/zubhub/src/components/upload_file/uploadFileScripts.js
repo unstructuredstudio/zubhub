@@ -25,170 +25,170 @@ export const removeMetaData = (images, state, handleSetState) => {
   });
 };
 
-export class FileField {
-  constructor() {
-    this.files = {};
-    this.size = 0;
-    this.length = {};
-    this.urls = {};
-  }
+// export class FileField {
+//   constructor() {
+//     this.files = {};
+//     this.size = 0;
+//     this.length = {};
+//     this.urls = {};
+//   }
 
-  updateLength(value, index) {
-    // if (!this.length[index]) {
-    //   this.length[index] = 0;
-    // }
-    this.length[index] = value;
-  }
+//   updateLength(value, index) {
+//     // if (!this.length[index]) {
+//     //   this.length[index] = 0;
+//     // }
+//     this.length[index] = value;
+//   }
 
-  addUrl(url, index) {
-    this.urls[index] = url;
-  }
+//   addUrl(url, index) {
+//     this.urls[index] = url;
+//   }
 
-  addFile(file, index) {
-    // this.updateLength(1, index);
-    if (!this.length[index]) {
-      // length instead of files
-      this.updateLength(1, index);
-    }
-    if (this.files[index]) {
-      this.size -= this.files[index].size;
-    }
-    this.files[index] = file;
-    this.size += file.size;
-  }
-  //index is index of input in list of this fields inputs otherwise
-  //is index in liste of files if filed has one input that  accepts multiple
-  deleteFile(index) {
-    if (this.files[index]) {
-      this.size -= this.files[index].size;
-    }
-    delete this.files[index];
-    delete this.urls[index];
-    delete this.length[index];
-  }
+//   addFile(file, index) {
+//     // this.updateLength(1, index);
+//     if (!this.length[index]) {
+//       // length instead of files
+//       this.updateLength(1, index);
+//     }
+//     if (this.files[index]) {
+//       this.size -= this.files[index].size;
+//     }
+//     this.files[index] = file;
+//     this.size += file.size;
+//   }
+//   //index is index of input in list of this fields inputs otherwise
+//   //is index in liste of files if filed has one input that  accepts multiple
+//   deleteFile(index) {
+//     if (this.files[index]) {
+//       this.size -= this.files[index].size;
+//     }
+//     delete this.files[index];
+//     delete this.urls[index];
+//     delete this.length[index];
+//   }
 
-  deleteAll() {
-    this.files = {};
-    this.length = {};
-    this.urls = {};
-    this.size = 0;
-  }
+//   deleteAll() {
+//     this.files = {};
+//     this.length = {};
+//     this.urls = {};
+//     this.size = 0;
+//   }
 
-  imagesToPreview(inputIndex) {
-    let imagesToPreview = {};
+//   imagesToPreview(inputIndex) {
+//     let imagesToPreview = {};
 
-    if (Object.keys(this.length).length > 0) {
-      if (inputIndex >= 0) {
-        if (this.length[inputIndex]) {
-          imagesToPreview[inputIndex] = this.files[inputIndex]
-            ? { image: this.files[inputIndex], type: 'file' }
-            : { image: this.urls[inputIndex], type: 'url' };
-        }
-      } else {
-        Object.entries(this.length).map(([index, value]) => {
-          if (value && value > 0) {
-            imagesToPreview[index] = this.files[index]
-              ? { image: this.files[index], type: 'file' }
-              : { image: this.urls[index], type: 'url' };
-          }
-        });
-      }
-    }
-    return imagesToPreview;
-  }
+//     if (Object.keys(this.length).length > 0) {
+//       if (inputIndex >= 0) {
+//         if (this.length[inputIndex]) {
+//           imagesToPreview[inputIndex] = this.files[inputIndex]
+//             ? { image: this.files[inputIndex], type: 'file' }
+//             : { image: this.urls[inputIndex], type: 'url' };
+//         }
+//       } else {
+//         Object.entries(this.length).map(([index, value]) => {
+//           if (value && value > 0) {
+//             imagesToPreview[index] = this.files[index]
+//               ? { image: this.files[index], type: 'file' }
+//               : { image: this.urls[index], type: 'url' };
+//           }
+//         });
+//       }
+//     }
+//     return imagesToPreview;
+//   }
 
-  selectedFilesCount(index, countFilesText) {
-    let filesCount = 0;
-    if (index < 0 && Object.keys(this.length).length !== 0) {
-      filesCount = Object.values(this.length).reduce(
-        (sum, record) => sum + record,
-        0,
-      );
-    } else {
-      filesCount = this.length[index];
-    }
-    if (filesCount) {
-      return filesCount > 1
-        ? `${filesCount} ${countFilesText[1]}`
-        : `${filesCount} ${countFilesText[0]}`;
-    } else {
-      return '';
-    }
-  }
-}
+//   selectedFilesCount(index, countFilesText) {
+//     let filesCount = 0;
+//     if (index < 0 && Object.keys(this.length).length !== 0) {
+//       filesCount = Object.values(this.length).reduce(
+//         (sum, record) => sum + record,
+//         0,
+//       );
+//     } else {
+//       filesCount = this.length[index];
+//     }
+//     if (filesCount) {
+//       return filesCount > 1
+//         ? `${filesCount} ${countFilesText[1]}`
+//         : `${filesCount} ${countFilesText[0]}`;
+//     } else {
+//       return '';
+//     }
+//   }
+// }
 
-export class MediaUpload {
-  constructor(fileFields = {}, totalFilesSize = 0, loaded = 0) {
-    this.fileFields = fileFields;
-    this.totalFilesSize = totalFilesSize;
-    this.loaded = loaded;
-  }
+// export class MediaUpload {
+//   constructor(fileFields = {}, totalFilesSize = 0, loaded = 0) {
+//     this.fileFields = fileFields;
+//     this.totalFilesSize = totalFilesSize;
+//     this.loaded = loaded;
+//   }
 
-  updateLoaded(loaded) {
-    this.loaded += loaded;
-  }
+//   updateLoaded(loaded) {
+//     this.loaded += loaded;
+//   }
 
-  createFileField(field, files, inputIndex) {
-    let fileField = new FileField();
-    if (inputIndex >= 0) {
-      fileField.addFile(files[0], inputIndex);
-    } else {
-      Object.keys(files).forEach(key => {
-        fileField.addFile(files[key], key);
-      });
-    }
-    this.fileFields[field] = fileField;
-    this.totalFilesSize += fileField.size;
-  }
+//   createFileField(field, files, inputIndex) {
+//     let fileField = new FileField();
+//     if (inputIndex >= 0) {
+//       fileField.addFile(files[0], inputIndex);
+//     } else {
+//       Object.keys(files).forEach(key => {
+//         fileField.addFile(files[key], key);
+//       });
+//     }
+//     this.fileFields[field] = fileField;
+//     this.totalFilesSize += fileField.size;
+//   }
 
-  updateFileField(field, files, inputIndex) {
-    this.totalFilesSize -= this.fileFields[field].size;
-    if (inputIndex >= 0) {
-      this.fileFields[field].addFile(files[0], inputIndex);
-    } else {
-      this.fileFields[field].deleteAll();
-      Object.keys(files).forEach(key => {
-        this.fileFields[field].addFile(files[key], key);
-      });
-    }
-    this.totalFilesSize += this.fileFields[field].size;
-  }
+//   updateFileField(field, files, inputIndex) {
+//     this.totalFilesSize -= this.fileFields[field].size;
+//     if (inputIndex >= 0) {
+//       this.fileFields[field].addFile(files[0], inputIndex);
+//     } else {
+//       this.fileFields[field].deleteAll();
+//       Object.keys(files).forEach(key => {
+//         this.fileFields[field].addFile(files[key], key);
+//       });
+//     }
+//     this.totalFilesSize += this.fileFields[field].size;
+//   }
 
-  appendToFileField(field, files) {
-    this.totalFilesSize -= this.fileFields[field].size;
-    let fileValues = Object.values(this.fileFields[field].files).concat(
-      Object.values(files),
-    );
-    this.fileFields[field].deleteAll();
-    fileValues.forEach((file, index) => {
-      this.fileFields[field].addFile(file, index);
-    });
-  }
+//   appendToFileField(field, files) {
+//     this.totalFilesSize -= this.fileFields[field].size;
+//     let fileValues = Object.values(this.fileFields[field].files).concat(
+//       Object.values(files),
+//     );
+//     this.fileFields[field].deleteAll();
+//     fileValues.forEach((file, index) => {
+//       this.fileFields[field].addFile(file, index);
+//     });
+//   }
 
-  addUrlToField(field, url, index) {
-    this.fileFields[field].addUrl(url, index);
-  }
+//   addUrlToField(field, url, index) {
+//     this.fileFields[field].addUrl(url, index);
+//   }
 
-  deleteFileFromField(field, index) {
-    this.totalFilesSize -= this.fileFields[field].size;
-    this.fileFields[field].deleteFile(index);
-    this.totalFilesSize += this.fileFields[field].size;
-  }
+//   deleteFileFromField(field, index) {
+//     this.totalFilesSize -= this.fileFields[field].size;
+//     this.fileFields[field].deleteFile(index);
+//     this.totalFilesSize += this.fileFields[field].size;
+//   }
 
-  deleteAllFromField(field) {
-    this.totalFilesSize -= this.fileFields[field].size;
-    this.fileFields[field].deleteAll();
-  }
+//   deleteAllFromField(field) {
+//     this.totalFilesSize -= this.fileFields[field].size;
+//     this.fileFields[field].deleteAll();
+//   }
 
-  serializeImage = (fieldName, url, index) => {
-    let fileField = this.fileFields[fieldName]
-      ? this.fileFields[fieldName]
-      : new FileField();
-    fileField.addUrl(url, index);
-    fileField.updateLength(1, index);
-    this.fileFields[fieldName] = fileField;
-  };
-}
+//   serializeImage = (fieldName, url, index) => {
+//     let fileField = this.fileFields[fieldName]
+//       ? this.fileFields[fieldName]
+//       : new FileField();
+//     fileField.addUrl(url, index);
+//     fileField.updateLength(1, index);
+//     this.fileFields[fieldName] = fileField;
+//   };
+// }
 
 export const handleFileFieldChange = (
   name,
@@ -202,16 +202,9 @@ export const handleFileFieldChange = (
   setNewActivityObject,
   validateSteps,
 ) => {
-  //const { field, index } = getFieldAndIndex(name);
-  formikProps.setFieldTouched(name, true);
-  // initialize media upload objects
-  // let mediaUpload = newActivityObject['mediaUpload']
-  //   ? newActivityObject['mediaUpload']
-  //   : new MediaUpload();
+  formikProps.setFieldTouched(name, true); 
   let selectedFiles = {};
-
   selectedFiles = fileInputRef.current.files;
-
   if (selectedFiles.length > 0) {
     formikProps.setFieldValue(name, selectedFiles).then(errors => {
       route
@@ -228,45 +221,12 @@ export const handleFileFieldChange = (
           errors[field][inputIndex] &&
           formikProps.setFieldValue(name, undefined, false)
         : errors[field] && formikProps.setFieldValue(name, undefined, false);
-      // if (!mediaUpload.fileFields[field]) {
-      //   if (!errors[field]) {
-      //     mediaUpload.createFileField(field, selectedFiles, index);
-      //   }
-      // } else {
-      //   if (!errors[field]) {
-      //     if (fileInputRef.current.multiple && index < 0) {
-      //       mediaUpload.updateFileField(field, selectedFiles, index);
-      //     } else {
-      //       mediaUpload.updateFileField(field, selectedFiles, index);
-      //     }
-      //   } else {
-      //     if (index < 0) {
-      //       mediaUpload.deleteAllFromField(field);
-      //     } else {
-      //       if (errors[field][index]) {
-      //         if (mediaUpload.fileFields[field].files[index]) {
-      //           mediaUpload.deleteFileFromField(field, index);
-      //         }
-      //       } else {
-      //         mediaUpload.updateFileField(field, selectedFiles, index);
-      //       }
-      //     }
-      //   }
-      // }
-      // setNewActivityObject(prevActivity => {
-      //   return { ...prevActivity, mediaUpload: mediaUpload };
-      // });
     });
   }
   validateSteps();
 };
 
 export const getErrors = (route, field, index, errors, touched) => {
-  // if (route && errors[route] && typeof touched[route] === 'boolean') {
-  //   console.log('route has error triggered', route, field);
-  //   return errors[route];
-  // }
-
   return route
     ? index < 0
       ? errors[route] &&
@@ -309,25 +269,26 @@ export const imagesToPreview = files => {
           : { image: files, type: 'url' };
     }
   }
-  console.log('images to preview', imagesToPreview);
   return imagesToPreview;
 };
 
 export const deleteImage = (setFieldValue, fieldName) => {
-  console.log('delete triggered', fieldName);
   setFieldValue(fieldName, undefined, true);
 };
 
 export const deleteImageAtIndex = (formikProps, field, index) => {
   let files = {};
-  Object.entries(formikProps.formikValues[field]).forEach(([key, value]) => {
-    if (key !== index) {
-      files[key] = value;
-    }
-  });
-  files['length'] = formikProps.formikValues[field].length - 1;
-  console.log('delete at index triggered', index, files);
-  formikProps.setFieldValue(field, files, true);
+  if (formikProps.formikValues[field].length === 1) {
+    formikProps.setFieldValue(field, undefined, true);
+  } else {
+    Object.entries(formikProps.formikValues[field]).forEach(([key, value]) => {
+      if (key !== index) {
+        files[key] = value;
+      }
+    });
+    files['length'] = formikProps.formikValues[field].length - 1;
+    formikProps.setFieldValue(field, files, true);
+  }
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -386,9 +347,7 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
   let totalSize = 0;
   fileFields.map(item => {
     if (item.files) {
-      console.log('FORMMEDIAUPLOAD', item.files);
       Object.entries(item.files).forEach(([index, file]) => {
-        console.log('FORMMEDIAUPLOAD file', file);
         if (index !== 'length' && file instanceof Blob) {
           totalSize += file.size;
           promises.push(
@@ -409,22 +368,6 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
   handleSetState(state => {
     return { ...state, totalToUpLoad: totalSize };
   });
-  // let filesByField = state.mediaUpload.fileFields;
-  // Object.keys(filesByField).forEach(field => {
-  //   if (filesByField[field].files) {
-  //     Object.keys(filesByField[field].files).forEach(index => {
-  //       promises.push(
-  //         uploadFile(
-  //           filesByField[field].files[index],
-  //           auth,
-  //           handleSetState,
-  //           field,
-  //           index,
-  //         ),
-  //       );
-  //     });
-  //   }
-  // });
   return promises;
 };
 
