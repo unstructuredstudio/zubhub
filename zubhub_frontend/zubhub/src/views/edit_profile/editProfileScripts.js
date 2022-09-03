@@ -50,6 +50,36 @@ export const getProfile = (refs, props) => {
 };
 
 /**
+ * @function handleToggleDeleteAccountModal
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+ export const handleToggleDeleteAccountModal = state => {
+  const open_delete_account_modal = !state.open_delete_account_modal;
+  return { open_delete_account_modal, more_anchor_el: null };
+};
+
+/**
+ * @function deleteAccount
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+ export const deleteAccount = (username_el, props) => {
+  if (username_el.current.firstChild.value !== props.auth.username) {
+    return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
+  } else {
+    return props.deleteAccount({
+      token: props.auth.token,
+      history: props.history,
+      logout: props.logout,
+      t: props.t,
+    });
+  }
+};
+
+/**
  * @function editProfile
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
