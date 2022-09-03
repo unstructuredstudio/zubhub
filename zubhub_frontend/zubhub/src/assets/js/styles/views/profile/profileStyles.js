@@ -14,8 +14,12 @@ const styles = theme => ({
     },
   },
   avatarBoxStyle: {
-    padding: '0 1em',
-    paddingBottom: '2.5em',
+    padding: '0 1em 2.5em 1em',
+    // paddingBottom: '2.5em',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'end',
     [theme.breakpoints.down('740')]: {
       padding: '1em 1em 0 1em',
       marginBottom: '1em',
@@ -50,9 +54,14 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'end',
     padding: '0 2em 2em 2em',
+    maxWidth: '35%',
+    [theme.breakpoints.down('740')]: {
+      maxWidth: '100%'
+    },
   },
   userNameStyle: {
-    wordWrap: 'break-word',
+    wordBreak: 'break-all',
+    lineHeight: '1.2',
     fontWeight: 900,
     fontSize: '2rem',
     [theme.breakpoints.down('740')]: {
@@ -163,14 +172,11 @@ const styles = theme => ({
   },
   floatRight: { float: 'right' },
   editButton: { 
-    display: 'block',
-    margin: '0 auto',
-    marginTop: '0.5rem'
-
+    display: 'flex',
+    marginTop: '0.5rem',
   },
   followButton: { 
-    display: 'block',
-    margin: '-3px auto',
+    display: 'flex',
     marginTop: '0.75rem'
   },
   displayNone: { display: 'none' },
