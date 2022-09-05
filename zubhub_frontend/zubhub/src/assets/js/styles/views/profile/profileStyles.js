@@ -14,37 +14,57 @@ const styles = theme => ({
     },
   },
   avatarBoxStyle: {
-    width: '100%',
+    padding: '0 1em 2.5em 1em',
+    // paddingBottom: '2.5em',
     display: 'flex',
-    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'end',
+    [theme.breakpoints.down('740')]: {
+      padding: '1em 1em 0 1em',
+      marginBottom: '1em',
+    },
   },
   profileShareButtonStyle: {
     borderRadius: '50% !important',
   },
-  avatarStyle: {
-    width: '100%',
-    height: '100%',
-    paddingTop: '1.5em',
-    paddingBottom: '1.5em',
-    '& img': {
-      width: '10em',
-      backgroundColor: 'white',
-      height: '10em',
-      borderRadius: '50%',
-      boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
+  flexClass: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('740')]: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
   },
-  ProfileDetailStyle: {
-    width: '100%',
+  avatarStyle: {
+    width: '8rem',
+    height: '8rem',
+    '& img': {
+      width: '8rem',
+      backgroundColor: 'white',
+      height: '8rem',
+      borderRadius: '50%',
+    },
+    boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
+  },
+  ProfileNameStyle: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'end',
+    padding: '0 2em 2em 2em',
+    maxWidth: '35%',
+    [theme.breakpoints.down('740')]: {
+      maxWidth: '100%'
+    },
   },
   userNameStyle: {
+    wordBreak: 'break-all',
+    lineHeight: '1.2',
     fontWeight: 900,
     fontSize: '2rem',
-    position: 'relative',
-    [theme.breakpoints.down('470')]: {
+    [theme.breakpoints.down('740')]: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -54,24 +74,46 @@ const styles = theme => ({
   tagsContainerStyle: {
     display: 'flex',
     flexWrap: 'wrap',
+    marginBottom: '0.1em'
   },
   emailStyle: { marginBottom: '0.5em' },
-  dividerStyle: {
-    width: '100vw',
-  },
   moreInfoBoxStyle: {
-    height: '3em',
+    flexGrow: 1,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    alignItems: 'end',
+    flexWrap: 'wrap',
+    paddingBottom: '2em',
+    [theme.breakpoints.down('525')]: {
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
+    },
   },
   moreInfoStyle: {
-    marginLeft: '0.5em',
-    marginRight: '0.5em',
+
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderRadius: '5px',
+    padding: '1em 1em',
+    margin: '0.5em',
+    backgroundColor: '#E0F6F8',
     fontWeight: 'bold',
-    fontSize: '0.9rem',
+    fontSize: '0.85rem',
     color: '#00B8C4',
+    lineHeight: '1',
+    width: '5.5rem',
+    [theme.breakpoints.down('740')]: {
+      margin: '1em',
+    },
+  },
+  moreInfoTitleStyle: {
+    fontWeight: 500,
+  },
+  moreInfoCountStyle: {
+    fontWeight: 685,
+    fontSize: '1.9rem',
   },
   profileLowerStyle: {
     margin: '1em',
@@ -175,6 +217,14 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   floatRight: { float: 'right' },
+  editButton: { 
+    display: 'flex',
+    marginTop: '0.5rem',
+  },
+  followButton: { 
+    display: 'flex',
+    marginTop: '0.75rem'
+  },
   displayNone: { display: 'none' },
   largeLabel: {
     fontSize: '1.3rem',

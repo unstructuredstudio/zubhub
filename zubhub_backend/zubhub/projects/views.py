@@ -15,12 +15,13 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from projects.permissions import (IsOwner, IsStaffOrModerator,
                                   SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, CustomUserRateThrottle)
+from activitylog.models import Activitylog  
 from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
 from creators.models import Creator
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
                     get_published_projects_for_user)
-from creators.utils import (activity_notification, send_notification, set_badge_like_category,
+from creators.utils import (activity_notification, send_notification,  activity_log, set_badge_like_category,
                             set_badge_project_category, set_badge_view_category,
                              set_badge_comment_category)
 from .serializers import (ProjectSerializer, ProjectListSerializer,
@@ -346,6 +347,14 @@ class ToggleLikeAPIView(RetrieveAPIView):
                         f'/projects/{obj.pk}'
                     )
 
+                    activity_log(
+                        [obj.creator],
+                        self.request.user,
+                        [{'project': obj.title}],
+                        Activitylog.Type.CLAP,
+                        f'/projects/{obj.pk}'
+                    )
+
                 creator = Creator.objects.get(id = obj.creator_id)
                 set_badge_like_category(creator)
 
@@ -390,6 +399,15 @@ class ToggleSaveAPIView(RetrieveAPIView):
                         Notification.Type.BOOKMARK,
                         f'/projects/{obj.pk}'
                     )
+
+                    activity_log(
+                        [obj.creator],
+                        self.request.user,
+                        [{'project': obj.title}],
+                        Activitylog.Type.BOOKMARK,
+                        f'/projects/{obj.pk}'
+                    )
+
 
             return obj
         else:
@@ -476,6 +494,14 @@ class AddCommentAPIView(CreateAPIView):
                 self.request.user,
                 [{'project': result.title}],
                 Notification.Type.COMMENT,
+                f'/projects/{result.pk}'
+            )
+
+            activity_log(
+                [result.creator],
+                self.request.user,
+                [{'project': result.title}],
+                Activitylog.Type.COMMENT,
                 f'/projects/{result.pk}'
             )
 
