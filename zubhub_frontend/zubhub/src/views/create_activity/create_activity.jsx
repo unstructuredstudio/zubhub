@@ -58,7 +58,7 @@ function CreateActivity(props) {
   ];
   const validateSteps = () => {
     let stepVerified = true;
-    //props.validateForm();
+    console.log('validate steps triggered!!!!!');
     for (let i = 0; i < requiredFieldsByStep.length; i++) {
       stepVerified = true;
       requiredFieldsByStep[i].map(field => {
@@ -122,7 +122,7 @@ function CreateActivity(props) {
     setStep(step => {
       if (step === 1) {
         requiredFieldsByStep[0].map(item =>
-          props.setFieldTouched(item, true, false),
+          props.setFieldTouched(item, true, true),
         );
       } else {
         requiredFieldsByStep[1].map(item =>
@@ -132,6 +132,7 @@ function CreateActivity(props) {
       }
       return step + 1;
     });
+    validateSteps();
   };
 
   return (

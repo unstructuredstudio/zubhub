@@ -46,10 +46,8 @@ function MaterialsUsed(props) {
     validateSteps,
   } = props;
   const [materialsUsedList, setMaterialsUsedList] = useState(
-    newActivityObject.materialsUsed
-      ? typeof newActivityObject.materialsUsed === 'string'
-        ? newActivityObject.materialsUsed
-        : newActivityObject.materialsUsed
+    formikProps.formikValues.materials_used
+      ? formikProps.formikValues.materials_used
       : ['', '', ''],
   );
   return (

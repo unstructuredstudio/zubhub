@@ -21,16 +21,8 @@ function CreateActivityStep2(props) {
   const activity_classes = useStyles();
   const common_classes = useCommonStyles();
   const [newActivity, setNewActivity] = useState(props.newActivity);
+  const { t, formikProps, validateSteps } = props;
 
-  const {
-    t,
-    newActivityObject,
-    setNewActivityObject,
-    formikProps,
-    validateSteps,
-  } = props;
-
-  //console.log('newActivity 2', newActivity)
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
@@ -54,8 +46,6 @@ function CreateActivityStep2(props) {
             imagesButtonLabel={t(
               'createActivity.inputs.materialsUsed.images.label',
             )}
-            newActivityObject={newActivityObject}
-            setNewActivityObject={setNewActivityObject}
             formikProps={formikProps}
             validateSteps={validateSteps}
             t={t}
@@ -81,8 +71,6 @@ function CreateActivityStep2(props) {
               'createActivity.inputs.facilitationTips.placeholder',
             )}
             formikProps={props.formikProps}
-            newActivityObject={props.newActivityObject}
-            setNewActivityObject={props.setNewActivityObject}
             validateSteps={props.validateSteps}
             vars={vars}
             t={props.t}
@@ -112,8 +100,6 @@ function CreateActivityStep2(props) {
             classes={classes}
             activity_classes={activity_classes}
             fieldType={{ simple: true, nested: false, array: false }}
-            newActivityObject={newActivityObject}
-            setNewActivityObject={setNewActivityObject}
             formikProps={formikProps}
             validateSteps={validateSteps}
             t={t}
@@ -153,8 +139,6 @@ function CreateActivityStep2(props) {
               classes={classes}
               fieldType={{ simple: true, nested: false, array: false }}
               activity_classes={activity_classes}
-              newActivityObject={newActivityObject}
-              setNewActivityObject={setNewActivityObject}
               formikProps={formikProps}
               validateSteps={validateSteps}
               t={t}

@@ -23,13 +23,7 @@ function CreateActivityStep1(props) {
   const classes = useProjectStyles();
   const activity_classes = useStyles();
   const common_classes = useCommonStyles();
-  const [newActivity, setNewActivity] = useState(props.newActivity);
-  const { t, formikProps, newActivityObject, setNewActivityObject, validateSteps } = props;
-  // const setFieldValue = (value, field) => {
-  //   const fieldObject = {}
-  //   fieldObject[field] = value
-  //   setNewActivity((prevactivity) => ({ ...prevactivity, ...fieldObject }))
-  // }
+  const { t, formikProps, validateSteps } = props;
 
   return (
     <div className={activity_classes.createActivityStepContainer}>
@@ -51,8 +45,6 @@ function CreateActivityStep1(props) {
             formikProps={formikProps}
             validateSteps={validateSteps}
             t={t}
-            newActivityObject={newActivityObject}
-            setNewActivityObject={setNewActivityObject}
           />
         </Grid>
         <Grid item xs={12} className={common_classes.marginTop1em}>
@@ -73,8 +65,6 @@ function CreateActivityStep1(props) {
             helperText={t('createActivity.inputs.motivation.helperText')}
             placeholder={t('createActivity.inputs.motivation.placeholder')}
             formikProps={props.formikProps}
-            newActivityObject={props.newActivityObject}
-            setNewActivityObject={props.setNewActivityObject}
             validateSteps={props.validateSteps}
             vars={vars}
             t={props.t}
@@ -97,8 +87,6 @@ function CreateActivityStep1(props) {
             fieldType={{ simple: true, nested: false, array: false }}
             helperText={t('createActivity.inputs.learningGoals.helperText')}
             placeholder={t('createActivity.inputs.learningGoals.placeholder')}
-            newActivityObject={props.newActivityObject}
-            setNewActivityObject={props.setNewActivityObject}
             formikProps={props.formikProps}
             validateSteps={props.validateSteps}
             vars={vars}

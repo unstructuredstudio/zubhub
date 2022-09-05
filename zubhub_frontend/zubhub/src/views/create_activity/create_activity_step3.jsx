@@ -4,13 +4,11 @@ import InputText from '../../components/inputText/inputText';
 import CancelIcon from '@material-ui/icons/Cancel';
 import 'react-toastify/dist/ReactToastify.css';
 import { vars } from '../create_project/createProjectScripts';
-import {
-  getMakingStepsRequiredError,
-  deleteItem,
-} from './createActivityScripts';
+import { getMakingStepsRequiredError } from './createActivityScripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, FormControl, Box, Typography } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
+import AddIcon from '@material-ui/icons/Add';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
 import commonStyles from '../../assets/js/styles';
@@ -19,51 +17,22 @@ import UploadFile from '../../components/upload_file/uploadFile';
 import FormLabel from '../../components/form_labels/formLabel';
 import AddMore from '../../components/addMore/addMore';
 import Input from '../../components/input/input';
+import { Field, FieldArray } from 'formik';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivityStep3(props) {
-  const {
-    t,
-    newActivityObject,
-    setNewActivityObject,
-    formikProps,
-    validateSteps,
-  } = props;
+  const { t, formikProps, validateSteps } = props;
   const classes = useProjectStyles();
   const activity_classes = useStyles();
   const common_classes = useCommonStyles();
   const [makingSteps, setMakingSteps] = useState([]);
-  //   formikProps.formikValues.making_steps
-  //     ? formikProps.formikValues.making_steps
-  //     : [
-  //         {
-  //           description: '',
-  //           image: null,
-  //         },
-  //       ],
-  // );
-  const [inspiringExamples, setInspiringExamples] = useState(
-    formikProps.formikValues.inspiring_examples
-      ? formikProps.formikValues.inspiring_examples
-      : [
-          {
-            description: '',
-            credit: '',
-            image: null,
-          },
-        ],
-  );
-  const newObject = values => {
-    let newValues = { ...values };
-    delete newValues['length'];
-    return newValues;
-  };
+  const [inspiringExamples, setInspiringExamples] = useState([]);
   useEffect(() => {
     setMakingSteps(
       formikProps.formikValues.making_steps
-        ? newObject(formikProps.formikValues.making_steps)
+        ? formikProps.formikValues.making_steps
         : [
             {
               description: '',
@@ -71,10 +40,20 @@ function CreateActivityStep3(props) {
             },
           ],
     );
-  }, [props]);
-  Object.entries(makingSteps).map(([key, item]) => {
-    console.log('making steps', key);
-  });
+    setInspiringExamples(
+      formikProps.formikValues.inspiring_examples
+        ? formikProps.formikValues.inspiring_examples
+        : [
+            {
+              description: '',
+              credit: '',
+              image: null,
+            },
+          ],
+    );
+  }, [formikProps.formikValues]);
+
+  // console.log('making steps', makingSteps);
 
   return (
     <div className={activity_classes.createActivityStepContainer}>
@@ -93,87 +72,120 @@ function CreateActivityStep3(props) {
             inputOrder={7}
             fieldLabel={t('createActivity.inputs.creationSteps.label')}
           />
-          {Object.keys(makingSteps).map(key => (
-            <Grid
-              item
-              xs={12}
-              md={12}
-              sm={12}
-              className={clsx(
-                activity_classes.itemContainer,
-                common_classes.marginTop1em,
-                common_classes.outlined,
-              )}
-            >
-              <CancelIcon
-                className={activity_classes.closeIcon}
-                fontSize="small"
-                onClick={e => {
-                  deleteItem(formikProps.setFieldValue, `making_steps[${key}]`);
-                }}
-              />
-              <InputText
-                key={`makingSteps[${key}].descriptionKey`}
-                name={`making_steps[${key}].description`}
-                classes={classes}
-                common_classes={common_classes}
-                activity_classes={activity_classes}
-                fieldType={{ simple: false, nested: true, array: true }}
-                helperText={''}
-                placeholder={`${t(
-                  'createActivity.inputs.creationSteps.placeholder',
-                )} ${key + 1}`}
-                formikProps={props.formikProps}
-                newActivityObject={props.newActivityObject}
-                setNewActivityObject={props.setNewActivityObject}
-                validateSteps={props.validateSteps}
-                vars={vars}
-                t={props.t}
-              />
-              <Grid
-                item
-                xs={12}
-                md={3}
-                sm={6}
-                className={common_classes.marginTop1em}
-              >
-                <UploadFile
-                  key={`makingSteps[${key}].imageKey`}
-                  name={`making_steps[${key}].image`}
-                  fileType={'image/*'}
-                  uploadButtonLabel={t(
-                    'createActivity.inputs.creationSteps.image.label',
-                  )}
-                  classes={classes}
-                  activity_classes={activity_classes}
-                  fieldType={{ simple: false, nested: true, array: true }}
-                  newActivityObject={newActivityObject}
-                  setNewActivityObject={setNewActivityObject}
-                  formikProps={formikProps}
-                  validateSteps={validateSteps}
-                  t={t}
-                  multiple={false}
-                  countFilesText={[
-                    props.t('createActivity.inputs.image'),
-                    props.t('createActivity.inputs.images'),
-                  ]}
-                />
-              </Grid>
-            </Grid>
-          ))}
-          <Grid
-            item
-            spacing={3}
-            container
-            direction="row"
-            alignItems="flex-end"
-            justifyContent="flex-end"
-          >
-            <AddMore
-              setNodeList={setMakingSteps}
-              label={t('createActivity.inputs.creationSteps.addMore')}
-            />
-          </Grid>
+
+          <FieldArray
+            name="making_steps"
+            render={arrayHelpers => (
+              <div>
+                {makingSteps &&
+                  makingSteps.length > 0 &&
+                  makingSteps.map((step, key) => (
+                    <Grid
+                      item
+                      xs={12}
+                      md={12}
+                      sm={12}
+                      className={clsx(
+                        activity_classes.itemContainer,
+                        common_classes.marginTop1em,
+                        common_classes.outlined,
+                      )}
+                    >
+                      {key > 0 && (
+                        <CancelIcon
+                          className={activity_classes.closeIcon}
+                          fontSize="small"
+                          onClick={() => arrayHelpers.remove(key)}
+                        />
+                      )}
+
+                      <InputText
+                        key={`makingSteps[${key}].descriptionKey`}
+                        name={`making_steps[${key}].description`}
+                        classes={classes}
+                        common_classes={common_classes}
+                        activity_classes={activity_classes}
+                        fieldType={{
+                          simple: false,
+                          nested: true,
+                          array: true,
+                        }}
+                        helperText={''}
+                        placeholder={`${t(
+                          'createActivity.inputs.creationSteps.placeholder',
+                        )} ${parseInt(key, 10) + 1}`}
+                        formikProps={props.formikProps}
+                        validateSteps={props.validateSteps}
+                        vars={vars}
+                        t={props.t}
+                      />
+                      <Grid
+                        item
+                        xs={12}
+                        md={3}
+                        sm={6}
+                        className={common_classes.marginTop1em}
+                      >
+                        <UploadFile
+                          key={`makingSteps[${key}].imageKey`}
+                          name={`making_steps[${key}].image`}
+                          fileType={'image/*'}
+                          uploadButtonLabel={t(
+                            'createActivity.inputs.creationSteps.image.label',
+                          )}
+                          classes={classes}
+                          activity_classes={activity_classes}
+                          fieldType={{
+                            simple: false,
+                            nested: true,
+                            array: true,
+                          }}
+                          formikProps={formikProps}
+                          validateSteps={validateSteps}
+                          t={t}
+                          multiple={false}
+                          countFilesText={[
+                            props.t('createActivity.inputs.image'),
+                            props.t('createActivity.inputs.images'),
+                          ]}
+                        />
+                      </Grid>
+                      {/* <button
+                        type="button"
+                        onClick={() =>
+                          arrayHelpers.insert(key, {
+                            description: '',
+                            image: '',
+                          })
+                        } // insert an empty string at a position
+                      >
+                        +
+                      </button> */}
+                    </Grid>
+                  ))}
+                <Grid
+                  item
+                  spacing={3}
+                  container
+                  direction="row"
+                  alignItems="flex-end"
+                  justifyContent="flex-end"
+                >
+                  <CustomButton
+                    variant="outlined"
+                    size="large"
+                    onClick={() => arrayHelpers.push({})}
+                    secondaryButtonStyle
+                    customButtonStyle
+                  >
+                    <AddIcon />{' '}
+                    {t('createActivity.inputs.creationSteps.addMore')}
+                  </CustomButton>
+                </Grid>
+              </div>
+            )}
+          />
+
           <Typography
             variant="h10"
             className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}
@@ -227,8 +239,6 @@ function CreateActivityStep3(props) {
               formikProps={formikProps}
               validateSteps={validateSteps}
               t={t}
-              newActivityObject={newActivityObject}
-              setNewActivityObject={setNewActivityObject}
             />
             <InputText
               name={`inspiring_artist.short_biography`}
@@ -241,8 +251,6 @@ function CreateActivityStep3(props) {
                 'createActivity.inputs.inspiringArtist.placeholder',
               )}
               formikProps={props.formikProps}
-              newActivityObject={props.newActivityObject}
-              setNewActivityObject={props.setNewActivityObject}
               validateSteps={props.validateSteps}
               vars={vars}
               t={props.t}
@@ -265,8 +273,6 @@ function CreateActivityStep3(props) {
                 classes={classes}
                 activity_classes={activity_classes}
                 fieldType={{ simple: false, nested: true, array: false }}
-                newActivityObject={newActivityObject}
-                setNewActivityObject={setNewActivityObject}
                 formikProps={formikProps}
                 validateSteps={validateSteps}
                 t={t}
@@ -296,82 +302,116 @@ function CreateActivityStep3(props) {
             inputOrder={9}
             fieldLabel={t('createActivity.inputs.inspiringExemples.label')}
           />
-          <Grid
-            className={clsx(
-              common_classes.marginTop1em,
-              common_classes.outlined,
+
+          <FieldArray
+            name="inspiring_examples"
+            render={arrayHelpers => (
+              <div>
+                {inspiringExamples &&
+                  inspiringExamples.length > 0 &&
+                  inspiringExamples.map((step, key) => (
+                    <Grid
+                      item
+                      xs={12}
+                      md={12}
+                      sm={12}
+                      className={clsx(
+                        activity_classes.itemContainer,
+                        common_classes.marginTop1em,
+                        common_classes.outlined,
+                      )}
+                    >
+                      {key > 0 && (
+                        <CancelIcon
+                          className={activity_classes.closeIcon}
+                          fontSize="small"
+                          onClick={() => arrayHelpers.remove(key)}
+                        />
+                      )}
+                      <Grid container direction="row" spacing={3}>
+                        <Grid item xs={12} md={4} sm={6}>
+                          <Input
+                            label={`Img-${key + 1} desc`}
+                            multiline={true}
+                            key={`inspiringExamples[${key}].descriptionKey`}
+                            name={`inspiring_examples[${key}].description`}
+                            fieldType={{
+                              simple: false,
+                              nested: true,
+                              array: true,
+                            }}
+                            classes={classes}
+                            formikProps={formikProps}
+                            validateSteps={validateSteps}
+                            t={t}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={3} sm={6}>
+                          <Input
+                            label={`Img-${key + 1} credit`}
+                            key={`inspiringExamples[${key}].creditKey`}
+                            name={`inspiring_examples[${key}].credit`}
+                            fieldType={{
+                              simple: false,
+                              nested: true,
+                              array: true,
+                            }}
+                            classes={classes}
+                            formikProps={formikProps}
+                            validateSteps={validateSteps}
+                            t={t}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={3} sm={6}>
+                          <UploadFile
+                            key={`inspiringExamples[${key}].imageKey`}
+                            name={`inspiring_examples[${key}].image`}
+                            fileType={'image/*'}
+                            uploadButtonLabel={t(
+                              'createActivity.inputs.inspiringExemples.image.label',
+                            )}
+                            classes={classes}
+                            activity_classes={activity_classes}
+                            fieldType={{
+                              simple: false,
+                              nested: true,
+                              array: true,
+                            }}
+                            formikProps={formikProps}
+                            validateSteps={validateSteps}
+                            t={t}
+                            multiple={false}
+                            countFilesText={[
+                              props.t('createActivity.inputs.image'),
+                              props.t('createActivity.inputs.images'),
+                            ]}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  ))}
+                <Grid
+                  item
+                  spacing={3}
+                  container
+                  direction="row"
+                  alignItems="flex-end"
+                  justifyContent="flex-end"
+                >
+                  <CustomButton
+                    variant="outlined"
+                    size="large"
+                    onClick={() => arrayHelpers.push({})}
+                    secondaryButtonStyle
+                    customButtonStyle
+                  >
+                    <AddIcon />{' '}
+                    {t('createActivity.inputs.inspiringExemples.addMore')}
+                  </CustomButton>
+                </Grid>
+              </div>
             )}
-          >
-            {inspiringExamples.map((inspiringExample, index) => (
-              <Grid container direction="row" spacing={3}>
-                <Grid item xs={12} md={4} sm={6}>
-                  <Input
-                    label={`Img-${index + 1} desc`}
-                    multiline={true}
-                    key={`inspiringExamples[${index}].descriptionKey`}
-                    name={`inspiring_examples[${index}].description`}
-                    fieldType={{ simple: false, nested: true, array: true }}
-                    classes={classes}
-                    formikProps={formikProps}
-                    validateSteps={validateSteps}
-                    t={t}
-                    newActivityObject={newActivityObject}
-                    setNewActivityObject={setNewActivityObject}
-                  />
-                </Grid>
-                <Grid item xs={12} md={3} sm={6}>
-                  <Input
-                    label={`Img-${index + 1} credit`}
-                    key={`inspiringExamples[${index}].creditKey`}
-                    name={`inspiring_examples[${index}].credit`}
-                    fieldType={{ simple: false, nested: true, array: true }}
-                    classes={classes}
-                    formikProps={formikProps}
-                    validateSteps={validateSteps}
-                    t={t}
-                    newActivityObject={newActivityObject}
-                    setNewActivityObject={setNewActivityObject}
-                  />
-                </Grid>
-                <Grid item xs={12} md={3} sm={6}>
-                  <UploadFile
-                    key={`inspiringExamples[${index}].imageKey`}
-                    name={`inspiring_examples[${index}].image`}
-                    fileType={'image/*'}
-                    uploadButtonLabel={t(
-                      'createActivity.inputs.inspiringExemples.image.label',
-                    )}
-                    classes={classes}
-                    activity_classes={activity_classes}
-                    fieldType={{ simple: false, nested: true, array: true }}
-                    newActivityObject={newActivityObject}
-                    setNewActivityObject={setNewActivityObject}
-                    formikProps={formikProps}
-                    validateSteps={validateSteps}
-                    t={t}
-                    multiple={false}
-                    countFilesText={[
-                      props.t('createActivity.inputs.image'),
-                      props.t('createActivity.inputs.images'),
-                    ]}
-                  />
-                </Grid>
-              </Grid>
-            ))}
-          </Grid>
-          <Grid
-            item
-            spacing={3}
-            container
-            direction="row"
-            alignItems="flex-end"
-            justifyContent="flex-end"
-          >
-            <AddMore
-              setNodeList={setInspiringExamples}
-              label={t('createActivity.inputs.inspiringExemples.addMore')}
-            />
-          </Grid>
+          />
         </Grid>
       </Grid>
     </div>

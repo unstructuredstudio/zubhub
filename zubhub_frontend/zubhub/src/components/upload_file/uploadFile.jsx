@@ -33,8 +33,6 @@ function UploadFile(props) {
     activity_classes,
     countFilesText,
     multiple,
-    newActivityObject,
-    setNewActivityObject,
     formikProps,
     validateSteps,
     t,
@@ -43,7 +41,14 @@ function UploadFile(props) {
   const { route, field, index } = getRouteFieldIndex(name);
   const fileInputRef = React.useRef(null);
   const [filesUploaded, setFilesUploaded] = useState(false);
-  let fieldErrors = null;
+  let fieldErrors = getErrors(
+    route,
+    field,
+    index,
+    formikProps.errors,
+    formikProps.touched,
+  );
+  console.log('field errors at field:', name, '=', fieldErrors);
   let fieldValue = getValue(
     route,
     field,
@@ -51,19 +56,7 @@ function UploadFile(props) {
     fieldType,
     formikProps.formikValues,
   );
-  // const handleFileInputChange = () => {
-  //   //if (fileType === 'image/*'){
-  //   handleFileFieldChange(
-  //     name,
-  //     fileInputRef,
-  //     formikProps,
-  //     newActivityObject,
-  //     setFilesUploaded,
-  //     setNewActivityObject,
-  //     validateSteps
-  //   );
-  //   // }
-  // };
+
   return (
     <div>
       <CustomButton
@@ -104,9 +97,6 @@ function UploadFile(props) {
               index,
               fileInputRef,
               formikProps,
-              newActivityObject,
-              setFilesUploaded,
-              setNewActivityObject,
               validateSteps,
             )
           }
@@ -125,15 +115,9 @@ function UploadFile(props) {
             : ''}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {
-            (fieldErrors = getErrors(
-              route,
-              field,
-              index,
-              formikProps.errors,
-              formikProps.touched,
-            ))
-          }
+          {/* {
+            (fieldErrors = 
+          } */}
           {fieldErrors
             ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
             : ''}
@@ -160,7 +144,12 @@ function UploadFile(props) {
                   fontSize="small"
                   onClick={e => {
                     fieldType.simple
-                      ? deleteImageAtIndex(formikProps, field, index)
+                      ? deleteImageAtIndex(
+                          formikProps,
+                          field,
+                          index,
+                          validateSteps,
+                        )
                       : deleteImage(formikProps.setFieldValue, name);
                   }}
                 />

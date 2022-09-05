@@ -1,16 +1,7 @@
 import * as Yup from 'yup';
 import ZubhubAPI from '../../api';
-import {
-  FormMediaUpload,
-  MediaUpload,
-  FileField,
-} from '../../components/upload_file/uploadFileScripts';
+import { FormMediaUpload } from '../../components/upload_file/uploadFileScripts';
 const API = new ZubhubAPI();
-
-export const deleteItem = (setFieldValue, name) => {
-  console.log('delete item triggered!!!!!!!!!', name);
-  setFieldValue(name, undefined, false);
-};
 
 // ^/file validation functions
 const isImage = value => {
@@ -166,14 +157,9 @@ export const handleInputTextFieldChange = (
 export const handleInputTextFieldBlur = (
   name,
   formikValues,
-  setNewActivityObject,
   setInputTextFieldFocused,
   validateSteps,
 ) => {
-  setNewActivityObject(newActivity => ({
-    ...newActivity,
-    [name]: formikValues[name],
-  }));
   setInputTextFieldFocused(false);
   validateSteps();
 };
@@ -298,33 +284,18 @@ export const initUpload = async (
     );
 
     let values = { ...formikProps.formikValues };
-
-    if (values['making_steps']) {
-      let making_steps = values.making_steps;
-      making_steps.forEach((step, idx) => {
-        step['step_order'] = idx + 1;
-      });
-      values['making_steps'] = making_steps;
-    }
-    if (values['materials_used']) {
-      let materials_used = values.materials_used;
-      materials_used = materials_used.join(',');
-      values['materials_used'] = materials_used;
-    }
     const result = await Promise.all(uploadedMediaPromises);
-    //console.log('result of upload', result);
-
     result.forEach(each => {
       switch (each.fieldType) {
         case 'simple':
-          values[each.field] = each.url;
+          values[each.field] = { 0: each.url };
           break;
         case 'array':
           let field = values[each.field];
           if (!Array.isArray(field)) {
             field = [];
           }
-          field.push({ image: each.url });
+          field.push(each.url);
           values = { ...values, [each.field]: field };
           break;
         case 'object':
@@ -352,15 +323,65 @@ export const initUpload = async (
       }
     });
     console.log('values=======================>', values);
-    if (!Array.isArray(values.activity_images)) {
-      let field = [];
-      Object.entries(values['activity_images']).forEach(([key, image]) => {
-        if (key !== 'length') {
-          field.push({ image: image });
-        }
-      });
-      values = { ...values, ['activity_images']: field };
+    objectsArray.forEach(field => {
+      if (values[field]) {
+        let fieldValues = [];
+        values[field].forEach((value, idx) => {
+          if (
+            (field === 'inspiring_examples' && value['image']) ||
+            field !== 'inspiring_examples'
+          ) {
+            if (field === 'making_steps') {
+              value['step_order'] = idx + 1;
+            }
+
+            if (value['image'] && value['image']['length']) {
+              value['image'] = value.image[0];
+            }
+            fieldValues.push(value);
+          }
+        });
+        fieldValues.length === 0
+          ? delete values[field]
+          : (values[field] = fieldValues);
+      }
+    });
+
+    if (
+      values['inspiring_artist'] &&
+      values['inspiring_artist']['image'] &&
+      values['inspiring_artist']['image']['length']
+    ) {
+      values['inspiring_artist'] = {
+        ...values['inspiring_artist'],
+        image: values['inspiring_artist']['image'][0],
+      };
     }
+    if (values['materials_used']) {
+      let materials_used = values.materials_used;
+      materials_used = materials_used.join(',');
+      values['materials_used'] = materials_used;
+    }
+    let field = [];
+    Object.entries(values['activity_images']).forEach(([key, image]) => {
+      if (key !== 'length') {
+        field.push({ image: image });
+      }
+    });
+    if (field.length > 0) {
+      values = {
+        ...values,
+        ['activity_images']: field,
+      };
+    }
+
+    if (values['materials_used_image']) {
+      values = {
+        ...values,
+        ['materials_used_image']: values['materials_used_image']['0'],
+      };
+    }
+
     if (values['id']) {
       API.updateActivity(props.auth.token, values.id, values).then(res => {
         console.log('apiresponse', res);

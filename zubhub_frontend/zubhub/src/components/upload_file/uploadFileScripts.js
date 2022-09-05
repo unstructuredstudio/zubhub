@@ -197,12 +197,9 @@ export const handleFileFieldChange = (
   inputIndex,
   fileInputRef,
   formikProps,
-  newActivityObject,
-  setFilesUploaded,
-  setNewActivityObject,
   validateSteps,
 ) => {
-  formikProps.setFieldTouched(name, true); 
+  formikProps.setFieldTouched(name, true, false);
   let selectedFiles = {};
   selectedFiles = fileInputRef.current.files;
   if (selectedFiles.length > 0) {
@@ -223,7 +220,7 @@ export const handleFileFieldChange = (
         : errors[field] && formikProps.setFieldValue(name, undefined, false);
     });
   }
-  validateSteps();
+  //validateSteps();
 };
 
 export const getErrors = (route, field, index, errors, touched) => {
@@ -235,12 +232,12 @@ export const getErrors = (route, field, index, errors, touched) => {
         touched[route][field] &&
         errors[route][field]
       : errors[route] &&
-        errors[route][field] &&
-        errors[route][field][index] &&
+        errors[route][index] &&
+        errors[route][index][field] &&
         touched[route] &&
-        touched[route][field] &&
-        touched[route][field][index] &&
-        errors[route][field][index]
+        touched[route][index] &&
+        touched[route][index][field] &&
+        errors[route][index][field]
     : index < 0
     ? errors[field] && touched[field] && errors[field]
     : errors[field] &&
@@ -276,10 +273,20 @@ export const deleteImage = (setFieldValue, fieldName) => {
   setFieldValue(fieldName, undefined, true);
 };
 
-export const deleteImageAtIndex = (formikProps, field, index) => {
+export const deleteImageAtIndex = (
+  formikProps,
+  field,
+  index,
+  validateSteps,
+) => {
   let files = {};
   if (formikProps.formikValues[field].length === 1) {
-    formikProps.setFieldValue(field, undefined, true);
+    formikProps.setFieldTouched(field, true, false);
+    formikProps.setFieldValue(field, undefined, true).then(errors => {
+      if (errors[field]) {
+        validateSteps();
+      }
+    });
   } else {
     Object.entries(formikProps.formikValues[field]).forEach(([key, value]) => {
       if (key !== index) {
@@ -287,7 +294,12 @@ export const deleteImageAtIndex = (formikProps, field, index) => {
       }
     });
     files['length'] = formikProps.formikValues[field].length - 1;
-    formikProps.setFieldValue(field, files, true);
+    formikProps.setFieldTouched(field, true, false);
+    formikProps.setFieldValue(field, files, true).then(errors => {
+      if (errors[field]) {
+        validateSteps();
+      }
+    });
   }
 };
 

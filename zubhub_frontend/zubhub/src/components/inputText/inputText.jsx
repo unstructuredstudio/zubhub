@@ -27,7 +27,6 @@ function InputText(props) {
     helperText,
     placeholder,
     formikProps,
-    newActivityObject,
     vars,
     t,
   } = props;
@@ -61,7 +60,6 @@ function InputText(props) {
               handleInputTextFieldBlur(
                 field,
                 formikProps.formikValues,
-                props.setNewActivityObject,
                 setInputTextFieldFocused,
                 props.validateSteps,
               );

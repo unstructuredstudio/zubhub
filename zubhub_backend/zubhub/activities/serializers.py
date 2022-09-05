@@ -137,10 +137,11 @@ class ActivitySerializer(serializers.ModelSerializer):
             if(activity.inspiring_artist is not None):
                 if('inspiring_artist' in validated_data):
                     # if('image' in validated_data['inspiring_artist']):
-                    activity.inspiring_artist.image = update_image(
-                        activity.inspiring_artist.image, validated_data['inspiring_artist'].get('image'))
+                    if(activity.inspiring_artist.image is not None or validated_data['inspiring_artist'].get('image') is not None):
+                        activity.inspiring_artist.image = update_image(
+                            activity.inspiring_artist.image, validated_data['inspiring_artist'].get('image'))
 
-                    print('updated image', activity.inspiring_artist.image)
+                        print('updated image', activity.inspiring_artist.image)
                     # if 'name' in validated_data['inspiring_artist']:
                     activity.inspiring_artist.name = validated_data['inspiring_artist'].get(
                         'name')
@@ -182,11 +183,11 @@ class ActivitySerializer(serializers.ModelSerializer):
         if 'inspiring_examples' in validated_data:
             update_inspiring_examples(
                 activity, validated_data.pop('inspiring_examples'))
-        activity.title = validated_data.pop('title')
-        activity.motivation = validated_data.pop('motivation')
-        activity.facilitation_tips = validated_data.pop('facilitation_tips')
-        activity.learning_goals = validated_data.pop('learning_goals')
-        activity.materials_used = validated_data.pop('materials_used')
-        activity.video = validated_data.pop('video')
+        activity.title = validated_data.get('title')
+        activity.motivation = validated_data.get('motivation')
+        activity.facilitation_tips = validated_data.get('facilitation_tips')
+        activity.learning_goals = validated_data.get('learning_goals')
+        activity.materials_used = validated_data.get('materials_used')
+        activity.video = validated_data.get('video')
         activity.save()
         return activity

@@ -33,7 +33,7 @@ def create_activity_images(activity, images):
 
 
 def update_image(image, image_data):
-    if(image_data and image):
+    if(image_data is not None and image is not None):
         if image_data["file_url"] == image.file_url:
             return image
         else:
