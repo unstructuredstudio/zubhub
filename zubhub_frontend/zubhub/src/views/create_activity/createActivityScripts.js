@@ -55,18 +55,45 @@ const imageSizeTooLarge = value => {
 };
 
 const allEmpty = arr => {
-  let allEmptyValues = true;
+  let allEmptyValues = false;
   if (arr) {
+    console.log('from array all empty', arr);
+    if (arr.length === 0) {
+      allEmptyValues = true;
+    }
     arr.forEach(value => {
       if ((value && value !== '') || (value && Object.keys(value).length > 0)) {
-        allEmptyValues = false;
+        allEmptyValues = true;
       }
     });
-    return !allEmptyValues;
+    return allEmptyValues;
   } else {
     return false;
   }
 };
+const EmptyObject = obj => {
+  let allEmptyValues = true;
+  if (obj) {
+    console.log('from object all empty', obj);
+    let myObject = Object.entries(obj);
+    console.log('myObject', Object.entries(obj));
+    if (myObject.length === 0) {
+      console.log('length is zero');
+      allEmptyValues = false;
+    } else {
+      myObject.forEach(([key, value]) => {
+        if (!value || value === '' || value === '<p><br></p>') {
+          allEmptyValues = false;
+        }
+      });
+    }
+    console.log('allempty is for', obj, allEmptyValues);
+    return allEmptyValues;
+  } else {
+    return false;
+  }
+};
+
 const imageValidationSchema = Yup.mixed()
   // .test('image_is_empty', 'image_is_empty', function (value) {
   //   return !value ? false : true;
@@ -91,7 +118,7 @@ export const validationSchema = Yup.object().shape({
       }),
     )
     .test({
-      message: 'required1',
+      message: 'required',
       test: arr => allEmpty(arr),
     }),
   inspiring_artist: Yup.object().shape({
@@ -137,37 +164,53 @@ export const validationSchema = Yup.object().shape({
   }),
 });
 
-export const handleInputTextFieldChange = (
-  name,
-  value,
-  setInputTextFieldFocused,
-  setFieldValue,
-  setFieldTouched,
-) => {
-  setInputTextFieldFocused(true);
-  if (value && value !== '<p><br></p>') {
-    //props.setStatus({ ...props.status, [label]: '' });
-    setFieldValue(name, value, true);
-  } else {
-    setFieldValue(name, undefined, true);
-  }
-  setFieldTouched(name, true);
-};
-
-export const handleInputTextFieldBlur = (
-  name,
-  formikValues,
-  setInputTextFieldFocused,
-  validateSteps,
-) => {
-  setInputTextFieldFocused(false);
-  validateSteps();
+export const getErrors = (route, field, index, errors, touched) => {
+  return route
+    ? index < 0
+      ? errors[route] &&
+        errors[route][field] &&
+        touched[route] &&
+        touched[route][field] &&
+        errors[route][field]
+      : errors[route] &&
+        errors[route][index] &&
+        errors[route][index][field] &&
+        touched[route] &&
+        touched[route][index] &&
+        touched[route][index][field] &&
+        errors[route][index][field]
+    : index < 0
+    ? errors[field] && touched[field] && errors[field]
+    : errors[field] && touched[field] && typeof errors[field] === 'string'
+    ? errors[field]
+    : errors[field] &&
+      errors[field][index] &&
+      touched[field] &&
+      touched[field][index] &&
+      errors[field][index];
 };
 
 export const getMakingStepsRequiredError = (route, errors, touched) => {
-  if (route && errors[route] && typeof touched[route] === 'boolean') {
-    return errors[route];
-  }
+  return (
+    errors[route] &&
+    touched[route] &&
+    typeof errors[route] === 'string' &&
+    errors[route]
+  );
+
+  // if (route && errors[route] && errors[route][index] && touched[route]) {
+  //   return errors[route][index];
+  // }
+};
+
+export const getStepError = (route, index, errors, touched) => {
+  return (
+    errors[route] &&
+    touched[route] &&
+    typeof errors[route] !== 'string' &&
+    errors[route][index] &&
+    errors[route][index]
+  );
 };
 
 export const getValue = (route, field, index, fieldType, values) => {
@@ -200,6 +243,9 @@ export const deserialize = (activity, setFieldValue) => {
   objectsArray.forEach(field => {
     if (activity[field]) {
       activity[field].forEach((item, index) => {
+        if (field === 'making_steps') {
+          delete item['step_order'];
+        }
         Object.entries(item).forEach(([key, value]) => {
           if (value === null) {
             setFieldValue(`${field}[${index}][${key}]`, undefined);
@@ -260,6 +306,16 @@ export const deleteActivity = (token, id) => {
   API.deleteActivity({ token: token, id: id });
 };
 
+const isEmptyObject = obj => {
+  let isEmpty = true;
+  Object.entries(obj).forEach(([key, value]) => {
+    if (key !== 'length' && value && value !== '') {
+      isEmpty = false;
+    }
+  });
+  return isEmpty;
+};
+
 export const initUpload = async (
   e,
   state,
@@ -276,7 +332,7 @@ export const initUpload = async (
   if (!props.auth.token) {
     props.history.push('/login');
   } else {
-    let uploadedMediaPromises = FormMediaUpload(
+    let uploadedMediaPromises = await FormMediaUpload(
       state,
       props.auth,
       handleSetState,
@@ -329,7 +385,7 @@ export const initUpload = async (
         values[field].forEach((value, idx) => {
           if (
             (field === 'inspiring_examples' && value['image']) ||
-            field !== 'inspiring_examples'
+            (field !== 'inspiring_examples' && !isEmptyObject(value))
           ) {
             if (field === 'making_steps') {
               value['step_order'] = idx + 1;

@@ -261,7 +261,7 @@ export const handleImageFieldChange = (refs, props, state, handleSetState) => {
       refs.image_el.current.files.length < 2 ? 'image' : 'images'
     }`,
   )}`;
-
+  console.log('image uploaded', refs.image_el.current.files);
   props.setFieldValue('project_images', refs.image_el.current).then(errors => {
     if (!errors['project_images']) {
       removeMetaData(refs.image_el.current.files, state, handleSetState);
@@ -1336,10 +1336,10 @@ export const validationSchema = Yup.object().shape({
       }
     })
     .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
-      const re = /^[a-z0-9@._+-]{1,150}$/i
+      const re = /^[a-z0-9@._+-]{1,150}$/i;
       let unsupported = false;
       for (let username of publish.visible_to) {
-        console.log("kdlskdlksd", username);
+        console.log('kdlskdlksd', username);
         if (!re.test(username)) {
           unsupported = true;
         }

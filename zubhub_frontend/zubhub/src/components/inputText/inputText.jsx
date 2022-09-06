@@ -4,10 +4,11 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  handleInputTextFieldChange,
-  handleInputTextFieldBlur,
   getValue,
+  getErrors
 } from '../../views/create_activity/createActivityScripts';
+import { handleInputTextFieldChange,
+  handleInputTextFieldBlur,} from './inputTextScripts'
 import {
   Box,
   Typography,
@@ -16,7 +17,7 @@ import {
   ClickAwayListener,
 } from '@material-ui/core';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
-import { getErrors } from '../upload_file/uploadFileScripts';
+
 function InputText(props) {
   const {
     classes,
@@ -32,7 +33,13 @@ function InputText(props) {
   } = props;
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
   const { route, field, index } = getRouteFieldIndex(name);
-  let fieldErrors = '';
+  let fieldErrors = getErrors(
+    route,
+    field,
+    index,
+    formikProps.errors,
+    formikProps.touched,
+  );
   return (
     <div>
       <Typography
@@ -92,15 +99,6 @@ function InputText(props) {
           />
         </ClickAwayListener>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {
-            (fieldErrors = getErrors(
-              route,
-              field,
-              index,
-              formikProps.errors,
-              formikProps.touched,
-            ))
-          }
           {fieldErrors
             ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
             : ''}

@@ -132,7 +132,7 @@ function CreateActivity(props) {
       }
       return step + 1;
     });
-    validateSteps();
+    // validateSteps();
   };
 
   return (

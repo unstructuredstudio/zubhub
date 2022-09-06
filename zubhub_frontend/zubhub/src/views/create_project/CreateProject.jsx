@@ -171,7 +171,7 @@ function CreateProject(props) {
     props.errors['video'],
     props.touched['video'],
   ]);
-   
+
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -194,7 +194,7 @@ function CreateProject(props) {
   } = state;
   const { t } = props;
   const id = props.match.params.id;
-  console.log(' create project props and state', props, state)
+  console.log(' create project props and state', props, state);
   if (!props.auth.token) {
     return <ErrorPage error={t('createProject.errors.notLoggedIn')} />;
   } else {
@@ -880,7 +880,9 @@ function CreateProject(props) {
                         >
                           {publish_types.map(type => (
                             <MenuItem key={type.name} value={type.value}>
-                              {t(`createProject.inputs.publish.publishTypes.${type.name}`)}
+                              {t(
+                                `createProject.inputs.publish.publishTypes.${type.name}`,
+                              )}
                             </MenuItem>
                           ))}
                         </Select>

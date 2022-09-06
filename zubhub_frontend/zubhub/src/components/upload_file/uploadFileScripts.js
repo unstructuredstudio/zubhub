@@ -4,6 +4,7 @@ import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import axios from 'axios';
+import Compressor from 'compressorjs';
 import {
   s3 as DO,
   doConfig,
@@ -17,12 +18,34 @@ export const handleFileButtonClick = (fileInput, label) => {
   fileInput.current.click();
 };
 
-export const removeMetaData = (images, state, handleSetState) => {
-  const newWorker = worker();
-  newWorker.removeMetaData(images);
-  newWorker.addEventListener('message', e => {
-    Compress(e.data, state, handleSetState);
+// export const removeMetaData = (images, state, handleSetState) => {
+//   const newWorker = worker();
+//   newWorker.removeMetaData(images);
+//   newWorker.addEventListener('message', e => {
+//     Compress(e.data);
+//   });
+// };
+
+export const compress = image => {
+  return new Promise((resolve, reject) => {
+    new Compressor(image, {
+      success: resolve,
+      error: reject,
+    });
   });
+  // new Compressor(image, {
+  //   quality: 0.6,
+  //   convertSize: 100000,
+  //   success: result => {
+  //     console.log('compressed result', result);
+  //     return result;
+  //   },
+  //   error: error => {
+  //     console.log('compressed result', error);
+  //     console.warn(error.message);
+  //     return image;
+  //   },
+  // });
 };
 
 // export class FileField {
@@ -415,7 +438,7 @@ export const uploadFile = (
 };
 
 export const uploadFileToLocal = async (
-  file,
+  fileNotCompressed,
   token,
   username,
   handleSetState,
@@ -424,11 +447,20 @@ export const uploadFileToLocal = async (
   fieldType,
   index,
 ) => {
+  let file = fileNotCompressed;
+  console.log('file before compression', file);
   let url =
     process.env.REACT_APP_NODE_ENV === 'production'
       ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
       : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
   url = url + 'upload-file-to-local/';
+  if (file.type.split('/')[1] !== 'gif') {
+    let compressResult = await compress(fileNotCompressed);
+    if (compressResult) {
+      console.log('compressed file', compressResult);
+      file = compressResult;
+    }
+  }
   let key = nanoid();
   if (file.type.split('/')[0] === 'image') {
     key = `project_images/${key}`;

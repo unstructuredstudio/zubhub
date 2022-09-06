@@ -4,7 +4,10 @@ import InputText from '../../components/inputText/inputText';
 import CancelIcon from '@material-ui/icons/Cancel';
 import 'react-toastify/dist/ReactToastify.css';
 import { vars } from '../create_project/createProjectScripts';
-import { getMakingStepsRequiredError } from './createActivityScripts';
+import {
+  getMakingStepsRequiredError,
+  getStepError,
+} from './createActivityScripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, FormControl, Box, Typography } from '@material-ui/core';
 import CustomButton from '../../components/button/Button';
@@ -53,8 +56,6 @@ function CreateActivityStep3(props) {
     );
   }, [formikProps.formikValues]);
 
-  // console.log('making steps', makingSteps);
-
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
@@ -70,11 +71,13 @@ function CreateActivityStep3(props) {
             classes={classes}
             common_classes={common_classes}
             inputOrder={7}
-            fieldLabel={t('createActivity.inputs.creationSteps.label')}
+            required={true}
+            fieldLabel={t('createActivity.inputs.making_steps.label')}
           />
 
           <FieldArray
             name="making_steps"
+            validateOnChange={false}
             render={arrayHelpers => (
               <div>
                 {makingSteps &&
@@ -112,7 +115,7 @@ function CreateActivityStep3(props) {
                         }}
                         helperText={''}
                         placeholder={`${t(
-                          'createActivity.inputs.creationSteps.placeholder',
+                          'createActivity.inputs.making_steps.placeholder',
                         )} ${parseInt(key, 10) + 1}`}
                         formikProps={props.formikProps}
                         validateSteps={props.validateSteps}
@@ -131,7 +134,7 @@ function CreateActivityStep3(props) {
                           name={`making_steps[${key}].image`}
                           fileType={'image/*'}
                           uploadButtonLabel={t(
-                            'createActivity.inputs.creationSteps.image.label',
+                            'createActivity.inputs.making_steps.image.label',
                           )}
                           classes={classes}
                           activity_classes={activity_classes}
@@ -161,6 +164,30 @@ function CreateActivityStep3(props) {
                       >
                         +
                       </button> */}
+
+                      <Typography
+                        variant="h10"
+                        className={clsx(
+                          classes.fieldHelperTextStyle,
+                          classes.errorMessage,
+                        )}
+                      >
+                        {getStepError(
+                          'making_steps',
+                          key,
+                          formikProps.errors,
+                          formikProps.touched,
+                        )
+                          ? t(
+                              `createActivity.inputs.making_steps.errors.${getStepError(
+                                'making_steps',
+                                key,
+                                formikProps.errors,
+                                formikProps.touched,
+                              )}`,
+                            )
+                          : ''}
+                      </Typography>
                     </Grid>
                   ))}
                 <Grid
@@ -179,13 +206,12 @@ function CreateActivityStep3(props) {
                     customButtonStyle
                   >
                     <AddIcon />{' '}
-                    {t('createActivity.inputs.creationSteps.addMore')}
+                    {t('createActivity.inputs.making_steps.addMore')}
                   </CustomButton>
                 </Grid>
               </div>
             )}
           />
-
           <Typography
             variant="h10"
             className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}
@@ -305,6 +331,7 @@ function CreateActivityStep3(props) {
 
           <FieldArray
             name="inspiring_examples"
+            validateOnChange={false}
             render={arrayHelpers => (
               <div>
                 {inspiringExamples &&

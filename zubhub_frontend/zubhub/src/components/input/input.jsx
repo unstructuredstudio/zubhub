@@ -9,7 +9,10 @@ import {
 } from '@material-ui/core';
 import { handleInputBlur, handleInputChange } from './inputScripts';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
-import { getValue } from '../../views/create_activity/createActivityScripts';
+import {
+  getValue,
+  getErrors,
+} from '../../views/create_activity/createActivityScripts';
 
 function Input(props) {
   const {
@@ -22,7 +25,15 @@ function Input(props) {
     validateSteps,
   } = props;
   const { route, field, index } = getRouteFieldIndex(name);
+  let fieldErrors = getErrors(
+    route,
+    field,
+    index,
+    formikProps.errors,
+    formikProps.touched,
+  );
 
+  console.log('input field error', fieldErrors);
   return (
     <div>
       <FormControl
@@ -51,15 +62,20 @@ function Input(props) {
             formikProps.formikValues,
           )}
           onBlur={e => handleInputBlur(e, formikProps, validateSteps)}
-          onChange={e => formikProps.handleChange(e)}
+          onChange={e =>
+            handleInputChange(
+              name,
+              e.target.value,
+              formikProps.setFieldValue,
+              formikProps.setFieldTouched,
+            )
+          }
         />
 
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {formikProps.touched[name] &&
-            formikProps.errors[name] &&
-            props.t(
-              `createActivity.inputs.${name}.errors.${formikProps.errors[name]}`,
-            )}
+          {fieldErrors &&
+            fieldErrors !== 'required1' &&
+            props.t(`createActivity.inputs.${name}.errors.${fieldErrors}`)}
         </FormHelperText>
       </FormControl>
     </div>
