@@ -75,7 +75,6 @@ function Profile(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const username = props.match.params.username || props.auth.username;
-  console.log(username, "username@")
   const [page, setPage] = useState(1);
   const [userActivity, setUserActivity] = useState([])
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -89,12 +88,13 @@ function Profile(props) {
     dialog_error: null,
     more_anchor_el: null,
     drafts: [],
+    badge_tags: [],
   });
 
   React.useEffect(() => {
   try{
-    let obj1= new API()
-    const promises = [getUserProfile(props), obj1.getUserActivity(username, page)];
+    let activitylogObj= new API()
+    const promises = [getUserProfile(props), activitylogObj.getUserActivity(username, page)];
     if (username === props.auth.username) {
       promises.push(
         ProjectActions.getUserDrafts({
@@ -110,11 +110,12 @@ function Profile(props) {
       const obj = values[0];
       const activity = values[1] || {};
       const drafts = values[2] || {};
+      const badges = obj.profile.badges;
 
       if (obj.profile) {
         parseComments(obj.profile.comments);
       }
-      handleSetState({ ...obj, ...drafts });
+      handleSetState({ ...obj, ...drafts, badge_tags: badges });
       setUserActivity(userActivity   => ([...userActivity, ...activity.results]))
       const nextPageExist= activity.next? true : false 
       setNextPage(nextPageExist)
@@ -140,6 +141,7 @@ function Profile(props) {
     dialog_error,
     more_anchor_el,
     drafts,
+    badge_tags,
   } = state;
 
   const more_menu_open = Boolean(more_anchor_el);
@@ -302,24 +304,53 @@ function Profile(props) {
           </Paper>
 
           <Container maxWidth="md">
-            <Paper className={classes.profileLowerStyle}>
-              <Typography
-                gutterBottom
-                component="h2"
-                variant="h6"
-                color="textPrimary"
-                className={classes.titleStyle}
-              >
-                {!profile.members_count
-                  ? t('profile.about.label1')
-                  : t('profile.about.label2')}
-              </Typography>
-              {profile.bio
-                ? profile.bio
-                : !profile.members_count
-                ? t('profile.about.placeholder1')
-                : t('profile.about.placeholder2')}
-            </Paper>
+            <div className= {classes.aboutMeBadgeBox}>
+              <Paper className={classes.aboutMeBox}>
+                <Typography
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
+                  color="textPrimary"
+                  className={classes.titleStyle}
+                >
+                  {!profile.members_count
+                    ? t('profile.about.label1')
+                    : t('profile.about.label2')}
+                </Typography>
+                {profile.bio
+                  ? profile.bio
+                  : !profile.members_count
+                  ? t('profile.about.placeholder1')
+                  : t('profile.about.placeholder2')}
+              </Paper>
+
+              <Paper className={classes.badgeBox}>
+                <Typography
+                    gutterBottom
+                    component="h2"
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.badgeTitleStyle}
+                  >
+                    {t('profile.badge.badges')}
+                  </Typography>
+                  {!badge_tags.length > 0 ? (
+                    t('profile.badge.addBadges')
+                  ) : (
+                    <Box className={classes.badgeContainerStyle}>
+                      {badge_tags.map(tag => (
+                        <Typography
+                          key={tag}
+                          className={clsx(classes.badgeStyle)}
+                          component="h2"
+                        >
+                          {tag}
+                        </Typography>
+                      ))}
+                    </Box>
+                  )}
+              </Paper>
+            </div>
 
             <Paper   className= {classes.profileLowerStyle}>
             <Typography
