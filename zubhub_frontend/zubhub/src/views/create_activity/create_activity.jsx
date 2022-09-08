@@ -272,6 +272,7 @@ export default connect(
       motivation: '',
       learning_goals: '',
       facilitation_tips: '',
+      video: '',
       making_steps: [
         {
           description: '',

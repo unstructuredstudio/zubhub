@@ -23,6 +23,7 @@ function Input(props) {
     fieldType,
     formikProps,
     validateSteps,
+    disabled,
   } = props;
   const { route, field, index } = getRouteFieldIndex(name);
   let fieldErrors = getErrors(
@@ -32,7 +33,13 @@ function Input(props) {
     formikProps.errors,
     formikProps.touched,
   );
-
+  let fieldValue = getValue(
+    route,
+    field,
+    index,
+    fieldType,
+    formikProps.formikValues,
+  );
   console.log('input field error', fieldErrors);
   return (
     <div>
@@ -53,15 +60,15 @@ function Input(props) {
           label={label ? label : ''}
           name={name}
           multiline={multiline ? multiline : false}
+          disabled={disabled ? disabled : false}
           type="text"
-          value={getValue(
-            route,
-            field,
-            index,
-            fieldType,
-            formikProps.formikValues,
-          )}
-          onBlur={e => handleInputBlur(e, formikProps, validateSteps)}
+          value={
+            name === 'video'
+              ? fieldValue && fieldValue['file_url']
+                && fieldValue['file_url']
+              : fieldValue
+          }
+          onBlur={e => handleInputBlur(e, name, formikProps, validateSteps)}
           onChange={e =>
             handleInputChange(
               name,

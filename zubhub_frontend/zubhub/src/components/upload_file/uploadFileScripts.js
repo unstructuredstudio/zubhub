@@ -27,12 +27,14 @@ export const handleFileButtonClick = (fileInput, label) => {
 // };
 
 export const compress = image => {
+  //if (file.type.split('/')[1] !== 'gif') {
   return new Promise((resolve, reject) => {
     new Compressor(image, {
       success: resolve,
       error: reject,
     });
   });
+
   // new Compressor(image, {
   //   quality: 0.6,
   //   convertSize: 100000,
@@ -351,7 +353,11 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
       type: 'array',
       files: formikValues['activity_images'] && formikValues['activity_images'],
     },
-    { field: 'video', files: formikValues['video'] && formikValues['video'] },
+    {
+      field: 'video',
+      type: 'simple',
+      files: formikValues['video'] && formikValues['video'],
+    },
     {
       route: 'inspiring_artist',
       field: 'inspiring_artist.image',
@@ -383,7 +389,10 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
   fileFields.map(item => {
     if (item.files) {
       Object.entries(item.files).forEach(([index, file]) => {
-        if (index !== 'length' && file instanceof Blob) {
+        if (
+          index !== 'length' &&
+          (file instanceof Blob || file instanceof File)
+        ) {
           totalSize += file.size;
           promises.push(
             uploadFile(
@@ -438,7 +447,7 @@ export const uploadFile = (
 };
 
 export const uploadFileToLocal = async (
-  fileNotCompressed,
+  filenon,
   token,
   username,
   handleSetState,
@@ -447,26 +456,29 @@ export const uploadFileToLocal = async (
   fieldType,
   index,
 ) => {
-  let file = fileNotCompressed;
-  console.log('file before compression', file);
+  let file = filenon;
+  console.log('size before compression', file.size);
+  try {
+    file = await compress(filenon);
+    console.log('size after compression', file.size);
+  } catch (error) {
+    console.log('compression error msg:', error.message);
+  }
+
   let url =
     process.env.REACT_APP_NODE_ENV === 'production'
       ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
       : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
   url = url + 'upload-file-to-local/';
-  if (file.type.split('/')[1] !== 'gif') {
-    let compressResult = await compress(fileNotCompressed);
-    if (compressResult) {
-      console.log('compressed file', compressResult);
-      file = compressResult;
-    }
-  }
+
   let key = nanoid();
   if (file.type.split('/')[0] === 'image') {
     key = `project_images/${key}`;
   } else {
-    key = key.slice(0, Math.floor(key.length / 3));
-    key = `videos/${slugify(username)}-${slugify(file.name)}-${key}`;
+    if (file.type.split('/')[0] === 'video') {
+      key = key.slice(0, Math.floor(key.length / 3));
+      key = `videos/${slugify(username)}-${slugify(file.name)}-${key}`;
+    }
   }
 
   const formData = new FormData();
@@ -497,7 +509,6 @@ export const uploadFileToLocal = async (
       url: {
         file_url: result.data.Location,
         public_id: result.data.Key,
-        fileName: file.name,
       },
     };
   } else {
@@ -506,7 +517,7 @@ export const uploadFileToLocal = async (
       field: field,
       fieldType,
       index: index,
-      url: { file_url: result.data.secure_url, fileName: file.name },
+      url: { file_url: result.data.secure_url },
     };
   }
 };

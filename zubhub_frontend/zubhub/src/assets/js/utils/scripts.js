@@ -94,10 +94,8 @@ export const s3 = new AWS.S3({
  */
 const shouldSetImages = (compressed, images, state, handleSetState) => {
   if (compressed.length === images.length) {
-    console.log('from souldSetImages state', state);
     const { media_upload } = state;
     media_upload.images_to_upload = compressed;
-    console.log('from souldSetImages', media_upload);
     handleSetState(media_upload);
   }
 };

@@ -95,14 +95,11 @@ const EmptyObject = obj => {
 };
 
 const imageValidationSchema = Yup.mixed()
-  // .test('image_is_empty', 'image_is_empty', function (value) {
-  //   return !value ? false : true;
-  // })
   .test('not_an_image', 'onlyImages', value => isImage(value))
   .test('image_size_too_large', 'imageSizeTooLarge', value =>
     imageSizeTooLarge(value),
   );
-// file validation functions /$
+
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
   motivation: Yup.string().max(10000, 'max').required('required'),
@@ -162,6 +159,70 @@ export const validationSchema = Yup.object().shape({
   materials_used_image: Yup.lazy(value => {
     return imageValidationSchema;
   }),
+  video: Yup.mixed()
+    .test('should_be_video_file', 'shouldBeVideoFile', value => {
+      if (!value) {
+        return true;
+      } else if (value['file_url']) {
+        return true;
+      } else if (typeof value === 'object') {
+        let not_a_video = false;
+        for (let index = 0; index < value.length; index++) {
+          if (value[index].type.split('/')[0] !== 'video') {
+            not_a_video = true;
+          }
+        }
+        return not_a_video ? false : true;
+      }
+      return false;
+    })
+    .test('should_be_url', 'shouldBeURL', value => {
+      if (!value) {
+        return true;
+      } else if (typeof value === 'object' && !value['file_url']) {
+        return true;
+      } else if (value['file_url'] && typeof value['file_url'] === 'string') {
+        const res = value['file_url'].match(
+          /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+        );
+        return res !== null ? true : false;
+      }
+
+      return false;
+    })
+    .test('max-video-url-length', 'maxVideoURLLength', value => {
+      if (!value) {
+        return true;
+      } else if (typeof value === 'object' && !value['file_url']) {
+        return true;
+      } else if (value['file_url'] && typeof value['file_url'] === 'string') {
+        return value['file_url'].length > 2048 ? false : true;
+      }
+
+      return false;
+    })
+    .test('max-video-file-size', 'maxVideoFileSize', value => {
+      if (!value) {
+        return true;
+      } else if (value['file_url'] && typeof value['file_url'] === 'string') {
+        return true;
+      } else if (typeof value === 'object' && !value['file_url']) {
+        let max = false;
+        for (let index = 0; index < value.length; index++) {
+          if (value[index].size / 1000 > 60240) {
+            max = true;
+          }
+        }
+        return max ? false : true;
+      }
+
+      return false;
+    }),
+  // .test('video_is_empty', 'imageOrVideo', function (value) {
+  //   return vars.video_field_touched && !value && !this.parent.project_images
+  //     ? false
+  //     : true;
+  // }),
 });
 
 export const getErrors = (route, field, index, errors, touched) => {
@@ -234,7 +295,6 @@ const activityFieldMap = [
   'materials_used',
   'motivation',
   'title',
-  'video',
 ];
 
 const objectsArray = ['making_steps', 'inspiring_examples'];
@@ -288,6 +348,10 @@ export const deserialize = (activity, setFieldValue) => {
         setFieldValue(`inspiring_artist[${key}]`, value);
       }
     });
+  }
+
+  if (activity['video']) {
+    setFieldValue('video', { file_url: activity['video'], length: 1 });
   }
 
   activityFieldMap.forEach(item => {
@@ -436,6 +500,25 @@ export const initUpload = async (
         ...values,
         ['materials_used_image']: values['materials_used_image']['0'],
       };
+    }
+
+    if (values['video']) {
+      Object.entries(values['video']).forEach(([key, value]) => {
+        console.log('video key value', key, value);
+        if (key === 'file_url') {
+          values = {
+            ...values,
+            ['video']: value,
+          };
+        } else {
+          if (key === '0') {
+            values = {
+              ...values,
+              ['video']: value['file_url'],
+            };
+          }
+        }
+      });
     }
 
     if (values['id']) {

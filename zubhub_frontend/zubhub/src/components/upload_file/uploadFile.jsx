@@ -20,6 +20,7 @@ import {
   FormHelperText,
   Grid,
   Paper,
+  CardMedia,
 } from '@material-ui/core';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
 
@@ -35,6 +36,7 @@ function UploadFile(props) {
     multiple,
     formikProps,
     validateSteps,
+    disabled,
     t,
   } = props;
 
@@ -63,6 +65,7 @@ function UploadFile(props) {
         variant="outlined"
         size="large"
         margin="normal"
+        disabled={disabled ? disabled : false}
         id={`${name}_button`}
         startIcon={fileType === 'image/*' ? <ImageIcon /> : <MovieIcon />}
         onClick={() => handleFileButtonClick(fileInputRef, name)}
@@ -107,7 +110,7 @@ function UploadFile(props) {
           component="span"
           id={`${name}_file_count_el`}
         >
-          {fieldValue
+          {fieldValue && typeof fieldValue !== 'string'
             ? fieldValue.length &&
               `${fieldValue.length} ${
                 fieldValue.length > 1 ? countFilesText[1] : countFilesText[0]
@@ -130,15 +133,30 @@ function UploadFile(props) {
                 key={`imagePaper${index}`}
                 className={activity_classes.imagePreviewContainer}
               >
-                <img
-                  className={activity_classes.imagePreview}
-                  src={
-                    image.type === 'file'
-                      ? window.URL.createObjectURL(image.image)
-                      : image.image.file_url
-                  }
-                  alt={`imageAlt${index}`}
-                />
+                {console.log('image to preview', image)}
+                {field === 'video' ? (
+                  <CardMedia
+                    //sx={{ height: 200 }}
+                    className={activity_classes.imagePreview}
+                    component={image.type === 'file' ? 'video' : 'iframe'}
+                    //height={150}
+                    image={
+                      image.type === 'file'
+                        ? window.URL.createObjectURL(image.image)
+                        : image.image
+                    }
+                  />
+                ) : (
+                  <img
+                    className={activity_classes.imagePreview}
+                    src={
+                      image.type === 'file'
+                        ? window.URL.createObjectURL(image.image)
+                        : image.image.file_url
+                    }
+                    alt={`imageAlt${index}`}
+                  />
+                )}
                 <CancelIcon
                   className={activity_classes.closeIcon}
                   fontSize="small"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import InputText from '../../components/inputText/inputText';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,7 @@ import { styles } from '../../assets/js/styles/views/create_activity/createActiv
 import commonStyles from '../../assets/js/styles';
 import MaterialsUsed from '../../components/materialsUsed/materialsUsed';
 import UploadFile from '../../components/upload_file/uploadFile';
+import Input from '../../components/input/input';
 import FormLabel from '../../components/form_labels/formLabel';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
@@ -20,8 +21,12 @@ function CreateActivityStep2(props) {
   const classes = useProjectStyles();
   const activity_classes = useStyles();
   const common_classes = useCommonStyles();
-  const [newActivity, setNewActivity] = useState(props.newActivity);
+  const [disableVideo, setDisableVideo] = useState(false);
   const { t, formikProps, validateSteps } = props;
+
+  useEffect(() => {
+    setDisableVideo(props.formikProps.formikValues['video'] ? true : false);
+  }, [props.formikProps.formikValues]);
 
   return (
     <div className={activity_classes.createActivityStepContainer}>
@@ -125,15 +130,25 @@ function CreateActivityStep2(props) {
             inputOrder={6}
             fieldLabel={'Add a video if provided'}
           />
+          <Input
+            label={'video url'}
+            classes={classes}
+            name={'video'}
+            fieldType={{ simple: true, nested: false, array: false }}
+            formikProps={formikProps}
+            validateSteps={validateSteps}
+            disabled={disableVideo}
+            t={t}
+          />
           <Grid
             item
             xs={12}
             md={4}
             sm={4}
-            className={common_classes.marginTop1em}
+            // className={common_classes.marginTop1em}
           >
             <UploadFile
-              name={'activityVideo'}
+              name={'video'}
               fileType={'video/*'}
               uploadButtonLabel={'Upload Video'}
               classes={classes}
@@ -141,6 +156,7 @@ function CreateActivityStep2(props) {
               activity_classes={activity_classes}
               formikProps={formikProps}
               validateSteps={validateSteps}
+              disabled={disableVideo}
               t={t}
               multiple={true}
               countFilesText={['video added', 'videos added']}
