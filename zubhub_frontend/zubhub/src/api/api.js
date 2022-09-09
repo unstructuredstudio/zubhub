@@ -939,6 +939,12 @@ class API {
     const url = 'activities/';
     return this.request({ url, method: 'GET' }).then(res => res.json());
   };
+
+  activityToggleSave = ({ id, token }) => {
+    const url = `activities/${id}/toggle-save/`;
+
+    return this.request({ url, token }).then(res => res.json());
+  };
 }
 
 export default API;

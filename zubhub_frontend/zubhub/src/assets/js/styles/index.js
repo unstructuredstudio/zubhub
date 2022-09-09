@@ -1,6 +1,6 @@
 const styles = theme => ({
   margin: {
-   margin: '1em',
+    margin: '1em',
   },
   marginTop1em: {
     marginTop: '1em',
@@ -16,6 +16,10 @@ const styles = theme => ({
   },
   marginLeft1em: {
     marginLeft: '1em',
+  },
+  centerContainer: {
+    margin: 'auto',
+    width: '90%',
   },
   marginRight1em: {
     marginRight: '1em',
@@ -51,7 +55,7 @@ const styles = theme => ({
     justifyContent: 'right',
   },
   justifySpaceBetween: {
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   addOnSmallScreen: {
     [theme.breakpoints.up('555')]: {
@@ -97,8 +101,32 @@ const styles = theme => ({
   outlined: {
     border: '2px solid #00B8C4',
     borderRadius: '15px',
-    padding: '1em'
-  }
+    padding: '1em',
+  },
+  projectsCountIcon: {
+    color: '#ffcc00',
+  },
+  fabButtonStyle: {
+    color: '#ffcc00',
+    backgroundColor: '#dc3545',
+    position: 'absolute',
+    marginLeft: '1em',
+    left: '0em',
+    top: '-1.8em',
+    '&:hover': {
+      backgroundColor: '#b52836',
+      backgroundSize: '100%',
+    },
+    '& svg': {
+      fill: '#ffcc00',
+    },
+    '& svg:hover': {
+      fill: '#ffcc00',
+    },
+  },
+  textDecorationNone: {
+    textDecoration: 'none',
+  },
 });
 
 export default styles;

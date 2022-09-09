@@ -1,17 +1,18 @@
 export const style = {
-  activityCardContainer:{
+  activityCardContainer: {
     position: 'relative',
     maxWidth: '350px',
-    minWidth: '300px'
+    minWidth: '300px',
+    height: '95%',
   },
-  activityCard:{
+  activityCard: {
     maxWidth: '100%',
     borderRadius: '15px',
-    position: 'relative!important'
+    position: 'relative!important',
+    height: '100%',
   },
   activityCardImage: {
     width: '100%',
-    objectFit: 'cover',
     position: 'absolute',
     height: '100%',
   },
@@ -49,30 +50,33 @@ export const style = {
   },
   tagsShowMoreIconContainer: {
     //position: 'absolute',
-
   },
   tagsShowMoreList: {
-    position: 'absolute', 
-    right: '0%', 
-    backgroundColor: 'white', 
+    position: 'absolute',
+    right: '0%',
+    backgroundColor: 'white',
     maxHeight: '12em',
-    overflow: 'auto', 
-    borderRadius: '10px'
+    overflow: 'auto',
+    borderRadius: '10px',
   },
-  
+
   activityCardContent: {
-     padding: '10px!important',
-    width: '100%'
+    width: '100%',
+    position: 'relative',
   },
   activityCardInfoBox: {
+    height: '100%',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'flex-end'
+    alignItems: 'flex-start',
   },
   projectsCount: {
-    color: '#00B8C4'
+    color: '#00B8C4',
   },
   activityTitle: {
-    fontWeight: 900,
-  }
-}
+    fontSize: '1.1rem',
+    fontWeight: '900',
+    width: '80%',
+    textAlign: '-webkit-auto',
+  },
+};

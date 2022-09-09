@@ -10,6 +10,17 @@ const activities = (state = default_state, action) => {
         ...state,
         ...action.payload,
       };
+    case at.SET_ACTIVITY:
+      return {
+        ...state,
+        all_activities: state.all_activities.map(activity => {
+          if (activity.id === action.payload.activity.id) {
+            return action.payload.activity;
+          } else {
+            return activity;
+          }
+        }),
+      };
     default:
       return state;
   }

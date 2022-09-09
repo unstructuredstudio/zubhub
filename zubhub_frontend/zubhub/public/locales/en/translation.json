@@ -884,6 +884,8 @@
       "tags": "Tags",
       "none": "None",
       "edit": "Edit",
+      "build": "Let's Make This Project",
+      "pdf": "Download Pdf",
       "delete": {
         "label": "Delete",
         "dialog": {

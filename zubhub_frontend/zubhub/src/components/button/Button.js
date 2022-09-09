@@ -23,6 +23,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     children,
     primaryButtonStyle,
     primaryButtonStyle2,
+    primaryButtonStyle3,
     secondaryButtonStyle,
     dangerButtonStyle,
     darkDangerButtonStyle,
@@ -37,6 +38,7 @@ const CustomButton = React.forwardRef((props, ref) => {
   const btnClasses = classNames({
     [classes.primaryButtonStyle]: primaryButtonStyle,
     [classes.primaryButtonStyle2]: primaryButtonStyle2,
+    [classes.primaryButtonStyle3]: primaryButtonStyle3,
     [classes.secondaryButtonStyle]: secondaryButtonStyle,
     [classes.dangerButtonStyle]: dangerButtonStyle,
     [classes.darkDangerButtonStyle]: darkDangerButtonStyle,
@@ -47,7 +49,13 @@ const CustomButton = React.forwardRef((props, ref) => {
   });
 
   return (
-    <Button ref={ref} {...rest} classes={muiClasses} className={btnClasses} disabled={disabled? disabled : false}>
+    <Button
+      ref={ref}
+      {...rest}
+      classes={muiClasses}
+      className={btnClasses}
+      disabled={disabled ? disabled : false}
+    >
       {children}
     </Button>
   );

@@ -25,9 +25,29 @@ const styles = theme => ({
       paddingTop: '4em',
     },
   },
+  demoImageContainerStyle: {
+    height: '450px',
+  },
+  demoImageStyle: {
+    objectFit: 'cover',
+    height: '100%',
+    width: '100%',
+    maxWidth: '100%',
+    borderRadius: '15px',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+  },
   titleStyle: {
-    fontWeight: 900,
-    textAlign: 'center',
+    fontWeight: 800,
+    fontFamily: 'Inknut Antiqua',
+  },
+  createdOn: {
+    fontFamily: 'Inter',
+    fontStyle: 'normal',
+    fontWeight: 700,
+    // lineHeight: '29px',
+    // /* identical to box height */
+    // textAlign: 'center',
+    color: '#696868',
   },
   metaInfoStyle: {
     display: 'flex',
@@ -175,13 +195,14 @@ const styles = theme => ({
     fontWeight: 900,
     fontSize: '2.2rem',
   },
-  descriptionBodyStyle: {
+  motivationBodyStyle: {
     marginBottom: '0.7em',
     color: 'rgba(0, 0, 0, 0.54)',
     '& .ql-editor': {
       fontSize: '1.5rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
     },
+    
   },
   materialsUsedStyle: {
     display: 'inline-block',

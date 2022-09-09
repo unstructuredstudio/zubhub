@@ -22,7 +22,10 @@ import {
   Paper,
   CardMedia,
 } from '@material-ui/core';
-import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
+import {
+  getRouteFieldIndex,
+  buildVideoThumbnailURL,
+} from '../../assets/js/utils/scripts';
 
 function UploadFile(props) {
   const {
@@ -138,12 +141,13 @@ function UploadFile(props) {
                   <CardMedia
                     //sx={{ height: 200 }}
                     className={activity_classes.imagePreview}
-                    component={image.type === 'file' ? 'video' : 'iframe'}
+                    component={image.type === 'file' ? 'video' : 'img'}
+                    //
                     //height={150}
                     image={
                       image.type === 'file'
                         ? window.URL.createObjectURL(image.image)
-                        : image.image
+                        : buildVideoThumbnailURL(image.image)
                     }
                   />
                 ) : (

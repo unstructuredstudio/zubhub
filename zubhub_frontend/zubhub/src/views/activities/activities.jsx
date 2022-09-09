@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { getActivities } from '../../store/actions/activityActions';
+import {
+  getActivities,
+  activityToggleSave,
+} from '../../store/actions/activityActions';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -35,11 +38,9 @@ const StyledSlider = styled(Slider)`
 
 function Activities(props) {
   const classes = useStyles();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
-
   useEffect(async () => {
-    setLoading(true);
     const res = await props.getActivities();
     setLoading(false);
   }, []);
@@ -94,7 +95,14 @@ function Activities(props) {
               align="center"
               className={classes.activityBoxContainer}
             >
-              <Activity key={`activity-${index}`} activity={activity} />
+              <Activity
+                key={`activity-${index}`}
+                activity={activity}
+                auth={props.auth}
+                activityToggleSave={props.activityToggleSave}
+                t={props.t}
+                history={props.history}
+              />
             </Grid>
           ))}
         </Grid>
@@ -106,6 +114,7 @@ function Activities(props) {
 const mapStateToProps = state => {
   return {
     activities: state.activities,
+    auth: state.auth,
   };
 };
 
@@ -113,6 +122,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getActivities: () => {
       return dispatch(getActivities());
+    },
+    activityToggleSave: args => {
+      return dispatch(activityToggleSave(args));
     },
   };
 };
