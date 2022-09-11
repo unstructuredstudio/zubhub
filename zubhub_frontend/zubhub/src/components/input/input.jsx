@@ -64,9 +64,9 @@ function Input(props) {
           type="text"
           value={
             name === 'video'
-              ? fieldValue && fieldValue['file_url']
-                && fieldValue['file_url']
-              : fieldValue
+              ? fieldValue && 
+                fieldValue['file_url'] && fieldValue['file_url']
+              :  fieldValue
           }
           onBlur={e => handleInputBlur(e, name, formikProps, validateSteps)}
           onChange={e =>

@@ -294,8 +294,11 @@ export const imagesToPreview = files => {
   return imagesToPreview;
 };
 
-export const deleteImage = (setFieldValue, fieldName) => {
-  setFieldValue(fieldName, undefined, true);
+export const deleteImage = (setFieldValue, fieldName, validateSteps) => {
+  setFieldValue(fieldName, undefined, true).then(errors =>{
+    validateSteps();
+  })
+
 };
 
 export const deleteImageAtIndex = (

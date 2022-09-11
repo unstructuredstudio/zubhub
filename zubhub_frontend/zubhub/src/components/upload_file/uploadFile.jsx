@@ -138,19 +138,24 @@ function UploadFile(props) {
               >
                 {console.log('image to preview', image)}
                 {field === 'video' ? (
-                  <CardMedia
-                    //sx={{ height: 200 }}
-                    className={activity_classes.imagePreview}
-                    component={image.type === 'file' ? 'video' : 'img'}
-                    //
-                    //height={150}
-                    image={
-                      image.type === 'file'
-                        ? window.URL.createObjectURL(image.image)
-                        : buildVideoThumbnailURL(image.image)
-                    }
-                  />
+                  image.type === 'file' ? (
+                    <CardMedia
+                      //sx={{ height: 200 }}
+                      className={activity_classes.imagePreview}
+                      component={image.type === 'file' ? 'video' : 'img'}
+                      //
+                      //height={150}
+                      image={window.URL.createObjectURL(image.image)}
+                    />
+                  ) : (
+                    <img
+                      className={activity_classes.imagePreview}
+                      src={buildVideoThumbnailURL(image.image)}
+                      alt={`imageAlt${index}`}
+                    />
+                  )
                 ) : (
+                  // )
                   <img
                     className={activity_classes.imagePreview}
                     src={
@@ -172,7 +177,11 @@ function UploadFile(props) {
                           index,
                           validateSteps,
                         )
-                      : deleteImage(formikProps.setFieldValue, name);
+                      : deleteImage(
+                          formikProps.setFieldValue,
+                          name,
+                          validateSteps,
+                        );
                   }}
                 />
               </Paper>
