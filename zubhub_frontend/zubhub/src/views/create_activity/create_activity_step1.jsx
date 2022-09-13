@@ -77,7 +77,7 @@ function CreateActivityStep1(props) {
             classes={classes}
             common_classes={common_classes}
             inputOrder={3}
-            fieldLabel={t('createActivity.inputs.learningGoals.label')}
+            fieldLabel={t('createActivity.inputs.learning_goals.label')}
           />
           <InputText
             classes={classes}
@@ -85,8 +85,8 @@ function CreateActivityStep1(props) {
             activity_classes={activity_classes}
             name={'learning_goals'}
             fieldType={{ simple: true, nested: false, array: false }}
-            helperText={t('createActivity.inputs.learningGoals.helperText')}
-            placeholder={t('createActivity.inputs.learningGoals.placeholder')}
+            helperText={t('createActivity.inputs.learning_goals.helperText')}
+            placeholder={t('createActivity.inputs.learning_goals.placeholder')}
             formikProps={props.formikProps}
             validateSteps={props.validateSteps}
             vars={vars}

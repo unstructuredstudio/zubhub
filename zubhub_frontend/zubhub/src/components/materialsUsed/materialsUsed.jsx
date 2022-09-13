@@ -56,7 +56,7 @@ function MaterialsUsed(props) {
         <Grid item xs={12} md={6}>
           {materialsUsedList.map((value, index) => (
             <Input
-              label={`material-${index + 1}`}
+              label={`${index + 1}-`}
               key={`materialsUsedKey[${index}]`}
               classes={classes}
               formikProps={formikProps}
@@ -105,9 +105,7 @@ function MaterialsUsed(props) {
             <UploadFile
               name={'materials_used_image'}
               fileType={'image/*'}
-              uploadButtonLabel={t(
-                'createActivity.inputs.materialsUsed.images.label',
-              )}
+              uploadButtonLabel={imagesButtonLabel}
               classes={classes}
               fieldType={{ simple: true, nested: false, array: false }}
               activity_classes={activity_classes}

@@ -124,7 +124,7 @@ function UploadFile(props) {
           {/* {
             (fieldErrors = 
           } */}
-          {fieldErrors
+          {fieldErrors && field !== 'video'
             ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
             : ''}
         </FormHelperText>

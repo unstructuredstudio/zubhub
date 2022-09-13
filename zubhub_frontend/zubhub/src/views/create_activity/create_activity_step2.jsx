@@ -13,6 +13,10 @@ import MaterialsUsed from '../../components/materialsUsed/materialsUsed';
 import UploadFile from '../../components/upload_file/uploadFile';
 import Input from '../../components/input/input';
 import FormLabel from '../../components/form_labels/formLabel';
+import {
+  getValue,
+  getErrors,
+} from '../../views/create_activity/createActivityScripts';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -28,6 +32,13 @@ function CreateActivityStep2(props) {
     setDisableVideo(props.formikProps.formikValues['video'] ? true : false);
   }, [props.formikProps.formikValues]);
 
+  let fieldErrors = getErrors(
+    undefined,
+    'video',
+    -1,
+    formikProps.errors,
+    formikProps.touched,
+  );
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
@@ -38,18 +49,18 @@ function CreateActivityStep2(props) {
             classes={classes}
             common_classes={common_classes}
             inputOrder={4}
-            fieldLabel={t('createActivity.inputs.materialsUsed.label')}
+            fieldLabel={t('createActivity.inputs.materials_used.label')}
           />
           <MaterialsUsed
             classes={classes}
             activity_classes={activity_classes}
             common_classes={common_classes}
-            addMoreLabel={t('createProject.inputs.materialsUsed.addMore')}
+            addMoreLabel={t('createActivity.inputs.materials_used.addMore')}
             encouragingText={t(
-              'createActivity.inputs.materialsUsed.encouragingText',
+              'createActivity.inputs.materials_used.encouragingText',
             )}
             imagesButtonLabel={t(
-              'createActivity.inputs.materialsUsed.images.label',
+              'createActivity.inputs.materials_used.images.label',
             )}
             formikProps={formikProps}
             validateSteps={validateSteps}
@@ -63,7 +74,7 @@ function CreateActivityStep2(props) {
             classes={classes}
             common_classes={common_classes}
             inputOrder={5}
-            fieldLabel={t('createActivity.inputs.facilitationTips.label')}
+            fieldLabel={t('createActivity.inputs.facilitation_tips.label')}
           />
           <InputText
             name={'facilitation_tips'}
@@ -71,9 +82,9 @@ function CreateActivityStep2(props) {
             common_classes={common_classes}
             activity_classes={activity_classes}
             fieldType={{ simple: true, nested: false, array: false }}
-            helperText={t('createActivity.inputs.facilitationTips.helperText')}
+            helperText={t('createActivity.inputs.facilitation_tips.helperText')}
             placeholder={t(
-              'createActivity.inputs.facilitationTips.placeholder',
+              'createActivity.inputs.facilitation_tips.placeholder',
             )}
             formikProps={props.formikProps}
             validateSteps={props.validateSteps}
@@ -100,7 +111,7 @@ function CreateActivityStep2(props) {
             name={'activity_images'}
             fileType={'image/*'}
             uploadButtonLabel={t(
-              'createActivity.inputs.materialsUsed.images.label',
+              'createActivity.inputs.materials_used.images.label',
             )}
             classes={classes}
             activity_classes={activity_classes}
@@ -162,6 +173,14 @@ function CreateActivityStep2(props) {
               countFilesText={['video added', 'videos added']}
             />
           </Grid>
+          <Typography
+            variant="h10"
+            className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}
+          >
+            {fieldErrors
+              ? t(`createActivity.inputs.video.errors.${fieldErrors}`)
+              : ''}
+          </Typography>
         </Grid>
       </Grid>
     </div>

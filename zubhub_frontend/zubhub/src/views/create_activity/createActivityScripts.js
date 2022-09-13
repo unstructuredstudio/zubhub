@@ -71,28 +71,28 @@ const allEmpty = arr => {
     return false;
   }
 };
-const EmptyObject = obj => {
-  let allEmptyValues = true;
-  if (obj) {
-    console.log('from object all empty', obj);
-    let myObject = Object.entries(obj);
-    console.log('myObject', Object.entries(obj));
-    if (myObject.length === 0) {
-      console.log('length is zero');
-      allEmptyValues = false;
-    } else {
-      myObject.forEach(([key, value]) => {
-        if (!value || value === '' || value === '<p><br></p>') {
-          allEmptyValues = false;
-        }
-      });
-    }
-    console.log('allempty is for', obj, allEmptyValues);
-    return allEmptyValues;
-  } else {
-    return false;
-  }
-};
+// const EmptyObject = obj => {
+//   let allEmptyValues = true;
+//   if (obj) {
+//     console.log('from object all empty', obj);
+//     let myObject = Object.entries(obj);
+//     console.log('myObject', Object.entries(obj));
+//     if (myObject.length === 0) {
+//       console.log('length is zero');
+//       allEmptyValues = false;
+//     } else {
+//       myObject.forEach(([key, value]) => {
+//         if (!value || value === '' || value === '<p><br></p>') {
+//           allEmptyValues = false;
+//         }
+//       });
+//     }
+//     console.log('allempty is for', obj, allEmptyValues);
+//     return allEmptyValues;
+//   } else {
+//     return false;
+//   }
+// };
 
 const imageValidationSchema = Yup.mixed()
   .test('not_an_image', 'onlyImages', value => isImage(value))
@@ -101,14 +101,14 @@ const imageValidationSchema = Yup.mixed()
   );
 
 export const validationSchema = Yup.object().shape({
-  title: Yup.string().max(100, 'max').required('required'),
-  motivation: Yup.string().max(10000, 'max').required('required'),
-  learning_goals: Yup.string().max(10000, 'max').required('required'),
-  facilitation_tips: Yup.string().max(10000, 'max').required('required'),
+  title: Yup.string().max(50, 'max').required('required'),
+  motivation: Yup.string().max(1000, 'max').required('required'),
+  learning_goals: Yup.string().max(1000, 'max').required('required'),
+  facilitation_tips: Yup.string().max(1000, 'max').required('required'),
   making_steps: Yup.array()
     .of(
       Yup.object().shape({
-        description: Yup.string().max(10000, 'max'),
+        description: Yup.string().max(500, 'max'),
         image: Yup.lazy(value => {
           return imageValidationSchema;
         }),
@@ -119,8 +119,8 @@ export const validationSchema = Yup.object().shape({
       test: arr => allEmpty(arr),
     }),
   inspiring_artist: Yup.object().shape({
-    name: Yup.string().max(100, 'max'),
-    short_biography: Yup.string().max(10000, 'max'),
+    name: Yup.string().max(50, 'max'),
+    short_biography: Yup.string().max(1000, 'max'),
     image: Yup.lazy(value => {
       return imageValidationSchema;
     }),
@@ -128,8 +128,8 @@ export const validationSchema = Yup.object().shape({
 
   inspiring_examples: Yup.array().of(
     Yup.object().shape({
-      description: Yup.string().max(1000, 'max'),
-      credit: Yup.string().max(100, 'max'),
+      description: Yup.string().max(500, 'max'),
+      credit: Yup.string().max(50, 'maxCredit'),
       image: Yup.lazy(value => {
         return imageValidationSchema;
       }),
@@ -137,7 +137,7 @@ export const validationSchema = Yup.object().shape({
   ),
 
   materials_used: Yup.array()
-    .of(Yup.string().max(100, 'max'))
+    .of(Yup.string().max(50, 'max'))
     .test({
       message: 'required1',
       test: arr => allEmpty(arr),
@@ -176,16 +176,40 @@ export const validationSchema = Yup.object().shape({
       }
       return false;
     })
-    .test('should_be_url', 'shouldBeURL', value => {
+    // .test('should_be_url', 'shouldBeURL', value => {
+    //   if (!value) {
+    //     return true;
+    //   } else if (typeof value === 'object' && !value['file_url']) {
+    //     return true;
+    //   } else if (value['file_url'] && typeof value['file_url'] === 'string') {
+    //     const res = value['file_url'].match(
+    //       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+    //     );
+    //     return res !== null ? true : false;
+    //   }
+
+    //   return false;
+    // })
+
+    //(http:\/\/www\.youtube\.com)?(www\.youtube\.com)?(m.youtube.com\/)?(http:\/\/m.youtube.com\/)?
+    .test('shouldBeURL', 'shouldBeURL', value => {
       if (!value) {
         return true;
       } else if (typeof value === 'object' && !value['file_url']) {
         return true;
       } else if (value['file_url'] && typeof value['file_url'] === 'string') {
-        const res = value['file_url'].match(
-          /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-        );
-        return res !== null ? true : false;
+        let regex =
+          /^((http[s]?:\/\/)?(www\.)?youtube\.com)?((http[s]?:\/\/)?(www\.)?youtu\.be\/)?(http[s]?:\/\/m.youtube.com\/)?(https:\/\/vimeo\.com)?(https:\/\/drive.google\.com)?/gm;
+        //^([http[s]?:\/\/]?[www\.]?youtube\.com)?(http[s]?:\/\/m.youtube.com\/)?(https:\/\/vimeo\.com)?(https:\/\/drive.google\.com)?/gm;
+        const res = value['file_url'].match(regex);
+        console.log('regex result=====>', res);
+        let result = false;
+        res.forEach(item => {
+          if (item !== '') {
+            result = true;
+          }
+        });
+        return result;
       }
 
       return false;

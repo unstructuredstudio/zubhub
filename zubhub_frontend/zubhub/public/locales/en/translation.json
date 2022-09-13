@@ -782,7 +782,7 @@
           "required": "This field is required"
         }
       },
-      "learningGoals": {
+      "learning_goals": {
         "label": "Add Learning Goals",
         "helperText": "List some of this activity's learning goals",
         "placeholder": "List some of this activity's learning goals",
@@ -791,12 +791,13 @@
           "required": "This field is required"
         }
       },
-      "materialsUsed": {
+      "materials_used": {
       "label": "what materials did you use?",
+      "addMore": "Add Material",
       "helperText": "List some of the essential materials used to create this activity",
       "encouragingText": "We strongly encourage you to upload an image containing all materials and tools used to create this activity",
       "images": {
-        "label": "Add Images"
+        "label": "Add Image"
       },
       "errors": {
         "max": "your material shouldn't be more than 50 characters",
@@ -805,7 +806,7 @@
         "min": "your material should be at least 2 characters"
       }
       },
-      "facilitationTips": {
+      "facilitation_tips": {
         "label": "Facilitation tips",
         "helperText": "List some helpful facilitation tips",
         "placeholder": "Facilitation tips",
@@ -835,12 +836,12 @@
           "label": "Add Step Image"
         },
         "errors": {
-          "max": "your creation step shouldn't be more than 10,000 characters",
+          "max": "your creation step shouldn't be more than 500 characters",
           "required": "describe creation process in at least one step ",
           "emptyStep": "step can't be empty provide either a description or an image"
         }
       },
-      "inspiringArtist": {
+      "inspiring_artist": {
         "label": "Inspiring Artist",
         "helperText": "Enter a Bio of your inspiring artist",
         "placeholder": "Inspiring artist Bio",
@@ -852,12 +853,31 @@
           "required": "This field is required"
         }
       },
-      "inspiringExemples": {
+      "inspiring_examples": {
         "label": "inspiring Examples",
         "addMore": "Add Example",
         "image": {
           "label": "Add Example Image"
+        },
+         "errors": {
+          "max": "your inspiring example's description shouldn't be more than 500 characters",
+          "required": "This field is required",
+          "maxCredit": "your inspiring example's credit shouldn't be more than 100 characters"
+
         }
+      },
+        "video": {
+          "label": "Let's add a video",
+          "label2": "Add Video",
+          "topHelperText": "It's ok if you don't have a video, you can add images instead!",
+          "bottomHelperText": "You can provide video URL (Youtube, vimeo and Google Drive are supported) or a video file",
+          "errors": {
+            "shouldBeURL": "Select a valid video URL from YouTube, Vimeo, or Google Drive",
+            "shouldBeVideoFile": "Select a valid video file",
+            "maxVideoFileSize": "video file is more than 60MB",
+            "maxVideoURLLength": "video URL is too long",
+            "imageOrVideo": "You must provide either image(s), video file, or video url to create your project!"
+          }
       },
       "image": "Image added",
       "images": "Images added",

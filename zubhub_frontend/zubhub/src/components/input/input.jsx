@@ -49,9 +49,9 @@ function Input(props) {
         size="small"
         fullWidth
         margin="none"
-        error={
-          formikProps.touched[name] && formikProps.errors[field] ? true : false
-        }
+        // error={
+        //   formikProps.touched[name] && formikProps.errors[field] ? true : false
+        // }
       >
         <InputLabel htmlFor={label}>{label}</InputLabel>
         <OutlinedInput
@@ -64,9 +64,8 @@ function Input(props) {
           type="text"
           value={
             name === 'video'
-              ? fieldValue && 
-                fieldValue['file_url'] && fieldValue['file_url']
-              :  fieldValue
+              ? fieldValue && fieldValue['file_url'] && fieldValue['file_url']
+              : fieldValue
           }
           onBlur={e => handleInputBlur(e, name, formikProps, validateSteps)}
           onChange={e =>
@@ -82,7 +81,12 @@ function Input(props) {
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {fieldErrors &&
             fieldErrors !== 'required1' &&
-            props.t(`createActivity.inputs.${name}.errors.${fieldErrors}`)}
+            field !== 'video' &&
+            props.t(
+              `createActivity.inputs.${
+                route ? route : field
+              }.errors.${fieldErrors}`,
+            )}
         </FormHelperText>
       </FormControl>
     </div>

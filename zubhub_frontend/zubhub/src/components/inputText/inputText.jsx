@@ -5,10 +5,12 @@ import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   getValue,
-  getErrors
+  getErrors,
 } from '../../views/create_activity/createActivityScripts';
-import { handleInputTextFieldChange,
-  handleInputTextFieldBlur,} from './inputTextScripts'
+import {
+  handleInputTextFieldChange,
+  handleInputTextFieldBlur,
+} from './inputTextScripts';
 import {
   Box,
   Typography,
@@ -100,7 +102,11 @@ function InputText(props) {
         </ClickAwayListener>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
           {fieldErrors
-            ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
+            ? t(
+                `createActivity.inputs.${
+                  route ? route : field
+                }.errors.${fieldErrors}`,
+              )
             : ''}
         </FormHelperText>
       </FormControl>

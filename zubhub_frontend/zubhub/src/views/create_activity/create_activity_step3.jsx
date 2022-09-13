@@ -165,7 +165,7 @@ function CreateActivityStep3(props) {
                         +
                       </button> */}
 
-                      <Typography
+                      {/* <Typography
                         variant="h10"
                         className={clsx(
                           classes.fieldHelperTextStyle,
@@ -187,7 +187,7 @@ function CreateActivityStep3(props) {
                               )}`,
                             )
                           : ''}
-                      </Typography>
+                      </Typography> */}
                     </Grid>
                   ))}
                 <Grid
@@ -244,7 +244,7 @@ function CreateActivityStep3(props) {
             classes={classes}
             common_classes={common_classes}
             inputOrder={8}
-            fieldLabel={t('createActivity.inputs.inspiringArtist.label')}
+            fieldLabel={t('createActivity.inputs.inspiring_artist.label')}
           />
           <Grid
             item
@@ -274,7 +274,7 @@ function CreateActivityStep3(props) {
               helperText={''}
               fieldType={{ simple: false, nested: true, array: false }}
               placeholder={t(
-                'createActivity.inputs.inspiringArtist.placeholder',
+                'createActivity.inputs.inspiring_artist.placeholder',
               )}
               formikProps={props.formikProps}
               validateSteps={props.validateSteps}
@@ -294,7 +294,7 @@ function CreateActivityStep3(props) {
                 name={`inspiring_artist.image`}
                 fileType={'image/*'}
                 uploadButtonLabel={t(
-                  'createActivity.inputs.inspiringArtist.image.label',
+                  'createActivity.inputs.inspiring_artist.image.label',
                 )}
                 classes={classes}
                 activity_classes={activity_classes}
@@ -326,7 +326,7 @@ function CreateActivityStep3(props) {
             classes={classes}
             common_classes={common_classes}
             inputOrder={9}
-            fieldLabel={t('createActivity.inputs.inspiringExemples.label')}
+            fieldLabel={t('createActivity.inputs.inspiring_examples.label')}
           />
 
           <FieldArray
@@ -395,7 +395,7 @@ function CreateActivityStep3(props) {
                             name={`inspiring_examples[${key}].image`}
                             fileType={'image/*'}
                             uploadButtonLabel={t(
-                              'createActivity.inputs.inspiringExemples.image.label',
+                              'createActivity.inputs.inspiring_examples.image.label',
                             )}
                             classes={classes}
                             activity_classes={activity_classes}
@@ -433,7 +433,7 @@ function CreateActivityStep3(props) {
                     customButtonStyle
                   >
                     <AddIcon />{' '}
-                    {t('createActivity.inputs.inspiringExemples.addMore')}
+                    {t('createActivity.inputs.inspiring_examples.addMore')}
                   </CustomButton>
                 </Grid>
               </div>
