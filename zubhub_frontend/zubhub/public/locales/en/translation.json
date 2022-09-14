@@ -842,11 +842,11 @@
         }
       },
       "inspiring_artist": {
-        "label": "Inspiring Artist",
-        "helperText": "Enter a Bio of your inspiring artist",
-        "placeholder": "Inspiring artist Bio",
+        "label": "Inspiring Person",
+        "helperText": "Enter a Bio of your inspiring Person",
+        "placeholder": "Inspiring Person Bio",
         "image": {
-          "label": "Add Artist Image"
+          "label": "Add Inspiring Person Image"
         },
         "errors": {
           "max": "your artist bio shouldn't be more than 10,000 characters",

@@ -49,6 +49,11 @@ const styles = theme => ({
     // textAlign: 'center',
     color: '#696868',
   },
+  videoPlayer: {
+    borderRadius: '15px',
+    width: '100%',
+    height: 'auto',
+  },
   metaInfoStyle: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -202,7 +207,6 @@ const styles = theme => ({
       fontSize: '1.5rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
     },
-    
   },
   materialsUsedStyle: {
     display: 'inline-block',

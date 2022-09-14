@@ -108,7 +108,7 @@ export const validationSchema = Yup.object().shape({
   making_steps: Yup.array()
     .of(
       Yup.object().shape({
-        description: Yup.string().max(500, 'max'),
+        description: Yup.string().max(1000, 'max'),
         image: Yup.lazy(value => {
           return imageValidationSchema;
         }),
@@ -199,7 +199,7 @@ export const validationSchema = Yup.object().shape({
         return true;
       } else if (value['file_url'] && typeof value['file_url'] === 'string') {
         let regex =
-          /^((http[s]?:\/\/)?(www\.)?youtube\.com)?((http[s]?:\/\/)?(www\.)?youtu\.be\/)?(http[s]?:\/\/m.youtube.com\/)?(https:\/\/vimeo\.com)?(https:\/\/drive.google\.com)?/gm;
+          /^((http[s]?:\/\/)?(www\.)?youtube\.com)?((http[s]?:\/\/)?(www\.)?youtu\.be\/)?(http[s]?:\/\/m.youtube.com\/)?(https:\/\/vimeo\.com)?((http[s]?:\/\/)?(www\.)?drive.google\.com)?/gm;
         //^([http[s]?:\/\/]?[www\.]?youtube\.com)?(http[s]?:\/\/m.youtube.com\/)?(https:\/\/vimeo\.com)?(https:\/\/drive.google\.com)?/gm;
         const res = value['file_url'].match(regex);
         console.log('regex result=====>', res);

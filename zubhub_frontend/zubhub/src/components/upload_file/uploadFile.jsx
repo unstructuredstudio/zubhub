@@ -138,23 +138,24 @@ function UploadFile(props) {
               >
                 {console.log('image to preview', image)}
                 {field === 'video' ? (
-                  image.type === 'file' ? (
-                    <CardMedia
-                      //sx={{ height: 200 }}
-                      className={activity_classes.imagePreview}
-                      component={image.type === 'file' ? 'video' : 'img'}
-                      //
-                      //height={150}
-                      image={window.URL.createObjectURL(image.image)}
-                    />
-                  ) : (
-                    <img
-                      className={activity_classes.imagePreview}
-                      src={buildVideoThumbnailURL(image.image)}
-                      alt={`imageAlt${index}`}
-                    />
-                  )
+                  // image.type === 'file' ? (
+                  <CardMedia
+                    className={activity_classes.imagePreview}
+                    component={image.type === 'file' ? 'video' : 'iframe'}
+                    image={
+                      image.type === 'file'
+                        ? window.URL.createObjectURL(image.image)
+                        : image.image
+                    }
+                  />
                 ) : (
+                  // ) : (
+                  //   <img
+                  //     className={activity_classes.imagePreview}
+                  //     src={buildVideoThumbnailURL(image.image)}
+                  //     alt={image.image}
+                  //   />
+                  // )
                   // )
                   <img
                     className={activity_classes.imagePreview}

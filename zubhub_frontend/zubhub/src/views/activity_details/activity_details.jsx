@@ -10,6 +10,7 @@ import { Grid, Box, CardMedia, Typography } from '@material-ui/core';
 import ActionIconsContainer from '../../components/actionIconsContainer/actionIconsContainer';
 import ReactQuill from 'react-quill';
 import clsx from 'clsx';
+import { videoOrUrl } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -155,6 +156,7 @@ function ActivityDetails(props) {
           xs={12}
           sm={8}
           lg={4}
+          item
           className={clsx(
             common_classes.marginTop1em,
             common_classes.marginBottom3em,
@@ -165,7 +167,7 @@ function ActivityDetails(props) {
         {/* <Typography variant="h5" className={classes.descriptionHeadingStyle}>
           {t('projectDetails.project.description')}
         </Typography> */}
-        <Grid lg={8} justifyContent="center">
+        <Grid lg={8} item justifyContent="center">
           <ReactQuill
             className={classes.motivationBodyStyle}
             theme={'bubble'}
@@ -178,6 +180,29 @@ function ActivityDetails(props) {
           className={clsx(common_classes.marginBottom1em)}
           variant="h5"
         ></Typography>
+        <Grid
+          xs={12}
+          sm={8}
+          lg={8}
+          container
+          alignItems="center"
+          // className={clsx(
+          //   common_classes.marginTop1em,
+          //   common_classes.marginBottom1em,
+          // )}
+        >
+          {activity.video && (
+            <CardMedia
+              //sx={{ height: 200 }}
+              className={classes.videoPlayer}
+              component={videoOrUrl(activity.video) ? 'video' : 'iframe'}
+              //
+              //height={150}
+              image={activity.video}
+              controls
+            />
+          )}
+        </Grid>
       </Box>
     </div>
   );

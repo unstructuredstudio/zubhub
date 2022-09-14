@@ -7,7 +7,9 @@ const refactorVideoUrl = url => {
       return 'https://www.youtube.com/embed/'.concat(url.split('/')[3]);
     }
     if (url.includes('drive.google.com')) {
-      return url.split('/view')[0].concat('', '/preview');
+      if (url.includes('/view')) {
+        return url.split('/view')[0].concat('', '/preview');
+      } else return url;
     } else {
       if (url.includes('https://vimeo.com')) {
         return url.replace('https://vimeo.com', 'player.vimeo.com/video');
