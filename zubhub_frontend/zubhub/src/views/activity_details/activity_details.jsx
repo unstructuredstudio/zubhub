@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { deleteActivity } from './activityDetailsScripts';
 import CustomButton from '../../components/button/Button';
+import GeneratePdf from '../../components/generatePdf/generatePdf';
 import styles from '../../assets/js/styles/views/activity_details/activityDetailsStyles';
 import commonStyles from '../../assets/js/styles';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,7 +11,11 @@ import { Grid, Box, CardMedia, Typography } from '@material-ui/core';
 import ActionIconsContainer from '../../components/actionIconsContainer/actionIconsContainer';
 import ReactQuill from 'react-quill';
 import clsx from 'clsx';
-import { videoOrUrl } from '../../assets/js/utils/scripts';
+//import logo from '../../assets/images/logos/logo.png';
+import {
+  videoOrUrl,
+  getBase64ImageFromURL,
+} from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -25,6 +30,77 @@ function ActivityDetails(props) {
 
   const activity = activities.all_activities.filter(item => item.id === id)[0];
   console.log('activity_details', activities, activity);
+  const [docDefinitionDefault, setDocDefinitionDefault] = useState({});
+  useEffect(async () => {
+    const response = await getBase64ImageFromURL(
+      activity.images[0].image.file_url,
+    );
+    
+    setDocDefinitionDefault(() => {
+      return {
+        pageSize: 'A4',
+        pageOrientation: 'portrait',
+        pageMargins: [40, 20, 40, 60],
+        content: [
+          {
+            text: 'Zubhub Activities',
+            style: 'header',
+            alignment: 'center',
+          },
+          {
+            alignment: 'justify',
+            columns: [
+              {
+                text: activity.title,
+                style: 'textBody',
+                alignment: 'justify',
+              },
+              {
+                image: response,
+                width: 200,
+                height: 200,
+              },
+            ],
+          },
+          {
+            text: activity.motivation,
+            alignment: 'center'
+          }
+        ],
+        defaultStyle: {
+          columnGap: 20,
+          // font: 'NimbusSans',
+        },
+        styles: {
+          withMargin: {
+            margin: [20, 20, 20, 20],
+          },
+          alignCenter: {
+            alignment: 'center',
+          },
+          header: {
+            fontSize: 20,
+            bold: true,
+            marginBottom: 20,
+          },
+          textBody: {
+            fontSize: 12,
+          },
+          subheader: {
+            fontSize: 15,
+            bold: true,
+          },
+          quote: {
+            italics: true,
+          },
+          small: {
+            fontSize: 8,
+          },
+        },
+      };
+    });
+  }, []);
+
   const handleDelete = () => {
     console.log('delete clicked');
     deleteActivity({ token: auth.token, id: id, history: history });
@@ -32,11 +108,15 @@ function ActivityDetails(props) {
   return (
     <div>
       <Box
+        id="activityDetailContainer"
+        //key="activityDetailContainer"
+
         className={clsx(
-          common_classes.margin,
-          common_classes.marginLeft1em,
-          common_classes.marginRight1em,
-          common_classes.centerContainer,
+          classes.activityDetailContainer,
+          common_classes.marginTop1em,
+          // common_classes.marginLeft1em,
+          // common_classes.marginRight1em,
+          //common_classes.centerContainer,
         )}
       >
         <Link
@@ -60,7 +140,7 @@ function ActivityDetails(props) {
           {t('activityDetails.activity.delete.label')}
         </CustomButton>
         <Grid
-          className={clsx(common_classes.marginTop3em)}
+          className={clsx(common_classes.marginTop1em)}
           container
           spacing={2}
         >
@@ -69,10 +149,11 @@ function ActivityDetails(props) {
             md={6}
             xs={12}
             sm={8}
-            lg={4}
+            lg={6}
             className={classes.demoImageContainerStyle}
           >
             <CardMedia
+              id="ActivityImage"
               className={clsx(
                 classes.demoImageStyle,
                 common_classes.marginBottom1em,
@@ -81,20 +162,17 @@ function ActivityDetails(props) {
               image={activity.images[0].image.file_url}
             />
           </Grid>
-          <Grid
-            container
-            lg={4}
-            md={4}
-            xs={12}
-            sm={4}
-            sx={{ height: '100%' }}
-            align="center"
-            justify="center"
-            direction="column"
-            // className={common_classes.marginLeft1em}
-          >
-            <Box>
+          <Grid item lg={6} md={4} xs={12} sm={4} align={'center'}>
+            {/* <Grid container> */}
+            <Box
+              sx={{ height: '100%' }}
+              align="center"
+              justify="center"
+              direction="column"
+              className={common_classes.marginLeft1em}
+            >
               <Typography
+                id="activityTitle"
                 className={clsx(
                   classes.titleStyle,
                   common_classes.marginBottom1em,
@@ -133,7 +211,11 @@ function ActivityDetails(props) {
                   xs={12}
                   className={common_classes.marginTop1em}
                 >
-                  <Link
+                  <GeneratePdf
+                    activity={activity}
+                    docDefinitionDefault={docDefinitionDefault}
+                  />
+                  {/* <Link
                     to={`/projects/create`}
                     className={common_classes.textDecorationNone}
                   >
@@ -145,10 +227,11 @@ function ActivityDetails(props) {
                     >
                       {t('activityDetails.activity.pdf')}
                     </CustomButton>
-                  </Link>
+                  </Link> */}
                 </Grid>
               </Grid>
             </Box>
+            {/* </Grid> */}
           </Grid>
         </Grid>
         <Grid
@@ -169,6 +252,7 @@ function ActivityDetails(props) {
         </Typography> */}
         <Grid lg={8} item justifyContent="center">
           <ReactQuill
+            id="activityMotivation"
             className={classes.motivationBodyStyle}
             theme={'bubble'}
             readOnly={true}
@@ -184,8 +268,8 @@ function ActivityDetails(props) {
           xs={12}
           sm={8}
           lg={8}
-          container
-          alignItems="center"
+          item
+          //alignItems="center"
           // className={clsx(
           //   common_classes.marginTop1em,
           //   common_classes.marginBottom1em,
@@ -193,15 +277,133 @@ function ActivityDetails(props) {
         >
           {activity.video && (
             <CardMedia
-              //sx={{ height: 200 }}
+              id="activityVideo"
               className={classes.videoPlayer}
               component={videoOrUrl(activity.video) ? 'video' : 'iframe'}
-              //
-              //height={150}
               image={activity.video}
               controls
             />
           )}
+        </Grid>
+        <Grid align="left" item>
+          <Typography
+            className={clsx(common_classes.marginTop1em, classes.subTitles)}
+            variant="h3"
+            align="left"
+          >
+            Learning Goals
+          </Typography>
+          <ReactQuill
+            className={classes.motivationBodyStyle}
+            theme={'bubble'}
+            readOnly={true}
+            value={activity.learning_goals || ''}
+          />
+        </Grid>
+        <Grid align="left" item>
+          <Typography
+            className={clsx(common_classes.marginTop1em, classes.subTitles)}
+            variant="h3"
+            align="left"
+          >
+            Materials Required
+          </Typography>
+          <Grid container>
+            <Grid item xs={6} lg={8} sm={8}>
+              {activity.materials_used &&
+                activity.materials_used.split(',').map(material => (
+                  <Typography
+                    // className={clsx(common_classes.marginTop1em)}
+                    variant="h6"
+                    align="left"
+                  >
+                    {material}
+                  </Typography>
+                ))}
+            </Grid>
+            {activity.materials_used_image ? (
+              <Grid item xs={6} lg={4} sm={4}>
+                <CardMedia
+                  className={classes.materialsImage}
+                  component="img"
+                  image={activity.materials_used_image.file_url}
+                ></CardMedia>
+              </Grid>
+            ) : (
+              ''
+            )}
+          </Grid>
+
+          {activity.making_steps && (
+            <>
+              <Typography
+                className={clsx(common_classes.marginTop1em, classes.subTitles)}
+                variant="h3"
+                align="left"
+              >
+                Making Process
+              </Typography>
+
+              {activity.making_steps.map(making_step => (
+                <Grid container>
+                  <Grid item xs={6} lg={8} sm={8}>
+                    {making_step.description && (
+                      <ReactQuill
+                        //className={classes.motivationBodyStyle}
+                        theme={'bubble'}
+                        readOnly={true}
+                        value={making_step.description || ''}
+                      />
+                    )}
+                  </Grid>
+                  <Grid item xs={6} lg={4} sm={4}>
+                    {making_step.image && (
+                      <CardMedia
+                        className={classes.materialsImage}
+                        component="img"
+                        image={making_step.image.file_url}
+                      ></CardMedia>
+                    )}
+                  </Grid>
+                </Grid>
+              ))}
+            </>
+          )}
+          {/* {activity.inspiring_examples && (
+            <Grid container>
+              <Typography
+                className={clsx(common_classes.marginTop1em, classes.subTitles)}
+                variant="h3"
+                align="left"
+              >
+                Some Inspiring Examples
+              </Typography>
+              
+              {activity.inspiring_examples.map(example => (
+                
+                  <Grid item xs={6} lg={8} sm={8}>
+                    {making_step.description && (
+                      <ReactQuill
+                        //className={classes.motivationBodyStyle}
+                        theme={'bubble'}
+                        readOnly={true}
+                        value={making_step.description || ''}
+                      />
+                    )}
+                  </Grid>
+                  <Grid item xs={6} lg={4} sm={4}>
+                    {making_step.image && (
+                      <CardMedia
+                        className={classes.materialsImage}
+                        component="img"
+                        image={making_step.image.file_url}
+                      ></CardMedia>
+                    )}
+                  </Grid>
+                
+              ))}</Grid>
+            </>
+          )} */}
         </Grid>
       </Box>
     </div>

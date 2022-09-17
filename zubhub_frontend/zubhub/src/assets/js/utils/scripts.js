@@ -352,3 +352,23 @@ export const getFieldAndIndex = str => {
     ? { field: arr[0], index: parseInt(arr[1].split('')[0]) }
     : { field: arr[0], index: parseInt('-1', 10) };
 };
+
+export const getBase64ImageFromURL = url => {
+  return new Promise((resolve, reject) => {
+    var img = new Image();
+    img.setAttribute('crossOrigin', 'anonymous');
+    img.onload = () => {
+      var canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      var dataURL = canvas.toDataURL('image/jpeg');
+      resolve(dataURL);
+    };
+    img.onerror = error => {
+      reject(error);
+    };
+    img.src = url;
+  });
+};

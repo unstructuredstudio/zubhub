@@ -25,6 +25,13 @@ const styles = theme => ({
       paddingTop: '4em',
     },
   },
+  activityDetailContainer: {
+    width: '90%',
+    margin: 'auto',
+    // [theme.breakpoints.down('511')]: {
+    //   width: '100%',
+    // },
+  },
   demoImageContainerStyle: {
     height: '450px',
   },
@@ -52,7 +59,20 @@ const styles = theme => ({
   videoPlayer: {
     borderRadius: '15px',
     width: '100%',
-    height: 'auto',
+    // height: 'auto',
+  },
+  subTitles: {
+    textAlign: 'left',
+    fontFamily: 'Corben',
+    fontStyle: 'normal',
+    fontWeight: 700,
+    fontSize: '48px',
+    lineHeight: '89px',
+    /* identical to box height */
+
+    textAlign: 'center',
+
+    color: '#3E3E5F',
   },
   metaInfoStyle: {
     display: 'flex',
