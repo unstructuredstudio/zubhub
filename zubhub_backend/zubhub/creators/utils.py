@@ -480,38 +480,40 @@ def add_titles(creator, count, ids):
             break
 
 def set_badge_like_category(creator):
-    likes_count = (Project.objects.filter(creator= creator)
-                .aggregate(Sum(('likes_count')))["likes_count__sum"])
-   
     badge_ids = [14, 13, 12]
-
     remove_initial_titles(creator, badge_ids)
-    add_titles(creator, likes_count, badge_ids)
+
+    queryset= Project.objects.filter(creator= creator)
+    if(queryset.exists()):
+        likes_count = (queryset.aggregate(Sum(('likes_count')))["likes_count__sum"])
+
+        add_titles(creator, likes_count, badge_ids)
     
 def set_badge_view_category(creator):
-    views_count = (Project.objects.filter(creator= creator).aggregate(
-                    Sum(('views_count')))["views_count__sum"])
-
     badge_ids = [11, 10, 9, 8]
-
     remove_initial_titles(creator, badge_ids)
-    add_titles(creator, views_count, badge_ids)
+    
+    queryset= Project.objects.filter(creator= creator)
+    if(queryset.exists()):
+        views_count = (queryset.aggregate(Sum(('views_count')))["views_count__sum"])
+
+        add_titles(creator, views_count, badge_ids)
 
 def set_badge_comment_category(creator):
-    creator_id = creator.id
-    comments_count = Comment.objects.filter(creator__id= creator_id).count()
-
     badge_ids = [7, 6, 5]
-
     remove_initial_titles(creator, badge_ids)
-    add_titles(creator, comments_count, badge_ids)
+    
+    creator_id = creator.id
+    queryset= Comment.objects.filter(creator__id= creator_id)
+    if(queryset.exists()):
+        comments_count = queryset.count()
+
+        add_titles(creator, comments_count, badge_ids)
 
 def set_badge_project_category(creator, projects_count):
     project_count_before_del = creator.projects_count
 
     if(projects_count < project_count_before_del):
-          queryset = Project.objects.filter(creator= creator)
-          if( queryset.exists()):
                 set_badge_view_category(creator)
                 set_badge_like_category(creator)
                 set_badge_comment_category(creator)

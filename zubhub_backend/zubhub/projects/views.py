@@ -143,7 +143,7 @@ class ProjectDeleteAPIView(DestroyAPIView):
             result = self.destroy(request, *args, **kwargs)
             project_count_after_deletion = creator.projects_count -1
             request.user.save()
-            set_badge_project_category(creator, project_count_after_deletion)
+            set_badge_project_category(creator, self.request.user.projects_count)
             return result
 
 
