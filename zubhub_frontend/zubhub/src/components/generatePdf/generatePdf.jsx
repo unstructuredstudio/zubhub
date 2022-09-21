@@ -3,12 +3,29 @@ import { useTranslation } from 'react-i18next';
 import CustomButton from '../../components/button/Button';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { pdfStyle } from '../../assets/js/styles/components/generatePdf/generatePdfStyle';
+import {
+  getPdfTextBlock,
+  getPdfMaterialsUsed,
+  getPdfMakingSteps,
+  getPdfInspiringPerson,
+  getPdfInspiringExamples,
+} from './generatePdfScripts';
+import { getBase64Images } from '../../views/activity_details/activityDetailsScripts';
 
 function GeneratePdf(props) {
   const { t } = useTranslation();
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
-  const { activity, docDefinitionDefault } = props;
-  console.log('docDefinitionDefault', docDefinitionDefault);
+  const {
+    activity,
+    fillPdf,
+    activityImage,
+    activityTitle,
+    activityMotivation,
+    //  docDefinitionDefault,
+  } = props;
+
+  //console.log('docDefinitionDefault', docDefinitionDefault);
   //   pdfMake.fonts = {
   //     NimbusSans: {
   //       normal: 'NimbusSanL-Reg.otf',
@@ -17,69 +34,85 @@ function GeneratePdf(props) {
   //       bolditalics: 'NimbusSanL-BolIta.otf',
   //     },
   //   };
-  //const [docDefinitionDefault, setDocDefinitionDefault] = useState({});
+  const [docDefinitionDefault, setDocDefinitionDefault] = useState({
+    pageSize: 'A4',
+    pageOrientation: 'portrait',
+    pageMargins: [40, 20, 40, 60],
+    content: [
+      {
+        text: 'Zubhub Activities',
+        style: 'header',
+        alignment: 'center',
+      },
+    ],
+    defaultStyle: {
+      columnGap: 20,
+    },
+    styles: pdfStyle,
+  });
+  useEffect(async () => {
+    //if (fillPdf) {
+    const result = await Promise.all(getBase64Images(activity));
+    const promiseImages = {};
+    result.forEach(item => {
+      Object.entries(item).map(([key, value]) => {
+        promiseImages[key] = value;
+      });
+    });
+    console.log('promises results', promiseImages);
 
-  // {
-  //   layout: "lightHorizontalLines",
-  //   style: "withMargin",
-  //   table: {
-  //     // headers are automatically repeated if the table spans over multiple pages
-  //     // you can declare how many rows should be treated as headers
-  //     headerRows: 1,
-  //     widths: ["*", "auto", 100, "*", "*", "*", "*", "*"],
+    setDocDefinitionDefault(state => {
+      let newContent = state.content;
+      newContent.push(
+        {
+          alignment: 'justify',
+          columns: [
+            {
+              image: promiseImages['activityImage'],
+              width: 200,
+              height: 200,
+            },
+            {
+              text: activity.title,
+              style: 'title',
+              alignment: 'justify',
+            },
+          ],
+        },
+        {
+          text: document.getElementById('activityMotivation').innerText,
+          alignment: 'center',
+        },
+      );
 
-  //     body: [
-  //       [],
-  //       ["Value 1", "Value 2", "Value 3", "Value 4", "", "", "", ""],
-  //       [
-  //         { text: "Bold value", bold: true },
-  //         "Val 2",
-  //         "Val 3",
-  //         "Val 4",
-  //         "",
-  //         "",
-  //         "",
-  //         ""
-  //       ]
-  //     ]
-  //   }
-  // }
-  //   const [url, setUrl] = useState(null);
-  //   const [data, setData] = useState([]);
-  //   const [pdfData, setPdfData] = useState([]);
-  //   const [docDefinition, setDocDefinition] = useState({});
+      newContent.push(
+        getPdfMaterialsUsed(activity, promiseImages),
+        getPdfTextBlock('LEARNING GOALS', 'activityLearningGoals'),
+        getPdfMakingSteps(activity, promiseImages),
+        getPdfTextBlock('FACILITATION TIPS', 'facilitationTips'),
+      );
 
-  //   useEffect(() => {
-  //     return () => {
-  //       if (url !== null) {
-  //         URL.revokeObjectURL(url);
-  //       }
-  //     };
-  //   }, [url]);
+      if (activity['inspiring_artist'] && promiseImages['inspiring_artist']) {
+        newContent.push(getPdfInspiringPerson(activity, promiseImages));
+      }
 
-  //   const setTableBodyData = () => {
-  //     const template = { ...docDefinitionDefault };
-  //     template.content[2].table.body = [headers, ...pdfData];
-  //     setDocDefinition(template);
-  //   };
+      if (
+        activity['inspiring_examples'] &&
+        activity['inspiring_examples'].length > 0
+      ) {
+        newContent.push(getPdfInspiringExamples(activity, promiseImages));
+      }
 
-  //   useEffect(() => {
-  //     const parsed = parseLookAheadData(lookAheadData);
-  //     const pdfData = parseToPdfData(parsed);
-  //     setPdfData(pdfData);
-  //     setData(parsed);
-  //   }, []);
+      console.log('content', newContent);
+      return {
+        ...state,
+        content: [...newContent],
+      };
+    });
+    //}
+  }, [fillPdf]);
 
-  //   useEffect(() => {
-  //     setTableBodyData();
-  //   }, [data]);
-
-  const create = async () => {
-    // const response = await getBase64ImageFromURL(
-    //   activity.images[0].image.file_url,
-    // );
-    // console.log('response', response);
-
+  const create = () => {
     const pdfDocGenerator = pdfMake.createPdf(docDefinitionDefault);
     pdfDocGenerator.download();
   };

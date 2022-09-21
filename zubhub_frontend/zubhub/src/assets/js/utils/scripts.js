@@ -353,7 +353,7 @@ export const getFieldAndIndex = str => {
     : { field: arr[0], index: parseInt('-1', 10) };
 };
 
-export const getBase64ImageFromURL = url => {
+export const getBase64ImageFromURL = (url, field, index) => {
   return new Promise((resolve, reject) => {
     var img = new Image();
     img.setAttribute('crossOrigin', 'anonymous');
@@ -364,7 +364,9 @@ export const getBase64ImageFromURL = url => {
       var ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0);
       var dataURL = canvas.toDataURL('image/jpeg');
-      resolve(dataURL);
+      index >= 0
+        ? resolve({ [`${field}${index}image`]:  dataURL  })
+        : resolve({ [field]:  dataURL  });
     };
     img.onerror = error => {
       reject(error);

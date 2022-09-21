@@ -21,6 +21,9 @@ const styles = theme => ({
     margin: 'auto',
     width: '90%',
   },
+  centerVertically:{
+    alignSelf: 'center'
+  },
   marginRight1em: {
     marginRight: '1em',
   },
@@ -50,6 +53,9 @@ const styles = theme => ({
   },
   alignCenter: {
     alignItems: 'center',
+  },
+  justifyCenter: {
+    justifyContent: 'center',
   },
   justifyRight: {
     justifyContent: 'right',

@@ -2,38 +2,68 @@ const styles = theme => ({
   root: {
     flex: '1 0 auto',
   },
-  projectDetailHeaderStyle: {
-    paddingTop: '1.5em',
-    boxShadow:
-      '0px 2px 1px -1px rgba(0,0,0,0), 0px 1px 1px 0px rgba(0,0,0,0), 0px 1px 3px 0px rgba(0,0,0,0)',
-    background: 'rgba(255,204,0,1)',
-    background:
-      '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      '-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
-    background:
-      '-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      '-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      '-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    filter:
-      "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
-    [theme.breakpoints.down('511')]: {
-      paddingTop: '4em',
-    },
-  },
+  // projectDetailHeaderStyle: {
+  //   paddingTop: '1.5em',
+  //   boxShadow:
+  //     '0px 2px 1px -1px rgba(0,0,0,0), 0px 1px 1px 0px rgba(0,0,0,0), 0px 1px 3px 0px rgba(0,0,0,0)',
+  //   background: 'rgba(255,204,0,1)',
+  //   background:
+  //     '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+  //   background:
+  //     '-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
+  //   background:
+  //     '-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+  //   background:
+  //     '-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+  //   background:
+  //     '-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+  //   background:
+  //     'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+  //   filter:
+  //     "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
+  //   [theme.breakpoints.down('511')]: {
+  //     paddingTop: '4em',
+  //   },
+  // },
   activityDetailContainer: {
-    width: '90%',
+    width: '100%',
     margin: 'auto',
     // [theme.breakpoints.down('511')]: {
     //   width: '100%',
     // },
   },
+  activityDetailBlockContainer: {
+    width: '80%',
+    margin: 'auto',
+    [theme.breakpoints.down('511')]: {
+      width: '90%',
+    },
+  },
   demoImageContainerStyle: {
     height: '450px',
+  },
+  leftCropedContainer: {
+    clipPath: 'polygon(100% 10%,100% 100%, 0% 100%,0% 0%)',
+    padding: '4em 10% ',
+    backgroundColor: '#FFCE0C',
+    [theme.breakpoints.down('511')]: {
+      padding: '1em 5%',
+      clipPath: 'polygon(100% 5%,100% 100%, 0% 100%,0% 0%)',
+    },
+  },
+  inspiringExamplesContainer: {
+    clipPath: 'polygon(100% 0%,100% 100%, 0% 100%,0% 10%)',
+    padding: '4em 20% ',
+    backgroundColor: '#FFCE0C',
+    [theme.breakpoints.down('511')]: {
+      padding: '1em 5%',
+      clipPath: 'polygon(100% 0%,100% 100%, 0% 100%,0% 5%)',
+    },
+  },
+  inspiringExampleImageStyle: {
+    height: '100%',
+    objectFit: 'cover',
+    margin: '2%',
   },
   demoImageStyle: {
     objectFit: 'cover',
@@ -47,6 +77,9 @@ const styles = theme => ({
     fontWeight: 800,
     fontFamily: 'Inknut Antiqua',
   },
+  artistBiography: {
+    alignSelf: 'center',
+  },
   createdOn: {
     fontFamily: 'Inter',
     fontStyle: 'normal',
@@ -58,20 +91,25 @@ const styles = theme => ({
   },
   videoPlayer: {
     borderRadius: '15px',
-    width: '100%',
-    // height: 'auto',
+    height: '60vh',
   },
+  imageCreditStyle: {
+    color: 'white',
+    fontSize: '10px',
+    textAlign: 'center !important',
+  },
+
   subTitles: {
     textAlign: 'left',
     fontFamily: 'Corben',
     fontStyle: 'normal',
     fontWeight: 700,
-    fontSize: '48px',
-    lineHeight: '89px',
+    fontSize: '1.8rem',
+    // lineHeight: '89px',
     /* identical to box height */
 
     textAlign: 'center',
-
+    margin: '3em 0 1em 0',
     color: '#3E3E5F',
   },
   metaInfoStyle: {
@@ -215,10 +253,39 @@ const styles = theme => ({
     maxWidth: '600px',
     height: 'auto',
   },
-  descriptionHeadingStyle: {
-    marginTop: '1em',
-    fontWeight: 900,
-    fontSize: '2.2rem',
+  // descriptionHeadingStyle: {
+  //   marginTop: '1em',
+  //   fontWeight: 900,
+  //   fontSize: '2.2rem',
+  // },
+  makingStepsDescriptionStyle: {
+    marginBottom: '0.7em',
+    color: 'rgba(0, 0, 0, 0.54)',
+    '& .ql-editor': {
+      fontSize: '1rem',
+      fontFamily: 'Raleway,Roboto,sans-serif',
+    },
+  },
+  creatorImage: {
+    objectFit: 'cover',
+    height: 'auto',
+    width: '80%',
+    borderRadius: '50%',
+    boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
+    '&:hover': {
+      width: '80%',
+      height: 'auto',
+      border: '2px solid rgba(0, 0, 0, .12)',
+    },
+  },
+  facilitationBodyStyle: {
+    marginBottom: '1em',
+    color: '#3E3E5F',
+    '& .ql-editor': {
+      fontSize: '1.2rem',
+      fontFamily: 'Raleway,Roboto,sans-serif',
+      fontWeight: 500,
+    },
   },
   motivationBodyStyle: {
     marginBottom: '0.7em',

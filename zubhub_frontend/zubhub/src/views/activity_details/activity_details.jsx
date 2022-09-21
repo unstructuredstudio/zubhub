@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { deleteActivity } from './activityDetailsScripts';
+import { deleteActivity, getBase64Images } from './activityDetailsScripts';
 import CustomButton from '../../components/button/Button';
 import GeneratePdf from '../../components/generatePdf/generatePdf';
+// import { pdfStyle } from '../../assets/js/styles/components/generatePdf/generatePdfStyle';
+// import {
+//   getPdfTextBlock,
+//   getPdfMaterialsUsed,
+//   getPdfMakingSteps,
+//   getPdfInspiringPerson,
+//   getPdfInspiringExamples,
+// } from '../../components/generatePdf/generatePdfScripts';
 import styles from '../../assets/js/styles/views/activity_details/activityDetailsStyles';
 import commonStyles from '../../assets/js/styles';
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,75 +38,22 @@ function ActivityDetails(props) {
 
   const activity = activities.all_activities.filter(item => item.id === id)[0];
   console.log('activity_details', activities, activity);
-  const [docDefinitionDefault, setDocDefinitionDefault] = useState({});
-  useEffect(async () => {
-    const response = await getBase64ImageFromURL(
-      activity.images[0].image.file_url,
-    );
-    
-    setDocDefinitionDefault(() => {
-      return {
-        pageSize: 'A4',
-        pageOrientation: 'portrait',
-        pageMargins: [40, 20, 40, 60],
-        content: [
-          {
-            text: 'Zubhub Activities',
-            style: 'header',
-            alignment: 'center',
-          },
-          {
-            alignment: 'justify',
-            columns: [
-              {
-                text: activity.title,
-                style: 'textBody',
-                alignment: 'justify',
-              },
-              {
-                image: response,
-                width: 200,
-                height: 200,
-              },
-            ],
-          },
-          {
-            text: activity.motivation,
-            alignment: 'center'
-          }
-        ],
-        defaultStyle: {
-          columnGap: 20,
-          // font: 'NimbusSans',
-        },
-        styles: {
-          withMargin: {
-            margin: [20, 20, 20, 20],
-          },
-          alignCenter: {
-            alignment: 'center',
-          },
-          header: {
-            fontSize: 20,
-            bold: true,
-            marginBottom: 20,
-          },
-          textBody: {
-            fontSize: 12,
-          },
-          subheader: {
-            fontSize: 15,
-            bold: true,
-          },
-          quote: {
-            italics: true,
-          },
-          small: {
-            fontSize: 8,
-          },
-        },
-      };
+
+  const [videoHeight, setVideoHeight] = useState();
+  const [imageCredit, setImageCredit] = useState('');
+  useEffect(() => {
+    setImageCredit(state => {
+      state = '';
+      activity.inspiring_examples.map((example, index) => {
+        state += example['description'] && ` ${example.description}-`;
+        state += example['credit'] && ` ${example.credit},`;
+      });
+      return state;
     });
+
+    // setVideoHeight(
+    //   (document.getElementById('activityVideo').offsetWidth * 9) / 16,
+    // );
   }, []);
 
   const handleDelete = () => {
@@ -109,231 +64,317 @@ function ActivityDetails(props) {
     <div>
       <Box
         id="activityDetailContainer"
-        //key="activityDetailContainer"
-
         className={clsx(
           classes.activityDetailContainer,
           common_classes.marginTop1em,
-          // common_classes.marginLeft1em,
-          // common_classes.marginRight1em,
-          //common_classes.centerContainer,
         )}
       >
-        <Link
-          to={`/activities/${id}/edit`}
-          className={common_classes.textDecorationNone}
-        >
+        <Box className={clsx(classes.activityDetailBlockContainer)}>
+          <Link
+            to={`/activities/${id}/edit`}
+            className={common_classes.textDecorationNone}
+          >
+            <CustomButton
+              className={common_classes.marginLeft1em}
+              variant="contained"
+              primaryButtonStyle
+            >
+              {t('activityDetails.activity.edit')}
+            </CustomButton>
+          </Link>
           <CustomButton
             className={common_classes.marginLeft1em}
             variant="contained"
             primaryButtonStyle
+            onClick={() => handleDelete()}
           >
-            {t('activityDetails.activity.edit')}
+            {t('activityDetails.activity.delete.label')}
           </CustomButton>
-        </Link>
-        <CustomButton
-          className={common_classes.marginLeft1em}
-          variant="contained"
-          primaryButtonStyle
-          onClick={() => handleDelete()}
-        >
-          {t('activityDetails.activity.delete.label')}
-        </CustomButton>
-        <Grid
-          className={clsx(common_classes.marginTop1em)}
-          container
-          spacing={2}
-        >
           <Grid
-            item
+            className={clsx(
+              common_classes.marginTop1em,
+              common_classes.justifyCenter,
+            )}
+            container
+            spacing={2}
+          >
+            <Grid
+              item
+              md={6}
+              xs={12}
+              sm={8}
+              lg={6}
+              className={classes.demoImageContainerStyle}
+            >
+              <CardMedia
+                id="activityImage"
+                className={clsx(
+                  classes.demoImageStyle,
+                  common_classes.marginBottom1em,
+                )}
+                component={'img'}
+                image={activity.images[0].image.file_url}
+              />
+            </Grid>
+            <Grid
+              item
+              lg={6}
+              md={4}
+              sx={12}
+              sm={4}
+              className={clsx(
+                common_classes.centerVertically,
+                // common_classes.justifyCenter,
+              )}
+            >
+              {/* <Grid container> */}
+              <Box
+                //sx={{ height: '100%' }}
+                align="center"
+                justify="center"
+                direction="column"
+                className={common_classes.marginLeft1em}
+              >
+                <Typography
+                  id="activityTitle"
+                  className={clsx(
+                    classes.titleStyle,
+                    common_classes.marginBottom1em,
+                  )}
+                  variant="h3"
+                >
+                  {activity.title}
+                </Typography>
+                <Typography className={classes.createdOn} variant="h6">
+                  {`Made a year ago by ${activity.creators[0].username}`}
+                </Typography>
+                <Grid container className={common_classes.justifyCenter}>
+                  <Grid item lg={8} xs={12}>
+                    <Link
+                      to={`/projects/create`}
+                      className={common_classes.textDecorationNone}
+                    >
+                      <CustomButton
+                        variant="contained"
+                        primaryButtonStyle
+                        primaryButtonStyle3
+                        fullWidth
+                      >
+                        {t('activityDetails.activity.build')}
+                      </CustomButton>
+                    </Link>
+                  </Grid>
+                  <Grid
+                    item
+                    lg={8}
+                    xs={12}
+                    className={common_classes.marginTop1em}
+                  >
+                    <GeneratePdf activity={activity} />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid
             md={6}
             xs={12}
             sm={8}
             lg={6}
-            className={classes.demoImageContainerStyle}
-          >
-            <CardMedia
-              id="ActivityImage"
-              className={clsx(
-                classes.demoImageStyle,
-                common_classes.marginBottom1em,
-              )}
-              component={'img'}
-              image={activity.images[0].image.file_url}
-            />
-          </Grid>
-          <Grid item lg={6} md={4} xs={12} sm={4} align={'center'}>
-            {/* <Grid container> */}
-            <Box
-              sx={{ height: '100%' }}
-              align="center"
-              justify="center"
-              direction="column"
-              className={common_classes.marginLeft1em}
-            >
-              <Typography
-                id="activityTitle"
-                className={clsx(
-                  classes.titleStyle,
-                  common_classes.marginBottom1em,
-                )}
-                variant="h3"
-                gutterBottom
-              >
-                {activity.title}
-              </Typography>
-              <Typography
-                className={classes.createdOn}
-                variant="h6"
-                gutterBottom
-              >
-                {`Made a year ago by ${activity.creators[0].username}`}
-              </Typography>
-              <Grid container lg={6} xs={12}>
-                <Grid item lg={12} xs={12}>
-                  <Link
-                    to={`/projects/create`}
-                    className={common_classes.textDecorationNone}
-                  >
-                    <CustomButton
-                      variant="contained"
-                      primaryButtonStyle
-                      primaryButtonStyle3
-                      fullWidth
-                    >
-                      {t('activityDetails.activity.build')}
-                    </CustomButton>
-                  </Link>
-                </Grid>
-                <Grid
-                  item
-                  lg={12}
-                  xs={12}
-                  className={common_classes.marginTop1em}
-                >
-                  <GeneratePdf
-                    activity={activity}
-                    docDefinitionDefault={docDefinitionDefault}
-                  />
-                  {/* <Link
-                    to={`/projects/create`}
-                    className={common_classes.textDecorationNone}
-                  >
-                    <CustomButton
-                      variant="contained"
-                      primaryButtonStyle
-                      primaryButtonStyle3
-                      fullWidth
-                    >
-                      {t('activityDetails.activity.pdf')}
-                    </CustomButton>
-                  </Link> */}
-                </Grid>
-              </Grid>
-            </Box>
-            {/* </Grid> */}
-          </Grid>
-        </Grid>
-        <Grid
-          md={6}
-          xs={12}
-          sm={8}
-          lg={4}
-          item
-          className={clsx(
-            common_classes.marginTop1em,
-            common_classes.marginBottom3em,
-          )}
-        >
-          <ActionIconsContainer activity={activity} t={t} auth={auth} />
-        </Grid>
-        {/* <Typography variant="h5" className={classes.descriptionHeadingStyle}>
-          {t('projectDetails.project.description')}
-        </Typography> */}
-        <Grid lg={8} item justifyContent="center">
-          <ReactQuill
-            id="activityMotivation"
-            className={classes.motivationBodyStyle}
-            theme={'bubble'}
-            readOnly={true}
-            value={activity.motivation || ''}
-          />
-        </Grid>
-        {}
-        <Typography
-          className={clsx(common_classes.marginBottom1em)}
-          variant="h5"
-        ></Typography>
-        <Grid
-          xs={12}
-          sm={8}
-          lg={8}
-          item
-          //alignItems="center"
-          // className={clsx(
-          //   common_classes.marginTop1em,
-          //   common_classes.marginBottom1em,
-          // )}
-        >
-          {activity.video && (
-            <CardMedia
-              id="activityVideo"
-              className={classes.videoPlayer}
-              component={videoOrUrl(activity.video) ? 'video' : 'iframe'}
-              image={activity.video}
-              controls
-            />
-          )}
-        </Grid>
-        <Grid align="left" item>
-          <Typography
-            className={clsx(common_classes.marginTop1em, classes.subTitles)}
-            variant="h3"
-            align="left"
-          >
-            Learning Goals
-          </Typography>
-          <ReactQuill
-            className={classes.motivationBodyStyle}
-            theme={'bubble'}
-            readOnly={true}
-            value={activity.learning_goals || ''}
-          />
-        </Grid>
-        <Grid align="left" item>
-          <Typography
-            className={clsx(common_classes.marginTop1em, classes.subTitles)}
-            variant="h3"
-            align="left"
-          >
-            Materials Required
-          </Typography>
-          <Grid container>
-            <Grid item xs={6} lg={8} sm={8}>
-              {activity.materials_used &&
-                activity.materials_used.split(',').map(material => (
-                  <Typography
-                    // className={clsx(common_classes.marginTop1em)}
-                    variant="h6"
-                    align="left"
-                  >
-                    {material}
-                  </Typography>
-                ))}
-            </Grid>
-            {activity.materials_used_image ? (
-              <Grid item xs={6} lg={4} sm={4}>
-                <CardMedia
-                  className={classes.materialsImage}
-                  component="img"
-                  image={activity.materials_used_image.file_url}
-                ></CardMedia>
-              </Grid>
-            ) : (
-              ''
+            item
+            className={clsx(
+              common_classes.marginTop1em,
+              common_classes.marginBottom3em,
             )}
+          >
+            <ActionIconsContainer activity={activity} t={t} auth={auth} />
           </Grid>
 
+          <Grid lg={8} item>
+            <ReactQuill
+              id="activityMotivation"
+              className={classes.motivationBodyStyle}
+              theme={'bubble'}
+              readOnly={true}
+              value={activity.motivation || ''}
+            />
+          </Grid>
+          {}
+          <Typography
+            className={clsx(common_classes.marginBottom1em)}
+            variant="h5"
+          ></Typography>
+          <Grid
+            className={clsx(
+              common_classes.marginTop1em,
+              common_classes.marginBottom1em,
+            )}
+          >
+            {activity.video && (
+              <div
+              // style={{ position: 'relative', height: 'max-content' }}`calc((${videoHeight} * 9) / 16)`
+              >
+                <CardMedia
+                  id="activityVideo"
+                  sx={{ height: 400 }}
+                  className={classes.videoPlayer}
+                  component={videoOrUrl(activity.video) ? 'video' : 'iframe'}
+                  image={activity.video}
+                  controls
+                />
+              </div>
+            )}
+          </Grid>
+          <Grid align="left" item>
+            <Typography
+              className={clsx(common_classes.marginTop1em, classes.subTitles)}
+              variant="h3"
+              align="left"
+            >
+              LEARNING GOALS
+            </Typography>
+            <ReactQuill
+              id="activityLearningGoals"
+              className={classes.motivationBodyStyle}
+              theme={'bubble'}
+              readOnly={true}
+              value={activity.learning_goals || ''}
+            />
+          </Grid>
+          <Grid align="left" item>
+            <Typography
+              className={clsx(common_classes.marginTop1em, classes.subTitles)}
+              variant="h3"
+              align="left"
+            >
+              MATERIALS REQUIRED
+            </Typography>
+            <Grid container>
+              <Grid item xs={12} lg={8} sm={8}>
+                {activity.materials_used &&
+                  activity.materials_used.split(',').map((material, index) => (
+                    <Typography
+                      key={`materialUsedKey${index}`}
+                      variant="h6"
+                      align="left"
+                    >
+                      {material}
+                    </Typography>
+                  ))}
+              </Grid>
+              {activity.materials_used_image ? (
+                <Grid item xs={12} lg={4} sm={4}>
+                  <CardMedia
+                    className={classes.materialsImage}
+                    component="img"
+                    image={activity.materials_used_image.file_url}
+                  ></CardMedia>
+                </Grid>
+              ) : (
+                ''
+              )}
+            </Grid>
+          </Grid>
+        </Box>
+        <Grid
+          container
+          className={clsx(
+            classes.inspiringExamplesContainer,
+            // common_classes.displayFlex,
+            // common_classes.justifyCenter,
+          )}
+        >
+          <Typography
+            className={clsx(common_classes.marginTop3em, classes.subTitles)}
+            variant="h3"
+            sx={{ width: '100%' }}
+          >
+            INSPIRING PERSON
+          </Typography>
+          <Grid container>
+            {activity.inspiring_artist && activity.inspiring_artist['image'] ? (
+              <>
+                {activity.inspiring_artist.image && (
+                  <Grid item xs={12} lg={4} sm={4}>
+                    <CardMedia
+                      className={classes.demoImageStyle}
+                      component="img"
+                      image={activity.inspiring_artist.image.file_url}
+                    ></CardMedia>
+                  </Grid>
+                )}
+                {activity.inspiring_artist.short_biography && (
+                  <Grid
+                    item
+                    xs={12}
+                    lg={6}
+                    sm={6}
+                    className={clsx(classes.artistBiography)}
+                  >
+                    <ReactQuill
+                      id={`inspiringArtistBiography`}
+                      className={classes.motivationBodyStyle}
+                      theme={'bubble'}
+                      readOnly={true}
+                      value={activity.inspiring_artist.short_biography || ''}
+                    />
+                  </Grid>
+                )}
+              </>
+            ) : (
+              'Coming soon!'
+            )}{' '}
+          </Grid>
+          {activity.inspiring_examples ? (
+            <Grid container className={common_classes.justifyCenter}>
+              <Typography
+                className={clsx(common_classes.marginTop3em, classes.subTitles)}
+                variant="h3"
+                align="center"
+              >
+                SOME INSPIRING EXAMPLES
+              </Typography>
+              <Grid
+                container
+                spacing={1}
+                className={common_classes.justifyCenter}
+              >
+                {activity.inspiring_examples.map((example, index) => (
+                  <Grid
+                    item
+                    xs={6}
+                    lg={4}
+                    sm={4}
+                    key={`inspiringExampleImageContainerKey${index}`}
+                  >
+                    {example.image && (
+                      <CardMedia
+                        key={`inspiringExampleImageKey${index}`}
+                        className={classes.inspiringExampleImageStyle}
+                        component="img"
+                        image={example.image.file_url}
+                      ></CardMedia>
+                    )}
+                  </Grid>
+                ))}
+                <Grid item xs={12} lg={12}>
+                  <Typography
+                    className={clsx(
+                      common_classes.marginTop1em,
+                      classes.imageCreditStyle,
+                    )}
+                    variant="caption"
+                  >
+                    {` From left to right : ${imageCredit}.`}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          ) : (
+            ''
+          )}
+        </Grid>
+        <Grid className={classes.activityDetailBlockContainer}>
           {activity.making_steps && (
             <>
               <Typography
@@ -341,24 +382,36 @@ function ActivityDetails(props) {
                 variant="h3"
                 align="left"
               >
-                Making Process
+                MAKING STEPS
               </Typography>
 
-              {activity.making_steps.map(making_step => (
-                <Grid container>
-                  <Grid item xs={6} lg={8} sm={8}>
+              {activity.making_steps.map((making_step, index) => (
+                <Grid
+                  container
+                  className={common_classes.marginBottom1em}
+                  key={`makingStepImageContainerKey${index}`}
+                >
+                  <Grid
+                    item
+                    xs={12}
+                    lg={8}
+                    sm={8}
+                    key={`makingStepImageSubContainerKey${index}`}
+                  >
                     {making_step.description && (
                       <ReactQuill
-                        //className={classes.motivationBodyStyle}
+                        id={`makingStep${index}description`}
+                        className={classes.makingStepsDescriptionStyle}
                         theme={'bubble'}
                         readOnly={true}
                         value={making_step.description || ''}
                       />
                     )}
                   </Grid>
-                  <Grid item xs={6} lg={4} sm={4}>
+                  <Grid item xs={12} lg={4} sm={4}>
                     {making_step.image && (
                       <CardMedia
+                        key={`makingStepImageKey${index}`}
                         className={classes.materialsImage}
                         component="img"
                         image={making_step.image.file_url}
@@ -369,41 +422,77 @@ function ActivityDetails(props) {
               ))}
             </>
           )}
-          {/* {activity.inspiring_examples && (
-            <Grid container>
-              <Typography
-                className={clsx(common_classes.marginTop1em, classes.subTitles)}
-                variant="h3"
-                align="left"
+        </Grid>
+        <Grid
+          container
+          className={clsx(
+            classes.leftCropedContainer,
+            common_classes.justifyCenter,
+            common_classes.marginBottom3em,
+          )}
+        >
+          <Typography
+            className={clsx(classes.subTitles)}
+            variant="h3"
+            align="center"
+          >
+            FACILITATION TIPS
+          </Typography>
+
+          <Grid item xs={12} lg={12} sm={12}>
+            {activity.facilitation_tips ? (
+              <ReactQuill
+                id={`facilitationTips`}
+                className={classes.facilitationBodyStyle}
+                theme={'bubble'}
+                readOnly={true}
+                value={activity.facilitation_tips || ''}
+              />
+            ) : (
+              'Coming soon!'
+            )}
+          </Grid>
+        </Grid>
+        <Grid>
+          <Typography
+            className={clsx(common_classes.marginTop1em, classes.subTitles)}
+            variant="h3"
+            align="center"
+          >
+            CONTRIBUTORS
+          </Typography>
+          <Grid
+            container
+            className={clsx(
+              classes.activityDetailBlockContainer,
+              common_classes.justifyCenter,
+            )}
+          >
+            {activity.creators.map((creator, index) => (
+              <Grid
+                item
+                lg={3}
+                md={3}
+                xs={4}
+                key={`activityDetailsCreatorContainer${index}`}
               >
-                Some Inspiring Examples
-              </Typography>
-              
-              {activity.inspiring_examples.map(example => (
-                
-                  <Grid item xs={6} lg={8} sm={8}>
-                    {making_step.description && (
-                      <ReactQuill
-                        //className={classes.motivationBodyStyle}
-                        theme={'bubble'}
-                        readOnly={true}
-                        value={making_step.description || ''}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item xs={6} lg={4} sm={4}>
-                    {making_step.image && (
-                      <CardMedia
-                        className={classes.materialsImage}
-                        component="img"
-                        image={making_step.image.file_url}
-                      ></CardMedia>
-                    )}
-                  </Grid>
-                
-              ))}</Grid>
-            </>
-          )} */}
+                <CardMedia
+                  key={`activityDetailsCreatorAvatar${index}`}
+                  className={classes.creatorImage}
+                  component="img"
+                  image={creator.avatar}
+                ></CardMedia>
+                <Typography
+                  key={`activityDetailsCreatorUserName${index}`}
+                  //className={clsx(classes.subTitles)}
+                  variant="h6"
+                  align="center"
+                >
+                  {creator.username}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
       </Box>
     </div>
