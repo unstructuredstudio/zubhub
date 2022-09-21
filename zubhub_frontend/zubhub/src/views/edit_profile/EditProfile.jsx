@@ -27,6 +27,10 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from '@material-ui/core';
 
 import {
@@ -36,6 +40,8 @@ import {
   editProfile,
   handleTooltipOpen,
   handleTooltipClose,
+  handleToggleDeleteAccountModal,
+  deleteAccount,
 } from './editProfileScripts';
 
 import CustomButton from '../../components/button/Button';
@@ -60,10 +66,13 @@ function EditProfile(props) {
     phone_el: React.useRef(null),
     bio_el: React.useRef(null),
   };
+  const username_check= React.useRef(null);
 
   const [state, setState] = React.useState({
     locations: [],
     tool_tip_open: false,
+    dialog_error: null,
+    open_delete_account_modal: false,
   });
 
   React.useEffect(() => {
@@ -81,10 +90,11 @@ function EditProfile(props) {
     }
   };
 
-  const { locations, tool_tip_open } = state;
+  const { locations, tool_tip_open, open_delete_account_modal,dialog_error, } = state;
   const { t } = props;
 
   return (
+  <>
     <Box className={classes.root}>
       <Container className={classes.containerStyle}>
         <Card className={classes.cardStyle}>
@@ -450,6 +460,21 @@ function EditProfile(props) {
                     </CustomButton>
                   </Grid>
                 </Grid>
+              <Grid container spacing={3}>
+              <Grid item xs={12}>
+                  <Link to="/profile" className={classes.textDecorationNone}>
+                    <CustomButton
+                      variant="outlined"
+                      size="large"
+                      secondaryButtonStyle
+                      customButtonStyle
+                      fullWidth
+                    >
+                      {t('editProfile.backToProfile')}
+                    </CustomButton>
+                  </Link>
+                </Grid>
+              </Grid>
               </form>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
@@ -465,18 +490,21 @@ function EditProfile(props) {
                     <Divider className={classes.divider} />
                   </Box>
                 </Grid>
+              </Grid>
+              <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <Link to="/profile" className={classes.textDecorationNone}>
                     <CustomButton
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
-                      customButtonStyle
+                      dangerButtonStyle
                       fullWidth
+                      onClick={() =>
+                        handleSetState(handleToggleDeleteAccountModal(state))
+                      }
                     >
-                      {t('editProfile.backToProfile')}
+                      {t('profile.delete.label')}
                     </CustomButton>
-                  </Link>
                 </Grid>
               </Grid>
             </CardContent>
@@ -484,6 +512,72 @@ function EditProfile(props) {
         </Card>
       </Container>
     </Box>
+            <Dialog
+            open={open_delete_account_modal}
+            onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
+            aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
+          >
+            <DialogTitle id="delete-project">
+              {t('profile.delete.dialog.primary')}
+            </DialogTitle>
+            <Box
+              component="p"
+              className={dialog_error !== null && classes.errorBox}
+            >
+              {dialog_error !== null && (
+                <Box component="span" className={classes.error}>
+                  {dialog_error}
+                </Box>
+              )}
+            </Box>{' '}
+            <DialogContent>
+              <Typography>{t('profile.delete.dialog.secondary')}</Typography>
+              <FormControl
+                className={clsx(classes.margin, classes.textField)}
+                variant="outlined"
+                size="medium"
+                fullWidth
+                margin="normal"
+              >
+                <InputLabel
+                  className={classes.customLabelStyle}
+                  htmlFor="username"
+                >
+                  {t('profile.delete.dialog.inputs.username')}
+                </InputLabel>
+                <OutlinedInput
+                  className={classes.customInputStyle}
+                  ref={username_check}
+                  name="username"
+                  type="text"
+                  labelWidth={120}
+                />
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <CustomButton
+                variant="outlined"
+                onClick={() =>
+                  handleSetState(handleToggleDeleteAccountModal(state))
+                }
+                color="primary"
+                secondaryButtonStyle
+              >
+                {t('profile.delete.dialog.cancel')}
+              </CustomButton>
+              <CustomButton
+                variant="contained"
+                onClick={e =>
+                  handleSetState(deleteAccount(username_check, props, state))
+                }
+                dangerButtonStyle
+                customButtonStyle
+              >
+                {t('profile.delete.dialog.procceed')}
+              </CustomButton>
+            </DialogActions>
+          </Dialog>
+    </>
   );
 }
 
@@ -493,6 +587,7 @@ EditProfile.propTypes = {
   setAuthUser: PropTypes.func.isRequired,
   editUserProfile: PropTypes.func.isRequired,
   getLocations: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -511,6 +606,12 @@ const mapDispatchToProps = dispatch => {
     },
     getLocations: _ => {
       return dispatch(AuthActions.getLocations());
+    },
+    deleteAccount: args => {
+      return dispatch(AuthActions.deleteAccount(args));
+    },
+    logout: args => {
+      return dispatch(AuthActions.logout(args));
     },
   };
 };

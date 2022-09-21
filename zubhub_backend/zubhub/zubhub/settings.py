@@ -114,6 +114,7 @@ INSTALLED_APPS = [
     'creators',
     'projects',
     'notifications',
+    'activitylog',
     'activities',
 ]
 

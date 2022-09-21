@@ -10,9 +10,13 @@ from projects.tasks import delete_file_task
 from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp
 from creators.models import Setting
 from notifications.models import Notification
+from activitylog.models import Activitylog
+from activitylog.utils import push_activity
 from notifications.utils import push_notification, get_notification_template_name
-from creators.models import Creator
+from creators.models import Creator, Badge
+from projects.models import Project, Comment
 from django.template.loader import render_to_string
+from django.db.models import Sum
 
 try:
     from allauth.account.adapter import get_adapter
@@ -367,6 +371,12 @@ def enforce_creator__creator_tags_constraints(creator, tag):
     else:
         return creator.tags.all()
 
+def activity_log(target: List[Creator], source: Creator, contexts, activity_type: Activitylog.Type, link: str):
+    for user, context in zip(target, contexts):
+        context.update({'source': source.username})
+        context.update({'target': user.username})
+
+    push_activity(user, source, context, activity_type, link)
 
 
 enabled_notification_settings: Dict[Notification.Type, Set[int]] = {
@@ -456,3 +466,57 @@ def send_notification(users: List[Creator], source: Creator, contexts,
 #         EmailAddress.objects.create(
 #             user=user, email=email, primary=False, verified=False
 #         )
+
+
+def remove_initial_titles(creator, ids):
+    for id in ids:
+        creator.badges.remove(Badge.objects.get(id= id))
+
+def add_titles(creator, count, ids):
+    for id in ids:
+        value = Badge.objects.get(id= id).threshold_value
+        if count > value:
+            creator.badges.add(Badge.objects.get(id = id))
+            break
+
+def set_badge_like_category(creator):
+    likes_count = (Project.objects.filter(creator= creator)
+                .aggregate(Sum(('likes_count')))["likes_count__sum"])
+   
+    badge_ids = [14, 13, 12]
+
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, likes_count, badge_ids)
+    
+def set_badge_view_category(creator):
+    views_count = (Project.objects.filter(creator= creator).aggregate(
+                    Sum(('views_count')))["views_count__sum"])
+
+    badge_ids = [11, 10, 9, 8]
+
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, views_count, badge_ids)
+
+def set_badge_comment_category(creator):
+    creator_id = creator.id
+    comments_count = Comment.objects.filter(creator__id= creator_id).count()
+
+    badge_ids = [7, 6, 5]
+
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, comments_count, badge_ids)
+
+def set_badge_project_category(creator, projects_count):
+    project_count_before_del = creator.projects_count
+
+    if(projects_count < project_count_before_del):
+          queryset = Project.objects.filter(creator= creator)
+          if( queryset.exists()):
+                set_badge_view_category(creator)
+                set_badge_like_category(creator)
+                set_badge_comment_category(creator)
+
+    badge_ids = [4, 3, 2, 1]
+
+    remove_initial_titles(creator, badge_ids)
+    add_titles(creator, projects_count, badge_ids)

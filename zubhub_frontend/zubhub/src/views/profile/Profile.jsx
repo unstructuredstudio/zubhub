@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
+import API from '../../api'
 
 import { makeStyles } from '@material-ui/core/styles';
 import ShareIcon from '@material-ui/icons/Share';
@@ -58,6 +59,7 @@ import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid';
+import UserActivitylog from '../../components/user_activitylog/UserActivitylog';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -73,6 +75,10 @@ function Profile(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const username = props.match.params.username || props.auth.username;
+  const [page, setPage] = useState(1);
+  const [userActivity, setUserActivity] = useState([])
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [nextPage, setNextPage] = useState(false)
 
   const [state, setState] = React.useState({
     results: [],
@@ -82,10 +88,13 @@ function Profile(props) {
     dialog_error: null,
     more_anchor_el: null,
     drafts: [],
+    badge_tags: [],
   });
 
   React.useEffect(() => {
-    const promises = [getUserProfile(props)];
+  try{
+    let activitylogObj= new API()
+    const promises = [getUserProfile(props), activitylogObj.getUserActivity(username, page)];
     if (username === props.auth.username) {
       promises.push(
         ProjectActions.getUserDrafts({
@@ -99,14 +108,22 @@ function Profile(props) {
 
     Promise.all(promises).then(values => {
       const obj = values[0];
-      const drafts = values[1] || {};
+      const activity = values[1] || {};
+      const drafts = values[2] || {};
+      const badges = obj.profile.badges;
 
       if (obj.profile) {
         parseComments(obj.profile.comments);
       }
-      handleSetState({ ...obj, ...drafts });
+      handleSetState({ ...obj, ...drafts, badge_tags: badges });
+      setUserActivity(userActivity   => ([...userActivity, ...activity.results]))
+      const nextPageExist= activity.next? true : false 
+      setNextPage(nextPageExist)
     });
-  }, []);
+  } catch (error) {
+    console.log(error);
+  }
+  }, [page]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -124,10 +141,18 @@ function Profile(props) {
     dialog_error,
     more_anchor_el,
     drafts,
+    badge_tags,
   } = state;
 
   const more_menu_open = Boolean(more_anchor_el);
   const { t } = props;
+
+  const handleScroll = (e) => {
+    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottom && nextPage) { 
+            setPage(page => page + 1)
+    }
+ }
 
   if (loading) {
     return <LoadingPage />;
@@ -136,17 +161,20 @@ function Profile(props) {
       <>
         <Box className={classes.root}>
           <Paper className={classes.profileHeaderStyle}>
-            <Container maxWidth="md">
-              {props.auth.username === profile.username ? (
+            <Container maxWidth="md"
+            style={{padding: '0 3em'}}
+            >
+              <Box className= {classes.flexClass}>
+                <Box className={classes.avatarBoxStyle}>
+                  <Avatar
+                    className={classes.avatarStyle}
+                    src={profile.avatar}
+                    alt={profile.username}
+                  />
+                  {props.auth.username === profile.username ? (
                 <>
                   <CustomButton
-                    className={classes.floatRight}
-                    onClick={e => handleSetState(handleMoreMenuOpen(e))}
-                  >
-                    <MoreVertIcon />
-                  </CustomButton>
-                  <CustomButton
-                    className={classes.floatRight}
+                    className={classes.editButton}
                     variant="contained"
                     margin="normal"
                     primaryButtonStyle
@@ -154,40 +182,10 @@ function Profile(props) {
                   >
                     {t('profile.edit')}
                   </CustomButton>
-                  <Menu
-                    className={classes.moreMenuStyle}
-                    disableScrollLock={true}
-                    id="profile_menu"
-                    anchorEl={more_anchor_el}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={more_menu_open}
-                    onClose={e => handleSetState(handleMoreMenuClose(e))}
-                  >
-                    <MenuItem>
-                      <Typography
-                        variant="subtitle2"
-                        className={common_classes.colorRed}
-                        component="span"
-                        onClick={() =>
-                          handleSetState(handleToggleDeleteAccountModal(state))
-                        }
-                      >
-                        {t('profile.delete.label')}
-                      </Typography>
-                    </MenuItem>
-                  </Menu>
                 </>
               ) : (
                 <CustomButton
-                  className={classes.floatRight}
+                  className={classes.followButton}
                   variant="outlined"
                   margin="normal"
                   secondaryButtonStyle
@@ -200,115 +198,181 @@ function Profile(props) {
                     : t('profile.follow')}
                 </CustomButton>
               )}
-              <Box className={classes.avatarBoxStyle}>
-                <Avatar
-                  className={classes.avatarStyle}
-                  src={profile.avatar}
-                  alt={profile.username}
-                />
-              </Box>
-              <Box className={classes.ProfileDetailStyle}>
-                <Typography
-                  className={classes.userNameStyle}
-                  component="h1"
-                  color="textPrimary"
-                >
-                  {profile.username}
-                </Typography>
-                <Box className={classes.tagsContainerStyle}>
-                  {sortTags(profile.tags).map(tag => (
-                    <Typography
-                      key={tag}
-                      className={clsx(common_classes.baseTagStyle, {
-                        [common_classes.extendedTagStyle]: !isBaseTag(tag),
-                      })}
-                      component="h2"
-                    >
-                      {tag}
-                    </Typography>
-                  ))}
                 </Box>
-                {props.auth.username === profile.username ? (
-                  <>
-                    <Typography className={classes.emailStyle} component="h5">
-                      {profile.email}
-                    </Typography>
-                    <Typography className={classes.emailStyle} component="h5">
-                      {profile.phone}
-                    </Typography>
-                  </>
-                ) : null}
-                <Divider className={classes.dividerStyle} />
-                <Box className={classes.moreInfoBoxStyle}>
-                  <Link
-                    className={classes.textDecorationNone}
-                    to={`/creators/${profile.username}/projects`}
+                <Box className={classes.ProfileNameStyle}>
+                  <Typography
+                    className={classes.userNameStyle}
+                    component="h1"
+                    color="textPrimary"
                   >
-                    <Typography
-                      className={classes.moreInfoStyle}
-                      component="h5"
-                    >
-                      {profile.projects_count} {t('profile.projectsCount')}
-                    </Typography>
-                  </Link>
-                  <Link
-                    to={`/creators/${profile.username}/followers`}
-                    className={classes.textDecorationNone}
-                  >
-                    <Typography
-                      className={classes.moreInfoStyle}
-                      component="h5"
-                    >
-                      {profile.followers.length} {t('profile.followersCount')}
-                    </Typography>
-                  </Link>
-                  <Link
-                    to={`/creators/${profile.username}/following`}
-                    className={classes.textDecorationNone}
-                  >
-                    <Typography
-                      className={classes.moreInfoStyle}
-                      component="h5"
-                    >
-                      {profile.following_count} {t('profile.followingCount')}
-                    </Typography>
-                  </Link>
-                  {profile.members_count !== null ? (
+                    {profile.username}
+                  </Typography>
+                  <Box className={classes.tagsContainerStyle}>
+                    {sortTags(profile.tags).map(tag => (
+                      <Typography
+                        key={tag}
+                        className={clsx(common_classes.baseTagStyle, {
+                          [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                        })}
+                        component="h2"
+                      >
+                        {tag}
+                      </Typography>
+                    ))}
+                  </Box>
+                  {props.auth.username === profile.username ? (
+                    <>
+                      <Typography className={classes.emailStyle} component="h5">
+                        {profile.email}
+                      </Typography>
+                      <Typography className={classes.emailStyle} component="h5">
+                        {profile.phone}
+                      </Typography>
+                    </>
+                  ) : null}
+                </Box> 
+                  <Box className={classes.moreInfoBoxStyle}>
                     <Link
-                      to={`/creators/${profile.username}/members`}
+                      className={classes.textDecorationNone}
+                      to={`/creators/${profile.username}/projects`}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        <div className={classes.moreInfoTitleStyle}>
+                        {t('profile.projectsCount')}
+                        </div>
+                        <div className={classes.moreInfoCountStyle}>
+                        {profile.projects_count}
+                        </div>
+                      </Typography>
+                    </Link>
+                    <Link
+                      to={`/creators/${profile.username}/followers`}
                       className={classes.textDecorationNone}
                     >
                       <Typography
                         className={classes.moreInfoStyle}
                         component="h5"
                       >
-                        {profile.members_count} {t('profile.membersCount')}
+                        <div className={classes.moreInfoTitleStyle}>
+                        {t('profile.followersCount')}
+                        </div>
+                        <div className={classes.moreInfoCountStyle}>
+                        {profile.followers.length} 
+                        </div>
                       </Typography>
                     </Link>
-                  ) : null}
-                </Box>
-              </Box>
+                    <Link
+                      to={`/creators/${profile.username}/following`}
+                      className={classes.textDecorationNone}
+                    >
+                      <Typography
+                        className={classes.moreInfoStyle}
+                        component="h5"
+                      >
+                        <div className={classes.moreInfoTitleStyle}>
+                        {t('profile.followingCount')}
+                        </div>
+                        <div className={classes.moreInfoCountStyle}>
+                        {profile.following_count} 
+                        </div>
+                      </Typography>
+                    </Link>
+                    {profile.members_count !== null ? (
+                      <Link
+                        to={`/creators/${profile.username}/members`}
+                        className={classes.textDecorationNone}
+                      >
+                        <Typography
+                          className={classes.moreInfoStyle}
+                          component="h5"
+                        >
+                          <div className={classes.moreInfoTitleStyle}>
+                          {t('profile.membersCount')}
+                          </div>
+                          <div className={classes.moreInfoCountStyle}>
+                          {profile.members_count} 
+                          </div>
+                        </Typography>
+                      </Link>
+                    ) : null}
+                  </Box>
+              </Box> 
             </Container>
           </Paper>
 
           <Container maxWidth="md">
-            <Paper className={classes.profileLowerStyle}>
-              <Typography
-                gutterBottom
-                component="h2"
-                variant="h6"
-                color="textPrimary"
-                className={classes.titleStyle}
-              >
-                {!profile.members_count
-                  ? t('profile.about.label1')
-                  : t('profile.about.label2')}
-              </Typography>
-              {profile.bio
-                ? profile.bio
-                : !profile.members_count
-                ? t('profile.about.placeholder1')
-                : t('profile.about.placeholder2')}
+            <div className= {classes.aboutMeBadgeBox}>
+              <Paper className={classes.aboutMeBox}>
+                <Typography
+                  gutterBottom
+                  component="h2"
+                  variant="h6"
+                  color="textPrimary"
+                  className={classes.titleStyle}
+                >
+                  {!profile.members_count
+                    ? t('profile.about.label1')
+                    : t('profile.about.label2')}
+                </Typography>
+                {profile.bio
+                  ? profile.bio
+                  : !profile.members_count
+                  ? t('profile.about.placeholder1')
+                  : t('profile.about.placeholder2')}
+              </Paper>
+
+              <Paper className={classes.badgeBox}>
+                <Typography
+                    gutterBottom
+                    component="h2"
+                    variant="h6"
+                    color="textPrimary"
+                    className={classes.badgeTitleStyle}
+                  >
+                    {t('profile.badge.badges')}
+                  </Typography>
+                  {!badge_tags.length > 0 ? (
+                    t('profile.badge.addBadges')
+                  ) : (
+                    <Box className={classes.badgeContainerStyle}>
+                      {badge_tags.map(tag => (
+                        <Typography
+                          key={tag}
+                          className={clsx(classes.badgeStyle)}
+                          component="h2"
+                        >
+                          {tag}
+                        </Typography>
+                      ))}
+                    </Box>
+                  )}
+              </Paper>
+            </div>
+
+            <Paper   className= {classes.profileLowerStyle}>
+            <Typography
+             gutterBottom
+             component="h2"
+             variant="h6"
+             color="textPrimary"
+             className= {classes.titleStyle}
+            >
+            {t('profile.activityLog')}
+            </Typography>
+                  <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
+
+                    {
+                      userActivity.map(activity => (
+                        <UserActivitylog 
+                        activity={activity}
+                        key={activity.id}
+                        />
+                        ))
+                      }
+                  </div>
             </Paper>
 
             {profile.projects_count > 0 || drafts.length > 0 ? (
