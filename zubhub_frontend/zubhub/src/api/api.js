@@ -279,8 +279,8 @@ class API {
   getUserActivity = (username, page) => {
     let url = `activitylog/${username}/?page=${page}`;
 
-    return this.request({url}).then(res => res.json());
-  }
+    return this.request({ url }).then(res => res.json());
+  };
 
   /**
    * @method getUserDrafts - get a paginated list of drafts
@@ -537,10 +537,11 @@ class API {
     category,
     tags,
     publish,
+    activity,
   }) => {
     const url = 'projects/create/';
     const method = 'POST';
-
+    console.log('from api activity_id', activity);
     const body = JSON.stringify({
       title,
       description,
@@ -550,6 +551,7 @@ class API {
       category,
       tags,
       publish,
+      activity,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };

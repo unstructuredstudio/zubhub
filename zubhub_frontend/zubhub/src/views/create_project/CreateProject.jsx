@@ -192,7 +192,7 @@ function CreateProject(props) {
     publish_visible_to_suggestion_open,
     publish_visible_to_suggestion,
   } = state;
-  const { t } = props;
+  const { t, activity_id} = props;
   const id = props.match.params.id;
   console.log(' create project props and state', props, state);
   if (!props.auth.token) {

@@ -416,7 +416,18 @@ function App(props) {
             </PageWrapper>
           )}
         />
-
+        <Route
+          path="/projects/:activity_id/create"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateProject}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
         <Route
           path="/projects/:id"
           render={routeProps => (

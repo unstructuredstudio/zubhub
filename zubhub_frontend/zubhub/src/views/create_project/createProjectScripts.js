@@ -721,6 +721,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     tags,
     id: props.match.params.id,
     token: props.auth.token,
+    activity: props.match.params.activity_id,
     images: state.media_upload.uploaded_images_url,
     video: state.media_upload.uploaded_videos_url[0]
       ? state.media_upload.uploaded_videos_url[0]

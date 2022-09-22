@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import *
-from projects.serializers import CategorySerializer
+from projects.serializers import CategorySerializer, ProjectSerializer
 from creators.serializers import CreatorMinimalSerializer
 from .utils import *
 
@@ -79,11 +79,13 @@ class ActivitySerializer(serializers.ModelSerializer):
     making_steps = ActivityMakingStepSerializer(many=True, required=False)
     inspiring_examples = InspiringExampleSerializer(many=True, required=False)
     materials_used_image = ImageSerializer(required=False)
+    inspired_projects = ProjectSerializer(many=True)
 
     class Meta:
         model = Activity
         fields = [
             "id",
+            "inspired_projects",
             "creators",
             "title",
             "motivation",

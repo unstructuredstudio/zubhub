@@ -151,7 +151,7 @@ function ActivityDetails(props) {
                 <Grid container className={common_classes.justifyCenter}>
                   <Grid item lg={8} xs={12}>
                     <Link
-                      to={`/projects/create`}
+                      to={`/projects/${id}/create`}
                       className={common_classes.textDecorationNone}
                     >
                       <CustomButton
