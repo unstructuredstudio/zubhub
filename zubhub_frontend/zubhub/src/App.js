@@ -89,12 +89,14 @@ function App(props) {
         <Route
           exact={true}
           path="/"
-          // render={props => (
-          //   <LazyImport
-          //     LazyComponent={CreateActivity}
-          //     {...routeProps}
-          //     {...props}
-          //   />
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+        <Route
+          path="/activities/create"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
@@ -104,24 +106,6 @@ function App(props) {
               />
             </PageWrapper>
           )}
-          // <div>
-          //   <h1>Hello</h1>
-          //   {myactivities
-          //     ? myactivities.map(activity => (
-          //         <div>
-          //           <p>{activity.title}</p>
-          //           <p>{activity.motivation}</p>
-          //           <p>{activity.publish}</p>
-          //         </div>
-          //       ))
-          //     : 'not yet!'}
-          // </div>
-
-          // render={routeProps => (
-          //   <PageWrapper {...routeProps} {...props}>
-          //     <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
-          //   </PageWrapper>
-          // )}
         />
 
         <Route

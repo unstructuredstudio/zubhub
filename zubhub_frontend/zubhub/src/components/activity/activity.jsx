@@ -31,7 +31,7 @@ function Activity(props) {
   const common_classes = useCommonStyles();
   const topMarginCoefficient = activity.creator?.length < 6 ? 2 : 1;
   const [state, handleSetState] = useState({ loading: false });
-  console.log('state from activity:::', state);
+ 
   return (
     <div className={classes.activityCardContainer}>
       {activity.creators?.length > 0

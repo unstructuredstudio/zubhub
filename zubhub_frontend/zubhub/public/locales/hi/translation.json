@@ -27,7 +27,8 @@
       "savedProjects": "बुकमार्क",
       "logout": "लॉग आउट",
       "browseActivities": "ब्राउज़ गतिविधियां",
-      "createActivity": "गतिविधि बनाएं"
+      "createActivity": "गतिविधि बनाएं",
+      "createActivityMenu": "गतिविधि बनाएं"
     },
 
     "footer": {

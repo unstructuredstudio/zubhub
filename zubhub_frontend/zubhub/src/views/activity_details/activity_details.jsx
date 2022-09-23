@@ -4,14 +4,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { deleteActivity, getBase64Images } from './activityDetailsScripts';
 import CustomButton from '../../components/button/Button';
 import GeneratePdf from '../../components/generatePdf/generatePdf';
-// import { pdfStyle } from '../../assets/js/styles/components/generatePdf/generatePdfStyle';
-// import {
-//   getPdfTextBlock,
-//   getPdfMaterialsUsed,
-//   getPdfMakingSteps,
-//   getPdfInspiringPerson,
-//   getPdfInspiringExamples,
-// } from '../../components/generatePdf/generatePdfScripts';
 import styles from '../../assets/js/styles/views/activity_details/activityDetailsStyles';
 import commonStyles from '../../assets/js/styles';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,7 +11,6 @@ import { Grid, Box, CardMedia, Typography } from '@material-ui/core';
 import ActionIconsContainer from '../../components/actionIconsContainer/actionIconsContainer';
 import ReactQuill from 'react-quill';
 import clsx from 'clsx';
-//import logo from '../../assets/images/logos/logo.png';
 import {
   videoOrUrl,
   getBase64ImageFromURL,

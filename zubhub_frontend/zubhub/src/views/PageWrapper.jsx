@@ -13,6 +13,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import SearchIcon from '@material-ui/icons/Search';
+
 import {
   CssBaseline,
   Container,
@@ -71,6 +72,7 @@ import API from '../api';
 import { throttle } from '../utils.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
+import BreadCrumb from '../components/breadCrumb/breadCrumb';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -211,7 +213,7 @@ function PageWrapper(props) {
   const { zubhub, hero } = props.projects;
 
   const profileMenuOpen = Boolean(anchor_el);
-
+  console.log('props path', props, props.match.path);
   return (
     <>
       <ToastContainer />
@@ -458,24 +460,49 @@ function PageWrapper(props) {
                 </>
               ) : (
                 <>
-                  <Link
-                    className={clsx(
-                      classes.textDecorationNone,
-                      common_classes.marginRight1em,
-                      common_classes.removeOnSmallScreen,
-                    )}
-                    to="/activities/all"
-                  >
-                    <CustomButton
-                      variant="contained"
-                      primaryButtonStyle
-                      primaryButtonStyle2
-                      customButtonStyle
-                      size="small"
+                  {props.match.path === '/activities/all' ? (
+                    props.auth.tags.includes('creator', 'staff', 'educator') ? (
+                      <Link
+                        className={clsx(
+                          classes.textDecorationNone,
+                          common_classes.marginRight1em,
+                          common_classes.removeOnSmallScreen,
+                        )}
+                        to="/activities/create"
+                      >
+                        <CustomButton
+                          variant="contained"
+                          primaryButtonStyle
+                          primaryButtonStyle2
+                          customButtonStyle
+                          size="small"
+                        >
+                          {t('pageWrapper.navbar.createActivity')}
+                        </CustomButton>
+                      </Link>
+                    ) : (
+                      ''
+                    )
+                  ) : (
+                    <Link
+                      className={clsx(
+                        classes.textDecorationNone,
+                        common_classes.marginRight1em,
+                        common_classes.removeOnSmallScreen,
+                      )}
+                      to="/activities/all"
                     >
-                      {t('pageWrapper.navbar.browseActivities')}
-                    </CustomButton>
-                  </Link>
+                      <CustomButton
+                        variant="contained"
+                        primaryButtonStyle
+                        primaryButtonStyle2
+                        customButtonStyle
+                        size="small"
+                      >
+                        {t('pageWrapper.navbar.browseActivities')}
+                      </CustomButton>
+                    </Link>
+                  )}
                   <Link
                     className={clsx(
                       classes.textDecorationNone,
@@ -541,20 +568,6 @@ function PageWrapper(props) {
                     open={profileMenuOpen}
                     onClose={e => handleSetState(handleProfileMenuClose(e))}
                   >
-                    <MenuItem className={common_classes.addOnSmallScreen}>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to="/activities/create"
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
-                          {t('pageWrapper.navbar.createActivity')}
-                        </Typography>
-                      </Link>
-                    </MenuItem>
                     <MenuItem>
                       <Tooltip title={props.auth.username} placement="top">
                         <Typography
@@ -592,6 +605,28 @@ function PageWrapper(props) {
                         </Typography>
                       </Link>
                     </MenuItem>
+                    {props.auth.tags.includes(
+                      'creator',
+                      'staff',
+                      'educator',
+                    ) && (
+                      <MenuItem
+                      //className={common_classes.addOnSmallScreen}
+                      >
+                        <Link
+                          className={clsx(classes.textDecorationNone)}
+                          to="/activities/create"
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            {t('pageWrapper.navbar.createActivityMenu')}
+                          </Typography>
+                        </Link>
+                      </MenuItem>
+                    )}
                     <MenuItem>
                       <Link
                         className={classes.textDecorationNone}
@@ -751,7 +786,7 @@ function PageWrapper(props) {
         </Container>
       </AppBar>
       <Toolbar ref={backToTopEl} />
-
+      <BreadCrumb />
       {loading ? <LoadingPage /> : props.children}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>

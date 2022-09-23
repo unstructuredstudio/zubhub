@@ -50,7 +50,7 @@ function Activities(props) {
   const activeSlide = currentSlide => {
     setActiveCarouselIndex(currentSlide);
   };
-  console.log('from activities view', activities);
+
   return (
     <div>
       {/* <div className={classes.bannerContainer}>
@@ -81,32 +81,32 @@ function Activities(props) {
           </StyledSlider>
         </Box>
       </div> */}
-      {loading ? (
+      {/* {loading ? (
         <LoadingPage />
-      ) : (
-        <Grid container className={classes.activityListContainer}>
-          {activities.all_activities.map((activity, index) => (
-            <Grid
-              key={`activityContainer-${index}`}
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              align="center"
-              className={classes.activityBoxContainer}
-            >
-              <Activity
-                key={`activity-${index}`}
-                activity={activity}
-                auth={props.auth}
-                activityToggleSave={props.activityToggleSave}
-                t={props.t}
-                history={props.history}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
+      ) : ( */}
+      <Grid container className={classes.activityListContainer}>
+        {activities.all_activities.map((activity, index) => (
+          <Grid
+            key={`activityContainer-${index}`}
+            item
+            xs={12}
+            sm={6}
+            md={6}
+            align="center"
+            className={classes.activityBoxContainer}
+          >
+            <Activity
+              key={`activity-${index}`}
+              activity={activity}
+              auth={props.auth}
+              activityToggleSave={props.activityToggleSave}
+              t={props.t}
+              history={props.history}
+            />
+          </Grid>
+        ))}
+      </Grid>
+      {/* // )} */}
     </div>
   );
 }

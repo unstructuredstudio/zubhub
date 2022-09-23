@@ -27,7 +27,8 @@
       "savedProjects": "Bookmarks",
       "logout": "Logout",
       "browseActivities": "BROWSE ACTIVITIES",
-      "createActivity": "Create Activity"
+      "createActivity": "CREATE ACTIVITY",
+      "createActivityMenu": "Create Activity"
     },
 
     "footer": {
