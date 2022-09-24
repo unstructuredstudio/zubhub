@@ -26,8 +26,16 @@ function ActivityDetails(props) {
   const { t } = props;
   const { id } = props.match.params;
   const { activities, auth } = useSelector(state => state);
-
-  const activity = activities.all_activities.filter(item => item.id === id)[0];
+  let activity = {};
+  console.log('activities', activities);
+  if (
+    activities.selectedActivity['id'] &&
+    activities.selectedActivity['id'] === id
+  ) {
+    activity = activities.selectedActivity;
+  } else {
+    activity = activities.all_activities.filter(item => item.id === id)[0];
+  }
   console.log('activity_details', activities, activity);
 
   const [videoHeight, setVideoHeight] = useState();

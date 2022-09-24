@@ -79,7 +79,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     making_steps = ActivityMakingStepSerializer(many=True, required=False)
     inspiring_examples = InspiringExampleSerializer(many=True, required=False)
     materials_used_image = ImageSerializer(required=False)
-    inspired_projects = ProjectSerializer(many=True)
+    inspired_projects = ProjectSerializer(many=True, required=False)
 
     class Meta:
         model = Activity

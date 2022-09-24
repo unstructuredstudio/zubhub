@@ -34,186 +34,7 @@ export const compress = image => {
       error: reject,
     });
   });
-
-  // new Compressor(image, {
-  //   quality: 0.6,
-  //   convertSize: 100000,
-  //   success: result => {
-  //     console.log('compressed result', result);
-  //     return result;
-  //   },
-  //   error: error => {
-  //     console.log('compressed result', error);
-  //     console.warn(error.message);
-  //     return image;
-  //   },
-  // });
 };
-
-// export class FileField {
-//   constructor() {
-//     this.files = {};
-//     this.size = 0;
-//     this.length = {};
-//     this.urls = {};
-//   }
-
-//   updateLength(value, index) {
-//     // if (!this.length[index]) {
-//     //   this.length[index] = 0;
-//     // }
-//     this.length[index] = value;
-//   }
-
-//   addUrl(url, index) {
-//     this.urls[index] = url;
-//   }
-
-//   addFile(file, index) {
-//     // this.updateLength(1, index);
-//     if (!this.length[index]) {
-//       // length instead of files
-//       this.updateLength(1, index);
-//     }
-//     if (this.files[index]) {
-//       this.size -= this.files[index].size;
-//     }
-//     this.files[index] = file;
-//     this.size += file.size;
-//   }
-//   //index is index of input in list of this fields inputs otherwise
-//   //is index in liste of files if filed has one input that  accepts multiple
-//   deleteFile(index) {
-//     if (this.files[index]) {
-//       this.size -= this.files[index].size;
-//     }
-//     delete this.files[index];
-//     delete this.urls[index];
-//     delete this.length[index];
-//   }
-
-//   deleteAll() {
-//     this.files = {};
-//     this.length = {};
-//     this.urls = {};
-//     this.size = 0;
-//   }
-
-//   imagesToPreview(inputIndex) {
-//     let imagesToPreview = {};
-
-//     if (Object.keys(this.length).length > 0) {
-//       if (inputIndex >= 0) {
-//         if (this.length[inputIndex]) {
-//           imagesToPreview[inputIndex] = this.files[inputIndex]
-//             ? { image: this.files[inputIndex], type: 'file' }
-//             : { image: this.urls[inputIndex], type: 'url' };
-//         }
-//       } else {
-//         Object.entries(this.length).map(([index, value]) => {
-//           if (value && value > 0) {
-//             imagesToPreview[index] = this.files[index]
-//               ? { image: this.files[index], type: 'file' }
-//               : { image: this.urls[index], type: 'url' };
-//           }
-//         });
-//       }
-//     }
-//     return imagesToPreview;
-//   }
-
-//   selectedFilesCount(index, countFilesText) {
-//     let filesCount = 0;
-//     if (index < 0 && Object.keys(this.length).length !== 0) {
-//       filesCount = Object.values(this.length).reduce(
-//         (sum, record) => sum + record,
-//         0,
-//       );
-//     } else {
-//       filesCount = this.length[index];
-//     }
-//     if (filesCount) {
-//       return filesCount > 1
-//         ? `${filesCount} ${countFilesText[1]}`
-//         : `${filesCount} ${countFilesText[0]}`;
-//     } else {
-//       return '';
-//     }
-//   }
-// }
-
-// export class MediaUpload {
-//   constructor(fileFields = {}, totalFilesSize = 0, loaded = 0) {
-//     this.fileFields = fileFields;
-//     this.totalFilesSize = totalFilesSize;
-//     this.loaded = loaded;
-//   }
-
-//   updateLoaded(loaded) {
-//     this.loaded += loaded;
-//   }
-
-//   createFileField(field, files, inputIndex) {
-//     let fileField = new FileField();
-//     if (inputIndex >= 0) {
-//       fileField.addFile(files[0], inputIndex);
-//     } else {
-//       Object.keys(files).forEach(key => {
-//         fileField.addFile(files[key], key);
-//       });
-//     }
-//     this.fileFields[field] = fileField;
-//     this.totalFilesSize += fileField.size;
-//   }
-
-//   updateFileField(field, files, inputIndex) {
-//     this.totalFilesSize -= this.fileFields[field].size;
-//     if (inputIndex >= 0) {
-//       this.fileFields[field].addFile(files[0], inputIndex);
-//     } else {
-//       this.fileFields[field].deleteAll();
-//       Object.keys(files).forEach(key => {
-//         this.fileFields[field].addFile(files[key], key);
-//       });
-//     }
-//     this.totalFilesSize += this.fileFields[field].size;
-//   }
-
-//   appendToFileField(field, files) {
-//     this.totalFilesSize -= this.fileFields[field].size;
-//     let fileValues = Object.values(this.fileFields[field].files).concat(
-//       Object.values(files),
-//     );
-//     this.fileFields[field].deleteAll();
-//     fileValues.forEach((file, index) => {
-//       this.fileFields[field].addFile(file, index);
-//     });
-//   }
-
-//   addUrlToField(field, url, index) {
-//     this.fileFields[field].addUrl(url, index);
-//   }
-
-//   deleteFileFromField(field, index) {
-//     this.totalFilesSize -= this.fileFields[field].size;
-//     this.fileFields[field].deleteFile(index);
-//     this.totalFilesSize += this.fileFields[field].size;
-//   }
-
-//   deleteAllFromField(field) {
-//     this.totalFilesSize -= this.fileFields[field].size;
-//     this.fileFields[field].deleteAll();
-//   }
-
-//   serializeImage = (fieldName, url, index) => {
-//     let fileField = this.fileFields[fieldName]
-//       ? this.fileFields[fieldName]
-//       : new FileField();
-//     fileField.addUrl(url, index);
-//     fileField.updateLength(1, index);
-//     this.fileFields[fieldName] = fileField;
-//   };
-// }
 
 export const handleFileFieldChange = (
   name,
@@ -295,10 +116,9 @@ export const imagesToPreview = files => {
 };
 
 export const deleteImage = (setFieldValue, fieldName, validateSteps) => {
-  setFieldValue(fieldName, undefined, true).then(errors =>{
+  setFieldValue(fieldName, undefined, true).then(errors => {
     validateSteps();
-  })
-
+  });
 };
 
 export const deleteImageAtIndex = (
@@ -450,7 +270,7 @@ export const uploadFile = (
 };
 
 export const uploadFileToLocal = async (
-  filenon,
+  fileBeforeCompression,
   token,
   username,
   handleSetState,
@@ -459,10 +279,10 @@ export const uploadFileToLocal = async (
   fieldType,
   index,
 ) => {
-  let file = filenon;
+  let file = fileBeforeCompression;
   console.log('size before compression', file.size);
   try {
-    file = await compress(filenon);
+    file = await compress(fileBeforeCompression);
     console.log('size after compression', file.size);
   } catch (error) {
     console.log('compression error msg:', error.message);

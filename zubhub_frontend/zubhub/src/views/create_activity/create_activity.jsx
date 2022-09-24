@@ -11,7 +11,7 @@ import {
   initUpload,
   deserialize,
 } from './createActivityScripts';
-
+import * as activityActions from '../../store/actions/activityActions'
 import * as AuthActions from '../../store/actions/authActions';
 import { Grid, Box, Typography } from '@material-ui/core';
 import CreateActivityStep1 from './create_activity_step1';
@@ -258,6 +258,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getSignature: args => {
       return dispatch(AuthActions.getSignature(args));
+    },
+    setActivity: args => {
+      return dispatch(activityActions.setActivity(args));
     },
   };
 };

@@ -73,27 +73,5 @@ export const activityToggleSave = args => {
     }
   };
 
-  // return () => {
-  //   return  API.activityToggleSave(args)
-  //     .then(res => {
-  //       if (res.title) {
-  //         setActivity(res);
-  //         return { loading: false };
-  //       }
-  //       // else {
-  //       //   res = Object.keys(res)
-  //       //     .map(key => res[key])
-  //       //     .join('\n');
-  //       //   throw new Error(res);
-  //       // }
-  //     })
-  //     .catch(error => {
-  //       if (error.message.startsWith('Unexpected')) {
-  //         toast.warning(args.t('projects.errors.unexpected'));
-  //       } else {
-  //         toast.warning(error.message);
-  //       }
-  //       return { loading: false };
-  //     });
-  // };
+ 
 };

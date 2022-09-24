@@ -551,7 +551,8 @@ export const initUpload = async (
         handleSetState(state => {
           return { ...state, submitting: false };
         });
-        return props.history.push('/activities/all/');
+        props.setActivity(res);
+        return props.history.push(`/activities/${values['id']}`);
       });
     } else {
       API.createActivity(props.auth.token, values).then(res => {
@@ -559,7 +560,8 @@ export const initUpload = async (
         handleSetState(state => {
           return { ...state, submitting: false };
         });
-        return props.history.push('/activities/all/');
+        props.setActivity(res);
+        return props.history.push(`/activities/${res.id}`);
       });
     }
   }
