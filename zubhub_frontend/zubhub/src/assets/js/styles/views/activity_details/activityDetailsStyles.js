@@ -96,7 +96,7 @@ const styles = theme => ({
   imageCreditStyle: {
     color: 'white',
     fontSize: '10px',
-    textAlign: 'center !important',
+    textAlign: 'center',
   },
 
   subTitles: {
@@ -279,7 +279,7 @@ const styles = theme => ({
     },
   },
   facilitationBodyStyle: {
-    marginBottom: '1em',
+    // marginBottom: '1em',
     color: '#3E3E5F',
     '& .ql-editor': {
       fontSize: '1.2rem',

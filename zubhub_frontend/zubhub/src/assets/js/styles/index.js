@@ -21,11 +21,14 @@ const styles = theme => ({
     margin: 'auto',
     width: '90%',
   },
-  centerVertically:{
-    alignSelf: 'center'
+  centerVertically: {
+    alignSelf: 'center',
   },
   marginRight1em: {
     marginRight: '1em',
+  },
+  textCenter: {
+    textAlign: 'center',
   },
   textDecorationNone: {
     textDecoration: 'none',

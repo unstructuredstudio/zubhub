@@ -14,22 +14,24 @@ function BreadCrumb() {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   return (
-    <Box className={classes.container}>
-      <Breadcrumbs separator="" aria-label="breadcrumb">
-        <Link
-          to="/activities/all"
-          className={clsx(common_classes.textDecorationNone, classes.link)}
-        >
-          Activities
-        </Link>
-        <Link
-          to="/"
-          className={clsx(common_classes.textDecorationNone, classes.link)}
-        >
-          Projects
-        </Link>
-      </Breadcrumbs>
-    </Box>
+    <Breadcrumbs
+      separator=""
+      aria-label="breadcrumb"
+      className={classes.container}
+    >
+      <Link
+        to="/activities/all"
+        className={clsx(common_classes.textDecorationNone, classes.link)}
+      >
+        Activities
+      </Link>
+      <Link
+        to="/"
+        className={clsx(common_classes.textDecorationNone, classes.link)}
+      >
+        Projects
+      </Link>
+    </Breadcrumbs>
   );
 }
 
