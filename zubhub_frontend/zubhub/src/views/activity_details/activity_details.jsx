@@ -49,15 +49,12 @@ function ActivityDetails(props) {
       });
       return state;
     });
-
-    // setVideoHeight(
-    //   (document.getElementById('activityVideo').offsetWidth * 9) / 16,
-    // );
+    window.scrollTo(0, 0);
   }, []);
 
   const handleDelete = () => {
     console.log('delete clicked');
-    deleteActivity({ token: auth.token, id: id, history: history });
+    deleteActivity({ token: auth.token, id: id, history: history, t: t });
   };
   return (
     <Box
@@ -68,26 +65,32 @@ function ActivityDetails(props) {
       )}
     >
       <Box className={clsx(classes.activityDetailBlockContainer)}>
-        <Link
-          to={`/activities/${id}/edit`}
-          className={common_classes.textDecorationNone}
-        >
-          <CustomButton
-            className={common_classes.marginLeft1em}
-            variant="contained"
-            primaryButtonStyle
-          >
-            {t('activityDetails.activity.edit')}
-          </CustomButton>
-        </Link>
-        <CustomButton
-          className={common_classes.marginLeft1em}
-          variant="contained"
-          primaryButtonStyle
-          onClick={() => handleDelete()}
-        >
-          {t('activityDetails.activity.delete.label')}
-        </CustomButton>
+        {activity.creators.filter(item => item.id === auth.id).length > 0 ? (
+          <Grid>
+            <Link
+              to={`/activities/${id}/edit`}
+              className={common_classes.textDecorationNone}
+            >
+              <CustomButton
+                className={common_classes.marginLeft1em}
+                variant="contained"
+                primaryButtonStyle
+              >
+                {t('activityDetails.activity.edit.label')}
+              </CustomButton>
+            </Link>
+            <CustomButton
+              className={common_classes.marginLeft1em}
+              variant="contained"
+              primaryButtonStyle
+              onClick={() => handleDelete()}
+            >
+              {t('activityDetails.activity.delete.label')}
+            </CustomButton>
+          </Grid>
+        ) : (
+          ''
+        )}
         <Grid
           className={clsx(
             common_classes.marginTop1em,
@@ -261,9 +264,12 @@ function ActivityDetails(props) {
                   <Typography
                     key={`materialUsedKey${index}`}
                     variant="h6"
-                    className={classes.facilitationBodyStyle}
+                    className={clsx(
+                      classes.facilitationBodyStyle,
+                      // common_classes.textCenter,
+                    )}
                   >
-                    {material}
+                    {`. ${material}`}
                   </Typography>
                 ))}
             </Grid>

@@ -29,7 +29,7 @@ export const handleInputBlur = (e, name, formikProps, validateSteps) => {
   } else {
     formikProps.handleBlur(e);
   }
-  validateSteps();
+  //validateSteps();
 };
 
 export const handleInputChange = (

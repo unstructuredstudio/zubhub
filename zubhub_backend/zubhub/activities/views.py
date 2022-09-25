@@ -5,17 +5,18 @@ from rest_framework.response import Response
 from rest_framework.generics import (
     ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from .permissions import IsStaffOrModeratorOrEducator, IsOwner
 from django.shortcuts import get_object_or_404
 from .models import *
 from .serializers import *
 
 
-@api_view(['GET'])
-def index(request):
-    print(type(request), 'request_activities')
-    response = Response({"message": "hello from backend"})
-    print(type(response), 'response_activities')
-    return response
+# @api_view(['GET'])
+# def index(request):
+#     print(type(request), 'request_activities')
+#     response = Response({"message": "hello from backend"})
+#     print(type(response), 'response_activities')
+#     return response
 
 
 class ActivityListAPIView(ListAPIView):
@@ -36,7 +37,7 @@ class ActivityCreateAPIView(CreateAPIView):
     """
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStaffOrModeratorOrEducator]
     #throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
 
 
@@ -46,7 +47,7 @@ class ActivityUpdateAPIView(UpdateAPIView):
     """
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-
+    permission_classes = [IsAuthenticated, IsOwner]
 
 class ActivityDeleteAPIView(DestroyAPIView):
     """
@@ -58,7 +59,7 @@ class ActivityDeleteAPIView(DestroyAPIView):
     """
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-   # permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def delete(self, request, *args, **kwargs):
         print(request)
@@ -81,16 +82,12 @@ class ToggleSaveAPIView(RetrieveAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticated]
-   # throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
-
+  
     def get_object(self):
         print('from_activity_toggle_save', self)
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)
-        # """ check if user is permitted to view this project """
-        # if can_view(self.request.user, obj):
-        # with transaction.atomic():
-
+       
         if self.request.user in obj.saved_by.all():
             obj.saved_by.remove(self.request.user)
             obj.save()

@@ -11,7 +11,7 @@ import {
   initUpload,
   deserialize,
 } from './createActivityScripts';
-import * as activityActions from '../../store/actions/activityActions'
+import * as activityActions from '../../store/actions/activityActions';
 import * as AuthActions from '../../store/actions/authActions';
 import { Grid, Box, Typography } from '@material-ui/core';
 import CreateActivityStep1 from './create_activity_step1';
@@ -49,6 +49,7 @@ function CreateActivity(props) {
     setFieldTouched: props.setFieldTouched,
     handleChange: props.handleChange,
     handleBlur: props.handleBlur,
+    handleReset: props.handleReset,
   };
 
   const requiredFieldsByStep = [
@@ -66,20 +67,6 @@ function CreateActivity(props) {
           stepVerified = false;
           setVerifiedStep(i + 1);
         }
-        // if (field === 'activityImages') {
-        //   if (
-        //     !newActivityObject.mediaUpload?.fileFields?.activityImages ||
-        //     (newActivityObject.mediaUpload?.fileFields?.activityImages &&
-        //       Object.keys(
-        //         newActivityObject.mediaUpload?.fileFields?.activityImages
-        //           .length,
-        //       ).length === 0)
-        //   ) {
-        //     console.log('images verification', newActivityObject.mediaUpload);
-        //     stepVerified = false;
-        //     setVerifiedStep(i + 1);
-        //   }
-        // }
       });
       if (stepVerified) {
         setVerifiedStep(i + 2);
@@ -99,23 +86,19 @@ function CreateActivity(props) {
       const activityToUpdate = props.activities?.all_activities.filter(
         item => item.id === id,
       )[0];
-      deserialize(activityToUpdate, props.setFieldValue);
-
-      //validateSteps();
-      setDeserializingForEdit(false);
+      if (activityToUpdate) {
+        deserialize(activityToUpdate, props.setFieldValue);
+        setDeserializingForEdit(false);
+      } else {
+        history.push('/activities/all');
+      }
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (readyForSubmit) {
-  //     console.log('into useEffect', props.values, readyForSubmit);
-  //     submitButtonRef.current.click();
-  //   }
-  // }, [readyForSubmit]);
 
   console.log('state', props, newActivityObject);
   const visitePrev = () => {
     setStep(step => step - 1);
+    window.scrollTo(0, 0);
   };
   const visiteNext = () => {
     //validateSteps();
@@ -133,6 +116,7 @@ function CreateActivity(props) {
       return step + 1;
     });
     validateSteps();
+    window.scrollTo(0, 0);
   };
 
   return (

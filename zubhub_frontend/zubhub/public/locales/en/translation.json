@@ -897,6 +897,13 @@
       "Edit": "Save Changes"
     }
   },
+ "activities": {
+   "errors": {
+      "dialog": {
+         "serverError": "Sorry the server is down try again later"
+      }
+   }
+ },
 
   "activityDetails": {
     "activity": {
@@ -909,16 +916,37 @@
       "category": "Category",
       "tags": "Tags",
       "none": "None",
-      "edit": "Edit",
+      
       "build": "Let's Make This Project",
       "pdf": "Download Pdf",
+      "create": {
+        "dialog": {
+          "primary": "Create Activity",
+          "cancel": "Cancel",
+          "proceed": "Proceed",
+          "success": "activity Created successfully",
+          "forbidden": "You must be staff monitor ao educator to be able to create a new activity "
+        }
+      },
+      "edit": {
+        "label": "Edit",
+        "dialog": {
+          "primary": "Edit Activity",
+          "cancel": "Cancel",
+          "proceed": "Proceed",
+          "success": "activity edited successfully",
+          "forbidden": "You must be the owner of this activity to perform this function"
+        }
+      },
       "delete": {
         "label": "Delete",
         "dialog": {
-          "primary": "Delete Project",
-          "secondary": "Are you sure you want to delete this project? You can't undo this action!!",
+          "primary": "Delete Activity",
+          "secondary": "Are you sure you want to delete this activity? You can't undo this action!!",
           "cancel": "Cancel",
-          "proceed": "Proceed"
+          "proceed": "Proceed",
+          "success": "activity deleted successfully",
+          "forbidden": "You must be the owner of this activity to perform this function"
         }
       }
     },
@@ -928,4 +956,5 @@
         "unsave": "unsave"
       }
   }
+ 
 }

@@ -10,11 +10,5 @@ export const styles = theme => ({
     boxShadow: '10px 0 5px -2px #888',
     color: 'white',
     fontWeight: 500,
-    // '&:active': {
-    //   backgroundColor: '#00949E',
-    // },
-    // '&:hover': {
-    //   backgroundColor: '#00949E',
-    // },
   },
 });

@@ -896,7 +896,8 @@ class API {
       video: video,
     });
     console.log('api json object', body);
-    return this.request({ url, method, token, body }).then(res => res.json());
+    return this.request({ url, method, token, body });
+    // .then(res => res.json());
   };
 
   updateActivity = (token, id, args) => {
@@ -931,15 +932,16 @@ class API {
       video: video,
     });
     console.log('api json object', body);
-    return this.request({ url, method, token, body }).then(res => res.json());
+    return this.request({ url, method, token, body });
+    //.then(res => res.json());
   };
 
   deleteActivity = ({ token, id }) => {
     const url = `activities/${id}/delete/`;
     const method = 'DELETE';
-    return this.request({ url, method, token }).then(res =>
-      Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
-    );
+    return this.request({ url, method, token });
+    //.then(res =>
+    //Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()), );
   };
 
   getActivities = () => {

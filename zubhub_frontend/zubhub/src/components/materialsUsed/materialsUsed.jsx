@@ -85,7 +85,7 @@ function MaterialsUsed(props) {
       <p className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}>
         {formikProps.touched['materials_used'] &&
           formikProps.errors['materials_used'] === 'required1' &&
-          t(`createActivity.inputs.materialsUsed.errors.required1`)}
+          t(`createActivity.inputs.materials_used.errors.required1`)}
       </p>
       <Grid item xs={12} className={common_classes.marginTop3em}>
         <Typography

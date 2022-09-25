@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 import ZubhubAPI from '../../api';
 import { FormMediaUpload } from '../../components/upload_file/uploadFileScripts';
 const API = new ZubhubAPI();
@@ -548,20 +549,64 @@ export const initUpload = async (
     if (values['id']) {
       API.updateActivity(props.auth.token, values.id, values).then(res => {
         console.log('apiresponse', res);
-        handleSetState(state => {
-          return { ...state, submitting: false };
-        });
-        props.setActivity(res);
-        return props.history.push(`/activities/${values['id']}`);
+        if (res.status === 200 && res.statusText === 'OK') {
+          handleSetState(state => {
+            return { ...state, submitting: false };
+          });
+          formikProps.handleReset();
+          const response = res.json();
+          response.then(res => {
+            console.log('after stringify', res);
+            props.setActivity(res);
+          });
+          toast.success(
+            props.t('activityDetails.activity.edit.dialog.success'),
+          );
+          return props.history.push(`/activities/${values['id']}`);
+        } else {
+          if (res.status === 403 && res.statusText === 'Forbidden') {
+            toast.error(
+              props.t('activityDetails.activity.delete.dialog.forbidden'),
+            );
+          } else {
+            toast.warning(props.t('activities.errors.dialog.serverError'));
+          }
+          return props.history.push(`/activities/${values['id']}`);
+        }
       });
     } else {
       API.createActivity(props.auth.token, values).then(res => {
-        console.log('apiresponse', res);
         handleSetState(state => {
           return { ...state, submitting: false };
         });
-        props.setActivity(res);
-        return props.history.push(`/activities/${res.id}`);
+        console.log('apiresponse', res);
+        if (res.status === 200 || res.statusText === 'Created') {
+          formikProps.handleReset();
+          const response = res.json();
+          response.then(res => {
+            console.log('after stringify', res);
+            props.setActivity(res);
+            toast.success(
+              props.t('activityDetails.activity.create.dialog.success'),
+            );
+            return props.history.push(`/activities/${res.id}`);
+          });
+        } else {
+          if (res.status === 403 && res.statusText === 'Forbidden') {
+            toast.error(
+              props.t('activityDetails.activity.create.dialog.forbidden'),
+            );
+          } else {
+            if (res.status === 404 || res.status === 400) {
+              res.json().then(res => {
+                toast.warning(res);
+              });
+            } else {
+              toast.warning(props.t('activities.errors.dialog.serverError'));
+            }
+          }
+          // return props.history.push(`/activities/${values['id']}`);
+        }
       });
     }
   }

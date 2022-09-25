@@ -138,21 +138,16 @@ class ActivitySerializer(serializers.ModelSerializer):
         if (activity.inspiring_artist is not None or 'inspiring_artist' in validated_data):
             if(activity.inspiring_artist is not None):
                 if('inspiring_artist' in validated_data):
-                    # if('image' in validated_data['inspiring_artist']):
                     if(activity.inspiring_artist.image is not None or validated_data['inspiring_artist'].get('image') is not None):
                         activity.inspiring_artist.image = update_image(
                             activity.inspiring_artist.image, validated_data['inspiring_artist'].get('image'))
 
-                        print('updated image', activity.inspiring_artist.image)
-                    # if 'name' in validated_data['inspiring_artist']:
                     activity.inspiring_artist.name = validated_data['inspiring_artist'].get(
                         'name')
-                    # if 'short_biography' in validated_data['inspiring_artist']:
                     activity.inspiring_artist.short_biography = validated_data[
                         'inspiring_artist'].get('short_biography')
                     activity.inspiring_artist.save()
-                    print('after_inspiring_artist_update',
-                          activity.inspiring_artist)
+                    
                 else:
                     activity.inspiring_artist.delete()
                     activity.inspiring_artist = None
@@ -162,7 +157,7 @@ class ActivitySerializer(serializers.ModelSerializer):
                         **validated_data['inspiring_artist']['image'])
                 activity.inspiring_artist = InspiringArtist.objects.create(
                     **validated_data['inspiring_artist'])
-                print('new_artist_in_validated_data', activity)
+                
         if(activity.materials_used_image is not None or 'materials_used_image' in validated_data):
             if (activity.materials_used_image is None):
                 activity.materials_used_image = Image.objects.create(
