@@ -1,6 +1,6 @@
 export const pdfStyle = {
   withMargin: {
-    margin: [20, 20, 20, 20],
+    margin: [30, 30, 30, 30],
   },
   alignCenter: {
     alignment: 'center',
@@ -11,23 +11,47 @@ export const pdfStyle = {
     marginBottom: 20,
   },
   title: {
-    fontSize: 25,
+    fontSize: 30,
+    bold: true,
+    color: '#00B8C4',
     alignment: 'center',
+    marginBottom: 20,
+  },
+  secondaryTitle: {
+    fontSize: 25,
+    color: '#00B8C4',
+    backgroundColor: 'gray',
+  },
+  motivation: {
+    fontSize: 15,
+    margin: 20,
+    color: '#3E3E5F',
+  },
+  videoLink: {
+    margin: 10,
+    fontSize: 12,
+    color: '#3E3E5F',
   },
   textBody: {
-    fontSize: 12,
+    marginTop: 10,
+    fontSize: 15,
+    color: '#3E3E5F',
   },
   subheader: {
     fontSize: 15,
     bold: true,
+    color: '#3E3E5F',
   },
   subTitles: {
-    fontSize: 18,
+    fontSize: 20,
     bold: true,
-    color: '#3E3E5F',
-    alignment: 'center',
+    color: '#00B8C4',
+    // alignment: 'center',
     marginTop: 20,
     marginBottom: 10,
+  },
+  image: {
+    borderRadius: 5,
   },
   quote: {
     italics: true,
@@ -58,5 +82,5 @@ export const pdfStyle = {
   artistImage: {
     width: 50,
     borderRadius: 10,
-  }
+  },
 };

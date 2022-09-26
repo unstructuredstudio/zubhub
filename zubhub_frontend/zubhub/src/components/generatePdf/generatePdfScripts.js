@@ -1,8 +1,8 @@
-
 export const getPdfMaterialsUsed = (activity, promiseImages) => {
   let pdfMaterials = [];
   let materialsList = {
     markerColor: '#00B8C4',
+    style: 'textBody',
     ul: [],
   };
   activity.materials_used.split(',').forEach(item => {
@@ -14,6 +14,7 @@ export const getPdfMaterialsUsed = (activity, promiseImages) => {
       image: promiseImages['materials_used_image'],
       width: 150,
       height: 150,
+      style: 'image',
     });
   }
 
@@ -21,6 +22,7 @@ export const getPdfMaterialsUsed = (activity, promiseImages) => {
     stack: [
       { text: 'MATERIALS USED', style: 'subTitles' },
       {
+        margin: [20, 30],
         alignment: 'justify',
         columns: pdfMaterials,
       },
@@ -37,11 +39,13 @@ export const getPdfMakingSteps = (activity, promiseImages) => {
       step.columns.push({
         text: document.getElementById(`makingStep${index}description`)
           .innerText,
+        style: 'textBody',
       });
     }
     if (item['image']) {
       step.columns.push({
         image: promiseImages[`making_steps${index}image`],
+        style: 'image',
       });
     }
     steps.push({ text: `Step ${item.step_order}:`, style: 'stepTitle' }, step);
@@ -65,11 +69,13 @@ export const getPdfInspiringPerson = (activity, promiseImages) => {
     artist.push({
       alignment: 'center',
       text: activity.inspiring_artist['name'],
+      style: 'textBody',
     });
   activity.inspiring_artist['short_biography'] &&
     artist.push({
       alignment: 'center',
-      text: document.getElementById('inspiringArtistBiography'),
+      text: document.getElementById('inspiringArtistBiography').innerText,
+      style: 'textBody',
     });
 
   return {
@@ -152,6 +158,7 @@ export const getPdfTextBlock = (title, elementId) => {
       {
         alignment: 'justify',
         text: document.getElementById(elementId).innerText,
+        style: 'textBody',
       },
     ],
     unbreakable: true,

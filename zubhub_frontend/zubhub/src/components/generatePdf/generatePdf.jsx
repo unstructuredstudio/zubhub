@@ -37,16 +37,16 @@ function GeneratePdf(props) {
   const [docDefinitionDefault, setDocDefinitionDefault] = useState({
     pageSize: 'A4',
     pageOrientation: 'portrait',
-    pageMargins: [40, 20, 40, 60],
+    pageMargins: [60, 60, 60, 60],
     content: [
-      {
-        text: 'Zubhub Activities',
-        style: 'header',
-        alignment: 'center',
-      },
+      // {
+      //   text: 'Zubhub Activities',
+      //   style: 'header',
+      //   //alignment: 'center',
+      // },
     ],
     defaultStyle: {
-      columnGap: 20,
+      columnGap: 15,
     },
     styles: pdfStyle,
   });
@@ -63,29 +63,53 @@ function GeneratePdf(props) {
 
     setDocDefinitionDefault(state => {
       let newContent = state.content;
+      newContent.push({
+        alignment: 'justify',
+        columns: [
+          {
+            stack: [
+              {
+                text: activity.title,
+                style: 'title',
+                alignment: 'justify',
+              },
+              {
+                text: 'Activity GUIDE',
+                style: 'secondaryTitle',
+              },
+              {
+                text: 'This guide outlines some getting started ideas, materials required, and the making process of this activity from things around us. See it on the right!',
+                style: 'textBody',
+              },
+            ],
+          },
+          {
+            image: promiseImages['activityImage'],
+            style: 'image',
+            width: 200,
+            height: 200,
+          },
+        ],
+      });
+      activity.video !== '' &&
+        newContent.push({
+          //
+          table: {
+            body: [
+              [
+                {
+                  border: [true, false, false, false],
+                  fillColor: '#eeeeee',
+                  text: `Watch it in action here ${activity.video}`,
+                  style: 'videoLink',
+                },
+              ],
+              //  style: 'videoLink',
+            ],
+          },
+        });
       newContent.push(
-        {
-          alignment: 'justify',
-          columns: [
-            {
-              image: promiseImages['activityImage'],
-              width: 200,
-              height: 200,
-            },
-            {
-              text: activity.title,
-              style: 'title',
-              alignment: 'justify',
-            },
-          ],
-        },
-        {
-          text: document.getElementById('activityMotivation').innerText,
-          alignment: 'center',
-        },
-      );
-
-      newContent.push(
+        getPdfTextBlock('MOTIVATION', 'activityMotivation'),
         getPdfMaterialsUsed(activity, promiseImages),
         getPdfTextBlock('LEARNING GOALS', 'activityLearningGoals'),
         getPdfMakingSteps(activity, promiseImages),
