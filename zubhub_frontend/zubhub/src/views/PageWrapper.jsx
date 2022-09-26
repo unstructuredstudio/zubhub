@@ -461,7 +461,12 @@ function PageWrapper(props) {
               ) : (
                 <>
                   {props.match.path === '/activities/all' ? (
-                    props.auth.tags.includes('creator', 'staff', 'educator') ? (
+                    props.auth.tags.filter(
+                      tag =>
+                        tag === 'moderator' ||
+                        tag === 'staff' ||
+                        tag === 'educator',
+                    ).length > 0 ? (
                       <Link
                         className={clsx(
                           classes.textDecorationNone,

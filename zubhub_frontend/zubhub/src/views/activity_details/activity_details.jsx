@@ -188,7 +188,12 @@ function ActivityDetails(props) {
             common_classes.marginBottom3em,
           )}
         >
-          <ActionIconsContainer activity={activity} t={t} auth={auth} />
+          <ActionIconsContainer
+            activity={activity}
+            t={t}
+            auth={auth}
+          
+          />
         </Grid>
 
         <Grid lg={8} item className={common_classes.textCenter}>
