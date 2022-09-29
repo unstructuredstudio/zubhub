@@ -65,7 +65,6 @@ function InputText(props) {
         <ClickAwayListener
           onClickAway={() => {
             if (inputTextFieldFocused) {
-              console.log('blur event from :', name);
               handleInputTextFieldBlur(
                 field,
                 formikProps.formikValues,

@@ -40,7 +40,7 @@ function Input(props) {
     fieldType,
     formikProps.formikValues,
   );
-  console.log('input field error', fieldErrors);
+
   return (
     <div>
       <FormControl

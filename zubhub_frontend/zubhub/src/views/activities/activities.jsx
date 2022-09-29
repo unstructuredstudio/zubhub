@@ -40,12 +40,12 @@ function Activities(props) {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
+  const { activities } = useSelector(state => state);
   useEffect(async () => {
     const res = await props.getActivities();
+    console.log('activities', activities);
     setLoading(false);
   }, []);
-
-  const { activities } = useSelector(state => state);
 
   const activeSlide = currentSlide => {
     setActiveCarouselIndex(currentSlide);

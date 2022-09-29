@@ -213,7 +213,7 @@ function PageWrapper(props) {
   const { zubhub, hero } = props.projects;
 
   const profileMenuOpen = Boolean(anchor_el);
-  console.log('props path', props, props.match.path);
+ 
   return (
     <>
       <ToastContainer />

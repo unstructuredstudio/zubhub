@@ -59,8 +59,7 @@ function GeneratePdf(props) {
         promiseImages[key] = value;
       });
     });
-    console.log('promises results', promiseImages);
-
+   
     setDocDefinitionDefault(state => {
       let newContent = state.content;
       newContent.push({
@@ -127,7 +126,7 @@ function GeneratePdf(props) {
         newContent.push(getPdfInspiringExamples(activity, promiseImages));
       }
 
-      console.log('content', newContent);
+     
       return {
         ...state,
         content: [...newContent],

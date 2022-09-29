@@ -59,7 +59,6 @@ function CreateActivity(props) {
   ];
   const validateSteps = () => {
     let stepVerified = true;
-    console.log('validate steps triggered!!!!!');
     for (let i = 0; i < requiredFieldsByStep.length; i++) {
       stepVerified = true;
       requiredFieldsByStep[i].map(field => {
@@ -95,7 +94,7 @@ function CreateActivity(props) {
     }
   }, []);
 
-  console.log('state', props, newActivityObject);
+ // console.log('state', props, newActivityObject);
   const visitePrev = () => {
     setStep(step => step - 1);
     window.scrollTo(0, 0);

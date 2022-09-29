@@ -58,7 +58,7 @@ const imageSizeTooLarge = value => {
 const allEmpty = arr => {
   let allEmptyValues = false;
   if (arr) {
-    console.log('from array all empty', arr);
+   // console.log('from array all empty', arr);
     if (arr.length === 0) {
       allEmptyValues = true;
     }
@@ -467,7 +467,7 @@ export const initUpload = async (
           break;
       }
     });
-    console.log('values=======================>', values);
+
     objectsArray.forEach(field => {
       if (values[field]) {
         let fieldValues = [];
@@ -529,7 +529,7 @@ export const initUpload = async (
 
     if (values['video']) {
       Object.entries(values['video']).forEach(([key, value]) => {
-        console.log('video key value', key, value);
+       
         if (key === 'file_url') {
           values = {
             ...values,
@@ -548,7 +548,7 @@ export const initUpload = async (
 
     if (values['id']) {
       API.updateActivity(props.auth.token, values.id, values).then(res => {
-        console.log('apiresponse', res);
+       
         if (res.status === 200 && res.statusText === 'OK') {
           handleSetState(state => {
             return { ...state, submitting: false };
@@ -556,7 +556,7 @@ export const initUpload = async (
           formikProps.handleReset();
           const response = res.json();
           response.then(res => {
-            console.log('after stringify', res);
+           
             props.setActivity(res);
           });
           toast.success(
@@ -584,7 +584,7 @@ export const initUpload = async (
           formikProps.handleReset();
           const response = res.json();
           response.then(res => {
-            console.log('after stringify', res);
+      
             props.setActivity(res);
             toast.success(
               props.t('activityDetails.activity.create.dialog.success'),

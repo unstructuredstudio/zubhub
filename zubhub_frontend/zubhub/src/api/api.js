@@ -541,7 +541,6 @@ class API {
   }) => {
     const url = 'projects/create/';
     const method = 'POST';
-    console.log('from api activity_id', activity);
     const body = JSON.stringify({
       title,
       description,
@@ -865,7 +864,7 @@ class API {
   // };
 
   createActivity = (token, args) => {
-    console.log('args from api', args);
+   
     const url = 'activities/create/';
     const method = 'POST';
     const {
@@ -901,7 +900,7 @@ class API {
   };
 
   updateActivity = (token, id, args) => {
-    console.log('args from api', args);
+   // console.log('args from api', args);
     const url = `activities/${id}/update/`;
     const method = 'PATCH';
     const {
@@ -945,7 +944,7 @@ class API {
   };
 
   getActivities = () => {
-    console.log('api getactivities triggered');
+   
     const url = 'activities/';
     return this.request({ url, method: 'GET' }).then(res => res.json());
   };

@@ -27,7 +27,7 @@ function ActivityDetails(props) {
   const { id } = props.match.params;
   const { activities, auth } = useSelector(state => state);
   let activity = {};
-  console.log('activities', activities);
+ 
   if (
     activities.selectedActivity['id'] &&
     activities.selectedActivity['id'] === id
@@ -36,7 +36,7 @@ function ActivityDetails(props) {
   } else {
     activity = activities.all_activities.filter(item => item.id === id)[0];
   }
-  console.log('activity_details', activities, activity);
+ // console.log('activity_details', activities, activity);
 
   const [videoHeight, setVideoHeight] = useState();
   const [imageCredit, setImageCredit] = useState('');
@@ -53,7 +53,6 @@ function ActivityDetails(props) {
   }, []);
 
   const handleDelete = () => {
-    console.log('delete clicked');
     deleteActivity({ token: auth.token, id: id, history: history, t: t });
   };
   return (
