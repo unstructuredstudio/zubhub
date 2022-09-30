@@ -906,6 +906,7 @@
  },
 
   "activityDetails": {
+    "made": "Made by",
     "activity": {
       "creator": {
         "follow": "Follow",
@@ -948,6 +949,12 @@
           "success": "activity deleted successfully",
           "forbidden": "You must be the owner of this activity to perform this function"
         }
+      },
+      "publish": {
+         "label": "Publish"
+      },
+      "unpublish": {
+         "label": "UnPublish"
       }
     },
       "saveButton": {

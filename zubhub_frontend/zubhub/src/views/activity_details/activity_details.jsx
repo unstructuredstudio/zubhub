@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-import { deleteActivity, getBase64Images } from './activityDetailsScripts';
+import { deleteActivity, togglePublish } from './activityDetailsScripts';
 import CustomButton from '../../components/button/Button';
 import GeneratePdf from '../../components/generatePdf/generatePdf';
 import styles from '../../assets/js/styles/views/activity_details/activityDetailsStyles';
@@ -11,8 +11,16 @@ import { Grid, Box, CardMedia, Typography } from '@material-ui/core';
 import ActionIconsContainer from '../../components/actionIconsContainer/actionIconsContainer';
 import ReactQuill from 'react-quill';
 import clsx from 'clsx';
+import { activityTogglePublish } from '../../store/actions/activityActions';
+// import {
+//   dFormatter,
+//   nFormatter,
+//   buildVideoThumbnailURL,
+//   isBaseTag,
+// } from '../../assets/js/utils/scripts';
 import {
   videoOrUrl,
+  dFormatter,
   getBase64ImageFromURL,
 } from '../../assets/js/utils/scripts';
 
@@ -27,7 +35,7 @@ function ActivityDetails(props) {
   const { id } = props.match.params;
   const { activities, auth } = useSelector(state => state);
   let activity = {};
- 
+
   if (
     activities.selectedActivity['id'] &&
     activities.selectedActivity['id'] === id
@@ -36,7 +44,7 @@ function ActivityDetails(props) {
   } else {
     activity = activities.all_activities.filter(item => item.id === id)[0];
   }
- // console.log('activity_details', activities, activity);
+  console.log('activity_details', activity, auth);
 
   const [videoHeight, setVideoHeight] = useState();
   const [imageCredit, setImageCredit] = useState('');
@@ -64,36 +72,63 @@ function ActivityDetails(props) {
       )}
     >
       <Box className={clsx(classes.activityDetailBlockContainer)}>
-        {activity.creators.filter(item => item.id === auth.id).length > 0 ? (
-          <Grid>
-            <Link
-              to={`/activities/${id}/edit`}
-              className={common_classes.textDecorationNone}
-            >
+        <Grid container className={common_classes.justifyRight}>
+          {activity.creators.filter(item => item.id === auth.id).length > 0 ? (
+            <Grid item>
+              <Link
+                to={`/activities/${id}/edit`}
+                className={common_classes.textDecorationNone}
+              >
+                <CustomButton
+                  className={common_classes.marginLeft1em}
+                  variant="contained"
+                  primaryButtonStyle
+                >
+                  {t('activityDetails.activity.edit.label')}
+                </CustomButton>
+              </Link>
               <CustomButton
                 className={common_classes.marginLeft1em}
                 variant="contained"
                 primaryButtonStyle
+                onClick={() => handleDelete()}
               >
-                {t('activityDetails.activity.edit.label')}
+                {t('activityDetails.activity.delete.label')}
               </CustomButton>
-            </Link>
-            <CustomButton
-              className={common_classes.marginLeft1em}
-              variant="contained"
-              primaryButtonStyle
-              onClick={() => handleDelete()}
-            >
-              {t('activityDetails.activity.delete.label')}
-            </CustomButton>
+            </Grid>
+          ) : (
+            ''
+          )}
+          <Grid item>
+            {auth.tags.filter(tag => tag === 'moderator' || tag === 'staff')
+              .length > 0 && (
+              <CustomButton
+                className={common_classes.marginLeft1em}
+                variant="contained"
+                primaryButtonStyle
+                onClick={e =>
+                  togglePublish(
+                    e,
+                    activity.id,
+                    auth,
+                    history,
+                    props.activityTogglePublish,
+                    t,
+                  )
+                }
+              >
+                {activity.publish
+                  ? t('activityDetails.activity.unpublish.label')
+                  : t('activityDetails.activity.publish.label')}
+              </CustomButton>
+            )}
           </Grid>
-        ) : (
-          ''
-        )}
+        </Grid>
         <Grid
           className={clsx(
             common_classes.marginTop1em,
-            common_classes.justifyCenter,
+            common_classes.justifySpaceBetween,
+            common_classes.marginBottom3em,
           )}
           container
           spacing={2}
@@ -104,22 +139,27 @@ function ActivityDetails(props) {
             xs={12}
             sm={8}
             lg={6}
-            className={classes.demoImageContainerStyle}
+            className={clsx(
+              classes.demoImageContainerStyle,
+              // common_classes.positionRelative,
+            )}
           >
             <CardMedia
               id="activityImage"
               className={clsx(
                 classes.demoImageStyle,
                 common_classes.marginBottom1em,
+                common_classes.marginTop1em,
               )}
               component={'img'}
               image={activity.images[0].image.file_url}
             />
+            <ActionIconsContainer activity={activity} t={t} auth={auth} />
           </Grid>
           <Grid
             item
             lg={6}
-            md={4}
+            md={6}
             sx={12}
             sm={4}
             className={clsx(
@@ -145,8 +185,13 @@ function ActivityDetails(props) {
               >
                 {activity.title}
               </Typography>
+
               <Typography className={classes.createdOn} variant="h6">
-                {`Made a year ago by ${activity.creators[0].username}`}
+                {`${t('activityDetails.made')} ${auth.username} ${
+                  dFormatter(activity.created_on).value
+                } ${t(`date.${dFormatter(activity.created_on).key}`)} ${t(
+                  'date.ago',
+                )}`}
               </Typography>
               <Grid container className={common_classes.justifyCenter}>
                 <Grid item lg={8} xs={12}>
@@ -183,54 +228,62 @@ function ActivityDetails(props) {
           lg={6}
           item
           className={clsx(
-            common_classes.marginTop1em,
+            // common_classes.marginTop1em,
             common_classes.marginBottom3em,
           )}
         >
-          <ActionIconsContainer
-            activity={activity}
-            t={t}
-            auth={auth}
-          
-          />
+          {/* <ActionIconsContainer activity={activity} t={t} auth={auth} /> */}
         </Grid>
-
-        <Grid lg={8} item className={common_classes.textCenter}>
+      </Box>
+      <Box
+        className={clsx(
+          classes.activityDetailBlock,
+          common_classes.marginTop3em,
+        )}
+      >
+        <Grid
+          className={clsx(
+            common_classes.justifyCenter,
+            common_classes.marginTop3em,
+          )}
+        >
           <ReactQuill
             id="activityMotivation"
-            className={classes.facilitationBodyStyle}
+            className={classes.motivationBodyStyle}
             theme={'bubble'}
             readOnly={true}
             value={activity.motivation || ''}
           />
         </Grid>
-        {}
-        <Typography
-          className={clsx(common_classes.marginBottom1em)}
-          variant="h5"
-        ></Typography>
+
         <Grid
+          container
           className={clsx(
-            common_classes.marginTop1em,
-            common_classes.marginBottom1em,
+            common_classes.marginTop3em,
+            common_classes.justifyCenter,
           )}
         >
           {activity.video && (
-            <div
-            // style={{ position: 'relative', height: 'max-content' }}`calc((${videoHeight} * 9) / 16)`
+            <Grid
+              item
+              //lg={8}
+              xs={12}
+              sm={12}
+              md={12}
+              className={clsx(classes.videoWrapperStyle)}
             >
               <CardMedia
                 id="activityVideo"
                 sx={{ height: 400 }}
-                className={classes.videoPlayer}
+                className={classes.iframeStyle}
                 component={videoOrUrl(activity.video) ? 'video' : 'iframe'}
                 image={activity.video}
                 controls
               />
-            </div>
+            </Grid>
           )}
         </Grid>
-        <Grid align="left" item>
+        <Grid item className={common_classes.justifyCenter}>
           <Typography
             className={clsx(common_classes.marginTop1em, classes.subTitles)}
             variant="h3"
@@ -314,7 +367,6 @@ function ActivityDetails(props) {
         <Typography
           className={clsx(common_classes.marginTop3em, classes.subTitles)}
           variant="h3"
-          sx={{ width: '100%' }}
         >
           INSPIRING PERSON
         </Typography>
@@ -327,7 +379,7 @@ function ActivityDetails(props) {
           {activity.inspiring_artist && activity.inspiring_artist['image'] ? (
             <>
               {activity.inspiring_artist.image && (
-                <Grid item xs={12} lg={4} sm={4}>
+                <Grid item xs={12} lg={6} sm={6}>
                   <CardMedia
                     className={classes.demoImageStyle}
                     component="img"
@@ -345,7 +397,10 @@ function ActivityDetails(props) {
                 >
                   <ReactQuill
                     id={`inspiringArtistBiography`}
-                    className={classes.motivationBodyStyle}
+                    className={clsx(
+                      classes.facilitationBodyStyle,
+                      common_classes.justifyCenter,
+                    )}
                     theme={'bubble'}
                     readOnly={true}
                     value={activity.inspiring_artist.short_biography || ''}
@@ -421,7 +476,7 @@ function ActivityDetails(props) {
       </Grid>
       <Grid
         className={clsx(
-          classes.activityDetailBlockContainer,
+          classes.activityDetailBlock,
           common_classes.justifyCenter,
         )}
       >
@@ -522,7 +577,7 @@ function ActivityDetails(props) {
         <Grid
           container
           className={clsx(
-            classes.activityDetailBlockContainer,
+            classes.activityDetailBlock,
             common_classes.justifyCenter,
           )}
         >
@@ -556,4 +611,19 @@ function ActivityDetails(props) {
   );
 }
 
-export default ActivityDetails;
+const mapStateToProps = state => {
+  return {
+    activities: state.activities,
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    activityTogglePublish: args => {
+      return dispatch(activityTogglePublish(args));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ActivityDetails);

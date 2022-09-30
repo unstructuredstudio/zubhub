@@ -864,7 +864,6 @@ class API {
   // };
 
   createActivity = (token, args) => {
-   
     const url = 'activities/create/';
     const method = 'POST';
     const {
@@ -900,7 +899,7 @@ class API {
   };
 
   updateActivity = (token, id, args) => {
-   // console.log('args from api', args);
+    // console.log('args from api', args);
     const url = `activities/${id}/update/`;
     const method = 'PATCH';
     const {
@@ -944,7 +943,6 @@ class API {
   };
 
   getActivities = () => {
-   
     const url = 'activities/';
     return this.request({ url, method: 'GET' }).then(res => res.json());
   };
@@ -952,6 +950,12 @@ class API {
   activityToggleSave = ({ id, token }) => {
     const url = `activities/${id}/toggle-save/`;
 
+    return this.request({ url, token }).then(res => res.json());
+  };
+
+  activityTogglePublish = ({ id, token }) => {
+    const url = `activities/${id}/toggle-publish/`;
+    console.log('api toggle publish');
     return this.request({ url, token }).then(res => res.json());
   };
 }

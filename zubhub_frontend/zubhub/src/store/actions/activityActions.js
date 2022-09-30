@@ -72,6 +72,25 @@ export const activityToggleSave = args => {
       return { loading: false };
     }
   };
+};
 
- 
+export const activityTogglePublish = args => {
+  return async dispatch => {
+    try {
+      const result = await ActivityAPI.activityTogglePublish(args);
+      console.log('from activity Publish actions result', result);
+      dispatch({
+        type: at.SET_ACTIVITY,
+        payload: { activity: result },
+      });
+      return result
+    } catch (error) {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return {error: error}
+    }
+  };
 };

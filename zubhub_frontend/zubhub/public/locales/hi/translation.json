@@ -821,6 +821,7 @@
   },
 
    "activityDetails": {
+    "made": "द्वारा निर्मित",
     "activity": {
       "creator": {
         "follow": "का पालन करें",
@@ -842,6 +843,12 @@
           "deleteActivityToastSuccess": "गतिविधि सफलतापूर्वक हटाई गई"
 
         }
+      },
+      "publish": {
+         "label": "प्रकाशित करना"
+      },
+      "unpublish": {
+         "label": "अप्रकाशित"
       }
     },
     "ariaLabels": {

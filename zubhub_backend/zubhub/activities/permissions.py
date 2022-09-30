@@ -13,3 +13,10 @@ class IsStaffOrModeratorOrEducator(BasePermission):
     def has_object_permission(self, request, view, object):
         print('staff_moderator_educator_permission',  request.user.is_staff, request.user.tags.filter(name="moderator").exists(), request.user.tags.filter(name="educator").exists() )
         return request.user.is_staff == True or request.user.tags.filter(name="moderator").exists() or request.user.tags.filter(name="educator").exists()
+    
+class IsStaffOrModerator(BasePermission):
+    message = "You must be a staff a moderator to perform this function"
+
+    def has_object_permission(self, request, view, object):
+       
+        return request.user.is_staff == True or request.user.tags.filter(name="moderator").exists()

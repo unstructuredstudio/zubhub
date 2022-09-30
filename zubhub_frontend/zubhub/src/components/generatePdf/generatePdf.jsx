@@ -11,7 +11,7 @@ import {
   getPdfInspiringPerson,
   getPdfInspiringExamples,
 } from './generatePdfScripts';
-import { getBase64Images } from '../../views/activity_details/activityDetailsScripts';
+import { getBase64Images } from './generatePdfScripts';
 
 function GeneratePdf(props) {
   const { t } = useTranslation();

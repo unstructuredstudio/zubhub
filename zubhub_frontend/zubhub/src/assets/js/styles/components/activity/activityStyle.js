@@ -1,4 +1,4 @@
-export const style = {
+export const style = theme => ({
   activityCardContainer: {
     position: 'relative',
     maxWidth: '350px',
@@ -10,6 +10,16 @@ export const style = {
     borderRadius: '15px',
     position: 'relative!important',
     height: '100%',
+  },
+  opacity: {
+    backgroundColor: 'black',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: '15px',
+    top: 0,
+    left: 0,
+    opacity: 0.4,
   },
   activityCardImage: {
     width: '100%',
@@ -79,4 +89,4 @@ export const style = {
     width: '80%',
     textAlign: '-webkit-auto',
   },
-};
+});

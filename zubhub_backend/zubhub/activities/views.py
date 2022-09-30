@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.generics import (
     ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from .permissions import IsStaffOrModeratorOrEducator, IsOwner
+from .permissions import IsStaffOrModeratorOrEducator, IsOwner, IsStaffOrModerator
 from django.shortcuts import get_object_or_404
 from .models import *
 from .serializers import *
@@ -94,4 +94,24 @@ class ToggleSaveAPIView(RetrieveAPIView):
         else:
             obj.saved_by.add(self.request.user)
             obj.save()
+        return obj
+
+
+class togglePublishActivityAPIView(RetrieveAPIView):
+    """
+    publish an activity.
+    Requires activity id.
+    Returns updated activity.
+    """
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+   
+
+    def get_object(self):
+        print('from_activity_toggle_publish', self)
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(self.get_queryset(), pk=pk)  
+        obj.publish = not obj.publish
+        obj.save()
         return obj

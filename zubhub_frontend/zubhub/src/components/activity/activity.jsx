@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { style } from '../../assets/js/styles/components/activity/activityStyle';
 import ProjectsCountIcon from '../../assets/js/icons/projectsCountIcon';
@@ -47,7 +48,7 @@ function Activity(props) {
         to={`/activities/${activity.id}`}
         className={common_classes.textDecorationNone}
       >
-        <Card className={classes.activityCard}>
+        <Card className={clsx(classes.activityCard)}>
           <CardMedia title={activity.title} className={classes.mediaBoxStyle}>
             <img
               src={activity.images[0] ? activity.images[0].image.file_url : ''}
@@ -160,6 +161,7 @@ function Activity(props) {
             </CardContent>
           </CardActions>
         </Card>
+        {activity.publish ? '' : <Box className={classes.opacity}></Box>}
       </Link>
     </div>
   );
