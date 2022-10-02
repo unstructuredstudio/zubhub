@@ -10,6 +10,7 @@ export const handleInputTextFieldChange = (
     //props.setStatus({ ...props.status, [label]: '' });
     setFieldValue(name, value, true);
   } else {
+    console.log('name', name);
     setFieldValue(name, undefined, true);
   }
   setFieldTouched(name, true, true);

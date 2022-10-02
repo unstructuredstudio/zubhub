@@ -53,7 +53,7 @@ function UploadFile(props) {
     formikProps.errors,
     formikProps.touched,
   );
-  console.log('field errors at field:', name, '=', fieldErrors);
+ // console.log('field errors at field:', name, '=', fieldErrors);
   let fieldValue = getValue(
     route,
     field,
@@ -136,7 +136,7 @@ function UploadFile(props) {
                 key={`imagePaper${index}`}
                 className={activity_classes.imagePreviewContainer}
               >
-                {console.log('image to preview', image)}
+                {/* {console.log('image to preview', image)} */}
                 {field === 'video' ? (
                   // image.type === 'file' ? (
                   <CardMedia

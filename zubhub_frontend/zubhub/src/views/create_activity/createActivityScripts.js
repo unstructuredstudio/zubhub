@@ -58,7 +58,7 @@ const imageSizeTooLarge = value => {
 const allEmpty = arr => {
   let allEmptyValues = false;
   if (arr) {
-   // console.log('from array all empty', arr);
+    // console.log('from array all empty', arr);
     if (arr.length === 0) {
       allEmptyValues = true;
     }
@@ -72,28 +72,14 @@ const allEmpty = arr => {
     return false;
   }
 };
-// const EmptyObject = obj => {
-//   let allEmptyValues = true;
-//   if (obj) {
-//     console.log('from object all empty', obj);
-//     let myObject = Object.entries(obj);
-//     console.log('myObject', Object.entries(obj));
-//     if (myObject.length === 0) {
-//       console.log('length is zero');
-//       allEmptyValues = false;
-//     } else {
-//       myObject.forEach(([key, value]) => {
-//         if (!value || value === '' || value === '<p><br></p>') {
-//           allEmptyValues = false;
-//         }
-//       });
-//     }
-//     console.log('allempty is for', obj, allEmptyValues);
-//     return allEmptyValues;
-//   } else {
-//     return false;
-//   }
-// };
+const allEmptyObjects = arr => {
+  console.log('allemptyObject', arr);
+  if (arr) {
+    return arr.filter(obj => Object.keys(obj).length > 0).length > 0;
+  } else {
+    return false;
+  }
+};
 
 const imageValidationSchema = Yup.mixed()
   .test('not_an_image', 'onlyImages', value => isImage(value))
@@ -117,7 +103,7 @@ export const validationSchema = Yup.object().shape({
     )
     .test({
       message: 'required',
-      test: arr => allEmpty(arr),
+      test: arr => allEmptyObjects(arr),
     }),
   inspiring_artist: Yup.object().shape({
     name: Yup.string().max(50, 'max'),
@@ -177,22 +163,6 @@ export const validationSchema = Yup.object().shape({
       }
       return false;
     })
-    // .test('should_be_url', 'shouldBeURL', value => {
-    //   if (!value) {
-    //     return true;
-    //   } else if (typeof value === 'object' && !value['file_url']) {
-    //     return true;
-    //   } else if (value['file_url'] && typeof value['file_url'] === 'string') {
-    //     const res = value['file_url'].match(
-    //       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-    //     );
-    //     return res !== null ? true : false;
-    //   }
-
-    //   return false;
-    // })
-
-    //(http:\/\/www\.youtube\.com)?(www\.youtube\.com)?(m.youtube.com\/)?(http:\/\/m.youtube.com\/)?
     .test('shouldBeURL', 'shouldBeURL', value => {
       if (!value) {
         return true;
@@ -201,9 +171,7 @@ export const validationSchema = Yup.object().shape({
       } else if (value['file_url'] && typeof value['file_url'] === 'string') {
         let regex =
           /^((http[s]?:\/\/)?(www\.)?youtube\.com)?((http[s]?:\/\/)?(www\.)?youtu\.be\/)?(http[s]?:\/\/m.youtube.com\/)?(https:\/\/vimeo\.com)?((http[s]?:\/\/)?(www\.)?drive.google\.com)?/gm;
-        //^([http[s]?:\/\/]?[www\.]?youtube\.com)?(http[s]?:\/\/m.youtube.com\/)?(https:\/\/vimeo\.com)?(https:\/\/drive.google\.com)?/gm;
         const res = value['file_url'].match(regex);
-        console.log('regex result=====>', res);
         let result = false;
         res.forEach(item => {
           if (item !== '') {
@@ -529,7 +497,6 @@ export const initUpload = async (
 
     if (values['video']) {
       Object.entries(values['video']).forEach(([key, value]) => {
-       
         if (key === 'file_url') {
           values = {
             ...values,
@@ -548,7 +515,6 @@ export const initUpload = async (
 
     if (values['id']) {
       API.updateActivity(props.auth.token, values.id, values).then(res => {
-       
         if (res.status === 200 && res.statusText === 'OK') {
           handleSetState(state => {
             return { ...state, submitting: false };
@@ -556,7 +522,6 @@ export const initUpload = async (
           formikProps.handleReset();
           const response = res.json();
           response.then(res => {
-           
             props.setActivity(res);
           });
           toast.success(
@@ -584,7 +549,6 @@ export const initUpload = async (
           formikProps.handleReset();
           const response = res.json();
           response.then(res => {
-      
             props.setActivity(res);
             toast.success(
               props.t('activityDetails.activity.create.dialog.success'),
