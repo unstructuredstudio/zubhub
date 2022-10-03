@@ -842,7 +842,7 @@
           "label": "Add Step Image"
         },
         "errors": {
-          "max": "your creation step shouldn't be more than 500 characters",
+          "max": "your creation step shouldn't be more than 1000 characters",
           "required": "describe creation process in at least one step ",
           "emptyStep": "step can't be empty provide either a description or an image"
         }
@@ -855,7 +855,7 @@
           "label": "Add Inspiring Person Image"
         },
         "errors": {
-          "max": "your artist bio shouldn't be more than 10,000 characters",
+          "max": "your artist bio shouldn't be more than 1000 characters",
           "required": "This field is required"
         }
       },
@@ -875,14 +875,12 @@
         "video": {
           "label": "Let's add a video",
           "label2": "Add Video",
-          "topHelperText": "It's ok if you don't have a video, you can add images instead!",
-          "bottomHelperText": "You can provide video URL (Youtube, vimeo and Google Drive are supported) or a video file",
+          "helperText": "You can provide video URL (Youtube, vimeo and Google Drive are supported) or a video file",
           "errors": {
             "shouldBeURL": "Select a valid video URL from YouTube, Vimeo, or Google Drive",
             "shouldBeVideoFile": "Select a valid video file",
             "maxVideoFileSize": "video file is more than 60MB",
-            "maxVideoURLLength": "video URL is too long",
-            "imageOrVideo": "You must provide either image(s), video file, or video url to create your project!"
+            "maxVideoURLLength": "video URL is too long"
           }
       },
       "image": "Image added",
@@ -891,8 +889,8 @@
       "videoURL": "Video URL added"  
     },
     "buttons": {
-      "Next": "Next->",
-      "Prev": "<-Prev",
+      "Next": "Next",
+      "Prev": "Prev",
       "Submit": "Submit For Review",
       "Edit": "Save Changes"
     }
@@ -900,7 +898,8 @@
  "activities": {
    "errors": {
       "dialog": {
-         "serverError": "Sorry the server is down try again later"
+         "serverError": "Sorry the server is down try again later",
+         "uploadError": "error occurred while downloading file : "
       }
    }
  },

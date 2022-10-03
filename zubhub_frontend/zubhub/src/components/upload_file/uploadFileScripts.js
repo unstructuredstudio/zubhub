@@ -252,6 +252,7 @@ export const uploadFile = (
   };
 
   return API.shouldUploadToLocal(args).then(res => {
+    console.log('should upload to local result', res);
     if (res && res.local === true) {
       return uploadFileToLocal(
         file,
@@ -264,12 +265,21 @@ export const uploadFile = (
         index,
       );
     } else if (res && res.local === false) {
-      // return uploadImageToDO(image, state, props, handleSetState, label);
+      // return uploadImageToDO(
+      //   file,
+      //   auth.token,
+      //   auth.username,
+      //   handleSetState,
+      //   route,
+      //   field,
+      //   fieldType,
+      //   index,
+      // );
     }
   });
 };
 
-export const uploadFileToLocal = async (
+export const uploadFileToLocal = (
   fileBeforeCompression,
   token,
   username,
@@ -279,121 +289,212 @@ export const uploadFileToLocal = async (
   fieldType,
   index,
 ) => {
-  let file = fileBeforeCompression;
-  console.log('size before compression', file.size);
-  try {
-    file = await compress(fileBeforeCompression);
-    console.log('size after compression', file.size);
-  } catch (error) {
-    console.log('compression error msg:', error.message);
-  }
-
-  let url =
-    process.env.REACT_APP_NODE_ENV === 'production'
-      ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
-      : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
-  url = url + 'upload-file-to-local/';
-
-  let key = nanoid();
-  if (file.type.split('/')[0] === 'image') {
-    key = `project_images/${key}`;
-  } else {
-    if (file.type.split('/')[0] === 'video') {
-      key = key.slice(0, Math.floor(key.length / 3));
-      key = `videos/${slugify(username)}-${slugify(file.name)}-${key}`;
+  return new Promise(async (resolve, reject) => {
+    let file = fileBeforeCompression;
+    console.log('size before compression', file.size);
+    try {
+      file = await compress(fileBeforeCompression);
+      console.log('size after compression', file.size);
+    } catch (error) {
+      console.log('compression error msg:', error.message);
     }
-  }
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('key', key);
+    let url =
+      process.env.REACT_APP_NODE_ENV === 'production'
+        ? process.env.REACT_APP_BACKEND_PRODUCTION_URL + '/api/'
+        : process.env.REACT_APP_BACKEND_DEVELOPMENT_URL + '/api/';
+    url = url + 'upload-file-to-local/';
 
-  const result = await axios.post(url, formData, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-    onUploadProgress: e => {
-      handleSetState(state => {
-        let sizeUploaded = state.sizeUploaded;
-        sizeUploaded += e.loaded;
-        return {
-          ...state,
-          sizeUploaded: sizeUploaded,
-        };
+    let key = nanoid();
+    if (file.type.split('/')[0] === 'image') {
+      key = `project_images/${key}`;
+    } else {
+      if (file.type.split('/')[0] === 'video') {
+        key = key.slice(0, Math.floor(key.length / 3));
+        key = `videos/${slugify(username)}-${slugify(file.name)}-${key}`;
+      }
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('key', key);
+    try {
+      const result = await axios.post(url, formData, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+        onUploadProgress: e => {
+          handleSetState(state => {
+            let sizeUploaded = state.sizeUploaded;
+            sizeUploaded += e.loaded;
+            return {
+              ...state,
+              sizeUploaded: sizeUploaded,
+            };
+          });
+        },
       });
-    },
-  });
-  if (result.data['Location']) {
-    return {
-      route: route,
-      field: field,
-      fieldType,
-      index: index,
-      url: {
-        file_url: result.data.Location,
-        public_id: result.data.Key,
-      },
-    };
-  } else {
-    return {
-      route: route,
-      field: field,
-      fieldType,
-      index: index,
-      url: { file_url: result.data.secure_url },
-    };
-  }
-};
-
-export const uploadImageToDO = (image, state, props, handleSetState, label) => {
-  return new Promise((resolve, reject) => {
-    const params = {
-      Bucket: `${doConfig.bucketName}`,
-      Key: `${label}/${nanoid()}`,
-      Body: image,
-      ContentType: image.type,
-      ACL: 'public-read',
-    };
-
-    DO.upload(params, err => {
-      reject(err.message);
-    })
-      .on('httpUploadProgress', e => {
-        const progress = Math.round((e.loaded * 100.0) / e.total);
-        const { media_upload } = state;
-        const upload_info = JSON.parse(
-          JSON.stringify(media_upload.upload_info),
-        );
-        upload_info[image.name] = progress;
-
-        let total = 0;
-        Object.keys(upload_info).forEach(each => {
-          total = total + upload_info[each];
-        });
-
-        total = total / Object.keys(upload_info).length;
-
-        handleSetState({
-          media_upload: {
-            ...media_upload,
-            upload_info,
-            upload_percent: total,
+      if (result.data['Location']) {
+        resolve({
+          route: route,
+          field: field,
+          fieldType,
+          index: index,
+          url: {
+            file_url: result.data.Location,
+            public_id: result.data.Key,
           },
         });
-      })
-      .send((err, data) => {
-        if (err) {
-          if (err.message.startsWith('Unexpected')) {
-            const error = props.t('createProject.errors.unexpected');
-            reject(error);
-          } else {
-            reject(err.message);
-          }
-        } else {
-          const secure_url = data.Location;
-          const public_id = data.Key;
-          resolve({ image_url: secure_url, public_id });
-        }
-      });
+      } else {
+        resolve({
+          route: route,
+          field: field,
+          fieldType,
+          index: index,
+          url: { file_url: result.data.secure_url },
+        });
+      }
+    } catch (error) {
+      reject({ message: 'uploadError', file: file.name });
+    }
   });
 };
+
+// export const uploadImageToDO = async (
+//   fileBeforeCompression,
+//   token,
+//   username,
+//   handleSetState,
+//   route,
+//   field,
+//   fieldType,
+//   index,
+// ) => {
+//   let file = fileBeforeCompression;
+//   console.log('size before compression', file.size);
+//   try {
+//     file = await compress(fileBeforeCompression);
+//     console.log('size after compression', file.size);
+//   } catch (error) {
+//     console.log('compression error msg:', error.message);
+//   }
+//   //`${file.name}/${nanoid()}`
+//   return new Promise((resolve, reject) => {
+//     const params = {
+//       Bucket: `${doConfig.bucketName}`,
+//       Key: nanoid(),
+//       Body: file,
+//       ContentType: file.type,
+//       ACL: 'public-read',
+//     };
+
+//     DO.upload(params, err => {
+//       toast.error(err.message);
+//       reject(err.message);
+//       handleSetState(state => {
+//         return { ...state, submitting: false };
+//       });
+//     })
+//       // .on('httpUploadProgress', e => {
+//       //   const progress = Math.round((e.loaded * 100.0) / e.total);
+//       //   const { media_upload } = state;
+//       //   const upload_info = JSON.parse(
+//       //     JSON.stringify(media_upload.upload_info),
+//       //   );
+//       //   upload_info[image.name] = progress;
+
+//       //   let total = 0;
+//       //   Object.keys(upload_info).forEach(each => {
+//       //     total = total + upload_info[each];
+//       //   });
+
+//       //   total = total / Object.keys(upload_info).length;
+
+//       //   handleSetState({
+//       //     media_upload: {
+//       //       ...media_upload,
+//       //       upload_info,
+//       //       upload_percent: total,
+//       //     },
+//       //   });
+//       // })
+//       .send((err, data) => {
+//         if (err) {
+//           handleSetState(state => {
+//             return { ...state, submitting: false };
+//           });
+//           if (err.message.startsWith('Unexpected')) {
+//             //const error = props.t('createProject.errors.unexpected');
+//             toast.error('unexpected');
+//             reject(err.message);
+//           } else {
+//             toast.error(err.message);
+//             reject(err.message);
+//           }
+//         } else {
+//           const secure_url = data.Location;
+//           const public_id = data.Key;
+//           resolve({
+//             route: route,
+//             field: field,
+//             fieldType,
+//             index: index,
+//             url: {
+//               file_url: data.Location,
+//               public_id: data.Key,
+//             },
+//           });
+//         }
+//       });
+//   });
+// };
+
+// export const uploadVideoToCloudinary = (
+//   video,
+//   state,
+//   props,
+//   handleSetState,
+// ) => {
+//   const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
+
+//   const upload_preset =
+//     process.env.REACT_APP_NODE_ENV === 'production'
+//       ? process.env.REACT_APP_VIDEO_UPLOAD_PRESET_NAME
+//       : process.env.REACT_APP_DEV_VIDEO_UPLOAD_PRESET_NAME;
+
+//   const params = {
+//     upload_preset,
+//     username: props.auth.username,
+//     filename: video.name,
+//     t: props.t,
+//     token: props.auth.token,
+//   };
+
+//   return props.getSignature(params).then(sig_res => {
+//     if (typeof sig_res === 'object') {
+//       const formData = new FormData();
+//       formData.append('file', video);
+//       formData.append('public_id', sig_res.public_id);
+//       formData.append('upload_preset', upload_preset);
+//       formData.append('api_key', sig_res.api_key);
+//       formData.append('timestamp', sig_res.timestamp);
+//       formData.append('signature', sig_res.signature);
+
+//       return new Promise((resolve, reject) => {
+//         const um = new UploadMedia(
+//           'video',
+//           url,
+//           formData,
+//           state,
+//           props,
+//           handleSetState,
+//           resolve,
+//           reject,
+//         );
+//         um.upload();
+//       });
+//     } else {
+//       return Promise.reject('');
+//     }
+//   });
+// };

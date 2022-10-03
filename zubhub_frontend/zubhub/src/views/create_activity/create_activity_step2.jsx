@@ -139,13 +139,14 @@ function CreateActivityStep2(props) {
             classes={classes}
             common_classes={common_classes}
             inputOrder={6}
-            fieldLabel={'Add a video if provided'}
+            fieldLabel={t('createActivity.inputs.video.label')}
           />
           <Input
             label={'video url'}
             classes={classes}
             name={'video'}
             fieldType={{ simple: true, nested: false, array: false }}
+            helperText={t('createActivity.inputs.video.helperText')}
             formikProps={formikProps}
             validateSteps={validateSteps}
             disabled={disableVideo}
@@ -161,7 +162,7 @@ function CreateActivityStep2(props) {
             <UploadFile
               name={'video'}
               fileType={'video/*'}
-              uploadButtonLabel={'Upload Video'}
+              uploadButtonLabel={t('createActivity.inputs.video.label2')}
               classes={classes}
               fieldType={{ simple: true, nested: false, array: false }}
               activity_classes={activity_classes}

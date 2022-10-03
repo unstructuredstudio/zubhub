@@ -14,6 +14,8 @@ import {
 import * as activityActions from '../../store/actions/activityActions';
 import * as AuthActions from '../../store/actions/authActions';
 import { Grid, Box, Typography } from '@material-ui/core';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import CreateActivityStep1 from './create_activity_step1';
 import CreateActivityStep2 from './create_activity_step2';
 import CreateActivityStep3 from './create_activity_step3';
@@ -175,7 +177,9 @@ function CreateActivity(props) {
                     <CustomButton
                       variant="contained"
                       primaryButtonStyle
-                      customButtonStyle
+                      customButtonStyle 
+                      startIcon={<NavigateBeforeIcon />}
+                      
                       size="small"
                       onClick={visitePrev}
                     >
@@ -190,6 +194,7 @@ function CreateActivity(props) {
                       primaryButtonStyle
                       customButtonStyle
                       size="small"
+                      endIcon={<NavigateNextIcon />}
                       onClick={visiteNext}
                     >
                       {t('createActivity.buttons.Next')}

@@ -397,45 +397,59 @@ export const initUpload = async (
     );
 
     let values = { ...formikProps.formikValues };
-    const result = await Promise.all(uploadedMediaPromises);
-    result.forEach(each => {
-      switch (each.fieldType) {
-        case 'simple':
-          values[each.field] = { 0: each.url };
-          break;
-        case 'array':
-          let field = values[each.field];
-          if (!Array.isArray(field)) {
-            field = [];
-          }
-          field.push(each.url);
-          values = { ...values, [each.field]: field };
-          break;
-        case 'object':
-          values = {
-            ...values,
-            [each.route]: {
-              ...values[each.route],
-              image: each.url,
-            },
-          };
-          break;
-        case 'objectsArray':
-          let arrfield = values[each.route];
-          arrfield[each.index] = {
-            ...arrfield[each.index],
-            [each.field]: each.url,
-          };
-          values = {
-            ...values,
-            [each.route]: arrfield,
-          };
-          break;
-        default:
-          break;
-      }
-    });
+    try {
+      const result = await Promise.all(uploadedMediaPromises);
 
+      result.forEach(each => {
+        switch (each.fieldType) {
+          case 'simple':
+            values[each.field] = { 0: each.url };
+            break;
+          case 'array':
+            let field = values[each.field];
+            if (!Array.isArray(field)) {
+              field = [];
+            }
+            field.push(each.url);
+            values = { ...values, [each.field]: field };
+            break;
+          case 'object':
+            values = {
+              ...values,
+              [each.route]: {
+                ...values[each.route],
+                image: each.url,
+              },
+            };
+            break;
+          case 'objectsArray':
+            let arrfield = values[each.route];
+            arrfield[each.index] = {
+              ...arrfield[each.index],
+              [each.field]: each.url,
+            };
+            values = {
+              ...values,
+              [each.route]: arrfield,
+            };
+            break;
+          default:
+            break;
+        }
+      });
+    } catch (error) {
+      // console.log('result promise all', result);
+      // if (!Array.isArray(result)) {
+      console.log('error', error);
+      toast.error(`${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`);
+      handleSetState(state => {
+        return { ...state, ['submitting']: false };
+      });
+
+      //(`${props.t(result.message)} ${result.file}`);
+      return;
+      // }
+    }
     objectsArray.forEach(field => {
       if (values[field]) {
         let fieldValues = [];

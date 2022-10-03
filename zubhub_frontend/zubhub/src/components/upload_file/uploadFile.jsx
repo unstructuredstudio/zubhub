@@ -53,7 +53,7 @@ function UploadFile(props) {
     formikProps.errors,
     formikProps.touched,
   );
- // console.log('field errors at field:', name, '=', fieldErrors);
+  // console.log('field errors at field:', name, '=', fieldErrors);
   let fieldValue = getValue(
     route,
     field,
@@ -121,9 +121,6 @@ function UploadFile(props) {
             : ''}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {/* {
-            (fieldErrors = 
-          } */}
           {fieldErrors && field !== 'video'
             ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
             : ''}
@@ -136,9 +133,7 @@ function UploadFile(props) {
                 key={`imagePaper${index}`}
                 className={activity_classes.imagePreviewContainer}
               >
-                {/* {console.log('image to preview', image)} */}
                 {field === 'video' ? (
-                  // image.type === 'file' ? (
                   <CardMedia
                     className={activity_classes.imagePreview}
                     component={image.type === 'file' ? 'video' : 'iframe'}
@@ -149,14 +144,6 @@ function UploadFile(props) {
                     }
                   />
                 ) : (
-                  // ) : (
-                  //   <img
-                  //     className={activity_classes.imagePreview}
-                  //     src={buildVideoThumbnailURL(image.image)}
-                  //     alt={image.image}
-                  //   />
-                  // )
-                  // )
                   <img
                     className={activity_classes.imagePreview}
                     src={
