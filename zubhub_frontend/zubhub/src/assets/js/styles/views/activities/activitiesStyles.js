@@ -1,70 +1,70 @@
 const styles = theme => ({
-  activityListContainer:{
+  activityListContainer: {
     padding: '4em 0',
     width: '70%',
     margin: 'auto',
-    [theme.breakpoints.down('900')]: {
-      width: '90%'
+    [theme.breakpoints.down('1000')]: {
+      width: '90%',
     },
-      [theme.breakpoints.down('400')]: {
-      width: '95%'
+    [theme.breakpoints.down('400')]: {
+      width: '95%',
     },
   },
-  activityBoxContainer:{
+  activityBoxContainer: {
     padding: '5vh 10px',
     position: 'relative',
   },
-  sliderVideo :{
+  sliderVideo: {
     width: '100%',
     opacity: '0.5',
     borderRadius: '15px',
     border: '3px solid #FFCE0C',
     float: 'none',
-    position:'relative',
+    position: 'relative',
   },
-  sliderBox:{
+  sliderBox: {
     width: '80%',
     margin: 'auto',
   },
-  activeSlideContainer:{
+  activeSlideContainer: {
     width: '100%',
     position: 'relative',
     height: '30vh',
-    paddingTop: '75%'
+    paddingTop: '75%',
   },
-  activeCarouselVideo:{
+  activeCarouselVideo: {
     position: 'absolute',
     top: '0',
     width: '100%',
-   // height: '70%!important',
+    // height: '70%!important',
     borderRadius: '15px',
     border: '7px solid #FFCE0C',
   },
-  bannerContainer:{
+  bannerContainer: {
     width: '100%',
     height: '35vh',
     backgroundColor: '#DC3545',
   },
-  slideContainer:{
+  slideContainer: {
     width: '100%',
     display: 'flex!important',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-})
+});
 
 export const sliderSettings = (images_num, func) => ({
   className: 'center slider detail-page-slider',
   centerMode: true,
   infinite: true,
-//   centerPadding: '60px',
+  //   centerPadding: '60px',
   dots: false,
   autoplay: false,
   //speed: 1000,
   slidesToShow: 3 > images_num ? images_num : 3,
   slidesToScroll: 1,
   focusOnSelect: true,
-  afterChange : func,
+  afterChange: func,
   swipeToSlide: true,
   nextArrow: <NextArrow />,
   prevArrow: <PrevArrow />,

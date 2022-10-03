@@ -26,6 +26,7 @@ const styles = theme => ({
   leftCropedContainer: {
     clipPath: 'polygon(100% 10%,100% 100%, 0% 100%,0% 0%)',
     padding: '8em 20%',
+    minHeight: '80vh',
     backgroundColor: '#FFCE0C',
     [theme.breakpoints.down('511')]: {
       padding: '1em 5%',
@@ -35,6 +36,7 @@ const styles = theme => ({
   inspiringExamplesContainer: {
     clipPath: 'polygon(100% 0%,100% 100%, 0% 100%,0% 10%)',
     padding: '8em 20% ',
+    minHeight: '80vh',
     backgroundColor: '#FFCE0C',
     [theme.breakpoints.down('511')]: {
       padding: '1em 5%',
@@ -56,17 +58,17 @@ const styles = theme => ({
   },
   titleStyle: {
     fontWeight: 800,
-    fontFamily: 'Inknut Antiqua',
+    // fontFamily: 'Inknut Antiqua',
     color: '#3E3E5F',
   },
   artistBiography: {
     alignSelf: 'center',
   },
   createdOn: {
-    fontFamily: 'Inter',
+    // fontFamily: 'Inter',
     fontStyle: 'normal',
     fontSize: '1.1rem',
-    fontWeight: 700,
+    // fontWeight: 700,
     color: '#3E3E5F',
   },
   videoPlayer: {
@@ -80,7 +82,7 @@ const styles = theme => ({
   },
 
   subTitles: {
-    fontFamily: 'Corben',
+    // fontFamily: 'Corben',
     fontStyle: 'normal',
     fontWeight: 800,
     fontSize: '2rem',
@@ -114,8 +116,7 @@ const styles = theme => ({
       border: '2px solid rgba(0, 0, 0, .12)',
     },
   },
-  facilitationBodyStyle: {
-    // marginBottom: '1em',
+  quillBodyStyle: {
     color: '#3E3E5F',
     '& .ql-editor': {
       fontSize: '1.2rem',
@@ -126,6 +127,11 @@ const styles = theme => ({
       '& .ql-editor': {
         fontSize: '1rem',
       },
+    },
+  },
+  quillTextCenter: {
+    '& p': {
+      textAlign: 'center',
     },
   },
   motivationBodyStyle: {

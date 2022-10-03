@@ -179,7 +179,7 @@ function ActivityDetails(props) {
                 id="activityTitle"
                 className={clsx(
                   classes.titleStyle,
-                  common_classes.marginBottom1em,
+                  // common_classes.marginBottom1em,
                 )}
                 variant="h3"
               >
@@ -193,7 +193,13 @@ function ActivityDetails(props) {
                   'date.ago',
                 )}`}
               </Typography>
-              <Grid container className={common_classes.justifyCenter}>
+              <Grid
+                container
+                className={clsx(
+                  common_classes.justifyCenter,
+                  common_classes.marginTop3em,
+                )}
+              >
                 <Grid item lg={8} xs={12}>
                   <Link
                     to={`/projects/${id}/create`}
@@ -283,7 +289,14 @@ function ActivityDetails(props) {
             </Grid>
           )}
         </Grid>
-        <Grid item className={common_classes.justifyCenter}>
+        <Grid
+          item
+          className={clsx(
+            common_classes.justifyCenter,
+            common_classes.marginTop3em,
+            common_classes.marginBottom3em,
+          )}
+        >
           <Typography
             className={clsx(common_classes.marginTop1em, classes.subTitles)}
             variant="h3"
@@ -293,7 +306,7 @@ function ActivityDetails(props) {
           </Typography>
           <ReactQuill
             id="activityLearningGoals"
-            className={classes.facilitationBodyStyle}
+            className={clsx(classes.quillBodyStyle, classes.quillTextCenter)}
             theme={'bubble'}
             readOnly={true}
             value={activity.learning_goals || ''}
@@ -322,15 +335,15 @@ function ActivityDetails(props) {
                     key={`materialUsedKey${index}`}
                     variant="h6"
                     className={clsx(
-                      classes.facilitationBodyStyle,
+                      classes.quillBodyStyle,
                       // common_classes.textCenter,
                     )}
                   >
-                    {`. ${material}`}
+                    {`${material}`}
                   </Typography>
                 ))}
             </Grid>
-            {activity.materials_used_image ? (
+            {activity.materials_used_image && (
               <Grid item xs={12} lg={4} sm={4}>
                 <CardMedia
                   className={classes.materialsImage}
@@ -338,8 +351,6 @@ function ActivityDetails(props) {
                   image={activity.materials_used_image.file_url}
                 ></CardMedia>
               </Grid>
-            ) : (
-              ''
             )}
           </Grid>
           <Box
@@ -372,9 +383,10 @@ function ActivityDetails(props) {
         </Typography>
         <Grid
           container
-          className={
-            (common_classes.justifyCenter, common_classes.marginBottom3em)
-          }
+          className={clsx(
+            common_classes.justifyCenter,
+            common_classes.marginBottom3em,
+          )}
         >
           {activity.inspiring_artist && activity.inspiring_artist['image'] ? (
             <>
@@ -398,7 +410,7 @@ function ActivityDetails(props) {
                   <ReactQuill
                     id={`inspiringArtistBiography`}
                     className={clsx(
-                      classes.facilitationBodyStyle,
+                      classes.quillBodyStyle,
                       common_classes.justifyCenter,
                     )}
                     theme={'bubble'}
@@ -445,7 +457,8 @@ function ActivityDetails(props) {
                 </Grid>
               ))}
               {activity.inspiring_examples &&
-              activity.inspiring_examples.length > 0 ? (
+              activity.inspiring_examples.length > 0 &&
+              imageCredit !== '' ? (
                 <Grid
                   item
                   xs={12}
@@ -478,6 +491,8 @@ function ActivityDetails(props) {
         className={clsx(
           classes.activityDetailBlock,
           common_classes.justifyCenter,
+          common_classes.marginTop3em,
+          common_classes.marginBottom3em,
         )}
       >
         {activity.making_steps && (
@@ -495,16 +510,16 @@ function ActivityDetails(props) {
                 container
                 className={clsx(
                   common_classes.marginBottom1em,
-                  common_classes.justifyCenter,
+                  // common_classes.justifyCenter,
                 )}
                 key={`makingStepImageContainerKey${index}`}
               >
                 <Grid
                   item
                   xs={12}
-                  lg={8}
-                  sm={8}
-                  className={clsx(common_classes.justifyCenter)}
+                  lg={making_step.image && 8}
+                  sm={making_step.image && 8}
+                  // className={clsx(common_classes.justifyCenter)}
                   key={`makingStepImageSubContainerKey${index}`}
                 >
                   {making_step.description && (
@@ -512,7 +527,7 @@ function ActivityDetails(props) {
                       id={`makingStep${index}description`}
                       className={clsx(
                         common_classes.justifyCenter,
-                        classes.facilitationBodyStyle,
+                        classes.quillBodyStyle,
                         //classes.makingStepsDescriptionStyle,
                       )}
                       theme={'bubble'}
@@ -521,16 +536,17 @@ function ActivityDetails(props) {
                     />
                   )}
                 </Grid>
-                <Grid item xs={12} lg={4} sm={4}>
-                  {making_step.image && (
+
+                {making_step.image && (
+                  <Grid item xs={12} lg={4} sm={4}>
                     <CardMedia
                       key={`makingStepImageKey${index}`}
                       className={classes.materialsImage}
                       component="img"
                       image={making_step.image.file_url}
                     ></CardMedia>
-                  )}
-                </Grid>
+                  </Grid>
+                )}
               </Grid>
             ))}
           </>
@@ -541,7 +557,7 @@ function ActivityDetails(props) {
         className={clsx(
           classes.leftCropedContainer,
           common_classes.justifyCenter,
-          common_classes.marginBottom3em,
+          common_classes.alignCenter,
         )}
       >
         <Typography
@@ -551,20 +567,19 @@ function ActivityDetails(props) {
         >
           FACILITATION TIPS
         </Typography>
-
-        <Grid item xs={12} lg={12} sm={12}>
-          {activity.facilitation_tips ? (
+        {activity.facilitation_tips ? (
+          <Grid item xs={12} lg={12} sm={12}>
             <ReactQuill
               id={`facilitationTips`}
-              className={classes.facilitationBodyStyle}
+              className={classes.quillBodyStyle}
               theme={'bubble'}
               readOnly={true}
               value={activity.facilitation_tips || ''}
             />
-          ) : (
-            'Coming soon!'
-          )}
-        </Grid>
+          </Grid>
+        ) : (
+          'Coming soon!'
+        )}
       </Grid>
       <Grid>
         <Typography

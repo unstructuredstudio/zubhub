@@ -90,8 +90,9 @@ function Activities(props) {
             key={`activityContainer-${index}`}
             item
             xs={12}
-            sm={6}
+            sm={12}
             md={6}
+            lg={6}
             align="center"
             className={classes.activityBoxContainer}
           >
