@@ -896,6 +896,7 @@
     }
   },
  "activities": {
+   "LinkedProjects": "Linked Projects",
    "errors": {
       "dialog": {
          "serverError": "Sorry the server is down try again later",

@@ -875,6 +875,7 @@
   },
 
   "activities": {
+   "LinkedProjects": "लिंक्ड प्रोजेक्ट्स",
    "errors": {
       "dialog": {
          "serverError": "क्षमा करें सर्वर डाउन है बाद में पुन: प्रयास करें",

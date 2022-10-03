@@ -78,15 +78,20 @@ export const style = theme => ({
     height: '100%',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
   },
   projectsCount: {
-    color: '#00B8C4',
+    color: '#00D3E1',
+    backgroundColor: '#00949E',
+    borderRadius: '15px',
+    padding: '5px 10px',
+  },
+  projectsCountNumber: {
+    color: 'white',
   },
   activityTitle: {
     fontSize: '1.1rem',
     fontWeight: '900',
-    width: '80%',
+    // width: '80%',
     textAlign: '-webkit-auto',
   },
 });

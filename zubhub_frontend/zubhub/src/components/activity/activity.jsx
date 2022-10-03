@@ -17,11 +17,13 @@ import {
   List,
   ListItem,
   ListItemText,
+  Grid,
   Fab,
 } from '@material-ui/core';
 import commonStyles from '../../assets/js/styles';
 import Creator from '../creator/creator';
 import { toggleSave } from './activityScripts';
+import CustomButton from '../button/Button';
 
 const useCommonStyles = makeStyles(commonStyles);
 const useStyles = makeStyles(style);
@@ -143,21 +145,34 @@ function Activity(props) {
                   <BookmarkBorderIcon aria-label="save" />
                 )}
               </Fab>
-              <Box className={classes.activityCardInfoBox}>
-                <Typography
-                  variant="h6"
-                  component="h6"
-                  className={classes.activityTitle}
-                >
-                  {activity.title}
-                </Typography>
-                <Typography component="h6" className={classes.projectsCount}>
-                  <ProjectsCountIcon
-                    className={common_classes.projectsCountIcon}
-                  />
-                  {activity.inspired_projects.length}
-                </Typography>
-              </Box>
+              <Grid
+                container
+                className={clsx(
+                  classes.activityCardInfoBox,
+                  common_classes.alignCenter,
+                )}
+              >
+                <Grid item xs={6} sm={6}>
+                  <Typography
+                    variant="h6"
+                    component="h6"
+                    className={classes.activityTitle}
+                  >
+                    {activity.title}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    variant="caption"
+                    className={classes.projectsCount}
+                  >
+                    {`${t('activities.LinkedProjects')} `}{' '}
+                    <span
+                      className={classes.projectsCountNumber}
+                    >{` ${activity.inspired_projects.length}`}</span>
+                  </Typography>
+                </Grid>
+              </Grid>
             </CardContent>
           </CardActions>
         </Card>
