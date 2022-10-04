@@ -438,17 +438,13 @@ export const initUpload = async (
         }
       });
     } catch (error) {
-      // console.log('result promise all', result);
-      // if (!Array.isArray(result)) {
-      console.log('error', error);
       toast.error(`${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`);
       handleSetState(state => {
         return { ...state, ['submitting']: false };
       });
 
-      //(`${props.t(result.message)} ${result.file}`);
       return;
-      // }
+     
     }
     objectsArray.forEach(field => {
       if (values[field]) {

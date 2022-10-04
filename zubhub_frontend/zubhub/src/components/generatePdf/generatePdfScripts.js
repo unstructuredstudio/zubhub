@@ -56,7 +56,6 @@ export const getPdfMakingSteps = (activity, promiseImages) => {
     stack: [{ text: 'MAKING STEPS', style: 'subTitles' }, ...steps],
     unbreakable: true,
   };
-  // newContent.push({ text: 'MAKING STEPS', style: 'subTitles' }, ...steps);
 };
 
 export const getPdfInspiringPerson = (activity, promiseImages) => {
@@ -81,7 +80,10 @@ export const getPdfInspiringPerson = (activity, promiseImages) => {
     });
 
   return {
-    stack: [{ text: 'INSPIRING PERSON', style: 'subTitles' }, ...artist],
+    stack: [
+      { text: 'INSPIRING PERSON', style: 'subTitles', alignment: 'center' },
+      ...artist,
+    ],
     unbreakable: true,
   };
 };
@@ -135,7 +137,7 @@ export const getPdfInspiringExamples = (activity, promiseImages) => {
 
   return {
     stack: [
-      { text: 'INSPIRING EXAMPLES', style: 'subTitles' },
+      { text: 'INSPIRING EXAMPLES', style: 'subTitles', alignment: 'center' },
       {
         // alignment: 'center',
         columns: [
@@ -153,7 +155,7 @@ export const getPdfInspiringExamples = (activity, promiseImages) => {
   };
 };
 
-export const getPdfTextBlock = (title, elementId) => {
+export const getPdfTextBlock = (title, elementId, breakable) => {
   return {
     stack: [
       { text: title, style: 'subTitles' },
@@ -163,7 +165,7 @@ export const getPdfTextBlock = (title, elementId) => {
         style: 'textBody',
       },
     ],
-    unbreakable: true,
+    unbreakable: !breakable ? true : false,
   };
 };
 

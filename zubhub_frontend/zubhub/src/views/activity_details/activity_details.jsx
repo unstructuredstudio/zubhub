@@ -71,7 +71,7 @@ function ActivityDetails(props) {
         common_classes.marginTop1em,
       )}
     >
-      <Box className={clsx(classes.activityDetailBlockContainer)}>
+      <Grid className={clsx(classes.activityDetailBlockContainer)}>
         <Grid container className={common_classes.justifyRight}>
           {activity.creators.filter(item => item.id === auth.id).length > 0 ? (
             <Grid item>
@@ -233,15 +233,10 @@ function ActivityDetails(props) {
           sm={8}
           lg={6}
           item
-          className={clsx(
-            // common_classes.marginTop1em,
-            common_classes.marginBottom3em,
-          )}
-        >
-          {/* <ActionIconsContainer activity={activity} t={t} auth={auth} /> */}
-        </Grid>
-      </Box>
-      <Box
+          className={clsx(common_classes.marginBottom3em)}
+        ></Grid>
+      </Grid>
+      <Grid
         className={clsx(
           classes.activityDetailBlock,
           common_classes.marginTop3em,
@@ -366,7 +361,7 @@ function ActivityDetails(props) {
             }}
           ></Box>
         </Grid>
-      </Box>
+      </Grid>
       <Grid
         container
         className={clsx(
@@ -571,7 +566,7 @@ function ActivityDetails(props) {
           <Grid item xs={12} lg={12} sm={12}>
             <ReactQuill
               id={`facilitationTips`}
-              className={classes.quillBodyStyle}
+              className={clsx(classes.quillBodyStyle, classes.quillTextCenter)}
               theme={'bubble'}
               readOnly={true}
               value={activity.facilitation_tips || ''}

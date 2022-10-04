@@ -32,6 +32,15 @@ export const pdfStyle = {
     fontSize: 12,
     color: '#3E3E5F',
   },
+  footer: {
+    margin: 0,
+    fontSize: 10,
+    color: '#00B8C4',
+  },
+  footerCell: {
+    margin: 10,
+    bold: true,
+  },
   textBody: {
     marginTop: 10,
     fontSize: 15,

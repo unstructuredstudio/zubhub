@@ -16,6 +16,7 @@ const styles = theme => ({
   activityDetailBlock: {
     width: '60%',
     margin: '3em auto',
+    padding: '5vh 0',
     [theme.breakpoints.down('700')]: {
       width: '90%',
     },

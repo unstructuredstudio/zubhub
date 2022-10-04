@@ -26,8 +26,6 @@ class ActivityListAPIView(ListAPIView):
 
     def get_queryset(self):
         all = Activity.objects.all()
-        for activity in all:
-            print(activity.title, 'listallactivities')
         return all
 
 

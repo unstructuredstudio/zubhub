@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CustomButton from '../../components/button/Button';
+import unstructuredLogo from '../../assets/images/logos/unstructured-logo.png';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { pdfStyle } from '../../assets/js/styles/components/generatePdf/generatePdfStyle';
@@ -16,42 +17,69 @@ import { getBase64Images } from './generatePdfScripts';
 function GeneratePdf(props) {
   const { t } = useTranslation();
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
-  const {
-    activity,
-    fillPdf,
-    activityImage,
-    activityTitle,
-    activityMotivation,
-    //  docDefinitionDefault,
-  } = props;
+  const { activity, fillPdf } = props;
 
-  //console.log('docDefinitionDefault', docDefinitionDefault);
-  //   pdfMake.fonts = {
-  //     NimbusSans: {
-  //       normal: 'NimbusSanL-Reg.otf',
-  //       bold: 'NimbusSanL-Bol.otf',
-  //       italics: 'NimbusSanL-RegIta.otf',
-  //       bolditalics: 'NimbusSanL-BolIta.otf',
-  //     },
-  //   };
   const [docDefinitionDefault, setDocDefinitionDefault] = useState({
     pageSize: 'A4',
     pageOrientation: 'portrait',
-    pageMargins: [60, 60, 60, 60],
-    content: [
-      // {
-      //   text: 'Zubhub Activities',
-      //   style: 'header',
-      //   //alignment: 'center',
-      // },
-    ],
+    pageMargins: [60, 60, 60, 40],
+    footer: function (currentPage, pageCount, pageSize) {
+      console.log('page size', pageSize);
+      return [
+        {
+          style: 'footer',
+          table: {
+            border: [false, false, false, false],
+            widths: ['auto', '*', 'auto'],
+            heights: 40,
+            body: [
+              [
+                {
+                  border: [false, false, false, false],
+                  text: `${activity.title}`,
+                  style: 'footerCell',
+                  link: 'https://zubhub.unstructured.studio/',
+                  alignment: 'left',
+                },
+                {
+                  border: [false, false, false, false],
+                  style: 'footerCell',
+                  text: currentPage.toString() + '/' + pageCount,
+                  alignment: 'center',
+                },
+
+                {
+                  border: [false, false, false, false],
+                  style: 'footerCell',
+                  text: `made by: @${activity.creators[0].username}`,
+                  link: 'https://zubhub.unstructured.studio/',
+                  alignment: 'right',
+                },
+              ],
+            ],
+          },
+          layout: {
+            fillColor: '#eeeeee',
+          },
+        },
+      ];
+    },
+    // header: function (currentPage, pageCount, pageSize) {
+    //   return [
+    //     {
+    //       image: unstructuredLogo,
+    //       width: 200,
+    //       height: 100,
+    //     },
+    //   ];
+    // },
+    content: [],
     defaultStyle: {
       columnGap: 15,
     },
     styles: pdfStyle,
   });
   useEffect(async () => {
-    //if (fillPdf) {
     const result = await Promise.all(getBase64Images(activity));
     const promiseImages = {};
     result.forEach(item => {
@@ -59,7 +87,7 @@ function GeneratePdf(props) {
         promiseImages[key] = value;
       });
     });
-   
+
     setDocDefinitionDefault(state => {
       let newContent = state.content;
       newContent.push({
@@ -98,8 +126,11 @@ function GeneratePdf(props) {
               [
                 {
                   border: [true, false, false, false],
+                  margins: [20, 10, 10, 20],
                   fillColor: '#eeeeee',
-                  text: `Watch it in action here ${activity.video}`,
+                  text: ' To Watch it in action click here',
+                  link: activity.video,
+                  // text: `Watch it in action here: ${activity.video}`,
                   style: 'videoLink',
                 },
               ],
@@ -112,7 +143,7 @@ function GeneratePdf(props) {
         getPdfMaterialsUsed(activity, promiseImages),
         getPdfTextBlock('LEARNING GOALS', 'activityLearningGoals'),
         getPdfMakingSteps(activity, promiseImages),
-        getPdfTextBlock('FACILITATION TIPS', 'facilitationTips'),
+        getPdfTextBlock('FACILITATION TIPS', 'facilitationTips', true),
       );
 
       if (activity['inspiring_artist'] && promiseImages['inspiring_artist']) {
@@ -126,13 +157,11 @@ function GeneratePdf(props) {
         newContent.push(getPdfInspiringExamples(activity, promiseImages));
       }
 
-     
       return {
         ...state,
         content: [...newContent],
       };
     });
-    //}
   }, [fillPdf]);
 
   const create = () => {
