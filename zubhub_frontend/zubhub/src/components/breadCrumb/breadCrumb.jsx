@@ -22,19 +22,15 @@ const useCommonStyles = makeStyles(commonStyles);
 function BreadCrumb({ props }) {
   const history = useHistory();
   const classes = useStyles();
-  //const {match} = props
   const { activities, projects } = useSelector(state => state);
   const common_classes = useCommonStyles();
   const [link, setLink] = useState('/');
-  console.log('breadcrumbs history', history, activities, projects);
   let pathList = history.location.pathname.split('/');
   pathList.shift();
   if (props.match) {
     pathList = props.match.path.split('/');
     pathList.shift();
   }
-
-  console.log('breadCrumbs pathList', pathList);
   const handleChange = e => {
     setLink(e.target.value);
   };
@@ -43,8 +39,9 @@ function BreadCrumb({ props }) {
   }, [link]);
 
   return (
+    
     <Breadcrumbs
-      separator=""
+      separator={<NavigateNextIcon fontSize="large" className={classes.separator} />}
       aria-label="breadcrumb"
       className={classes.container}
     >
@@ -61,7 +58,7 @@ function BreadCrumb({ props }) {
           }}
           onChange={handleChange}
         >
-          <MenuItem value={'/'}>Projects</MenuItem>
+          <MenuItem className={classes.item} value={'/'}>Projects</MenuItem>
           <MenuItem value={'/activities'}>Activities</MenuItem>
         </Select>
       </Box>
@@ -93,8 +90,9 @@ function BreadCrumb({ props }) {
                 </Tooltip>
               </Link>
             ) : (
-              ''
-              // <p className={classes.textStyle}>{item}</p>
+              <Typography component="span" className={classes.textStyle}>
+                {item}
+              </Typography>
             )
           ) : (
             ''
