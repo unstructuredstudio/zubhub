@@ -12,12 +12,6 @@ import ActionIconsContainer from '../../components/actionIconsContainer/actionIc
 import ReactQuill from 'react-quill';
 import clsx from 'clsx';
 import { activityTogglePublish } from '../../store/actions/activityActions';
-// import {
-//   dFormatter,
-//   nFormatter,
-//   buildVideoThumbnailURL,
-//   isBaseTag,
-// } from '../../assets/js/utils/scripts';
 import {
   videoOrUrl,
   dFormatter,
@@ -44,8 +38,8 @@ function ActivityDetails(props) {
   } else {
     activity = activities.all_activities.filter(item => item.id === id)[0];
   }
-  console.log('activity_details', activity, auth);
-
+  // console.log('activity_details', activity, auth);
+  console.log('activities store', activities);
   const [videoHeight, setVideoHeight] = useState();
   const [imageCredit, setImageCredit] = useState('');
   useEffect(() => {
@@ -72,7 +66,7 @@ function ActivityDetails(props) {
       )}
     >
       <Grid className={clsx(classes.activityDetailBlockContainer)}>
-        <Grid container className={common_classes.justifyRight}>
+        <Grid container>
           {activity.creators.filter(item => item.id === auth.id).length > 0 ? (
             <Grid item>
               <Link
@@ -126,6 +120,17 @@ function ActivityDetails(props) {
         </Grid>
         <Grid
           className={clsx(
+            common_classes.addOnSmallScreen,
+            common_classes.justifyCenter,
+            common_classes.marginTop1em,
+          )}
+        >
+          <Typography id="activityTitle" className={clsx(classes.titleStyle)}>
+            {activity.title}
+          </Typography>
+        </Grid>
+        <Grid
+          className={clsx(
             common_classes.marginTop1em,
             common_classes.justifySpaceBetween,
             common_classes.marginBottom3em,
@@ -137,12 +142,9 @@ function ActivityDetails(props) {
             item
             md={6}
             xs={12}
-            sm={8}
+            sm={12}
             lg={6}
-            className={clsx(
-              classes.demoImageContainerStyle,
-              // common_classes.positionRelative,
-            )}
+            className={clsx(classes.demoImageContainerStyle)}
           >
             <CardMedia
               id="activityImage"
@@ -161,25 +163,25 @@ function ActivityDetails(props) {
             lg={6}
             md={6}
             sx={12}
-            sm={4}
+            sm={6}
             className={clsx(
+              classes.marginAuto,
               common_classes.centerVertically,
-              // common_classes.justifyCenter,
+              common_classes.justifySelfCenter,
             )}
           >
-            {/* <Grid container> */}
-            <Box
-              //sx={{ height: '100%' }}
-              align="center"
-              justify="center"
-              direction="column"
-              className={common_classes.marginLeft1em}
+            <Grid
+              className={clsx(
+                common_classes.marginLeft1em,
+                common_classes.justifyCenter,
+                common_classes.alignCenter,
+              )}
             >
               <Typography
                 id="activityTitle"
                 className={clsx(
                   classes.titleStyle,
-                  // common_classes.marginBottom1em,
+                  common_classes.removeOnSmallScreen,
                 )}
                 variant="h3"
               >
@@ -187,11 +189,11 @@ function ActivityDetails(props) {
               </Typography>
 
               <Typography className={classes.createdOn} variant="h6">
-                {`${t('activityDetails.made')} ${auth.username} ${
-                  dFormatter(activity.created_on).value
-                } ${t(`date.${dFormatter(activity.created_on).key}`)} ${t(
-                  'date.ago',
-                )}`}
+                {`${t('activityDetails.made')} ${
+                  activity.creators[0].username
+                } ${dFormatter(activity.created_on).value} ${t(
+                  `date.${dFormatter(activity.created_on).key}`,
+                )} ${t('date.ago')}`}
               </Typography>
               <Grid
                 container
@@ -224,17 +226,9 @@ function ActivityDetails(props) {
                   <GeneratePdf activity={activity} />
                 </Grid>
               </Grid>
-            </Box>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid
-          md={6}
-          xs={12}
-          sm={8}
-          lg={6}
-          item
-          className={clsx(common_classes.marginBottom3em)}
-        ></Grid>
       </Grid>
       <Grid
         className={clsx(
@@ -366,7 +360,6 @@ function ActivityDetails(props) {
         container
         className={clsx(
           classes.inspiringExamplesContainer,
-          // common_classes.displayFlex,
           common_classes.justifyCenter,
         )}
       >
@@ -514,7 +507,6 @@ function ActivityDetails(props) {
                   xs={12}
                   lg={making_step.image && 8}
                   sm={making_step.image && 8}
-                  // className={clsx(common_classes.justifyCenter)}
                   key={`makingStepImageSubContainerKey${index}`}
                 >
                   {making_step.description && (
@@ -523,7 +515,6 @@ function ActivityDetails(props) {
                       className={clsx(
                         common_classes.justifyCenter,
                         classes.quillBodyStyle,
-                        //classes.makingStepsDescriptionStyle,
                       )}
                       theme={'bubble'}
                       readOnly={true}
@@ -607,7 +598,6 @@ function ActivityDetails(props) {
               ></CardMedia>
               <Typography
                 key={`activityDetailsCreatorUserName${index}`}
-                //className={clsx(classes.subTitles)}
                 variant="h6"
                 align="center"
               >

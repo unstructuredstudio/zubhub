@@ -60,6 +60,9 @@ const styles = theme => ({
   justifyCenter: {
     justifyContent: 'center',
   },
+  justifySelfCenter: {
+    justifySelf: 'center',
+  },
   justifyRight: {
     justifyContent: 'right',
   },

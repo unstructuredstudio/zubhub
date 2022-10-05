@@ -7,7 +7,7 @@ export const deleteActivity = args => {
   return API.deleteActivity({ token: args.token, id: args.id }).then(res => {
     if (res.status === 204) {
       toast.success(args.t('activityDetails.activity.delete.dialog.success'));
-      return args.history.push('/activities/all/');
+      return args.history.push('/activities');
     } else {
       if (res.status === 403 && res.statusText === 'Forbidden') {
         toast.error(args.t('activityDetails.activity.delete.dialog.forbidden'));

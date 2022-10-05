@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { style } from '../../assets/js/styles/components/activity/activityStyle';
 import ProjectsCountIcon from '../../assets/js/icons/projectsCountIcon';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import {
+  getActivities,
+  activityToggleSave,
+  setActivity,
+} from '../../store/actions/activityActions';
 import {
   Card,
   CardActions,
@@ -49,6 +55,7 @@ function Activity(props) {
       <Link
         to={`/activities/${activity.id}`}
         className={common_classes.textDecorationNone}
+        onClick={e => props.setActivity(activity)}
       >
         <Card className={clsx(classes.activityCard)}>
           <CardMedia title={activity.title} className={classes.mediaBoxStyle}>
@@ -186,4 +193,25 @@ Activity.propTypes = {
   activity: PropTypes.object.isRequired,
 };
 
-export default Activity;
+const mapStateToProps = state => {
+  return {
+    activities: state.activities,
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getActivities: () => {
+      return dispatch(getActivities());
+    },
+    activityToggleSave: args => {
+      return dispatch(activityToggleSave(args));
+    },
+    setActivity: args => {
+      return dispatch(setActivity(args));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Activity);

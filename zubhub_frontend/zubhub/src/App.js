@@ -138,18 +138,6 @@ function App(props) {
             </PageWrapper>
           )}
         />
-        <Route
-          path="/activities/all"
-          render={routeProps => (
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport
-                LazyComponent={Activities}
-                {...routeProps}
-                {...props}
-              />
-            </PageWrapper>
-          )}
-        />
 
         <Route
           path="/activities/create"
@@ -488,6 +476,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={ActivityDetails}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={Activities}
                 {...routeProps}
                 {...props}
               />

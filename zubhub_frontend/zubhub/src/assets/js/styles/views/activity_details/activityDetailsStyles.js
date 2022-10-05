@@ -13,6 +13,9 @@ const styles = theme => ({
       width: '90%',
     },
   },
+  marginAuto: {
+    margin: 'auto',
+  },
   activityDetailBlock: {
     width: '60%',
     margin: '3em auto',
@@ -22,7 +25,7 @@ const styles = theme => ({
     },
   },
   demoImageContainerStyle: {
-    height: '450px',
+    maxHeight: '450px',
   },
   leftCropedContainer: {
     clipPath: 'polygon(100% 10%,100% 100%, 0% 100%,0% 0%)',
@@ -52,24 +55,28 @@ const styles = theme => ({
   demoImageStyle: {
     objectFit: 'cover',
     height: '60vh',
-    // width: '100%',
     maxWidth: '100%',
     borderRadius: '15px',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
   },
   titleStyle: {
     fontWeight: 800,
-    // fontFamily: 'Inknut Antiqua',
+    textAlign: 'center',
     color: '#3E3E5F',
+    [theme.breakpoints.down('900')]: {
+      fontSize: '1.9rem',
+    },
+    [theme.breakpoints.down('500')]: {
+      fontSize: '1.5rem',
+    },
   },
   artistBiography: {
     alignSelf: 'center',
   },
   createdOn: {
-    // fontFamily: 'Inter',
     fontStyle: 'normal',
     fontSize: '1.1rem',
-    // fontWeight: 700,
+    textAlign: 'center',
     color: '#3E3E5F',
   },
   videoPlayer: {
@@ -230,101 +237,5 @@ const styles = theme => ({
     padding: '16px 24px',
   },
 });
-
-// export const sliderSettings = images_num => ({
-//   className: 'center slider detail-page-slider',
-//   centerMode: true,
-//   infinite: true,
-//   centerPadding: '60px',
-//   dots: false,
-//   autoplay: true,
-//   speed: 500,
-//   slidesToShow: 4 > images_num ? images_num : 4,
-//   slidesToScroll: 1,
-//   focusOnSelect: true,
-//   swipeToSlide: true,
-//   nextArrow: <NextArrow />,
-//   prevArrow: <PrevArrow />,
-//   responsive: [
-//     {
-//       breakpoint: 980,
-//       settings: {
-//         slidesToShow: 3 > images_num ? images_num : 3,
-//         slidesToScroll: 1,
-//         infinite: true,
-//       },
-//     },
-//     {
-//       breakpoint: 770,
-//       settings: {
-//         slidesToShow: 2 > images_num ? images_num : 2,
-//         slidesToScroll: 1,
-//         infinite: true,
-//       },
-//     },
-//     {
-//       breakpoint: 550,
-//       settings: {
-//         slidesToShow: 1 > images_num ? images_num : 1,
-//         slidesToScroll: 1,
-//         infinite: true,
-//       },
-//     },
-//   ],
-// });
-
-// export function NextArrow(props) {
-//   const { className, style, onClick } = props;
-//   return (
-//     <div
-//       className={className}
-//       style={{
-//         ...style,
-//         display: 'flex',
-//         height: '200px',
-//         width: '30px',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         borderRadius: '0 15px 15px 0',
-//         background: '#767474',
-//         zIndex: '10',
-//         boxShadow:
-//           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-//         backgroundColor: '#00B8C4',
-//         '&:hover': {
-//           backgroundColor: '#03848C',
-//         },
-//       }}
-//       onClick={onClick}
-//     />
-//   );
-// }
-
-// export function PrevArrow(props) {
-//   const { className, style, onClick } = props;
-//   return (
-//     <div
-//       className={className}
-//       style={{
-//         ...style,
-//         display: 'flex',
-//         height: '200px',
-//         width: '30px',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         borderRadius: '15px 0 0 15px',
-//         background: '#767474',
-//         zIndex: '10',
-//         boxShadow:
-//           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-//         backgroundColor: '#00B8C4',
-//         '&:hover': {
-//           backgroundColor: '#03848C',
-//         },
-//       }}
-//       onClick={onClick}
-//     />
-//   );
-// }
 
 export default styles;

@@ -11,14 +11,6 @@ from .models import *
 from .serializers import *
 
 
-# @api_view(['GET'])
-# def index(request):
-#     print(type(request), 'request_activities')
-#     response = Response({"message": "hello from backend"})
-#     print(type(response), 'response_activities')
-#     return response
-
-
 class ActivityListAPIView(ListAPIView):
 
     serializer_class = ActivitySerializer

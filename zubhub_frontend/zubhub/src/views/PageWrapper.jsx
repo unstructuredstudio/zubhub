@@ -213,7 +213,7 @@ function PageWrapper(props) {
   const { zubhub, hero } = props.projects;
 
   const profileMenuOpen = Boolean(anchor_el);
- 
+
   return (
     <>
       <ToastContainer />
@@ -460,7 +460,7 @@ function PageWrapper(props) {
                 </>
               ) : (
                 <>
-                  {props.match.path === '/activities/all' ? (
+                  {props.match.path === '/activities' ? (
                     props.auth.tags.filter(
                       tag =>
                         tag === 'moderator' ||
@@ -495,7 +495,7 @@ function PageWrapper(props) {
                         common_classes.marginRight1em,
                         common_classes.removeOnSmallScreen,
                       )}
-                      to="/activities/all"
+                      to="/activities"
                     >
                       <CustomButton
                         variant="contained"
@@ -791,7 +791,7 @@ function PageWrapper(props) {
         </Container>
       </AppBar>
       <Toolbar ref={backToTopEl} />
-      <BreadCrumb />
+      <BreadCrumb props={props} />
       {loading ? <LoadingPage /> : props.children}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>

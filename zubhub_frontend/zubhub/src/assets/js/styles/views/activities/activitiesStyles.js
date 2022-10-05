@@ -53,93 +53,93 @@ const styles = theme => ({
   },
 });
 
-export const sliderSettings = (images_num, func) => ({
-  className: 'center slider detail-page-slider',
-  centerMode: true,
-  infinite: true,
-  //   centerPadding: '60px',
-  dots: false,
-  autoplay: false,
-  //speed: 1000,
-  slidesToShow: 3 > images_num ? images_num : 3,
-  slidesToScroll: 1,
-  focusOnSelect: true,
-  afterChange: func,
-  swipeToSlide: true,
-  nextArrow: <NextArrow />,
-  prevArrow: <PrevArrow />,
-  responsive: [
-    {
-      breakpoint: 980,
-      settings: {
-        slidesToShow: 3 > images_num ? images_num : 3,
-        slidesToScroll: 1,
-        infinite: true,
-      },
-    },
-    {
-      breakpoint: 770,
-      settings: {
-        slidesToShow: 1 > images_num ? images_num : 1,
-        slidesToScroll: 1,
-        infinite: true,
-      },
-    },
-  ],
-});
+// export const sliderSettings = (images_num, func) => ({
+//   className: 'center slider detail-page-slider',
+//   centerMode: true,
+//   infinite: true,
+//   //   centerPadding: '60px',
+//   dots: false,
+//   autoplay: false,
+//   //speed: 1000,
+//   slidesToShow: 3 > images_num ? images_num : 3,
+//   slidesToScroll: 1,
+//   focusOnSelect: true,
+//   afterChange: func,
+//   swipeToSlide: true,
+//   nextArrow: <NextArrow />,
+//   prevArrow: <PrevArrow />,
+//   responsive: [
+//     {
+//       breakpoint: 980,
+//       settings: {
+//         slidesToShow: 3 > images_num ? images_num : 3,
+//         slidesToScroll: 1,
+//         infinite: true,
+//       },
+//     },
+//     {
+//       breakpoint: 770,
+//       settings: {
+//         slidesToShow: 1 > images_num ? images_num : 1,
+//         slidesToScroll: 1,
+//         infinite: true,
+//       },
+//     },
+//   ],
+// });
 
-export function NextArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: 'flex',
-        height: '150px',
-        width: '25px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '0 15px 15px 0',
-        background: '#767474',
-        zIndex: '10',
-        boxShadow:
-          '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: '#00B8C4',
-        '&:hover': {
-          backgroundColor: '#03848C',
-        },
-      }}
-      onClick={onClick}
-    />
-  );
-}
+// export function NextArrow(props) {
+//   const { className, style, onClick } = props;
+//   return (
+//     <div
+//       className={className}
+//       style={{
+//         ...style,
+//         display: 'flex',
+//         height: '150px',
+//         width: '25px',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         borderRadius: '0 15px 15px 0',
+//         background: '#767474',
+//         zIndex: '10',
+//         boxShadow:
+//           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+//         backgroundColor: '#00B8C4',
+//         '&:hover': {
+//           backgroundColor: '#03848C',
+//         },
+//       }}
+//       onClick={onClick}
+//     />
+//   );
+// }
 
-export function PrevArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: 'flex',
-        height: '150px',
-        width: '25px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '15px 0 0 15px',
-        background: '#767474',
-        zIndex: '10',
-        boxShadow:
-          '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: '#00B8C4',
-        '&:hover': {
-          backgroundColor: '#03848C',
-        },
-      }}
-      onClick={onClick}
-    />
-  );
-}
+// export function PrevArrow(props) {
+//   const { className, style, onClick } = props;
+//   return (
+//     <div
+//       className={className}
+//       style={{
+//         ...style,
+//         display: 'flex',
+//         height: '150px',
+//         width: '25px',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         borderRadius: '15px 0 0 15px',
+//         background: '#767474',
+//         zIndex: '10',
+//         boxShadow:
+//           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+//         backgroundColor: '#00B8C4',
+//         '&:hover': {
+//           backgroundColor: '#03848C',
+//         },
+//       }}
+//       onClick={onClick}
+//     />
+//   );
+// }
 
 export default styles;
