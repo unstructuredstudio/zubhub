@@ -16,41 +16,45 @@ const useStyles = makeStyles(styles);
 
 function Activities(props) {
   const classes = useStyles();
-
-  useEffect(async () => {
-    const res = await props.getActivities();
+  useEffect(() => {
+    props.getActivities(props.t);
   }, []);
+
+  let activityList = [];
   const { activities } = useSelector(state => state);
-  const activityList =
-    props.auth.tags.filter(item => item === 'staff' || item === 'moderator')
-      .length > 0
-      ? activities.all_activities
-      : activities.published;
+  if (activities) {
+    activityList =
+      props.auth.tags.filter(item => item === 'staff' || item === 'moderator')
+        .length > 0
+        ? activities.all_activities
+        : activities.published;
+  }
 
   return (
     <div>
       <Grid container className={classes.activityListContainer}>
-        {activityList.map((activity, index) => (
-          <Grid
-            key={`activityContainer-${index}`}
-            item
-            xs={12}
-            sm={12}
-            md={6}
-            lg={6}
-            align="center"
-            className={classes.activityBoxContainer}
-          >
-            <Activity
-              key={`activity-${index}`}
-              activity={activity}
-              auth={props.auth}
-              activityToggleSave={props.activityToggleSave}
-              t={props.t}
-              history={props.history}
-            />
-          </Grid>
-        ))}
+        {activityList &&
+          activityList.map((activity, index) => (
+            <Grid
+              key={`activityContainer-${index}`}
+              item
+              xs={12}
+              sm={12}
+              md={6}
+              lg={6}
+              align="center"
+              className={classes.activityBoxContainer}
+            >
+              <Activity
+                key={`activity-${index}`}
+                activity={activity}
+                auth={props.auth}
+                activityToggleSave={props.activityToggleSave}
+                t={props.t}
+                history={props.history}
+              />
+            </Grid>
+          ))}
       </Grid>
       {/* // )} */}
     </div>

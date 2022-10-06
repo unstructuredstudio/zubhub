@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+
 import ZubhubAPI from '../../api';
 
 const API = new ZubhubAPI();

@@ -130,6 +130,7 @@ const styles = theme => ({
       fontSize: '1.2rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
       fontWeight: 500,
+      maxHeight: ''
     },
     [theme.breakpoints.down('959')]: {
       '& .ql-editor': {

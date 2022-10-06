@@ -14,7 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { styles } from '../../assets/js/styles/components/breadCrumb/breadCrumbStyle';
 import commonStyles from '../../assets/js/styles';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import clsx from 'clsx';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -88,11 +87,11 @@ function BreadCrumb({ props }) {
                 className={clsx(common_classes.textDecorationNone)}
               >
                 <Tooltip
-                  title={activities.selectedActivity.title}
+                  title={activities?.selectedActivity?.title}
                   placement="top"
                 >
                   <Typography component="span" className={classes.textStyle}>
-                    {activities.selectedActivity.title.toLowerCase()}
+                    {activities?.selectedActivity?.title?.toLowerCase()}
                   </Typography>
                 </Tooltip>
               </Link>

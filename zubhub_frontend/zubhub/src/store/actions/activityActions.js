@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+
 import API from '../../api/api';
 import * as at from '../actionTypes';
 let ActivityAPI = new API();
@@ -21,27 +22,36 @@ export const setActivity = activity => {
   };
 };
 
-export const getActivities = () => {
+export const getActivities = t => {
+  console.log('getActivities action triggered', t);
   return async dispatch => {
-    const res = await ActivityAPI.getActivities();
-    const all_activities = res;
-    const published = [];
-    const unPublishedActivities = res.filter(item => {
-      if (!item.publish) {
-        return true;
+    try {
+      const res = await ActivityAPI.getActivities();
+      const all_activities = res;
+      const published = [];
+      const unPublishedActivities = res.filter(item => {
+        if (!item.publish) {
+          return true;
+        } else {
+          published.push(item);
+          return false;
+        }
+      });
+      dispatch({
+        type: at.SET_ACTIVITIES,
+        payload: {
+          all_activities: all_activities,
+          published: published,
+          unPublishedActivities: unPublishedActivities,
+        },
+      });
+    } catch (error) {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(t('projects.errors.unexpected'));
       } else {
-        published.push(item);
-        return false;
+        toast.warning(error.message);
       }
-    });
-    dispatch({
-      type: at.SET_ACTIVITIES,
-      payload: {
-        all_activities: all_activities,
-        published: published,
-        unPublishedActivities: unPublishedActivities,
-      },
-    });
+    }
   };
 };
 
