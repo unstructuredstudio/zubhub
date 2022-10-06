@@ -239,7 +239,6 @@ function ActivityDetails(props) {
         <Grid
           className={clsx(
             common_classes.justifyCenter,
-            common_classes.marginTop3em,
           )}
         >
           <ReactQuill

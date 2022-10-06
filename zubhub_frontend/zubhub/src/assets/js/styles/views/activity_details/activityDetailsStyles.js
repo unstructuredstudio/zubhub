@@ -20,7 +20,7 @@ const styles = theme => ({
     width: '60%',
     margin: '3em auto',
     padding: '5vh 0',
-    [theme.breakpoints.down('700')]: {
+    [theme.breakpoints.down('900')]: {
       width: '90%',
     },
   },

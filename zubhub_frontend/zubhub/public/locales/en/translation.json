@@ -775,7 +775,7 @@
       "title": {
         "label": "Name your Activity",
         "errors": {
-          "max": "your title shouldn't be more than 100 characters",
+          "max": "your title shouldn't be more than 50 characters",
           "required": "This field is required"
         }
       },
@@ -784,7 +784,7 @@
         "helperText": "Add motivation text",
         "placeholder": "Add motivation text",
         "errors": {
-          "max": "your motivation shouldn't be more than 10,000 characters",
+          "max": "your motivation shouldn't be more than 1000 characters",
           "required": "This field is required"
         }
       },
@@ -793,7 +793,7 @@
         "helperText": "List some of this activity's learning goals",
         "placeholder": "List some of this activity's learning goals",
         "errors": {
-          "max": "your learning goals shouldn't be more than 10,000 characters",
+          "max": "your learning goals shouldn't be more than 1000 characters",
           "required": "This field is required"
         }
       },
@@ -866,9 +866,9 @@
           "label": "Add Example Image"
         },
          "errors": {
-          "max": "your inspiring example's description shouldn't be more than 500 characters",
+          "max": "your inspiring example's description shouldn't be more than 100 characters",
           "required": "This field is required",
-          "maxCredit": "your inspiring example's credit shouldn't be more than 100 characters"
+          "maxCredit": "your inspiring example's credit shouldn't be more than 50 characters"
 
         }
       },

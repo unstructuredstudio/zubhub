@@ -91,7 +91,7 @@ export const validationSchema = Yup.object().shape({
   title: Yup.string().max(50, 'max').required('required'),
   motivation: Yup.string().max(1000, 'max').required('required'),
   learning_goals: Yup.string().max(1000, 'max').required('required'),
-  facilitation_tips: Yup.string().max(1000, 'max').required('required'),
+  facilitation_tips: Yup.string().max(10000, 'max').required('required'),
   making_steps: Yup.array()
     .of(
       Yup.object().shape({
@@ -115,7 +115,7 @@ export const validationSchema = Yup.object().shape({
 
   inspiring_examples: Yup.array().of(
     Yup.object().shape({
-      description: Yup.string().max(500, 'max'),
+      description: Yup.string().max(100, 'max'),
       credit: Yup.string().max(50, 'maxCredit'),
       image: Yup.lazy(value => {
         return imageValidationSchema;
