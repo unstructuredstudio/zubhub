@@ -39,9 +39,10 @@ function BreadCrumb({ props }) {
   }, [link]);
 
   return (
-    
     <Breadcrumbs
-      separator={<NavigateNextIcon fontSize="large" className={classes.separator} />}
+      separator={
+        <NavigateNextIcon fontSize="large" className={classes.separator} />
+      }
       aria-label="breadcrumb"
       className={classes.container}
     >
@@ -58,8 +59,14 @@ function BreadCrumb({ props }) {
           }}
           onChange={handleChange}
         >
-          <MenuItem className={classes.item} value={'/'}>Projects</MenuItem>
+          <MenuItem className={classes.item} value={'/'}>
+            Projects
+          </MenuItem>
           <MenuItem value={'/activities'}>Activities</MenuItem>
+          {/* {props.auth.tags.filter(tag => tag === 'staff' || tag === 'moderator')
+            .length > 0 && (
+            <MenuItem value={'/activities'}>Unpublished Activities</MenuItem>
+          )} */}
         </Select>
       </Box>
       {pathList.map((item, index) => (

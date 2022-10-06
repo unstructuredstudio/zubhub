@@ -156,7 +156,7 @@ function ActivityDetails(props) {
               component={'img'}
               image={activity.images[0].image.file_url}
             />
-            <ActionIconsContainer activity={activity} t={t} auth={auth} />
+            {/* <ActionIconsContainer activity={activity} t={t} auth={auth} /> */}
           </Grid>
           <Grid
             item
@@ -236,11 +236,7 @@ function ActivityDetails(props) {
           common_classes.marginTop3em,
         )}
       >
-        <Grid
-          className={clsx(
-            common_classes.justifyCenter,
-          )}
-        >
+        <Grid className={clsx(common_classes.justifyCenter)}>
           <ReactQuill
             id="activityMotivation"
             className={classes.motivationBodyStyle}

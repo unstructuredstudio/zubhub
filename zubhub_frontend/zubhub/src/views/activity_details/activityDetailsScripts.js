@@ -10,7 +10,9 @@ export const deleteActivity = args => {
       return args.history.push('/activities');
     } else {
       if (res.status === 403 && res.statusText === 'Forbidden') {
-        toast.error(args.t('activityDetails.activity.delete.dialog.forbidden'));
+        toast.warning(
+          args.t('activityDetails.activity.delete.dialog.forbidden'),
+        );
       } else {
         toast.warning(args.t('activities.errors.dialog.serverError'));
       }

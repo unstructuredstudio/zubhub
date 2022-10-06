@@ -24,10 +24,23 @@ export const setActivity = activity => {
 export const getActivities = () => {
   return async dispatch => {
     const res = await ActivityAPI.getActivities();
-    console.log('from reducer actions', res);
+    const all_activities = res;
+    const published = [];
+    const unPublishedActivities = res.filter(item => {
+      if (!item.publish) {
+        return true;
+      } else {
+        published.push(item);
+        return false;
+      }
+    });
     dispatch({
       type: at.SET_ACTIVITIES,
-      payload: { all_activities: res },
+      payload: {
+        all_activities: all_activities,
+        published: published,
+        unPublishedActivities: unPublishedActivities,
+      },
     });
   };
 };
@@ -83,14 +96,14 @@ export const activityTogglePublish = args => {
         type: at.SET_ACTIVITY,
         payload: { activity: result },
       });
-      return result
+      return result;
     } catch (error) {
       if (error.message.startsWith('Unexpected')) {
         toast.warning(args.t('projects.errors.unexpected'));
       } else {
         toast.warning(error.message);
       }
-      return {error: error}
+      return { error: error };
     }
   };
 };

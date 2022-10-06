@@ -10,7 +10,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Activity from '../../components/activity/activity';
 import styles from '../../assets/js/styles/views/activities/activitiesStyles';
 import { makeStyles } from '@material-ui/core/styles';
-import styled from 'styled-components';
+
 import { Grid, Box } from '@material-ui/core';
 const useStyles = makeStyles(styles);
 
@@ -21,11 +21,16 @@ function Activities(props) {
     const res = await props.getActivities();
   }, []);
   const { activities } = useSelector(state => state);
+  const activityList =
+    props.auth.tags.filter(item => item === 'staff' || item === 'moderator')
+      .length > 0
+      ? activities.all_activities
+      : activities.published;
 
   return (
     <div>
       <Grid container className={classes.activityListContainer}>
-        {activities.all_activities.map((activity, index) => (
+        {activityList.map((activity, index) => (
           <Grid
             key={`activityContainer-${index}`}
             item

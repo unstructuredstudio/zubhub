@@ -2,11 +2,15 @@ export const styles = theme => ({
   container: {
     backgroundColor: '#00B8C4',
     // maxHeight: '80px',
-    minHeight: '50px',
+    minHeight: '45px',
+    [theme.breakpoints.down('700')]: {
+      minHeight: '40px',
+    },
     textAlign: 'center',
     display: 'flex',
     maxWidth: '100vw',
     lineHeight: '40px',
+    paddingRight: '10px',
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
     '& ol': {
@@ -30,7 +34,7 @@ export const styles = theme => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    [theme.breakpoints.down('700')]: {
+    [theme.breakpoints.down('900')]: {
       fontSize: '0.8rem',
     },
   },
@@ -40,7 +44,7 @@ export const styles = theme => ({
     // width: '110px',
     // overflow: 'hidden',
     // textOverflow: 'ellipsis',
-    [theme.breakpoints.down('700')]: {
+    [theme.breakpoints.down('900')]: {
       maxWidth: '110',
       padding: '0 5px',
     },
@@ -54,7 +58,7 @@ export const styles = theme => ({
     fontSize: '1rem',
     display: 'flex',
     width: '150px',
-    [theme.breakpoints.down('700')]: {
+    [theme.breakpoints.down('900')]: {
       width: '110px',
       fontSize: '0.8rem',
     },

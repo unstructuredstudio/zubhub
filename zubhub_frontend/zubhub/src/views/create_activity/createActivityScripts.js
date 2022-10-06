@@ -438,7 +438,7 @@ export const initUpload = async (
         }
       });
     } catch (error) {
-      toast.error(`${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`);
+      toast.warning(`${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`);
       handleSetState(state => {
         return { ...state, ['submitting']: false };
       });
@@ -540,7 +540,7 @@ export const initUpload = async (
           return props.history.push(`/activities/${values['id']}`);
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.error(
+            toast.warning(
               props.t('activityDetails.activity.delete.dialog.forbidden'),
             );
           } else {
@@ -567,7 +567,7 @@ export const initUpload = async (
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.error(
+            toast.warning(
               props.t('activityDetails.activity.create.dialog.forbidden'),
             );
           } else {
