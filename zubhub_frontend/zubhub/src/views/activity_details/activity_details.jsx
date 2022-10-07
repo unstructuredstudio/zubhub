@@ -239,7 +239,7 @@ function ActivityDetails(props) {
         <Grid className={clsx(common_classes.justifyCenter)}>
           <ReactQuill
             id="activityMotivation"
-            className={classes.motivationBodyStyle}
+            className={clsx(classes.quillBodyStyle, classes.quillTextCenter)}
             theme={'bubble'}
             readOnly={true}
             value={activity.motivation || ''}
@@ -256,7 +256,6 @@ function ActivityDetails(props) {
           {activity.video && (
             <Grid
               item
-              //lg={8}
               xs={12}
               sm={12}
               md={12}
@@ -286,7 +285,7 @@ function ActivityDetails(props) {
             variant="h3"
             align="left"
           >
-            LEARNING GOALS
+            {t('activityDetails.subTitles.learning_goals')}
           </Typography>
           <ReactQuill
             id="activityLearningGoals"
@@ -309,7 +308,7 @@ function ActivityDetails(props) {
             variant="h3"
             align="left"
           >
-            MATERIALS REQUIRED
+            {t('activityDetails.subTitles.materials_required')}
           </Typography>
           <Grid container className={common_classes.justifyCenter}>
             <Grid item xs={12} lg={8} sm={8}>
@@ -362,7 +361,7 @@ function ActivityDetails(props) {
           className={clsx(common_classes.marginTop3em, classes.subTitles)}
           variant="h3"
         >
-          INSPIRING PERSON
+          {t('activityDetails.subTitles.inspiring_person')}
         </Typography>
         <Grid
           container
@@ -414,7 +413,7 @@ function ActivityDetails(props) {
               variant="h3"
               align="center"
             >
-              SOME INSPIRING EXAMPLES
+              {t('activityDetails.subTitles.inspiring_examples')}
             </Typography>
             <Grid
               container
@@ -485,7 +484,7 @@ function ActivityDetails(props) {
               variant="h3"
               align="left"
             >
-              MAKING STEPS
+              {t('activityDetails.subTitles.making_steps')}
             </Typography>
 
             {activity.making_steps.map((making_step, index) => (
@@ -546,7 +545,7 @@ function ActivityDetails(props) {
           variant="h3"
           align="center"
         >
-          FACILITATION TIPS
+          {t('activityDetails.subTitles.facilitation_tips')}
         </Typography>
         {activity.facilitation_tips ? (
           <Grid item xs={12} lg={12} sm={12}>
@@ -568,7 +567,7 @@ function ActivityDetails(props) {
           variant="h3"
           align="center"
         >
-          CONTRIBUTORS
+          {t('activityDetails.subTitles.contributors')}
         </Typography>
         <Grid
           container

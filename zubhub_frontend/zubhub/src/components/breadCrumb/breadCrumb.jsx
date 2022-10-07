@@ -21,15 +21,16 @@ const useCommonStyles = makeStyles(commonStyles);
 function BreadCrumb({ props }) {
   const history = useHistory();
   const classes = useStyles();
-  const { activities, projects } = useSelector(state => state);
   const common_classes = useCommonStyles();
   const [link, setLink] = useState('/');
+  console.log('bread crumbs props', props);
   let pathList = history.location.pathname.split('/');
   pathList.shift();
   if (props.match) {
     pathList = props.match.path.split('/');
     pathList.shift();
   }
+  const store = useSelector(state => state);
   const handleChange = e => {
     setLink(e.target.value);
   };
@@ -37,8 +38,16 @@ function BreadCrumb({ props }) {
     history.push(link);
   }, [link]);
 
+  const getLink = (url, index) => {
+    console.log('ref index ', index);
+    let arr = url.split('/').slice(0, index + 2);
+    let newUrl = arr.join('/');
+    return /^\/((projects)?(creators)?)$/.test(newUrl) ? '/' : newUrl;
+  };
+
   return (
     <Breadcrumbs
+      maxItems={3}
       separator={
         <NavigateNextIcon fontSize="large" className={classes.separator} />
       }
@@ -59,52 +68,60 @@ function BreadCrumb({ props }) {
           onChange={handleChange}
         >
           <MenuItem className={classes.item} value={'/'}>
-            Projects
+            {props.t('breadCrumb.link.projects')}
           </MenuItem>
-          <MenuItem value={'/activities'}>Activities</MenuItem>
-          {/* {props.auth.tags.filter(tag => tag === 'staff' || tag === 'moderator')
-            .length > 0 && (
-            <MenuItem value={'/activities'}>Unpublished Activities</MenuItem>
-          )} */}
+          <MenuItem value={'/activities'}>
+            {props.t('breadCrumb.link.activities')}
+          </MenuItem>
         </Select>
       </Box>
-      {pathList.map((item, index) => (
-        <Box className={clsx(common_classes.textDecorationNone, classes.link)}>
-          {index < 1 ? (
-            <Link
-              to={item === 'projects' ? '/' : `/${item}`}
-              className={clsx(
-                common_classes.textDecorationNone,
-                classes.textStyle,
-              )}
-            >
-              {item}
-            </Link>
-          ) : pathList[0] === 'activities' ? (
-            item === ':id' ? (
+      {pathList &&
+        pathList[0] !== '' &&
+        pathList.map((item, index) => (
+          <Box
+            className={clsx(common_classes.textDecorationNone, classes.link)}
+          >
+            {index < 1 ? (
               <Link
-                to={`/activities/${activities.selectedActivity.id}`}
+                id={`${index}-link`}
+                to={getLink(props.match.url, index)}
+                className={clsx(
+                  common_classes.textDecorationNone,
+                  classes.textStyle,
+                )}
+              >
+                {props.t(`breadCrumb.link.${item}`)}
+              </Link>
+            ) : /^:/.test(item) ? (
+              <Link
+                id={`${index}-link`}
+                to={getLink(props.match.url, index)}
                 className={clsx(common_classes.textDecorationNone)}
               >
-                <Tooltip
-                  title={activities?.selectedActivity?.title}
-                  placement="top"
-                >
-                  <Typography component="span" className={classes.textStyle}>
-                    {activities?.selectedActivity?.title?.toLowerCase()}
-                  </Typography>
-                </Tooltip>
+                <Typography component="span" className={classes.textStyle}>
+                  {pathList[index - 1] === 'activities'
+                    ? store.activities?.selectedActivity?.title?.toLowerCase()
+                    : pathList[index - 1] === 'projects'
+                    ? store.projects?.all_projects?.results.filter(
+                        project => project.id === props.match.params.id,
+                      )[0].title
+                    : pathList[index - 1] === 'creators' &&
+                      props.match.params.username}
+                </Typography>
               </Link>
             ) : (
-              <Typography component="span" className={classes.textStyle}>
-                {item}
-              </Typography>
-            )
-          ) : (
-            ''
-          )}
-        </Box>
-      ))}
+              <Link
+                id={`${index}-link`}
+                to={getLink(props.match.url, index)}
+                className={clsx(common_classes.textDecorationNone)}
+              >
+                <Typography component="span" className={classes.textStyle}>
+                  {props.t(`breadCrumb.link.${item}`)}
+                </Typography>
+              </Link>
+            )}
+          </Box>
+        ))}
     </Breadcrumbs>
   );
 }

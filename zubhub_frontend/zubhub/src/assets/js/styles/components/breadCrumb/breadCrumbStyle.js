@@ -45,7 +45,7 @@ export const styles = theme => ({
     // overflow: 'hidden',
     // textOverflow: 'ellipsis',
     [theme.breakpoints.down('900')]: {
-      maxWidth: '110',
+      // maxWidth: '110',
       padding: '0 5px',
     },
     // boxShadow: '10px 0 5px -2px #888',
@@ -59,7 +59,7 @@ export const styles = theme => ({
     display: 'flex',
     width: '150px',
     [theme.breakpoints.down('900')]: {
-      width: '110px',
+      width: '130px',
       fontSize: '0.8rem',
     },
     borderRadius: 30,
@@ -77,7 +77,7 @@ export const styles = theme => ({
   },
   icon: {
     fill: 'white',
-    marginRight: '20px',
+    marginRight: '15px',
   },
   item: {
     margin: 'auto 0',

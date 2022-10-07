@@ -906,6 +906,15 @@
  },
 
   "activityDetails": {
+    "subTitles": {
+       "learning_goals": "LEARNING GOALS",
+       "materials_required": "MATERIALS REQUIRED",
+       "making_steps": "MAKING STEPS",
+       "inspiring_person": "INSPIRING ARTIST/SCIENTIST",
+       "facilitation_tips": "FACILITATION TIPS",
+       "inspiring_examples": "SOME INSPIRING EXAMPLES",
+       "contributors": "CONTRIBUTORS"
+    },
     "made": "Made by",
     "activity": {
       "creator": {
@@ -962,6 +971,20 @@
         "save": "save",
         "unsave": "unsave"
       }
+  },
+  "breadCrumb":{
+    "link":{
+      "activities": "activities",
+      "projects": "projects",
+      "edit": "edit",
+      "create": "create",
+      "about": "about",
+      "login": "login",
+      "profile": "profile",
+      "creators": "creators",
+      "followers": "followers",
+      "following": "following"
+    }
   }
  
 }
