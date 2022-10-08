@@ -466,7 +466,7 @@ function PageWrapper(props) {
                         tag === 'moderator' ||
                         tag === 'staff' ||
                         tag === 'educator',
-                    ).length > 0 ? (
+                    ).length > 0 && (
                       <Link
                         className={clsx(
                           classes.textDecorationNone,
@@ -485,8 +485,6 @@ function PageWrapper(props) {
                           {t('pageWrapper.navbar.createActivity')}
                         </CustomButton>
                       </Link>
-                    ) : (
-                      ''
                     )
                   ) : (
                     <Link
@@ -586,7 +584,10 @@ function PageWrapper(props) {
                       </Tooltip>
                     </MenuItem>
                     <MenuItem>
-                      <a className={classes.textDecorationNone} href="/profile">
+                      <Link
+                        className={classes.textDecorationNone}
+                        to="/profile"
+                      >
                         <Typography
                           variant="subtitle2"
                           color="textPrimary"
@@ -594,7 +595,7 @@ function PageWrapper(props) {
                         >
                           {t('pageWrapper.navbar.profile')}
                         </Typography>
-                      </a>
+                      </Link>
                     </MenuItem>
                     <MenuItem className={common_classes.addOnSmallScreen}>
                       <Link
@@ -610,28 +611,7 @@ function PageWrapper(props) {
                         </Typography>
                       </Link>
                     </MenuItem>
-                    {props.auth.tags.includes(
-                      'creator',
-                      'staff',
-                      'educator',
-                    ) && (
-                      <MenuItem
-                      //className={common_classes.addOnSmallScreen}
-                      >
-                        <Link
-                          className={clsx(classes.textDecorationNone)}
-                          to="/activities/create"
-                        >
-                          <Typography
-                            variant="subtitle2"
-                            color="textPrimary"
-                            component="span"
-                          >
-                            {t('pageWrapper.navbar.createActivityMenu')}
-                          </Typography>
-                        </Link>
-                      </MenuItem>
-                    )}
+
                     <MenuItem>
                       <Link
                         className={classes.textDecorationNone}

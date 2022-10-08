@@ -964,7 +964,11 @@
       "profile": "प्रोफ़ाइल",
        "creators": "रचनाकारों",
       "followers": "अनुयायियों",
-      "following": "निम्नलिखित"
+      "following": "निम्नलिखित",
+      "edit-profile": "प्रोफ़ाइल संपादित करें",
+      "saved": "बचाया",
+      "signup": "साइन अप करें",
+      "account-status": "खाते की स्थिति"
     }
   }
 }

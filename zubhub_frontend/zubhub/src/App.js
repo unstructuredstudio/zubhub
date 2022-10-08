@@ -2,7 +2,6 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import CreateActivity from './views/create_activity/create_activity';
-import API from './api';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
@@ -81,7 +80,6 @@ const LazyImport = props => {
   );
 };
 
-const myApi = new API();
 function App(props) {
   return (
     <Router>
@@ -139,18 +137,6 @@ function App(props) {
           )}
         />
 
-        <Route
-          path="/activities/create"
-          render={routeProps => (
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport
-                LazyComponent={CreateActivity}
-                {...routeProps}
-                {...props}
-              />
-            </PageWrapper>
-          )}
-        />
         <Route
           path="/password-reset"
           render={routeProps => (

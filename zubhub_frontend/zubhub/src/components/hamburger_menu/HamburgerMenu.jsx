@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -7,7 +8,7 @@ import styles from '../../assets/js/styles/components/hamburger_menu/hamburgerMe
 import commonStyles from '../../assets/js/styles';
 import cn from 'classnames';
 import clsx from 'clsx';
-import { Typography, Drawer, Link, Avatar, MenuItem } from '@material-ui/core';
+import { Typography, Drawer, Avatar, MenuItem } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -66,9 +67,10 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
         </Typography>
       </MenuItem>
       <Link
-        href="/profile"
+        to="/profile"
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
+        onClick={() => setHamburgerMenuOpen(false)}
       >
         <MenuItem className={classes.paddingItem}>
           <Typography variant="subtitle2" color="textPrimary" component="span">
@@ -77,9 +79,10 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
         </MenuItem>
       </Link>
       <Link
-        href="/projects/create"
+        to="/projects/create"
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
+        onClick={() => setHamburgerMenuOpen(false)}
       >
         <MenuItem className={classes.paddingItem}>
           <Typography variant="subtitle2" color="textPrimary" component="span">
@@ -87,6 +90,32 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
           </Typography>
         </MenuItem>
       </Link>
+      {auth.tags.filter(tag => tag === 'staff' || tag === 'educator').length >
+        0 && (
+        <Link
+          to="/activities/create"
+          className={clsx(
+            classes.menuItemStyle,
+            common_classes.textDecorationNone,
+          )}
+          onClick={() => setHamburgerMenuOpen(false)}
+        >
+          <MenuItem
+            className={clsx(
+              common_classes.addOnSmallScreen,
+              classes.paddingItem,
+            )}
+          >
+            <Typography
+              variant="subtitle2"
+              color="textPrimary"
+              component="span"
+            >
+              {t('pageWrapper.navbar.createActivityMenu')}
+            </Typography>
+          </MenuItem>
+        </Link>
+      )}
       <div
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
@@ -102,9 +131,10 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
         </MenuItem>
       </div>
       <Link
-        href={`/creators/${auth.username}/projects`}
+        to={`/creators/${auth.username}/projects`}
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
+        onClick={() => setHamburgerMenuOpen(false)}
       >
         <MenuItem className={classes.paddingItem}>
           <Typography variant="subtitle2" color="textPrimary" component="span">
@@ -113,9 +143,10 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
         </MenuItem>
       </Link>
       <Link
-        href={`/creators/${auth.username}/followers`}
+        to={`/creators/${auth.username}/followers`}
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
+        onClick={() => setHamburgerMenuOpen(false)}
       >
         <MenuItem className={classes.paddingItem}>
           <Typography variant="subtitle2" color="textPrimary" component="span">
@@ -124,9 +155,10 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
         </MenuItem>
       </Link>
       <Link
-        href={`/creators/${auth.username}/following`}
+        to={`/creators/${auth.username}/following`}
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
+        onClick={() => setHamburgerMenuOpen(false)}
       >
         <MenuItem className={classes.paddingItem}>
           <Typography variant="subtitle2" color="textPrimary" component="span">
@@ -135,9 +167,10 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
         </MenuItem>
       </Link>
       <Link
-        href="/projects/saved"
+        to="/projects/saved"
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
+        onClick={() => setHamburgerMenuOpen(false)}
       >
         <MenuItem className={classes.paddingItem}>
           <Typography variant="subtitle2" color="textPrimary" component="span">
@@ -145,23 +178,23 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
           </Typography>
         </MenuItem>
       </Link>
-      <Link
-        className={cn(classes.logOutStyle)}
-        style={{ textDecoration: 'none' }}
+      <MenuItem
+        className={clsx(
+          classes.logOutStyle,
+          common_classes.textDecorationNone,
+        )}
         onClick={() =>
           dispatch(AuthActions.logout({ token: auth.token, history, t }))
         }
       >
-        <MenuItem className={classes.paddingItem}>
-          <Typography
-            className={common_classes.colorRed}
-            variant="subtitle2"
-            component="span"
-          >
-            {t('pageWrapper.navbar.logout')}
-          </Typography>
-        </MenuItem>
-      </Link>
+        <Typography
+          className={clsx(common_classes.colorRed, classes.paddingItem)}
+          variant="subtitle2"
+          component="span"
+        >
+          {t('pageWrapper.navbar.logout')}
+        </Typography>
+      </MenuItem>
     </Drawer>,
   ];
 };

@@ -983,7 +983,11 @@
       "profile": "profile",
       "creators": "creators",
       "followers": "followers",
-      "following": "following"
+      "following": "following",
+      "edit-profile": "edit-profile",
+      "saved": "saved",
+      "signup": "signup",
+      "account-status": "account-status"
     }
   }
  
