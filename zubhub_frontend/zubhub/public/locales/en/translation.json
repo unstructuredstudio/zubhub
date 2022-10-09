@@ -28,7 +28,9 @@
       "logout": "Logout",
       "browseActivities": "BROWSE ACTIVITIES",
       "createActivity": "CREATE ACTIVITY",
-      "createActivityMenu": "Create Activity"
+      "createActivityMenu": "Create Activity",
+      "unpublishedActivities": "Unpublished Activities",
+      "myActivities": "My Activities"
     },
 
     "footer": {

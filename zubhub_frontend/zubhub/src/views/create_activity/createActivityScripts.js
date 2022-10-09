@@ -59,7 +59,6 @@ const imageSizeTooLarge = value => {
 const allEmpty = arr => {
   let allEmptyValues = false;
   if (arr) {
-    // console.log('from array all empty', arr);
     if (arr.length === 0) {
       allEmptyValues = true;
     }
@@ -74,7 +73,6 @@ const allEmpty = arr => {
   }
 };
 const allEmptyObjects = arr => {
-  console.log('allemptyObject', arr);
   if (arr) {
     return arr.filter(obj => Object.keys(obj).length > 0).length > 0;
   } else {
@@ -555,7 +553,6 @@ export const initUpload = async (
         handleSetState(state => {
           return { ...state, submitting: false };
         });
-        console.log('apiresponse', res);
         if (res.status === 200 || res.statusText === 'Created') {
           formikProps.handleReset();
           const response = res.json();

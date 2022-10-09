@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -85,6 +85,7 @@ const useCommonStyles = makeStyles(commonStyles);
  */
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
+  const history = useHistory();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
@@ -611,7 +612,42 @@ function PageWrapper(props) {
                         </Typography>
                       </Link>
                     </MenuItem>
-
+                    {props.auth.tags.filter(
+                      tag => tag === 'staff' || tag === 'educator',
+                    ).length > 0 && (
+                      <MenuItem
+                        className={clsx(common_classes.removeOnSmallScreen)}
+                        onClick={() => {
+                          history.push('/activities', { flag: 'educator' });
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.myActivities')}
+                        </Typography>
+                      </MenuItem>
+                    )}
+                    {props.auth.tags.filter(
+                      tag => tag === 'staff' || tag === 'moderator',
+                    ).length > 0 && (
+                      <MenuItem
+                        className={clsx(common_classes.removeOnSmallScreen)}
+                        onClick={() => {
+                          history.push('/activities', { flag: 'staff' });
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.unpublishedActivities')}
+                        </Typography>
+                      </MenuItem>
+                    )}
                     <MenuItem>
                       <Link
                         className={classes.textDecorationNone}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
   getActivities,
   activityToggleSave,
@@ -15,6 +16,7 @@ import { Grid, Box } from '@material-ui/core';
 const useStyles = makeStyles(styles);
 
 function Activities(props) {
+  const location = useLocation();
   const classes = useStyles();
   useEffect(() => {
     props.getActivities(props.t);
@@ -23,11 +25,17 @@ function Activities(props) {
   let activityList = [];
   const { activities } = useSelector(state => state);
   if (activities) {
-    activityList =
-      props.auth.tags.filter(item => item === 'staff' || item === 'moderator')
-        .length > 0
-        ? activities.all_activities
-        : activities.published;
+    activityList = location.state?.flag
+      ? location.state.flag === 'educator'
+        ? activities.all_activities.filter(
+            activity =>
+              activity.creators.filter(creator => creator.id === props.auth.id)
+                .length > 0,
+          )
+        : location.state.flag === 'staff'
+        ? activities.unPublishedActivities
+        : activities.published
+      : activities.published;
   }
 
   return (

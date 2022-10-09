@@ -38,8 +38,7 @@ function ActivityDetails(props) {
   } else {
     activity = activities.all_activities.filter(item => item.id === id)[0];
   }
-  // console.log('activity_details', activity, auth);
-  console.log('activities store', activities);
+
   const [videoHeight, setVideoHeight] = useState();
   const [imageCredit, setImageCredit] = useState('');
   useEffect(() => {

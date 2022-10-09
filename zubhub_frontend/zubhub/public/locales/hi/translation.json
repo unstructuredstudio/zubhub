@@ -28,7 +28,9 @@
       "logout": "लॉग आउट",
       "browseActivities": "ब्राउज़ गतिविधियां",
       "createActivity": "गतिविधि बनाएं",
-      "createActivityMenu": "गतिविधि बनाएं"
+      "createActivityMenu": "गतिविधि बनाएं",
+      "unpublishedActivities": "अप्रकाशित गतिविधियाँ",
+      "myActivities": "मेरी गतिविधियां"
     },
 
     "footer": {

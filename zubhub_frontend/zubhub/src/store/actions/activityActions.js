@@ -23,7 +23,6 @@ export const setActivity = activity => {
 };
 
 export const getActivities = t => {
-  console.log('getActivities action triggered', t);
   return async dispatch => {
     try {
       const res = await ActivityAPI.getActivities();
@@ -56,7 +55,7 @@ export const getActivities = t => {
 };
 
 export const activityCountView = args => {
-  console.log('from activity count views actions', args);
+ 
   return async dispatch => {
     try {
       const result = await ActivityAPI.activityToggleSave(args);
@@ -77,7 +76,7 @@ export const activityCountView = args => {
 };
 
 export const activityToggleSave = args => {
-  console.log('from activity save actions', args);
+ 
   return async dispatch => {
     try {
       const result = await ActivityAPI.activityToggleSave(args);
@@ -101,7 +100,7 @@ export const activityTogglePublish = args => {
   return async dispatch => {
     try {
       const result = await ActivityAPI.activityTogglePublish(args);
-      console.log('from activity Publish actions result', result);
+     
       dispatch({
         type: at.SET_ACTIVITY,
         payload: { activity: result },

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -8,12 +8,11 @@ import styles from '../../assets/js/styles/components/hamburger_menu/hamburgerMe
 import commonStyles from '../../assets/js/styles';
 import cn from 'classnames';
 import clsx from 'clsx';
-import { Typography, Drawer, Avatar, MenuItem } from '@material-ui/core';
+import { Typography, Drawer, Avatar, MenuItem, Box } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../../store/actions/authActions';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -21,7 +20,6 @@ const useCommonStyles = makeStyles(commonStyles);
 const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
   const classes = useStyles();
   const common_classes = useCommonStyles();
-
   const [hamburgerMenuOpen, setHamburgerMenuOpen] = useState(false);
   const { t } = useTranslation();
   const history = useHistory();
@@ -92,30 +90,80 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
       </Link>
       {auth.tags.filter(tag => tag === 'staff' || tag === 'educator').length >
         0 && (
-        <Link
-          to="/activities/create"
+        <>
+          <Link
+            to="/activities/create"
+            className={clsx(
+              classes.menuItemStyle,
+              common_classes.textDecorationNone,
+            )}
+            onClick={() => setHamburgerMenuOpen(false)}
+          >
+            <MenuItem
+              className={clsx(
+                common_classes.addOnSmallScreen,
+                classes.paddingItem,
+              )}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                component="span"
+              >
+                {t('pageWrapper.navbar.createActivityMenu')}
+              </Typography>
+            </MenuItem>
+          </Link>
+          <Box
+            className={clsx(
+              classes.menuItemStyle,
+              common_classes.addOnSmallScreen,
+            )}
+          >
+            <MenuItem
+              className={clsx(classes.paddingItem)}
+              onClick={() => {
+                history.push('/activities', { flag: 'educator' });
+                setHamburgerMenuOpen(false);
+              }}
+            >
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                component="span"
+              >
+                {t('pageWrapper.navbar.myActivities')}
+              </Typography>
+            </MenuItem>
+          </Box>
+        </>
+      )}
+      {auth.tags.filter(tag => tag === 'staff' || tag === 'moderator').length >
+        0 && (
+        <Box
           className={clsx(
+            common_classes.addOnSmallScreen,
             classes.menuItemStyle,
-            common_classes.textDecorationNone,
           )}
-          onClick={() => setHamburgerMenuOpen(false)}
         >
           <MenuItem
-            className={clsx(
-              common_classes.addOnSmallScreen,
-              classes.paddingItem,
-            )}
+            className={clsx(classes.paddingItem)}
+            onClick={() => {
+              history.push('/activities', { flag: 'staff' });
+              setHamburgerMenuOpen(false);
+            }}
           >
             <Typography
               variant="subtitle2"
               color="textPrimary"
               component="span"
             >
-              {t('pageWrapper.navbar.createActivityMenu')}
+              {t('pageWrapper.navbar.unpublishedActivities')}
             </Typography>
           </MenuItem>
-        </Link>
+        </Box>
       )}
+
       <div
         className={classes.menuItemStyle}
         style={{ textDecoration: 'none' }}
@@ -179,10 +227,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
         </MenuItem>
       </Link>
       <MenuItem
-        className={clsx(
-          classes.logOutStyle,
-          common_classes.textDecorationNone,
-        )}
+        className={clsx(classes.logOutStyle, common_classes.textDecorationNone)}
         onClick={() =>
           dispatch(AuthActions.logout({ token: auth.token, history, t }))
         }

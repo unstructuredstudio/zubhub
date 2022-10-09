@@ -96,7 +96,6 @@ function CreateActivity(props) {
     }
   }, []);
 
-  console.log('state', props);
   const visitePrev = () => {
     setStep(step => step - 1);
     window.scrollTo(0, 0);

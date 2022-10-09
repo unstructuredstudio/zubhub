@@ -858,10 +858,6 @@ class API {
     const body = JSON.stringify({ ...args });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
-  // getActivities = () => {
-  //   console.log('json activities', jsonActivities);
-  //   return jsonActivities;
-  // };
 
   createActivity = (token, args) => {
     const url = 'activities/create/';
@@ -893,13 +889,11 @@ class API {
       inspiring_artist: inspiring_artist,
       video: video,
     });
-    console.log('api json object', body);
     return this.request({ url, method, token, body });
     // .then(res => res.json());
   };
 
   updateActivity = (token, id, args) => {
-    // console.log('args from api', args);
     const url = `activities/${id}/update/`;
     const method = 'PATCH';
     const {
@@ -929,7 +923,6 @@ class API {
       inspiring_artist: inspiring_artist,
       video: video,
     });
-    console.log('api json object', body);
     return this.request({ url, method, token, body });
     //.then(res => res.json());
   };
@@ -955,7 +948,6 @@ class API {
 
   activityTogglePublish = ({ id, token }) => {
     const url = `activities/${id}/toggle-publish/`;
-    console.log('api toggle publish');
     return this.request({ url, token }).then(res => res.json());
   };
 }

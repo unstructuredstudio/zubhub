@@ -23,7 +23,6 @@ function BreadCrumb({ props }) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const [link, setLink] = useState('/');
-  console.log('bread crumbs props', props);
   let pathList = history.location.pathname.split('/');
   pathList.shift();
   if (props.match) {
@@ -39,7 +38,6 @@ function BreadCrumb({ props }) {
   }, [link]);
 
   const getLink = (url, index) => {
-    console.log('ref index ', index);
     let arr = url.split('/').slice(0, index + 2);
     let newUrl = arr.join('/');
     return /^\/((projects)?(creators)?)$/.test(newUrl) ? '/' : newUrl;
