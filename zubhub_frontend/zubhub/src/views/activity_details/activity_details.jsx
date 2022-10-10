@@ -202,19 +202,23 @@ function ActivityDetails(props) {
                 )}
               >
                 <Grid item lg={8} xs={12}>
-                  <Link
+                  {/* <Link
                     to={`/projects/${id}/create`}
                     className={common_classes.textDecorationNone}
+                  > */}
+                  <CustomButton
+                    variant="contained"
+                    primaryButtonStyle
+                    primaryButtonStyle3
+                    fullWidth
+                    onClick={() => {
+                      history.push('/projects/create', { activity_id: id });
+                     
+                    }}
                   >
-                    <CustomButton
-                      variant="contained"
-                      primaryButtonStyle
-                      primaryButtonStyle3
-                      fullWidth
-                    >
-                      {t('activityDetails.activity.build')}
-                    </CustomButton>
-                  </Link>
+                    {t('activityDetails.activity.build')}
+                  </CustomButton>
+                  {/* </Link> */}
                 </Grid>
                 <Grid
                   item

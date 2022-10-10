@@ -2,7 +2,6 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import { withFormik } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -128,7 +127,6 @@ const buildMaterialUsedNodes = ({ props, refs, classes, common_classes }) => {
  */
 function CreateProject(props) {
   const [category, setCategory] = React.useState([]);
-
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
@@ -192,8 +190,9 @@ function CreateProject(props) {
     publish_visible_to_suggestion_open,
     publish_visible_to_suggestion,
   } = state;
-  const { t, activity_id} = props;
+  const { t } = props;
   const id = props.match.params.id;
+
   if (!props.auth.token) {
     return <ErrorPage error={t('createProject.errors.notLoggedIn')} />;
   } else {

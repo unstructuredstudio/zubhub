@@ -357,20 +357,48 @@ export const getBase64ImageFromURL = (url, field, index) => {
   return new Promise((resolve, reject) => {
     var img = new Image();
     img.setAttribute('crossOrigin', 'anonymous');
+    // function draw(img) {
+    //   var buffer = document.createElement('canvas');
+    //   buffer.width = img.width;
+    //   buffer.height = img.height;
+    //   var bufferctx = buffer.getContext('2d');
+    //   bufferctx.drawImage(img, 0, 0);
+    //   var imageData = bufferctx.getImageData(0, 0, buffer.width, buffer.height);
+    //   var data = imageData.data;
+    //   var removeBlack = function () {
+    //     for (var i = 0; i < data.length; i += 4) {
+    //       if (data[i] + data[i + 1] + data[i + 2] < 10) {
+    //         data[i + 3] = 0; // alpha
+    //       }
+    //     }
+    //     bufferctx.putImageData(imageData, 0, 0);
+    //   };
+    //   removeBlack();
+    //   var dataURL = buffer.toDataURL('image/jpeg');
+    //   index >= 0
+    //     ? resolve({ [`${field}${index}image`]: dataURL })
+    //     : resolve({ [field]: dataURL });
+    // }
+    // img.onload = () => {
+    //   draw(img);
+    // };
     img.onload = () => {
       var canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
       var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFF';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
       var dataURL = canvas.toDataURL('image/jpeg');
       index >= 0
-        ? resolve({ [`${field}${index}image`]:  dataURL  })
-        : resolve({ [field]:  dataURL  });
+        ? resolve({ [`${field}${index}image`]: dataURL })
+        : resolve({ [field]: dataURL });
     };
     img.onerror = error => {
       reject(error);
     };
+
     img.src = url;
   });
 };

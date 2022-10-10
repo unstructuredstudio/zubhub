@@ -1,5 +1,5 @@
 import { getBase64ImageFromURL } from '../../assets/js/utils/scripts';
-
+import logo from '../../assets/images/logos/logo-google.png';
 export const getPdfMaterialsUsed = (activity, promiseImages) => {
   let pdfMaterials = [];
   let materialsList = {
@@ -15,7 +15,6 @@ export const getPdfMaterialsUsed = (activity, promiseImages) => {
     pdfMaterials.push({
       image: promiseImages['materials_used_image'],
       width: 150,
-      height: 150,
       style: 'image',
     });
   }
@@ -48,13 +47,14 @@ export const getPdfMakingSteps = (activity, promiseImages) => {
       step.columns.push({
         image: promiseImages[`making_steps${index}image`],
         style: 'image',
+        width: 200,
       });
     }
     steps.push({ text: `Step ${item.step_order}:`, style: 'stepTitle' }, step);
   });
   return {
     stack: [{ text: 'MAKING STEPS', style: 'subTitles' }, ...steps],
-    unbreakable: true,
+    // unbreakable: true,
   };
 };
 
@@ -171,6 +171,7 @@ export const getPdfTextBlock = (title, elementId, breakable) => {
 
 export const getBase64Images = activity => {
   const promises = [];
+  promises.push(getBase64ImageFromURL(logo, 'logo'));
   promises.push(
     getBase64ImageFromURL(activity.images[0].image.file_url, 'activityImage'),
   );

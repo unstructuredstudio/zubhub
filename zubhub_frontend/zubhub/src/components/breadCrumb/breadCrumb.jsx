@@ -100,7 +100,7 @@ function BreadCrumb({ props }) {
                   {pathList[index - 1] === 'activities'
                     ? store.activities?.selectedActivity?.title?.toLowerCase()
                     : pathList[index - 1] === 'projects'
-                    ? store.projects?.all_projects?.results.filter(
+                    ? store.projects?.all_projects?.results?.filter(
                         project => project.id === props.match.params.id,
                       )[0].title
                     : pathList[index - 1] === 'creators' &&

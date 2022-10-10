@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CustomButton from '../../components/button/Button';
-import unstructuredLogo from '../../assets/images/logos/unstructured-logo.png';
 import pdfMake from 'pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { pdfStyle } from '../../assets/js/styles/components/generatePdf/generatePdfStyle';
+
 import {
   getPdfTextBlock,
   getPdfMaterialsUsed,
@@ -24,7 +24,6 @@ function GeneratePdf(props) {
     pageOrientation: 'portrait',
     pageMargins: [60, 60, 60, 40],
     footer: function (currentPage, pageCount, pageSize) {
-      console.log('page size', pageSize);
       return [
         {
           style: 'footer',
@@ -64,15 +63,7 @@ function GeneratePdf(props) {
         },
       ];
     },
-    // header: function (currentPage, pageCount, pageSize) {
-    //   return [
-    //     {
-    //       image: unstructuredLogo,
-    //       width: 200,
-    //       height: 100,
-    //     },
-    //   ];
-    // },
+
     content: [],
     defaultStyle: {
       columnGap: 15,
@@ -87,7 +78,7 @@ function GeneratePdf(props) {
         promiseImages[key] = value;
       });
     });
-
+    console.log('pdf promise', promiseImages);
     setDocDefinitionDefault(state => {
       let newContent = state.content;
       newContent.push({
@@ -114,7 +105,6 @@ function GeneratePdf(props) {
             image: promiseImages['activityImage'],
             style: 'image',
             width: 200,
-            height: 200,
           },
         ],
       });
@@ -159,6 +149,33 @@ function GeneratePdf(props) {
 
       return {
         ...state,
+        // header: function (currentPage, pageCount, pageSize) {
+        //   return [
+        //     {
+        //       table: {
+        //         alignment: 'center',
+        //         border: [false, false, false, false],
+        //         widths: [80],
+        //         heights: 40,
+        //         body: [
+        //           [
+        //             {
+        //               border: [false, false, false, false],
+
+        //               image: promiseImages['logo'],
+        //               width: 80,
+        //               height: 40,
+        //               alignment: 'center',
+        //             },
+        //           ],
+        //         ],
+        //       },
+        //       layout: {
+        //         fillColor: 'white',
+        //       },
+        //     },
+        //   ];
+        // },
         content: [...newContent],
       };
     });

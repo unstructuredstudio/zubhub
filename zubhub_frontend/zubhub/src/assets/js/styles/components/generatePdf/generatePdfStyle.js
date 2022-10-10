@@ -34,6 +34,7 @@ export const pdfStyle = {
   },
   footer: {
     margin: 0,
+    marginTop: 10,
     fontSize: 10,
     color: '#00B8C4',
   },
@@ -43,7 +44,8 @@ export const pdfStyle = {
   },
   textBody: {
     marginTop: 10,
-    fontSize: 15,
+    fontSize: 14,
+    lineHeight: 1,
     color: '#3E3E5F',
   },
   subheader: {
