@@ -141,7 +141,7 @@ function ActivityDetails(props) {
             item
             md={6}
             xs={12}
-            sm={12}
+            sm={6}
             lg={6}
             className={clsx(classes.demoImageContainerStyle)}
           >
@@ -198,14 +198,11 @@ function ActivityDetails(props) {
                 container
                 className={clsx(
                   common_classes.justifyCenter,
-                  common_classes.marginTop3em,
+                  common_classes.marginTop1em,
                 )}
               >
                 <Grid item lg={8} xs={12}>
-                  {/* <Link
-                    to={`/projects/${id}/create`}
-                    className={common_classes.textDecorationNone}
-                  > */}
+                 
                   <CustomButton
                     variant="contained"
                     primaryButtonStyle
@@ -213,12 +210,11 @@ function ActivityDetails(props) {
                     fullWidth
                     onClick={() => {
                       history.push('/projects/create', { activity_id: id });
-                     
                     }}
                   >
                     {t('activityDetails.activity.build')}
                   </CustomButton>
-                  {/* </Link> */}
+                 
                 </Grid>
                 <Grid
                   item

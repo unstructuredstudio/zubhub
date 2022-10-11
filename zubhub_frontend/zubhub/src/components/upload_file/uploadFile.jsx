@@ -135,7 +135,7 @@ function UploadFile(props) {
               >
                 {field === 'video' ? (
                   <CardMedia
-                    className={activity_classes.imagePreview}
+                    className={clsx(activity_classes.imagePreview)}
                     component={image.type === 'file' ? 'video' : 'iframe'}
                     image={
                       image.type === 'file'

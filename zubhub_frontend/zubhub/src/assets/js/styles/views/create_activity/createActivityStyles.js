@@ -49,14 +49,12 @@ export const styles = theme => ({
   },
   imagePreview: {
     width: '100%',
-    position: 'absolute',
-    height: '100%',
-    top: 0,
     borderRadius: '15px 0px 15px 15px',
   },
+ 
   imagePreviewContainer: {
     position: 'relative',
-    paddingTop: '100%',
+    boxShadow: 'none',
     borderRadius: '15px 0px 15px 15px',
   },
   itemContainer: {

@@ -1,14 +1,13 @@
 export const styles = theme => ({
   container: {
     backgroundColor: '#00B8C4',
-    // maxHeight: '80px',
     minHeight: '45px',
     [theme.breakpoints.down('700')]: {
-      minHeight: '40px',
+      top: '56px',
     },
     textAlign: 'center',
     display: 'flex',
-    maxWidth: '100vw',
+    width: '100vw',
     lineHeight: '40px',
     paddingRight: '10px',
     boxShadow:
@@ -40,15 +39,9 @@ export const styles = theme => ({
   },
   link: {
     padding: '0 20px',
-    // whiteSpace: 'nowrap',
-    // width: '110px',
-    // overflow: 'hidden',
-    // textOverflow: 'ellipsis',
     [theme.breakpoints.down('900')]: {
-      // maxWidth: '110',
       padding: '0 5px',
     },
-    // boxShadow: '10px 0 5px -2px #888',
     color: 'white',
     fontWeight: 500,
   },

@@ -24,9 +24,9 @@ const styles = theme => ({
       width: '90%',
     },
   },
-  demoImageContainerStyle: {
-    maxHeight: '450px',
-  },
+  // demoImageContainerStyle: {
+  //   // maxHeight: '450px',
+  // },
   leftCropedContainer: {
     clipPath: 'polygon(100% 10%,100% 100%, 0% 100%,0% 0%)',
     padding: '8em 20%',
@@ -54,7 +54,7 @@ const styles = theme => ({
   },
   demoImageStyle: {
     objectFit: 'cover',
-    height: '60vh',
+    //height: '60vh',
     maxWidth: '100%',
     borderRadius: '15px',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
@@ -75,7 +75,7 @@ const styles = theme => ({
   },
   createdOn: {
     fontStyle: 'normal',
-    fontSize: '1.1rem',
+    fontSize: '0.9rem',
     textAlign: 'center',
     color: '#3E3E5F',
   },
