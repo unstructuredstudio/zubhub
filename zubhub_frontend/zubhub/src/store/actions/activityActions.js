@@ -76,7 +76,7 @@ export const activityCountView = args => {
 };
 
 export const activityToggleSave = args => {
- 
+  console.log('toggle save', args)
   return async dispatch => {
     try {
       const result = await ActivityAPI.activityToggleSave(args);

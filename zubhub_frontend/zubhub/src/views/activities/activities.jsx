@@ -24,6 +24,7 @@ function Activities(props) {
 
   let activityList = [];
   const { activities } = useSelector(state => state);
+  console.log('store activities', activities);
   if (activities) {
     activityList = location.state?.flag
       ? location.state.flag === 'educator'

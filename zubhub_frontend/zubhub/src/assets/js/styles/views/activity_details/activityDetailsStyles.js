@@ -140,6 +140,9 @@ const styles = theme => ({
         fontSize: '1rem',
       },
     },
+    '& .ql-toolbar': {
+      display: 'none',
+    },
   },
   quillTextCenter: {
     '& p': {

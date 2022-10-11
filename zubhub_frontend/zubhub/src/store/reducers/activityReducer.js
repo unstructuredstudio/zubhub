@@ -16,7 +16,7 @@ const activities = (state = default_state, action) => {
       return {
         ...state,
         selectedActivity: action.payload.activity,
-        all_activities: state.all_activities.map(activity => {
+        published: state.published.map(activity => {
           if (activity.id === action.payload.activity.id) {
             return action.payload.activity;
           } else {
