@@ -118,3 +118,19 @@ class FAQ(models.Model):
         self.question = clean_summernote_html(self.question)
         self.answer = clean_summernote_html(self.answer)
         super().save(*args, **kwargs)
+
+
+class Ambassadors(models.Model):
+    ambassadors = models.TextField(blank=True, null=True)
+    edited_on = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Ambassadors"
+        verbose_name_plural = "Ambassadors"
+
+    def __str__(self):
+        return self.edited_on.strftime("Ambassadors as edited on %I:%M %p, %d %b %Y %Z")
+
+    def save(self, *args, **kwargs):
+        self.edited_on = timezone.now()
+        super().save(*args, **kwargs)
