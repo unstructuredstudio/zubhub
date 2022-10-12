@@ -61,6 +61,9 @@ const ProjectDetails = React.lazy(() =>
 const StaffPickDetails = React.lazy(() =>
   import('./views/staff_pick_details/StaffPickDetails'),
 );
+const Ambassadors = React.lazy(() =>
+  import('./views/ambassadors/Ambassadors')
+);
 const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
 const TermsOfUse = React.lazy(() => import('./views/terms_of_use/TermsOfUse'));
 const About = React.lazy(() => import('./views/about/About'));
@@ -364,6 +367,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={ProjectDetails}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/ambassadors"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={Ambassadors}
                 {...routeProps}
                 {...props}
               />
