@@ -23,6 +23,13 @@ const activities = (state = default_state, action) => {
             return activity;
           }
         }),
+        all_activities: state.all_activities.map(activity => {
+          if (activity.id === action.payload.activity.id) {
+            return action.payload.activity;
+          } else {
+            return activity;
+          }
+        }),
       };
     default:
       return state;

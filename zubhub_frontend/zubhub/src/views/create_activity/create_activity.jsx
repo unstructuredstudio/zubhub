@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
+import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { withFormik } from 'formik';
 import clsx from 'clsx';
 import CustomButton from '../../components/button/Button';
@@ -13,7 +14,13 @@ import {
 } from './createActivityScripts';
 import * as activityActions from '../../store/actions/activityActions';
 import * as AuthActions from '../../store/actions/authActions';
-import { Grid, Box, Typography } from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  Typography,
+  Dialog,
+  CircularProgress,
+} from '@material-ui/core';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import CreateActivityStep1 from './create_activity_step1';
@@ -23,12 +30,14 @@ import LoadingPage from '../loading/LoadingPage';
 import commonStyles from '../../assets/js/styles';
 import MultiStepProgressBar from '../../components/multi_step_progress_bar/multiStepProgressBar';
 const useStyles = makeStyles(styles);
+const useProjectStyles = makeStyles(projectStyles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivity(props) {
   const { t, history } = props;
   const { id } = props.match.params;
   const classes = useStyles();
+  const project_classes = useProjectStyles();
   const common_classes = useCommonStyles();
   const stepComponentsMap = {
     1: props => <CreateActivityStep1 {...props} />,
@@ -40,8 +49,9 @@ function CreateActivity(props) {
   const [verifiedStep, setVerifiedStep] = useState(1);
   const [newActivityObject, setNewActivityObject] = useState({
     submitting: false,
-    totalToUpLoad: 0,
-    sizeUploaded: 0,
+    countFiles: 0,
+    loadedPercent: {},
+    loadProgress: 0,
   });
   const formikProps = {
     formikValues: props.values,
@@ -118,10 +128,10 @@ function CreateActivity(props) {
     validateSteps();
     window.scrollTo(0, 0);
   };
-
+  console.log('newActivity', newActivityObject);
   return (
     <>
-      {deserializingForEdit || newActivityObject.submitting ? (
+      {deserializingForEdit ? (
         <LoadingPage />
       ) : (
         <div className={classes.createActivityContainer}>
@@ -144,20 +154,6 @@ function CreateActivity(props) {
                   setNewActivityObject: setNewActivityObject,
                   t: props.t,
                 })}
-                {/* <button
-                  ref={submitButtonRef}
-                  type="submit"
-                  id={'submitButton'}
-                  name={'submitButton'}
-                  style={{ display: 'none' }}
-                  onClick={e =>
-                    create(
-                      props.auth,
-                      formikProps.formikValues,
-                      setReadyForSubmit,
-                    )
-                  }
-                ></button> */}
               </form>
               <Box className={clsx(common_classes.margin)}>
                 <Grid
@@ -176,9 +172,8 @@ function CreateActivity(props) {
                     <CustomButton
                       variant="contained"
                       primaryButtonStyle
-                      customButtonStyle 
+                      customButtonStyle
                       startIcon={<NavigateBeforeIcon />}
-                      
                       size="small"
                       onClick={visitePrev}
                     >
@@ -228,6 +223,46 @@ function CreateActivity(props) {
               </Box>
             </Box>
           </Box>
+
+          <Dialog
+            PaperProps={{
+              style: {
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+              },
+            }}
+            className={project_classes.uploadProgressDialogStyle}
+            open={newActivityObject.submitting}
+            aria-labelledby="upload progress dialog"
+          >
+            <Box
+              className={project_classes.uploadProgressIndicatorContainerStyle}
+            >
+              <CircularProgress
+                className={project_classes.uploadProgressStyle}
+                variant="determinate"
+                size={70}
+                thickness={6}
+                value={newActivityObject.loadProgress}
+              />
+              <Box
+                top={0}
+                left={0}
+                bottom={0}
+                right={0}
+                position="absolute"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Typography
+                  className={project_classes.uploadProgressLabelStyle}
+                  variant="caption"
+                  component="div"
+                >{`${newActivityObject.loadProgress}%`}</Typography>
+              </Box>
+            </Box>
+          </Dialog>
         </div>
       )}
     </>

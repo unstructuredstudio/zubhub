@@ -208,7 +208,7 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
     },
   ];
 
-  let totalSize = 0;
+  let countFiles = 0;
   fileFields.map(item => {
     if (item.files) {
       Object.entries(item.files).forEach(([index, file]) => {
@@ -216,7 +216,7 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
           index !== 'length' &&
           (file instanceof Blob || file instanceof File)
         ) {
-          totalSize += file.size;
+          countFiles += 1;
           promises.push(
             uploadFile(
               file,
@@ -233,7 +233,7 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
     }
   });
   handleSetState(state => {
-    return { ...state, totalToUpLoad: totalSize };
+    return { ...state, countFiles: countFiles };
   });
   return promises;
 };
@@ -295,9 +295,14 @@ export const uploadFileToLocal = (
     try {
       file = await compress(fileBeforeCompression);
       console.log('size after compression', file.size);
-    } catch (error) {
-      console.log('compression error msg:', error.message);
-    }
+    } catch (error) {}
+    let fileFieldName = '';
+    let NameArray = [route, field, index];
+    NameArray.forEach(item => {
+      if (item) {
+        fileFieldName += item;
+      }
+    });
 
     let url =
       process.env.REACT_APP_NODE_ENV === 'production'
@@ -325,11 +330,19 @@ export const uploadFileToLocal = (
         },
         onUploadProgress: e => {
           handleSetState(state => {
-            let sizeUploaded = state.sizeUploaded;
-            sizeUploaded += e.loaded;
+            let loadedPercent = state.loadedPercent;
+            loadedPercent[fileFieldName] = Math.round(
+              (e.loaded * 100) / e.total,
+            );
+            let loadProgress = Math.round(
+              Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
+                state.countFiles,
+            );
+            console.log('from axios', loadedPercent);
             return {
               ...state,
-              sizeUploaded: sizeUploaded,
+              loadedPercent: loadedPercent,
+              loadProgress: loadProgress,
             };
           });
         },
@@ -355,7 +368,7 @@ export const uploadFileToLocal = (
         });
       }
     } catch (error) {
-      reject({ message: 'uploadError', file: file.name });
+      reject({ message: 'uploadError', file: file.name, error: error });
     }
   });
 };

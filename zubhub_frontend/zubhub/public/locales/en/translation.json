@@ -902,6 +902,7 @@
    "errors": {
       "dialog": {
          "serverError": "Sorry the server is down try again later",
+         "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
          "uploadError": "error occurred while downloading file : "
       }
    }

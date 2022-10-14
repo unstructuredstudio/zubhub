@@ -437,13 +437,22 @@ export const initUpload = async (
         }
       });
     } catch (error) {
-      toast.warning(`${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`);
+      console.log('error ', error);
+      if (error.error.response.status >= 500) {
+        toast.warning(
+          `${props.t(`activities.errors.dialog.mediaServerError`)}`,
+        );
+      } else {
+        toast.warning(
+          `${props.t(`activities.errors.dialog.${error.message}`)} ${
+            error.file
+          }`,
+        );
+      }
       handleSetState(state => {
         return { ...state, ['submitting']: false };
       });
-
       return;
-     
     }
     objectsArray.forEach(field => {
       if (values[field]) {
@@ -569,13 +578,13 @@ export const initUpload = async (
               props.t('activityDetails.activity.create.dialog.forbidden'),
             );
           } else {
-            if (res.status === 404 || res.status === 400) {
-              res.json().then(res => {
-                toast.warning(res);
-              });
-            } else {
-              toast.warning(props.t('activities.errors.dialog.serverError'));
-            }
+            // if (res.status === 404 || res.status === 400) {
+            //   res.json().then(res => {
+            //     toast.warning(res);
+            //   });
+            // } else {
+            toast.warning(props.t('activities.errors.dialog.serverError'));
+            // }
           }
           // return props.history.push(`/activities/${values['id']}`);
         }

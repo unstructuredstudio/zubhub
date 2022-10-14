@@ -66,7 +66,8 @@ function ActivityDetails(props) {
     >
       <Grid className={clsx(classes.activityDetailBlockContainer)}>
         <Grid container>
-          {activity.creators.filter(item => item.id === auth.id).length > 0 ? (
+          {activity?.creators?.filter(item => item.id === auth.id).length >
+          0 ? (
             <Grid item>
               <Link
                 to={`/activities/${id}/edit`}
@@ -202,7 +203,6 @@ function ActivityDetails(props) {
                 )}
               >
                 <Grid item lg={8} xs={12}>
-                 
                   <CustomButton
                     variant="contained"
                     primaryButtonStyle
@@ -214,7 +214,6 @@ function ActivityDetails(props) {
                   >
                     {t('activityDetails.activity.build')}
                   </CustomButton>
-                 
                 </Grid>
                 <Grid
                   item
