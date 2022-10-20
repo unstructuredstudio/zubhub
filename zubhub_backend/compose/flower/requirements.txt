@@ -25,7 +25,7 @@ django-js-asset>=1.2.2
 django-mptt>=0.11.0
 django-rest-auth>=0.9.5
 django-rest-swagger>=2.2.0
-django-summernote==0.8.11.6
+django-summernote>=0.8.11.6
 django-treebeard>=4.5.1
 djangorestframework>=3.11.2
 factory-boy>=2.12.0
