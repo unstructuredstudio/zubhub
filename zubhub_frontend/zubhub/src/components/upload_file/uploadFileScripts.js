@@ -252,7 +252,6 @@ export const uploadFile = (
   };
 
   return API.shouldUploadToLocal(args).then(res => {
-    console.log('should upload to local result', res);
     if (res && res.local === true) {
       return uploadFileToLocal(
         file,
@@ -291,10 +290,8 @@ export const uploadFileToLocal = (
 ) => {
   return new Promise(async (resolve, reject) => {
     let file = fileBeforeCompression;
-    console.log('size before compression', file.size);
     try {
       file = await compress(fileBeforeCompression);
-      console.log('size after compression', file.size);
     } catch (error) {}
     let fileFieldName = '';
     let NameArray = [route, field, index];
@@ -338,7 +335,7 @@ export const uploadFileToLocal = (
               Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
                 state.countFiles,
             );
-            console.log('from axios', loadedPercent);
+           
             return {
               ...state,
               loadedPercent: loadedPercent,

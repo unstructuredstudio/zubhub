@@ -139,6 +139,28 @@ const styles = theme => ({
   textDecorationNone: {
     textDecoration: 'none',
   },
+  fieldNumberStyle: {
+    height: '20px',
+    width: '20px',
+    backgroundColor: '#00B8C4',
+    fontWeight: 700,
+    color: 'white',
+    display: 'inline-block',
+    textAlign: 'center',
+    borderRadius: '50%',
+    lineHeight: '17px',
+    marginRight: '0.3em',
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.2rem',
+    },
+  },
+  listDotsStyle: {
+    height: '10px',
+    width: '10px',
+    backgroundColor: '#FFCE0C',
+    borderRadius: '50%',
+    marginRight: '0.3em',
+  },
 });
 
 export default styles;

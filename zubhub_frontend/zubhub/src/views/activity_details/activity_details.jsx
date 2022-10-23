@@ -308,20 +308,21 @@ function ActivityDetails(props) {
           >
             {t('activityDetails.subTitles.materials_required')}
           </Typography>
-          <Grid container className={common_classes.justifyCenter}>
+          <Grid container className={clsx(common_classes.justifyCenter)}>
             <Grid item xs={12} lg={8} sm={8}>
               {activity.materials_used &&
                 activity.materials_used.split(',').map((material, index) => (
-                  <Typography
-                    key={`materialUsedKey${index}`}
-                    variant="h6"
-                    className={clsx(
-                      classes.quillBodyStyle,
-                      // common_classes.textCenter,
-                    )}
-                  >
-                    {`${material}`}
-                  </Typography>
+                  <Grid container className={clsx(common_classes.alignCenter)}>
+                    {' '}
+                    <Box className={common_classes.listDotsStyle}>{}</Box>
+                    <Typography
+                      key={`materialUsedKey${index}`}
+                      variant="h6"
+                      className={clsx(classes.quillBodyStyle)}
+                    >
+                      {`${material}`}
+                    </Typography>
+                  </Grid>
                 ))}
             </Grid>
             {activity.materials_used_image && (
@@ -495,19 +496,19 @@ function ActivityDetails(props) {
                 key={`makingStepImageContainerKey${index}`}
               >
                 <Grid
-                  item
+                  container
                   xs={12}
                   lg={making_step.image && 8}
                   sm={making_step.image && 8}
                   key={`makingStepImageSubContainerKey${index}`}
                 >
+                  <Box className={common_classes.fieldNumberStyle}>
+                    {making_step.step_order}
+                  </Box>
                   {making_step.description && (
                     <ReactQuill
                       id={`makingStep${index}description`}
-                      className={clsx(
-                        common_classes.justifyCenter,
-                        classes.quillBodyStyle,
-                      )}
+                      className={clsx(classes.quillBodyStyle)}
                       theme={'bubble'}
                       readOnly={true}
                       value={making_step.description || ''}

@@ -101,7 +101,7 @@ function MaterialsUsed(props) {
           {encouragingText}
         </Typography>
         <Grid container spacing={1}>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={6}>
             <UploadFile
               name={'materials_used_image'}
               fileType={'image/*'}

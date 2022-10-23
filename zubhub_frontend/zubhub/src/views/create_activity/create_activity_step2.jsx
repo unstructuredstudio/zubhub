@@ -95,7 +95,7 @@ function CreateActivityStep2(props) {
         <Grid
           item
           xs={12}
-          md={4}
+          md={6}
           sm={6}
           className={common_classes.marginTop1em}
         >
@@ -152,13 +152,7 @@ function CreateActivityStep2(props) {
             disabled={disableVideo}
             t={t}
           />
-          <Grid
-            item
-            xs={12}
-            md={4}
-            sm={4}
-            // className={common_classes.marginTop1em}
-          >
+          <Grid item xs={12} lg={4}>
             <UploadFile
               name={'video'}
               fileType={'video/*'}

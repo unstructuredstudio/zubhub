@@ -53,7 +53,6 @@ function UploadFile(props) {
     formikProps.errors,
     formikProps.touched,
   );
-  // console.log('field errors at field:', name, '=', fieldErrors);
   let fieldValue = getValue(
     route,
     field,
