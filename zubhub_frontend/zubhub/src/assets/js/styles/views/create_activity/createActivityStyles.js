@@ -5,6 +5,7 @@ export const styles = theme => ({
   },
   createActivityContainerTitle: {
     color: 'white',
+    fontWeight: 900,
   },
   CreateActivityFormContainer: {
     backgroundColor: 'white',
@@ -51,7 +52,7 @@ export const styles = theme => ({
     width: '100%',
     borderRadius: '15px 0px 15px 15px',
   },
- 
+
   imagePreviewContainer: {
     position: 'relative',
     boxShadow: 'none',

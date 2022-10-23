@@ -101,7 +101,7 @@ function CreateActivity(props) {
         deserialize(activityToUpdate, props.setFieldValue);
         setDeserializingForEdit(false);
       } else {
-        history.push('/activities/all');
+        history.push('/activities');
       }
     }
   }, []);
@@ -128,7 +128,7 @@ function CreateActivity(props) {
     validateSteps();
     window.scrollTo(0, 0);
   };
-  console.log('newActivity', newActivityObject);
+  // console.log('newActivity', newActivityObject);
   return (
     <>
       {deserializingForEdit ? (
