@@ -107,7 +107,6 @@ class ActivitySerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        print('validated_data===>', validated_data)
         if 'inspiring_artist' in validated_data:
             validated_data['inspiring_artist'] = create_inspiring_artist(
                 validated_data.pop('inspiring_artist'))
@@ -133,8 +132,6 @@ class ActivitySerializer(serializers.ModelSerializer):
         return activity
 
     def update(self, activity, validated_data):
-        print('activity_to_update', activity)
-        print('validated_data_from_update', validated_data)
         if (activity.inspiring_artist is not None or 'inspiring_artist' in validated_data):
             if(activity.inspiring_artist is not None):
                 if('inspiring_artist' in validated_data):
@@ -165,7 +162,6 @@ class ActivitySerializer(serializers.ModelSerializer):
             else:
                 if('materials_used_image' in validated_data):
                     image = {**validated_data['materials_used_image']}
-                    print('image_of_materials', image)
                     activity.materials_used_image.file_url = image['file_url']
                     activity.materials_used_image.public_id = image['public_id']
                     activity.materials_used_image.save()

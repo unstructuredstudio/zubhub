@@ -2,7 +2,6 @@ from .models import *
 
 
 def create_inspiring_artist(inspiring_artist_data):
-    print('inspiringArtistData', inspiring_artist_data)
     inspiring_artist_data['image'] = Image.objects.create(
         **inspiring_artist_data['image'])
     return InspiringArtist.objects.create(
@@ -26,7 +25,7 @@ def create_inspiring_examples(activity, inspiring_examples):
 
 
 def create_activity_images(activity, images):
-    print('activity_serialized_images', images)
+   
     for image in images:
         saved_image = Image.objects.create(**image['image'])
         ActivityImage.objects.create(activity=activity, image=saved_image)

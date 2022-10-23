@@ -128,7 +128,7 @@ function CreateActivity(props) {
     validateSteps();
     window.scrollTo(0, 0);
   };
-  // console.log('newActivity', newActivityObject);
+ 
   return (
     <>
       {deserializingForEdit ? (

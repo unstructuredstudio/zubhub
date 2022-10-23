@@ -20,7 +20,7 @@ const useStyles = makeStyles(styles);
 function Activities(props) {
   const location = useLocation();
   const classes = useStyles();
-  console.log('props in activities', props);
+
   useEffect(() => {
     location.state?.flag
       ? location.state.flag === 'staff'
@@ -39,20 +39,6 @@ function Activities(props) {
   let activityList = [];
   const { activities } = useSelector(state => state);
   activityList = activities.all_activities;
-
-  // if (activities) {
-  //   activityList = location.state?.flag
-  //     ? location.state.flag === 'educator'
-  //       ? activities.all_activities.filter(
-  //           activity =>
-  //             activity.creators.filter(creator => creator.id === props.auth.id)
-  //               .length > 0,
-  //         )
-  //       : location.state.flag === 'staff'
-  //       ? activities.unPublishedActivities
-  //       : activities.published
-  //     : activities.published;
-  // }
 
   return (
     <div>
@@ -80,7 +66,6 @@ function Activities(props) {
             </Grid>
           ))}
       </Grid>
-      {/* // )} */}
     </div>
   );
 }

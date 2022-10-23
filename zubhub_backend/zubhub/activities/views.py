@@ -31,8 +31,6 @@ class UserActivitiesAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
     
     def get_queryset(self):
-        print('self_user', self.request.user)
-        print('self_user_activities', self.request.user.activities_created.all())
         return self.request.user.activities_created.all()
 
 
@@ -91,7 +89,6 @@ class ActivityDeleteAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
 
     def delete(self, request, *args, **kwargs):
-        print(request)
         activity = self.get_object()
         if activity:
             result = self.destroy(request, *args, **kwargs)
@@ -113,7 +110,6 @@ class ToggleSaveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
   
     def get_object(self):
-        print('from_activity_toggle_save', self)
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)
        
@@ -138,7 +134,7 @@ class togglePublishActivityAPIView(RetrieveAPIView):
    
 
     def get_object(self):
-        print('from_activity_toggle_publish', self)
+       
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)  
         obj.publish = not obj.publish
