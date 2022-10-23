@@ -37,7 +37,7 @@ function GeneratePdf(props) {
                   border: [false, false, false, false],
                   text: `${activity.title}`,
                   style: 'footerCell',
-                  link: 'https://zubhub.unstructured.studio/',
+                  link: window.location.href,
                   alignment: 'left',
                 },
                 {
@@ -51,7 +51,7 @@ function GeneratePdf(props) {
                   border: [false, false, false, false],
                   style: 'footerCell',
                   text: `made by: @${activity.creators[0].username}`,
-                  link: 'https://zubhub.unstructured.studio/',
+                  link: window.location.href,
                   alignment: 'right',
                 },
               ],
@@ -78,7 +78,6 @@ function GeneratePdf(props) {
         promiseImages[key] = value;
       });
     });
-    console.log('pdf promise', promiseImages);
     setDocDefinitionDefault(state => {
       let newContent = state.content;
       newContent.push({
