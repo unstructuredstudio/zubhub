@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import { style } from '../../assets/js/styles/components/activity/activityStyle';
-import ProjectsCountIcon from '../../assets/js/icons/projectsCountIcon';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import {

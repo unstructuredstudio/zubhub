@@ -80,13 +80,15 @@ export const style = theme => ({
     justifyContent: 'space-between',
   },
   projectsCount: {
-    color: '#00D3E1',
+    color: 'white',
     backgroundColor: '#00949E',
     borderRadius: '15px',
     padding: '5px 10px',
   },
   projectsCountNumber: {
     color: 'white',
+    fontWeight: 900,
+    marginLeft: '5px',
   },
   activityTitle: {
     fontSize: '1.1rem',

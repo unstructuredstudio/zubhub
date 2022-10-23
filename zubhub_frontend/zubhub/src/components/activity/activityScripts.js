@@ -49,7 +49,6 @@ export const addView = async (
       token: auth.token,
       t: t,
     });
-    console.log('result after saving view', result)
   }
 };
 
