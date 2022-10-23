@@ -402,3 +402,8 @@ export const getBase64ImageFromURL = (url, field, index) => {
     img.src = url;
   });
 };
+
+export const capitalize = str => {
+  let newStr = str.toString().toLowerCase();
+  return newStr.charAt(0).toUpperCase() + newStr.slice(1);
+};

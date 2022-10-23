@@ -7,9 +7,8 @@ import {
   Breadcrumbs,
   MenuItem,
   Select,
-  Tooltip,
-  FormControl,
 } from '@material-ui/core';
+import { capitalize } from '../../assets/js/utils/scripts';
 import { makeStyles } from '@material-ui/core/styles';
 import { styles } from '../../assets/js/styles/components/breadCrumb/breadCrumbStyle';
 import commonStyles from '../../assets/js/styles';
@@ -121,13 +120,17 @@ function BreadCrumb({ props }) {
               >
                 <Typography component="span" className={classes.textStyle}>
                   {pathList[index] === 'activities'
-                    ? store.activities?.selectedActivity?.title?.toLowerCase()
+                    ? store.activities?.selectedActivity?.title &&
+                      capitalize(store.activities.selectedActivity.title)
                     : pathList[index] === 'projects'
-                    ? store.projects?.all_projects?.results?.filter(
-                        project => project.id === props.match.params.id,
-                      )[0].title
+                    ? store.projects?.all_projects?.results &&
+                      capitalize(
+                        store.projects?.all_projects?.results.filter(
+                          project => project.id === props.match.params.id,
+                        )[0].title,
+                      )
                     : pathList[index] === 'creators' &&
-                      props.match.params.username}
+                      capitalize(props.match.params.username)}
                 </Typography>
               </Link>
             ) : (

@@ -977,20 +977,20 @@
   },
   "breadCrumb":{
     "link":{
-      "activities": "activities",
-      "projects": "projects",
-      "edit": "edit",
-      "create": "create",
-      "about": "about",
-      "login": "login",
-      "profile": "profile",
-      "creators": "creators",
-      "followers": "followers",
-      "following": "following",
-      "edit-profile": "edit-profile",
-      "saved": "saved",
-      "signup": "signup",
-      "account-status": "account-status"
+      "activities": "Activities",
+      "projects": "Projects",
+      "edit": "Edit",
+      "create": "Create",
+      "about": "About",
+      "login": "Login",
+      "profile": "Profile",
+      "creators": "Creators",
+      "followers": "Followers",
+      "following": "Following",
+      "edit-profile": "Edit-profile",
+      "saved": "Saved",
+      "signup": "Signup",
+      "account-status": "Account-status"
     }
   }
  
