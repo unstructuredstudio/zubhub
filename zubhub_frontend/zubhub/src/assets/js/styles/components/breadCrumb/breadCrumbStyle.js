@@ -27,7 +27,7 @@ export const styles = theme => ({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 600,
+    fontWeight: 400,
     maxWidth: '110px',
     fontSize: '1rem',
     overflow: 'hidden',
@@ -43,7 +43,7 @@ export const styles = theme => ({
       padding: '0 5px',
     },
     color: 'white',
-    fontWeight: 500,
+    fontWeight: 400,
   },
   select: {
     color: 'white',
