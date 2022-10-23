@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
   Box,
@@ -20,9 +20,16 @@ const useCommonStyles = makeStyles(commonStyles);
 
 function BreadCrumb({ props }) {
   const history = useHistory();
+  const location = useLocation();
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const [link, setLink] = useState('/');
+  const [link, setLink] = useState(location.pathname);
+
+  useEffect(() => {
+    setLink(location.pathname);
+  }, [location]);
+
+  console.log('breadcrumbs link', link);
   let pathList = history.location.pathname.split('/');
   pathList.shift();
   if (props.match) {
@@ -33,16 +40,13 @@ function BreadCrumb({ props }) {
   const handleChange = e => {
     setLink(e.target.value);
   };
-  useEffect(() => {
-    history.push(link);
-  }, [link]);
 
   const getLink = (url, index) => {
     let arr = url.split('/').slice(0, index + 2);
     let newUrl = arr.join('/');
     return /^\/((projects)?(creators)?)$/.test(newUrl) ? '/' : newUrl;
   };
-
+  console.log('pathlist', pathList);
   return (
     <Breadcrumbs
       maxItems={3}
@@ -55,7 +59,11 @@ function BreadCrumb({ props }) {
       <Box className={clsx(common_classes.textDecorationNone, classes.link)}>
         <Select
           className={clsx(common_classes.textDecorationNone, classes.select)}
-          value={link}
+          value={
+            link.split('/').splice(0, 2).join('/') !== '/activities'
+              ? '/'
+              : '/activities'
+          }
           label="link"
           disableUnderline={true}
           inputProps={{
@@ -65,52 +73,67 @@ function BreadCrumb({ props }) {
           }}
           onChange={handleChange}
         >
-          <MenuItem className={classes.item} value={'/'}>
+          <MenuItem
+            className={classes.item}
+            value={'/'}
+            onClick={e => history.push('/')}
+          >
             {props.t('breadCrumb.link.projects')}
           </MenuItem>
-          <MenuItem value={'/activities'}>
+          <MenuItem
+            value={'/activities'}
+            onClick={e => history.push('/activities')}
+          >
             {props.t('breadCrumb.link.activities')}
           </MenuItem>
         </Select>
       </Box>
       {pathList &&
         pathList[0] !== '' &&
-        pathList.map((item, index) => (
+        pathList[0] !== 'activities' &&
+        pathList[0] !== 'projects' && (
           <Box
             className={clsx(common_classes.textDecorationNone, classes.link)}
           >
-            {index < 1 ? (
+            <Link
+              id={`firstItem-link`}
+              to={getLink(props.match.url, 0)}
+              className={clsx(
+                common_classes.textDecorationNone,
+                classes.textStyle,
+              )}
+            >
+              {props.t(`breadCrumb.link.${pathList[0]}`)}
+            </Link>
+          </Box>
+        )}
+      {pathList &&
+        pathList.length > 1 &&
+        pathList.slice(1, pathList.length).map((item, index) => (
+          <Box
+            className={clsx(common_classes.textDecorationNone, classes.link)}
+          >
+            {/^:/.test(item) ? (
               <Link
                 id={`${index}-link`}
-                to={getLink(props.match.url, index)}
-                className={clsx(
-                  common_classes.textDecorationNone,
-                  classes.textStyle,
-                )}
-              >
-                {props.t(`breadCrumb.link.${item}`)}
-              </Link>
-            ) : /^:/.test(item) ? (
-              <Link
-                id={`${index}-link`}
-                to={getLink(props.match.url, index)}
+                to={getLink(props.match.url, index + 1)}
                 className={clsx(common_classes.textDecorationNone)}
               >
                 <Typography component="span" className={classes.textStyle}>
-                  {pathList[index - 1] === 'activities'
+                  {pathList[index] === 'activities'
                     ? store.activities?.selectedActivity?.title?.toLowerCase()
-                    : pathList[index - 1] === 'projects'
+                    : pathList[index] === 'projects'
                     ? store.projects?.all_projects?.results?.filter(
                         project => project.id === props.match.params.id,
                       )[0].title
-                    : pathList[index - 1] === 'creators' &&
+                    : pathList[index] === 'creators' &&
                       props.match.params.username}
                 </Typography>
               </Link>
             ) : (
               <Link
                 id={`${index}-link`}
-                to={getLink(props.match.url, index)}
+                to={getLink(props.match.url, index + 1)}
                 className={clsx(common_classes.textDecorationNone)}
               >
                 <Typography component="span" className={classes.textStyle}>
