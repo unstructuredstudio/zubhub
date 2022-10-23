@@ -1,5 +1,4 @@
 import i18next from 'i18next';
-let jsonActivities = require('./genericActivities.json');
 /**
  * API class containing all the calls to the backend api endpoints
  */
@@ -931,14 +930,23 @@ class API {
     const url = `activities/${id}/delete/`;
     const method = 'DELETE';
     return this.request({ url, method, token });
-    //.then(res =>
-    //Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()), );
   };
 
   getActivities = () => {
     const url = 'activities/';
-    return this.request({ url, method: 'GET' }).then(res => res.json());
+    return this.request({ url, method: 'GET' })
+    // .then(res => res.json());
   };
+
+  getUnPublishedActivities = token => {
+    const url = 'activities/unPublished';
+    return this.request({ url, method: 'GET', token });
+  };
+
+  getMyActivities=(token)=>{
+    const url = 'activities/myActivities';
+    return this.request({ url, method: 'GET', token });
+  }
 
   activityToggleSave = ({ id, token }) => {
     const url = `activities/${id}/toggle-save/`;

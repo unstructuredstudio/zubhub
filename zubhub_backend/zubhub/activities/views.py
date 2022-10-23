@@ -19,7 +19,48 @@ class ActivityListAPIView(ListAPIView):
     def get_queryset(self):
         all = Activity.objects.all()
         return all
+    
 
+class UserActivitiesAPIView(ListAPIView):
+    """
+    Fetch list of users activities.
+    Returns list of activities.
+    """
+
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    
+    def get_queryset(self):
+        print('self_user', self.request.user)
+        print('self_user_activities', self.request.user.activities_created.all())
+        return self.request.user.activities_created.all()
+
+
+class PublishedActivitiesAPIView(ListAPIView):
+    """
+    Fetch list of published activities by any user.
+    Returns list of published activities.
+    """
+
+    serializer_class = ActivitySerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        return Activity.objects.filter(publish= True)
+    
+class UnPublishedActivitiesAPIView(ListAPIView):
+    """
+    Fetch list of unpublished activities by authenticated staff member.
+
+    Requires authentication.
+    Returns list of unpublished activities.
+    """
+
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated, IsStaffOrModerator]
+
+    def get_queryset(self):
+        return Activity.objects.filter(publish= False)  
 
 class ActivityCreateAPIView(CreateAPIView):
     """
@@ -28,8 +69,6 @@ class ActivityCreateAPIView(CreateAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticated, IsStaffOrModeratorOrEducator]
-    #throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
-
 
 class ActivityUpdateAPIView(UpdateAPIView):
     """

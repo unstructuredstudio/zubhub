@@ -3,8 +3,10 @@ import { connect, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
   getActivities,
+  getMyActivities,
   activityToggleSave,
   setActivity,
+  getUnPublishedActivities,
 } from '../../store/actions/activityActions';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -18,26 +20,39 @@ const useStyles = makeStyles(styles);
 function Activities(props) {
   const location = useLocation();
   const classes = useStyles();
+  console.log('props in activities', props);
   useEffect(() => {
-    props.getActivities(props.t);
-  }, []);
+    location.state?.flag
+      ? location.state.flag === 'staff'
+        ? props.getUnPublishedActivities({
+            t: props.t,
+            token: props.auth.token,
+          })
+        : location.state.flag === 'educator' &&
+          props.getMyActivities({
+            t: props.t,
+            token: props.auth.token,
+          })
+      : props.getActivities(props.t);
+  }, [location]);
 
   let activityList = [];
   const { activities } = useSelector(state => state);
-  console.log('store activities', activities);
-  if (activities) {
-    activityList = location.state?.flag
-      ? location.state.flag === 'educator'
-        ? activities.all_activities.filter(
-            activity =>
-              activity.creators.filter(creator => creator.id === props.auth.id)
-                .length > 0,
-          )
-        : location.state.flag === 'staff'
-        ? activities.unPublishedActivities
-        : activities.published
-      : activities.published;
-  }
+  activityList = activities.all_activities;
+
+  // if (activities) {
+  //   activityList = location.state?.flag
+  //     ? location.state.flag === 'educator'
+  //       ? activities.all_activities.filter(
+  //           activity =>
+  //             activity.creators.filter(creator => creator.id === props.auth.id)
+  //               .length > 0,
+  //         )
+  //       : location.state.flag === 'staff'
+  //       ? activities.unPublishedActivities
+  //       : activities.published
+  //     : activities.published;
+  // }
 
   return (
     <div>
@@ -79,8 +94,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getActivities: () => {
-      return dispatch(getActivities());
+    getActivities: args => {
+      return dispatch(getActivities(args));
+    },
+    getMyActivities: args => {
+      return dispatch(getMyActivities(args));
+    },
+    getUnPublishedActivities: args => {
+      return dispatch(getUnPublishedActivities(args));
     },
     activityToggleSave: args => {
       return dispatch(activityToggleSave(args));

@@ -29,7 +29,6 @@ export const togglePublish = async (
   activityTogglePublish,
   t,
 ) => {
-  console.log('togglePublish');
   e.preventDefault();
   if (!auth.token) {
     history.push('/login');
@@ -39,6 +38,5 @@ export const togglePublish = async (
       token: auth.token,
       t: t,
     });
-    console.log('result', result);
   }
 };
