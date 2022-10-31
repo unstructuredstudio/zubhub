@@ -49,7 +49,8 @@ class FAQAdmin(SummernoteModelAdmin):
 class AmbassadorsAdmin(SummernoteModelAdmin):
     summernote_fields = ('ambassadors',)
     readonly_fields = ["edited_on"]
-
+    search_fields = ["projects"]
+    
     class Media:
         js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 

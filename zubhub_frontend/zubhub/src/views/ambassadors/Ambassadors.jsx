@@ -3,13 +3,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Container, Card, Typography } from '@material-ui/core';
+import { Grid, Box, Container, Card, Typography } from '@material-ui/core';
+import { toast } from 'react-toastify';
 
 import * as UserActions from '../../store/actions/userActions';
+import * as ProjectActions from '../../store/actions/projectActions';
 import LoadingPage from '../loading/LoadingPage';
 import ErrorPage from '../error/ErrorPage';
+import Project from '../../components/project/Project';
 
 import styles from '../../assets/js/styles/views/ambassadors/ambassadorsStyles';
+import ZubHubAPI from '../../api';
+
+const API = new ZubHubAPI();
+
 const useStyles = makeStyles(styles);
 
 /**
@@ -40,6 +47,7 @@ function Ambassadors(props) {
 
   const { loading, ambassadors } = state;
   const { t } = props;
+  
 
   if (loading) {
     return <LoadingPage />;
@@ -57,6 +65,28 @@ function Ambassadors(props) {
             ></Box>
           </Card>
         </Container>
+        <Container className={classes.containerStyle}>
+            <Typography className={classes.ambassadorsHeadingStyle}>
+              Selected Projects
+            </Typography>
+            {ambassadors.projects.map((project, index) =>
+              index <= 2 ? 
+              (
+                <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                align="center"
+                className={classes.projectGridStyle}
+                key={project.id}
+              >
+                  
+                {/* <Project project={project} /> */}
+              </Grid>
+            ) : null,
+          )}
+        </Container>
       </Box>
     );
   } else {
@@ -67,6 +97,7 @@ function Ambassadors(props) {
 Ambassadors.propTypes = {
   auth: PropTypes.object.isRequired,
   getAmbassadors: PropTypes.func.isRequired,
+  // getProject: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -80,6 +111,9 @@ const mapDispatchToProps = dispatch => {
     getAmbassadors: args => {
       return dispatch(UserActions.getAmbassadors(args));
     },
+    // getProject: args => {
+    //   return dispatch(ProjectActions.getProject(args));
+    // },
   };
 };
 
