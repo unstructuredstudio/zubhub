@@ -6,6 +6,7 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from .utils import MediaStorage, get_upload_path, clean_summernote_html
+from projects.models import Project 
 
 
 class AdminSettings(models.Model):
@@ -123,6 +124,7 @@ class FAQ(models.Model):
 class Ambassadors(models.Model):
     ambassadors = models.TextField(blank=True, null=True)
     edited_on = models.DateTimeField(blank=True, null=True)
+    projects = models.ManyToManyField(Project, related_name="ambassador_project_picks")
 
     class Meta:
         verbose_name = "Ambassadors"

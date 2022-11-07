@@ -55,4 +55,5 @@ class AmbassadorsSerializer(serializers.ModelSerializer):
         model = Ambassadors
         fields = [
             "ambassadors",
+            "projects"
         ]
