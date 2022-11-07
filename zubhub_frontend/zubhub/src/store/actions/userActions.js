@@ -473,7 +473,7 @@ export const getFaqs = args => {
  */
  export const getAmbassadors = args => {
   return () => {
-    return API.getAmbassadors()
+    return API.getAmbassadors(args)
       .then(res => {
         if (res) {
           return { ambassadors: res, loading: false };

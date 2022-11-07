@@ -837,10 +837,12 @@ class API {
    *
    * @todo - describe method's signature
    */
-  getAmbassadors = () => {
-    const url = `ambassadors/`;
+  getAmbassadors = ({ token, page }) => {
+    const url = page
+    ? `ambassadors/?page=${page}`
+    : `ambassadors`;
 
-    return this.request({ url }).then(res => res.json());
+    return this.request({ token, url }).then(res => res.json());
   };
 
   /**

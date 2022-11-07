@@ -25,6 +25,23 @@ const styles = theme => ({
     marginBottom: '5em',
     fontSize: '1.2rem'
   },
+  projectGridStyle: {
+    marginBottom: '2em',
+  },
+  buttonGroupStyle: {
+    paddingLeft: '2em',
+    paddingRight: '2em',
+    display: 'block',
+    marginTop: '2em',
+    maxWidth: '2000px',
+    width: '100%',
+  },
+  floatRight: {
+    float: 'right',
+  },
+  floatLeft: {
+    float: 'left',
+  },
 });
 
 export default styles;

@@ -1,5 +1,10 @@
 from rest_framework import serializers
 from .models import Hero, FAQ, Help, Privacy, Ambassadors
+from projects.pagination import ProjectNumberPagination
+from projects.utils import get_published_projects_for_user
+from projects.serializers import ProjectSerializer
+from math import ceil
+
 
 
 class HeroSerializer(serializers.ModelSerializer):
@@ -49,7 +54,9 @@ class FAQListSerializer(serializers.ModelSerializer):
             "answer"
         ]
 
+
 class AmbassadorsSerializer(serializers.ModelSerializer):
+    projects = serializers.SerializerMethodField('paginated_projects')
 
     class Meta:
         model = Ambassadors
@@ -57,3 +64,31 @@ class AmbassadorsSerializer(serializers.ModelSerializer):
             "ambassadors",
             "projects"
         ]
+
+    def paginated_projects(self, obj):
+        projects = obj.projects.all()
+
+        projects = get_published_projects_for_user(
+                    self.context['request'].user, 
+                    projects)
+
+        paginator = ProjectNumberPagination()
+        page = paginator.paginate_queryset(
+            projects, self.context['request'])
+        serializer = ProjectSerializer(page, read_only=True, many=True, context={
+            'request': self.context['request']})
+        count = projects.count()
+        num_pages = ceil(count/paginator.page_size)
+        current_page = int(
+            self.context["request"].query_params.get("page", "1"))
+        if current_page != 1:
+            prev_page = current_page - 1
+        else:
+            prev_page = None
+
+        if current_page != num_pages:
+            next_page = current_page + 1
+        else:
+            next_page = None
+
+        return {"results": serializer.data, "prev": prev_page, "next": next_page, "count": count}
