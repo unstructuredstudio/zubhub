@@ -782,7 +782,7 @@
         }
       },
       "motivation": {
-        "label": "motivation",
+        "label": "Motivation",
         "helperText": "Add motivation text",
         "placeholder": "Add motivation text",
         "errors": {
@@ -800,7 +800,7 @@
         }
       },
       "materials_used": {
-      "label": "what materials did you use?",
+      "label": "What materials did you use?",
       "addMore": "Add Material",
       "helperText": "List some of the essential materials used to create this activity",
       "encouragingText": "We strongly encourage you to upload an image containing all materials and tools used to create this activity",
@@ -862,7 +862,7 @@
         }
       },
       "inspiring_examples": {
-        "label": "inspiring Examples",
+        "label": "Inspiring Examples",
         "addMore": "Add Example",
         "image": {
           "label": "Add Example Image"
