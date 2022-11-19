@@ -93,7 +93,7 @@ export const style = theme => ({
   activityTitle: {
     fontSize: '1.1rem',
     fontWeight: '900',
-    color: '#3E3E5F',
+    color: '#000000',
     // width: '80%',
     textAlign: '-webkit-auto',
   },

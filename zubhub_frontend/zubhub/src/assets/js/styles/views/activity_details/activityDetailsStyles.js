@@ -62,7 +62,7 @@ const styles = theme => ({
   titleStyle: {
     fontWeight: 800,
     textAlign: 'center',
-    color: '#3E3E5F',
+    color: '#000000',
     [theme.breakpoints.down('900')]: {
       fontSize: '1.9rem',
     },
@@ -84,13 +84,12 @@ const styles = theme => ({
     height: '60vh',
   },
   imageCreditStyle: {
-    color: 'white',
+    color: '#3E3E5F',
     fontSize: '10px',
     textAlign: 'center',
   },
 
   subTitles: {
-    // fontFamily: 'Corben',
     fontStyle: 'normal',
     fontWeight: 800,
     fontSize: '2rem',
@@ -98,10 +97,9 @@ const styles = theme => ({
       fontWeight: 700,
       fontSize: '1.8rem',
     },
-
     textAlign: 'center',
     margin: '3em 0 1em 0',
-    color: '#3E3E5F',
+    color: '#000000',
   },
 
   makingStepsDescriptionStyle: {
@@ -125,8 +123,8 @@ const styles = theme => ({
     },
   },
   quillBodyStyle: {
-    color: '#3E3E5F',
-    '& .ql-editor': {
+    '& > *': {
+      color: '#000000',
       fontSize: '1.2rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
       fontWeight: 500,
@@ -144,20 +142,9 @@ const styles = theme => ({
       display: 'none',
     },
   },
-  quillTextCenter: {
-    '& p': {
-      textAlign: 'center',
-    },
-  },
-  motivationBodyStyle: {
-    marginBottom: '0.7em',
-    color: 'rgba(0, 0, 0, 0.54)',
-    '& .ql-editor': {
-      fontSize: '1.5rem',
 
-      fontFamily: 'Raleway,Roboto,sans-serif',
-    },
-    '& p': {
+  quillTextCenter: {
+    '& > *': {
       textAlign: 'center',
     },
   },
@@ -185,7 +172,7 @@ const styles = theme => ({
     display: 'inline-block',
     fontSize: '1.5rem',
     padding: '0.2em 0.5em',
-    color: '#00B8C4',
+    color: '#000000',
     borderRadius: '15px',
     border: '1px solid #00B8C4',
     marginRight: '0.5em',
