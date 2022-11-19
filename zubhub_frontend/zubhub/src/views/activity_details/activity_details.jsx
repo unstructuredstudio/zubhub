@@ -187,14 +187,18 @@ function ActivityDetails(props) {
               >
                 {activity.title}
               </Typography>
-
-              <Typography className={classes.createdOn} variant="h6">
-                {`${t('activityDetails.made')} ${
-                  activity.creators[0].username
-                } ${dFormatter(activity.created_on).value} ${t(
-                  `date.${dFormatter(activity.created_on).key}`,
-                )} ${t('date.ago')}`}
-              </Typography>
+              <Link
+                to={`/creators/${activity.creators[0].username}`}
+                className={common_classes.link}
+              >
+                <Typography className={classes.createdOn} variant="h6">
+                  {`${t('activityDetails.made')} ${
+                    activity.creators[0].username
+                  } ${dFormatter(activity.created_on).value} ${t(
+                    `date.${dFormatter(activity.created_on).key}`,
+                  )} ${t('date.ago')}`}
+                </Typography>
+              </Link>
               <Grid
                 container
                 className={clsx(

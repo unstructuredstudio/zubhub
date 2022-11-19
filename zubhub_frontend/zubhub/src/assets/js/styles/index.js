@@ -161,6 +161,9 @@ const styles = theme => ({
     borderRadius: '50%',
     marginRight: '0.3em',
   },
+  link: {
+    textDecoration: 'none',
+  },
 });
 
 export default styles;
