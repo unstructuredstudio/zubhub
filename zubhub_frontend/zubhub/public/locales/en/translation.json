@@ -900,6 +900,7 @@
  "activities": {
    "LinkedProjects": "Linked Projects",
    "errors": {
+      "unexpected": "No activities created yet !",
       "dialog": {
          "serverError": "Sorry the server is down try again later",
          "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",

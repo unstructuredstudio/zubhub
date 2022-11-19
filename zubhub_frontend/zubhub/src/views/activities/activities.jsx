@@ -13,6 +13,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Activity from '../../components/activity/activity';
 import styles from '../../assets/js/styles/views/activities/activitiesStyles';
 import { makeStyles } from '@material-ui/core/styles';
+import ErrorPage from '../error/ErrorPage';
 
 import { Grid, Box } from '@material-ui/core';
 const useStyles = makeStyles(styles);
@@ -39,35 +40,38 @@ function Activities(props) {
   let activityList = [];
   const { activities } = useSelector(state => state);
   activityList = activities.all_activities;
-
-  return (
-    <div>
-      <Grid container className={classes.activityListContainer}>
-        {activityList &&
-          activityList.map((activity, index) => (
-            <Grid
-              key={`activityContainer-${index}`}
-              item
-              xs={12}
-              sm={12}
-              md={6}
-              lg={6}
-              align="center"
-              className={classes.activityBoxContainer}
-            >
-              <Activity
-                key={`activity-${index}`}
-                activity={activity}
-                auth={props.auth}
-                activityToggleSave={props.activityToggleSave}
-                t={props.t}
-                history={props.history}
-              />
-            </Grid>
-          ))}
-      </Grid>
-    </div>
-  );
+  if (!activityList || activityList.length === 0) {
+    return <ErrorPage error={props.t('activities.errors.unexpected')} />;
+  } else {
+    return (
+      <div>
+        <Grid container className={classes.activityListContainer}>
+          {activityList &&
+            activityList.map((activity, index) => (
+              <Grid
+                key={`activityContainer-${index}`}
+                item
+                xs={12}
+                sm={12}
+                md={6}
+                lg={6}
+                align="center"
+                className={classes.activityBoxContainer}
+              >
+                <Activity
+                  key={`activity-${index}`}
+                  activity={activity}
+                  auth={props.auth}
+                  activityToggleSave={props.activityToggleSave}
+                  t={props.t}
+                  history={props.history}
+                />
+              </Grid>
+            ))}
+        </Grid>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => {
