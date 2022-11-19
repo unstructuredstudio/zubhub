@@ -2,9 +2,12 @@ export const styles = theme => ({
   container: {
     backgroundColor: '#00B8C4',
     minHeight: '45px',
-    [theme.breakpoints.down('700')]: {
+    [theme.breakpoints.down('555')]: {
       top: '56px',
     },
+    top: '64px',
+    position: 'fixed',
+    zIndex: 100,
     textAlign: 'center',
     display: 'flex',
     width: '100vw',

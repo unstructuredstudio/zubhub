@@ -167,11 +167,12 @@ const styles = theme => ({
       },
     },
   },
-  profileStyle: { fontWeight: 'bold',
-                  width: '130px',
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
+  profileStyle: {
+    fontWeight: 'bold',
+    width: '130px',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
   logOutStyle: {
     borderTop: '1px solid #C4C4C4',
@@ -258,6 +259,9 @@ const styles = theme => ({
   displayNone: { display: 'none' },
   largeLabel: {
     fontSize: '1.3rem',
+  },
+  marginBottom: {
+    marginBottom: '45px',
   },
 });
 

@@ -806,8 +806,9 @@ function PageWrapper(props) {
           ) : null}
         </Container>
       </AppBar>
-      <Toolbar ref={backToTopEl} />
+      <Toolbar ref={backToTopEl} className={classes.marginBottom} />
       <BreadCrumb props={props} />
+
       {loading ? <LoadingPage /> : props.children}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>

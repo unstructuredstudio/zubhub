@@ -934,7 +934,7 @@ class API {
 
   getActivities = () => {
     const url = 'activities/';
-    return this.request({ url, method: 'GET' })
+    return this.request({ url, method: 'GET' });
     // .then(res => res.json());
   };
 
@@ -943,10 +943,10 @@ class API {
     return this.request({ url, method: 'GET', token });
   };
 
-  getMyActivities=(token)=>{
+  getMyActivities = token => {
     const url = 'activities/myActivities';
     return this.request({ url, method: 'GET', token });
-  }
+  };
 
   activityToggleSave = ({ id, token }) => {
     const url = `activities/${id}/toggle-save/`;

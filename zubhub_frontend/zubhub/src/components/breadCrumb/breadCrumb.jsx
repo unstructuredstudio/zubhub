@@ -44,7 +44,7 @@ function BreadCrumb({ props }) {
     let newUrl = arr.join('/');
     return /^\/((projects)?(creators)?)$/.test(newUrl) ? '/' : newUrl;
   };
-
+  console.log('breadcrumbs', location, pathList, props.match);
   return (
     <Breadcrumbs
       maxItems={3}
