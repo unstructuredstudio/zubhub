@@ -805,9 +805,9 @@ function PageWrapper(props) {
             </ClickAwayListener>
           ) : null}
         </Container>
+        <BreadCrumb props={props} />
       </AppBar>
       <Toolbar ref={backToTopEl} className={classes.marginBottom} />
-      <BreadCrumb props={props} />
 
       {loading ? <LoadingPage /> : props.children}
 

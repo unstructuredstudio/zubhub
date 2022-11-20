@@ -2,19 +2,11 @@ export const styles = theme => ({
   container: {
     backgroundColor: '#00B8C4',
     minHeight: '45px',
-    [theme.breakpoints.down('555')]: {
-      top: '56px',
-    },
-    top: '64px',
-    position: 'fixed',
-    zIndex: 100,
     textAlign: 'center',
     display: 'flex',
     width: '100vw',
     lineHeight: '40px',
     paddingRight: '10px',
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
     '& ol': {
       flexWrap: 'nowrap',
       overflow: 'hidden',
