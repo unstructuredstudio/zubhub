@@ -972,7 +972,9 @@
       "edit-profile": "प्रोफ़ाइल संपादित करें",
       "saved": "बचाया",
       "signup": "साइन अप करें",
-      "account-status": "खाते की स्थिति"
+      "account-status": "खाते की स्थिति",
+      "LinkedProjects": "लिंक्ड प्रोजेक्ट्स",
+      "drafts": "ड्राफ्ट"
     }
   }
 }

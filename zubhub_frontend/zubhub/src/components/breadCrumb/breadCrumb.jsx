@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Typography,
@@ -17,9 +18,11 @@ import clsx from 'clsx';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
-function BreadCrumb({ props }) {
+function BreadCrumb() {
   const history = useHistory();
   const location = useLocation();
+  const match = useRouteMatch();
+  const { t } = useTranslation();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const [link, setLink] = useState(location.pathname);
@@ -28,12 +31,6 @@ function BreadCrumb({ props }) {
     setLink(location.pathname);
   }, [location]);
 
-  let pathList = history.location.pathname.split('/');
-  pathList.shift();
-  if (props.match) {
-    pathList = props.match.path.split('/');
-    pathList.shift();
-  }
   const store = useSelector(state => state);
   const handleChange = e => {
     setLink(e.target.value);
@@ -44,10 +41,64 @@ function BreadCrumb({ props }) {
     let newUrl = arr.join('/');
     return /^\/((projects)?(creators)?)$/.test(newUrl) ? '/' : newUrl;
   };
-  console.log('breadcrumbs', location, pathList, props.match);
+
+  const getActivityTitle = id => {
+    if (store.activities.selectedActivity['id'] === id) {
+      return capitalize(store.activities.selectedActivity.title);
+    } else {
+      let arr = store.activities.all_activities.filter(item => item.id === id);
+      return arr.length > 0 ? capitalize(arr[0].title) : '';
+    }
+  };
+
+  const getProjectTitle = id => {
+    if (store.projects.all_projects.results) {
+      let arr = store.projects.all_projects.results.filter(
+        project => project.id === id,
+      );
+      return arr.length > 0 ? capitalize(arr[0].title) : '';
+    } else {
+      return '';
+    }
+  };
+
+  const mapLinkToTitle = {
+    activities: id => getActivityTitle(id),
+    projects: id => getProjectTitle(id),
+    creators: username => capitalize(username),
+  };
+
+  const createPathList = () => {
+    let pathList = match.path.split('/');
+    let pathListUrl = match.url.split('/');
+    pathList.shift();
+    pathListUrl.shift();
+    let result = [];
+    if (pathList.length <= 1) {
+      return result;
+    } else {
+      let path = {};
+      for (let i = 1; i < pathList.length; i++) {
+        path = {};
+        path['link'] = getLink(match.url, i);
+        if (/^:/.test(pathList[i]) && mapLinkToTitle[pathList[0]]) {
+          path['title'] = mapLinkToTitle[pathList[0]](pathListUrl[i]);
+        } else {
+          path['title'] = t(`breadCrumb.link.${pathList[i]}`);
+        }
+        if (path['title']) {
+          result.push(path);
+        }
+      }
+    }
+    return result;
+  };
+
+  const pathResult = createPathList();
+  
   return (
     <Breadcrumbs
-      maxItems={3}
+      maxItems={2}
       separator={
         <NavigateNextIcon fontSize="large" className={classes.separator} />
       }
@@ -76,75 +127,32 @@ function BreadCrumb({ props }) {
             value={'/'}
             onClick={e => history.push('/')}
           >
-            {props.t('breadCrumb.link.projects')}
+            {t(`breadCrumb.link.projects`)}
           </MenuItem>
           <MenuItem
             value={'/activities'}
             onClick={e => history.push('/activities')}
           >
-            {props.t('breadCrumb.link.activities')}
+            {t(`breadCrumb.link.activities`)}
           </MenuItem>
         </Select>
       </Box>
-      {pathList &&
-        pathList[0] !== '' &&
-        pathList[0] !== 'activities' &&
-        pathList[0] !== 'projects' && (
-          <Box
-            className={clsx(common_classes.textDecorationNone, classes.link)}
+      {pathResult.map((item, index) => (
+        <Box
+          key={`link-box-${index}`}
+          className={clsx(common_classes.textDecorationNone, classes.link)}
+        >
+          <Link
+            id={`${index}-link`}
+            to={item.link}
+            className={clsx(common_classes.textDecorationNone)}
           >
-            <Link
-              id={`firstItem-link`}
-              to={getLink(props.match.url, 0)}
-              className={clsx(
-                common_classes.textDecorationNone,
-                classes.textStyle,
-              )}
-            >
-              {props.t(`breadCrumb.link.${pathList[0]}`)}
-            </Link>
-          </Box>
-        )}
-      {pathList &&
-        pathList.length > 1 &&
-        pathList.slice(1, pathList.length).map((item, index) => (
-          <Box
-            className={clsx(common_classes.textDecorationNone, classes.link)}
-          >
-            {/^:/.test(item) ? (
-              <Link
-                id={`${index}-link`}
-                to={getLink(props.match.url, index + 1)}
-                className={clsx(common_classes.textDecorationNone)}
-              >
-                <Typography component="span" className={classes.textStyle}>
-                  {pathList[index] === 'activities'
-                    ? store.activities?.selectedActivity?.title &&
-                      capitalize(store.activities.selectedActivity.title)
-                    : pathList[index] === 'projects'
-                    ? store.projects?.all_projects?.results &&
-                      capitalize(
-                        store.projects?.all_projects?.results.filter(
-                          project => project.id === props.match.params.id,
-                        )[0].title,
-                      )
-                    : pathList[index] === 'creators' &&
-                      capitalize(props.match.params.username)}
-                </Typography>
-              </Link>
-            ) : (
-              <Link
-                id={`${index}-link`}
-                to={getLink(props.match.url, index + 1)}
-                className={clsx(common_classes.textDecorationNone)}
-              >
-                <Typography component="span" className={classes.textStyle}>
-                  {props.t(`breadCrumb.link.${item}`)}
-                </Typography>
-              </Link>
-            )}
-          </Box>
-        ))}
+            <Typography component="span" className={classes.textStyle}>
+              {item.title}
+            </Typography>
+          </Link>
+        </Box>
+      ))}
     </Breadcrumbs>
   );
 }

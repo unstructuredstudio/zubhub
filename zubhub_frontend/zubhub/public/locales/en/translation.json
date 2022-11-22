@@ -991,7 +991,9 @@
       "edit-profile": "Edit-profile",
       "saved": "Saved",
       "signup": "Signup",
-      "account-status": "Account-status"
+      "account-status": "Account-status",
+      "LinkedProjects": "Linked Projects",
+      "drafts": "drafts"
     }
   }
  
