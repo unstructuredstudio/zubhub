@@ -38,12 +38,7 @@ export const cloudinaryFactory = window => {
 export const videoOrUrl = video_url => {
   let regex =
     /^((http[s]?:\/\/)?(www\.)?youtube\.com)?((http[s]?:\/\/)?(www\.)?vimeo\.com)?((http[s]?:\/\/)?(www\.)?drive.google\.com)?/gm;
-  console.log(video_url.match(regex));
-  if (video_url.match(regex)[0] !== '') {
-    return false;
-  } else {
-    return true;
-  }
+  return video_url.match(regex)[0] !== '' ? false : true;
 };
 
 export const buildVideoThumbnailURL = video_url => {

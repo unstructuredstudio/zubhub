@@ -94,11 +94,9 @@ export const getActivities = t => {
   return async dispatch => {
     return ActivityAPI.getActivities()
       .then(res => {
-        
         if (res.status >= 200 && res.status < 300) {
           let response = res.json();
           response.then(all => {
-           
             dispatch({
               type: at.SET_ACTIVITIES,
               payload: {
@@ -119,22 +117,6 @@ export const getActivities = t => {
       .catch(error => {
         toast.warning(t('activities.errors.dialog.serverError'));
       });
-    // try {
-    //   const res = await ActivityAPI.getActivities();
-    //   const all_activities = res;
-    //   dispatch({
-    //     type: at.SET_ACTIVITIES,
-    //     payload: {
-    //       all_activities: all_activities,
-    //     },
-    //   });
-    // } catch (error) {
-    //   if (error.message.startsWith('Unexpected')) {
-    //     toast.warning(t('projects.errors.unexpected'));
-    //   } else {
-    //     toast.warning(error.message);
-    //   }
-    // }
   };
 };
 
@@ -159,7 +141,6 @@ export const activityCountView = args => {
 };
 
 export const activityToggleSave = args => {
- 
   return async dispatch => {
     try {
       const result = await ActivityAPI.activityToggleSave(args);

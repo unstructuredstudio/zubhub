@@ -16,61 +16,78 @@ import { makeStyles } from '@material-ui/core/styles';
 import ErrorPage from '../error/ErrorPage';
 
 import { Grid, Box } from '@material-ui/core';
+import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
 
 function Activities(props) {
   const location = useLocation();
   const classes = useStyles();
+  const [loading, setLoading] = useState(true);
+  const { activities } = useSelector(state => state);
+  let [activityList, setActivityList] = useState([]);
 
   useEffect(() => {
-    location.state?.flag
-      ? location.state.flag === 'staff'
-        ? props.getUnPublishedActivities({
-            t: props.t,
-            token: props.auth.token,
-          })
-        : location.state.flag === 'educator' &&
-          props.getMyActivities({
-            t: props.t,
-            token: props.auth.token,
-          })
-      : props.getActivities(props.t);
+    setActivityList(activities.all_activities);
+  }, [activities]);
+
+  const flagMap = {
+    staff: () =>
+      props.getUnPublishedActivities({
+        t: props.t,
+        token: props.auth.token,
+      }),
+    educator: () =>
+      props.getMyActivities({
+        t: props.t,
+        token: props.auth.token,
+      }),
+  };
+  useEffect(async () => {
+    setLoading(true);
+    if (location.state?.flag && flagMap[location.state.flag]) {
+      await flagMap[location.state.flag]();
+    } else {
+      await props.getActivities(props.t);
+    }
+    setActivityList(activities.all_activities);
+    setLoading(false);
   }, [location]);
 
-  let activityList = [];
-  const { activities } = useSelector(state => state);
-  activityList = activities.all_activities;
-  if (!activityList || activityList.length === 0) {
-    return <ErrorPage error={props.t('activities.errors.unexpected')} />;
+  if (loading) {
+    return <LoadingPage />;
   } else {
-    return (
-      <div>
-        <Grid container className={classes.activityListContainer}>
-          {activityList &&
-            activityList.map((activity, index) => (
-              <Grid
-                key={`activityContainer-${index}`}
-                item
-                xs={12}
-                sm={12}
-                md={6}
-                lg={6}
-                align="center"
-                className={classes.activityBoxContainer}
-              >
-                <Activity
-                  key={`activity-${index}`}
-                  activity={activity}
-                  auth={props.auth}
-                  activityToggleSave={props.activityToggleSave}
-                  t={props.t}
-                  history={props.history}
-                />
-              </Grid>
-            ))}
-        </Grid>
-      </div>
-    );
+    if (!activityList || activityList.length === 0) {
+      return <ErrorPage error={props.t('activities.errors.emptyList')} />;
+    } else {
+      return (
+        <div>
+          <Grid container className={classes.activityListContainer}>
+            {activityList &&
+              activityList.map((activity, index) => (
+                <Grid
+                  key={`activityContainer-${index}`}
+                  item
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  lg={6}
+                  align="center"
+                  className={classes.activityBoxContainer}
+                >
+                  <Activity
+                    key={`activity-${index}`}
+                    activity={activity}
+                    auth={props.auth}
+                    activityToggleSave={props.activityToggleSave}
+                    t={props.t}
+                    history={props.history}
+                  />
+                </Grid>
+              ))}
+          </Grid>
+        </div>
+      );
+    }
   }
 }
 
