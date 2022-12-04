@@ -206,7 +206,12 @@ class Tag(models.Model):
     search_vector = SearchVectorField(null=True)
 
     class Meta:
-        indexes = (GinIndex(fields=["search_vector"]),)
+        indexes = (GinIndex(fields=["search_vector"]),
+                   GinIndex(
+                       name="tag_name_gin_idx",
+                       fields=["name"],
+                       opclasses=["gin_trgm_ops"],
+                   ))
 
     def __str__(self):
         return self.name
