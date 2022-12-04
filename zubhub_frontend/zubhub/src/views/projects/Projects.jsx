@@ -115,6 +115,14 @@ function Projects(props) {
                           {t('projects.exploreIdeas')}
                         </CustomButton>
                       </a>
+                      <CustomButton
+                        className={classes.heroButtonStyle}
+                        size="small"
+                        customWarningButtonStyle
+                        onClick={() => props.history.push('/ambassadors')}
+                      >
+                        {t('projects.zubhubAmbassadors')}
+                      </CustomButton>
                     </Box>
                     <Box
                       className={clsx(classes.heroImageContainerStyle, {

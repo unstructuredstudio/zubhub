@@ -832,6 +832,20 @@ class API {
   };
 
   /**
+   * @method getAmbassadors
+   * @author Srishti Sethi <srishti@unstructured.studio>
+   *
+   * @todo - describe method's signature
+   */
+  getAmbassadors = ({ token, page }) => {
+    const url = page
+    ? `ambassadors/?page=${page}`
+    : `ambassadors`;
+
+    return this.request({ token, url }).then(res => res.json());
+  };
+
+  /**
    * Gets a user's notifications
    * @param {number} page the page of notifications to get
    * @param {string} token the user's auth token

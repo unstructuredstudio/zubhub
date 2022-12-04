@@ -464,3 +464,37 @@ export const getFaqs = args => {
       });
   };
 };
+
+/**
+ * @function getAmbassadors
+ * @author Srishti Sethi <srishti@unstructured.studio>
+ *
+ * @todo - describe function's signature
+ */
+ export const getAmbassadors = args => {
+  return () => {
+    return API.getAmbassadors(args)
+      .then(res => {
+        if (res) {
+          return { ambassadors: res, loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('signup.errors.unexpected'));
+          return {
+            loading: false,
+          };
+        } else {
+          console.log('sorry')
+          toast.warning(args.t('signup.errors.unexpected'));
+          return { loading: false };
+        }
+      });
+  };
+};

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AdminSettings, Hero, Privacy, FAQ, Help
+from .models import AdminSettings, Hero, Privacy, FAQ, Help, Ambassadors
 
 ## these models are imported to be unregsitered
 from django_summernote.models import Attachment
@@ -46,11 +46,21 @@ class FAQAdmin(SummernoteModelAdmin):
         js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 
+class AmbassadorsAdmin(SummernoteModelAdmin):
+    summernote_fields = ('ambassadors',)
+    readonly_fields = ["edited_on"]
+    search_fields = ["projects"]
+    
+    class Media:
+        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+
+
 admin.site.register(AdminSettings, AdminSettingsAdmin)
 admin.site.register(Hero, HeroAdmin)
 admin.site.register(Privacy, PrivacyAdmin)
 admin.site.register(Help, HelpAdmin)
 admin.site.register(FAQ, FAQAdmin)
+admin.site.register(Ambassadors, AmbassadorsAdmin)
 
 ## Unregister some default and third-party models
 admin.site.unregister(Attachment)
