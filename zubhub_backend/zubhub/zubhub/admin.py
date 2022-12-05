@@ -28,7 +28,7 @@ class PrivacyAdmin(SummernoteModelAdmin):
     readonly_fields = ["edited_on"]
 
     class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 
 class HelpAdmin(SummernoteModelAdmin):
@@ -36,14 +36,14 @@ class HelpAdmin(SummernoteModelAdmin):
     readonly_fields = ["edited_on"]
 
     class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 
 class FAQAdmin(SummernoteModelAdmin):
     summernote_fields = ('answer',)
 
     class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 
 class AmbassadorsAdmin(SummernoteModelAdmin):
@@ -52,7 +52,7 @@ class AmbassadorsAdmin(SummernoteModelAdmin):
     search_fields = ["projects"]
     
     class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 
 admin.site.register(AdminSettings, AdminSettingsAdmin)
