@@ -47,7 +47,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
     from rest_auth.urls import (LoginView, LogoutView, PasswordResetConfirmView, PasswordResetView)
     from rest_auth.registration.urls import VerifyEmailView
     from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
-                            HeroAPIView, HelpAPIView, PrivacyAPIView, 
+                            HeroAPIView, HelpAPIView, ChallengeAPIView, PrivacyAPIView, 
                             FAQAPIView, AmbassadorsAPIView, SigGenAPIView, UploadFileToLocalAPIView,
                             MarkdownToHtmlAPIView, MediaSchemaAPIView, WebSchemaAPIView)
 
@@ -65,6 +65,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/upload-file-to-local/', UploadFileToLocalAPIView),
             path('api/hero/', HeroAPIView.as_view()),
             path('api/help/', HelpAPIView.as_view()),
+            path('api/challenge/', ChallengeAPIView.as_view()),
             path('api/privacy/', PrivacyAPIView.as_view()),
             path('api/faqs/', FAQAPIView.as_view()),
             path('api/ambassadors/', AmbassadorsAPIView.as_view()),

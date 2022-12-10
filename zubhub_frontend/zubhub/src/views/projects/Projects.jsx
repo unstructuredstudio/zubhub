@@ -26,6 +26,7 @@ import Project from '../../components/project/Project';
 import StaffPick from '../../components/staff_pick/StaffPick';
 import activity_of_the_month_svg from '../../assets/images/activity_of_the_month.svg';
 import activity_of_the_month_small_svg from '../../assets/images/activity_of_the_month_small.svg';
+import new_stuff from '../../assets/images/new_stuff.svg'
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
@@ -131,13 +132,13 @@ function Projects(props) {
                     >
                       <img
                         className={classes.heroImageTextSmallStyle}
-                        src={activity_of_the_month_small_svg}
-                        alt={t('projects.activityOfTheMonth')}
+                        src={new_stuff}
+                        alt={t('projects.newStuff')}
                       />
                       <img
                         className={classes.heroImageTextStyle}
-                        src={activity_of_the_month_svg}
-                        alt={t('projects.activityOfTheMonth')}
+                        src={new_stuff}
+                        alt={t('projects.newStuff')}
                       />
                       <a
                         className={classes.heroImageLinkStyle}

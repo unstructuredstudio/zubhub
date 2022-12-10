@@ -103,6 +103,21 @@ class Help(models.Model):
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
 
+class Challenge(models.Model):
+    challenge = models.TextField(blank=True, null=True)
+    edited_on = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Challenge"
+        verbose_name_plural = "Challenges"
+
+    def __str__(self):
+        return self.edited_on.strftime("Challenges as edited on %I:%M %p, %d %b %Y %Z")
+
+    def save(self, *args, **kwargs):
+        self.challenge = clean_summernote_html(self.challenge)
+        self.edited_on = timezone.now()
+        super().save(*args, **kwargs)
 
 class FAQ(models.Model):
     question = models.TextField(blank=True, null=True)
