@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hero, FAQ, Help, Privacy, Ambassadors
+from .models import Hero, FAQ, Help, Challenge, Privacy, Ambassadors
 from projects.pagination import ProjectNumberPagination
 from projects.utils import get_published_projects_for_user
 from projects.serializers import ProjectSerializer
@@ -44,6 +44,13 @@ class HelpSerializer(serializers.ModelSerializer):
             "about",
         ]
 
+class ChallengeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Challenge
+        fields = [
+            "challenge",
+        ]
 
 class FAQListSerializer(serializers.ModelSerializer):
 

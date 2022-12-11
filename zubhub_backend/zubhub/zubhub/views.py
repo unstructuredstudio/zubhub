@@ -1,7 +1,7 @@
 from math import floor
 import uuid
-from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, PrivacySerializer, AmbassadorsSerializer
-from .models import Hero, FAQ, Privacy, Help, Ambassadors, AdminSettings
+from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, ChallengeSerializer, PrivacySerializer, AmbassadorsSerializer
+from .models import Hero, FAQ, Privacy, Help, Challenge, Ambassadors, AdminSettings
 from .utils import delete_file_from_media_server, upload_file_to_media_server, get_sig
 from projects.permissions import PostUserRateThrottle, GetUserRateThrottle, SustainedRateThrottle
 from rest_framework.permissions import IsAuthenticated
@@ -209,6 +209,18 @@ class HelpAPIView(RetrieveAPIView):
     def get_object(self):
         return self.get_queryset().last()
 
+class ChallengeAPIView(RetrieveAPIView):
+    """
+    Get "Challenges"\n
+    """
+
+    queryset = Challenge.objects.all()
+    serializer_class = ChallengeSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_object(self):
+        return self.get_queryset().last()
 
 class PrivacyAPIView(RetrieveAPIView):
     """

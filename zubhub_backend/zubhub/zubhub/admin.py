@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AdminSettings, Hero, Privacy, FAQ, Help, Ambassadors
+from .models import AdminSettings, Hero, Privacy, FAQ, Help, Challenge, Ambassadors
 
 ## these models are imported to be unregsitered
 from django_summernote.models import Attachment
@@ -38,6 +38,12 @@ class HelpAdmin(SummernoteModelAdmin):
     class Media:
         js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
+class ChallengeAdmin(SummernoteModelAdmin):
+    summernote_fields = ('challenge',)
+    readonly_fields = ["edited_on"]
+
+    class Media:
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 class FAQAdmin(SummernoteModelAdmin):
     summernote_fields = ('answer',)
@@ -59,6 +65,7 @@ admin.site.register(AdminSettings, AdminSettingsAdmin)
 admin.site.register(Hero, HeroAdmin)
 admin.site.register(Privacy, PrivacyAdmin)
 admin.site.register(Help, HelpAdmin)
+admin.site.register(Challenge, ChallengeAdmin)
 admin.site.register(FAQ, FAQAdmin)
 admin.site.register(Ambassadors, AmbassadorsAdmin)
 

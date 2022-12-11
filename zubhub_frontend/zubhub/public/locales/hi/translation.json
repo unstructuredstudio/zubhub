@@ -34,6 +34,7 @@
       "termsOfUse": "उपयोग की शर्तें",
       "about": "तकरीबन",
       "zubhub": "ZubHub",
+      "challenges": "चैलेंज",
       "unstructuredStudio": "अनस्ट्रक्चर्ड स्टूडियो",
       "help": "मदद",
       "resources": "टिंकरिंग संसाधन",
@@ -237,7 +238,7 @@
   "projects": {
     "shareProject": "एक परियोजना साझा करें",
     "exploreIdeas": "विचारों का अन्वेषण करें",
-    "activityOfTheMonth": "महीने की गतिविधि",
+    "newStuff": "नयी चीज़",
     "allProjects": "सभी परियोजनाएं",
     "prev": "पिछला",
     "next": "आगे",

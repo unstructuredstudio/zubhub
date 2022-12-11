@@ -836,6 +836,16 @@ function PageWrapper(props) {
                 {t('pageWrapper.footer.zubhub')}
               </Typography>
             </Link>
+
+            <Link to="/challenge" className={common_classes.textDecorationNone}>
+              <Typography
+                variant="subtitle2"
+                color="textPrimary"
+                className={classes.footerLinkStyle}
+              >
+                {t('pageWrapper.footer.challenges')}
+              </Typography>
+            </Link>
           </Box>
 
           <Box className={classes.footerBoxStyle}>

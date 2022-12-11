@@ -67,6 +67,7 @@ const Ambassadors = React.lazy(() =>
 const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
 const TermsOfUse = React.lazy(() => import('./views/terms_of_use/TermsOfUse'));
 const About = React.lazy(() => import('./views/about/About'));
+const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 
 const LazyImport = props => {
@@ -418,6 +419,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={About} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/challenge"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
