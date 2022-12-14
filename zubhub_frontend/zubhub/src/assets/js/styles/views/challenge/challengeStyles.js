@@ -6,12 +6,8 @@ const styles = theme => ({
     paddingTop: '2em',
     paddingBottom: '2em',
     flex: '1 0 auto',
-    background: 'rgba(255,204,0,1)',
     background:
       'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-  },
-  containerStyle: {
-    maxWidth: '1000px',
   },
   cardStyle: {
     border: 0,
@@ -21,9 +17,9 @@ const styles = theme => ({
     minHeight: '500px',
     width: '100%',
   },
-
   challengeBodyStyle: {
     marginBottom: '5em',
+    fontSize: '1.2rem'
   },
 });
 
