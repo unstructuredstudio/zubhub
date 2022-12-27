@@ -66,9 +66,13 @@ const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
   import('./views/activity_details/activity_details'),
 );
+const Ambassadors = React.lazy(() =>
+  import('./views/ambassadors/Ambassadors')
+);
 const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
 const TermsOfUse = React.lazy(() => import('./views/terms_of_use/TermsOfUse'));
 const About = React.lazy(() => import('./views/about/About'));
+const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 
 const LazyImport = props => {
@@ -400,6 +404,19 @@ function App(props) {
         />
 
         <Route
+          path="/ambassadors"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={Ambassadors}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/privacy_policy"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
@@ -430,6 +447,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={About} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/challenge"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

@@ -44,31 +44,31 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
         LoginView, LogoutView, PasswordResetConfirmView, PasswordResetView)
     from rest_auth.registration.urls import VerifyEmailView
     from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
-                              HeroAPIView, HelpAPIView, PrivacyAPIView,
-                              FAQAPIView, SigGenAPIView, UploadFileToLocalAPIView,
-                              MarkdownToHtmlAPIView, MediaSchemaAPIView, WebSchemaAPIView)
+                            HeroAPIView, HelpAPIView, ChallengeAPIView, PrivacyAPIView, 
+                            FAQAPIView, AmbassadorsAPIView, SigGenAPIView, UploadFileToLocalAPIView,
+                            MarkdownToHtmlAPIView, MediaSchemaAPIView, WebSchemaAPIView)
 
     schema_url_patterns = [
-        path('api/rest-auth/login/', LoginView.as_view()),
-        path('api/rest-auth/logout/', LogoutView.as_view()),
-        path('api/rest-auth/registration/verify-email/',
-             VerifyEmailView.as_view()),
-        path('api/rest-auth/password/reset/', PasswordResetView.as_view()),
-        path('api/rest-auth/password/reset/confirm/',
-             PasswordResetConfirmView.as_view()),
-        path('api/creators/', include('creators.urls')),
-        path('api/projects/', include('projects.urls')),
-        path('api/activities/', include('activities.urls')),
-        path('api/activitylog/', include('activitylog.urls')),
-        path('api/upload-file/', UploadFileAPIView),
-        path('api/delete-file/', DeleteFileAPIView),
-        path('api/upload-file-to-local/', UploadFileToLocalAPIView),
-        path('api/hero/', HeroAPIView.as_view()),
-        path('api/help/', HelpAPIView.as_view()),
-        path('api/privacy/', PrivacyAPIView.as_view()),
-        path('api/faqs/', FAQAPIView.as_view()),
-        path('api/signature/', SigGenAPIView),
-    ]
+            path('api/rest-auth/login/', LoginView.as_view()),
+            path('api/rest-auth/logout/', LogoutView.as_view()),
+            path('api/rest-auth/registration/verify-email/', VerifyEmailView.as_view()),
+            path('api/rest-auth/password/reset/', PasswordResetView.as_view()),
+            path('api/rest-auth/password/reset/confirm/', PasswordResetConfirmView.as_view()),
+            path('api/creators/', include('creators.urls')),
+            path('api/projects/', include('projects.urls')),
+            path('api/activities/', include('activities.urls')),
+            path('api/activitylog/', include('activitylog.urls')),
+            path('api/upload-file/', UploadFileAPIView),
+            path('api/delete-file/', DeleteFileAPIView),
+            path('api/upload-file-to-local/', UploadFileToLocalAPIView),
+            path('api/hero/', HeroAPIView.as_view()),
+            path('api/help/', HelpAPIView.as_view()),
+            path('api/challenge/', ChallengeAPIView.as_view()),
+            path('api/privacy/', PrivacyAPIView.as_view()),
+            path('api/faqs/', FAQAPIView.as_view()),
+            path('api/ambassadors/', AmbassadorsAPIView.as_view()),
+            path('api/signature/', SigGenAPIView)
+            ]
 
     urlpatterns = urlpatterns + [
         path('web-schema/', WebSchemaAPIView, name="web-schema"),

@@ -6,6 +6,7 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from .utils import MediaStorage, get_upload_path, clean_summernote_html
+from projects.models import Project 
 
 
 class AdminSettings(models.Model):
@@ -102,6 +103,21 @@ class Help(models.Model):
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
 
+class Challenge(models.Model):
+    challenge = models.TextField(blank=True, null=True)
+    edited_on = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Challenge"
+        verbose_name_plural = "Challenges"
+
+    def __str__(self):
+        return self.edited_on.strftime("Challenges as edited on %I:%M %p, %d %b %Y %Z")
+
+    def save(self, *args, **kwargs):
+        self.challenge = clean_summernote_html(self.challenge)
+        self.edited_on = timezone.now()
+        super().save(*args, **kwargs)
 
 class FAQ(models.Model):
     question = models.TextField(blank=True, null=True)
@@ -117,4 +133,21 @@ class FAQ(models.Model):
     def save(self, *args, **kwargs):
         self.question = clean_summernote_html(self.question)
         self.answer = clean_summernote_html(self.answer)
+        super().save(*args, **kwargs)
+
+
+class Ambassadors(models.Model):
+    ambassadors = models.TextField(blank=True, null=True)
+    edited_on = models.DateTimeField(blank=True, null=True)
+    projects = models.ManyToManyField(Project, related_name="ambassador_project_picks")
+
+    class Meta:
+        verbose_name = "Ambassadors"
+        verbose_name_plural = "Ambassadors"
+
+    def __str__(self):
+        return self.edited_on.strftime("Ambassadors as edited on %I:%M %p, %d %b %Y %Z")
+
+    def save(self, *args, **kwargs):
+        self.edited_on = timezone.now()
         super().save(*args, **kwargs)

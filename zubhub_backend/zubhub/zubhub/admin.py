@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import AdminSettings, Hero, Privacy, FAQ, Help
+from .models import AdminSettings, Hero, Privacy, FAQ, Help, Challenge, Ambassadors
 
 ## these models are imported to be unregsitered
 from django_summernote.models import Attachment
@@ -28,7 +28,7 @@ class PrivacyAdmin(SummernoteModelAdmin):
     readonly_fields = ["edited_on"]
 
     class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 
 class HelpAdmin(SummernoteModelAdmin):
@@ -36,21 +36,38 @@ class HelpAdmin(SummernoteModelAdmin):
     readonly_fields = ["edited_on"]
 
     class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
+class ChallengeAdmin(SummernoteModelAdmin):
+    summernote_fields = ('challenge',)
+    readonly_fields = ["edited_on"]
+
+    class Media:
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 class FAQAdmin(SummernoteModelAdmin):
     summernote_fields = ('answer',)
 
     class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+
+
+class AmbassadorsAdmin(SummernoteModelAdmin):
+    summernote_fields = ('ambassadors',)
+    readonly_fields = ["edited_on"]
+    search_fields = ["projects"]
+    
+    class Media:
+        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
 
 
 admin.site.register(AdminSettings, AdminSettingsAdmin)
 admin.site.register(Hero, HeroAdmin)
 admin.site.register(Privacy, PrivacyAdmin)
 admin.site.register(Help, HelpAdmin)
+admin.site.register(Challenge, ChallengeAdmin)
 admin.site.register(FAQ, FAQAdmin)
+admin.site.register(Ambassadors, AmbassadorsAdmin)
 
 ## Unregister some default and third-party models
 admin.site.unregister(Attachment)

@@ -39,7 +39,7 @@ const styles = theme => ({
       color: 'white',
       backgroundColor: '#9A0036',
     },
-  },
+  }, 
   darkDangerButtonStyle: {
     borderRadius: 30,
     backgroundColor: '#9A0036',
@@ -47,6 +47,15 @@ const styles = theme => ({
     '&:hover': {
       color: 'white',
       backgroundColor: '#9A0036',
+    },
+  },
+  customWarningButtonStyle: {
+    borderRadius: 30,
+    backgroundColor: '#FECB00',
+    color: '#896e00',
+    '&:hover': {
+      color: '#896e00',
+      backgroundColor: '#FECB00',
     },
   },
   mediaUploadButtonStyle: {
