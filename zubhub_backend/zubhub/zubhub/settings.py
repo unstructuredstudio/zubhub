@@ -336,7 +336,8 @@ SUMMERNOTE_CONFIG = {
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['table', ['table']],
-            ['insert', ['emoji', 'link', 'picture', 'video']]
+            ['insert', ['emoji', 'link', 'picture', 'video']],
+            ['view', ['codeview']]
         ]
     },
     "css": ("/static/css/summernote_plugin.css",),

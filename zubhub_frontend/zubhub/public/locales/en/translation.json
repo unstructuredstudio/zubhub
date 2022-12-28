@@ -39,6 +39,7 @@
       "termsOfUse": "Terms of Use",
       "about": "About",
       "zubhub": "ZubHub",
+      "challenges": "Challenges",
       "unstructuredStudio": "Unstructured Studio",
       "help": "Help",
       "resources": "Tinkering Resources",
@@ -240,9 +241,10 @@
   },
 
   "projects": {
-    "shareProject": "Share a project",
+    "shareProject": "Share a Project",
     "exploreIdeas": "Explore Ideas",
-    "activityOfTheMonth": "Activity of the Month",
+    "zubhubAmbassadors": "Be our Ambassador",
+    "newStuff": "New Stuff",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",

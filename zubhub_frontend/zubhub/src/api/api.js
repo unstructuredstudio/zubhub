@@ -807,6 +807,17 @@ class API {
     return this.request({ url }).then(res => res.json());
   };
 
+    /**
+   * @method getChallenge
+   * @author Suchakra Sharma <suchakra@unstructured.studio>
+   *
+   */
+  getChallenge = () => {
+    const url = `challenge/`;
+
+    return this.request({ url }).then(res => res.json());
+  };
+
   /**
    * @method getPrivacy
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -829,6 +840,20 @@ class API {
     const url = `faqs/`;
 
     return this.request({ url }).then(res => res.json());
+  };
+
+  /**
+   * @method getAmbassadors
+   * @author Srishti Sethi <srishti@unstructured.studio>
+   *
+   * @todo - describe method's signature
+   */
+  getAmbassadors = ({ token, page }) => {
+    const url = page
+    ? `ambassadors/?page=${page}`
+    : `ambassadors`;
+
+    return this.request({ token, url }).then(res => res.json());
   };
 
   /**
