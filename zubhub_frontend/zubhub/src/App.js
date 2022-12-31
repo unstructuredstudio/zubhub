@@ -66,6 +66,9 @@ const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
   import('./views/activity_details/activity_details'),
 );
+const LinkedProjects = React.lazy(() =>
+  import('./views/linked_projects/LinkedProjects'),
+);
 const Ambassadors = React.lazy(() =>
   import('./views/ambassadors/Ambassadors')
 );
@@ -103,6 +106,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={CreateActivity}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities/:id/linkedProjects"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={LinkedProjects}
                 {...routeProps}
                 {...props}
               />
@@ -455,7 +471,11 @@ function App(props) {
           path="/challenge"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
+              <LazyImport
+                LazyComponent={Challenge}
+                {...routeProps}
+                {...props}
+              />
             </PageWrapper>
           )}
         />

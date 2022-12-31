@@ -903,6 +903,7 @@
    "LinkedProjects": "Linked Projects",
    "errors": {
       "emptyList": "No activities created yet !",
+      "LinkedProjects": "No projects Linked to this activity yet created !",
       "dialog": {
          "serverError": "Sorry the server is down try again later",
          "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
@@ -994,7 +995,7 @@
       "saved": "Saved",
       "signup": "Signup",
       "account-status": "Account-status",
-      "LinkedProjects": "Linked Projects",
+      "linkedProjects": "Linked Projects",
       "drafts": "drafts"
     }
   }

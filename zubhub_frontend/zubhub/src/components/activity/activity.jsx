@@ -168,15 +168,21 @@ function Activity(props) {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography
-                    variant="caption"
-                    className={classes.projectsCount}
+                  <Link
+                    to={`/activities/${activity.id}/linkedProjects`}
+                    className={common_classes.textDecorationNone}
+                    onClick={e => props.setActivity(activity)}
                   >
-                    {`${t('activities.LinkedProjects')} `}{' '}
-                    <span
-                      className={classes.projectsCountNumber}
-                    >{` ${activity.inspired_projects.length}`}</span>
-                  </Typography>
+                    <Typography
+                      variant="caption"
+                      className={classes.projectsCount}
+                    >
+                      {`${t('activities.LinkedProjects')} `}{' '}
+                      <span
+                        className={classes.projectsCountNumber}
+                      >{` ${activity.inspired_projects.length}`}</span>
+                    </Typography>
+                  </Link>
                 </Grid>
               </Grid>
             </CardContent>
