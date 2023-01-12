@@ -264,16 +264,16 @@ export const uploadFile = (
         index,
       );
     } else if (res && res.local === false) {
-      // return uploadImageToDO(
-      //   file,
-      //   auth.token,
-      //   auth.username,
-      //   handleSetState,
-      //   route,
-      //   field,
-      //   fieldType,
-      //   index,
-      // );
+      return uploadImageToDO(
+        file,
+        auth.token,
+        auth.username,
+        handleSetState,
+        route,
+        field,
+        fieldType,
+        index,
+      );
     }
   });
 };
@@ -335,7 +335,7 @@ export const uploadFileToLocal = (
               Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
                 state.countFiles,
             );
-           
+
             return {
               ...state,
               loadedPercent: loadedPercent,
@@ -370,94 +370,90 @@ export const uploadFileToLocal = (
   });
 };
 
-// export const uploadImageToDO = async (
-//   fileBeforeCompression,
-//   token,
-//   username,
-//   handleSetState,
-//   route,
-//   field,
-//   fieldType,
-//   index,
-// ) => {
-//   let file = fileBeforeCompression;
-//   console.log('size before compression', file.size);
-//   try {
-//     file = await compress(fileBeforeCompression);
-//     console.log('size after compression', file.size);
-//   } catch (error) {
-//     console.log('compression error msg:', error.message);
-//   }
-//   //`${file.name}/${nanoid()}`
-//   return new Promise((resolve, reject) => {
-//     const params = {
-//       Bucket: `${doConfig.bucketName}`,
-//       Key: nanoid(),
-//       Body: file,
-//       ContentType: file.type,
-//       ACL: 'public-read',
-//     };
+export const uploadImageToDO = async (
+  fileBeforeCompression,
+  token,
+  username,
+  handleSetState,
+  route,
+  field,
+  fieldType,
+  index,
+) => {
+  let file = fileBeforeCompression;
 
-//     DO.upload(params, err => {
-//       toast.error(err.message);
-//       reject(err.message);
-//       handleSetState(state => {
-//         return { ...state, submitting: false };
-//       });
-//     })
-//       // .on('httpUploadProgress', e => {
-//       //   const progress = Math.round((e.loaded * 100.0) / e.total);
-//       //   const { media_upload } = state;
-//       //   const upload_info = JSON.parse(
-//       //     JSON.stringify(media_upload.upload_info),
-//       //   );
-//       //   upload_info[image.name] = progress;
+  try {
+    file = await compress(fileBeforeCompression);
+  } catch (error) {
+    console.log('compression error msg:', error.message);
+  }
+  let fileFieldName = '';
+  let NameArray = [route, field, index];
+  NameArray.forEach(item => {
+    if (item) {
+      fileFieldName += item;
+    }
+  });
+  //`${file.name}/${nanoid()}`
+  return new Promise((resolve, reject) => {
+    const params = {
+      Bucket: `${doConfig.bucketName}`,
+      Key: nanoid(),
+      Body: file,
+      ContentType: file.type,
+      ACL: 'public-read',
+    };
 
-//       //   let total = 0;
-//       //   Object.keys(upload_info).forEach(each => {
-//       //     total = total + upload_info[each];
-//       //   });
+    DO.upload(params, err => {
+      reject({ message: 'uploadError', file: file.name, error: err });
+      handleSetState(state => {
+        return { ...state, submitting: false };
+      });
+    })
+      .on('httpUploadProgress', e => {
+        handleSetState(state => {
+          let loadedPercent = state.loadedPercent;
+          loadedPercent[fileFieldName] = Math.round((e.loaded * 100) / e.total);
+          let loadProgress = Math.round(
+            Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
+              state.countFiles,
+          );
 
-//       //   total = total / Object.keys(upload_info).length;
+          return {
+            ...state,
+            loadedPercent: loadedPercent,
+            loadProgress: loadProgress,
+          };
+        });
+      })
+      .send((err, data) => {
+        if (err) {
+          handleSetState(state => {
+            return { ...state, submitting: false };
+          });
 
-//       //   handleSetState({
-//       //     media_upload: {
-//       //       ...media_upload,
-//       //       upload_info,
-//       //       upload_percent: total,
-//       //     },
-//       //   });
-//       // })
-//       .send((err, data) => {
-//         if (err) {
-//           handleSetState(state => {
-//             return { ...state, submitting: false };
-//           });
-//           if (err.message.startsWith('Unexpected')) {
-//             //const error = props.t('createProject.errors.unexpected');
-//             toast.error('unexpected');
-//             reject(err.message);
-//           } else {
-//             toast.error(err.message);
-//             reject(err.message);
-//           }
-//         } else {
-//           const secure_url = data.Location;
-//           const public_id = data.Key;
-//           resolve({
-//             route: route,
-//             field: field,
-//             fieldType,
-//             index: index,
-//             url: {
-//               file_url: data.Location,
-//               public_id: data.Key,
-//             },
-//           });
-//         }
-//       });
-//   });
-// };
+          reject({
+            message: 'uploadError',
+            file: file.name,
+            error: err,
+          });
+        } else {
+          const secure_url = data.Location;
+          const public_id = data.Key;
+          resolve({
+            route: route,
+            field: field,
+            fieldType,
+            index: index,
+            url: {
+              file_url: data.Location,
+              public_id: data.Key,
+            },
+          });
+        }
+      });
+  });
+};
 
 // export const uploadVideoToCloudinary = (
 //   video,

@@ -438,17 +438,20 @@ export const initUpload = async (
       });
     } catch (error) {
       console.log('error ', error);
-      if (error.error.response.status >= 500) {
-        toast.warning(
-          `${props.t(`activities.errors.dialog.mediaServerError`)}`,
-        );
-      } else {
-        toast.warning(
-          `${props.t(`activities.errors.dialog.${error.message}`)} ${
-            error.file
-          }`,
-        );
-      }
+      toast.warning(
+        `${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`,
+      );
+      // if (error.error.response.status >= 500) {
+      //   toast.warning(
+      //     `${props.t(`activities.errors.dialog.mediaServerError`)}`,
+      //   );
+      // } else {
+      //   toast.warning(
+      //     `${props.t(`activities.errors.dialog.${error.message}`)} ${
+      //       error.file
+      //     }`,
+      //   );
+      // }
       handleSetState(state => {
         return { ...state, ['submitting']: false };
       });
