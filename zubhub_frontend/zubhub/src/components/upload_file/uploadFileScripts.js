@@ -161,7 +161,14 @@ const getFilesFromNested = nestedObject => {
   });
   return files;
 };
-export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
+export const FormMediaUpload = (
+  state,
+  auth,
+  handleSetState,
+  formikValues,
+  getSignature,
+  t,
+) => {
   let promises = [];
   let fileFields = [
     {
@@ -226,6 +233,8 @@ export const FormMediaUpload = (state, auth, handleSetState, formikValues) => {
               item.field,
               item.type,
               index,
+              getSignature,
+              t,
             ),
           );
         }
@@ -246,6 +255,8 @@ export const uploadFile = (
   field,
   fieldType,
   index,
+  getSignature,
+  t,
 ) => {
   const args = {
     token: auth.token,
@@ -264,16 +275,29 @@ export const uploadFile = (
         index,
       );
     } else if (res && res.local === false) {
-      return uploadImageToDO(
-        file,
-        auth.token,
-        auth.username,
-        handleSetState,
-        route,
-        field,
-        fieldType,
-        index,
-      );
+      // if (file.type.split('/')[0] === 'image') {
+        return uploadImageToDO(
+          file,
+          handleSetState,
+          route,
+          field,
+          fieldType,
+          index,
+        );
+      // } else {
+      //   return uploadVideoToCloudinary(
+      //     file,
+      //     auth.token,
+      //     auth.username,
+      //     handleSetState,
+      //     route,
+      //     field,
+      //     index,
+      //     fieldType,
+      //     getSignature,
+      //     t,
+      //   );
+      // }
     }
   });
 };
@@ -372,8 +396,6 @@ export const uploadFileToLocal = (
 
 export const uploadImageToDO = async (
   fileBeforeCompression,
-  token,
-  username,
   handleSetState,
   route,
   field,
@@ -394,17 +416,28 @@ export const uploadImageToDO = async (
       fileFieldName += item;
     }
   });
-  //`${file.name}/${nanoid()}`
+ 
   return new Promise((resolve, reject) => {
     const params = {
       Bucket: `${doConfig.bucketName}`,
-      Key: nanoid(),
+      Key: `${doConfig.project_images}/${nanoid()}`,
       Body: file,
       ContentType: file.type,
       ACL: 'public-read',
+      // CORSConfiguration: {
+      //   CORSRules: [
+      //     {
+      //       AllowedHeaders: ['Authorization'],
+      //       AllowedMethods: ['GET', 'HEAD', 'POST', 'PUT', 'HEAD'],
+      //       AllowedOrigins: ['http://www.example.com'],
+      //       ExposeHeaders: ['Access-Control-Allow-Origin'],
+      //     },
+      //   ],
+      // },
     };
 
     DO.upload(params, err => {
+      
       reject({ message: 'uploadError', file: file.name, error: err });
       handleSetState(state => {
         return { ...state, submitting: false };
@@ -456,13 +489,18 @@ export const uploadImageToDO = async (
 };
 
 // export const uploadVideoToCloudinary = (
-//   video,
-//   state,
-//   props,
+//   file,
+//   token,
+//   username,
 //   handleSetState,
+//   route,
+//   field,
+//   index,
+//   fieldType,
+//   getSignature,
+//   t,
 // ) => {
 //   const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
-
 //   const upload_preset =
 //     process.env.REACT_APP_NODE_ENV === 'production'
 //       ? process.env.REACT_APP_VIDEO_UPLOAD_PRESET_NAME
@@ -470,37 +508,75 @@ export const uploadImageToDO = async (
 
 //   const params = {
 //     upload_preset,
-//     username: props.auth.username,
-//     filename: video.name,
-//     t: props.t,
-//     token: props.auth.token,
+//     username: username,
+//     filename: file.name,
+//     t: t,
+//     token: token,
 //   };
-
-//   return props.getSignature(params).then(sig_res => {
+//   let fileFieldName = '';
+//   let NameArray = [field, index];
+//   NameArray.forEach(item => {
+//     if (item) {
+//       fileFieldName += item;
+//     }
+//   });
+//   return new Promise(async (resolve, reject) => {
+//     const sig_res = await getSignature(params);
+//     console.log('sig_res', sig_res);
 //     if (typeof sig_res === 'object') {
 //       const formData = new FormData();
-//       formData.append('file', video);
+//       formData.append('file', file);
 //       formData.append('public_id', sig_res.public_id);
 //       formData.append('upload_preset', upload_preset);
 //       formData.append('api_key', sig_res.api_key);
 //       formData.append('timestamp', sig_res.timestamp);
 //       formData.append('signature', sig_res.signature);
+//       try {
+//         const result = await axios.post(url, formData, {
+//           headers: {
+//             Authorization: `Token ${token}`,
+//             'Access-Control-Allow-Origin': '*',
+//             'Content-Type': 'application/json',
+//           },
+//           withCredentials: true,
+//           onUploadProgress: e => {
+//             handleSetState(state => {
+//               let loadedPercent = state.loadedPercent;
+//               loadedPercent[fileFieldName] = Math.round(
+//                 (e.loaded * 100) / e.total,
+//               );
+//               let loadProgress = Math.round(
+//                 Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
+//                   state.countFiles,
+//               );
 
-//       return new Promise((resolve, reject) => {
-//         const um = new UploadMedia(
-//           'video',
-//           url,
-//           formData,
-//           state,
-//           props,
-//           handleSetState,
-//           resolve,
-//           reject,
-//         );
-//         um.upload();
-//       });
+//               return {
+//                 ...state,
+//                 loadedPercent: loadedPercent,
+//                 loadProgress: loadProgress,
+//               };
+//             });
+//           },
+//         });
+//         console.log('response result from cloudinary', result);
+
+//         resolve({
+//           route: route,
+//           field: field,
+//           fieldType,
+//           index: index,
+//           url: { file_url: result.data.secure_url },
+//         });
+//       } catch (error) {
+//         reject({ message: 'videoUploadError', file: file.name, error: error });
+//       }
 //     } else {
-//       return Promise.reject('');
+//       reject({
+//         message: 'videoUploadError reject getSignal',
+//         file: file.name,
+//         error: sig_res,
+//       });
 //     }
 //   });
+
 // };

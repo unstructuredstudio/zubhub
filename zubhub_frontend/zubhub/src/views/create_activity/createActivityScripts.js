@@ -393,6 +393,8 @@ export const initUpload = async (
       props.auth,
       handleSetState,
       formikProps.formikValues,
+      props.getSignature,
+      props.t
     );
 
     let values = { ...formikProps.formikValues };
