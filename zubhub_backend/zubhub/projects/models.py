@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
 from projects.utils import clean_comment_text, clean_project_desc
+#from activities.models import Activity
 
 Creator = get_user_model()
 
@@ -78,7 +79,7 @@ class Project(models.Model):
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000)
-    category = models.ForeignKey(Category,
+    category = models.ForeignKey("projects.Category",
                                  on_delete=models.SET_NULL,
                                  null=True,
                                  blank=True,
@@ -102,7 +103,11 @@ class Project(models.Model):
                                    on_delete=models.RESTRICT,
                                    related_name='project_target')
     search_vector = SearchVectorField(null=True)
-
+    inspired_from_activity = models.ForeignKey("activities.Activity",
+                                               on_delete=models.SET_NULL,
+                                               null=True,
+                                               blank=True,
+                                               related_name="inspired_projects")
     class Meta:
         indexes = (GinIndex(fields=["search_vector"]), )
 

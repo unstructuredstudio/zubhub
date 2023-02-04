@@ -25,7 +25,12 @@
       "followers": "Followers",
       "following": "Following",
       "savedProjects": "Bookmarks",
-      "logout": "Logout"
+      "logout": "Logout",
+      "browseActivities": "BROWSE ACTIVITIES",
+      "createActivity": "CREATE ACTIVITY",
+      "createActivityMenu": "Create Activity",
+      "unpublishedActivities": "Unpublished Activities",
+      "myActivities": "My Activities"
     },
 
     "footer": {
@@ -34,6 +39,7 @@
       "termsOfUse": "Terms of Use",
       "about": "About",
       "zubhub": "ZubHub",
+      "challenges": "Challenges",
       "unstructuredStudio": "Unstructured Studio",
       "help": "Help",
       "resources": "Tinkering Resources",
@@ -235,9 +241,10 @@
   },
 
   "projects": {
-    "shareProject": "Share a project",
+    "shareProject": "Share a Project",
     "exploreIdeas": "Explore Ideas",
-    "activityOfTheMonth": "Activity of the Month",
+    "zubhubAmbassadors": "Be our Ambassador",
+    "newStuff": "New Stuff",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
@@ -552,6 +559,11 @@
       "placeholder1": "Tell us more about you by clicking on the edit button at the top of the page 😀!",
       "placeholder2": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
+    "activityLog": "Activity Log",
+    "badge": {
+      "badges": "Badges",
+      "addBadges": "Seems like you have not created any project yet, add projects to your profile to get badges 😉!"
+    },
     "projects": {
       "label": "Latest projects",
       "viewAll": "View all >>"
@@ -756,5 +768,236 @@
     "errors": {
       "page_empty": "This page is empty"
     }
+  },
+
+  "createActivity": {
+    "welcomeMsg": {
+      "primary": "Create Activity",
+      "edit": "Update Activity"
+    },
+    "inputs": {
+      "title": {
+        "label": "Name your Activity",
+        "errors": {
+          "max": "your title shouldn't be more than 50 characters",
+          "required": "This field is required"
+        }
+      },
+      "motivation": {
+        "label": "Motivation",
+        "helperText": "Add motivation text",
+        "placeholder": "Add motivation text",
+        "errors": {
+          "max": "your motivation shouldn't be more than 1000 characters",
+          "required": "This field is required"
+        }
+      },
+      "learning_goals": {
+        "label": "Add Learning Goals",
+        "helperText": "List some of this activity's learning goals",
+        "placeholder": "List some of this activity's learning goals",
+        "errors": {
+          "max": "your learning goals shouldn't be more than 1000 characters",
+          "required": "This field is required"
+        }
+      },
+      "materials_used": {
+      "label": "What materials did you use?",
+      "addMore": "Add Material",
+      "helperText": "List some of the essential materials used to create this activity",
+      "encouragingText": "We strongly encourage you to upload an image containing all materials and tools used to create this activity",
+      "images": {
+        "label": "Add Image"
+      },
+      "errors": {
+        "max": "your material shouldn't be more than 50 characters",
+        "required": "this field is required",
+        "required1": "At least one material is required!",
+        "min": "your material should be at least 2 characters"
+      }
+      },
+      "facilitation_tips": {
+        "label": "Facilitation tips",
+        "helperText": "List some helpful facilitation tips",
+        "placeholder": "Facilitation tips",
+        "errors": {
+          "max": "your facilitation tips shouldn't be more than 10,000 characters",
+          "required": "This field is required"
+        }
+
+      },
+      "activityImages": {
+        "label": "Add Images of your activity",
+        "errors": {
+          "required1": "you can't create a new activity without images",
+          "required": "This field is required",
+          "onlyImages": "Only images are allowed for this field",
+          "imageOrVideo": "You must provide either image(s), video file, or video url to create your activity!",
+          "imageSizeTooLarge": "One or more of your images is larger than 10 MB in size! Upload smaller images",
+          "tooManyImages": "Too many images uploaded! We only support 10 images per activity :("
+        }
+      },
+      "making_steps": {
+        "label": "Creation Steps",
+        "helperText": "List steps you followed to create this activity",
+        "placeholder": "creation step",
+        "addMore": "Add a Step",
+        "image": {
+          "label": "Add Step Image"
+        },
+        "errors": {
+          "max": "your creation step shouldn't be more than 1000 characters",
+          "required": "describe creation process in at least one step ",
+          "emptyStep": "step can't be empty provide either a description or an image"
+        }
+      },
+      "inspiring_artist": {
+        "label": "Inspiring Person",
+        "helperText": "Enter a Bio of your inspiring Person",
+        "placeholder": "Inspiring Person Bio",
+        "image": {
+          "label": "Add Inspiring Person Image"
+        },
+        "errors": {
+          "max": "your artist bio shouldn't be more than 1000 characters",
+          "required": "This field is required"
+        }
+      },
+      "inspiring_examples": {
+        "label": "Inspiring Examples",
+        "addMore": "Add Example",
+        "image": {
+          "label": "Add Example Image"
+        },
+         "errors": {
+          "max": "your inspiring example's description shouldn't be more than 100 characters",
+          "required": "This field is required",
+          "maxCredit": "your inspiring example's credit shouldn't be more than 50 characters"
+
+        }
+      },
+        "video": {
+          "label": "Let's add a video",
+          "label2": "Add Video",
+          "helperText": "You can provide video URL (Youtube, vimeo and Google Drive are supported) or a video file",
+          "errors": {
+            "shouldBeURL": "Select a valid video URL from YouTube, Vimeo, or Google Drive",
+            "shouldBeVideoFile": "Select a valid video file",
+            "maxVideoFileSize": "video file is more than 60MB",
+            "maxVideoURLLength": "video URL is too long"
+          }
+      },
+      "image": "Image added",
+      "images": "Images added",
+      "videoFile": "Video file added",
+      "videoURL": "Video URL added"  
+    },
+    "buttons": {
+      "Next": "Next",
+      "Prev": "Prev",
+      "Submit": "Submit For Review",
+      "Edit": "Save Changes"
+    }
+  },
+ "activities": {
+   "LinkedProjects": "Linked Projects",
+   "errors": {
+      "emptyList": "No activities created yet !",
+      "LinkedProjects": "No projects Linked to this activity yet created !",
+      "dialog": {
+         "serverError": "Sorry the server is down try again later",
+         "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
+         "uploadError": "error occurred while downloading file : "
+      }
+   }
+ },
+
+  "activityDetails": {
+    "subTitles": {
+       "learning_goals": "LEARNING GOALS",
+       "materials_required": "MATERIALS REQUIRED",
+       "making_steps": "MAKING STEPS",
+       "inspiring_person": "INSPIRING ARTIST/SCIENTIST",
+       "facilitation_tips": "FACILITATION TIPS",
+       "inspiring_examples": "SOME INSPIRING EXAMPLES",
+       "contributors": "CONTRIBUTORS"
+    },
+    "made": "Made by",
+    "activity": {
+      "creator": {
+        "follow": "Follow",
+        "unfollow": "Unfollow"
+      },
+      "description": "Description",
+      "materials": "Materials Used",
+      "category": "Category",
+      "tags": "Tags",
+      "none": "None",
+      
+      "build": "Let's Make This Project",
+      "pdf": "Download Pdf",
+      "create": {
+        "dialog": {
+          "primary": "Create Activity",
+          "cancel": "Cancel",
+          "proceed": "Proceed",
+          "success": "activity Created successfully",
+          "forbidden": "You must be staff monitor ao educator to be able to create a new activity "
+        }
+      },
+      "edit": {
+        "label": "Edit",
+        "dialog": {
+          "primary": "Edit Activity",
+          "cancel": "Cancel",
+          "proceed": "Proceed",
+          "success": "activity edited successfully",
+          "forbidden": "You must be the owner of this activity to perform this function"
+        }
+      },
+      "delete": {
+        "label": "Delete",
+        "dialog": {
+          "primary": "Delete Activity",
+          "secondary": "Are you sure you want to delete this activity? You can't undo this action!!",
+          "cancel": "Cancel",
+          "proceed": "Proceed",
+          "success": "activity deleted successfully",
+          "forbidden": "You must be the owner of this activity to perform this function"
+        }
+      },
+      "publish": {
+         "label": "Publish"
+      },
+      "unpublish": {
+         "label": "UnPublish"
+      }
+    },
+      "saveButton": {
+        "label": "save button",
+        "save": "save",
+        "unsave": "unsave"
+      }
+  },
+  "breadCrumb":{
+    "link":{
+      "activities": "Activities",
+      "projects": "Projects",
+      "edit": "Edit",
+      "create": "Create",
+      "about": "About",
+      "login": "Login",
+      "profile": "Profile",
+      "creators": "Creators",
+      "followers": "Followers",
+      "following": "Following",
+      "edit-profile": "Edit-profile",
+      "saved": "Saved",
+      "signup": "Signup",
+      "account-status": "Account-status",
+      "linkedProjects": "Linked Projects",
+      "drafts": "drafts"
+    }
   }
+ 
 }

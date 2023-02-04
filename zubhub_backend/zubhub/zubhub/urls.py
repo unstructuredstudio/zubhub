@@ -30,10 +30,6 @@ urlpatterns = [
 ]
 
 
-
-
-
-
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
@@ -44,11 +40,12 @@ if settings.DEBUG:
 if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
     """ Don't server documentation and schema in production """
 
-    from rest_auth.urls import (LoginView, LogoutView, PasswordResetConfirmView, PasswordResetView)
+    from rest_auth.urls import (
+        LoginView, LogoutView, PasswordResetConfirmView, PasswordResetView)
     from rest_auth.registration.urls import VerifyEmailView
     from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
-                            HeroAPIView, HelpAPIView, PrivacyAPIView, 
-                            FAQAPIView, SigGenAPIView, UploadFileToLocalAPIView, 
+                            HeroAPIView, HelpAPIView, ChallengeAPIView, PrivacyAPIView, 
+                            FAQAPIView, AmbassadorsAPIView, SigGenAPIView, UploadFileToLocalAPIView,
                             MarkdownToHtmlAPIView, MediaSchemaAPIView, WebSchemaAPIView)
 
     schema_url_patterns = [
@@ -59,13 +56,17 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/rest-auth/password/reset/confirm/', PasswordResetConfirmView.as_view()),
             path('api/creators/', include('creators.urls')),
             path('api/projects/', include('projects.urls')),
+            path('api/activities/', include('activities.urls')),
+            path('api/activitylog/', include('activitylog.urls')),
             path('api/upload-file/', UploadFileAPIView),
             path('api/delete-file/', DeleteFileAPIView),
             path('api/upload-file-to-local/', UploadFileToLocalAPIView),
             path('api/hero/', HeroAPIView.as_view()),
             path('api/help/', HelpAPIView.as_view()),
+            path('api/challenge/', ChallengeAPIView.as_view()),
             path('api/privacy/', PrivacyAPIView.as_view()),
             path('api/faqs/', FAQAPIView.as_view()),
+            path('api/ambassadors/', AmbassadorsAPIView.as_view()),
             path('api/signature/', SigGenAPIView)
             ]
 
@@ -74,6 +75,6 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
         path('media-schema/', MediaSchemaAPIView, name="media-schema"),
         path('', TemplateView.as_view(
             template_name='doc/doc.html',
-            extra_context={'web_schema_url':'web-schema', 'media_schema_url': 'media-schema'}), name="doc"),
+            extra_context={'web_schema_url': 'web-schema', 'media_schema_url': 'media-schema'}), name="doc"),
         path('markdown-to-html/', MarkdownToHtmlAPIView, name="markdown-to-html")
     ]

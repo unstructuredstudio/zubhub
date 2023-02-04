@@ -7,6 +7,21 @@ const styles = theme => ({
       backgroundColor: '#03848C',
     },
   },
+  primaryButtonStyle2: {
+    backgroundColor: '#FFD73D',
+    '&:hover': {
+      backgroundColor: '#EFBF06',
+    },
+  },
+  primaryButtonStyle3: {
+    backgroundColor: '#DC3545',
+    border: '2px solid #FFCE0C',
+    borderRadius: 30,
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#B41423',
+    },
+  },
   secondaryButtonStyle: {
     borderRadius: 30,
     backgroundColor: 'white',
@@ -24,7 +39,7 @@ const styles = theme => ({
       color: 'white',
       backgroundColor: '#9A0036',
     },
-  },
+  }, 
   darkDangerButtonStyle: {
     borderRadius: 30,
     backgroundColor: '#9A0036',
@@ -32,6 +47,15 @@ const styles = theme => ({
     '&:hover': {
       color: 'white',
       backgroundColor: '#9A0036',
+    },
+  },
+  customWarningButtonStyle: {
+    borderRadius: 30,
+    backgroundColor: '#FECB00',
+    color: '#896e00',
+    '&:hover': {
+      color: '#896e00',
+      backgroundColor: '#FECB00',
     },
   },
   mediaUploadButtonStyle: {

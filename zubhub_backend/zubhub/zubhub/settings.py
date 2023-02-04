@@ -113,7 +113,9 @@ INSTALLED_APPS = [
     'APIS',
     'creators',
     'projects',
-    'notifications'
+    'notifications',
+    'activitylog',
+    'activities',
 ]
 
 # askimet
@@ -334,7 +336,8 @@ SUMMERNOTE_CONFIG = {
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['table', ['table']],
-            ['insert', ['emoji', 'link', 'picture', 'video']]
+            ['insert', ['emoji', 'link', 'picture', 'video']],
+            ['view', ['codeview']]
         ]
     },
     "css": ("/static/css/summernote_plugin.css",),

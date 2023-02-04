@@ -4,6 +4,9 @@ const styles = theme => ({
   },
   mainContainerStyle: {
     maxWidth: '2000px',
+    zIndex: 1,
+    boxShadow:
+      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
   },
   toolBarStyle: {
     paddingLeft: 0,
@@ -167,11 +170,12 @@ const styles = theme => ({
       },
     },
   },
-  profileStyle: { fontWeight: 'bold',
-                  width: '130px',
-                  textOverflow: 'ellipsis',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
+  profileStyle: {
+    fontWeight: 'bold',
+    width: '130px',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
   },
   logOutStyle: {
     borderTop: '1px solid #C4C4C4',
@@ -258,6 +262,9 @@ const styles = theme => ({
   displayNone: { display: 'none' },
   largeLabel: {
     fontSize: '1.3rem',
+  },
+  marginBottom: {
+    marginBottom: '45px',
   },
 });
 

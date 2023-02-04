@@ -281,6 +281,13 @@ const styles = theme => ({
       fontSize: '1.2rem',
     },
   },
+  requiredLabelStyle: {
+    display: 'inline-block',
+    color: 'red'
+  },
+  errorMessage: {
+    color: 'red'
+  }
 });
 
 export default styles;
