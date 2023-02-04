@@ -56,7 +56,10 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/rest-auth/password/reset/confirm/', PasswordResetConfirmView.as_view()),
             path('api/creators/', include('creators.urls')),
             path('api/projects/', include('projects.urls')),
+<<<<<<< HEAD
             path('api/activities/', include('activities.urls')),
+=======
+>>>>>>> master
             path('api/activitylog/', include('activitylog.urls')),
             path('api/upload-file/', UploadFileAPIView),
             path('api/delete-file/', DeleteFileAPIView),
