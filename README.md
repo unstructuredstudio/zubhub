@@ -4,16 +4,17 @@
 
 # Intro
 
-ZubHub is a free web platform that expands access to low-cost creative learning and collaboration opportunities globally to children in underserved communities.
+**ZubHub** is an open-source, documentation & collaboration tool for activity-based learning. It is available for custom use for schools, libraries, hackerspaces, educational organizations, etc. Imagine your own online community built around your educational activities! 
 
-It is available for custom use for your school, library, hackerspace, or educational organization. It can be hosted in low or no internet bandwidth locations to create a small virtual hub. These hubs can be interconnected to form an extensive distributed creative education network. You can think of it as [Mastodon](<https://en.wikipedia.org/wiki/Mastodon_(software)>) social network but specifically intended for showcasing and collaborating on creative educational projects. Or maybe like [Hackaday.io](https://hackaday.io/), but for children :smiley:
+Zubhub is designed and developed by [Unstructured Studio](https://unstructured.studio). We are an educational non-profit organization incorporated in Canada and India. We have our own ZubHub and we use it to expand access to low-cost creative learning opportunities to children and educators. On our ZubHub, children, and educators can get inspired by a collection of activity ideas and projects, learn how to build with the materials and tools that they already have access to, and share their creations with others. Some of the primary features are creator portfolios, community-curated projects, discussion-based collaboration, and workshops. ZubHub takes inspiration from the research conducted on the [Build In Progress](http://web.mit.edu/ttseng/www/portfolio/build_in_progress/index.html) platform at the MIT Media Lab. :smiley:
 
 | ZubHub is currently in public beta. A public ZubHub instance is hosted here: https://zubhub.unstructured.studio |
 | --------------------------------------------------------------------------------------------------------------- |
 
-Zubhub is designed and developed by [Unstructured Studio](https://unstructured.studio), an educational non-profit organization incorporated in Canada and India. Want to know more about ZubHub and our feature roadmap? Head to 👉 [ZubHub Wiki](https://github.com/unstructuredstudio/zubhub/wiki)!
+Want to know more about ZubHub and our feature roadmap? Head to 👉 [ZubHub Wiki](https://github.com/unstructuredstudio/zubhub/wiki)!
 
-<img src="screenshot.png">
+<img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/288353/216785034-05025129-fd99-414a-868d-7103fc38bf68.png">
+
 
 # Development Setup
 
