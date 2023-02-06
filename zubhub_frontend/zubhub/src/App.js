@@ -1,6 +1,7 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import CreateActivity from './views/create_activity/create_activity';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
@@ -61,6 +62,13 @@ const ProjectDetails = React.lazy(() =>
 const StaffPickDetails = React.lazy(() =>
   import('./views/staff_pick_details/StaffPickDetails'),
 );
+const Activities = React.lazy(() => import('./views/activities/activities'));
+const ActivityDetails = React.lazy(() =>
+  import('./views/activity_details/activity_details'),
+);
+const LinkedProjects = React.lazy(() =>
+  import('./views/linked_projects/LinkedProjects'),
+);
 const Ambassadors = React.lazy(() =>
   import('./views/ambassadors/Ambassadors')
 );
@@ -89,6 +97,31 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+        <Route
+          path="/activities/create"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateActivity}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities/:id/linkedProjects"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={LinkedProjects}
+                {...routeProps}
+                {...props}
+              />
             </PageWrapper>
           )}
         />
@@ -361,7 +394,18 @@ function App(props) {
             </PageWrapper>
           )}
         />
-
+        <Route
+          path="/projects/:activity_id/create"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateProject}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
         <Route
           path="/projects/:id"
           render={routeProps => (
@@ -427,7 +471,11 @@ function App(props) {
           path="/challenge"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
+              <LazyImport
+                LazyComponent={Challenge}
+                {...routeProps}
+                {...props}
+              />
             </PageWrapper>
           )}
         />
@@ -437,6 +485,45 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={FAQs} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities/:id/edit"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateActivity}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities/:id"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={ActivityDetails}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/activities"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={Activities}
+                {...routeProps}
+                {...props}
+              />
             </PageWrapper>
           )}
         />

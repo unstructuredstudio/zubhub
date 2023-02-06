@@ -34,6 +34,13 @@ export const cloudinaryFactory = window => {
  *
  * @todo - describe function's signature
  */
+
+export const videoOrUrl = video_url => {
+  let regex =
+    /^((http[s]?:\/\/)?(www\.)?youtube\.com)?((http[s]?:\/\/)?(www\.)?vimeo\.com)?((http[s]?:\/\/)?(www\.)?drive.google\.com)?/gm;
+  return video_url.match(regex)[0] !== '' ? false : true;
+};
+
 export const buildVideoThumbnailURL = video_url => {
   if (video_url.search('youtube.com/embed/') > -1) {
     const id = video_url.split('youtube.com/embed/')[1];
@@ -96,7 +103,6 @@ const shouldSetImages = (compressed, images, state, handleSetState) => {
   if (compressed.length === images.length) {
     const { media_upload } = state;
     media_upload.images_to_upload = compressed;
-
     handleSetState(media_upload);
   }
 };
@@ -144,7 +150,6 @@ export const countComments = comments => {
  */
 export const Compress = (images, state, handleSetState) => {
   let compressed = [];
-
   for (let index = 0; index < images.length; index += 1) {
     let image = images[index];
 
@@ -314,4 +319,86 @@ export const calculateLabelWidth = (text, document) => {
  */
 export const isBaseTag = tag => {
   return BASE_TAGS.includes(tag);
+};
+
+export const getRouteFieldIndex = str => {
+  let arr = str.split('.');
+  let { route, index } = getRouteAndIndex(arr[0]);
+  return arr.length > 1
+    ? { route: route, field: arr[1], index: index }
+    : { field: route, index: index };
+};
+
+export const getRouteAndIndex = str => {
+  let arr = str.split('[');
+  return arr.length > 1
+    ? { route: arr[0], index: parseInt(arr[1].split('')[0]) }
+    : { route: arr[0], index: parseInt('-1', 10) };
+};
+
+export const getIndexFromFieldName = fieldName => {
+  let arr = fieldName.split('[');
+  return arr.length > 1 ? parseInt(arr[1].split('')[0]) : parseInt('-1', 10);
+};
+
+export const getFieldAndIndex = str => {
+  let arr = str.split('[');
+  return arr.length > 1
+    ? { field: arr[0], index: parseInt(arr[1].split('')[0]) }
+    : { field: arr[0], index: parseInt('-1', 10) };
+};
+
+export const getBase64ImageFromURL = (url, field, index) => {
+  return new Promise((resolve, reject) => {
+    var img = new Image();
+    img.setAttribute('crossOrigin', 'anonymous');
+    // function draw(img) {
+    //   var buffer = document.createElement('canvas');
+    //   buffer.width = img.width;
+    //   buffer.height = img.height;
+    //   var bufferctx = buffer.getContext('2d');
+    //   bufferctx.drawImage(img, 0, 0);
+    //   var imageData = bufferctx.getImageData(0, 0, buffer.width, buffer.height);
+    //   var data = imageData.data;
+    //   var removeBlack = function () {
+    //     for (var i = 0; i < data.length; i += 4) {
+    //       if (data[i] + data[i + 1] + data[i + 2] < 10) {
+    //         data[i + 3] = 0; // alpha
+    //       }
+    //     }
+    //     bufferctx.putImageData(imageData, 0, 0);
+    //   };
+    //   removeBlack();
+    //   var dataURL = buffer.toDataURL('image/jpeg');
+    //   index >= 0
+    //     ? resolve({ [`${field}${index}image`]: dataURL })
+    //     : resolve({ [field]: dataURL });
+    // }
+    // img.onload = () => {
+    //   draw(img);
+    // };
+    img.onload = () => {
+      var canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFF';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      var dataURL = canvas.toDataURL('image/jpeg');
+      index >= 0
+        ? resolve({ [`${field}${index}image`]: dataURL })
+        : resolve({ [field]: dataURL });
+    };
+    img.onerror = error => {
+      reject(error);
+    };
+
+    img.src = url;
+  });
+};
+
+export const capitalize = str => {
+  let newStr = str.toString().toLowerCase();
+  return newStr.charAt(0).toUpperCase() + newStr.slice(1);
 };

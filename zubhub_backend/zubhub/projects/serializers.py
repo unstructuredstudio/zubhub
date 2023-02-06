@@ -11,19 +11,21 @@ from .pagination import ProjectNumberPagination
 from .utils import update_images, update_tags, parse_comment_trees, get_published_projects_for_user
 from .tasks import update_video_url_if_transform_ready, delete_file_task
 from math import ceil
-
+from activities.models import Activity
 
 Creator = get_user_model()
 
 
 class PublishingRuleSerializer(serializers.ModelSerializer):
     visible_to = CreatorMinimalSerializer(read_only=True, many=True)
+
     class Meta:
         model = PublishingRule
         fields = [
             "type",
             "visible_to"
         ]
+
 
 class CommentSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
@@ -80,6 +82,7 @@ class TagSerializer(serializers.ModelSerializer):
             "name"
         ]
 
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -102,7 +105,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         slug_field="name", queryset=Category.objects.all(), required=False)
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
-    publish =  PublishingRuleSerializer(read_only=True)
+    publish = PublishingRuleSerializer(read_only=True)
+    activity = serializers.SlugRelatedField(
+        slug_field="id", queryset=Activity.objects.all(), required=False)
 
     class Meta:
         model = Project
@@ -121,7 +126,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             "views_count",
             "comments",
             "created_on",
-            "publish"
+            "publish",
+            "activity"
         ]
 
     read_only_fields = ["created_on", "views_count"]
@@ -190,8 +196,8 @@ class ProjectSerializer(serializers.ModelSerializer):
         try:
 
             if publish["type"] not in [
-                PublishingRule.DRAFT, PublishingRule.PUBLIC,
-                PublishingRule.AUTHENTICATED_VIEWERS, PublishingRule.PREVIEW]:
+                    PublishingRule.DRAFT, PublishingRule.PUBLIC,
+                    PublishingRule.AUTHENTICATED_VIEWERS, PublishingRule.PREVIEW]:
                 raise serializers.ValidationError(
                     _("publish type is not supported. must be one of 1,2,3 or 4")
                 )
@@ -202,35 +208,38 @@ class ProjectSerializer(serializers.ModelSerializer):
                 )
 
             if (publish["type"] == PublishingRule.PREVIEW and
-                len(publish["visible_to"]) == 0):
+                    len(publish["visible_to"]) == 0):
                 raise serializers.ValidationError(
                     _("publish visible_to must not be empty when publish type is Preview")
                 )
 
         except:
-             raise serializers.ValidationError(
-                 _("publish format is not supported")
-             )
+            raise serializers.ValidationError(
+                _("publish format is not supported")
+            )
 
         return publish
-        
 
     def create(self, validated_data):
         images_data = validated_data.pop('images')
-        tags_data = self.validate_tags(self.context['request'].data.get("tags", []))
+        tags_data = self.validate_tags(
+            self.context['request'].data.get("tags", []))
         category = None
+        activity = validated_data.pop('activity', None)
         if validated_data.get('category', None):
             category = validated_data.pop('category')
 
-        publish = self.validate_publish(self.context['request'].data.get("publish", {}))
+        publish = self.validate_publish(
+            self.context['request'].data.get("publish", {}))
 
         with transaction.atomic():
 
-            rule = PublishingRule.objects.create(type=publish["type"], 
-                        publisher_id=str(self.context["request"].user.id))
-            
+            rule = PublishingRule.objects.create(type=publish["type"],
+                                                 publisher_id=str(self.context["request"].user.id))
+
             if rule.type == PublishingRule.PREVIEW:
-                rule.visible_to.set(Creator.objects.filter(username__in=publish["visible_to"]))
+                rule.visible_to.set(Creator.objects.filter(
+                    username__in=publish["visible_to"]))
 
             project = Project.objects.create(**validated_data, publish=rule)
 
@@ -243,6 +252,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
             if category:
                 category.projects.add(project)
+            if activity is not None:
+                activity.inspired_projects.add(project)
 
             if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
                 update_video_url_if_transform_ready.delay(
@@ -263,25 +274,26 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         if (project.video.find("cloudinary.com") > -1 or
             project.video.startswith("{0}://{1}".format(
-            settings.DEFAULT_MEDIA_SERVER_PROTOCOL,
-            settings.DEFAULT_MEDIA_SERVER_DOMAIN)) and 
-            project.video != video_data):
+                settings.DEFAULT_MEDIA_SERVER_PROTOCOL,
+                settings.DEFAULT_MEDIA_SERVER_DOMAIN)) and
+                project.video != video_data):
             delete_file_task.delay(project.video)
 
         with transaction.atomic():
 
-            rule = PublishingRule.objects.create(type=publish["type"], 
-                        publisher_id=str(self.context["request"].user.id))
+            rule = PublishingRule.objects.create(type=publish["type"],
+                                                 publisher_id=str(self.context["request"].user.id))
 
             if rule.type == PublishingRule.PREVIEW:
-                rule.visible_to.set(Creator.objects.filter(username__in=publish["visible_to"]))
+                rule.visible_to.set(Creator.objects.filter(
+                    username__in=publish["visible_to"]))
 
             project.title = validated_data.pop("title")
             project.description = validated_data.pop("description")
             project.video = video_data
             project.materials_used = validated_data.pop("materials_used")
             project.publish = rule
-                
+
             project.save()
 
             update_images(project, images_data)
@@ -308,7 +320,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
     saved_by = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
     created_on = serializers.DateTimeField(read_only=True)
-    publish =  PublishingRuleSerializer(read_only=True)
+    publish = PublishingRuleSerializer(read_only=True)
 
     class Meta:
         model = Project
@@ -345,8 +357,8 @@ class StaffPickSerializer(serializers.ModelSerializer):
         projects = obj.projects.all()
 
         projects = get_published_projects_for_user(
-                    self.context['request'].user, 
-                    projects)
+            self.context['request'].user,
+            projects)
 
         paginator = ProjectNumberPagination()
         page = paginator.paginate_queryset(

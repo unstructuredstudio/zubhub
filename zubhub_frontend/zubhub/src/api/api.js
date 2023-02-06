@@ -1,5 +1,4 @@
 import i18next from 'i18next';
-
 /**
  * API class containing all the calls to the backend api endpoints
  */
@@ -279,8 +278,8 @@ class API {
   getUserActivity = (username, page) => {
     let url = `activitylog/${username}/?page=${page}`;
 
-    return this.request({url}).then(res => res.json());
-  }
+    return this.request({ url }).then(res => res.json());
+  };
 
   /**
    * @method getUserDrafts - get a paginated list of drafts
@@ -537,10 +536,10 @@ class API {
     category,
     tags,
     publish,
+    activity,
   }) => {
     const url = 'projects/create/';
     const method = 'POST';
-
     const body = JSON.stringify({
       title,
       description,
@@ -550,6 +549,7 @@ class API {
       category,
       tags,
       publish,
+      activity,
     });
     return this.request({ url, method, token, body }).then(res => res.json());
   };
@@ -881,6 +881,107 @@ class API {
     delete args.token;
     const body = JSON.stringify({ ...args });
     return this.request({ url, method, token, body }).then(res => res.json());
+  };
+
+  createActivity = (token, args) => {
+    const url = 'activities/create/';
+    const method = 'POST';
+    const {
+      title,
+      motivation,
+      learning_goals,
+      materials_used,
+      materials_used_image,
+      facilitation_tips,
+      activity_images,
+      making_steps,
+      inspiring_examples,
+      inspiring_artist,
+      video,
+    } = args;
+
+    const body = JSON.stringify({
+      title: title,
+      motivation: motivation,
+      learning_goals: learning_goals,
+      materials_used: materials_used,
+      materials_used_image: materials_used_image,
+      facilitation_tips: facilitation_tips,
+      images: activity_images,
+      making_steps: making_steps,
+      inspiring_examples: inspiring_examples,
+      inspiring_artist: inspiring_artist,
+      video: video,
+    });
+    return this.request({ url, method, token, body });
+    // .then(res => res.json());
+  };
+
+  updateActivity = (token, id, args) => {
+    const url = `activities/${id}/update/`;
+    const method = 'PATCH';
+    const {
+      title,
+      motivation,
+      learning_goals,
+      materials_used,
+      materials_used_image,
+      facilitation_tips,
+      activity_images,
+      making_steps,
+      inspiring_examples,
+      inspiring_artist,
+      video,
+    } = args;
+
+    const body = JSON.stringify({
+      title: title,
+      motivation: motivation,
+      learning_goals: learning_goals,
+      materials_used: materials_used,
+      materials_used_image: materials_used_image,
+      facilitation_tips: facilitation_tips,
+      images: activity_images,
+      making_steps: making_steps,
+      inspiring_examples: inspiring_examples,
+      inspiring_artist: inspiring_artist,
+      video: video,
+    });
+    return this.request({ url, method, token, body });
+    //.then(res => res.json());
+  };
+
+  deleteActivity = ({ token, id }) => {
+    const url = `activities/${id}/delete/`;
+    const method = 'DELETE';
+    return this.request({ url, method, token });
+  };
+
+  getActivities = () => {
+    const url = 'activities/';
+    return this.request({ url, method: 'GET' });
+    // .then(res => res.json());
+  };
+
+  getUnPublishedActivities = token => {
+    const url = 'activities/unPublished';
+    return this.request({ url, method: 'GET', token });
+  };
+
+  getMyActivities = token => {
+    const url = 'activities/myActivities';
+    return this.request({ url, method: 'GET', token });
+  };
+
+  activityToggleSave = ({ id, token }) => {
+    const url = `activities/${id}/toggle-save/`;
+
+    return this.request({ url, token }).then(res => res.json());
+  };
+
+  activityTogglePublish = ({ id, token }) => {
+    const url = `activities/${id}/toggle-publish/`;
+    return this.request({ url, token }).then(res => res.json());
   };
 }
 

@@ -261,7 +261,7 @@ export const handleImageFieldChange = (refs, props, state, handleSetState) => {
       refs.image_el.current.files.length < 2 ? 'image' : 'images'
     }`,
   )}`;
-
+  console.log('image uploaded', refs.image_el.current.files);
   props.setFieldValue('project_images', refs.image_el.current).then(errors => {
     if (!errors['project_images']) {
       removeMetaData(refs.image_el.current.files, state, handleSetState);
@@ -721,6 +721,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     tags,
     id: props.match.params.id,
     token: props.auth.token,
+    activity: props.location.state?.activity_id,
     images: state.media_upload.uploaded_images_url,
     video: state.media_upload.uploaded_videos_url[0]
       ? state.media_upload.uploaded_videos_url[0]
@@ -916,7 +917,6 @@ export const uploadImageToLocal = (image, state, props, handleSetState) => {
   const formData = new FormData();
   formData.append('file', image);
   formData.append('key', `project_images/${nanoid()}`);
-
   return new Promise((resolve, reject) => {
     const um = new UploadMedia(
       'image',
@@ -1337,10 +1337,10 @@ export const validationSchema = Yup.object().shape({
       }
     })
     .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
-      const re = /^[a-z0-9@._+-]{1,150}$/i
+      const re = /^[a-z0-9@._+-]{1,150}$/i;
       let unsupported = false;
       for (let username of publish.visible_to) {
-        console.log("kdlskdlksd", username);
+        console.log('kdlskdlksd', username);
         if (!re.test(username)) {
           unsupported = true;
         }
@@ -1441,7 +1441,6 @@ export class UploadMedia {
 
   upload = () => {
     this.xhr.open('POST', this.url);
-
     if (!this.url.startsWith(process.env.REACT_APP_VIDEO_UPLOAD_URL)) {
       this.xhr.xsrfCookieName = 'csrftoken';
       this.xhr.xsrfHeaderName = 'X-CSRFToken';

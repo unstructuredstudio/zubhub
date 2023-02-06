@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -13,6 +13,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import SearchIcon from '@material-ui/icons/Search';
+
 import {
   CssBaseline,
   Container,
@@ -71,6 +72,7 @@ import API from '../api';
 import { throttle } from '../utils.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
+import BreadCrumb from '../components/breadCrumb/breadCrumb';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -83,6 +85,7 @@ const useCommonStyles = makeStyles(commonStyles);
  */
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
+  const history = useHistory();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
@@ -458,6 +461,52 @@ function PageWrapper(props) {
                 </>
               ) : (
                 <>
+                  {props.match.path === '/activities' ? (
+                    props.auth.tags.filter(
+                      tag =>
+                        tag === 'moderator' ||
+                        tag === 'staff' ||
+                        tag === 'educator',
+                    ).length > 0 && (
+                      <Link
+                        className={clsx(
+                          classes.textDecorationNone,
+                          common_classes.marginRight1em,
+                          common_classes.removeOnSmallScreen,
+                        )}
+                        to="/activities/create"
+                      >
+                        <CustomButton
+                          variant="contained"
+                          primaryButtonStyle
+                          primaryButtonStyle2
+                          customButtonStyle
+                          size="small"
+                        >
+                          {t('pageWrapper.navbar.createActivity')}
+                        </CustomButton>
+                      </Link>
+                    )
+                  ) : (
+                    <Link
+                      className={clsx(
+                        classes.textDecorationNone,
+                        common_classes.marginRight1em,
+                        common_classes.removeOnSmallScreen,
+                      )}
+                      to="/activities"
+                    >
+                      <CustomButton
+                        variant="contained"
+                        primaryButtonStyle
+                        primaryButtonStyle2
+                        customButtonStyle
+                        size="small"
+                      >
+                        {t('pageWrapper.navbar.browseActivities')}
+                      </CustomButton>
+                    </Link>
+                  )}
                   <Link
                     className={clsx(
                       classes.textDecorationNone,
@@ -524,19 +573,22 @@ function PageWrapper(props) {
                     onClose={e => handleSetState(handleProfileMenuClose(e))}
                   >
                     <MenuItem>
-                    <Tooltip title={props.auth.username} placement="top">
-                      <Typography
-                        variant="subtitle2"
-                        color="textPrimary"
-                        component="span"
-                        className={classes.profileStyle}
-                      >
-                        {props.auth.username }
-                      </Typography>
+                      <Tooltip title={props.auth.username} placement="top">
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                          className={classes.profileStyle}
+                        >
+                          {props.auth.username}
+                        </Typography>
                       </Tooltip>
                     </MenuItem>
                     <MenuItem>
-                      <a className={classes.textDecorationNone} href="/profile">
+                      <Link
+                        className={classes.textDecorationNone}
+                        to="/profile"
+                      >
                         <Typography
                           variant="subtitle2"
                           color="textPrimary"
@@ -544,7 +596,7 @@ function PageWrapper(props) {
                         >
                           {t('pageWrapper.navbar.profile')}
                         </Typography>
-                      </a>
+                      </Link>
                     </MenuItem>
                     <MenuItem className={common_classes.addOnSmallScreen}>
                       <Link
@@ -560,6 +612,42 @@ function PageWrapper(props) {
                         </Typography>
                       </Link>
                     </MenuItem>
+                    {props.auth.tags.filter(
+                      tag => tag === 'staff' || tag === 'educator',
+                    ).length > 0 && (
+                      <MenuItem
+                        className={clsx(common_classes.removeOnSmallScreen)}
+                        onClick={() => {
+                          history.push('/activities', { flag: 'educator' });
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.myActivities')}
+                        </Typography>
+                      </MenuItem>
+                    )}
+                    {props.auth.tags.filter(
+                      tag => tag === 'staff' || tag === 'moderator',
+                    ).length > 0 && (
+                      <MenuItem
+                        className={clsx(common_classes.removeOnSmallScreen)}
+                        onClick={() => {
+                          history.push('/activities', { flag: 'staff' });
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
+                        >
+                          {t('pageWrapper.navbar.unpublishedActivities')}
+                        </Typography>
+                      </MenuItem>
+                    )}
                     <MenuItem>
                       <Link
                         className={classes.textDecorationNone}
@@ -717,8 +805,9 @@ function PageWrapper(props) {
             </ClickAwayListener>
           ) : null}
         </Container>
+        <BreadCrumb />
       </AppBar>
-      <Toolbar ref={backToTopEl} />
+      <Toolbar ref={backToTopEl} className={classes.marginBottom} />
 
       {loading ? <LoadingPage /> : props.children}
 

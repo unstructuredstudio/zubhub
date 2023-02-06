@@ -114,7 +114,8 @@ INSTALLED_APPS = [
     'creators',
     'projects',
     'notifications',
-    'activitylog'
+    'activitylog',
+    'activities',
 ]
 
 # askimet
