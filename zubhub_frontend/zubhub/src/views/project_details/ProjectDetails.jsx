@@ -296,18 +296,6 @@ function ProjectDetails(props) {
                       />
                     ) : null}
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    {project.video && isVideoFromGdrive(project.video) ? (
-                      <a
-                        className={common_classes.floatRight}
-                        href={project.video}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Can't play video? click here
-                      </a>
-                    ) : null}
-                  </Grid>
                   <div
                     className={mediaQuery ? classes.actionBoxMobileWrapper : ''}
                   >
