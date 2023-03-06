@@ -71,7 +71,7 @@ function Project(props) {
                 ? t('project.publish.preview')
                 : ''}
               {project.publish.type ===
-              publish_type['Authenticated Creators'] ? (
+                publish_type['Authenticated Creators'] ? (
                 <LockIcon />
               ) : (
                 ''
@@ -160,6 +160,7 @@ function Project(props) {
                   color="textSecondary"
                   variant="caption"
                   component="p"
+                  className={classes.creatorUsernameStyle}
                 >
                   {project.creator.username}
                 </Typography>

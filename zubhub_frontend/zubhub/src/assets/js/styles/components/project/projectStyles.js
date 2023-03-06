@@ -125,6 +125,9 @@ const styles = theme => ({
     marginRight: '0.5em',
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
   },
+  creatorUsernameStyle: {
+    wordBreak: 'break-all',
+  },
   captionStyle: {
     display: 'flex',
     justifyContent: 'space-between',
