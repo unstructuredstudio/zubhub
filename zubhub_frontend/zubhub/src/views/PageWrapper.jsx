@@ -729,7 +729,11 @@ function PageWrapper(props) {
                 role="search"
                 ref={formRef}
               >
-                <FormControl variant="outlined" style={{ minWidth: 'unset' }}>
+                <FormControl
+                  variant="outlined"
+                  style={{ minWidth: 'unset' }}
+                  className={classes.formControlStyle}
+                >
                   <InputSelect
                     searchType={searchType}
                     onSearchTypeChange={setSearchType}
@@ -752,10 +756,7 @@ function PageWrapper(props) {
                   </InputLabel>
                   <Autocomplete
                     options={options}
-                    defaultValue={
-                      props.location.search &&
-                      getQueryParams(window.location.href).get('q')
-                    }
+                    defaultValue={getQueryParams(window.location.href).get('q')}
                     renderOption={(option, { inputValue }) => (
                       <Option
                         option={option}
