@@ -31,7 +31,7 @@ const styles = theme => ({
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
-      width: '40em',
+      width: '28em',
       backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'white',
       borderRadius: '50px',
@@ -57,11 +57,11 @@ const styles = theme => ({
           border: '1px solid rgba(0,0,0,0.2)',
         },
       },
-      [theme.breakpoints.down('1216')]: {
-        width: '30em',
-      },
-      [theme.breakpoints.down('1054')]: {
+      [theme.breakpoints.down('1316')]: {
         width: '20em',
+      },
+      [theme.breakpoints.down('1154')]: {
+        width: '8.5em',
       },
     },
   },
@@ -123,12 +123,12 @@ const styles = theme => ({
     color: 'white',
   },
   addOn894: {
-    [theme.breakpoints.up('894')]: {
+    [theme.breakpoints.up('1175')]: {
       display: 'none',
     },
   },
   removeOn894: {
-    [theme.breakpoints.down('894')]: {
+    [theme.breakpoints.down('1175')]: {
       display: 'none',
     },
   },
