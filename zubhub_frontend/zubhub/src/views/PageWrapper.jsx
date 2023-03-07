@@ -278,7 +278,7 @@ function PageWrapper(props) {
                 onSubmit={handleSubmit}
                 ref={formRef}
               >
-                <FormControl variant="outlined">
+                <FormControl className={clsx(common_classes.width100Percent, common_classes.displayFlex, common_classes.displayInlineFlex)} variant="outlined">
                   <InputLabel
                     htmlFor="q"
                     className={classes.searchFormLabelStyle}
@@ -302,6 +302,7 @@ function PageWrapper(props) {
                       </InputSelect>
                     </FormControl>
                     <Autocomplete
+                      style={{ width: '70%' }}
                       options={options}
                       defaultValue={{
                         title:
