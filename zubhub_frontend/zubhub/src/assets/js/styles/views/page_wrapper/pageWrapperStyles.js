@@ -31,7 +31,6 @@ const styles = theme => ({
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
-      width: '35em',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
@@ -58,7 +57,7 @@ const styles = theme => ({
         },
       },
       [theme.breakpoints.down('1216')]: {
-        width: '30em',
+        width: '100%',
       },
       [theme.breakpoints.down('1054')]: {
         width: '20em',

@@ -145,8 +145,8 @@ function PageWrapper(props) {
   useEffect(() => {
     throttledFetchOptions(
       query ||
-        (props.location.search &&
-          getQueryParams(window.location.href).get('q')),
+      (props.location.search &&
+        getQueryParams(window.location.href).get('q')),
       searchType,
     );
   }, [query, searchType]);
@@ -615,39 +615,39 @@ function PageWrapper(props) {
                     {props.auth.tags.filter(
                       tag => tag === 'staff' || tag === 'educator',
                     ).length > 0 && (
-                      <MenuItem
-                        className={clsx(common_classes.removeOnSmallScreen)}
-                        onClick={() => {
-                          history.push('/activities', { flag: 'educator' });
-                        }}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
+                        <MenuItem
+                          className={clsx(common_classes.removeOnSmallScreen)}
+                          onClick={() => {
+                            history.push('/activities', { flag: 'educator' });
+                          }}
                         >
-                          {t('pageWrapper.navbar.myActivities')}
-                        </Typography>
-                      </MenuItem>
-                    )}
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            {t('pageWrapper.navbar.myActivities')}
+                          </Typography>
+                        </MenuItem>
+                      )}
                     {props.auth.tags.filter(
                       tag => tag === 'staff' || tag === 'moderator',
                     ).length > 0 && (
-                      <MenuItem
-                        className={clsx(common_classes.removeOnSmallScreen)}
-                        onClick={() => {
-                          history.push('/activities', { flag: 'staff' });
-                        }}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
+                        <MenuItem
+                          className={clsx(common_classes.removeOnSmallScreen)}
+                          onClick={() => {
+                            history.push('/activities', { flag: 'staff' });
+                          }}
                         >
-                          {t('pageWrapper.navbar.unpublishedActivities')}
-                        </Typography>
-                      </MenuItem>
-                    )}
+                          <Typography
+                            variant="subtitle2"
+                            color="textPrimary"
+                            component="span"
+                          >
+                            {t('pageWrapper.navbar.unpublishedActivities')}
+                          </Typography>
+                        </MenuItem>
+                      )}
                     <MenuItem>
                       <Link
                         className={classes.textDecorationNone}
@@ -751,6 +751,7 @@ function PageWrapper(props) {
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
                   <Autocomplete
+                    style={{ width: '100%' }}
                     options={options}
                     defaultValue={
                       props.location.search &&
