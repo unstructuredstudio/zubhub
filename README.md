@@ -4,9 +4,9 @@
 
 # Intro
 
-**ZubHub** is an open-source, documentation & collaboration tool for activity-based learning. It is available for custom use for schools, libraries, hackerspaces, educational organizations, etc. Imagine your own online community built around your educational activities! 
+**ZubHub** is an open-source, documentation & collaboration tool for activity-based learning. It is available for custom use for schools, libraries, hackerspaces, educational organizations, etc. Imagine your own online community built around your educational activities!
 
-Zubhub is designed and developed by [Unstructured Studio](https://unstructured.studio). We are an educational non-profit organization incorporated in Canada and India. We have our own ZubHub and we use it to expand access to low-cost creative learning opportunities to children and educators. On our ZubHub, children, and educators can get inspired by a collection of activity ideas and projects, learn how to build with the materials and tools that they already have access to, and share their creations with others. Some of the primary features are creator portfolios, community-curated projects, discussion-based collaboration, and workshops. ZubHub takes inspiration from the research conducted on the [Build In Progress](http://web.mit.edu/ttseng/www/portfolio/build_in_progress/index.html) platform at the MIT Media Lab. :smiley:
+Zubhub is designed and developed by [Unstructured Studio](https://unstructured.studio). We are an educational non-profit organization incorporated in Canada and India. We have our own ZubHub and we use it to expand access to low-cost creative learning opportunities to children and educators. On our ZubHub, children, and educators can get inspired by a collection of activity ideas and projects, learn how to build with the materials and tools that they already have access to, and share their creations with others. Some of the primary features are creator portfolios, community-curated projects, discussion-based collaboration, and workshops. ZubHub takes inspiration from the research conducted on the [Build In Progress](https://www.media.mit.edu/projects/build-in-progress/overview/) platform at the MIT Media Lab. :smiley:
 
 | ZubHub is currently in public beta. A public ZubHub instance is hosted here: https://zubhub.unstructured.studio |
 | --------------------------------------------------------------------------------------------------------------- |
@@ -14,7 +14,6 @@ Zubhub is designed and developed by [Unstructured Studio](https://unstructured.s
 Want to know more about ZubHub and our feature roadmap? Head to 👉 [ZubHub Wiki](https://github.com/unstructuredstudio/zubhub/wiki)!
 
 <img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/288353/216785034-05025129-fd99-414a-868d-7103fc38bf68.png">
-
 
 # Development Setup
 
