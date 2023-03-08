@@ -302,7 +302,7 @@ function PageWrapper(props) {
                       </InputSelect>
                     </FormControl>
                     <Autocomplete
-                      style={{ width: '70%' }}
+                      className={classes.input}
                       options={options}
                       defaultValue={{
                         title:
@@ -481,7 +481,7 @@ function PageWrapper(props) {
                           variant="contained"
                           primaryButtonStyle
                           primaryButtonStyle2
-                          customButtonStyle
+                          className={classes.customButton}
                           size="small"
                         >
                           {t('pageWrapper.navbar.createActivity')}
@@ -501,7 +501,7 @@ function PageWrapper(props) {
                         variant="contained"
                         primaryButtonStyle
                         primaryButtonStyle2
-                        customButtonStyle
+                        className={classes.customButton}
                         size="small"
                       >
                         {t('pageWrapper.navbar.browseActivities')}
@@ -519,7 +519,7 @@ function PageWrapper(props) {
                     <CustomButton
                       variant="contained"
                       primaryButtonStyle
-                      customButtonStyle
+                      className={classes.customButton}
                       size="small"
                     >
                       {t('pageWrapper.navbar.createProject')}
