@@ -212,6 +212,9 @@ const styles = theme => ({
     '&.MuiInput-underline:after': {
       display: 'none !important',
     },
+    '& .MuiSelect-icon': {
+      color: 'white',
+    },
     '& .MuiSelect-root': {
       boxSizing: 'border-box',
       backgroundColor: 'rgba(0,0,0,0)',

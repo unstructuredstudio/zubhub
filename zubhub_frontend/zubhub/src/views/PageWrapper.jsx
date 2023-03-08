@@ -832,29 +832,8 @@ function PageWrapper(props) {
                 classes.languageSelectBoxStyle,
                 common_classes.displayInlineFlex,
                 common_classes.alignCenter,
-                common_classes.addOnSmallScreen,
               )}
-            >
-              <TranslateIcon />
-              <Select
-                className={classes.languageSelectStyle}
-                value=""
-                onChange={e => handleChangeLanguage({ e, props })}
-              >
-                {Object.keys(languageMap).map((ln, index) => (
-                  <MenuItem key={index} value={ln}>
-                    {languageMap[ln]}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            <Box
-              className={clsx(
-                classes.languageSelectBoxStyle,
-                common_classes.displayInlineFlex,
-                common_classes.alignCenter,
-                common_classes.removeOnSmallScreen,
-              )}
+              style={{ margin: 0 }}
             >
               <TranslateIcon />
               <Select
