@@ -596,6 +596,9 @@ html,
   display: none !important;
 }
 
-.MuiInputBase-root #phone{
+.MuiInputBase-root #phone {
   width: 80%;
+}
+.MuiGrid-root #Numcenter {
+  line-height: 19px !important;
 }
