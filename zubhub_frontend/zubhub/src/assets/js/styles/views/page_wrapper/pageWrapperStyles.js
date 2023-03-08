@@ -14,6 +14,9 @@ const styles = theme => ({
   },
   logoStyle: {
     flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
     '& img': {
       height: '2em',
     },
@@ -31,7 +34,6 @@ const styles = theme => ({
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
-      width: '35em',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
@@ -58,10 +60,10 @@ const styles = theme => ({
         },
       },
       [theme.breakpoints.down('1216')]: {
-        width: '30em',
+        width: '100%',
       },
       [theme.breakpoints.down('1054')]: {
-        width: '20em',
+        // width: '20em',
       },
     },
   },
@@ -120,12 +122,13 @@ const styles = theme => ({
     color: 'white',
   },
   addOn894: {
-    [theme.breakpoints.up('894')]: {
+    [theme.breakpoints.up('1168')]: {
       display: 'none',
     },
   },
   removeOn894: {
-    [theme.breakpoints.down('894')]: {
+    flex: 1,
+    [theme.breakpoints.down('1168')]: {
       display: 'none',
     },
   },
