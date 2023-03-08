@@ -156,14 +156,20 @@ function Project(props) {
                   src={project.creator.avatar}
                   alt={project.creator.username}
                 />
-                <Typography
-                  color="textSecondary"
-                  variant="caption"
-                  component="p"
+                <Tooltip
+                  title={project.creator.username}
+                  placement="bottom"
+                  arrow
                   className={classes.creatorUsernameStyle}
                 >
-                  {project.creator.username}
-                </Typography>
+                  <Typography
+                    color="textSecondary"
+                    variant="caption"
+                    component="p"
+                  >
+                    {project.creator.username}
+                  </Typography>
+                </Tooltip>
                 <Link
                   className={common_classes.textDecorationNone}
                   to={`/search/?q=${project.creator.tags[0]}&tab=creators`}
