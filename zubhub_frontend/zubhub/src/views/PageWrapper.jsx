@@ -756,7 +756,10 @@ function PageWrapper(props) {
                   </InputLabel>
                   <Autocomplete
                     options={options}
-                    defaultValue={getQueryParams(window.location.href).get('q')}
+                    defaultValue={
+                      props.location.search &&
+                      getQueryParams(window.location.href).get('q')
+                    }
                     renderOption={(option, { inputValue }) => (
                       <Option
                         option={option}
