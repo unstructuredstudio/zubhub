@@ -51,9 +51,15 @@ export const updateProjects = (res, projects, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map(project =>
+        if(projects[0]){
+          projects = projects.map(project =>
+            project.id === res.project.id ? res.project : project,
+          );
+        } else {
+        projects = projects.results.map(project =>
           project.id === res.project.id ? res.project : project,
         );
+        }
         return { results: projects };
       } else {
         res = Object.keys(res)
