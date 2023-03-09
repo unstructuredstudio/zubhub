@@ -166,9 +166,20 @@ const styles = theme => ({
   },
   enlargedImageStyle: {
     alignSelf: 'center',
+    padding:'2px',
     width: '80%',
     maxWidth: '600px',
     height: 'auto',
+  },
+  cancelEnlargedImageBtn:{
+   backgroundColor: '#F50057',
+   position: 'absolute',
+   right: '23px',
+   top: '0%',
+   width: '32px',
+   height: '32px',
+   borderRadius: '100%',
+   zIndex: '100',
   },
   descriptionHeadingStyle: {
     marginTop: '1em',

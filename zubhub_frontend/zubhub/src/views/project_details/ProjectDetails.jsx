@@ -13,6 +13,7 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
+import CloseIcon from '@material-ui/icons/Close';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import {
@@ -26,6 +27,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
 } from '@material-ui/core';
 
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
@@ -120,6 +122,7 @@ function ProjectDetails(props) {
     open_enlarged_image_dialog: false,
     open_delete_project_modal: false,
     delete_project_dialog_error: null,
+    image_id: 0,
   });
 
   React.useEffect(() => {
@@ -168,6 +171,7 @@ function ProjectDetails(props) {
     open_enlarged_image_dialog,
     open_delete_project_modal,
     delete_project_dialog_error,
+    image_id,
   } = state;
   const { t } = props;
   if (loading) {
@@ -400,7 +404,7 @@ function ProjectDetails(props) {
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>
                       <Slider {...sliderSettings(project.images.length)}>
-                        {project.images.map(image => (
+                        {project.images.map((image, index) => (
                           <div>
                             <img
                               key={image.public_id}
@@ -409,7 +413,11 @@ function ProjectDetails(props) {
                               alt={image.public_id}
                               onClick={e =>
                                 handleSetState(
-                                  handleOpenEnlargedImageDialog(e, state),
+                                  handleOpenEnlargedImageDialog(
+                                    e,
+                                    state,
+                                    index,
+                                  ),
                                 )
                               }
                             />
@@ -492,6 +500,7 @@ function ProjectDetails(props) {
             style: {
               backgroundColor: 'transparent',
               boxShadow: 'none',
+              width: '100vw',
             },
           }}
           className={classes.enlargedImageDialogStyle}
@@ -504,11 +513,52 @@ function ProjectDetails(props) {
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
-          <img
-            className={classes.enlargedImageStyle}
-            src={enlarged_image_url}
-            alt={`${project.title}`}
-          />
+          <IconButton
+            className={classes.cancelEnlargedImageBtn}
+            onClick={() =>
+              setState({
+                ...state,
+                open_enlarged_image_dialog: !open_enlarged_image_dialog,
+              })
+            }
+            aria-label="close"
+          >
+            <CloseIcon style={{ color: 'white' }} />
+          </IconButton>
+
+          {project.images.length <= 1 ? (
+            <img
+              className={classes.enlargedImageStyle}
+              src={enlarged_image_url}
+              alt={`${project.title}`}
+            />
+          ) : (
+            <Box className={classes.enlargedImageStyle}>
+              <Slider
+                initialSlide={image_id}
+                adaptiveHeight
+                infinite
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+              >
+                {project.images.map(image => (
+                  <div>
+                    <img
+                      style={{
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: 'auto',
+                      }}
+                      key={image.public_id}
+                      src={image.image_url}
+                    />
+                  </div>
+                ))}
+              </Slider>
+            </Box>
+          )}
         </Dialog>
 
         <Dialog
