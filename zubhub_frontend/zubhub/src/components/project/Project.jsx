@@ -53,6 +53,11 @@ function Project(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
+  // const tags = ['staff']
+  // const tags = [ 'moderator','staff']
+  // const tags = ['moderator', 'staff', 'group']
+  const tags = ['stafffin the place of wein palace nottingham', 'moderator', 'group', 'creator']
+
   const { project, t } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
@@ -162,29 +167,65 @@ function Project(props) {
                   arrow
                   className={classes.creatorUsernameStyle}
                 >
-                  <Typography
-                    color="textSecondary"
-                    variant="caption"
-                    component="p"
-                  >
-                    {project.creator.username}
-                  </Typography>
+                  <Box>
+                    <Typography
+                      color="textSecondary"
+                      variant="caption"
+                      component="p"
+                      style={{
+                        flex: 1, textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        fontWeight: '700'
+                      }}
+                    >
+                      {project.creator.username}
+                    </Typography>
+                  </Box>
                 </Tooltip>
-                <Link
-                  className={common_classes.textDecorationNone}
-                  to={`/search/?q=${project.creator.tags[0]}&tab=creators`}
-                >
-                  <Typography
-                    className={clsx(common_classes.baseTagStyle, {
-                      [common_classes.extendedTagStyle]: !isBaseTag(
-                        project.creator.tags[0],
-                      ),
-                    })}
-                    component="h2"
-                  >
-                    {project.creator.tags[0]}
-                  </Typography>
-                </Link>
+                <Box style={{ display: 'flex', alignItems: 'center', maxWidth: '100%', gap: '5px' }}>
+                  {tags.map((tag, index) => (
+                    <>
+                      {index == 0 &&
+                        <Link
+                          className={clsx(common_classes.baseTagStyle, common_classes.textDecorationNone, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
+                          style={{
+                            padding: '4px 10px',
+                            overflow: 'hidden',
+                          }}
+                          to={`/search/?q=${tag}&tab=creators`}
+                        >
+                          <Typography style={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            fontWeight: '700',
+                            fontSize: '0.8rem'
+                          }} component="div">
+                            {tag}
+                          </Typography>
+                        </Link>
+                      }
+                      {index == 1 &&
+                        <Link
+                          className={common_classes.textDecorationNone}
+                          to={`#`}
+                        >
+                          <Typography
+                            style={{ fontWeight: '700', fontSize: '0.85rem', padding: '4px 10px', whiteSpace: 'nowrap' }}
+                            className={clsx(common_classes.baseTagStyle, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
+                            component="div"
+                          >
+                            + {tags.length - 1}
+                          </Typography>
+                        </Link>
+
+                      }
+                    </>
+
+                  ))}
+
+                </Box>
               </Box>
             </Link>
             <Box className={classes.captionStyle}>

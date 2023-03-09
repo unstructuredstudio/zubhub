@@ -120,16 +120,17 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '15px',
   },
   creatorAvatarStyle: {
-    marginRight: '0.5em',
+    // marginRight: '0.5em',
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
   },
   creatorUsernameStyle: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
+    maxWidth: '70%',
     marginRight: 'auto',
+    fontWeight: '700',
   },
   captionStyle: {
     display: 'flex',
