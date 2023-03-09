@@ -200,6 +200,7 @@ function PageWrapper(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
+    if (query.length == 0) return
     const queryParams = new URLSearchParams({
       type: searchType,
       q: query,
