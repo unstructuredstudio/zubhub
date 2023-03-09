@@ -728,6 +728,7 @@ function PageWrapper(props) {
               <form
                 action="/search"
                 className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
+                onSubmit={handleSubmit}
                 role="search"
                 ref={formRef}
               >
@@ -754,6 +755,7 @@ function PageWrapper(props) {
                   </InputLabel>
                   <Autocomplete
                     style={{ width: '100%' }}
+                    className={classes.mobileInput}
                     options={options}
                     defaultValue={
                       props.location.search &&

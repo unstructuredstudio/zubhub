@@ -5,6 +5,20 @@ const styles = theme => ({
   input: {
     flex: 1,
     marginRight: '2rem',
+    '& .MuiInputBase-input': {
+      color: 'white',
+    },
+    '& .MuiInputBase-input:focus': {
+      color: 'black',
+    },
+  },
+  mobileInput: {
+    '& .MuiInputBase-input': {
+      color: 'white',
+    },
+    '& .MuiInputBase-input:focus': {
+      color: 'black',
+    },
   },
   customButton: {
     fontSize: '1.15rem',
