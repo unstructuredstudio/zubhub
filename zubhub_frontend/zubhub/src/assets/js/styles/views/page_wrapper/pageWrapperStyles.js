@@ -2,6 +2,13 @@ const styles = theme => ({
   navBarStyle: {
     backgroundColor: '#DC3545',
   },
+  input: {
+    flex: 1,
+    marginRight: '2rem',
+  },
+  customButton: {
+    fontSize: '1.15rem',
+  },
   mainContainerStyle: {
     maxWidth: '2000px',
     zIndex: 1,
@@ -9,8 +16,7 @@ const styles = theme => ({
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
   },
   toolBarStyle: {
-    paddingLeft: 0,
-    paddingRight: 0,
+    padding: '15px 0',
   },
   logoStyle: {
     flexGrow: 1,
@@ -149,8 +155,8 @@ const styles = theme => ({
     cursor: 'pointer',
     backgroundColor: 'white',
     [theme.breakpoints.up('1600')]: {
-      height: '3em',
-      width: '3em',
+      height: '40px',
+      width: '40px',
     },
   },
   profileMenuStyle: {
