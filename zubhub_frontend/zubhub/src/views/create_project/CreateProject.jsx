@@ -644,7 +644,7 @@ function CreateProject(props) {
                           >
                             <Box
                               className={classes.fieldNumberStyle}
-                              id="Numcenter"
+                              id="sixCenter"
                             >
                               6
                             </Box>
@@ -850,7 +850,7 @@ function CreateProject(props) {
                           >
                             <Box
                               className={classes.fieldNumberStyle}
-                              id="Numcenter"
+                              id="eightCenter"
                             >
                               8
                             </Box>

@@ -599,6 +599,13 @@ html,
 .MuiInputBase-root #phone {
   width: 80%;
 }
-.MuiGrid-root #Numcenter {
-  line-height: 19px !important;
+.MuiGrid-root #sixCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.MuiGrid-root #eightCenter{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
