@@ -221,8 +221,8 @@ class EditCreatorAPIView(UpdateAPIView):
     request body format:\n
         {\n
             "username": "string",\n
-            "email": "",\n
-            "phone": "",\n
+            "email": "string",\n
+            "phone": "string",\n
             "avatar": "string",\n
             "location": "string",\n
             "bio": "string"\n

@@ -11,6 +11,27 @@ export const getLocations = props => {
 };
 
 /**
+ * @function handleClickShowPassword
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const handleClickShowPassword = state => {
+  const { show_password } = state;
+  return { show_password: !show_password };
+};
+
+/**
+ * @function handleMouseDownPassword
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const handleMouseDownPassword = e => {
+  e.preventDefault();
+};
+
+/**
  * @function getProfile
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
@@ -87,40 +108,55 @@ export const getProfile = (refs, props) => {
  */
 export const editProfile = (e, props, toast) => {
   e.preventDefault();
+  let password_match = true;
   if (props.values.user_location.length < 1) {
     props.validateField('user_location');
+  } else if (props.values.password.length < 1) {
+    props.validateField('editProfile.inputs.password.errors');
   } else {
-    return props
-      .editUserProfile({ ...props.values, token: props.auth.token })
-      .then(_ => {
-        toast.success(props.t('editProfile.toastSuccess'));
-        props.history.push('/profile');
-      })
-      .catch(error => {
-        const messages = JSON.parse(error.message);
-        if (typeof messages === 'object') {
-          const server_errors = {};
-          Object.keys(messages).forEach(key => {
-            if (key === 'non_field_errors') {
-              server_errors['non_field_errors'] = messages[key][0];
-            } else if (key === 'location') {
-              server_errors['user_location'] = messages[key][0];
+    props.login({ values: props.values, history: props.history }).catch(error => {
+      const messages = JSON.parse(error.message);
+      console.log(messages);
+      toast.error(props.t('editProfile.inputs.password.errors.invalid'));
+      password_match = false;
+      return;
+    }).finally(() => {
+      if (password_match == false) {
+        return;
+      } else {
+        return props
+          .editUserProfile({ ...props.values, token: props.auth.token })
+          .then(_ => {
+            toast.success(props.t('editProfile.toastSuccess'));
+            props.history.push('/profile');
+          })
+          .catch(error => {
+            const messages = JSON.parse(error.message);
+            if (typeof messages === 'object') {
+              const server_errors = {};
+              Object.keys(messages).forEach(key => {
+                if (key === 'non_field_errors') {
+                  server_errors['non_field_errors'] = messages[key][0];
+                } else if (key === 'location') {
+                  server_errors['user_location'] = messages[key][0];
+                } else {
+                  server_errors[key] = messages[key][0];
+                }
+              });
+              // props.setStatus({
+              //   //this is a hack. we need to find a more react way of maintaining initial state for email and phone.
+              //   init_email: props.status && props.status.init_email,
+              //   init_phone: props.status && props.status.init_phone,
+              //   ...server_errors,
+              // });
             } else {
-              server_errors[key] = messages[key][0];
+              props.setStatus({
+                non_field_errors: props.t('editProfile.errors.unexpected'),
+              });
             }
           });
-          props.setStatus({
-            //this is a hack. we need to find a more react way of maintaining initial state for email and phone.
-            init_email: props.status && props.status.init_email,
-            init_phone: props.status && props.status.init_phone,
-            ...server_errors,
-          });
-        } else {
-          props.setStatus({
-            non_field_errors: props.t('editProfile.errors.unexpected'),
-          });
-        }
-      });
+      }
+    });
   }
 };
 
@@ -153,6 +189,7 @@ export const handleTooltipClose = () => {
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   user_location: Yup.string().min(1, 'min').required('required'),
+  password: Yup.string().required('required'),
   email: Yup.string().email('invalid'),
   phone: Yup.string().test('phone_is_invalid', 'invalid', function (value) {
     return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
