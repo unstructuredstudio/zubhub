@@ -104,7 +104,7 @@ const styles = theme => ({
     fontSize: '1.3rem',
   },
   descriptionStyle: {
-    flexGrow: 1,
+    // flexGrow: 1,
     '& p': {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -115,7 +115,7 @@ const styles = theme => ({
     },
   },
   creatorBoxStyle: {
-    marginTop: '0.5em',
+    marginTop: '15px',
     marginBottom: '0.5em',
     display: 'flex',
     justifyContent: 'flex-start',
@@ -123,8 +123,40 @@ const styles = theme => ({
     flexWrap: 'wrap',
     gap: '15px',
   },
+  date: { fontWeight: '600', marginLeft: 'auto' },
+  footer: { marginTop: 10, flexDirection: 'row', display: 'flex' },
+  tagsContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    maxWidth: '100%',
+    gap: '5px',
+  },
+  tagContainer: {
+    overflow: 'hidden',
+    marginLeft: '0 !important',
+  },
+  restOfTags: {
+    fontWeight: '700',
+    fontSize: '0.85rem',
+    padding: '2px 10px !important',
+    whiteSpace: 'nowrap',
+  },
+  username: {
+    flex: 1,
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    fontWeight: '700',
+  },
+  tagName: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontWeight: '700',
+    fontSize: '0.9rem',
+    padding: '2px 10px',
+  },
   creatorAvatarStyle: {
-    // marginRight: '0.5em',
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
   },
   creatorUsernameStyle: {
@@ -135,8 +167,14 @@ const styles = theme => ({
   captionStyle: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   captionIconStyle: {
+    backgroundColor: '#eee',
+    padding: '2px 7px',
+    borderRadius: 25,
+    justifyContent: 'space-between',
+    fontWeight: '600',
     display: 'flex',
     alignItems: 'center',
     marginRight: '1em',

@@ -53,11 +53,6 @@ function Project(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
-  // const tags = ['staff']
-  // const tags = [ 'moderator','staff']
-  // const tags = ['moderator', 'staff', 'group']
-  const tags = ['stafffin the place of wein palace nottingham', 'moderator', 'group', 'creator']
-
   const { project, t } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
@@ -152,6 +147,7 @@ function Project(props) {
               </Typography>
             </Box>
             <Link
+              style={{ flexGrow: 1 }}
               to={`/creators/${project.creator.username}`}
               className={classes.textDecorationNone}
             >
@@ -172,36 +168,22 @@ function Project(props) {
                       color="textSecondary"
                       variant="caption"
                       component="p"
-                      style={{
-                        flex: 1, textOverflow: 'ellipsis',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        fontWeight: '700'
-                      }}
+                      className={classes.username}
                     >
                       {project.creator.username}
                     </Typography>
                   </Box>
                 </Tooltip>
-                <Box style={{ display: 'flex', alignItems: 'center', maxWidth: '100%', gap: '5px' }}>
-                  {tags.map((tag, index) => (
+                <Box className={classes.tagsContainer}>
+                  {project.creator.tags.map((tag, index) => (
                     <>
                       {index == 0 &&
                         <Link
-                          className={clsx(common_classes.baseTagStyle, common_classes.textDecorationNone, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
-                          style={{
-                            padding: '4px 10px',
-                            overflow: 'hidden',
-                          }}
+                          className={clsx(common_classes.baseTagStyle, classes.tagContainer, common_classes.textDecorationNone, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
+
                           to={`/search/?q=${tag}&tab=creators`}
                         >
-                          <Typography style={{
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            fontWeight: '700',
-                            fontSize: '0.8rem'
-                          }} component="div">
+                          <Typography className={classes.tagName} component="div">
                             {tag}
                           </Typography>
                         </Link>
@@ -212,11 +194,11 @@ function Project(props) {
                           to={`#`}
                         >
                           <Typography
-                            style={{ fontWeight: '700', fontSize: '0.85rem', padding: '4px 10px', whiteSpace: 'nowrap' }}
-                            className={clsx(common_classes.baseTagStyle, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
+
+                            className={clsx(common_classes.baseTagStyle, classes.restOfTags, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
                             component="div"
                           >
-                            + {tags.length - 1}
+                            + {project.creator.tags.length - 1}
                           </Typography>
                         </Link>
 
@@ -228,7 +210,7 @@ function Project(props) {
                 </Box>
               </Box>
             </Link>
-            <Box className={classes.captionStyle}>
+            <Box className={classes.footer}>
               <Box className={classes.captionStyle}>
                 <Typography
                   className={clsx(
@@ -254,6 +236,7 @@ function Project(props) {
                 color="textSecondary"
                 variant="caption"
                 component="span"
+                className={classes.date}
               >
                 {`${dFormatter(project.created_on).value} ${t(
                   `date.${dFormatter(project.created_on).key}`,
