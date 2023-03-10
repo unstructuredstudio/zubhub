@@ -173,7 +173,7 @@ function ProjectDetails(props) {
     open_enlarged_image_dialog,
     open_delete_project_modal,
     delete_project_dialog_error,
-    image_id,
+    enlarged_image_id,
   } = state;
   const { t } = props;
   if (loading) {
@@ -532,7 +532,7 @@ function ProjectDetails(props) {
             />
           ) : (
               <Slider
-                initialSlide={image_id}
+                initialSlide={enlarged_image_id} //Start the slider from the image clicked in projectDetails
                 adaptiveHeight
                 infinite
                 speed={500}
