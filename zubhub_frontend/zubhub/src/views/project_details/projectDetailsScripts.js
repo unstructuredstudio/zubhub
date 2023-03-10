@@ -8,9 +8,11 @@ import { toast } from 'react-toastify';
  */
 export const handleOpenEnlargedImageDialog = (e, state, imgIndex) => {
   const image_url = e.currentTarget.getAttribute('src');
+  //Store the index of clicked image
   const image_index = imgIndex
+  
   const open_enlarged_image_dialog = !state.open_enlarged_image_dialog;
-  return { enlarged_image_url: image_url, open_enlarged_image_dialog, image_id:image_index };
+  return { enlarged_image_url: image_url, open_enlarged_image_dialog, enlarged_image_id:image_index };
 };
 
 /**

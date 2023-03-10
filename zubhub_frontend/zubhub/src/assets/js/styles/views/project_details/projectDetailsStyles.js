@@ -1,3 +1,5 @@
+import zIndex from "@material-ui/core/styles/zIndex";
+
 const styles = theme => ({
   root: {
     flex: '1 0 auto',
@@ -161,24 +163,30 @@ const styles = theme => ({
     height: '200px',
   },
   enlargedImageDialogStyle: {
+  padding:'4px',
+  },
+  enlargedImageContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent:'center',
+    width: '100%',
+    marginTop: '12px',
   },
   enlargedImageStyle: {
     alignSelf: 'center',
     padding:'2px',
-    width: '80%',
-    maxWidth: '600px',
+    width: '85%',
+    maxWidth: '840px',
     height: 'auto',
   },
   cancelEnlargedImageBtn:{
    backgroundColor: '#F50057',
    position: 'absolute',
-   right: '23px',
+   right: '6%',
    top: '0%',
-   width: '32px',
-   height: '32px',
+   width: '34px',
+   height: '34px',
    borderRadius: '100%',
+   border: '2px solid white',
    zIndex: '100',
   },
   descriptionHeadingStyle: {
@@ -380,4 +388,31 @@ export function PrevArrow(props) {
   );
 }
 
+export function EnlargedImgArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, 
+        display: 'flex',
+        height: '40px',
+        width: '40px',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: '100%',
+        background: '#767474',
+        zIndex: '10',
+        margin:'4px',
+        boxShadow:
+        '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+      backgroundColor: '#00B8C4',
+      '&:hover': {
+        backgroundColor: '#03848C',
+      },
+        
+      }}
+      onClick={onClick}
+    />
+  );
+}
 export default styles;

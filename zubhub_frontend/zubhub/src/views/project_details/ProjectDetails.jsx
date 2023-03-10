@@ -58,6 +58,7 @@ import {
   getPlayerOptions,
 } from '../../assets/js/utils/scripts';
 import styles, {
+  EnlargedImgArrow,
   sliderSettings,
 } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
@@ -122,7 +123,8 @@ function ProjectDetails(props) {
     open_enlarged_image_dialog: false,
     open_delete_project_modal: false,
     delete_project_dialog_error: null,
-    image_id: 0,
+    //Added image_id to store the current_image to 
+    enlarged_image_id: 0,
   });
 
   React.useEffect(() => {
@@ -401,6 +403,7 @@ function ProjectDetails(props) {
                               alt={image.public_id}
                               onClick={e =>
                                 handleSetState(
+                                  //index parameter stores current image
                                   handleOpenEnlargedImageDialog(
                                     e,
                                     state,
@@ -483,14 +486,18 @@ function ProjectDetails(props) {
           </Paper>
         </Box>
 
+        {/* Preview Image Container */}
         <Dialog
           PaperProps={{
             style: {
               backgroundColor: 'transparent',
               boxShadow: 'none',
-              width: '100vw',
             },
           }}
+          BackdropProps={{style: {backgroundColor: 'black', opacity: '0.7'}}}
+          fullWidth
+          scroll='body'
+          maxWidth='md'
           className={classes.enlargedImageDialogStyle}
           open={open_enlarged_image_dialog}
           onClose={() =>
@@ -500,7 +507,8 @@ function ProjectDetails(props) {
             })
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
-        >
+        > 
+         {/* Cancel Button on the Preview Images */}
           <IconButton
             className={classes.cancelEnlargedImageBtn}
             onClick={() =>
@@ -514,6 +522,8 @@ function ProjectDetails(props) {
             <CloseIcon style={{ color: 'white' }} />
           </IconButton>
 
+            {/* Slider Image Container */}
+          <Box className={classes.enlargedImageContainer}>
           {project.images.length <= 1 ? (
             <img
               className={classes.enlargedImageStyle}
@@ -521,7 +531,6 @@ function ProjectDetails(props) {
               alt={`${project.title}`}
             />
           ) : (
-            <Box className={classes.enlargedImageStyle}>
               <Slider
                 initialSlide={image_id}
                 adaptiveHeight
@@ -529,15 +538,17 @@ function ProjectDetails(props) {
                 speed={500}
                 slidesToShow={1}
                 slidesToScroll={1}
+                className= {classes.enlargedImageStyle}
+                nextArrow = {<EnlargedImgArrow/>}
+                prevArrow = {<EnlargedImgArrow/>}
+
               >
                 {project.images.map(image => (
                   <div>
                     <img
                       style={{
-                        alignSelf: 'center',
                         alignItems: 'center',
                         width: '100%',
-                        height: 'auto',
                       }}
                       key={image.public_id}
                       src={image.image_url}
@@ -545,8 +556,8 @@ function ProjectDetails(props) {
                   </div>
                 ))}
               </Slider>
-            </Box>
           )}
+          </Box>
         </Dialog>
 
         <Dialog
