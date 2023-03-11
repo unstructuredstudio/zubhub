@@ -259,7 +259,12 @@ const styles = theme => ({
   },
   footerLinkStyle: {
     color: 'white',
+    cursor: 'pointer',
+    '&:hover': {
+      color: 'rgb(254 211 42)',
+    },
   },
+
   center: {
     display: 'flex',
     justifyContent: 'center',
