@@ -263,9 +263,8 @@ const styles = theme => ({
     '&:hover': {
       color: 'rgb(254 211 42)',
     },
-  },
-
-  center: {
+  }, 
+   center: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
