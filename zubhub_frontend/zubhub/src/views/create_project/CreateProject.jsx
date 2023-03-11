@@ -642,12 +642,16 @@ function CreateProject(props) {
                             color="textSecondary"
                             className={classes.customLabelStyle}
                           >
+<<<<<<< Updated upstream
                             <Box
                               className={classes.fieldNumberStyle}
                               id="sixCenter"
                             >
                               6
                             </Box>
+=======
+                            <Box className={classes.customBoxStyle}>6</Box>
+>>>>>>> Stashed changes
                             {t('createProject.inputs.category.label')}
                           </Typography>
                         </label>
@@ -848,12 +852,16 @@ function CreateProject(props) {
                             color="textSecondary"
                             className={classes.customLabelStyle}
                           >
+<<<<<<< Updated upstream
                             <Box
                               className={classes.fieldNumberStyle}
                               id="eightCenter"
                             >
                               8
                             </Box>
+=======
+                            <Box className={classes.customBoxStyle}>8</Box>
+>>>>>>> Stashed changes
                             {t('createProject.inputs.publish.label')}
                           </Typography>
                         </label>

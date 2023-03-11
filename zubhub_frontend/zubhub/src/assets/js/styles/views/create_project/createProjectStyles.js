@@ -40,6 +40,7 @@ const styles = theme => ({
     },
     fontWeight: 'bold',
     fontSize: '1rem',
+    display:'flex',
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.7rem',
     },
@@ -65,6 +66,23 @@ const styles = theme => ({
         fontSize: '1.7rem',
       },
     },
+  },
+  customBoxStyle:{
+     height: '20px',
+    width: '20px',
+    backgroundColor: '#00B8C4',
+    color: 'white',
+    display: 'flex',
+    alignItems:'center',
+    justifyContent:'center',
+    textAlign: 'center',
+    borderRadius: '50%',
+    lineHeight: '17px',
+    marginRight: '0.3em',
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.2rem',
+    },
+    
   },
   descInputStyle: {
     color: 'black',
@@ -175,7 +193,6 @@ const styles = theme => ({
     width: '20px',
     backgroundColor: '#00B8C4',
     color: 'white',
-    display: 'inline-block',
     textAlign: 'center',
     borderRadius: '50%',
     lineHeight: '17px',
