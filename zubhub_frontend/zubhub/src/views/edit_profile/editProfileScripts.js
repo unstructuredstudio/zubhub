@@ -141,6 +141,7 @@ export const editProfile = (e, props, toast) => {
                   server_errors['user_location'] = messages[key][0];
                 } else {
                   server_errors[key] = messages[key][0];
+                  toast.error(server_errors[key]);
                 }
               });
               // props.setStatus({
