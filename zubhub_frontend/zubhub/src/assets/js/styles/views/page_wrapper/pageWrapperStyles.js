@@ -7,6 +7,9 @@ const styles = theme => ({
     zIndex: 1,
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    [theme.breakpoints.down('1184')]: {
+      maxWidth: '100%',
+    },
   },
   toolBarStyle: {
     paddingLeft: 0,
@@ -31,7 +34,8 @@ const styles = theme => ({
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
-      width: '35em',
+      width: '28em',
+      minWidth: 'unset',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
@@ -57,14 +61,15 @@ const styles = theme => ({
           border: '1px solid rgba(255,255,255,0.2)',
         },
       },
-      [theme.breakpoints.down('1216')]: {
-        width: '30em',
-      },
-      [theme.breakpoints.down('1054')]: {
+      [theme.breakpoints.down('1315')]: {
         width: '20em',
+      },
+      [theme.breakpoints.down('1181')]: {
+        width: '18em',
       },
     },
   },
+  // search bar for when the screen is small
   smallSearchFormStyle: {
     height: '4em',
     width: '100%',
@@ -72,8 +77,10 @@ const styles = theme => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: '1em',
     '& .search-form-input': {
       height: '2.5em',
+      width: '18em',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
       borderRadius: '50px',
@@ -98,6 +105,15 @@ const styles = theme => ({
         '&.Mui-focused fieldset': {
           border: '1px solid rgba(255,255,255,0.2)',
         },
+      },
+      [theme.breakpoints.down('420')]: {
+        width: '15em',
+      },
+      [theme.breakpoints.down('376')]: {
+        width: '13em',
+      },
+      [theme.breakpoints.down('290')]: {
+        width: '8em',
       },
     },
   },
@@ -111,7 +127,6 @@ const styles = theme => ({
     position: 'absolute!important',
     width: '1px',
   },
-
   searchFormSubmitStyle: {
     padding: 0,
     color: '#FFCE0C',
@@ -119,13 +134,15 @@ const styles = theme => ({
   toggleSearchFormStyle: {
     color: 'white',
   },
+  //  remove the search toggle icon from screens higher than 894
   addOn894: {
-    [theme.breakpoints.up('894')]: {
+    [theme.breakpoints.up('1167')]: {
       display: 'none',
     },
   },
+  // to remove the search bar from screens lower than 894
   removeOn894: {
-    [theme.breakpoints.down('894')]: {
+    [theme.breakpoints.down('1167')]: {
       display: 'none',
     },
   },
@@ -213,11 +230,14 @@ const styles = theme => ({
       boxSizing: 'border-box',
       backgroundColor: 'rgba(0,0,0,0)',
     },
+    [theme.breakpoints.down('282')]: {
+      marginLeft: '0.3em',
+    },
   },
   footerStyle: {
     backgroundColor: '#dc3545',
     boxSizing: 'border-box',
-    width: '100%',
+    width: '100vw',
     textAlign: 'left',
     padding: '45px 50px',
     display: 'flex',
