@@ -103,8 +103,7 @@ function PageWrapper(props) {
   });
 
   const [options, setOptions] = useState([]);
-  const [query, setQuery] = useState('');
-  const [queryInput, setQueryInput] = useState('');
+  const [query, setQuery] = useState(props.location.search ? getQueryParams(window.location.href).get('q') : '');
 
   const throttledFetchOptions = useMemo(
     () =>
@@ -210,6 +209,10 @@ function PageWrapper(props) {
     window.location.reload();
   };
 
+  const handleTextField = (event) => {
+    setQuery(event.target.value)
+  }
+
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
   const { zubhub, hero } = props.projects;
@@ -305,11 +308,8 @@ function PageWrapper(props) {
                     <Autocomplete
                       className={classes.input}
                       options={options}
-                      defaultValue={{
-                        title:
-                          props.location.search &&
-                          getQueryParams(window.location.href).get('q'),
-                      }}
+                      defaultValue={{ title: query }}
+                      value={{ title: query }}
                       renderOption={(option, { inputValue }) => (
                         <Option
                           option={option}
@@ -317,7 +317,7 @@ function PageWrapper(props) {
                           onOptionClick={onSearchOptionClick}
                         />
                       )}
-                      onChange={onSearchOptionClick}
+
                     >
                       {params => (
                         <TextField
@@ -346,13 +346,8 @@ function PageWrapper(props) {
                               </InputAdornment>
                             ),
                             pattern: '(.|s)*S(.|s)*',
-                            defaultValue: {
-                              title:
-                                props.location.search &&
-                                getQueryParams(window.location.href).get('q'),
-                            },
                           }}
-                          onChange={e => setQuery(e.target.value)}
+                          onChange={handleTextField}
                           placeholder={`${t(
                             'pageWrapper.inputs.search.label',
                           )}...`}
@@ -759,10 +754,8 @@ function PageWrapper(props) {
                   <Autocomplete
                     style={{ width: '100%' }}
                     options={options}
-                    defaultValue={
-                      props.location.search &&
-                      getQueryParams(window.location.href).get('q')
-                    }
+                    defaultValue={{ title: query }}
+                    value={{ title: query }}
                     renderOption={(option, { inputValue }) => (
                       <Option
                         option={option}
@@ -770,7 +763,6 @@ function PageWrapper(props) {
                         onOptionClick={onSearchOptionClick}
                       />
                     )}
-                    onChange={onSearchOptionClick}
                   >
                     {params => (
                       <TextField
@@ -803,7 +795,7 @@ function PageWrapper(props) {
                         placeholder={`${t(
                           'pageWrapper.inputs.search.label',
                         )}...`}
-                        onChange={e => setQuery(e.target.value)}
+                        onChange={handleTextField}
                       />
                     )}
                   </Autocomplete>
