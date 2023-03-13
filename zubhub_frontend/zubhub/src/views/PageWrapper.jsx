@@ -731,7 +731,11 @@ function PageWrapper(props) {
                 role="search"
                 ref={formRef}
               >
-                <FormControl variant="outlined" style={{ minWidth: 'unset' }}>
+                <FormControl
+                  variant="outlined"
+                  style={{ minWidth: 'unset' }}
+                  className={classes.formControlStyle}
+                >
                   <InputSelect
                     searchType={searchType}
                     onSearchTypeChange={setSearchType}
