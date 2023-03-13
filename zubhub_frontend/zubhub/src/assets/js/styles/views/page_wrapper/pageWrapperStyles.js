@@ -40,7 +40,7 @@ const styles = theme => ({
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
-      width: '40em',
+      // width: '40em',
       backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'white',
       borderRadius: '50px',
