@@ -1,21 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="YouTube_Icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" viewBox="0 0 1024 721" enable-background="new 0 0 1024 721" xml:space="preserve">
-<path id="Triangle" fill="#FFFFFF" d="M407,493l276-143L407,206V493z"/>
-<path id="The_Sharpness" opacity="0.12" fill="#420000" d="M407,206l242,161.6l34-17.6L407,206z"/>
-<g id="Lozenge">
-	<g>
-		
-			<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="512.5" y1="719.7" x2="512.5" y2="1.2" gradientTransform="matrix(1 0 0 -1 0 721)">
-			<stop  offset="0" style="stop-color:#3fbdbc"/>
-			<stop  offset="1" style="stop-color:#3ab4b5"/>
-		</linearGradient>
-		<path fill="url(#SVGID_1_)" d="M1013,156.3c0,0-10-70.4-40.6-101.4C933.6,14.2,890,14,870.1,11.6C727.1,1.3,512.7,1.3,512.7,1.3
-			h-0.4c0,0-214.4,0-357.4,10.3C135,14,91.4,14.2,52.6,54.9C22,85.9,12,156.3,12,156.3S1.8,238.9,1.8,321.6v77.5
-			C1.8,481.8,12,564.4,12,564.4s10,70.4,40.6,101.4c38.9,40.7,89.9,39.4,112.6,43.7c81.7,7.8,347.3,10.3,347.3,10.3
-			s214.6-0.3,357.6-10.7c20-2.4,63.5-2.6,102.3-43.3c30.6-31,40.6-101.4,40.6-101.4s10.2-82.7,10.2-165.3v-77.5
-			C1023.2,238.9,1013,156.3,1013,156.3z M407,493V206l276,144L407,493z"/>
-	</g>
+<svg width="1143" height="816" viewBox="0 0 1143 816" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_dd_116_2)">
+<path d="M1072 197.3C1072 197.3 1062 126.9 1031.4 95.9C992.6 55.2 949 55 929.1 52.6C786.1 42.3 571.7 42.3 571.7 42.3H571.3C571.3 42.3 356.9 42.3 213.9 52.6C194 55 150.4 55.2 111.6 95.9C81 126.9 71 197.3 71 197.3C71 197.3 60.8 279.9 60.8 362.6V440.1C60.8 522.8 71 605.4 71 605.4C71 605.4 81 675.8 111.6 706.8C150.5 747.5 201.5 746.2 224.2 750.5C305.9 758.3 571.5 760.8 571.5 760.8C571.5 760.8 786.1 760.5 929.1 750.1C949.1 747.7 992.6 747.5 1031.4 706.8C1062 675.8 1072 605.4 1072 605.4C1072 605.4 1082.2 522.7 1082.2 440.1V362.6C1082.2 279.9 1072 197.3 1072 197.3ZM466 534V247L742 391L466 534Z" fill="url(#paint0_linear_116_2)"/>
+<path d="M466 534L742 391L466 247V534Z" fill="white"/>
+<path opacity="0.12" d="M466 247L708 408.6L742 391L466 247Z" fill="#420000"/>
 </g>
+<defs>
+<filter id="filter0_dd_116_2" x="0.800003" y="0.299988" width="1141.4" height="815.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="-20" dy="-2"/>
+<feGaussianBlur stdDeviation="20"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_116_2"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="20" dy="15"/>
+<feGaussianBlur stdDeviation="20"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow_116_2" result="effect2_dropShadow_116_2"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_116_2" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_116_2" x1="571.5" y1="42.3" x2="571.5" y2="760.8" gradientUnits="userSpaceOnUse">
+<stop stop-color="#3FBDBC"/>
+<stop offset="1" stop-color="#3AB4B5"/>
+</linearGradient>
+</defs>
 </svg>
