@@ -23,7 +23,7 @@ import {
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CommentIcon from '../../assets/js/icons/CommentIcon';
-import playIcon from '../../assets/images/play-icon.png';
+import playIcon from '../../assets/images/play-icon.svg';
 import {
   dFormatter,
   nFormatter,
