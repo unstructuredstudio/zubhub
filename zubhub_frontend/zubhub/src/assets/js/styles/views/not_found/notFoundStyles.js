@@ -10,7 +10,7 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    margin: '5% 0',
+    margin: '72px 0 52px 0',
     width: '80%',
     gap: '40px',
     [theme.breakpoints.down('1024')]: {
