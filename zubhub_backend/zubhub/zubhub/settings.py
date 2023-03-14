@@ -142,7 +142,10 @@ REST_FRAMEWORK = {
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'creators.serializers.CustomRegisterSerializer',
 }
-
+REST_AUTH_SERIALIZERS = {
+    'PASSWORD_RESET_SERIALIZER': 
+        'zubhub.serializers.CustomPasswordResetSerializer',
+}
 ACCOUNT_ADAPTER = 'creators.adapter.CustomAccountAdapter'
 
 AUTH_USER_MODEL = 'creators.Creator'

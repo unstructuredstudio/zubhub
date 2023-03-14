@@ -52,7 +52,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/rest-auth/login/', LoginView.as_view()),
             path('api/rest-auth/logout/', LogoutView.as_view()),
             path('api/rest-auth/registration/verify-email/', VerifyEmailView.as_view()),
-            path('api/rest-auth/password/reset/', PasswordResetView.as_view()),
+            path('api/rest-auth/password/reset/', PasswordResetView.as_view()), 
             path('api/rest-auth/password/reset/confirm/', PasswordResetConfirmView.as_view()),
             path('api/creators/', include('creators.urls')),
             path('api/projects/', include('projects.urls')),

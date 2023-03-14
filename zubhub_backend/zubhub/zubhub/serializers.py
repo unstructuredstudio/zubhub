@@ -4,8 +4,13 @@ from projects.pagination import ProjectNumberPagination
 from projects.utils import get_published_projects_for_user
 from projects.serializers import ProjectSerializer
 from math import ceil
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.utils.translation import gettext as _
+from rest_auth.serializers import PasswordResetSerializer
 
-
+UserModel = get_user_model()
 
 class HeroSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
@@ -99,3 +104,17 @@ class AmbassadorsSerializer(serializers.ModelSerializer):
             next_page = None
 
         return {"results": serializer.data, "prev": prev_page, "next": next_page, "count": count}
+    
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    email = serializers.EmailField()
+    password_reset_form_class = PasswordResetForm
+    def validate_email(self, value):
+        self.reset_form = self.password_reset_form_class(data=self.initial_data)
+        if not self.reset_form.is_valid():
+            raise serializers.ValidationError(_('Error'))
+
+        if not UserModel.objects.filter(email=value).exists():
+
+            raise serializers.ValidationError(_('Invalid e-mail address'))
+        return value
+    
