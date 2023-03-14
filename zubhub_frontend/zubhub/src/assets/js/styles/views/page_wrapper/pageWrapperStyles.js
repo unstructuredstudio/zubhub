@@ -1,4 +1,4 @@
-const styles = theme => ({
+export const styles = theme => ({
   navBarStyle: {
     backgroundColor: '#DC3545',
   },
@@ -8,6 +8,9 @@ const styles = theme => ({
   },
   customButton: {
     fontSize: '1.15rem',
+    [theme.breakpoints.down('1315')]: {
+      width: '8em',
+    },
   },
   mainContainerStyle: {
     maxWidth: '2000px',
@@ -43,15 +46,10 @@ const styles = theme => ({
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
-
-      width: '28em',
+      width: '24em',
       minWidth: 'unset',
       backgroundColor: 'rgba(255,255,255,0.2)',
-      color: 'black',
-
-      backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'white',
-
       borderRadius: '50px',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
@@ -75,19 +73,14 @@ const styles = theme => ({
           border: '1px solid rgba(0,0,0,0.2)',
         },
       },
-
       [theme.breakpoints.down('1315')]: {
         width: '20em',
-
+      },
       [theme.breakpoints.down('1216')]: {
         width: '100%',
       },
-      [theme.breakpoints.down('1054')]: {
-        // width: '20em',
-
-      },
       [theme.breakpoints.down('1181')]: {
-        width: '18em',
+        width: '10em',
       },
     },
   },
@@ -100,14 +93,9 @@ const styles = theme => ({
     marginBottom: '1em',
     '& .search-form-input': {
       height: '2.5em',
-
       width: '18em',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
-
-      backgroundColor: 'rgba(0,0,0,0.2)',
-      color: 'white',
-
       borderRadius: '50px',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
@@ -165,22 +153,13 @@ const styles = theme => ({
   },
   //  remove the search toggle icon from screens higher than 894
   addOn894: {
-
-    [theme.breakpoints.up('1167')]: {
-
     [theme.breakpoints.up('1168')]: {
-
       display: 'none',
     },
   },
   // to remove the search bar from screens lower than 894
   removeOn894: {
-
-    [theme.breakpoints.down('1167')]: {
-
-    flex: 1,
     [theme.breakpoints.down('1168')]: {
-
       display: 'none',
     },
   },
