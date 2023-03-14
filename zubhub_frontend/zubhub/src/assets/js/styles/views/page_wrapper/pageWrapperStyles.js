@@ -2,6 +2,13 @@ const styles = theme => ({
   navBarStyle: {
     backgroundColor: '#DC3545',
   },
+  input: {
+    flex: 1,
+    marginRight: '2rem',
+  },
+  customButton: {
+    fontSize: '1.15rem',
+  },
   mainContainerStyle: {
     maxWidth: '2000px',
     zIndex: 1,
@@ -12,11 +19,13 @@ const styles = theme => ({
     },
   },
   toolBarStyle: {
-    paddingLeft: 0,
-    paddingRight: 0,
+    padding: '15px 0',
   },
   logoStyle: {
     flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
     '& img': {
       height: '2em',
     },
@@ -34,35 +43,48 @@ const styles = theme => ({
     '& .search-form-input': {
       height: '2.5em',
       maxWidth: '40em',
+
       width: '28em',
       minWidth: 'unset',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
+
+      backgroundColor: 'rgba(0,0,0,0.2)',
+      color: 'white',
+
       borderRadius: '50px',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       '&:hover': {
-        backgroundColor: 'rgba(255,255,255,0.8)',
+        backgroundColor: 'rgba(0,0,0,0.3)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
-          color: '#DC3545',
+          color: '#FFF',
         },
       },
       '&.MuiOutlinedInput-notchedOutline': {
-        border: '1px solid rgba(255,255,255,0.2)',
+        border: '1px solid rgba(0,0,0,0.2)',
       },
       '&.MuiOutlinedInput-root': {
         '& fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&:hover fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&.Mui-focused fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
       },
+
       [theme.breakpoints.down('1315')]: {
         width: '20em',
+
+      [theme.breakpoints.down('1216')]: {
+        width: '100%',
+      },
+      [theme.breakpoints.down('1054')]: {
+        // width: '20em',
+
       },
       [theme.breakpoints.down('1181')]: {
         width: '18em',
@@ -71,7 +93,6 @@ const styles = theme => ({
   },
   smallSearchFormStyle: {
     height: '4em',
-    width: '100%',
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
@@ -79,30 +100,35 @@ const styles = theme => ({
     marginBottom: '1em',
     '& .search-form-input': {
       height: '2.5em',
+
       width: '18em',
       backgroundColor: 'rgba(255,255,255,0.2)',
       color: 'black',
+
+      backgroundColor: 'rgba(0,0,0,0.2)',
+      color: 'white',
+
       borderRadius: '50px',
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       '&:hover': {
-        backgroundColor: 'rgba(255,255,255,0.8)',
+        backgroundColor: 'rgba(0,0,0,0.3)',
         '& .MuiInputAdornment-root .MuiButtonBase-root': {
-          color: '#DC3545',
+          color: '#FFF',
         },
       },
       '&.MuiOutlinedInput-notchedOutline': {
-        border: '1px solid rgba(255,255,255,0.2)',
+        border: '1px solid rgba(0,0,0,0.2)',
       },
       '&.MuiOutlinedInput-root': {
         '& fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&:hover fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
         '&.Mui-focused fieldset': {
-          border: '1px solid rgba(255,255,255,0.2)',
+          border: '1px solid rgba(0,0,0,0.2)',
         },
       },
       [theme.breakpoints.down('420')]: {
@@ -116,6 +142,10 @@ const styles = theme => ({
       },
     },
   },
+  formControlStyle: {
+    minWidth: 'unset',
+  },
+
   searchFormLabelStyle: {
     border: 0,
     clip: 'rect(0 0 0 0)',
@@ -135,13 +165,22 @@ const styles = theme => ({
   },
   //  remove the search toggle icon from screens higher than 894
   addOn894: {
+
     [theme.breakpoints.up('1167')]: {
+
+    [theme.breakpoints.up('1168')]: {
+
       display: 'none',
     },
   },
   // to remove the search bar from screens lower than 894
   removeOn894: {
+
     [theme.breakpoints.down('1167')]: {
+
+    flex: 1,
+    [theme.breakpoints.down('1168')]: {
+
       display: 'none',
     },
   },
@@ -162,8 +201,8 @@ const styles = theme => ({
     cursor: 'pointer',
     backgroundColor: 'white',
     [theme.breakpoints.up('1600')]: {
-      height: '3em',
-      width: '3em',
+      height: '40px',
+      width: '40px',
     },
   },
   profileMenuStyle: {
