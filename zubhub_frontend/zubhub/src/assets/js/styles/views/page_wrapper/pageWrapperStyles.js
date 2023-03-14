@@ -69,7 +69,6 @@ const styles = theme => ({
       },
     },
   },
-  // search bar for when the screen is small
   smallSearchFormStyle: {
     height: '4em',
     width: '100%',

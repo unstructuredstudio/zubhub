@@ -805,7 +805,6 @@ function PageWrapper(props) {
             </ClickAwayListener>
           ) : null}
         </Container>
-        {/* dropdown */}
         <BreadCrumb />
       </AppBar>
       <Toolbar ref={backToTopEl} className={classes.marginBottom} />
