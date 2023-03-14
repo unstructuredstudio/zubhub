@@ -68,6 +68,8 @@ const styles = theme => ({
   },
   playIconStyle: {
     zIndex: 0,
+    height: '40%',
+    width: '40%',
   },
   actionAreaStyle: {
     flexGrow: 100,
