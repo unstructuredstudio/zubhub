@@ -70,8 +70,8 @@ const styles = theme => ({
   circleBox: {
     height: '20px',
     width: '20px',
-    backgroundColor: '#00B8C4',
     color: 'white',
+    backgroundColor: [theme.circleBox.backgroundColor],
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -98,7 +98,7 @@ const styles = theme => ({
       borderBottomRightRadius: 15,
       borderBottomLeftRadius: 15,
       '& .ql-editor': {
-        WebkitUserSelect:'text',
+        WebkitUserSelect: 'text',
         color: '#000000de',
         fontSize: '1rem',
         fontFamily: 'Raleway,Roboto,sans-serif',
@@ -299,11 +299,11 @@ const styles = theme => ({
   },
   requiredLabelStyle: {
     display: 'inline-block',
-    color: 'red'
+    color: 'red',
   },
   errorMessage: {
-    color: 'red'
-  }
+    color: 'red',
+  },
 });
 
 export default styles;
