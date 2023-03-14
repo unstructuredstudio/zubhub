@@ -6,7 +6,7 @@
 
 **ZubHub** is an open-source, documentation & collaboration tool for activity-based learning. It is available for custom use for schools, libraries, hackerspaces, educational organizations, etc. Imagine your own online community built around your educational activities! 
 
-Zubhub is designed and developed by [Unstructured Studio](https://unstructured.studio). We are an educational non-profit organization incorporated in Canada and India. We have our own ZubHub and we use it to expand access to low-cost creative learning opportunities to children and educators. On our ZubHub, children, and educators can get inspired by a collection of activity ideas and projects, learn how to build with the materials and tools that they already have access to, and share their creations with others. Some of the primary features are creator portfolios, community-curated projects, discussion-based collaboration, and workshops. ZubHub takes inspiration from the research conducted on the [Build In Progress](https://www.media.mit.edu/projects/build-in-progress/overview/) platform at the MIT Media Lab. :smiley:
+Zubhub is designed and developed by [Unstructured Studio](https://unstructured.studio). We are an educational non-profit organization incorporated in Canada and India. We have our own ZubHub and we use it to expand access to low-cost creative learning opportunities to children and educators. On our ZubHub, children, and educators can get inspired by a collection of activity ideas and projects, learn how to build with the materials and tools that they already have access to, and share their creations with others. Some of the primary features are creator portfolios, community-curated projects, discussion-based collaboration, and workshops. ZubHub takes inspiration from the research conducted on the [Build In Progress](http://web.mit.edu/ttseng/www/portfolio/build_in_progress/index.html) platform at the MIT Media Lab. :smiley:
 
 | ZubHub is currently in public beta. A public ZubHub instance is hosted here: https://zubhub.unstructured.studio |
 | --------------------------------------------------------------------------------------------------------------- |
@@ -23,9 +23,11 @@ Follow the instructions below to set up your local development environment
 ## Steps
 
 1. Install [Git](https://git-scm.com/downloads). ( [jump to section](#install-git) )
-2. [Fork](https://github.com/unstructuredstudio/zubhub/fork) and clone zubhub repository. ( [jump to section](#fork-and-clone-zubhub-repository) )
+2. [Fork](https://github.com/unstructuredstudio/zubhub/fork) and clone zubhub repository. ( [jump to section]
+(#fork-and-clone-zubhub-repository) )
 3. Install [docker](https://docs.docker.com/get-docker/). ( [jump to section](#install-docker) )
-4. Install [docker-compose](https://docs.docker.com/compose/install/). ( [jump to section](#install-docker-compose) )
+4. Install [docker-compose](https://docs.docker.com/compose/install/). ( [jump to section]
+(#install-docker-compose) )
 5. Install [Node.js 14 and npm 7 or later](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/). ( [jump to section](#install-node-and-npm) )
 6. Install make. ( [jump to section](#install-make) )
 7. Setup Backend. ( [jump to section](#setup-backend) )
@@ -34,7 +36,7 @@ Follow the instructions below to set up your local development environment
 <br/>
 <br/>
 
-## Windows Specific Setup
+## Installation and Project Software Requirement Setup
 
 - Install **Docker** and **Docker Compose** by installing [Docker Desktop for Windows](https://docs.docker.com/desktop/windows/install/).
 
@@ -79,16 +81,99 @@ The copied URL will have the format of `https://github.com/<your github username
 
 ## Install Docker
 
+Docker is a platform that allows you to build, test, and deploy applications as containers. Containers are lightweight, portable, and self-contained units that run applications and their dependencies.
+You can skip this step if you already have Docker installed on your machine. To check if Docker is running on your machine, run the following command docker --version.
+The steps to install Docker on your machine will vary depending on your operating system.
+- Click on this [link](https://docs.docker.com/get-docker/), select your operating system from the options given, then download docker and follow the steps below to install on your local machine.
+
 > **_NOTE:_** You can skip this step if you already have **docker** installed on your machine. To check if **docker** is running on your machine, run the following command `docker --version`.
 
-- Click on this [link](https://docs.docker.com/get-docker/), select your operating system from the options given, then download and install docker on your local machine.
+MacOS
+
+1. Download the Docker Desktop for Mac installer from the Docker website on this [link](https://docs.docker.com/get-docker/).
+2. Double-click the downloaded .dmg file to open the installer.
+3. Drag the Docker icon to the Applications folder.
+4. Double-click the Docker icon in the Applications folder to start Docker Desktop.
+
+Windows
+
+1. Download the Docker Desktop for Windows installer from the Docker website on this [link](https://docs.docker.com/get-docker/).
+2. Double-click the downloaded .exe file to start the installer.
+3. Follow the prompts to install Docker Desktop.
+4. When the installation is complete, Docker Desktop starts automatically.
+
+Linux
+
+1. Follow the instructions on the Docker website on this [link](https://docs.docker.com/get-docker/) to install Docker Engine for your Linux distribution.
+2. Once Docker is installed, start the Docker service by running the command `sudo systemctl start docker`.
+
+After you have installed Docker, you can verify the installation by running the following command in your terminal or command prompt: docker --version
+
+If Docker is installed correctly, this command will display the version number of Docker that is installed on your machine.
 
 <br/>
 <br/>
 
 ## Install Docker Compose
 
+Docker Compose is a tool that allows you to define and run multi-container Docker applications.
+You can skip this step if you already have Docker Compose installed on your machine. To check if Docker Compose is running on your machine, run the following command docker-compose --version.
+To install Docker Compose, follow the instructions below:
+
 > **_NOTE:_** You can skip this step if you already have **docker-compose** installed on your machine. To check if **docker-compose** is running on your machine, run the following command `docker-compose --version`.
+
+
+Install Docker Compose on Linux systems
+Follow the steps below to install Docker Compose on a Linux system:
+
+1. Open a terminal window.
+2. Run the following command to download the current stable release of Docker Compose: 
+
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+This command downloads the latest version of Docker Compose and saves it to the /usr/local/bin directory.
+3. Apply executable permissions to the Docker Compose binary:
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+4. Test the installation by running the following command:
+
+docker-compose --version
+
+This command displays the version of Docker Compose that you installed.
+
+Install Docker Compose on macOS
+Follow the steps below to install Docker Compose on a macOS system:
+
+1. Open a terminal window.
+2. Run the following command to download the Docker Compose binary:
+
+curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+This command downloads the latest version of Docker Compose and saves it to the /usr/local/bin directory.
+
+3. Apply executable permissions to the Docker Compose binary:
+ 
+chmod +x /usr/local/bin/docker-compose
+
+4. Test the installation by running the following command:
+
+docker-compose --version
+
+This command displays the version of Docker Compose that you installed.
+
+
+Install Docker Compose on Windows systems
+Follow the steps below to install Docker Compose on a Windows system:
+
+1. Download the Docker Compose installer from the official Docker website: https://docs.docker.com/compose/install/#install-compose-on-windows-desktop-systems.
+2. Run the installer and follow the instructions to complete the installation.
+3. Test the installation by running the following command in a command prompt:
+
+docker-compose --version
+
+This command displays the version of Docker Compose that you installed.
+
 
 - Click on this [link](https://docs.docker.com/compose/install/), go through the page and select your operating system from the options given, then follow the given instructions to download and install **docker-compose** on your local machine.
 
@@ -100,6 +185,15 @@ The copied URL will have the format of `https://github.com/<your github username
 > **_NOTE:_** You can skip this step if you already have **node** and **npm** installed on your machine. To check if **node** and **npm** are already installed on your machine, run the following command `node --version` and `npm --version`.
 
 - Click on this [link](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/) and follow the given instructions to install **node** and **npm** on your local machine.
+
+1. Go to the Node.js download page and download the appropriate installer for your operating system.
+2. Run the installer and follow the prompts to install Node.js.
+3. Open a terminal or command prompt and run the following command to check that Node.js and npm are installed correctly:
+
+node -v
+npm -v
+
+If the version numbers are displayed, Node.js and npm are installed correctly.
 
 <br/>
 <br/>
