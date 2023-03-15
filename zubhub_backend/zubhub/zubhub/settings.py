@@ -139,6 +139,10 @@ REST_FRAMEWORK = {
     }
 }
 
+REST_AUTH_SERIALIZERS = {
+    'PASSWORD_RESET_SERIALIZER': 'creators.serializers.CustomPasswordResetSerializer',
+}
+
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'creators.serializers.CustomRegisterSerializer',
 }
@@ -296,7 +300,8 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 CELERY_EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_SUBJECT_PREFIX = ''
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "hello@unstructured.studio")
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL", "hello@unstructured.studio")
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
@@ -345,8 +350,8 @@ SUMMERNOTE_CONFIG = {
 }
 
 
-#for auto-generating the database schema
+# for auto-generating the database schema
 GRAPH_MODELS = {
-  'all_applications': True,
-  'group_models': True,
+    'all_applications': True,
+    'group_models': True,
 }
