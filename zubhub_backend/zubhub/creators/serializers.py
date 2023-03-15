@@ -1,3 +1,4 @@
+from django.contrib.auth.forms import PasswordResetForm
 from rest_framework.response import Response
 from datetime import date
 import re
@@ -275,10 +276,15 @@ class AddGroupMembersSerializer(serializers.Serializer):
 
 
 class CustomPasswordResetSerializer(PasswordResetSerializer):
-    email = serializers.EmailField()
+    password_reset_form_class = PasswordResetForm
 
     def validate_email(self, value):
+        self.reset_form = self.password_reset_form_class(
+            data=self.initial_data)
+        if not self.reset_form.is_valid():
+            raise serializers.ValidationError(_('Error'))
+
         if not Creator.objects.filter(email=value).exists():
             raise serializers.ValidationError(
-                _("No account found with this email. Verify and try again."))
+                _('No account found with this email. Verify and try again.'))
         return value
