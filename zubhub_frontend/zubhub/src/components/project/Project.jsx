@@ -71,7 +71,7 @@ function Project(props) {
                 ? t('project.publish.preview')
                 : ''}
               {project.publish.type ===
-              publish_type['Authenticated Creators'] ? (
+                publish_type['Authenticated Creators'] ? (
                 <LockIcon />
               ) : (
                 ''
@@ -147,6 +147,7 @@ function Project(props) {
               </Typography>
             </Box>
             <Link
+              style={{ flexGrow: 1 }}
               to={`/creators/${project.creator.username}`}
               className={classes.textDecorationNone}
             >
@@ -156,31 +157,60 @@ function Project(props) {
                   src={project.creator.avatar}
                   alt={project.creator.username}
                 />
-                <Typography
-                  color="textSecondary"
-                  variant="caption"
-                  component="p"
+                <Tooltip
+                  title={project.creator.username}
+                  placement="bottom"
+                  arrow
+                  className={classes.creatorUsernameStyle}
                 >
-                  {project.creator.username}
-                </Typography>
-                <Link
-                  className={common_classes.textDecorationNone}
-                  to={`/search/?q=${project.creator.tags[0]}&tab=creators`}
-                >
-                  <Typography
-                    className={clsx(common_classes.baseTagStyle, {
-                      [common_classes.extendedTagStyle]: !isBaseTag(
-                        project.creator.tags[0],
-                      ),
-                    })}
-                    component="h2"
-                  >
-                    {project.creator.tags[0]}
-                  </Typography>
-                </Link>
+                  <Box>
+                    <Typography
+                      color="textSecondary"
+                      variant="caption"
+                      component="p"
+                      className={classes.username}
+                    >
+                      {project.creator.username}
+                    </Typography>
+                  </Box>
+                </Tooltip>
+                <Box className={classes.tagsContainer}>
+                  {project.creator.tags.map((tag, index) => (
+                    <>
+                      {index == 0 &&
+                        <Link
+                          className={clsx(common_classes.baseTagStyle, classes.tagContainer, common_classes.textDecorationNone, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
+
+                          to={`/search/?q=${tag}&tab=creators`}
+                        >
+                          <Typography className={classes.tagName} component="div">
+                            {tag}
+                          </Typography>
+                        </Link>
+                      }
+                      {index == 1 &&
+                        <Link
+                          className={common_classes.textDecorationNone}
+                          to={`#`}
+                        >
+                          <Typography
+
+                            className={clsx(common_classes.baseTagStyle, classes.restOfTags, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
+                            component="div"
+                          >
+                            + {project.creator.tags.length - 1}
+                          </Typography>
+                        </Link>
+
+                      }
+                    </>
+
+                  ))}
+
+                </Box>
               </Box>
             </Link>
-            <Box className={classes.captionStyle}>
+            <Box className={classes.footer}>
               <Box className={classes.captionStyle}>
                 <Typography
                   className={clsx(
@@ -206,6 +236,7 @@ function Project(props) {
                 color="textSecondary"
                 variant="caption"
                 component="span"
+                className={classes.date}
               >
                 {`${dFormatter(project.created_on).value} ${t(
                   `date.${dFormatter(project.created_on).key}`,
