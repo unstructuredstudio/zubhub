@@ -89,6 +89,11 @@ function PageWrapper(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
+
+  //Created new state "show" to show and hide the scroll to top button
+  const [show, setShow] = useState(false);
+
+
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
@@ -141,6 +146,22 @@ function PageWrapper(props) {
       }, 2),
     [],
   );
+
+  //Logic behind showing and hiding scroll to top button
+  const handleScroll = ()=>{
+    if(window.pageYOffset > 250){
+      if(!show) setShow(true);
+    }
+    else{
+      if(show) setShow(false);
+    }
+  }
+  useEffect(()=>{
+    if(250){
+      window.addEventListener('scroll', handleScroll);
+    }
+  })
+
 
   useEffect(() => {
     throttledFetchOptions(
@@ -999,7 +1020,7 @@ function PageWrapper(props) {
           </Box>
         </section>
 
-        <Zoom in={useScrollTrigger}>
+        {show && <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}
             role="presentation"
@@ -1009,7 +1030,7 @@ function PageWrapper(props) {
               <KeyboardArrowUpIcon />
             </Fab>
           </div>
-        </Zoom>
+        </Zoom>}
       </footer>
     </>
   );
