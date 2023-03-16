@@ -388,7 +388,7 @@
     "createToastSuccess": "Your project was created successfully!",
     "updateToastSuccess": "Your project was updated successfully!",
     "errors": {
-      "notLoggedIn": "You are not logged in. Click on the signin button to get started",
+      "notLoggedIn": "You are not logged in. Click on the login button to get started",
       "unexpected": "Well, this is embarrasing! Seems like we could not create your project :( Maybe try again later?"
     }
   },
