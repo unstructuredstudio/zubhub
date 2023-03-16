@@ -368,7 +368,7 @@
         "publishTypes": {
           "authenticatedCreators": "Only me",
           "draft": "Only a few ZubHub users",
-          "preview": "All registered ZubHub users",
+          "preview": "Only a few ZubHub users",
           "public": "Everyone on the internet"
         },
         "visibleTo": "Visible To",
