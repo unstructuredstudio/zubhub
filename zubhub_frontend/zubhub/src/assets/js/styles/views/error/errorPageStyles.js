@@ -26,6 +26,7 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: '60vh',
     [theme.breakpoints.down('500')]: {
       flexDirection: 'column',
       justifyContent: 'center',
