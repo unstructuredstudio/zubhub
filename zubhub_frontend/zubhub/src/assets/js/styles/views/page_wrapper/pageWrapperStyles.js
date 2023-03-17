@@ -290,8 +290,12 @@ export const styles = theme => ({
   },
   footerLinkStyle: {
     color: 'white',
-  },
-  center: {
+    cursor: 'pointer',
+    '&:hover': {
+      color: 'rgb(243 137 147)',
+    },
+  }, 
+   center: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
