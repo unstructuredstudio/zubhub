@@ -115,11 +115,14 @@ export const editProfile = (e, props, toast) => {
     props.validateField('editProfile.inputs.password.errors');
   } else {
     props.login({ values: props.values, history: props.history }).catch(error => {
-      const messages = JSON.parse(error.message);
-      console.log(messages);
-      toast.error(props.t('editProfile.inputs.password.errors.invalid'));
-      password_match = false;
-      return;
+      try{
+        const messages = JSON.parse(error.message);
+        toast.error(props.t('editProfile.inputs.password.errors.invalid'));
+        password_match = false;
+        return;
+      } catch (err) {
+        toast.error(props.t('err.message'));
+      }
     }).finally(() => {
       if (password_match == false) {
         return;
@@ -144,12 +147,6 @@ export const editProfile = (e, props, toast) => {
                   toast.error(server_errors[key]);
                 }
               });
-              // props.setStatus({
-              //   //this is a hack. we need to find a more react way of maintaining initial state for email and phone.
-              //   init_email: props.status && props.status.init_email,
-              //   init_phone: props.status && props.status.init_phone,
-              //   ...server_errors,
-              // });
             } else {
               props.setStatus({
                 non_field_errors: props.t('editProfile.errors.unexpected'),
