@@ -4,6 +4,7 @@ export const styles = theme => ({
     minHeight: '45px',
     textAlign: 'center',
     display: 'flex',
+    width: '100vw',
     lineHeight: '40px',
     paddingRight: '10px',
     '& ol': {

@@ -70,12 +70,12 @@ const styles = theme => ({
     justifyContent: 'space-between',
   },
   addOnSmallScreen: {
-    [theme.breakpoints.up('763')]: {
+    [theme.breakpoints.up('555')]: {
       display: 'none',
     },
   },
   removeOnSmallScreen: {
-    [theme.breakpoints.down('763')]: {
+    [theme.breakpoints.down('555')]: {
       display: 'none',
     },
   },
