@@ -80,11 +80,14 @@ function BreadCrumb() {
       let path = {};
       for (let i = 1; i < pathList.length; i++) {
         path = {};
-        path['link'] = getLink(match.url, i);
         if (/^:/.test(pathList[i]) && mapLinkToTitle[pathList[0]]) {
+          path['link'] = getLink(match.url, i);
           path['title'] = mapLinkToTitle[pathList[0]](pathListUrl[i]);
         } else {
-          path['title'] = t(`breadCrumb.link.${pathList[i]}`);
+          path['title'] = t(capitalize(pathList[i]));
+          pathList.forEach((_p, i)=>{
+          path['link'] = getLink(match.url, i);
+          })
         }
         if (path['title']) {
           result.push(path);

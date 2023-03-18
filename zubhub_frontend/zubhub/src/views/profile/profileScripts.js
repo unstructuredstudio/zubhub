@@ -11,7 +11,7 @@ import { getUserDrafts } from '../../store/actions/projectActions';
 
   if (!username) {
     username = props.auth.username;
-  } else if (props.auth.username === username) props.history.push('/profile');
+  } else if (props.auth.username === username) props.history.replace('/profile');
   return props.getUserProfile({
     username,
     token: props.auth.token,
@@ -51,14 +51,14 @@ export const updateProjects = (res, projects, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        if(projects[0]){
+        if (projects[0]) {
           projects = projects.map(project =>
             project.id === res.project.id ? res.project : project,
           );
         } else {
-        projects = projects.results.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
+          projects = projects.results.map(project =>
+            project.id === res.project.id ? res.project : project,
+          );
         }
         return { results: projects };
       } else {

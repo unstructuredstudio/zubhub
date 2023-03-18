@@ -221,6 +221,9 @@ const styles = theme => ({
     '&.MuiInput-underline:after': {
       display: 'none !important',
     },
+    '& .MuiSelect-icon': {
+      color: 'white',
+    },
     '& .MuiSelect-root': {
       boxSizing: 'border-box',
       backgroundColor: 'rgba(0,0,0,0)',
@@ -262,8 +265,12 @@ const styles = theme => ({
   },
   footerLinkStyle: {
     color: 'white',
-  },
-  center: {
+    cursor: 'pointer',
+    '&:hover': {
+      color: 'rgb(243 137 147)',
+    },
+  }, 
+   center: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
