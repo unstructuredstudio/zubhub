@@ -233,7 +233,7 @@ export const validationSchema = Yup.object().shape({
         ? false
         : true;
     }),
-  dateOfBirth: Yup.date().max(new Date(), 'max').required('required'),
+  dateOfBirth: Yup.date().max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough').required('required'),
   user_location: Yup.string().min(1, 'min').required('required'),
   password1: Yup.string().min(8, 'min').required('required'),
   password2: Yup.string()

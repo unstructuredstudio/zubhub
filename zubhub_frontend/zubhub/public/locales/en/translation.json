@@ -87,6 +87,7 @@
         "label": "Date of Birth",
         "errors": {
           "max": "Your date of birth can't be greater than today",
+          "oldEnough": "Age must be greater than 13 years",
           "required": "Looks like you forgot to enter this!"
         }
       },
