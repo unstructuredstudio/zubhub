@@ -136,10 +136,7 @@ function Login(props) {
                         type="text"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('login.inputs.username.label'),
-                          document,
-                        )}
+                        label="Username Or Email"
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -198,10 +195,7 @@ function Login(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={calculateLabelWidth(
-                          t('login.inputs.password.label'),
-                          document,
-                        )}
+                        label="password"
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}

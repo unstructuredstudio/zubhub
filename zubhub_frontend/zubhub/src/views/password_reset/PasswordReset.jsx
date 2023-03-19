@@ -114,10 +114,7 @@ function PasswordReset(props) {
                         type="text"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('passwordReset.inputs.email.label'),
-                          document,
-                        )}
+                        label="email"
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
