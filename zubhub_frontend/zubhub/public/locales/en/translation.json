@@ -899,6 +899,7 @@
       "Edit": "Save Changes"
     }
   },
+
  "activities": {
    "LinkedProjects": "Linked Projects",
    "errors": {
@@ -999,5 +1000,4 @@
       "drafts": "drafts"
     }
   }
- 
 }

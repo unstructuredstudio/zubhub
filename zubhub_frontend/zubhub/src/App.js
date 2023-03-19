@@ -69,14 +69,13 @@ const ActivityDetails = React.lazy(() =>
 const LinkedProjects = React.lazy(() =>
   import('./views/linked_projects/LinkedProjects'),
 );
-const Ambassadors = React.lazy(() =>
-  import('./views/ambassadors/Ambassadors')
-);
+const Ambassadors = React.lazy(() => import('./views/ambassadors/Ambassadors'));
 const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
 const TermsOfUse = React.lazy(() => import('./views/terms_of_use/TermsOfUse'));
 const About = React.lazy(() => import('./views/about/About'));
 const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
+const NotFound = React.lazy(() => import('./views/not_found/NotFound'));
 
 const LazyImport = props => {
   const { LazyComponent, ...restOfProps } = props;
@@ -524,6 +523,15 @@ function App(props) {
                 {...routeProps}
                 {...props}
               />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="*"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={NotFound} {...routeProps} />
             </PageWrapper>
           )}
         />
