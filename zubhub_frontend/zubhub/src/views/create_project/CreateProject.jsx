@@ -20,6 +20,7 @@ import {
   Grid,
   Box,
   Container,
+  Paper,
   Card,
   CardActionArea,
   CardContent,
@@ -66,6 +67,7 @@ import {
   handlePublishFieldBlur,
   checkMediaFilesErrorState,
   handleSelectVideoFileChecked,
+  removeUploadedImage,
 } from './createProjectScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
@@ -473,6 +475,27 @@ function CreateProject(props) {
                                 `createProject.inputs.projectImages.errors.${props.errors['project_images']}`,
                               ))}
                         </FormHelperText>
+                        {(media_upload.images_to_upload.length > 0) && 
+                        <Grid container spacing={2}>
+                         {
+                         media_upload.images_to_upload.map((image) =>
+                            <Grid item key={image.name} md={4} xs={6} sm={6}>
+                              <Paper key={[image.name,'paper'].join('')}
+                                   className={classes.imagePreviewContainer}
+                              >
+                                <img
+                                   className={classes.imagePreview} 
+                                   src={window.URL.createObjectURL(image)} 
+                                   alt={image.name}/>
+                                   <i className={"fas fa-times-circle "+classes.closeIcon} 
+                                      onClick={e => handleSetState(removeUploadedImage(image,media_upload)) }
+                                   ></i>
+                              </Paper>
+                            </Grid>
+                             )
+                         }
+                        </Grid>
+                        }
                       </FormControl>
                     </Grid>
 

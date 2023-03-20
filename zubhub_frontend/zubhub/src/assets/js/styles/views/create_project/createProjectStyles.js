@@ -9,6 +9,25 @@ const styles = theme => ({
     background:
       'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
+  imagePreview:{
+    width: '100%',
+    position: 'absolute',
+    height: '100%',
+    top: 0,
+    borderRadius: '15px 0px 15px 15px',
+  },
+  imagePreviewContainer:{
+    position: 'relative',
+    paddingTop: '100%',
+    borderRadius: '15px 0px 15px 15px',
+    aspectratio: 4/3,
+  },
+  closeIcon:{
+    position: 'absolute',
+    top: -5,
+    right: -10,
+    color: 'red',
+  },
   containerStyle: {
     maxWidth: '600px',
     [theme.breakpoints.up('1600')]: {
