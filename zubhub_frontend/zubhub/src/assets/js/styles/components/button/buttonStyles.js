@@ -52,7 +52,7 @@ const styles = theme => ({
   customWarningButtonStyle: {
     borderRadius: 30,
     backgroundColor: '#FECB00',
-    color: 'white', // previous colour #896e00
+    color: 'white',
     '&:hover': {
       color: 'white',
       backgroundColor: '#C49d00',
