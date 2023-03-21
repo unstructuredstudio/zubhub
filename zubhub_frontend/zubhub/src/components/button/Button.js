@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 import styles from '../../assets/js/styles/components/button/buttonStyles';
+import { Input } from '@material-ui/core';
 
 const useStyles = makeStyles(styles);
 
