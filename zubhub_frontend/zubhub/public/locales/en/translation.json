@@ -87,7 +87,7 @@
         "label": "Date of Birth",
         "errors": {
           "max": "Your date of birth can't be greater than today",
-          "oldEnough": "Age must be greater than 13 years",
+          "oldEnough": "You must be older than 13 years to use ZubHub",
           "required": "Looks like you forgot to enter this!"
         }
       },
