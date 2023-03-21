@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 import styles from '../../assets/js/styles/components/button/buttonStyles';
+import { Input } from '@material-ui/core';
 
 const useStyles = makeStyles(styles);
 
@@ -64,7 +65,7 @@ const CustomButton = React.forwardRef((props, ref) => {
 });
 
 Button.propTypes = {
-  size: PropTypes.oneOf(['small', 'large']),
+  size: PropTypes.oneOf(['small', 'large', 'medium']),
   primaryButtonStyle: PropTypes.bool,
   secondaryButtonStyle: PropTypes.bool,
   dangerButtonStyle: PropTypes.bool,

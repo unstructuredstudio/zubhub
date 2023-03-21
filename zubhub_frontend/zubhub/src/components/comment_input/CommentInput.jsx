@@ -51,28 +51,31 @@ function CommentInput(props) {
     creator_suggestion_open: false,
   });
 
+  const [isTextAreaMounted, setIsTextAreaMounted] = React.useState(false)
+
   React.useEffect(() => {
     const comment_text_el = refs.comment_text.current;
+    comment_text_el && setIsTextAreaMounted(true)
 
     return () => {
       try {
         comment_text_el.removeEventListener('focus', () =>
           handleCommentTextFocus(refs),
         );
-      } catch {}
+      } catch { }
 
       try {
         document.removeEventListener('click', e =>
           handleDocumentClick(e, refs),
         );
-      } catch {}
+      } catch { }
     };
   }, []);
 
   React.useEffect(() => {
     try {
       constructCommentBox(refs);
-    } catch {}
+    } catch { }
   }, [props.context.body]);
 
   const handleSetState = obj => {
@@ -136,8 +139,8 @@ function CommentInput(props) {
         ></textarea>
         <CustomButton
           ref={refs.comment_publish_button}
-          onClick={e => handleAddComment(e, props, refs.comment_text)}
-          className={clsx('comment-publish-button', 'display-none')}
+          onClick={e => isTextAreaMounted && refs.comment_text.current?.value?.length > 0 ? handleAddComment(e, props, refs.comment_text) : null}
+          className={clsx('comment-publish-button', { 'no-button-click': isTextAreaMounted && refs.comment_text.current?.value?.length == 0 })}
           variant="contained"
           size={parent_id ? 'small' : 'medium'}
           primaryButtonStyle
