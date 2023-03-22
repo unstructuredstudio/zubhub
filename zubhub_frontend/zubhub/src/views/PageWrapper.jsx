@@ -89,11 +89,7 @@ function PageWrapper(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
-
-  //Created new state "show" to show and hide the scroll to top button
-  const [show, setShow] = useState(false);
-
-
+  const [showScrollBar, setShowScrollBar] = useState(false);
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
@@ -147,17 +143,16 @@ function PageWrapper(props) {
     [],
   );
 
-  //Logic behind showing and hiding scroll to top button
   const handleScroll = ()=>{
-    if(window.pageYOffset > 250){
-      if(!show) setShow(true);
+    if(window.pageYOffset > 70){
+      if(!showScrollBar) setShowScrollBar(true);
     }
     else{
-      if(show) setShow(false);
+      if(showScrollBar) setShowScrollBar(false);
     }
   }
   useEffect(()=>{
-    if(250){
+    if(70){
       window.addEventListener('scroll', handleScroll);
     }
   })
@@ -1020,7 +1015,7 @@ function PageWrapper(props) {
           </Box>
         </section>
 
-        {show && <Zoom in={useScrollTrigger}>
+        {showScrollBar && <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}
             role="presentation"
