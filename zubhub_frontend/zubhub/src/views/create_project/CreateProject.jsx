@@ -16,6 +16,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import MovieIcon from '@material-ui/icons/Movie';
 import InsertLinkIcon from '@material-ui/icons/InsertLink';
+import CancelIcon from '@material-ui/icons/Cancel';
 import {
   Grid,
   Box,
@@ -35,6 +36,7 @@ import {
   FormControl,
   InputLabel,
   ClickAwayListener,
+  CardMedia,
 } from '@material-ui/core';
 
 import {
@@ -69,6 +71,10 @@ import {
   handleSelectVideoFileChecked,
   removeUploadedImage,
 } from './createProjectScripts';
+
+import {
+  imagesToPreview,
+} from '../../components/upload_file/uploadFileScripts.js';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import * as UserActions from '../../store/actions/userActions';
@@ -438,12 +444,7 @@ function CreateProject(props) {
                             >
                               {t('createProject.inputs.projectImages.label2')}
                             </CustomButton>
-                            <Typography
-                              color="textSecondary"
-                              variant="caption"
-                              component="span"
-                              ref={refs.image_count_el}
-                            ></Typography>
+                            <Typography ref={refs.image_count_el} />
                           </Grid>
                         </Grid>
                         <input
@@ -465,6 +466,15 @@ function CreateProject(props) {
                           }
                           onBlur={props.handleBlur}
                         />
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                        >
+                          {(media_upload.images_to_upload.length > 0) ? (media_upload.images_to_upload.length == 1 ? 
+                          `${media_upload.images_to_upload.length} `+props.t('createActivity.inputs.image'):
+                          `${media_upload.images_to_upload.length} `+props.t('createActivity.inputs.images')):''}
+                        </Typography>
                         <FormHelperText
                           error
                           className={classes.fieldHelperTextStyle}
@@ -475,27 +485,29 @@ function CreateProject(props) {
                                 `createProject.inputs.projectImages.errors.${props.errors['project_images']}`,
                               ))}
                         </FormHelperText>
-                        {(media_upload.images_to_upload.length > 0) && 
                         <Grid container spacing={2}>
-                         {
-                         media_upload.images_to_upload.map((image) =>
-                            <Grid item key={image.name} md={4} xs={6} sm={6}>
-                              <Paper key={[image.name,'paper'].join('')}
-                                   className={classes.imagePreviewContainer}
-                              >
-                                <img
-                                   className={classes.imagePreview} 
-                                   src={window.URL.createObjectURL(image)} 
-                                   alt={image.name}/>
-                                   <i className={"fas fa-times-circle "+classes.closeIcon} 
-                                      onClick={e => handleSetState(removeUploadedImage(image,media_upload)) }
-                                   ></i>
-                              </Paper>
-                            </Grid>
-                             )
-                         }
+                        {(media_upload.images_to_upload.length > 0) && Object.entries(imagesToPreview(media_upload.images_to_upload)).map(([index, image]) => (
+                        <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
+                          <Paper
+                            key={`imagePaper${index}`}
+                            className={classes.imagePreviewContainer}
+                          >
+                          <img
+                            className={classes.imagePreview}
+                            src={
+                              image.type === 'file'
+                                ? window.URL.createObjectURL(image.image)
+                                : image.image.file_url
+                            }
+                            alt={`imageAlt${index}`}
+                          />
+                            <CancelIcon
+                              className={classes.closeIcon} 
+                              onClick={e => handleSetState(removeUploadedImage(image.image,media_upload)) } />
+                          </Paper>
                         </Grid>
-                        }
+                      ))}
+                      </Grid>
                       </FormControl>
                     </Grid>
 
