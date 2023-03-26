@@ -44,7 +44,7 @@ class FetchAuthUserApiTests(TestCase):
     def test_user_for_profile_retrieval(self):
         """Test that you can retrieve user profile with given username"""
         res = self.client.post(reverse("creators:signup_creator"), self.payload)
-        url = self.client.get(("/api/creators/test_dummy/"))
+        url = self.client.get(reverse("creators:user_profile", args=["test_dummy"]))
         self.assertEqual(url.status_code, status.HTTP_200_OK)
 
     def test_fetch_authenticated_user(self):
