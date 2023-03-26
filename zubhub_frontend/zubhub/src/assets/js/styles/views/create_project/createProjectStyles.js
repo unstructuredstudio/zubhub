@@ -11,18 +11,23 @@ const styles = theme => ({
   },
   imagePreview: {
     width: '100%',
-    borderRadius: '15px 0px 15px 15px',
+    borderRadius: '15px 15px 15px 15px',
   },
   imagePreviewContainer: {
     position: 'relative',
     boxShadow: 'none',
-    borderRadius: '15px 0px 15px 15px',
+    borderRadius: '15px 15px 15px 15px',
   },
   closeIcon:{
+    backgroundColor: 'red',
     position: 'absolute',
     top: -10,
     right: -10,
-    color: 'red',
+    width: '30px',
+    height: '30px',
+    borderRadius: '100%',
+    border: '2px solid white',
+    zIndex: '100',
   },
   containerStyle: {
     maxWidth: '600px',

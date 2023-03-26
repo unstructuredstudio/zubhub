@@ -16,7 +16,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import MovieIcon from '@material-ui/icons/Movie';
 import InsertLinkIcon from '@material-ui/icons/InsertLink';
-import CancelIcon from '@material-ui/icons/Cancel';
+
 import {
   Grid,
   Box,
@@ -36,7 +36,7 @@ import {
   FormControl,
   InputLabel,
   ClickAwayListener,
-  CardMedia,
+  IconButton,
 } from '@material-ui/core';
 
 import {
@@ -501,9 +501,11 @@ function CreateProject(props) {
                             }
                             alt={`imageAlt${index}`}
                           />
-                            <CancelIcon
+                            <IconButton
                               className={classes.closeIcon} 
-                              onClick={e => handleSetState(removeUploadedImage(image.image,media_upload)) } />
+                              onClick={e => handleSetState(removeUploadedImage(image.image,media_upload)) } >
+                              <CloseIcon style={{ color: 'white' }} />
+                            </IconButton>
                           </Paper>
                         </Grid>
                       ))}
