@@ -558,6 +558,15 @@ html,
   margin-left: 0;
 }
 
+.no-button-click{
+  background-color: #c8c8c8 !important;
+  cursor: not-allowed !important;
+}
+.no-button-click > * {
+  pointer-events: none;
+  cursor: not-allowed !important;
+}
+
 .mention {
   text-decoration: none;
   color: #00b8c4;

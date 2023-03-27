@@ -64,7 +64,7 @@ const CustomButton = React.forwardRef((props, ref) => {
 });
 
 Button.propTypes = {
-  size: PropTypes.oneOf(['small', 'large']),
+  size: PropTypes.oneOf(['small', 'large', 'medium']),
   primaryButtonStyle: PropTypes.bool,
   secondaryButtonStyle: PropTypes.bool,
   dangerButtonStyle: PropTypes.bool,

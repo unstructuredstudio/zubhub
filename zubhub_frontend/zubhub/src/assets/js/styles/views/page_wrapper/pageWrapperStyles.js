@@ -10,7 +10,7 @@ const styles = theme => ({
     fontSize: '1.15rem',
   },
   mainContainerStyle: {
-    maxWidth: '2000px',
+    maxWidth: '100vw',
     zIndex: 1,
     boxShadow:
       '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
@@ -221,6 +221,9 @@ const styles = theme => ({
     '&.MuiInput-underline:after': {
       display: 'none !important',
     },
+    '& .MuiSelect-icon': {
+      color: 'white',
+    },
     '& .MuiSelect-root': {
       boxSizing: 'border-box',
       backgroundColor: 'rgba(0,0,0,0)',
@@ -262,8 +265,12 @@ const styles = theme => ({
   },
   footerLinkStyle: {
     color: 'white',
-  },
-  center: {
+    cursor: 'pointer',
+    '&:hover': {
+      color: 'rgb(243 137 147)',
+    },
+  }, 
+   center: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
