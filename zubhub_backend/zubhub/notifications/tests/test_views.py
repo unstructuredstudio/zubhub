@@ -18,8 +18,8 @@ class UserNotificationsAPIViewTest(TestCase):
 
     @classmethod
     def setUpTestData(self):
-        self.first_creator = Creator.objects.create(username="krishna")
-        self.second_creator = Creator.objects.create(username="kali")
+        self.first_creator = Creator.objects.create_user(username="krishna", password="makhanchor")
+        self.second_creator = Creator.objects.create_user(username="kali")
         self.client = APIClient()
 
         self.payload = Notification.objects.create(
@@ -33,20 +33,9 @@ class UserNotificationsAPIViewTest(TestCase):
         self.payload.sources.add(self.second_creator, self.second_creator)
         self.payload.save()
 
-        self.auth = {
-            "username": "test_dummy2",
-            "email": "test_dummy2@gmail.com",
-            "password1": "qwertyu12345",
-            "password2": "qwertyu12345",
-            "phone": "+57778899066",
-            "dateOfBirth": "1998-02-20",
-            "location": "Nigeria",
-            "bio": "ddd",
-            "subscribe": True,
-        }
 
     def test_get_user_notifications(self):
-        rgst = self.client.post(reverse("creators:signup_creator"), self.auth, format="json")
+        self.client.force_login(self.first_creator)
         res = self.client.get(reverse('notifications:user-notifications'))
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data['count'], 1)
@@ -59,7 +48,7 @@ class UserNotificationsAPIViewTest(TestCase):
 class MarkNotificationAsViewedAPIViewTest(TestCase):
     @classmethod
     def setUpTestData(self):
-        self.first_creator = Creator.objects.create(username="krishna")
+        self.first_creator = Creator.objects.create(username="krishna", email="testuser@example.com", password="makhanchor")
         self.second_creator = Creator.objects.create(username="kali")
         self.client = APIClient()
 
@@ -74,22 +63,67 @@ class MarkNotificationAsViewedAPIViewTest(TestCase):
         self.payload.sources.add(self.second_creator, self.second_creator)
         self.payload.save() 
 
+        self.data ={
+            "id": "914e841f-8cd2-4db8-b442-55a4cab95c73",
+            "recipient": {
+                "id": "623813fd-b4c3-420d-a4f6-543793a113d3",
+                "username": "abc^@xyz.com",
+                "avatar": "https://robohash.org/abc^@xyz.com",
+                "comments": [],
+                "bio": "",
+                "followers": [],
+                "following_count": 0,
+                "projects_count": 1,
+                "tags": [
+                    "creator"
+                ],
+                "badges": [
+                    "Hatchling"
+                ]
+            },
+            "sources": [
+                {
+                    "id": "623813fd-b4c3-420d-a4f6-543793a113d3",
+                    "username": "abc^@xyz.com",
+                    "avatar": "https://robohash.org/abc^@xyz.com",
+                    "comments": [],
+                    "bio": "",
+                    "followers": [],
+                    "following_count": 0,
+                    "projects_count": 1,
+                    "tags": [
+                        "creator"
+                    ],
+                    "badges": [
+                        "Hatchling"
+                    ]
+                }
+            ],
+            "date": "2023-03-27T10:34:42.506342Z",
+            "viewed": False,
+            "type": 2,
+            "link": "/projects/40f84b92-c549-4390-a2c3-d242f72a192e",
+            "message": "<strong>abc^@xyz.com</strong> clapped for your project \"abc\"\n"
+        }
+
     def test_mark_notification_as_viewed(self):
-        self.payload= Notification.objects.get(id=self.payload.id)
-        res = self.client.put("/api/notifications/{}/update".format(self.payload.id), data=self.payload, content_type="application/json", follow=True)
+        self.client.force_login(self.first_creator)
+        url=reverse('notifications:update-notification',kwargs={'pk': self.payload.pk})
+        res=self.client.put(url, data=self.data, content_type='application/json')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data['viewed'], True)
 
     def test_mark_notification_as_unauthozired(self):
         self.payload= Notification.objects.get(id=self.payload.id)
-        res = self.client.put("/api/notifications/{}/update".format(self.payload.id), data=self.payload, content_type="application/json", follow=True)
+        url=reverse('notifications:update-notification',kwargs={'pk': self.payload.pk})
+        res=self.client.put(url, self.payload)
         self.assertEqual(res.status_code, 403)
 
 
 class DeleteNotificationAPIViewTest(TestCase):
     @classmethod
     def setUpTestData(self):
-        self.first_creator = Creator.objects.create(username="krishna")
+        self.first_creator = Creator.objects.create(username="krishna", email='testuser@example.com', password='makhanchor')
         self.second_creator = Creator.objects.create(username="kali")
         self.client = APIClient()
 
@@ -104,21 +138,10 @@ class DeleteNotificationAPIViewTest(TestCase):
         self.payload.sources.add(self.second_creator, self.second_creator)
         self.payload.save()
 
-        self.auth = {
-            "username": "test_dummy2",
-            "email": "test_dummy2@gmail.com",
-            "password1": "qwertyu12345",
-            "password2": "qwertyu12345",
-            "phone": "+57778899066",
-            "dateOfBirth": "1998-02-20",
-            "location": "Nigeria",
-            "bio": "ddd",
-            "subscribe": True,
-        }
-
-    def test_delete_notification(self):
-        rgst = self.client.post(reverse("creators:signup_creator"), self.auth, format="json")
-        res = self.client.delete(f"/api/notifications/{self.payload.id}/delete", data=self.payload, content_type="application/json", follow=True)
+    def test_delete_notification_(self):
+        self.client.force_login(self.first_creator)
+        url=reverse('notifications:delete-notification',kwargs={'pk': self.payload.pk})
+        res = self.client.delete(url, self.payload)
         self.assertEqual(res.status_code, 204)
 
     def test_delete_notification_unauthorized(self):
