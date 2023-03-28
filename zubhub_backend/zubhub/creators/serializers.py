@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import PasswordResetForm
+from rest_framework.response import Response
 from datetime import date
 import re
 from django.utils.translation import ugettext_lazy as _
@@ -8,11 +10,11 @@ from .admin import badges
 from .models import Location, PhoneNumber
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
+from rest_auth.serializers import PasswordResetSerializer
 from allauth.account.utils import setup_user_email
 from .utils import setup_user_phone
 from projects.models import Comment
 from projects.utils import parse_comment_trees
-
 Creator = get_user_model()
 
 
@@ -28,8 +30,8 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
                                         read_only=True,
                                         many=True)
     badges = serializers.SlugRelatedField(slug_field="badge_title",
-                                            read_only=True,
-                                            many=True)
+                                          read_only=True,
+                                          many=True)
 
     class Meta:
         model = Creator
@@ -37,7 +39,8 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'avatar', 'comments', 'bio', 'followers',
                   'following_count', 'projects_count', 'members_count', 'tags', 'badges')
 
-    read_only_fields = ["id", "projects_count", "following_count", "tags", "badges"]
+    read_only_fields = ["id", "projects_count",
+                        "following_count", "tags", "badges"]
 
     def get_members_count(self, obj):
         if hasattr(obj, "creatorgroup"):
@@ -54,8 +57,8 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
     def get_profile_comments(self, obj):
         from projects.serializers import CommentSerializer
 
-        ## There is a need to really start thinking about optimizing our queries
-        ## to limit/eliminate n+1 queries problem (i.e selecte_related and prefetch_related )
+        # There is a need to really start thinking about optimizing our queries
+        # to limit/eliminate n+1 queries problem (i.e selecte_related and prefetch_related )
         all_comments = obj.profile_comments.all()
         root_comments = []
         creators_dict = {}
@@ -86,8 +89,9 @@ class CreatorSerializer(CreatorMinimalSerializer):
                                         read_only=True,
                                         many=True)
     badges = serializers.SlugRelatedField(slug_field="badge_title",
-                                            read_only=True,
-                                            many=True)
+                                          read_only=True,
+                                          many=True)
+
     class Meta:
         model = Creator
 
@@ -269,3 +273,18 @@ class AddGroupMembersSerializer(serializers.Serializer):
                 _("you must submit group member usernames either through the form or as csv"
                   ))
         return csv
+
+
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    password_reset_form_class = PasswordResetForm
+
+    def validate_email(self, value):
+        self.reset_form = self.password_reset_form_class(
+            data=self.initial_data)
+        if not self.reset_form.is_valid():
+            raise serializers.ValidationError(_('Error'))
+
+        if not Creator.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                _('No account found with this email. Verify and try again.'))
+        return value
