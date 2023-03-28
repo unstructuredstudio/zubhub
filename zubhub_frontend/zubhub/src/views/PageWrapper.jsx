@@ -89,7 +89,7 @@ function PageWrapper(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
-  const [showScrollBar, setShowScrollBar] = useState(false);
+  const [showScrollBar, setShowScrollBar] = useState(true);
   const [searchType, setSearchType] = useState(
     getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
   );
@@ -143,20 +143,25 @@ function PageWrapper(props) {
     [],
   );
 
-  const handleScroll = ()=>{
-    if(window.pageYOffset > 70){
-      if(!showScrollBar) setShowScrollBar(true);
+  const isInViewport = (el)=> {
+    if (el.current != null) {
+      const rect = el.current.getBoundingClientRect();
+      var isinview = (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+      setShowScrollBar(isinview)
+      return isinview;
     }
-    else{
-      if(showScrollBar) setShowScrollBar(false);
-    }
+    return true;
+
   }
   useEffect(()=>{
-    if(70){
-      window.addEventListener('scroll', handleScroll);
-    }
+    window.addEventListener("scroll", ()=> isInViewport(backToTopEl));
+    return window.removeEventListener("scroll", ()=> isInViewport(backToTopEl))
   })
-
 
   useEffect(() => {
     throttledFetchOptions(
@@ -1015,7 +1020,7 @@ function PageWrapper(props) {
           </Box>
         </section>
 
-        {showScrollBar && <Zoom in={useScrollTrigger}>
+        {!showScrollBar && <Zoom in={useScrollTrigger}>
           <div
             onClick={e => handleScrollTopClick(e, backToTopEl)}
             role="presentation"
