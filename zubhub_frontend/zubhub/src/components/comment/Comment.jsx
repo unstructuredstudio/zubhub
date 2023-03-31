@@ -86,7 +86,7 @@ function Comment(props) {
             common_classes.textDecorationNone,
             !parent ? classes.commentMetaStyle : classes.subCommentMetaStyle,
           )}
-          to={`/creators/${props.auth.username}`}
+          to={`/creators/${comment.creator.username}`}
         >
           <Avatar
             className={

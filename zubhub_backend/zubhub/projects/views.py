@@ -27,8 +27,7 @@ from creators.utils import (activity_notification, send_notification,  activity_
 from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer,
                           StaffPickSerializer)
-from .pagination import ProjectNumberPagination
-
+from .pagination import ProjectNumberPagination 
 
 class ProjectCreateAPIView(CreateAPIView):
     """
@@ -183,7 +182,7 @@ class ProjectTagSearchAPIView(ListAPIView):
         tags = Tag.objects.annotate(rank=rank).filter(
             search_vector=query).order_by('-rank')
         return tags
-
+        
 
 class ProjectTagAutocompleteAPIView(ListAPIView):
     """
@@ -201,7 +200,7 @@ class ProjectTagAutocompleteAPIView(ListAPIView):
         query_string = self.request.GET.get('q')
         tags = Tag.objects.annotate(
             similarity=TrigramSimilarity('name', query_string)).filter(
-                similarity__gt=0.01).order_by('-similarity')[:20]
+                similarity__gt=0.25).order_by('-similarity')[:20]
         return tags
 
 

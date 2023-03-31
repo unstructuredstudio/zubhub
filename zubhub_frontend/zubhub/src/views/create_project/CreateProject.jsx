@@ -642,7 +642,7 @@ function CreateProject(props) {
                             color="textSecondary"
                             className={classes.customLabelStyle}
                           >
-                            <Box className={classes.fieldNumberStyle}>6</Box>
+                            <Box className={classes.circleBox}>6</Box>
                             {t('createProject.inputs.category.label')}
                           </Typography>
                         </label>
@@ -843,7 +843,7 @@ function CreateProject(props) {
                             color="textSecondary"
                             className={classes.customLabelStyle}
                           >
-                            <Box className={classes.fieldNumberStyle}>8</Box>
+                            <Box className={classes.circleBox}>8</Box>
                             {t('createProject.inputs.publish.label')}
                           </Typography>
                         </label>

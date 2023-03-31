@@ -40,6 +40,7 @@ const styles = theme => ({
     },
     fontWeight: 'bold',
     fontSize: '1rem',
+    display: 'flex',
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.7rem',
     },
@@ -66,6 +67,22 @@ const styles = theme => ({
       },
     },
   },
+  circleBox: {
+    height: '20px',
+    width: '20px',
+    color: 'white',
+    backgroundColor: [theme.circleBox.backgroundColor],
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    borderRadius: '50%',
+    lineHeight: '17px',
+    marginRight: '0.3em',
+    [theme.breakpoints.up('1600')]: {
+      fontSize: '1.2rem',
+    },
+  },
   descInputStyle: {
     color: 'black',
     borderRadius: 15,
@@ -81,7 +98,7 @@ const styles = theme => ({
       borderBottomRightRadius: 15,
       borderBottomLeftRadius: 15,
       '& .ql-editor': {
-        WebkitUserSelect:'text',
+        WebkitUserSelect: 'text',
         color: '#000000de',
         fontSize: '1rem',
         fontFamily: 'Raleway,Roboto,sans-serif',
@@ -175,7 +192,6 @@ const styles = theme => ({
     width: '20px',
     backgroundColor: '#00B8C4',
     color: 'white',
-    display: 'inline-block',
     textAlign: 'center',
     borderRadius: '50%',
     lineHeight: '17px',
@@ -283,11 +299,11 @@ const styles = theme => ({
   },
   requiredLabelStyle: {
     display: 'inline-block',
-    color: 'red'
+    color: 'red',
   },
   errorMessage: {
-    color: 'red'
-  }
+    color: 'red',
+  },
 });
 
 export default styles;
