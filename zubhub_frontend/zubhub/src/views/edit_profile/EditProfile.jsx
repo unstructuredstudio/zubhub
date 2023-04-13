@@ -10,6 +10,11 @@ import { withFormik } from 'formik';
 import { toast } from 'react-toastify';
 
 import { makeStyles } from '@material-ui/core/styles';
+
+import Visibility from '@material-ui/icons/Visibility';
+
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 import {
   Grid,
   Box,
@@ -31,6 +36,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputAdornment,
+  IconButton,
 } from '@material-ui/core';
 
 import {
@@ -42,6 +49,8 @@ import {
   handleTooltipClose,
   handleToggleDeleteAccountModal,
   deleteAccount,
+  handleClickShowPassword,
+  handleMouseDownPassword,
 } from './editProfileScripts';
 
 import CustomButton from '../../components/button/Button';
@@ -73,6 +82,7 @@ function EditProfile(props) {
     tool_tip_open: false,
     dialog_error: null,
     open_delete_account_modal: false,
+    show_password: false,
   });
 
   React.useEffect(() => {
@@ -81,6 +91,7 @@ function EditProfile(props) {
   }, []);
 
   const classes = useStyles();
+  const { show_password } = state;
 
   const handleSetState = obj => {
     if (obj) {
@@ -285,11 +296,7 @@ function EditProfile(props) {
                       </InputLabel>
                       <OutlinedInput
                         ref={refs.email_el}
-                        disabled={
-                          props.status && props.status['init_email']
-                            ? true
-                            : false
-                        }
+                        
                         className={clsx(classes.customInputStyle)}
                         id="email"
                         name="email"
@@ -302,28 +309,6 @@ function EditProfile(props) {
                           document,
                         )}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
-                        {props.status && props.status['init_email'] && (
-                          <Typography
-                            color="textSecondary"
-                            variant="caption"
-                            component="span"
-                            className={classes.fieldHelperTextStyle}
-                          >
-                            {t('editProfile.inputs.email.disabledHelperText')}
-                          </Typography>
-                        )}
-                        <br />
-                        {(props.status && props.status['email']) ||
-                          (props.touched['email'] &&
-                            props.errors['email'] &&
-                            t(
-                              `editProfile.inputs.email.errors.${props.errors['email']}`,
-                            ))}
-                      </FormHelperText>
                     </FormControl>
                   </Grid>
 
@@ -347,11 +332,7 @@ function EditProfile(props) {
                       </InputLabel>
                       <OutlinedInput
                         ref={refs.phone_el}
-                        disabled={
-                          props.status && props.status['init_phone']
-                            ? true
-                            : false
-                        }
+                        
                         className={clsx(classes.customInputStyle)}
                         id="phone"
                         name="phone"
@@ -364,26 +345,66 @@ function EditProfile(props) {
                           document,
                         )}
                       />
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['password']) ||
+                        (props.touched['password'] && props.errors['password'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="password"
+                      >
+                        {t('editProfile.inputs.password.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        className={classes.customInputStyle}
+                        id="password"
+                        name="password"
+                        type={show_password ? 'text' : 'password'}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                handleSetState(handleClickShowPassword(state))
+                              }
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                            >
+                              {show_password ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        labelWidth={calculateLabelWidth(
+                          t('editProfile.inputs.password.label'),
+                          document,
+                        )}
+                      />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
                         error
                       >
-                        {props.status && props.status['init_phone'] && (
-                          <Typography
-                            color="textSecondary"
-                            variant="caption"
-                            component="span"
-                            className={classes.fieldHelperTextStyle}
-                          >
-                            {t('editProfile.inputs.phone.disabledHelperText')}
-                          </Typography>
-                        )}
-                        <br />
-                        {(props.status && props.status['phone']) ||
-                          (props.touched['phone'] &&
-                            props.errors['phone'] &&
+                        {(props.status && props.status['password']) ||
+                          (props.touched['password'] &&
+                            props.errors['password'] &&
                             t(
-                              `editProfile.inputs.phone.errors.${props.errors['phone']}`,
+                              `editProfile.inputs.password.errors.${props.errors['password']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
@@ -588,6 +609,7 @@ EditProfile.propTypes = {
   editUserProfile: PropTypes.func.isRequired,
   getLocations: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -610,6 +632,9 @@ const mapDispatchToProps = dispatch => {
     deleteAccount: args => {
       return dispatch(AuthActions.deleteAccount(args));
     },
+    login: args => {
+      return dispatch(AuthActions.login(args));
+    },
     logout: args => {
       return dispatch(AuthActions.logout(args));
     },
@@ -623,6 +648,9 @@ export default connect(
   withFormik({
     mapPropsToValue: () => ({
       username: '',
+      email:'',
+      phone:'',
+      password: '',
       user_location: '',
       bio: '',
     }),

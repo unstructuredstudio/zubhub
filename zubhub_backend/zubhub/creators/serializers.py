@@ -115,10 +115,6 @@ class CreatorSerializer(CreatorMinimalSerializer):
             raise serializers.ValidationError(
                 _("a user with that email address already exists"))
 
-        if (self.context.get("request").user.email):
-            raise serializers.ValidationError(
-                _("to edit this field mail hello@unstructured.studio"))
-
         return email
 
     def validate_phone(self, phone):
@@ -136,10 +132,6 @@ class CreatorSerializer(CreatorMinimalSerializer):
                 return phone
             raise serializers.ValidationError(
                 _("a user with that phone number already exists"))
-
-        if (self.context.get("request").user.phone):
-            raise serializers.ValidationError(
-                _("to edit this field mail hello@unstructured.studio"))
 
         return phone
 
