@@ -4,21 +4,7 @@ const styles = theme => ({
   },
   input: {
     flex: 1,
-    marginRight: '2rem',
-    '& .MuiInputBase-input': {
-      color: 'white',
-    },
-    '& .MuiInputBase-input:focus': {
-      color: 'black',
-    },
-  },
-  mobileInput: {
-    '& .MuiInputBase-input': {
-      color: 'white',
-    },
-    '& .MuiInputBase-input:focus': {
-      color: 'black',
-    },
+    marginRight: '2rem'
   },
   customButton: {
     fontSize: '1.15rem',
@@ -283,8 +269,8 @@ const styles = theme => ({
     '&:hover': {
       color: 'rgb(243 137 147)',
     },
-  }, 
-   center: {
+  },
+  center: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
