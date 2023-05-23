@@ -7,8 +7,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import LockIcon from '@material-ui/icons/Lock';
-import PublicIcon from '@material-ui/icons/Public';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+
 import {
   Tooltip,
   Avatar,
@@ -72,12 +72,14 @@ function Project(props) {
                 : ''}
               {project.publish.type ===
                 publish_type['Authenticated Creators'] ? (
-                <LockIcon />
+                  // t('project.publish.private')
+                  <VisibilityOffIcon />
               ) : (
                 ''
               )}
               {project.publish.type === publish_type.Public ? (
-                <PublicIcon />
+                // t('project.publish.public')
+                <VisibilityIcon />
               ) : (
                 ''
               )}
