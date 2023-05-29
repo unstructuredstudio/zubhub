@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
 
@@ -72,12 +73,11 @@ function Project(props) {
                 : ''}
               {project.publish.type ===
                 publish_type['Authenticated Creators'] ? (
-                  <LockIcon />
+                <LockIcon />
               ) : (
                 ''
               )}
               {project.publish.type === publish_type.Public ? (
-                // t('project.publish.public')
                 <PublicIcon />
               ) : (
                 ''
