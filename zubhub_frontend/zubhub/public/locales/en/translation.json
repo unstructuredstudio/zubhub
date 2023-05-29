@@ -624,6 +624,13 @@
           "tooLong": "Looks like you have a lot to say! But we don't support more than 255 characters for now :("
         }
       },
+      "password": {
+        "label": "Current Password",
+        "errors": {
+          "invalid": "You have entered incorrect password",
+          "required": "Seems like you forgot this"
+        }
+      },
       "submit": "Edit Profile"
     },
     "or": "OR",
