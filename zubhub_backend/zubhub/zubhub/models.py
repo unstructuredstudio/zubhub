@@ -7,7 +7,7 @@ from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from .utils import MediaStorage, get_upload_path, clean_summernote_html
 from projects.models import Project 
-
+from django.utils.html import strip_tags
 
 class AdminSettings(models.Model):
     PUBLIC = 1
@@ -151,3 +151,23 @@ class Ambassadors(models.Model):
     def save(self, *args, **kwargs):
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
+
+class Theme(models.Model):
+    Theme_Name = models.CharField(max_length=20)
+    Primary_Color1 = models.CharField(max_length=16, help_text="Enter hexcode to replace #DC3545 (red)", default="#DC3545")
+    Primary_Color2 = models.CharField(max_length=16, help_text="Enter hexcode to replace #FDCB00 (yellow)", default="#FDCB00")
+    Primary_Color3 = models.CharField(max_length=16, help_text="Enter hexcode to replace #00B8C4 (cyan)", default="#00B8C4")
+    
+    class Meta:
+        verbose_name = "Theme"
+        verbose_name_plural = "Themes"
+
+    def save(self, *args, **kwargs):
+        self.Theme_Name= strip_tags(self.Theme_Name)
+        self.Primary_Color1 = strip_tags(self.Primary_Color1)
+        self.Primary_Color2 = strip_tags(self.Primary_Color3)
+        self.Primary_Color3 = strip_tags(self.Primary_Color3)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.Theme_Name
