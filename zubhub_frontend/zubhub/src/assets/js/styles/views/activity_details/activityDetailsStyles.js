@@ -31,7 +31,7 @@ const styles = theme => ({
     clipPath: 'polygon(100% 10%,100% 100%, 0% 100%,0% 0%)',
     padding: '8em 20%',
     minHeight: '80vh',
-    backgroundColor: '#FFCE0C',
+    backgroundColor: 'var(--primary-color2)',
     [theme.breakpoints.down('511')]: {
       padding: '1em 5%',
       clipPath: 'polygon(100% 5%,100% 100%, 0% 100%,0% 0%)',
@@ -41,7 +41,7 @@ const styles = theme => ({
     clipPath: 'polygon(100% 0%,100% 100%, 0% 100%,0% 10%)',
     padding: '8em 20% ',
     minHeight: '80vh',
-    backgroundColor: '#FFCE0C',
+    backgroundColor: 'var(--primary-color2)',
     [theme.breakpoints.down('511')]: {
       padding: '1em 5%',
       clipPath: 'polygon(100% 0%,100% 100%, 0% 100%,0% 5%)',
@@ -62,7 +62,7 @@ const styles = theme => ({
   titleStyle: {
     fontWeight: 800,
     textAlign: 'center',
-    color: '#000000',
+    color: 'var(--text-color1)',
     [theme.breakpoints.down('900')]: {
       fontSize: '1.9rem',
     },
@@ -99,7 +99,7 @@ const styles = theme => ({
     },
     textAlign: 'center',
     margin: '3em 0 1em 0',
-    color: '#000000',
+    color: 'var(--text-color1)',
   },
 
   makingStepsDescriptionStyle: {
@@ -124,7 +124,7 @@ const styles = theme => ({
   },
   quillBodyStyle: {
     '& > *': {
-      color: '#000000',
+      color: 'var(--text-color1)',
       fontSize: '1.2rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
       fontWeight: 500,
@@ -172,9 +172,9 @@ const styles = theme => ({
     display: 'inline-block',
     fontSize: '1.5rem',
     padding: '0.2em 0.5em',
-    color: '#000000',
+    color: 'var(--text-color1)',
     borderRadius: '15px',
-    border: '1px solid #00B8C4',
+    border: '1px solid var(--primary-color3)',
     marginRight: '0.5em',
     marginBottom: '0.5em',
   },
@@ -183,7 +183,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   tagsStyle: {
-    backgroundColor: '#E4E4E4',
+    backgroundColor: 'var(--text-color3)',
     textTransform: 'lowercase',
     color: 'black',
     border: 'none',
@@ -204,13 +204,13 @@ const styles = theme => ({
 
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
-      color: '#00B8C4',
+      color: 'var(--primary-color3)',
     },
   },
   secondaryLink: {
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     '&:hover': {
-      color: '#03848C',
+      color: 'var(--secondary-color6)',
     },
   },
 

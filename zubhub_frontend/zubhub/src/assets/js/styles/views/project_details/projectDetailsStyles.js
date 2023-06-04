@@ -6,21 +6,21 @@ const styles = theme => ({
     paddingTop: '1.5em',
     boxShadow:
       '0px 2px 1px -1px rgba(0,0,0,0), 0px 1px 1px 0px rgba(0,0,0,0), 0px 1px 3px 0px rgba(0,0,0,0)',
-    background: 'rgba(255,204,0,1)',
+    background: 'var(--primary-color2)',
     background:
-      '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-moz-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      '-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
+      '-webkit-gradient(left top, left bottom, color-stop(0%, var(--primary-color2)), color-stop(25%, var(--primary-color2)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
     background:
-      '-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-webkit-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      '-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-o-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      '-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-ms-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     filter:
-      "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
+      "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
@@ -85,9 +85,9 @@ const styles = theme => ({
     zIndex: 1,
   },
   actionBoxStyle: {
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     '&:hover': {
-      backgroundColor: '#03848C',
+      backgroundColor: 'var(--secondary-color6)',
     },
     borderRadius: '15px',
     position: 'absolute',
@@ -187,9 +187,9 @@ const styles = theme => ({
     display: 'inline-block',
     fontSize: '1.5rem',
     padding: '0.2em 0.5em',
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     borderRadius: '15px',
-    border: '1px solid #00B8C4',
+    border: '1px solid var(--primary-color3)',
     marginRight: '0.5em',
     marginBottom: '0.5em',
   },
@@ -198,7 +198,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   tagsStyle: {
-    backgroundColor: '#E4E4E4',
+    backgroundColor: 'var(--text-color3)',
     textTransform: 'lowercase',
     color: 'black',
     border: 'none',
@@ -224,17 +224,17 @@ const styles = theme => ({
     marginTop: '2.5em',
     marginBottom: '2.5em',
     borderRadius: '15px',
-    backgroundColor: '#E4E4E4',
+    backgroundColor: 'var(--text-color3)',
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
-      color: '#00B8C4',
+      color: 'var(--primary-color3)',
     },
   },
   secondaryLink: {
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     '&:hover': {
-      color: '#03848C',
+      color: 'var(--secondary-color6)',
     },
   },
 
@@ -262,11 +262,11 @@ const styles = theme => ({
     padding: '1em',
     borderRadius: 6,
     borderWidth: '1px',
-    borderColor: '#a94442',
-    backgroundColor: '#ffcdd2',
+    borderColor: 'var(--primary-color2)',
+    backgroundColor: 'var(--secondary-color1)',
   },
   error: {
-    color: '#a94442',
+    color: 'var(--primary-color2)',
   },
   dialogButtonContainer: {
     padding: '16px 24px',
@@ -328,13 +328,13 @@ export function NextArrow(props) {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '0 15px 15px 0',
-        background: '#767474',
+        background: 'var(--text-color2)',
         zIndex: '10',
         boxShadow:
           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: '#00B8C4',
+        backgroundColor: 'var(--primary-color3)',
         '&:hover': {
-          backgroundColor: '#03848C',
+          backgroundColor: 'var(--secondary-color6)',
         },
       }}
       onClick={onClick}
@@ -355,13 +355,13 @@ export function PrevArrow(props) {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '15px 0 0 15px',
-        background: '#767474',
+        background: 'var(--text-color2)',
         zIndex: '10',
         boxShadow:
           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: '#00B8C4',
+        backgroundColor: 'var(--primary-color3)',
         '&:hover': {
-          backgroundColor: '#03848C',
+          backgroundColor: 'var(--secondary-color6)',
         },
       }}
       onClick={onClick}

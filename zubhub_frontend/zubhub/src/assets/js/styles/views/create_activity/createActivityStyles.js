@@ -1,6 +1,6 @@
 export const styles = theme => ({
   createActivityContainer: {
-    backgroundColor: '#FFCD06',
+    backgroundColor: 'var(--primary-color2)',
     padding: '5vh 10%',
   },
   createActivityContainerTitle: {
@@ -16,7 +16,7 @@ export const styles = theme => ({
     height: '30px',
     width: '30px',
     backgroundColor: 'white',
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -41,7 +41,7 @@ export const styles = theme => ({
     textAlign: 'center',
   },
   activityCreationProgressBarScroller: {
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     height: '100%',
     borderRadius: '10px',
   },
@@ -66,6 +66,6 @@ export const styles = theme => ({
     position: 'absolute',
     top: -10,
     right: -10,
-    color: '#DC3545',
+    color: 'var(--primary-color1)',
   },
 });

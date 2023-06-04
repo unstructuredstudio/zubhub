@@ -5,9 +5,9 @@ const styles = theme => ({
     paddingTop: '2em',
     paddingBottom: '2em',
     flex: '1 0 auto',
-    background: 'rgba(255,204,0,1)',
+    background: 'var(--primary-color2)',
     background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
   containerStyle: {
     maxWidth: '600px',
@@ -36,7 +36,7 @@ const styles = theme => ({
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
-      color: '#00B8C4',
+      color: 'var(--primary-color3)',
     },
     fontWeight: 'bold',
     fontSize: '1rem',
@@ -49,17 +49,17 @@ const styles = theme => ({
     width: '100%',
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '2px solid #00B8C4',
-      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+      border: '2px solid var(--primary-color3)',
+      boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '2px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+        border: '2px solid var(--primary-color3)',
+        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '2px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+        border: '2px solid var(--primary-color3)',
+        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
       },
       [theme.breakpoints.up('1600')]: {
         fontSize: '1.7rem',
@@ -75,15 +75,15 @@ const styles = theme => ({
 
   bulkAddStyles: {
     '& .MuiSwitch-colorSecondary.Mui-checked': {
-      color: '#00B8C4',
+      color: 'var(--primary-color3)',
     },
     '& .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track': {
-      backgroundColor: '#00B8C4',
+      backgroundColor: 'var(--primary-color3)',
     },
   },
 
   uploadProgressStyle: {
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
   },
 
   addCSVStyles: {
@@ -96,14 +96,14 @@ const styles = theme => ({
     padding: '1em',
     borderRadius: 6,
     borderWidth: '1px',
-    borderColor: '#a94442',
-    backgroundColor: '#ffcdd2',
+    borderColor: 'var(--primary-color2)',
+    backgroundColor: 'var(--secondary-color1)',
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.5rem',
     },
   },
   error: {
-    color: '#a94442',
+    color: 'var(--primary-color2)',
   },
   fieldHelperTextStyle: {
     [theme.breakpoints.up('1600')]: {

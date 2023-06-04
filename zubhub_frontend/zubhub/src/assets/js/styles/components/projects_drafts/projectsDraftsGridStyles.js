@@ -19,18 +19,18 @@ const styles = theme => ({
 
   tabStyle: {
       '&.Mui-selected': {
-        color: '#00B8C4',
+        color: 'var(--primary-color3)',
         fontWeight: 'bold',
         backgroundColor: '#ffffff',
       },
 
-      backgroundColor: '#EDEDED',
+      backgroundColor: 'var(--text-color3)',
       width: '50%',
       maxWidth: '50%',
   },
 
   indicator: {
-    backgroundColor: "#00B8C4",
+    backgroundColor: "var(--primary-color3)",
     height: '5px',
   }
 });

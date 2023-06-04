@@ -1153,7 +1153,7 @@ export const checkMediaFilesErrorState = (refs, props) => {
     } else {
       refs.image_upload_button_el.current.setAttribute(
         'style',
-        'border-color: 1px solid rgba(0, 0, 0, 0.23); color:#00B8C4',
+        'border-color: 1px solid rgba(0, 0, 0, 0.23); color:var(--primary-color3)',
       );
     }
 
@@ -1165,7 +1165,7 @@ export const checkMediaFilesErrorState = (refs, props) => {
     } else {
       refs.video_upload_button_el.current.setAttribute(
         'style',
-        'border-color: 1px solid rgba(0, 0, 0, 0.23); color:#00B8C4',
+        'border-color: 1px solid rgba(0, 0, 0, 0.23); color:var(--primary-color3)',
       );
     }
 

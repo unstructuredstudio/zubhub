@@ -368,7 +368,7 @@ function ActivityDetails(props) {
                   minHeight: '5px',
                   width: '10%',
                   margin: 'auto',
-                  backgroundColor: '#FFCE0C',
+                  backgroundColor: 'var(--primary-color2)',
                 }}
               ></Box>
             </Grid>

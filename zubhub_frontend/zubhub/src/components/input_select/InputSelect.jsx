@@ -9,7 +9,7 @@ const BootstrapInput = withStyles(theme => ({
     position: 'relative',
     fontSize: 16,
     padding: '10px 26px 10px 18px',
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     color: 'white',
     transition: 'background-color 250ms ease',
     textAlign: 'center',
@@ -20,16 +20,16 @@ const BootstrapInput = withStyles(theme => ({
     '&:focus': {
       borderTopLeftRadius: 250,
       borderBottomLeftRadius: 250,
-      backgroundColor: '#00B8C4',
+      backgroundColor: 'var(--primary-color3)',
     },
     '&[aria-expanded]': {
       borderRadius: 0,
       borderTopLeftRadius: 250,
       borderBottomLeftRadius: 250,
       backgroundColor: 'white',
-      color: '#00B8C4',
+      color: 'var(--primary-color3)',
       '& ~ svg': {
-        color: '#00B8C4',
+        color: 'var(--primary-color3)',
       },
     },
   },

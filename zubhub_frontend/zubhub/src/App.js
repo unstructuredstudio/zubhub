@@ -2,9 +2,11 @@ import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import CreateActivity from './views/create_activity/create_activity';
-
+import { useEffect, useState } from "react";
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
+import ZubhubAPI from '../src/api/api';
+import { updateTheme } from './theme.js';
 
 const SearchResults = React.lazy(() =>
   import('./views/search_results/SearchResults'),
@@ -76,6 +78,7 @@ const About = React.lazy(() => import('./views/about/About'));
 const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 const NotFound = React.lazy(() => import('./views/not_found/NotFound'));
+const API = new ZubhubAPI();
 
 const LazyImport = props => {
   const { LazyComponent, ...restOfProps } = props;
@@ -87,6 +90,36 @@ const LazyImport = props => {
 };
 
 function App(props) {
+  const [theme, setTheme] = useState({
+    'primary-color1': 'blue',
+    'primary-color2': 'blue',
+    'primary-color3': 'blue',
+    'secondary-color1': 'blue',
+    'secondary-color2': 'blue',
+    'secondary-color3': 'blue',
+    'secondary-color4': 'blue',
+    'secondary-color5': 'blue',
+    'secondary-color6': 'blue',
+    'text-color1': 'blue',
+    'text-color2': 'blue',
+    'text-color3': 'blue',
+  });
+
+  useEffect(() => {
+    handleThemeChange();
+  }, []);
+
+  const handleThemeChange = async () => {
+    try {
+      const data = await API.theme();
+      setTheme(data);
+
+      updateTheme(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Router>
       <Switch>

@@ -18,7 +18,7 @@ const styles = theme => ({
     width: '100%',
     opacity: '0.5',
     borderRadius: '15px',
-    border: '3px solid #FFCE0C',
+    border: '3px solid var(--primary-color2)',
     float: 'none',
     position: 'relative',
   },
@@ -38,12 +38,12 @@ const styles = theme => ({
     width: '100%',
     // height: '70%!important',
     borderRadius: '15px',
-    border: '7px solid #FFCE0C',
+    border: '7px solid var(--primary-color2)',
   },
   bannerContainer: {
     width: '100%',
     height: '35vh',
-    backgroundColor: '#DC3545',
+    backgroundColor: 'var(--primary-color1)',
   },
   slideContainer: {
     width: '100%',
@@ -101,13 +101,13 @@ const styles = theme => ({
 //         justifyContent: 'center',
 //         alignItems: 'center',
 //         borderRadius: '0 15px 15px 0',
-//         background: '#767474',
+//         background: 'var(--text-color2)',
 //         zIndex: '10',
 //         boxShadow:
 //           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-//         backgroundColor: '#00B8C4',
+//         backgroundColor: 'var(--primary-color3)',
 //         '&:hover': {
-//           backgroundColor: '#03848C',
+//           backgroundColor: 'var(--secondary-color6)',
 //         },
 //       }}
 //       onClick={onClick}
@@ -128,13 +128,13 @@ const styles = theme => ({
 //         justifyContent: 'center',
 //         alignItems: 'center',
 //         borderRadius: '15px 0 0 15px',
-//         background: '#767474',
+//         background: 'var(--text-color2)',
 //         zIndex: '10',
 //         boxShadow:
 //           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-//         backgroundColor: '#00B8C4',
+//         backgroundColor: 'var(--primary-color3)',
 //         '&:hover': {
-//           backgroundColor: '#03848C',
+//           backgroundColor: 'var(--secondary-color6)',
 //         },
 //       }}
 //       onClick={onClick}

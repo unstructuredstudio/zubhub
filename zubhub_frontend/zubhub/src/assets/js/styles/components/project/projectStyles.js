@@ -14,21 +14,21 @@ const styles = theme => ({
     flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
-    background: 'rgba(255,204,0,1)',
+    background: 'var(--primary-color2)',
     background:
-      '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-moz-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      '-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
+      '-webkit-gradient(left top, left bottom, color-stop(0%, var(--primary-color2)), color-stop(25%, var(--primary-color2)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
     background:
-      '-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-webkit-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      '-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-o-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      '-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      '-ms-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     filter:
-      "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
+      "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -54,7 +54,7 @@ const styles = theme => ({
     top: '0.5em',
     right: '0.5em',
     zIndex: 1,
-    backgroundColor: '#0000003b',
+    backgroundColor: 'var(--text-color2)',
     padding: '0.2em 0.5em',
     borderRadius: '50px',
     fontWeight: 700,
@@ -80,21 +80,21 @@ const styles = theme => ({
     flexDirection: 'column',
   },
   fabButtonStyle: {
-    color: '#ffcc00',
-    backgroundColor: '#dc3545',
+    color: 'var(--primary-color2)',
+    backgroundColor: 'var(--primary-color1)',
     position: 'absolute',
     marginLeft: '1em',
     right: '1em',
     top: '-1.8em',
     '&:hover': {
-      backgroundColor: '#b52836',
+      backgroundColor: 'var(--secondary-color2)',
       backgroundSize: '100%',
     },
     '& svg': {
-      fill: '#ffcc00',
+      fill: 'var(--primary-color2)',
     },
     '& svg:hover': {
-      fill: '#ffcc00',
+      fill: 'var(--primary-color2)',
     },
   },
   likeButtonStyle: {
@@ -202,33 +202,33 @@ const styles = theme => ({
     marginRight: '0.5em',
     fontWeight: 'bold',
     fontSize: '0.9rem',
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
   },
   primaryButton: {
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     borderRadius: 15,
     color: 'white',
     marginLeft: '1em',
     '&:hover': {
-      backgroundColor: '#03848C',
+      backgroundColor: 'var(--secondary-color6)',
     },
   },
   secondaryButton: {
     backgroundColor: 'white',
     borderRadius: 15,
-    borderColor: '#00B8C4',
-    color: '#00B8C4',
+    borderColor: 'var(--primary-color3)',
+    color: 'var(--primary-color3)',
     marginLeft: '1em',
     '&:hover': {
-      color: '#03848C',
-      borderColor: '#03848C',
+      color: 'var(--secondary-color6)',
+      borderColor: 'var(--secondary-color6)',
       backgroundColor: '#F2F2F2',
     },
   },
   secondaryLink: {
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     '&:hover': {
-      color: '#03848C',
+      color: 'var(--secondary-color6)',
     },
   },
   center: {
