@@ -84,7 +84,7 @@ class AccountStatusAPIView(APIView):
                     _("Account doesn't exist, is inactive or has been deleted."
                       )
                 },
-                status=status.HTTP_200_OK)
+                status=status.HTTP_404_NOT_FOUND)
 
 class UserProfileAPIView(RetrieveAPIView):
     """
@@ -221,8 +221,8 @@ class EditCreatorAPIView(UpdateAPIView):
     request body format:\n
         {\n
             "username": "string",\n
-            "email": "",\n
-            "phone": "",\n
+            "email": "string",\n
+            "phone": "string",\n
             "avatar": "string",\n
             "location": "string",\n
             "bio": "string"\n

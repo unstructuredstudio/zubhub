@@ -87,6 +87,7 @@
         "label": "Date of Birth",
         "errors": {
           "max": "Your date of birth can't be greater than today",
+          "oldEnough": "You must be older than 13 years to use ZubHub",
           "required": "Looks like you forgot to enter this!"
         }
       },
@@ -367,8 +368,8 @@
         "topHelperText": "If you are still working on the project and are unsure if you want to publish this right away, select 'Only me'",
         "publishTypes": {
           "authenticatedCreators": "Only me",
-          "draft": "Only a few ZubHub users",
-          "preview": "All registered ZubHub users",
+          "draft": "Save as Draft",
+          "preview": "Only a few ZubHub users",
           "public": "Everyone on the internet"
         },
         "visibleTo": "Visible To",
@@ -388,7 +389,7 @@
     "createToastSuccess": "Your project was created successfully!",
     "updateToastSuccess": "Your project was updated successfully!",
     "errors": {
-      "notLoggedIn": "You are not logged in. Click on the signin button to get started",
+      "notLoggedIn": "You are not logged in. Click on the login button to get started",
       "unexpected": "Well, this is embarrasing! Seems like we could not create your project :( Maybe try again later?"
     }
   },
@@ -621,6 +622,13 @@
         "helpText": "Tell us something interesting about you! You can share what care about, your hobbies, things you have been working on recently, etc.",
         "errors": {
           "tooLong": "Looks like you have a lot to say! But we don't support more than 255 characters for now :("
+        }
+      },
+      "password": {
+        "label": "Current Password",
+        "errors": {
+          "invalid": "You have entered incorrect password",
+          "required": "Seems like you forgot this"
         }
       },
       "submit": "Edit Profile"
