@@ -166,25 +166,15 @@ class Theme(models.Model):
     Text_Color1 = models.CharField(max_length=16, help_text="Enter hexcode to replace color black", default="#212121")
     Text_Color2 = models.CharField(max_length=16, help_text="Enter hexcode to replace color dark gray", default="#757474")
     Text_Color3 = models.CharField(max_length=16, help_text="Enter hexcode to replace color light gray", default="#E4E4E4")
+    status = models.PositiveSmallIntegerField(choices=((0, 'Inactive'), (1, 'Active')), default=0)
 
     class Meta:
         verbose_name = "Theme"
         verbose_name_plural = "Themes"
 
     def save(self, *args, **kwargs):
-        self.Theme_Name= strip_tags(self.Theme_Name)
-        self.Primary_Color1 = strip_tags(self.Primary_Color1)
-        self.Primary_Color2 = strip_tags(self.Primary_Color2)
-        self.Primary_Color3 = strip_tags(self.Primary_Color3)
-        self.Secondary_Color1 = strip_tags(self.Secondary_Color1)
-        self.Secondary_Color2 = strip_tags(self.Secondary_Color2)
-        self.Secondary_Color3 = strip_tags(self.Secondary_Color3)
-        self.Secondary_Color4 = strip_tags(self.Secondary_Color4)
-        self.Secondary_Color5 = strip_tags(self.Secondary_Color5)
-        self.Secondary_Color6 = strip_tags(self.Secondary_Color6)
-        self.Text_Color1 = strip_tags(self.Text_Color1)
-        self.Text_Color2 = strip_tags(self.Text_Color2)
-        self.Text_Color3 = strip_tags(self.Text_Color3)
+        if self.status == 1:
+            Theme.objects.exclude(pk=self.pk).update(status=0)
         super().save(*args, **kwargs)
 
     def __str__(self):

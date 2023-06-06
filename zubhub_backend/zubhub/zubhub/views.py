@@ -1,5 +1,6 @@
 from math import floor
 import uuid
+from django.shortcuts import get_object_or_404
 from django.utils.html import format_html
 from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, ChallengeSerializer, PrivacySerializer, AmbassadorsSerializer, ThemeSerializer
 from .models import Hero, FAQ, Privacy, Help, Challenge, Ambassadors, AdminSettings, Theme
@@ -355,4 +356,4 @@ class ThemeAPIView(RetrieveAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     
     def get_object(self):
-        return self.get_queryset().last()
+        return get_object_or_404(Theme, status=1)

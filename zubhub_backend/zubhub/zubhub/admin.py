@@ -45,11 +45,18 @@ class ChallengeAdmin(SummernoteModelAdmin):
     class Media:
         js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
         
-class ThemeAdmin(SummernoteModelAdmin):
-    summernote_fields = ('theme',)
 
-    class Media:
-        js = ('http://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+class ThemeAdmin(admin.ModelAdmin):
+    list_display = ['Theme_Name', 'status']
+    actions = ['make_selected_active']
+
+    def make_selected_active(self, request, queryset):
+        queryset.update(status=0)
+        selected_themes = queryset.first()
+        selected_themes.status = 1
+        selected_themes.save()
+
+    make_selected_active.short_description = "Select and make active"
 
 
 class FAQAdmin(SummernoteModelAdmin):
