@@ -189,7 +189,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
         if re.match(pattern, username):
             # If it's a valid email, raise an error
-            raise serializers.ValidationError("Username cannot be an email.")
+            raise serializers.ValidationError(_("Username cannot be an email."))
         
         return username
 
