@@ -1,3 +1,4 @@
+from enum import Enum
 from django.contrib import admin
 from .models import AdminSettings, Hero, Privacy, FAQ, Help, Challenge, Ambassadors, Theme
 
@@ -46,14 +47,18 @@ class ChallengeAdmin(SummernoteModelAdmin):
         js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
         
 
+class StatusEnum(Enum):
+    INACTIVE = 0
+    ACTIVE = 1
+
 class ThemeAdmin(admin.ModelAdmin):
     list_display = ['Theme_Name', 'status']
     actions = ['make_selected_active']
 
     def make_selected_active(self, request, queryset):
-        queryset.update(status=0)
+        queryset.update(status=StatusEnum.INACTIVE.value)
         selected_themes = queryset.first()
-        selected_themes.status = 1
+        selected_themes.status = StatusEnum.ACTIVE.value
         selected_themes.save()
 
     make_selected_active.short_description = "Select and make active"

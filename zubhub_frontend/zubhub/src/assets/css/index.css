@@ -84,6 +84,7 @@ html,
   justify-content: space-between;
   background-color: 'var(--primary-color2)';
   padding: 20px;
+  color: 'var(--text-color1)';
 }
 
 .gallery-sub-nav .btn-primary.dropdown-toggle:focus {

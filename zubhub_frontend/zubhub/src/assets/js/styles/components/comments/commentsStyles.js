@@ -14,10 +14,12 @@ const styles = theme => ({
     marginBottom: '2.5em',
     borderRadius: '15px',
     backgroundColor: 'var(--text-color3)',
+    color: 'var(--text-color1)',
   },
   commentAvatarStyle: {
     backgroundColor: 'var(--text-color3)',
     marginRight: '1em',
+    color: 'var(--text-color1)',
   },
 
   creatorSuggestionBoxStyle: {
