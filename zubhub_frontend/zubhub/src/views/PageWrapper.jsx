@@ -51,10 +51,7 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
-import {
-  getQueryParams,
-  SearchType,
-} from './search_results/searchResultsScripts';
+import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
@@ -73,6 +70,8 @@ import { throttle } from '../utils.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
 import BreadCrumb from '../components/breadCrumb/breadCrumb';
+import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
+import Navbar from '../components/Navbar/Navbar';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -89,9 +88,7 @@ function PageWrapper(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
-  const [searchType, setSearchType] = useState(
-    getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
-  );
+  const [searchType, setSearchType] = useState(getQueryParams(window.location.href).get('type') || SearchType.PROJECTS);
   const formRef = useRef();
   const token = useSelector(state => state.auth.token);
 
@@ -143,9 +140,7 @@ function PageWrapper(props) {
 
   useEffect(() => {
     throttledFetchOptions(
-      query ||
-        (props.location.search &&
-          getQueryParams(window.location.href).get('q')),
+      query || (props.location.search && getQueryParams(window.location.href).get('q')),
       searchType,
     );
   }, [query, searchType]);
@@ -167,7 +162,7 @@ function PageWrapper(props) {
       });
   }, [props.auth.token]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleSetState(handleProfileMenuClose());
   }, [trigger]);
 
@@ -209,9 +204,9 @@ function PageWrapper(props) {
     window.location.reload();
   };
 
-  const handleTextField = (event) => {
-    setQuery(event.target.value)
-  }
+  const handleTextField = event => {
+    setQuery(event.target.value);
+  };
 
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
@@ -223,15 +218,12 @@ function PageWrapper(props) {
     <>
       <ToastContainer />
       <CssBaseline />
-      <AppBar className={classes.navBarStyle}>
+      {/* <AppBar className={classes.navBarStyle}>
         <Container className={classes.mainContainerStyle}>
           <Toolbar className={classes.toolBarStyle}>
             <Box className={classes.logoStyle}>
               <Link to="/">
-                <img
-                  src={zubhub?.header_logo_url ? zubhub.header_logo_url : logo}
-                  alt="logo"
-                />
+                <img src={zubhub?.header_logo_url ? zubhub.header_logo_url : logo} alt="logo" />
               </Link>
               <Box
                 className={clsx(
@@ -290,25 +282,14 @@ function PageWrapper(props) {
                   )}
                   variant="outlined"
                 >
-                  <InputLabel
-                    htmlFor="q"
-                    className={classes.searchFormLabelStyle}
-                  >
+                  <InputLabel htmlFor="q" className={classes.searchFormLabelStyle}>
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
                   <FormGroup row>
                     <FormControl variant="outlined">
-                      <InputSelect
-                        searchType={searchType}
-                        onSearchTypeChange={setSearchType}
-                        name="type"
-                      >
-                        <MenuItem value={SearchType.PROJECTS}>
-                          Projects
-                        </MenuItem>
-                        <MenuItem value={SearchType.CREATORS}>
-                          Creators
-                        </MenuItem>
+                      <InputSelect searchType={searchType} onSearchTypeChange={setSearchType} name="type">
+                        <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
+                        <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
                         <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                       </InputSelect>
                     </FormControl>
@@ -318,13 +299,8 @@ function PageWrapper(props) {
                       defaultValue={{ title: query }}
                       value={{ title: query }}
                       renderOption={(option, { inputValue }) => (
-                        <Option
-                          option={option}
-                          inputValue={inputValue}
-                          onOptionClick={onSearchOptionClick}
-                        />
+                        <Option option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
                       )}
-
                     >
                       {params => (
                         <TextField
@@ -335,18 +311,13 @@ function PageWrapper(props) {
                           {...params}
                           InputProps={{
                             ...params.InputProps,
-                            className: clsx(
-                              classes.searchFormInputStyle,
-                              'search-form-input',
-                            ),
+                            className: clsx(classes.searchFormInputStyle, 'search-form-input'),
                             endAdornment: (
                               <InputAdornment position="end">
                                 <IconButton
                                   type="submit"
                                   className={classes.searchFormSubmitStyle}
-                                  aria-label={t(
-                                    'pageWrapper.inputs.search.label',
-                                  )}
+                                  aria-label={t('pageWrapper.inputs.search.label')}
                                 >
                                   <SearchIcon />
                                 </IconButton>
@@ -355,9 +326,7 @@ function PageWrapper(props) {
                             pattern: '(.|s)*S(.|s)*',
                           }}
                           onChange={handleTextField}
-                          placeholder={`${t(
-                            'pageWrapper.inputs.search.label',
-                          )}...`}
+                          placeholder={`${t('pageWrapper.inputs.search.label')}...`}
                         />
                       )}
                     </Autocomplete>
@@ -369,41 +338,19 @@ function PageWrapper(props) {
               {!props.auth.token ? (
                 <>
                   <IconButton
-                    className={clsx(
-                      classes.toggleSearchFormStyle,
-                      classes.addOn894,
-                    )}
+                    className={clsx(classes.toggleSearchFormStyle, classes.addOn894)}
                     id="toggle-search"
                     aria-label="toggle search form"
-                    onClick={() =>
-                      handleSetState(handleToggleSearchForm(state))
-                    }
+                    onClick={() => handleSetState(handleToggleSearchForm(state))}
                   >
                     <SearchIcon />
                   </IconButton>
-                  <Link
-                    className={clsx(
-                      classes.textDecorationNone,
-                      common_classes.removeOnSmallScreen,
-                    )}
-                    to="/login"
-                  >
-                    <CustomButton
-                      variant="outlined"
-                      size="large"
-                      secondaryButtonStyle
-                      className={classes.customButton}
-                    >
+                  <Link className={clsx(classes.textDecorationNone, common_classes.removeOnSmallScreen)} to="/login">
+                    <CustomButton variant="outlined" size="large" secondaryButtonStyle className={classes.customButton}>
                       {t('pageWrapper.navbar.login')}
                     </CustomButton>
                   </Link>
-                  <Link
-                    className={clsx(
-                      classes.textDecorationNone,
-                      common_classes.removeOnSmallScreen,
-                    )}
-                    to="/signup"
-                  >
+                  <Link className={clsx(classes.textDecorationNone, common_classes.removeOnSmallScreen)} to="/signup">
                     <CustomButton
                       variant="contained"
                       size="large"
@@ -441,22 +388,14 @@ function PageWrapper(props) {
                   >
                     <MenuItem>
                       <Link className={classes.textDecorationNone} to="/login">
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.login')}
                         </Typography>
                       </Link>
                     </MenuItem>
                     <MenuItem>
                       <Link className={classes.textDecorationNone} to="/signup">
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.signup')}
                         </Typography>
                       </Link>
@@ -466,12 +405,8 @@ function PageWrapper(props) {
               ) : (
                 <>
                   {props.match.path === '/activities' ? (
-                    props.auth.tags.filter(
-                      tag =>
-                        tag === 'moderator' ||
-                        tag === 'staff' ||
-                        tag === 'educator',
-                    ).length > 0 && (
+                    props.auth.tags.filter(tag => tag === 'moderator' || tag === 'staff' || tag === 'educator').length >
+                      0 && (
                       <Link
                         className={clsx(
                           classes.textDecorationNone,
@@ -519,39 +454,23 @@ function PageWrapper(props) {
                     )}
                     to="/projects/create"
                   >
-                    <CustomButton
-                      variant="contained"
-                      primaryButtonStyle
-                      className={classes.customButton}
-                      size="small"
-                    >
+                    <CustomButton variant="contained" primaryButtonStyle className={classes.customButton} size="small">
                       {t('pageWrapper.navbar.createProject')}
                     </CustomButton>
                   </Link>
                   <IconButton
-                    className={clsx(
-                      classes.toggleSearchFormStyle,
-                      classes.addOn894,
-                    )}
+                    className={clsx(classes.toggleSearchFormStyle, classes.addOn894)}
                     id="toggle-search"
                     aria-label="toggle search form"
-                    onClick={() =>
-                      handleSetState(handleToggleSearchForm(state))
-                    }
+                    onClick={() => handleSetState(handleToggleSearchForm(state))}
                   >
                     <SearchIcon />
                   </IconButton>
                   <NotificationButton
-                    className={clsx(
-                      common_classes.marginRight1em,
-                      common_classes.removeOnSmallScreen,
-                    )}
+                    className={clsx(common_classes.marginRight1em, common_classes.removeOnSmallScreen)}
                   />
                   <Avatar
-                    className={clsx(
-                      classes.avatarStyle,
-                      common_classes.removeOnSmallScreen,
-                    )}
+                    className={clsx(classes.avatarStyle, common_classes.removeOnSmallScreen)}
                     aria-label={`${props.auth.username}' Avatar`}
                     aria-controls="profile_menu"
                     aria-haspopup="true"
@@ -589,121 +508,67 @@ function PageWrapper(props) {
                       </Tooltip>
                     </MenuItem>
                     <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to="/profile"
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                      <Link className={classes.textDecorationNone} to="/profile">
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.profile')}
                         </Typography>
                       </Link>
                     </MenuItem>
                     <MenuItem className={common_classes.addOnSmallScreen}>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to="/projects/create"
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                      <Link className={classes.textDecorationNone} to="/projects/create">
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.createProject')}
                         </Typography>
                       </Link>
                     </MenuItem>
-                    {props.auth.tags.filter(
-                      tag => tag === 'staff' || tag === 'educator',
-                    ).length > 0 && (
+                    {props.auth.tags.filter(tag => tag === 'staff' || tag === 'educator').length > 0 && (
                       <MenuItem
                         className={clsx(common_classes.removeOnSmallScreen)}
                         onClick={() => {
                           history.push('/activities', { flag: 'educator' });
                         }}
                       >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.myActivities')}
                         </Typography>
                       </MenuItem>
                     )}
-                    {props.auth.tags.filter(
-                      tag => tag === 'staff' || tag === 'moderator',
-                    ).length > 0 && (
+                    {props.auth.tags.filter(tag => tag === 'staff' || tag === 'moderator').length > 0 && (
                       <MenuItem
                         className={clsx(common_classes.removeOnSmallScreen)}
                         onClick={() => {
                           history.push('/activities', { flag: 'staff' });
                         }}
                       >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.unpublishedActivities')}
                         </Typography>
                       </MenuItem>
                     )}
                     <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to={`/creators/${props.auth.username}/projects`}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                      <Link className={classes.textDecorationNone} to={`/creators/${props.auth.username}/projects`}>
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.projects')}
                         </Typography>
                       </Link>
                     </MenuItem>
                     <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to={`/creators/${props.auth.username}/followers`}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                      <Link className={classes.textDecorationNone} to={`/creators/${props.auth.username}/followers`}>
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.followers')}
                         </Typography>
                       </Link>
                     </MenuItem>
                     <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to={`/creators/${props.auth.username}/following`}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                      <Link className={classes.textDecorationNone} to={`/creators/${props.auth.username}/following`}>
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.following')}
                         </Typography>
                       </Link>
                     </MenuItem>
                     <MenuItem>
-                      <Link
-                        className={classes.textDecorationNone}
-                        to="/projects/saved"
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          color="textPrimary"
-                          component="span"
-                        >
+                      <Link className={classes.textDecorationNone} to="/projects/saved">
+                        <Typography variant="subtitle2" color="textPrimary" component="span">
                           {t('pageWrapper.navbar.savedProjects')}
                         </Typography>
                       </Link>
@@ -724,38 +589,22 @@ function PageWrapper(props) {
             </div>
           </Toolbar>
           {open_search_form ? (
-            <ClickAwayListener
-              onClickAway={e => handleSetState(closeSearchFormOrIgnore(e))}
-            >
+            <ClickAwayListener onClickAway={e => handleSetState(closeSearchFormOrIgnore(e))}>
               <form
                 action="/search"
                 className={clsx(classes.smallSearchFormStyle, classes.addOn894)}
                 role="search"
                 ref={formRef}
               >
-                <FormControl
-                  variant="outlined"
-                  style={{ minWidth: 'unset' }}
-                  className={classes.formControlStyle}
-                >
-                  <InputSelect
-                    searchType={searchType}
-                    onSearchTypeChange={setSearchType}
-                    name="type"
-                  >
+                <FormControl variant="outlined" style={{ minWidth: 'unset' }} className={classes.formControlStyle}>
+                  <InputSelect searchType={searchType} onSearchTypeChange={setSearchType} name="type">
                     <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
                     <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
                     <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
                   </InputSelect>
                 </FormControl>
-                <FormControl
-                  variant="outlined"
-                  style={{ flex: '1 1 auto', maxWidth: '350px' }}
-                >
-                  <InputLabel
-                    htmlFor="q"
-                    className={classes.searchFormLabelStyle}
-                  >
+                <FormControl variant="outlined" style={{ flex: '1 1 auto', maxWidth: '350px' }}>
+                  <InputLabel htmlFor="q" className={classes.searchFormLabelStyle}>
                     {t('pageWrapper.inputs.search.label')}
                   </InputLabel>
                   <Autocomplete
@@ -764,11 +613,7 @@ function PageWrapper(props) {
                     defaultValue={{ title: query }}
                     value={{ title: query }}
                     renderOption={(option, { inputValue }) => (
-                      <Option
-                        option={option}
-                        inputValue={inputValue}
-                        onOptionClick={onSearchOptionClick}
-                      />
+                      <Option option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
                     )}
                   >
                     {params => (
@@ -780,18 +625,13 @@ function PageWrapper(props) {
                         {...params}
                         InputProps={{
                           ...params.InputProps,
-                          className: clsx(
-                            classes.smallSearchFormInputStyle,
-                            'search-form-input',
-                          ),
+                          className: clsx(classes.smallSearchFormInputStyle, 'search-form-input'),
                           endAdornment: (
                             <InputAdornment position="end">
                               <IconButton
                                 type="submit"
                                 className={classes.searchFormSubmitStyle}
-                                aria-label={t(
-                                  'pageWrapper.inputs.search.label',
-                                )}
+                                aria-label={t('pageWrapper.inputs.search.label')}
                               >
                                 <SearchIcon />
                               </IconButton>
@@ -799,9 +639,7 @@ function PageWrapper(props) {
                           ),
                           pattern: '(.|s)*S(.|s)*',
                         }}
-                        placeholder={`${t(
-                          'pageWrapper.inputs.search.label',
-                        )}...`}
+                        placeholder={`${t('pageWrapper.inputs.search.label')}...`}
                         onChange={handleTextField}
                       />
                     )}
@@ -812,20 +650,19 @@ function PageWrapper(props) {
           ) : null}
         </Container>
         <BreadCrumb />
-      </AppBar>
+      </AppBar> */}
+      <Navbar />
       <Toolbar ref={backToTopEl} className={classes.marginBottom} />
 
-      {loading ? <LoadingPage /> : props.children}
+      <Container className={classes.childrenContainer} maxWidth="lg">
+        <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout>
+      </Container>
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
           <a href="https://unstructured.studio">
             <img
-              src={
-                zubhub?.footer_logo_url
-                  ? zubhub.footer_logo_url
-                  : unstructuredLogo
-              }
+              src={zubhub?.footer_logo_url ? zubhub.footer_logo_url : unstructuredLogo}
               className={classes.footerLogoStyle}
               alt="unstructured-studio-logo"
             />
@@ -857,124 +694,65 @@ function PageWrapper(props) {
 
         <section className={classes.footerSectionStyle}>
           <Box className={classes.footerBoxStyle}>
-            <Typography
-              variant="subtitle2"
-              color="textPrimary"
-              className={classes.footerTitleStyle}
-            >
+            <Typography variant="subtitle2" color="textPrimary" className={classes.footerTitleStyle}>
               {t('pageWrapper.footer.privacy')}
             </Typography>
 
-            <Link
-              to={`/privacy_policy`}
-              className={common_classes.textDecorationNone}
-            >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
+            <Link to={`/privacy_policy`} className={common_classes.textDecorationNone}>
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
                 {t('pageWrapper.footer.guidelines')}
               </Typography>
             </Link>
 
-            <Link
-              to={`/terms_of_use`}
-              className={common_classes.textDecorationNone}
-            >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
+            <Link to={`/terms_of_use`} className={common_classes.textDecorationNone}>
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
                 {t('pageWrapper.footer.termsOfUse')}
               </Typography>
             </Link>
           </Box>
 
           <Box className={classes.footerBoxStyle}>
-            <Typography
-              variant="subtitle2"
-              color="textPrimary"
-              className={classes.footerTitleStyle}
-            >
+            <Typography variant="subtitle2" color="textPrimary" className={classes.footerTitleStyle}>
               {t('pageWrapper.footer.about')}
             </Typography>
 
             <Link to="/about" className={common_classes.textDecorationNone}>
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
                 {t('pageWrapper.footer.zubhub')}
               </Typography>
             </Link>
 
             <Link to="/challenge" className={common_classes.textDecorationNone}>
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
                 {t('pageWrapper.footer.challenges')}
               </Typography>
             </Link>
           </Box>
 
           <Box className={classes.footerBoxStyle}>
-            <Typography
-              variant="subtitle2"
-              color="textPrimary"
-              className={classes.footerTitleStyle}
-            >
+            <Typography variant="subtitle2" color="textPrimary" className={classes.footerTitleStyle}>
               {t('pageWrapper.footer.help')}
             </Typography>
 
             <a
               target="__blank"
               rel="noreferrer"
-              href={
-                hero.tinkering_resource_url
-                  ? hero.tinkering_resource_url
-                  : 'https://kriti.unstructured.studio/'
-              }
+              href={hero.tinkering_resource_url ? hero.tinkering_resource_url : 'https://kriti.unstructured.studio/'}
               className={common_classes.textDecorationNone}
             >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
                 {t('pageWrapper.footer.resources')}
               </Typography>
             </a>
 
-            <Link
-              to={`/faqs`}
-              className={clsx(
-                common_classes.textDecorationNone,
-                common_classes.displayNone,
-              )}
-            >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
+            <Link to={`/faqs`} className={clsx(common_classes.textDecorationNone, common_classes.displayNone)}>
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
                 {t('pageWrapper.footer.faqs')}
               </Typography>
             </Link>
 
-            <a
-              href="mailto:hello@unstructured.studio"
-              className={common_classes.textDecorationNone}
-            >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                className={classes.footerLinkStyle}
-              >
+            <a href="mailto:hello@unstructured.studio" className={common_classes.textDecorationNone}>
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
                 {t('pageWrapper.footer.contactUs')}
               </Typography>
             </a>

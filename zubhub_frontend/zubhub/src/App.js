@@ -5,6 +5,7 @@ import CreateActivity from './views/create_activity/create_activity';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
+import CreateProject2 from './views/create_project/CreateProject2';
 
 const SearchResults = React.lazy(() =>
   import('./views/search_results/SearchResults'),
@@ -361,7 +362,7 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
-                LazyComponent={CreateProject}
+                LazyComponent={CreateProject2}
                 {...routeProps}
                 {...props}
               />

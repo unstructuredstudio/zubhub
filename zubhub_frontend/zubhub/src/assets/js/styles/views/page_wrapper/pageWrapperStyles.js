@@ -1,4 +1,5 @@
 const styles = theme => ({
+  childrenContainer: { padding: '0' },
   navBarStyle: {
     backgroundColor: '#DC3545',
   },
@@ -269,8 +270,8 @@ const styles = theme => ({
     '&:hover': {
       color: 'rgb(243 137 147)',
     },
-  }, 
-   center: {
+  },
+  center: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

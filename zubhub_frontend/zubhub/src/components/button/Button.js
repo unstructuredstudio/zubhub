@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import classNames from 'classnames';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
 import styles from '../../assets/js/styles/components/button/buttonStyles';
+import clsx from 'clsx'
 
 const useStyles = makeStyles(styles);
 
@@ -23,6 +21,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     children,
     primaryButtonStyle,
     primaryButtonStyle2,
+    primaryButtonOutlinedStyle,
     primaryButtonStyle3,
     secondaryButtonStyle,
     dangerButtonStyle,
@@ -47,6 +46,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     [classes.mediaUploadButtonStyle]: mediaUploadButtonStyle,
     [classes.customButtonStyle]: customButtonStyle,
     [classes.fullWidth]: fullWidth,
+    [classes.primaryButtonOutlinedStyle]: primaryButtonOutlinedStyle,
     [className]: className,
   });
 
@@ -55,7 +55,7 @@ const CustomButton = React.forwardRef((props, ref) => {
       ref={ref}
       {...rest}
       classes={muiClasses}
-      className={btnClasses}
+      className={clsx(btnClasses, classes.default)}
       disabled={disabled ? disabled : false}
     >
       {children}

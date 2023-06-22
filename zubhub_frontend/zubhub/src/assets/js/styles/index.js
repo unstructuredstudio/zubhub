@@ -1,4 +1,28 @@
+import { colors } from "../colors";
+
 const styles = theme => ({
+  iconBox: {
+    height: 35,
+    width: 35,
+    borderRadius: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  title1: {
+    fontWeight: 'bold',
+    fontSize: '25px !important',
+    lineHeight: '35px',
+    marginBottom: 8,
+    color: colors.black
+  },
+  title2: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    lineHeight: '16px',
+    marginBottom: 8,
+    color: colors.black
+  },
   margin: {
     margin: '1em',
   },

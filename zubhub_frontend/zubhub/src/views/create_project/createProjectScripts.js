@@ -9,6 +9,7 @@ import {
 } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
+import API from '../../api';
 
 /**
  * @constant vars
@@ -207,6 +208,21 @@ export const handleSuggestTags = (e, props, state, handleSetState) => {
   }
 };
 
+export const searchTags = (value, callBack) => {
+  clearTimeout(vars.timer.id);
+  const api = new API()
+  if (value !== '') {
+    vars.timer.id = setTimeout(async () => {
+      try {
+        const res = await api.suggestTags(value)
+        callBack(undefined, res);
+      } catch (error) {
+        callBack(error);
+      }
+    }, 500);
+  }
+}
+
 /**
  * @function suggestTags
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -254,13 +270,11 @@ export const removeTag = (_, props, value) => {
  * @todo - describe function's signature
  */
 export const handleImageFieldChange = (refs, props, state, handleSetState) => {
-  refs.image_count_el.current.innerText = `${
-    refs.image_el.current.files.length
-  } ${props.t(
-    `createProject.inputs.${
-      refs.image_el.current.files.length < 2 ? 'image' : 'images'
-    }`,
-  )}`;
+  refs.image_count_el.current.innerText = `${refs.image_el.current.files.length
+    } ${props.t(
+      `createProject.inputs.${refs.image_el.current.files.length < 2 ? 'image' : 'images'
+      }`,
+    )}`;
   console.log('image uploaded', refs.image_el.current.files);
   props.setFieldValue('project_images', refs.image_el.current).then(errors => {
     if (!errors['project_images']) {
@@ -1028,13 +1042,11 @@ export const getProject = (refs, props, state) => {
         }
 
         if (refs.image_count_el.current && obj.project.images.length > 0) {
-          refs.image_count_el.current.innerText = `${
-            obj.project.images.length
-          } ${props.t(
-            `createProject.inputs.${
-              obj.project.images.length < 2 ? 'image' : 'images'
-            }`,
-          )}`;
+          refs.image_count_el.current.innerText = `${obj.project.images.length
+            } ${props.t(
+              `createProject.inputs.${obj.project.images.length < 2 ? 'image' : 'images'
+              }`,
+            )}`;
 
           const files = obj.project.images.map(url => ({
             name: url,
@@ -1102,15 +1114,15 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
       e.target === refs.video_file_el.current
         ? refs.video_file_el.current
         : e.target === refs.video_el.current.firstChild
-        ? e.target
-        : '';
+          ? e.target
+          : '';
 
     type =
       e.target === refs.video_file_el.current
         ? 'videoFile'
         : e.target === refs.video_el.current.firstChild
-        ? 'videoURL'
-        : null;
+          ? 'videoURL'
+          : null;
   }
 
   props.setStatus({ ...props.status, video: '' });
