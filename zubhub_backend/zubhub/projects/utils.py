@@ -318,6 +318,74 @@ def get_published_projects_for_user(user, all):
     all |= visible_to
     return all.order_by("-created_on")
 
+def recommend_projects_by_likes(projects, project=None):
+    """
+    Appends most popular projects by likes to an input list, which may be empty
+
+    Params:
+    projects - may be empty or contain 2 or less projects
+    project - original project if it exists, None if original project does not exist
+
+    Returns list containing three projects
+    """
+
+    """ if three projects still not found, add from most popular by likes """
+    Project = apps.get_model('projects.Project')
+
+    for l in Project.objects.all().order_by('-likes_count'):
+        if len(projects) == 3:
+            return projects
+        if not l in projects and l != project:
+            projects.append(l)
+
+    return projects
+
+def recommend_projects(project):
+    """
+    Params:
+    project - Project object
+
+    Returns list of three projects to recommend to a user 
+    """
+    Project = apps.get_model('projects.Project')
+
+    # get project category
+    category = getattr(project, 'category')
+
+    # get project tags
+    tags = list(project.tags.all())
+
+    projects = list(Project.objects.none())
+
+    if len(tags) != 0 and category != None:
+        # loop through each tag of the original project
+        for i in tags:
+            # loop through each project in the same category in random order and check if it contains this tag
+            for j in Project.objects.filter(category__name=category).order_by('?'):
+                tags_j = list(j.tags.all())
+                # skip original project and any projects already added to projects
+                if j == project or j in projects:
+                    continue
+                # if the jth project's tags include the ith tag, add to projects
+                if i in tags_j:
+                    projects.append(j)
+                # stop once we have added 3 projects (inner loop)
+                if len(projects) == 3:
+                    return projects
+            # stop once we have added 3 projects (outer loop)
+            if len(projects) == 3:
+                return projects
+                
+    # if three projects not found, add random from same category
+    if category!=None:
+        for k in Project.objects.filter(category__name=category).order_by('?'):
+            if len(projects) == 3: 
+                return projects
+            if not k in projects and k != project:
+                projects.append(k)
+
+    # if three projects still not found, add from most popular by likes
+    return recommend_projects_by_likes(projects)
 
 def detect_mentions(kwargs):
     text = kwargs.get("text", None)

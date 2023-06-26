@@ -10,7 +10,7 @@ import 'react-quill/dist/quill.bubble.css';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
+import ProjectsBar from '../../components/projectsBar/projectsBar';
 import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
@@ -112,7 +112,7 @@ function ProjectDetails(props) {
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
   const { id } = useParams();
-
+  // const [testProjects, setTestProjects] = React.useState([]);
   const [state, setState] = React.useState({
     project: {},
     loading: true,
@@ -466,7 +466,7 @@ function ProjectDetails(props) {
                 </Grid>
               </Grid>
             </Container>
-
+            {/* <ProjectsBar projects={testProjects} {...props} /> */}
             <Comments
               context={{ name: 'project', body: project }}
               handleSetState={handleSetState}

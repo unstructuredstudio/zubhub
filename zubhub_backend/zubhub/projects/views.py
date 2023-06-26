@@ -20,7 +20,7 @@ from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
 from creators.models import Creator
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
-                    get_published_projects_for_user)
+                    get_published_projects_for_user, recommend_projects, recommend_projects_by_likes)
 from creators.utils import (activity_notification, send_notification,  activity_log, set_badge_like_category,
                             set_badge_project_category, set_badge_view_category,
                              set_badge_comment_category)
@@ -28,6 +28,8 @@ from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer,
                           StaffPickSerializer)
 from .pagination import ProjectNumberPagination
+from django.db import models
+from django.db.models.functions import Length
 
 
 class ProjectCreateAPIView(CreateAPIView):
@@ -162,6 +164,22 @@ class ProjectListAPIView(ListAPIView):
     def get_queryset(self):
         all = Project.objects.prefetch_related('publish__visible_to').all()
         return get_published_projects_for_user(self.request.user, all)
+    
+class ProjectRecommendAPIView(ListAPIView):
+    """
+    Fetch three projects to recommend
+    Returns list of three projects
+    """
+
+    serializer_class = ProjectListSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        try:
+            return recommend_projects(Project.objects.get(pk=self.kwargs.get("pk")))
+        except Project.DoesNotExist:
+            return recommend_projects_by_likes(Project.objects.none())
 
 
 class ProjectTagSearchAPIView(ListAPIView):
