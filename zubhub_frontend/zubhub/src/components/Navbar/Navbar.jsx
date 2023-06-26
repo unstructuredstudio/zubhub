@@ -1,31 +1,31 @@
 import {
   AppBar,
-  Container,
-  makeStyles,
-  Box,
-  Select,
-  MenuItem,
   Avatar,
-  Typography,
-  OutlinedInput,
+  Box,
+  Container,
   Hidden,
+  MenuItem,
+  OutlinedInput,
+  Select,
   SwipeableDrawer,
+  Typography,
+  makeStyles,
 } from '@material-ui/core';
-import React, { useState } from 'react';
-import { images } from '../../assets/images';
-import { Translate, Notifications, Search, Menu, SearchOutlined } from '@material-ui/icons';
-import { navbarStyle } from './navbar.style';
-import commonStyles from '../../assets/js/styles';
-import languageMap from '../../assets/js/languageMap.json';
-import { handleChangeLanguage } from '../../views/pageWrapperScripts';
+import { Menu, Notifications, Search, SearchOutlined, Translate } from '@material-ui/icons';
 import clsx from 'clsx';
-import Autocomplete from '../autocomplete/Autocomplete';
+import React, { forwardRef, useState } from 'react';
+import { images } from '../../assets/images';
 import { colors } from '../../assets/js/colors';
-import HamburgerMenu from '../hamburger_menu/HamburgerMenu';
+import languageMap from '../../assets/js/languageMap.json';
+import commonStyles from '../../assets/js/styles';
+import { handleChangeLanguage } from '../../views/pageWrapperScripts';
 import Sidenav from '../Sidenav/Sidenav';
+import BreadCrumb from '../breadCrumb/breadCrumb';
+import { navbarStyle } from './navbar.style';
 
 const anchor = 'left';
 
+forwardRef();
 export default function Navbar(props) {
   const classes = makeStyles(navbarStyle)();
   const commonClasses = makeStyles(commonStyles)();
@@ -41,81 +41,86 @@ export default function Navbar(props) {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
     setState({ left: !state.left });
   };
 
   return (
-    <AppBar className={classes.box}>
-      <Container className={classes.container} maxWidth="lg">
-        <Hidden mdUp>
-          <Box onClick={toggleDrawer}>
-            <Menu />
-          </Box>
-        </Hidden>
-        {/* Logo */}
-        <img src={images.logo} className={classes.logo} />
+    <AppBar id="navbar-root" className={classes.root}>
+      <div className={classes.box}>
+        <Container className={classes.container} maxWidth="lg">
+          <Hidden mdUp>
+            <Box onClick={toggleDrawer}>
+              <Menu />
+            </Box>
+          </Hidden>
+          {/* Logo */}
+          <img src={images.logo} className={classes.logo} />
 
-        <Hidden smDown>
-          <OutlinedInput
-            placeholder="Search"
-            className={classes.input}
-            startAdornment={<Search style={{ color: colors.white }} />}
-          />
-        </Hidden>
+          {/* Search Input */}
+          <Hidden smDown>
+            <OutlinedInput
+              placeholder="Search"
+              className={classes.input}
+              startAdornment={<Search style={{ color: colors.white }} />}
+            />
+          </Hidden>
 
-        {/* Language on Mobile */}
-        <Box
-          className={clsx(
-            classes.languageContainerStyle,
-            commonClasses.displayInlineFlex,
-            commonClasses.alignCenter,
-            commonClasses.addOnSmallScreen,
-          )}
-        >
-          <Translate />
-          <Select className={classes.languageSelectStyle} value="" onChange={e => handleChangeLanguage({ e, props })}>
-            {languages}
-          </Select>
-        </Box>
-
-        {/* Language on Desktop */}
-        <Box
-          className={clsx(
-            classes.languageContainerStyle,
-            commonClasses.displayInlineFlex,
-            commonClasses.alignCenter,
-            commonClasses.removeOnSmallScreen,
-          )}
-        >
-          <Translate />
-          <Select
-            className={classes.languageSelectStyle}
-            // value={props.i18n.language}
-            onChange={e => handleChangeLanguage({ e, props })}
+          {/* Language on Mobile */}
+          <Box
+            className={clsx(
+              classes.languageContainerStyle,
+              commonClasses.displayInlineFlex,
+              commonClasses.alignCenter,
+              commonClasses.addOnSmallScreen,
+            )}
           >
-            {languages}
-          </Select>
-        </Box>
-
-        <Hidden mdUp>
-          <SearchOutlined />
-        </Hidden>
-
-        <Hidden smDown>
-          <div className={clsx(classes.notification, commonClasses.iconBox)}>
-            <Notifications style={{ color: colors.primary, fontSize: 20 }} />
-          </div>
-
-          <Box>
-            <Typography className={clsx(commonClasses.title2, classes.username)}>Faridah Ade</Typography>
-            <Typography className="">Student</Typography>
+            <Translate />
+            <Select className={classes.languageSelectStyle} value="" onChange={e => handleChangeLanguage({ e, props })}>
+              {languages}
+            </Select>
           </Box>
-        </Hidden>
-        <Avatar className={commonClasses.iconBox} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+
+          {/* Language on Desktop */}
+          <Box
+            className={clsx(
+              classes.languageContainerStyle,
+              commonClasses.displayInlineFlex,
+              commonClasses.alignCenter,
+              commonClasses.removeOnSmallScreen,
+            )}
+          >
+            <Translate />
+            <Select
+              className={classes.languageSelectStyle}
+              value={props.i18n.language}
+              onChange={e => handleChangeLanguage({ e, props })}
+            >
+              {languages}
+            </Select>
+          </Box>
+
+          <Hidden mdUp>
+            <SearchOutlined />
+          </Hidden>
+
+          <Hidden smDown>
+            <div className={clsx(classes.notification, commonClasses.iconBox)}>
+              <Notifications style={{ color: colors.primary, fontSize: 20 }} />
+            </div>
+
+            <Box>
+              <Typography className={clsx(commonClasses.title2, classes.username)}>Faridah Ade</Typography>
+              <Typography className="">Student</Typography>
+            </Box>
+          </Hidden>
+          <Avatar className={commonClasses.iconBox} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        </Container>
+      </div>
+      <Container maxWidth="lg">
+        <BreadCrumb />
       </Container>
+
       <SwipeableDrawer anchor={anchor} open={state.left} onClose={toggleDrawer} onOpen={toggleDrawer}>
-        {/* <Typography>Hello</Typography> */}
         <Sidenav />
       </SwipeableDrawer>
     </AppBar>

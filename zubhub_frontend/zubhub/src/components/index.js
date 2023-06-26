@@ -4,6 +4,7 @@ import OrDivider from "./form/orDivider/OrDivider";
 import TagsInput from "./form/tagsInput/TagsInput";
 import VideoInput from "./form/videoInput/VideoInput";
 import Sidenav from "./Sidenav/Sidenav";
+import Editor from "./form/editor/Editor";
 
 export {
     TagsInput,
@@ -11,5 +12,6 @@ export {
     ImageInput,
     OrDivider,
     VideoInput,
-    Dropdown
+    Dropdown,
+    Editor
 }

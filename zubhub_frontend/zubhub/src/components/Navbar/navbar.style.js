@@ -2,6 +2,12 @@ import { colors } from "../../assets/js/colors";
 import clsx from 'clsx';
 import commonClasses from '../../assets/js/styles/index'
 export const navbarStyle = theme => ({
+    root: {
+        backgroundColor: colors.primary,
+        '&.MuiPaper-elevation4': {
+            boxShadow: 'unset'
+        }
+    },
     box: {
         backgroundColor: colors.secondary,
         padding: '15px 0px',
@@ -26,7 +32,7 @@ export const navbarStyle = theme => ({
         minWidth: 300,
         width: '40%',
         // height: 35,
-        padding: '1px 30px',
+        padding: '0px 30px',
         // outline: `solid 1px ${colors.light}`,
         '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: 'yellow !important'
@@ -35,7 +41,7 @@ export const navbarStyle = theme => ({
             borderColor: 'tranparent'
         },
         '& .MuiOutlinedInput-input': {
-            padding: '12px 14px',
+            padding: '10px 14px',
             color: colors.white,
             fontSize: 16,
             fontWeight: '600'

@@ -651,7 +651,7 @@ function PageWrapper(props) {
         </Container>
         <BreadCrumb />
       </AppBar> */}
-      <Navbar />
+      <Navbar {...props} />
       <Toolbar ref={backToTopEl} className={classes.marginBottom} />
 
       <Container className={classes.childrenContainer} maxWidth="lg">

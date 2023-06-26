@@ -4,14 +4,24 @@ export const createProjectStyle = theme => ({
     container: {
         color: colors.gray,
     },
-    banner: {
+    banner: ({ height }) => ({
         backgroundColor: colors.white,
         padding: '15px',
         display: 'flex',
         width: '100%',
         justifyContent: 'space-between',
-        alignItems: 'center'
-    },
+        alignItems: 'center',
+        borderRadius: 10,
+        [theme.breakpoints.down('sm')]: {
+            borderRadius: 0,
+            position: 'fixed',
+            top: height,
+            zIndex: 2,
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.10)'
+            // width: '100%'
+        },
+    })
+    ,
     previewButton: {
         borderRadius: 20
     },
@@ -36,8 +46,15 @@ export const createProjectStyle = theme => ({
         backgroundColor: colors.white,
         padding: 24,
         marginTop: 24,
-        overflowX: 'hidden',
-        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)'
+        overflow: 'hidden',
+        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
+        [theme.breakpoints.down('sm')]: {
+            margin: '24px',
+            marginTop: 24 * 4
+        },
+        [theme.breakpoints.down('xs')]: {
+            marginTop: 24 * 2.6
+        },
     },
     stepperLine: {
         height: 2,

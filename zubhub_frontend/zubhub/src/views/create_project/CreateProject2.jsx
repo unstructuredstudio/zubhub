@@ -1,17 +1,18 @@
 import { Box, CircularProgress, FormControl, Grid, Link, TextField, Typography, makeStyles } from '@material-ui/core';
 import { ArrowBackIosRounded, ArrowForwardIosRounded, CloudDoneOutlined } from '@material-ui/icons';
-import * as Yup from 'yup';
 import DoneRounded from '@material-ui/icons/DoneRounded';
 import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
 import clsx from 'clsx';
 import { useFormik } from 'formik';
 import { useRef, useState } from 'react';
 import StepWizard from 'react-step-wizard';
+import * as Yup from 'yup';
 import styles from '../../assets/js/styles';
-import { Dropdown, ImageInput, TagsInput, VideoInput } from '../../components';
+import { Dropdown, Editor, ImageInput, TagsInput, VideoInput } from '../../components';
 import CustomButton from '../../components/button/Button';
 import { createProjectStyle } from './createProject.style';
-import { removeTag, searchTags } from './createProjectScripts';
+import { searchTags } from './createProjectScripts';
+import { useDomElementHeight } from '../../hooks/useDomElementHeight.hook';
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Project Details', 'Add Photos/Videos', 'Project Features'];
@@ -20,9 +21,9 @@ export default function CreateProject2() {
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.saved);
   const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setcompletedSteps] = useState([]);
+  const { height } = useDomElementHeight('navbar-root');
   const wizard = useRef(null);
-
-  const classes = makeStyles(createProjectStyle)();
+  const classes = makeStyles(createProjectStyle)({ height });
   const commonClasses = makeStyles(styles)();
 
   const isActive = index => index + 1 === activeStep;
@@ -98,6 +99,7 @@ export default function CreateProject2() {
       console.log(values); // Perform form submission or further processing
     },
   });
+  console.log(height);
 
   return (
     <div className={classes.container}>
@@ -127,7 +129,7 @@ export default function CreateProject2() {
           <Box className={classes.stepperContainer}>{renderSteps}</Box>
 
           <Box style={{ marginTop: 100 }}>
-            <StepWizard className="animate__bounceIn" initialStep={activeStep} ref={wizard}>
+            <StepWizard initialStep={activeStep} ref={wizard}>
               <Step1 formik={formik} />
               <Step2 formik={formik} />
               <Step3 formik={formik} />
@@ -186,8 +188,11 @@ const Step1 = ({ formik }) => {
     formik.setFieldValue('materials_used', tags);
   };
 
+  let quillRef = null;
+
   return (
     <div>
+      <Editor />
       <Box marginY={6}>
         <FormControl fullWidth>
           <label className={commonClasses.title2}>
