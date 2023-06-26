@@ -5,7 +5,7 @@ import styles from '../../../assets/js/styles';
 import OrDivider from '../orDivider/OrDivider';
 import { videoInputStyles } from './videoInput.styles';
 
-export default function VideoInput({ name, label, required, value, handleChange, acceptLink, linkValue }) {
+export default function VideoInput({ name, label, required, value = [], handleChange, linkValue = '' }) {
   const commomClasses = makeStyles(styles)();
   const classes = makeStyles(videoInputStyles)();
   const input = useRef(null);
@@ -28,41 +28,56 @@ export default function VideoInput({ name, label, required, value, handleChange,
     handleChange(files);
   };
 
+  const showDivider = () => {
+    if (value.length === 0 && linkValue.length === 0) {
+      return (
+        <Box marginY={3}>
+          <OrDivider />
+        </Box>
+      );
+    }
+    return null;
+  };
+
+  console.log(value.length === 0 && linkValue.length === 0);
+
+  const uploadedVideo = value?.map((asset, index) => (
+    <Box key={index} className={classes.previewBox}>
+      <video controls>
+        <source src={getPath(asset)} type={asset.type} />
+        Your browser does not support the video tag.
+      </video>
+      <Box onClick={() => removeImage(asset)} className={classes.clearIcon}>
+        <ClearRounded style={{ fontSize: 12 }} />
+      </Box>
+    </Box>
+  ));
+
   return (
     <FormControl fullWidth>
       <label className={commomClasses.title2} htmlFor={name}>
         {label} {required && <span className={commomClasses.colorRed}>*</span>}
       </label>
-      <Box onClick={() => input.current.click()} className={classes.container}>
-        <CloudUploadOutlined />
-        <Typography>MP4 or GIFS can be added (Maximum of 1 video and 20MB each)</Typography>
-      </Box>
-      <Box className={classes.previewContainer}>
-        {value?.map((asset, index) => (
-          <Box key={index} className={classes.previewBox}>
-            <video controls>
-              <source src={getPath(asset)} type={asset.type} />
-              Your browser does not support the video tag.
-            </video>
-            <Box onClick={() => removeImage(asset)} className={classes.clearIcon}>
-              <ClearRounded style={{ fontSize: 12 }} />
-            </Box>
-          </Box>
-        ))}
-      </Box>
 
-      {acceptLink && (
+      {linkValue.length === 0 && (
         <>
-          <Box marginY={3}>
-            <OrDivider />
+          <Box onClick={() => input.current.click()} className={classes.container}>
+            <CloudUploadOutlined />
+            <Typography>MP4 or GIFS can be added (Maximum of 1 video and 20MB each)</Typography>
           </Box>
-          <TextField
-            placeholder="Paste your video link here"
-            variant="outlined"
-            value={linkValue}
-            onChange={e => handleChange(e.target.value, 'link')}
-          />
+          <Box className={classes.previewContainer}>{uploadedVideo}</Box>
         </>
+      )}
+
+      {showDivider()}
+
+      {value.length == 0 && (
+        <TextField
+          placeholder="Paste your video link here"
+          variant="outlined"
+          value={linkValue}
+          onChange={e => handleChange(e.target.value, 'link')}
+        />
       )}
 
       <input

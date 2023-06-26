@@ -12,6 +12,7 @@ export const imageInputStyles = theme => ({
         flexDirection: 'column',
         gap: 10,
         cursor: 'pointer',
+        textAlign: 'center'
     },
     input: {
         visibility: 'hidden'

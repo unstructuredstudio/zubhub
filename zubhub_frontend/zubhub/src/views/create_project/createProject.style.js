@@ -53,7 +53,8 @@ export const createProjectStyle = theme => ({
             marginTop: 24 * 4
         },
         [theme.breakpoints.down('xs')]: {
-            marginTop: 24 * 2.6
+            margin: '18px',
+            marginTop: 24 * 2
         },
     },
     stepperLine: {
