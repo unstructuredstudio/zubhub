@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-
+import ZubhubAPI from '../../../src/api/api';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
 import Slider from 'react-slick';
@@ -112,7 +112,7 @@ function ProjectDetails(props) {
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
   const { id } = useParams();
-  // const [testProjects, setTestProjects] = React.useState([]);
+  
   const [state, setState] = React.useState({
     project: {},
     loading: true,
@@ -121,8 +121,20 @@ function ProjectDetails(props) {
     open_delete_project_modal: false,
     delete_project_dialog_error: null,
   });
+  const [recommendedProjects, setRecommendedProjects] = React.useState([]);
+  const API = new ZubhubAPI();
+  const recommendedProj = async () => {
+    try {
+      const data = await API.recommendedProjects(state.project);
+
+      setRecommendedProjects(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   React.useEffect(() => {
+    recommendedProj();
     Promise.resolve(
       props.getProject({
         id: props.match.params.id,
@@ -466,7 +478,7 @@ function ProjectDetails(props) {
                 </Grid>
               </Grid>
             </Container>
-            {/* <ProjectsBar projects={testProjects} {...props} /> */}
+            <ProjectsBar projects={recommendedProjects} {...props} />
             <Comments
               context={{ name: 'project', body: project }}
               handleSetState={handleSetState}

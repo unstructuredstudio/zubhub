@@ -148,6 +148,21 @@ class API {
     return this.request({ url, method, body }).then(res => res.json());
   };
 
+    /**
+   * @method theme - get the recommended projects for a projects
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+    recommendedProjects = (Project) => {
+      
+      const method = 'GET';
+      const body= Project;
+      const url = 'projects/'+Project.id+'/recommend/';
+  
+      return this.request({ url, method, body }).then(res => res.json());
+    };
+
   /**
    * @method sendEmailConfirmation - verify a user's email by making api call
    *         to this endpoint with the provided key
