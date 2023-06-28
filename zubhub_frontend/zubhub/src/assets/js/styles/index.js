@@ -95,7 +95,7 @@ const styles = theme => ({
     float: 'left',
   },
   baseTagStyle: {
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     borderRadius: '50px',
     color: 'white',
     padding: '0 0.5em',
@@ -111,29 +111,29 @@ const styles = theme => ({
     backgroundColor: 'grey',
   },
   outlined: {
-    border: '2px solid #00B8C4',
+    border: '2px solid var(--primary-color3)',
     borderRadius: '15px',
     padding: '1em',
   },
   projectsCountIcon: {
-    color: '#ffcc00',
+    color: 'var(--primary-color2)',
   },
   fabButtonStyle: {
-    color: '#ffcc00',
-    backgroundColor: '#dc3545',
+    color: 'var(--primary-color2)',
+    backgroundColor: 'var(--primary-color1)',
     position: 'absolute',
     marginLeft: '1em',
     left: '0em',
     top: '-1.8em',
     '&:hover': {
-      backgroundColor: '#b52836',
+      backgroundColor: 'var(--secondary-color2)',
       backgroundSize: '100%',
     },
     '& svg': {
-      fill: '#ffcc00',
+      fill: 'var(--primary-color2)',
     },
     '& svg:hover': {
-      fill: '#ffcc00',
+      fill: 'var(--primary-color2)',
     },
   },
   textDecorationNone: {
@@ -142,7 +142,7 @@ const styles = theme => ({
   fieldNumberStyle: {
     height: '20px',
     width: '20px',
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     fontWeight: 700,
     color: 'white',
     display: 'inline-block',
@@ -157,7 +157,7 @@ const styles = theme => ({
   listDotsStyle: {
     height: '10px',
     width: '10px',
-    backgroundColor: '#FFCE0C',
+    backgroundColor: 'var(--primary-color2)',
     borderRadius: '50%',
     marginRight: '0.3em',
   },

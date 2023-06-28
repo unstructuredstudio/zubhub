@@ -3,7 +3,7 @@ import logo from '../../assets/images/logos/logo-google.png';
 export const getPdfMaterialsUsed = (activity, promiseImages) => {
   let pdfMaterials = [];
   let materialsList = {
-    markerColor: '#00B8C4',
+    markerColor: 'var(--primary-color3)',
     style: 'textBody',
     ul: [],
   };
