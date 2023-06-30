@@ -1,21 +1,14 @@
 import { Box, ClickAwayListener, makeStyles } from '@material-ui/core';
-import React, { useEffect, useRef, useState } from 'react';
-import ReactQuill from 'react-quill';
-import { editorStyle } from './editor.style';
 import {
-  FormatBoldRounded,
-  Cop,
-  FileCopyRounded,
-  FileCopySharp,
-  FormatItalicRounded,
-  FileCopyOutlined,
   DescriptionOutlined,
+  FileCopyOutlined,
   FormatBoldOutlined,
   FormatItalicOutlined,
-  AttachFileOutlined,
   FormatUnderlinedOutlined,
 } from '@material-ui/icons';
-import { colors } from '../../../assets/js/colors';
+import React, { useRef, useState } from 'react';
+import ReactQuill from 'react-quill';
+import { editorStyle } from './editor.style';
 
 const menu = [
   { name: 'copy', icon: FileCopyOutlined },
@@ -32,7 +25,7 @@ export default function Editor() {
   const [isSeleted, setIsSeleted] = useState(false);
   const classes = makeStyles(editorStyle)({ position });
 
-  const onSelectionChange = (range, _, methods) => {
+  const onSelectionChange = range => {
     if (range && range.length) {
       const { top, bottom, left, right, width } = getSelectedTextBounds();
       setPosition({ top, bottom, left, right, width });
@@ -61,6 +54,20 @@ export default function Editor() {
   const setItalic = editor => editor.format('italic', !editor.getFormat().italic);
   const setUnderline = editor => editor.format('underline', !editor.getFormat().underline);
 
+  const tooltip = (
+    <ClickAwayListener onClickAway={() => setIsSeleted(false)}>
+      <Box className={classes.editorTooltip}>
+        <>
+          {menu.map(({ name, icon: Icon }) => (
+            <div key={name} className={classes.tooltipItem} onClick={() => handleFormatting({ [name]: true })}>
+              <Icon style={{ fontSize: 18 }} />
+            </div>
+          ))}
+        </>
+      </Box>
+    </ClickAwayListener>
+  );
+
   return (
     <div style={{ position: 'relative' }}>
       <ReactQuill
@@ -69,19 +76,7 @@ export default function Editor() {
         className={classes.editor}
         modules={{ toolbar: false }}
       />
-      {isSeleted ? (
-        <ClickAwayListener onClickAway={() => setIsSeleted(false)}>
-          <Box className={classes.editorTooltip}>
-            <>
-              {menu.map(({ name, icon: Icon }) => (
-                <div key={name} className={classes.tooltipItem} onClick={() => handleFormatting({ [name]: true })}>
-                  <Icon style={{ fontSize: 18 }} />
-                </div>
-              ))}
-            </>
-          </Box>
-        </ClickAwayListener>
-      ) : null}
+      {isSeleted ? tooltip : null}
     </div>
   );
 }
