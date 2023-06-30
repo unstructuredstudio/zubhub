@@ -25,14 +25,14 @@ export default function Step3({ formik }) {
   };
 
   const addTag = value => {
-    const values = [...formik.values.hashtags, value];
+    const values = [...formik.values.tags, value];
     formik.setFieldValue('hashtags', values);
     clearSuggestions();
     setValue('');
   };
 
   const removeTag = tagIndex => {
-    const tags = [...formik.values.hashtags].filter((_, index) => index !== tagIndex);
+    const tags = [...formik.values.tags].filter((_, index) => index !== tagIndex);
     formik.setFieldValue('hashtags', tags);
   };
 
@@ -50,7 +50,7 @@ export default function Step3({ formik }) {
         <TagsInput
           label="What hashtag best describes your project?"
           description="For example, if you made flower from cardboard, you can write: cardboard, flowers, colours or leave it blank if you’re unsure."
-          selectedTags={formik.values.hashtags}
+          selectedTags={formik.values.tags}
           popularTags={popularTags}
           onChange={handleChangeTag}
           addTag={addTag}

@@ -1,50 +1,52 @@
-import { makeStyles } from '@material-ui/core';
-import React, { useEffect, useRef } from 'react';
+import { Box, ClickAwayListener, makeStyles } from '@material-ui/core';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { editorStyle } from './editor.style';
+import {
+  FormatBoldRounded,
+  Cop,
+  FileCopyRounded,
+  FileCopySharp,
+  FormatItalicRounded,
+  FileCopyOutlined,
+  DescriptionOutlined,
+  FormatBoldOutlined,
+  FormatItalicOutlined,
+  AttachFileOutlined,
+  FormatUnderlinedOutlined,
+} from '@material-ui/icons';
+import { colors } from '../../../assets/js/colors';
+
+const menu = [
+  { name: 'copy', icon: FileCopyOutlined },
+  { name: 'paste', icon: DescriptionOutlined },
+  { name: 'bold', icon: FormatBoldOutlined },
+  { name: 'italic', icon: FormatItalicOutlined },
+  { name: 'underline', icon: FormatUnderlinedOutlined },
+  // { name: 'attachment', icon: AttachFileOutlined },
+];
 
 export default function Editor() {
-  const classes = makeStyles(editorStyle)();
   let quillRef = useRef(null);
-  useEffect(() => {
-    // const editor = quillRef.current?.getEditor();
-    // if (editor) {
-    //   editor.on('selection-change', handleSelectionChange);
-    // }
-    // return () => {
-    //   if (editor) {
-    //     editor.off('selection-change', handleSelectionChange);
-    //   }
-    // };
-  }, []);
+  const [position, setPosition] = useState({});
+  const [isSeleted, setIsSeleted] = useState(false);
+  const classes = makeStyles(editorStyle)({ position });
 
-  console.log(quillRef.current);
-
-  const handleSelectionChange = range => {
-    if (range) {
-      const selectedText = quillRef.current?.getEditor().getText(range.index, range.length);
-      console.log('Selected Text:', selectedText);
+  const onSelectionChange = (range, _, methods) => {
+    if (range && range.length) {
+      const { top, bottom, left, right, width } = getSelectedTextBounds();
+      setPosition({ top, bottom, left, right, width });
+      setIsSeleted(true);
     }
   };
 
-  const handleChange = (...rest) => {
-    // console.log(rest);
-    // const selection = editor.getSelection();
-    // if (selection && selection.length > 0) {
-    //   const formats = editor.getFormat(selection.index, selection.length);
-    //   if (formats.bold) {
-    //     // If the selected text is already bold, remove the formatting
-    //     editor.format('bold', false);
-    //   } else {
-    //     // Apply bold formatting to the selected text
-    //     editor.format('bold', true);
-    //   }
-    // }
-    // Continue with other onChange logic if needed
-  };
-  const onSelectionChange = range => {
-    if (range && range.length) {
-      handleFormatting({ italic: true });
+  const getSelectedTextBounds = () => {
+    const editor = quillRef.getEditor();
+    const selection = editor.getSelection();
+    if (selection && selection.length > 0) {
+      const range = editor.getSelection(true);
+      const bounds = editor.getBounds(range.index, range.length);
+      return bounds;
     }
   };
 
@@ -52,19 +54,34 @@ export default function Editor() {
     const editor = quillRef.getEditor();
     if (bold) return setBold(editor);
     if (italic) return setItalic(editor);
+    if (underline) return setUnderline(editor);
   };
 
   const setBold = editor => editor.format('bold', !editor.getFormat().bold);
   const setItalic = editor => editor.format('italic', !editor.getFormat().italic);
+  const setUnderline = editor => editor.format('underline', !editor.getFormat().underline);
 
   return (
-    <ReactQuill
-      ref={ref => (quillRef = ref)}
-      onChangeSelection={onSelectionChange}
-      onChange={handleChange}
-      className={classes.editor}
-      modules={{ toolbar: true }}
-      // Other props
-    />
+    <div style={{ position: 'relative' }}>
+      <ReactQuill
+        ref={ref => (quillRef = ref)}
+        onChangeSelection={onSelectionChange}
+        className={classes.editor}
+        modules={{ toolbar: false }}
+      />
+      {isSeleted ? (
+        <ClickAwayListener onClickAway={() => setIsSeleted(false)}>
+          <Box className={classes.editorTooltip}>
+            <>
+              {menu.map(({ name, icon: Icon }) => (
+                <div key={name} className={classes.tooltipItem} onClick={() => handleFormatting({ [name]: true })}>
+                  <Icon style={{ fontSize: 18 }} />
+                </div>
+              ))}
+            </>
+          </Box>
+        </ClickAwayListener>
+      ) : null}
+    </div>
   );
 }

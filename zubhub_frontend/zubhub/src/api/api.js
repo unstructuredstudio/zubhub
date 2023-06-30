@@ -51,14 +51,14 @@ class API {
         withCredentials: 'true',
         headers: content_type
           ? new Headers({
-              Authorization: `Token ${token}`,
-              'Content-Type': content_type,
-              'Accept-Language': `${i18next.language},en;q=0.5`,
-            })
+            Authorization: `Token ${token}`,
+            'Content-Type': content_type,
+            'Accept-Language': `${i18next.language},en;q=0.5`,
+          })
           : new Headers({
-              Authorization: `Token ${token}`,
-              'Accept-Language': `${i18next.language},en;q=0.5`,
-            }),
+            Authorization: `Token ${token}`,
+            'Accept-Language': `${i18next.language},en;q=0.5`,
+          }),
         body,
       });
     } else if (token) {
@@ -551,6 +551,7 @@ class API {
       publish,
       activity,
     });
+    console.log('inside');
     return this.request({ url, method, token, body }).then(res => res.json());
   };
 
@@ -807,11 +808,11 @@ class API {
     return this.request({ url }).then(res => res.json());
   };
 
-    /**
-   * @method getChallenge
-   * @author Suchakra Sharma <suchakra@unstructured.studio>
-   *
-   */
+  /**
+ * @method getChallenge
+ * @author Suchakra Sharma <suchakra@unstructured.studio>
+ *
+ */
   getChallenge = () => {
     const url = `challenge/`;
 
@@ -850,8 +851,8 @@ class API {
    */
   getAmbassadors = ({ token, page }) => {
     const url = page
-    ? `ambassadors/?page=${page}`
-    : `ambassadors`;
+      ? `ambassadors/?page=${page}`
+      : `ambassadors`;
 
     return this.request({ token, url }).then(res => res.json());
   };

@@ -1,7 +1,7 @@
 import { Box, FormControl, TextField, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 import styles from '../../../assets/js/styles';
-import { TagsInput } from '../../../components';
+import { Editor, TagsInput } from '../../../components';
 import { searchTags } from '../../../store/actions/projectActions';
 
 export default function Step1({ formik }) {
@@ -10,6 +10,7 @@ export default function Step1({ formik }) {
   const [remoteTags, setRemoteTags] = useState([]);
   const [popularTags, setPopularTags] = useState(['Glue', 'Water', 'Battery', 'Masuring tape']);
   const clearSuggestions = () => setRemoteTags([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = async value => {
     setValue(value);
@@ -19,7 +20,7 @@ export default function Step1({ formik }) {
   };
 
   const addTag = value => {
-    const values = [...formik.values.materials_used, value];
+    const values = [...(formik.values?.materials_used || []), value];
     formik.setFieldValue('materials_used', values);
     clearSuggestions();
     setValue('');
@@ -34,7 +35,7 @@ export default function Step1({ formik }) {
 
   return (
     <div>
-      {/* <Editor /> */}
+      <Editor />
       <Box marginY={6}>
         <FormControl fullWidth>
           <label className={commonClasses.title2}>
@@ -80,7 +81,7 @@ export default function Step1({ formik }) {
           label="What materials did you use?"
           description="Include the materials you used for your project, this could be measuring tapes, pencils, etc"
           selectedTags={formik.values.materials_used}
-          error={formik.errors.materials_used}
+          error={formik.touched.materials_used && formik.errors.materials_used}
           popularTags={popularTags}
           onChange={handleChange}
           addTag={addTag}

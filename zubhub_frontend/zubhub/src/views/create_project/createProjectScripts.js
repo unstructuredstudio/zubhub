@@ -1243,70 +1243,70 @@ export const validationSchema = Yup.object().shape({
         return true;
       }
     }),
-  video: Yup.mixed()
-    .test('should_be_video_file', 'shouldBeVideoFile', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'string') {
-        return true;
-      } else if (typeof value === 'object') {
-        let not_a_video = false;
-        for (let index = 0; index < value.files.length; index++) {
-          if (value.files[index].type.split('/')[0] !== 'video') {
-            not_a_video = true;
-          }
-        }
-        return not_a_video ? false : true;
-      }
-      return false;
-    })
-    .test('should_be_url', 'shouldBeURL', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'object') {
-        return true;
-      } else if (typeof value === 'string') {
-        const res = value.match(
-          /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-        );
-        return res !== null ? true : false;
-      }
+  // video: Yup.mixed()
+  //   .test('should_be_video_file', 'shouldBeVideoFile', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       let not_a_video = false;
+  //       for (let index = 0; index < value.files.length; index++) {
+  //         if (value.files[index].type.split('/')[0] !== 'video') {
+  //           not_a_video = true;
+  //         }
+  //       }
+  //       return not_a_video ? false : true;
+  //     }
+  //     return false;
+  //   })
+  //   .test('should_be_url', 'shouldBeURL', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       const res = value.match(
+  //         /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+  //       );
+  //       return res !== null ? true : false;
+  //     }
 
-      return false;
-    })
-    .test('max-video-url-length', 'maxVideoURLLength', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'object') {
-        return true;
-      } else if (typeof value === 'string') {
-        return value.length > 2048 ? false : true;
-      }
+  //     return false;
+  //   })
+  //   .test('max-video-url-length', 'maxVideoURLLength', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       return value.length > 2048 ? false : true;
+  //     }
 
-      return false;
-    })
-    .test('max-video-file-size', 'maxVideoFileSize', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'string') {
-        return true;
-      } else if (typeof value === 'object') {
-        let max = false;
-        for (let index = 0; index < value.files.length; index++) {
-          if (value.files[index].size / 1000 > 60240) {
-            max = true;
-          }
-        }
-        return max ? false : true;
-      }
+  //     return false;
+  //   })
+  //   .test('max-video-file-size', 'maxVideoFileSize', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       let max = false;
+  //       for (let index = 0; index < value.files.length; index++) {
+  //         if (value.files[index].size / 1000 > 60240) {
+  //           max = true;
+  //         }
+  //       }
+  //       return max ? false : true;
+  //     }
 
-      return false;
-    })
-    .test('video_is_empty', 'imageOrVideo', function (value) {
-      return vars.video_field_touched && !value && !this.parent.project_images
-        ? false
-        : true;
-    }),
+  //     return false;
+  //   })
+  //   .test('video_is_empty', 'imageOrVideo', function (value) {
+  //     return vars.video_field_touched && !value && !this.parent.project_images
+  //       ? false
+  //       : true;
+  //   }),
   materials_used: Yup.string()
     .max(10000, 'max')
     .test('empty', 'required', value => {
@@ -1337,28 +1337,28 @@ export const validationSchema = Yup.object().shape({
       return true;
     }
   }),
-  publish: Yup.mixed()
-    .test('visible_to_required', 'visible_to_required', publish => {
-      if (
-        publish.type === publish_type['Preview'] &&
-        publish.visible_to.length < 1
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    })
-    .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
-      const re = /^[a-z0-9@._+-]{1,150}$/i;
-      let unsupported = false;
-      for (let username of publish.visible_to) {
-        console.log('kdlskdlksd', username);
-        if (!re.test(username)) {
-          unsupported = true;
-        }
-      }
-      return unsupported ? false : true;
-    }),
+  // publish: Yup.mixed()
+  //   .test('visible_to_required', 'visible_to_required', publish => {
+  //     if (
+  //       publish.type === publish_type['Preview'] &&
+  //       publish.visible_to.length < 1
+  //     ) {
+  //       return false;
+  //     } else {
+  //       return true;
+  //     }
+  //   })
+  //   .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
+  //     const re = /^[a-z0-9@._+-]{1,150}$/i;
+  //     let unsupported = false;
+  //     for (let username of publish.visible_to) {
+  //       console.log('kdlskdlksd', username);
+  //       if (!re.test(username)) {
+  //         unsupported = true;
+  //       }
+  //     }
+  //     return unsupported ? false : true;
+  //   }),
 });
 
 /**

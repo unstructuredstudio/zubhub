@@ -14,18 +14,8 @@ import {
   getErrors,
 } from './uploadFileScripts.js';
 import { getValue } from '../../views/create_activity/createActivityScripts';
-import {
-  Typography,
-  FormControl,
-  FormHelperText,
-  Grid,
-  Paper,
-  CardMedia,
-} from '@material-ui/core';
-import {
-  getRouteFieldIndex,
-  buildVideoThumbnailURL,
-} from '../../assets/js/utils/scripts';
+import { Typography, FormControl, FormHelperText, Grid, Paper, CardMedia } from '@material-ui/core';
+import { getRouteFieldIndex, buildVideoThumbnailURL } from '../../assets/js/utils/scripts';
 
 function UploadFile(props) {
   const {
@@ -46,21 +36,10 @@ function UploadFile(props) {
   const { route, field, index } = getRouteFieldIndex(name);
   const fileInputRef = React.useRef(null);
   const [filesUploaded, setFilesUploaded] = useState(false);
-  let fieldErrors = getErrors(
-    route,
-    field,
-    index,
-    formikProps.errors,
-    formikProps.touched,
-  );
-  let fieldValue = getValue(
-    route,
-    field,
-    index,
-    fieldType,
-    formikProps.formikValues,
-  );
+  let fieldErrors = getErrors(route, field, index, formikProps.errors, formikProps.touched);
+  let fieldValue = getValue(route, field, index, fieldType, formikProps.formikValues);
 
+  console.log({ fieldValue });
   return (
     <div>
       <CustomButton
@@ -94,86 +73,50 @@ function UploadFile(props) {
           id={`${name}_id`}
           name={name}
           multiple={multiple ? multiple : ''}
-          onChange={() =>
-            handleFileFieldChange(
-              name,
-              route,
-              field,
-              index,
-              fileInputRef,
-              formikProps,
-              validateSteps,
-            )
-          }
+          onChange={() => handleFileFieldChange(name, route, field, index, fileInputRef, formikProps, validateSteps)}
         />
-        <Typography
-          color="textSecondary"
-          variant="caption"
-          component="span"
-          id={`${name}_file_count_el`}
-        >
+        <Typography color="textSecondary" variant="caption" component="span" id={`${name}_file_count_el`}>
           {fieldValue && typeof fieldValue !== 'string'
             ? fieldValue.length &&
-              `${fieldValue.length} ${
-                fieldValue.length > 1 ? countFilesText[1] : countFilesText[0]
-              }`
+              `${fieldValue.length} ${fieldValue.length > 1 ? countFilesText[1] : countFilesText[0]}`
             : ''}
         </Typography>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {fieldErrors && field !== 'video'
-            ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`)
-            : ''}
+          {fieldErrors && field !== 'video' ? t(`createActivity.inputs.activityImages.errors.${fieldErrors}`) : ''}
         </FormHelperText>
 
         <Grid container spacing={2}>
-          {Object.entries(imagesToPreview(fieldValue)).map(([index, image]) => (
-            <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
-              <Paper
-                key={`imagePaper${index}`}
-                className={activity_classes.imagePreviewContainer}
-              >
-                {field === 'video' ? (
-                  <CardMedia
-                    className={clsx(activity_classes.imagePreview)}
-                    component={image.type === 'file' ? 'video' : 'iframe'}
-                    image={
-                      image.type === 'file'
-                        ? window.URL.createObjectURL(image.image)
-                        : image.image
-                    }
+          {Object.entries(imagesToPreview(fieldValue)).map(([index, image]) => {
+            console.log({ image });
+            return (
+              <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
+                <Paper key={`imagePaper${index}`} className={activity_classes.imagePreviewContainer}>
+                  {field === 'video' ? (
+                    <CardMedia
+                      className={clsx(activity_classes.imagePreview)}
+                      component={image.type === 'file' ? 'video' : 'iframe'}
+                      image={image.type === 'file' ? window.URL.createObjectURL(image.image) : image.image}
+                    />
+                  ) : (
+                    <img
+                      className={activity_classes.imagePreview}
+                      // src={image.type === 'file' ? window.URL.createObjectURL(image.image) : image.image.file_url}
+                      alt={`imageAlt${index}`}
+                    />
+                  )}
+                  <CancelIcon
+                    className={activity_classes.closeIcon}
+                    fontSize="small"
+                    onClick={e => {
+                      fieldType.simple
+                        ? deleteImageAtIndex(formikProps, field, index, validateSteps)
+                        : deleteImage(formikProps.setFieldValue, name, validateSteps);
+                    }}
                   />
-                ) : (
-                  <img
-                    className={activity_classes.imagePreview}
-                    src={
-                      image.type === 'file'
-                        ? window.URL.createObjectURL(image.image)
-                        : image.image.file_url
-                    }
-                    alt={`imageAlt${index}`}
-                  />
-                )}
-                <CancelIcon
-                  className={activity_classes.closeIcon}
-                  fontSize="small"
-                  onClick={e => {
-                    fieldType.simple
-                      ? deleteImageAtIndex(
-                          formikProps,
-                          field,
-                          index,
-                          validateSteps,
-                        )
-                      : deleteImage(
-                          formikProps.setFieldValue,
-                          name,
-                          validateSteps,
-                        );
-                  }}
-                />
-              </Paper>
-            </Grid>
-          ))}
+                </Paper>
+              </Grid>
+            );
+          })}
         </Grid>
       </FormControl>
     </div>

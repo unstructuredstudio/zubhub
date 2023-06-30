@@ -15,7 +15,7 @@ export default function TagsInput({
   description,
   error,
   popularTags,
-  selectedTags,
+  selectedTags = [],
   placeholder,
   addTag,
   remoteData,
@@ -25,6 +25,7 @@ export default function TagsInput({
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(tagsInputStyles)();
   const [isSearching, setIsSearching] = useState(false);
+  selectedTags = [...(selectedTags ?? [])];
   const ref = useRef(null);
 
   const handleChange = e => {
@@ -64,7 +65,7 @@ export default function TagsInput({
     </CustomButton>
   ));
 
-  selectedTags = [...(selectedTags ?? [])]?.map((tag, index) => (
+  selectedTags = selectedTags?.map((tag, index) => (
     <CustomButton
       onClick={() => onSelectedTagClick(index)}
       className={classes.button}

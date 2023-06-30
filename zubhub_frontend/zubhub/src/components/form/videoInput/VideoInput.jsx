@@ -1,4 +1,4 @@
-import { Box, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
+import { Box, CardMedia, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
 import { ClearRounded, CloudUploadOutlined } from '@material-ui/icons';
 import React, { useRef } from 'react';
 import styles from '../../../assets/js/styles';
@@ -20,6 +20,7 @@ export default function VideoInput({ name, label, required, value = [], handleCh
   };
 
   const getPath = file => {
+    if (!file) return;
     return (window.URL || window.webkitURL).createObjectURL(file);
   };
 
@@ -39,8 +40,6 @@ export default function VideoInput({ name, label, required, value = [], handleCh
     return null;
   };
 
-  console.log(value.length === 0 && linkValue.length === 0);
-
   const uploadedVideo = value?.map((asset, index) => (
     <Box key={index} className={classes.previewBox}>
       <video controls>
@@ -52,6 +51,8 @@ export default function VideoInput({ name, label, required, value = [], handleCh
       </Box>
     </Box>
   ));
+
+  console.log(value);
 
   return (
     <FormControl fullWidth>

@@ -44,7 +44,7 @@ export const createProjectStyle = theme => ({
     formContainer: {
         borderRadius: 10,
         backgroundColor: colors.white,
-        padding: 24,
+        padding: '64px',
         marginTop: 24,
         overflow: 'hidden',
         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
@@ -54,7 +54,8 @@ export const createProjectStyle = theme => ({
         },
         [theme.breakpoints.down('xs')]: {
             margin: '18px',
-            marginTop: 24 * 2
+            marginTop: 24 * 2,
+            padding: '32px'
         },
     },
     stepperLine: {
