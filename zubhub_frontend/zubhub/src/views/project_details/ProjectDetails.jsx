@@ -121,13 +121,12 @@ function ProjectDetails(props) {
     open_delete_project_modal: false,
     delete_project_dialog_error: null,
   });
-  const [recommendedProjects, setRecommendedProjects] = React.useState([]);
+  const [recommendedProject, setRecommendedProject] = React.useState([]);
   const API = new ZubhubAPI();
   const recommendedProj = async () => {
     try {
-      const data = await API.recommendedProjects(state.project);
-
-      setRecommendedProjects(data);
+      const data = await API.recommendedProjects(props.match.params.id);
+      setRecommendedProject(data);
     } catch (error) {
       console.error(error);
     }
@@ -478,7 +477,7 @@ function ProjectDetails(props) {
                 </Grid>
               </Grid>
             </Container>
-            <ProjectsBar projects={recommendedProjects} {...props} />
+            <ProjectsBar projects={recommendedProject} {...props} />
             <Comments
               context={{ name: 'project', body: project }}
               handleSetState={handleSetState}

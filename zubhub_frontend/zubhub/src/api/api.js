@@ -154,13 +154,10 @@ class API {
    *
    * @todo - describe method's signature
    */
-    recommendedProjects = (Project) => {
-      
+    recommendedProjects = (id) => {
+      const url = `projects/${id}/recommend/`;
       const method = 'GET';
-      const body= Project;
-      const url = 'projects/'+Project.id+'/recommend/';
-  
-      return this.request({ url, method, body }).then(res => res.json());
+      return this.request({ url, method }).then(res => res.json());
     };
 
   /**
