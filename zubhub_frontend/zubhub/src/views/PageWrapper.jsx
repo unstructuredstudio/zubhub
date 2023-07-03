@@ -103,8 +103,7 @@ function PageWrapper(props) {
   });
 
   const [options, setOptions] = useState([]);
-  const [query, setQuery] = useState('');
-  const [queryInput, setQueryInput] = useState('');
+  const [query, setQuery] = useState(props.location.search ? getQueryParams(window.location.href).get('q') : '');
 
   const throttledFetchOptions = useMemo(
     () =>
@@ -145,8 +144,8 @@ function PageWrapper(props) {
   useEffect(() => {
     throttledFetchOptions(
       query ||
-      (props.location.search &&
-        getQueryParams(window.location.href).get('q')),
+        (props.location.search &&
+          getQueryParams(window.location.href).get('q')),
       searchType,
     );
   }, [query, searchType]);
@@ -200,7 +199,7 @@ function PageWrapper(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (query.length == 0) return
+    if (query.length == 0) return;
     const queryParams = new URLSearchParams({
       type: searchType,
       q: query,
@@ -209,6 +208,10 @@ function PageWrapper(props) {
     window.history.pushState({}, '', `/search?${queryParams}`);
     window.location.reload();
   };
+
+  const handleTextField = (event) => {
+    setQuery(event.target.value)
+  }
 
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
@@ -279,7 +282,14 @@ function PageWrapper(props) {
                 onSubmit={handleSubmit}
                 ref={formRef}
               >
-                <FormControl className={clsx(common_classes.width100Percent, common_classes.displayFlex, common_classes.displayInlineFlex)} variant="outlined">
+                <FormControl
+                  className={clsx(
+                    common_classes.width100Percent,
+                    common_classes.displayFlex,
+                    common_classes.displayInlineFlex,
+                  )}
+                  variant="outlined"
+                >
                   <InputLabel
                     htmlFor="q"
                     className={classes.searchFormLabelStyle}
@@ -305,11 +315,8 @@ function PageWrapper(props) {
                     <Autocomplete
                       className={classes.input}
                       options={options}
-                      defaultValue={{
-                        title:
-                          props.location.search &&
-                          getQueryParams(window.location.href).get('q'),
-                      }}
+                      defaultValue={{ title: query }}
+                      value={{ title: query }}
                       renderOption={(option, { inputValue }) => (
                         <Option
                           option={option}
@@ -317,7 +324,7 @@ function PageWrapper(props) {
                           onOptionClick={onSearchOptionClick}
                         />
                       )}
-                      onChange={onSearchOptionClick}
+
                     >
                       {params => (
                         <TextField
@@ -346,13 +353,8 @@ function PageWrapper(props) {
                               </InputAdornment>
                             ),
                             pattern: '(.|s)*S(.|s)*',
-                            defaultValue: {
-                              title:
-                                props.location.search &&
-                                getQueryParams(window.location.href).get('q'),
-                            },
                           }}
-                          onChange={e => setQuery(e.target.value)}
+                          onChange={handleTextField}
                           placeholder={`${t(
                             'pageWrapper.inputs.search.label',
                           )}...`}
@@ -390,7 +392,7 @@ function PageWrapper(props) {
                       variant="outlined"
                       size="large"
                       secondaryButtonStyle
-                      customButtonStyle
+                      className={classes.customButton}
                     >
                       {t('pageWrapper.navbar.login')}
                     </CustomButton>
@@ -407,7 +409,7 @@ function PageWrapper(props) {
                       size="large"
                       primaryButtonStyle
                       customButtonStyle
-                      className={common_classes.marginLeft1em}
+                      className={`${common_classes.marginLeft1em} ${classes.customButton}`}
                     >
                       {t('pageWrapper.navbar.signup')}
                     </CustomButton>
@@ -617,39 +619,39 @@ function PageWrapper(props) {
                     {props.auth.tags.filter(
                       tag => tag === 'staff' || tag === 'educator',
                     ).length > 0 && (
-                        <MenuItem
-                          className={clsx(common_classes.removeOnSmallScreen)}
-                          onClick={() => {
-                            history.push('/activities', { flag: 'educator' });
-                          }}
+                      <MenuItem
+                        className={clsx(common_classes.removeOnSmallScreen)}
+                        onClick={() => {
+                          history.push('/activities', { flag: 'educator' });
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
                         >
-                          <Typography
-                            variant="subtitle2"
-                            color="textPrimary"
-                            component="span"
-                          >
-                            {t('pageWrapper.navbar.myActivities')}
-                          </Typography>
-                        </MenuItem>
-                      )}
+                          {t('pageWrapper.navbar.myActivities')}
+                        </Typography>
+                      </MenuItem>
+                    )}
                     {props.auth.tags.filter(
                       tag => tag === 'staff' || tag === 'moderator',
                     ).length > 0 && (
-                        <MenuItem
-                          className={clsx(common_classes.removeOnSmallScreen)}
-                          onClick={() => {
-                            history.push('/activities', { flag: 'staff' });
-                          }}
+                      <MenuItem
+                        className={clsx(common_classes.removeOnSmallScreen)}
+                        onClick={() => {
+                          history.push('/activities', { flag: 'staff' });
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          color="textPrimary"
+                          component="span"
                         >
-                          <Typography
-                            variant="subtitle2"
-                            color="textPrimary"
-                            component="span"
-                          >
-                            {t('pageWrapper.navbar.unpublishedActivities')}
-                          </Typography>
-                        </MenuItem>
-                      )}
+                          {t('pageWrapper.navbar.unpublishedActivities')}
+                        </Typography>
+                      </MenuItem>
+                    )}
                     <MenuItem>
                       <Link
                         className={classes.textDecorationNone}
@@ -731,7 +733,11 @@ function PageWrapper(props) {
                 role="search"
                 ref={formRef}
               >
-                <FormControl variant="outlined" style={{ minWidth: 'unset' }}>
+                <FormControl
+                  variant="outlined"
+                  style={{ minWidth: 'unset' }}
+                  className={classes.formControlStyle}
+                >
                   <InputSelect
                     searchType={searchType}
                     onSearchTypeChange={setSearchType}
@@ -755,10 +761,8 @@ function PageWrapper(props) {
                   <Autocomplete
                     style={{ width: '100%' }}
                     options={options}
-                    defaultValue={
-                      props.location.search &&
-                      getQueryParams(window.location.href).get('q')
-                    }
+                    defaultValue={{ title: query }}
+                    value={{ title: query }}
                     renderOption={(option, { inputValue }) => (
                       <Option
                         option={option}
@@ -766,7 +770,6 @@ function PageWrapper(props) {
                         onOptionClick={onSearchOptionClick}
                       />
                     )}
-                    onChange={onSearchOptionClick}
                   >
                     {params => (
                       <TextField
@@ -799,7 +802,7 @@ function PageWrapper(props) {
                         placeholder={`${t(
                           'pageWrapper.inputs.search.label',
                         )}...`}
-                        onChange={e => setQuery(e.target.value)}
+                        onChange={handleTextField}
                       />
                     )}
                   </Autocomplete>
@@ -833,29 +836,8 @@ function PageWrapper(props) {
                 classes.languageSelectBoxStyle,
                 common_classes.displayInlineFlex,
                 common_classes.alignCenter,
-                common_classes.addOnSmallScreen,
               )}
-            >
-              <TranslateIcon />
-              <Select
-                className={classes.languageSelectStyle}
-                value=""
-                onChange={e => handleChangeLanguage({ e, props })}
-              >
-                {Object.keys(languageMap).map((ln, index) => (
-                  <MenuItem key={index} value={ln}>
-                    {languageMap[ln]}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
-            <Box
-              className={clsx(
-                classes.languageSelectBoxStyle,
-                common_classes.displayInlineFlex,
-                common_classes.alignCenter,
-                common_classes.removeOnSmallScreen,
-              )}
+              style={{ margin: 0 }}
             >
               <TranslateIcon />
               <Select

@@ -31,7 +31,6 @@ from .pagination import ProjectNumberPagination
 from django.db import models
 from django.db.models.functions import Length
 
-
 class ProjectCreateAPIView(CreateAPIView):
     """
     Create new Project.\n
@@ -201,7 +200,7 @@ class ProjectTagSearchAPIView(ListAPIView):
         tags = Tag.objects.annotate(rank=rank).filter(
             search_vector=query).order_by('-rank')
         return tags
-
+        
 
 class ProjectTagAutocompleteAPIView(ListAPIView):
     """
@@ -219,7 +218,7 @@ class ProjectTagAutocompleteAPIView(ListAPIView):
         query_string = self.request.GET.get('q')
         tags = Tag.objects.annotate(
             similarity=TrigramSimilarity('name', query_string)).filter(
-                similarity__gt=0.01).order_by('-similarity')[:20]
+                similarity__gt=0.25).order_by('-similarity')[:20]
         return tags
 
 
