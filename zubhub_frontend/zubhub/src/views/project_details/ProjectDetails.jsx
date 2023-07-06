@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -101,7 +101,8 @@ function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
-  const { id } = useParams();
+  const { id, ...all } = useParams();
+  const [open, setOpen] = useState(false);
 
   const [state, setState] = React.useState({
     project: {},
@@ -127,6 +128,12 @@ function ProjectDetails(props) {
     });
   }, [id]);
 
+  useEffect(() => {
+    if (props.history.location.state?.fromEdit) {
+      toggleDialog();
+    }
+  }, []);
+
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {
       const cld = cloudinaryFactory(window);
@@ -142,6 +149,8 @@ function ProjectDetails(props) {
       });
     }
   }, [state.project.video]);
+
+  const toggleDialog = () => setOpen(!open);
 
   const handleSetState = obj => {
     if (obj) {
@@ -385,6 +394,19 @@ function ProjectDetails(props) {
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
           <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
+        </Dialog>
+
+        <Dialog maxWidth={300} open={open} onClose={toggleDialog}>
+          <DialogTitle>Congratulations your project has successfully created!</DialogTitle>
+          <DialogContent>
+            <p>Share your project with the world. Post it on the following platforms:</p>
+          </DialogContent>
+          <DialogActions>
+            <IconButton onClick={toggleDialog}>Close</IconButton>
+            <Button variant="contained" onClick={toggleDialog}>
+              Save
+            </Button>
+          </DialogActions>
         </Dialog>
 
         <Dialog

@@ -19,7 +19,7 @@ const menu = [
   // { name: 'attachment', icon: AttachFileOutlined },
 ];
 
-export default function Editor() {
+export default function Editor(props) {
   let quillRef = useRef(null);
   const [position, setPosition] = useState({});
   const [isSeleted, setIsSeleted] = useState(false);
@@ -76,6 +76,7 @@ export default function Editor() {
         className={classes.editor}
         modules={{ toolbar: false }}
         placeholder="Please describe your project"
+        {...props}
       />
       {isSeleted ? tooltip : null}
     </div>

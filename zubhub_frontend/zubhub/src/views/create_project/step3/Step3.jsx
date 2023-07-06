@@ -42,6 +42,7 @@ export default function Step3({ formik, ...props }) {
     const tags = [...formik.values.tags].filter((_, index) => index !== tagIndex);
     formik.setFieldValue('tags', tags);
   };
+  let valuecategory = formik.values.category?.name ? formik.values.category?.name : { name: formik.values.catogory };
 
   return (
     <>
@@ -50,7 +51,7 @@ export default function Step3({ formik, ...props }) {
         placeholder="Select Categories"
         handleChange={handleChange}
         data={categories}
-        value={formik.values.category}
+        value={valuecategory}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
       />
 

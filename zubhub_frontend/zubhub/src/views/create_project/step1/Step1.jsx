@@ -59,6 +59,7 @@ export default function Step1({ formik }) {
           <label className={commonClasses.title2}>
             Share a few things about your Project <span className={commonClasses.colorRed}>*</span>
           </label>
+          {/* <Editor variant="outlined" name="description" multiline minRows={4} placeholder="Describe your project" /> */}
           <TextField
             variant="outlined"
             name="description"

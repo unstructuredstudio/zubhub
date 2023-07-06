@@ -1,17 +1,4 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  Link,
-  Typography,
-  makeStyles,
-  useMediaQuery,
-} from '@material-ui/core';
+import { Box, CircularProgress, Grid, Link, Typography, makeStyles, useMediaQuery } from '@material-ui/core';
 import { ArrowBackIosRounded, ArrowForwardIosRounded, CloudDoneOutlined } from '@material-ui/icons';
 import DoneRounded from '@material-ui/icons/DoneRounded';
 import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
@@ -38,7 +25,6 @@ const steps = ['Details', 'Photos/Videos', 'Features'];
 
 function CreateProject2(props) {
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.saved);
-  const [open, setOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
@@ -74,14 +60,14 @@ function CreateProject2(props) {
     if (state.success) {
       if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
       if (activeStep === 3) {
-        return toggleDialog();
+        props.history.push(`/projects/${props.match.params.id}`, { fromEdit: true });
       }
       go('next');
     }
   }, [state.success]);
 
   useEffect(() => {
-    console.log(state.loading, 'loading state');
+    // console.log(state.loading, 'loading state');
   }, [state.loading]);
 
   const draftContainerText = () => {
@@ -159,7 +145,6 @@ function CreateProject2(props) {
     </Box>
   ));
 
-  const toggleDialog = () => setOpen(!open);
   console.log({ formik });
 
   return (
@@ -221,19 +206,6 @@ function CreateProject2(props) {
           >
             {activeStep == 3 ? 'Publish' : 'Next'}
           </CustomButton>
-
-          <Dialog open={open} onClose={toggleDialog}>
-            <DialogTitle>Congratulations your project has been published</DialogTitle>
-            <DialogContent>
-              <p>Modal content goes here.</p>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={toggleDialog}>Close</Button>
-              <Button variant="contained" onClick={toggleDialog}>
-                Save
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Box>
       </Box>
     </div>
