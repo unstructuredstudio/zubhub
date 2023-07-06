@@ -725,9 +725,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
     : [];
 
-  const create_or_update = props.match.params.id
-    ? props.updateProject
-    : props.createProject;
+  const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
 
   create_or_update({
     ...props.values,
@@ -1201,6 +1199,7 @@ export const checkMediaFilesErrorState = (refs, props) => {
  *
  * @todo - describe object's function
  */
+
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
   description: Yup.string().max(10000, 'max').required('required'),

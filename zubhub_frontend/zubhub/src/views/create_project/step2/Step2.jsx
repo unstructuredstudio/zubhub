@@ -23,7 +23,7 @@ export default function Step2({ formik }) {
         value={formik.values.video}
         linkValue={formik.values.video_link}
         handleChange={handleVideoChange}
-        label="Add some videos"
+        label="Add a video"
         acceptLink
       />
     </>

@@ -9,34 +9,14 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
-import {
-  Tooltip,
-  Avatar,
-  Box,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Fab,
-  Typography,
-} from '@material-ui/core';
+import { Tooltip, Avatar, Box, Card, CardActionArea, CardMedia, CardContent, Fab, Typography } from '@material-ui/core';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CommentIcon from '../../assets/js/icons/CommentIcon';
 import playIcon from '../../assets/images/play-icon.svg';
-import {
-  dFormatter,
-  nFormatter,
-  buildVideoThumbnailURL,
-  isBaseTag,
-} from '../../assets/js/utils/scripts';
+import { dFormatter, nFormatter, buildVideoThumbnailURL, isBaseTag } from '../../assets/js/utils/scripts';
 import { publish_type } from '../../assets/js/utils/constants';
-import {
-  toggleLike,
-  toggleSave,
-  formatProjectDescription,
-  getPublishTypeLabel,
-} from './projectScripts';
+import { toggleLike, toggleSave, formatProjectDescription, getPublishTypeLabel } from './projectScripts';
 import styles from '../../assets/js/styles/components/project/projectStyles';
 import commonStyles from '../../assets/js/styles';
 
@@ -58,29 +38,12 @@ function Project(props) {
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
-          <Tooltip
-            title={getPublishTypeLabel(project.publish.type)}
-            placement="right-start"
-            arrow
-          >
+          <Tooltip title={getPublishTypeLabel(project.publish.type)} placement="right-start" arrow>
             <Box className={classes.publishStyle}>
-              {project.publish.type === publish_type.Draft
-                ? t('project.publish.draft')
-                : ''}
-              {project.publish.type === publish_type.Preview
-                ? t('project.publish.preview')
-                : ''}
-              {project.publish.type ===
-                publish_type['Authenticated Creators'] ? (
-                <LockIcon />
-              ) : (
-                ''
-              )}
-              {project.publish.type === publish_type.Public ? (
-                <PublicIcon />
-              ) : (
-                ''
-              )}
+              {project.publish.type === publish_type.Draft ? t('project.publish.draft') : ''}
+              {project.publish.type === publish_type.Preview ? t('project.publish.preview') : ''}
+              {project.publish.type === publish_type['Authenticated Creators'] ? <LockIcon /> : ''}
+              {project.publish.type === publish_type.Public ? <PublicIcon /> : ''}
             </Box>
           </Tooltip>
           {project.video ? (
@@ -93,17 +56,11 @@ function Project(props) {
               <img className={classes.playIconStyle} src={playIcon} alt="" />
             </>
           ) : project.images.length > 0 ? (
-            <img
-              className={classes.mediaImageStyle}
-              src={project.images[0].image_url}
-              alt={project.title}
-            />
+            <img className={classes.mediaImageStyle} src={project.images[0].image_url} alt={project.title} />
           ) : null}
         </CardMedia>
         <CardActionArea className={classes.actionAreaStyle}>
-          <CardContent
-            className={clsx(classes.contentStyle, classes.positionRelative)}
-          >
+          <CardContent className={clsx(classes.contentStyle, classes.positionRelative)}>
             <Fab
               className={classes.fabButtonStyle}
               size="small"
@@ -130,19 +87,11 @@ function Project(props) {
               )}
               {nFormatter(project.likes.length)}
             </Fab>
-            <Typography
-              className={classes.titleStyle}
-              variant="h5"
-              component="h2"
-            >
+            <Typography className={classes.titleStyle} variant="h5" component="h2">
               {project.title}
             </Typography>
             <Box className={classes.descriptionStyle}>
-              <Typography
-                variant="subtitle2"
-                color="textSecondary"
-                component="p"
-              >
+              <Typography variant="subtitle2" color="textSecondary" component="p">
                 {formatProjectDescription(project.description)}
               </Typography>
             </Box>
@@ -164,12 +113,7 @@ function Project(props) {
                   className={classes.creatorUsernameStyle}
                 >
                   <Box>
-                    <Typography
-                      color="textSecondary"
-                      variant="caption"
-                      component="p"
-                      className={classes.username}
-                    >
+                    <Typography color="textSecondary" variant="caption" component="p" className={classes.username}>
                       {project.creator.username}
                     </Typography>
                   </Box>
@@ -177,46 +121,42 @@ function Project(props) {
                 <Box className={classes.tagsContainer}>
                   {project.creator.tags.map((tag, index) => (
                     <>
-                      {index == 0 &&
+                      {index == 0 && (
                         <Link
-                          className={clsx(common_classes.baseTagStyle, classes.tagContainer, common_classes.textDecorationNone, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
-
+                          className={clsx(
+                            common_classes.baseTagStyle,
+                            classes.tagContainer,
+                            common_classes.textDecorationNone,
+                            { [common_classes.extendedTagStyle]: !isBaseTag(tag) },
+                          )}
                           to={`/search/?q=${tag}&tab=creators`}
                         >
                           <Typography className={classes.tagName} component="div">
                             {tag}
                           </Typography>
                         </Link>
-                      }
-                      {index == 1 &&
-                        <Link
-                          className={common_classes.textDecorationNone}
-                          to={`#`}
-                        >
+                      )}
+                      {index == 1 && (
+                        <Link className={common_classes.textDecorationNone} to={`#`}>
                           <Typography
-
-                            className={clsx(common_classes.baseTagStyle, classes.restOfTags, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
+                            className={clsx(common_classes.baseTagStyle, classes.restOfTags, {
+                              [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                            })}
                             component="div"
                           >
                             + {project.creator.tags.length - 1}
                           </Typography>
                         </Link>
-
-                      }
+                      )}
                     </>
-
                   ))}
-
                 </Box>
               </Box>
             </Link>
             <Box className={classes.footer}>
               <Box className={classes.captionStyle}>
                 <Typography
-                  className={clsx(
-                    classes.captionIconStyle,
-                    classes.VisibilityIconStyle,
-                  )}
+                  className={clsx(classes.captionIconStyle, classes.VisibilityIconStyle)}
                   color="textSecondary"
                   variant="caption"
                   component="span"
@@ -232,15 +172,10 @@ function Project(props) {
                   <CommentIcon /> {project.comments_count}
                 </Typography>
               </Box>
-              <Typography
-                color="textSecondary"
-                variant="caption"
-                component="span"
-                className={classes.date}
-              >
-                {`${dFormatter(project.created_on).value} ${t(
-                  `date.${dFormatter(project.created_on).key}`,
-                )} ${t('date.ago')}`}
+              <Typography color="textSecondary" variant="caption" component="span" className={classes.date}>
+                {`${dFormatter(project.created_on).value} ${t(`date.${dFormatter(project.created_on).key}`)} ${t(
+                  'date.ago',
+                )}`}
               </Typography>
             </Box>
           </CardContent>

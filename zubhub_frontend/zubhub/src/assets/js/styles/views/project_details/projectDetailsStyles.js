@@ -26,7 +26,7 @@ const styles = theme => ({
     },
   },
   titleStyle: {
-    fontWeight: 900,
+    fontWeight: 800,
     textAlign: 'center',
   },
   metaInfoStyle: {
@@ -35,6 +35,7 @@ const styles = theme => ({
     alignItems: 'center',
   },
   creatorProfileStyle: {
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     marginBottom: '1em',
@@ -44,7 +45,7 @@ const styles = theme => ({
     },
     [theme.breakpoints.down('500')]: {
       width: '100%',
-      justifyContent: 'space-between',
+      // justifyContent: 'space-between',
     },
   },
   creatorAvatarStyle: {
@@ -72,6 +73,8 @@ const styles = theme => ({
     },
   },
   iframeStyle: {
+    borderRadius: 6,
+    overflow: 'hidden',
     position: 'absolute',
     borderStyle: 'none',
     top: 0,
@@ -123,21 +126,6 @@ const styles = theme => ({
     },
   },
   actionBoxButtonStyle: {
-    margin: '0.5em',
-    display: 'flex',
-    maxWidth: '100%',
-    minWidth: 0,
-    flexDirection: 'column',
-    '& span': { display: 'flex', flexDirection: 'column' },
-    [theme.breakpoints.down('1080')]: {
-      flexDirection: 'row',
-      margin: '0.2em',
-      padding: '7px',
-      '& span': {
-        flexDirection: 'row',
-      },
-    },
-    textAlign: 'center',
     color: 'white',
     '& MuiFab-root:hover': {
       color: '#F2F2F2',
@@ -179,8 +167,9 @@ const styles = theme => ({
     marginBottom: '0.7em',
     color: 'rgba(0, 0, 0, 0.54)',
     '& .ql-editor': {
-      fontSize: '1.5rem',
+      fontSize: '1.01rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
+      padding: '4px 0'
     },
   },
   materialsUsedStyle: {
@@ -196,6 +185,7 @@ const styles = theme => ({
   tagsBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',
+    gap: 10
   },
   tagsStyle: {
     backgroundColor: '#E4E4E4',
@@ -254,7 +244,7 @@ const styles = theme => ({
   largeLabel: {
     fontSize: '1.3rem',
   },
-  positionRelative: { position: 'relative' },
+  positionRelative: { position: 'relative', borderRadius: 6, overflow: 'hidden' },
   positionAbsolute: { position: 'absolute' },
   marginBottom1em: { marginBottom: '1em' },
   errorBox: {

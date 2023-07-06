@@ -19,8 +19,10 @@ export default function ImageInput({ name, label, required, value, handleChange 
   };
 
   const getPath = file => {
+    if (file.link) return file.name;
     return (window.URL || window.webkitURL).createObjectURL(file);
   };
+  // console.log({ value });
 
   const removeImage = file => {
     const files = value.filter(img => `${img.name}${img.size}` !== `${file.name}${file.size}`);

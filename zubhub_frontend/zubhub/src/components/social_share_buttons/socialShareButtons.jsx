@@ -18,18 +18,12 @@ const SocialButtons = () => {
   const mediaQuery = useMediaQuery('(min-width: 1080px)');
   return (
     <>
-      <ButtonGroup
-        className={classes.buttonGroup}
-        orientation={(mediaQuery && 'vertical') || 'horizontal'}
-      >
+      <ButtonGroup className={classes.buttonGroup}>
         <IconButton
           className={classes.button}
           onClick={() =>
             window.open(
-              'https://www.facebook.com/sharer/sharer.php?u=' +
-                url +
-                '&quote=' +
-                t('projectDetails.socialShare.fbwa'),
+              'https://www.facebook.com/sharer/sharer.php?u=' + url + '&quote=' + t('projectDetails.socialShare.fbwa'),
             )
           }
         >
@@ -38,11 +32,7 @@ const SocialButtons = () => {
         <IconButton
           className={classes.button}
           onClick={() =>
-            window.open(
-              'https://web.whatsapp.com/send?text=' +
-                t('projectDetails.socialShare.fbwa') +
-                url,
-            )
+            window.open('https://web.whatsapp.com/send?text=' + t('projectDetails.socialShare.fbwa') + url)
           }
         >
           <WhatsAppIcon />

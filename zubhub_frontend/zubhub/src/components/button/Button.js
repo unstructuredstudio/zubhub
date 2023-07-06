@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import styles from '../../assets/js/styles/components/button/buttonStyles';
 import clsx from 'clsx'
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles(styles);
 
@@ -33,6 +34,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     className,
     muiClasses,
     disabled,
+    loading,
     ...rest
   } = props;
   const btnClasses = classNames({
@@ -56,9 +58,10 @@ const CustomButton = React.forwardRef((props, ref) => {
       {...rest}
       classes={muiClasses}
       className={clsx(btnClasses, classes.default)}
-      disabled={disabled ? disabled : false}
+      disabled={disabled || loading}
     >
       {children}
+      {loading && <CircularProgress size={20} color="inherit" />}
     </Button>
   );
 });

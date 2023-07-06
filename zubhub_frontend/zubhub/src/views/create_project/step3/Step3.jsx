@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { step3Style } from './step3.styles';
 import { Box, makeStyles } from '@material-ui/core';
 import styles from '../../../assets/js/styles';
-import { searchTags } from '../../../store/actions/projectActions';
+import { searchTags } from '../script';
 import { Dropdown, TagsInput } from '../../../components';
+import { getCategories } from '../script';
 
-export default function Step3({ formik }) {
+export default function Step3({ formik, ...props }) {
   const handleChange = data => {
-    console.log(data);
+    formik.setFieldValue('category', data);
   };
+
+  useEffect(() => {
+    getCategories(props).then(cats => setCategories(cats.categories));
+  }, []);
 
   const commonClasses = makeStyles(styles)();
   const [value, setValue] = useState('');
   const [remoteTags, setRemoteTags] = useState([]);
   const [popularTags, setPopularTags] = useState(testTags);
+  const [categories, setCategories] = useState([]);
 
   const clearSuggestions = () => setRemoteTags([]);
 
@@ -25,15 +31,16 @@ export default function Step3({ formik }) {
   };
 
   const addTag = value => {
+    console.log(value);
     const values = [...formik.values.tags, value];
-    formik.setFieldValue('hashtags', values);
+    formik.setFieldValue('tags', values);
     clearSuggestions();
     setValue('');
   };
 
   const removeTag = tagIndex => {
     const tags = [...formik.values.tags].filter((_, index) => index !== tagIndex);
-    formik.setFieldValue('hashtags', tags);
+    formik.setFieldValue('tags', tags);
   };
 
   return (
@@ -42,12 +49,14 @@ export default function Step3({ formik }) {
         label="What category does your project belong too?"
         placeholder="Select Categories"
         handleChange={handleChange}
-        data={data}
+        data={categories}
+        value={formik.values.category}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
       />
 
       <Box marginTop={6} marginBottom={1}>
         <TagsInput
+          name="tags"
           label="What hashtag best describes your project?"
           description="For example, if you made flower from cardboard, you can write: cardboard, flowers, colours or leave it blank if you’re unsure."
           selectedTags={formik.values.tags}
@@ -65,9 +74,4 @@ export default function Step3({ formik }) {
   );
 }
 
-const testTags = ['#Clothing', '#Animation', '#Painting', '#Science & Technology', '#Mechanics', '#Music', '#General'];
-
-const data = [
-  { label: 'Yaya', value: 'yaya' },
-  { label: 'Mamoudou', value: 'mamoudou' },
-];
+const testTags = ['Clothing', 'Animation', 'Painting', 'Science', 'Technology', 'Mechanics', 'Music', 'General'];

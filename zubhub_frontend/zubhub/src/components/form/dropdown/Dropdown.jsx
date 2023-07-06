@@ -4,13 +4,23 @@ import { Box, FormControl, TextField, Typography, makeStyles } from '@material-u
 import { Autocomplete } from '@material-ui/lab';
 import styles from '../../../assets/js/styles';
 
-export default function Dropdown({ label, data = [], value, placeholder, required, handleChange, error, description }) {
+export default function Dropdown({
+  label,
+  data = [],
+  value,
+  multiple,
+  placeholder,
+  required,
+  handleChange,
+  error,
+  description,
+}) {
   const classes = makeStyles(dropdownStyle)();
   const commonClasses = makeStyles(styles)();
 
   const labelView = props => (
     <Box component="li" sx={{ '& > *': { mr: 2 } }} {...props}>
-      <Typography>{props.label}</Typography>
+      <Typography>{props.name}</Typography>
     </Box>
   );
 
@@ -39,9 +49,10 @@ export default function Dropdown({ label, data = [], value, placeholder, require
         sx={{ width: 300 }}
         options={data}
         autoHighlight
-        multiple
-        onChange={handleChange}
-        getOptionLabel={option => option?.label}
+        multiple={multiple}
+        value={value}
+        onChange={(e, value) => handleChange(value)}
+        getOptionLabel={option => option?.name}
         renderOption={labelView}
         renderInput={inputView}
       />

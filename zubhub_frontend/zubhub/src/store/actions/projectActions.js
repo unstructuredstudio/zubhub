@@ -26,15 +26,12 @@ export const setProjects = projects => {
 export const createProject = props => {
 
   return () => {
-    console.log(props);
-
     return API.createProject(props).then(res => {
       if (!res.id) {
-        console.log('succcc');
         throw new Error(JSON.stringify(res));
       } else {
         toast.success(props.t('createProject.createToastSuccess'));
-        // return props.history.push('/profile');
+        return res.id;
       }
     });
   };
@@ -75,7 +72,7 @@ export const updateProject = props => {
         throw new Error(JSON.stringify(res));
       } else {
         toast.success(props.t('createProject.updateToastSuccess'));
-        return props.history.push('/profile');
+        // return props.history.push('/profile');
       }
     });
   };

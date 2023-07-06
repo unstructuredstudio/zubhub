@@ -75,6 +75,7 @@ export default function Editor() {
         onChangeSelection={onSelectionChange}
         className={classes.editor}
         modules={{ toolbar: false }}
+        placeholder="Please describe your project"
       />
       {isSeleted ? tooltip : null}
     </div>

@@ -387,7 +387,7 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
-                LazyComponent={CreateProject}
+                LazyComponent={CreateProject2}
                 {...routeProps}
                 {...props}
               />

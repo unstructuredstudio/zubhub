@@ -52,8 +52,6 @@ export default function VideoInput({ name, label, required, value = [], handleCh
     </Box>
   ));
 
-  console.log(value);
-
   return (
     <FormControl fullWidth>
       <label className={commomClasses.title2} htmlFor={name}>

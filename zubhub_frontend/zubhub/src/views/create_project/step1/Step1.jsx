@@ -2,7 +2,7 @@ import { Box, FormControl, TextField, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 import styles from '../../../assets/js/styles';
 import { Editor, TagsInput } from '../../../components';
-import { searchTags } from '../../../store/actions/projectActions';
+import { searchTags } from '../script';
 
 export default function Step1({ formik }) {
   const commonClasses = makeStyles(styles)();
@@ -35,7 +35,7 @@ export default function Step1({ formik }) {
 
   return (
     <div>
-      <Editor />
+      {/* <Editor /> */}
       <Box marginY={6}>
         <FormControl fullWidth>
           <label className={commonClasses.title2}>

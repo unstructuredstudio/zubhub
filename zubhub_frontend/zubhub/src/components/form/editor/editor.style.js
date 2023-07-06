@@ -5,8 +5,11 @@ export const editorStyle = theme => ({
         '& .ql-toolbar': {
             display: 'none'
         },
-        height: 200,
-        fontSize: 20
+        '& .ql-container.ql-snow': {
+            fontSize: 14,
+            borderRadius: 4
+        },
+        height: 125,
     },
     editorTooltip: ({ position: { left, top, width } }) => ({
         display: 'flex',
