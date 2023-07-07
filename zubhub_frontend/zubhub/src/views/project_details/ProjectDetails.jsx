@@ -175,7 +175,7 @@ function ProjectDetails(props) {
     return (
       <>
         <Box className={classes.root}>
-          <Paper className={classes.projectDetailHeaderStyle}>
+          <Box className={classes.projectDetailHeaderStyle}>
             <Container className={classes.headerStyle}>
               <Typography align="center" className={common_classes.title1} variant="h3" gutterBottom>
                 {project.title}
@@ -258,7 +258,7 @@ function ProjectDetails(props) {
                 <div
                   style={{
                     backgroundColor: colors.primary,
-                    width: '100%',
+                    // width: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -373,7 +373,7 @@ function ProjectDetails(props) {
                 More Projects
               </Typography>
             </Box>
-          </Paper>
+          </Box>
         </Box>
 
         <Dialog

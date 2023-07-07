@@ -102,8 +102,6 @@ export const searchTags = (value, callBack) => {
 }
 
 export const initUpload = (state, props, handleSetState) => {
-    console.log(props, 'props');
-
     if (!props.auth.token) return props.history.push('/login');
 
     if (!(props.values.images.length !== 0 || props.values.video.length !== 0)) {
@@ -115,6 +113,9 @@ export const initUpload = (state, props, handleSetState) => {
     state.media_upload.upload_dialog = true;
     handleSetState({
         success: false,
+        default_state: {
+            loading: true,
+        },
         media_upload: {
             ...state.media_upload,
             upload_dialog: true,
@@ -196,7 +197,7 @@ export const uploadProject = async (state, props, handleSetState) => {
         publish: { type: props.step < 3 ? 1 : 4, visible_to: [] }
     })
         .then((id) => {
-            handleSetState({ ...state, success: true, id: `${id}` })
+            handleSetState({ ...state, default_state: { loading: false }, success: true, id: `${id}` })
         })
         .catch(error => {
             console.log(error, 'error');
@@ -204,6 +205,7 @@ export const uploadProject = async (state, props, handleSetState) => {
                 media_upload: {
                     ...state.media_upload,
                     upload_dialog: false,
+                    default_state: { loading: false }
                 },
             });
             const messages = JSON.parse(error.message);
@@ -407,6 +409,7 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
                 total = total / Object.keys(upload_info).length;
 
                 handleSetState({
+                    default_state: { loading: false },
                     media_upload: {
                         ...media_upload,
                         upload_info,
@@ -513,7 +516,6 @@ export const getProject = (props, state) => {
                     : [];
 
                 return {
-                    // loading: false,
                     materials_used: obj.project.materials_used.split(','),
                     media_upload,
                 };

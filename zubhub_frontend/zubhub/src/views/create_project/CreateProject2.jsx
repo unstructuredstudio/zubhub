@@ -24,7 +24,7 @@ const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Details', 'Photos/Videos', 'Features'];
 
 function CreateProject2(props) {
-  const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.saved);
+  const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
   const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
@@ -67,8 +67,13 @@ function CreateProject2(props) {
   }, [state.success]);
 
   useEffect(() => {
-    // console.log(state.loading, 'loading state');
-  }, [state.loading]);
+    if (state.default_state?.loading) {
+      setDraftStatus(DRAFT_STATUSES.saving);
+    } else {
+      setDraftStatus(DRAFT_STATUSES.saved);
+    }
+    console.log(state.default_state?.loading, 'loading state');
+  }, [state.default_state?.loading]);
 
   const draftContainerText = () => {
     if (draftStatus === DRAFT_STATUSES.idle) return 'Draft';
