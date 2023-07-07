@@ -19,6 +19,7 @@ import * as script from './script';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
+import { toast } from 'react-toastify';
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Details', 'Photos/Videos', 'Features'];
@@ -45,6 +46,21 @@ function CreateProject2(props) {
     }
   };
 
+  const getToastMessage = () => {
+    console.log(props);
+    let message = '';
+    if (activeStep === 1 && props.match.path === '/projects/create') {
+      message = 'createProject.addedToDraft';
+    }
+    if ([1, 2].includes(activeStep) && props.match.params.id) {
+      message = 'createProject.savedStep';
+    }
+    if (activeStep === 3 && props.match.params.id) {
+      message = 'createProject.createToastSuccess';
+    }
+    return message;
+  };
+
   useEffect(() => {
     if (props.match.params.id) {
       Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
@@ -53,14 +69,14 @@ function CreateProject2(props) {
     } else {
       handleSetState(script.getCategories(props));
     }
-    // handleSetState(buildPublishTypes(props));
   }, []);
 
   useEffect(() => {
     if (state.success) {
       if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
+      toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        props.history.push(`/projects/${props.match.params.id}`, { fromEdit: true });
+        return props.history.push(`/projects/${props.match.params.id}`, { fromEdit: true });
       }
       go('next');
     }

@@ -30,7 +30,6 @@ export const createProject = props => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(props.t('createProject.createToastSuccess'));
         return res.id;
       }
     });
@@ -71,8 +70,7 @@ export const updateProject = props => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(props.t('createProject.updateToastSuccess'));
-        // return props.history.push('/profile');
+        // toast.success(props.t('createProject.updateToastSuccess'));
       }
     });
   };

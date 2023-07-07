@@ -386,6 +386,8 @@
       "videoFile": "Video file added",
       "videoURL": "Video URL added"
     },
+    "addedToDraft":"Project added as draft successfully!",
+    "savedStep":"Project has been saved successfully!",
     "createToastSuccess": "Your project was created successfully!",
     "updateToastSuccess": "Your project was updated successfully!",
     "errors": {

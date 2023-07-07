@@ -551,7 +551,6 @@ class API {
       publish,
       activity,
     });
-    console.log('inside');
     return this.request({ url, method, token, body }).then(res => res.json());
   };
 
