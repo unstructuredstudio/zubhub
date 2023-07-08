@@ -1,59 +1,56 @@
-import React, { useEffect, useState } from 'react';
-import { Button, IconButton, useMediaQuery } from '@material-ui/core';
-import { Link, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { IconButton, useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { FiShare } from 'react-icons/fi';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
+import { connect } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import Confetti from 'react-confetti';
 
+import {
+  Avatar,
+  Box,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import {
-  Avatar,
-  Box,
-  Typography,
-  Grid,
-  Container,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@material-ui/core';
 
-import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
-import * as UserActions from '../../store/actions/userActions';
-import * as ProjectActions from '../../store/actions/projectActions';
+import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
-import Comments from '../../components/comments/Comments';
+import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
+import * as ProjectActions from '../../store/actions/projectActions';
+import * as UserActions from '../../store/actions/userActions';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
-import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import {
+  deleteProject,
   handleOpenEnlargedImageDialog,
   handleToggleDeleteProjectModal,
-  isVideoFromGdrive,
-  deleteProject,
-  toggleSave,
-  toggleLike,
-  toggleFollow,
   isCloudinaryVideo,
   isGdriveORVimeoORYoutube,
-  handleMobileShare,
+  toggleFollow,
+  toggleLike,
+  toggleSave,
 } from './projectDetailsScripts';
 
-import { nFormatter, parseComments, cloudinaryFactory, getPlayerOptions } from '../../assets/js/utils/scripts';
-import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
-import commonStyles from '../../assets/js/styles';
-import { colors } from '../../assets/js/colors.js';
 import { CloseOutlined } from '@material-ui/icons';
+import { colors } from '../../assets/js/colors.js';
+import commonStyles from '../../assets/js/styles';
+import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import { cloudinaryFactory, getPlayerOptions, parseComments } from '../../assets/js/utils/scripts';
 import { Modal } from '../../components/index.js';
 
 const useStyles = makeStyles(styles);
@@ -102,8 +99,8 @@ const buildTagsComponent = (classes, tags, history) => {
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const mediaQuery = useMediaQuery('(max-width: 600px)');
-  const { id, ...all } = useParams();
+  const [{ height, width }, setDimensions] = useState({});
+  const { id } = useParams();
   const [open, setOpen] = useState(false);
 
   const [state, setState] = React.useState({
@@ -133,6 +130,7 @@ function ProjectDetails(props) {
   useEffect(() => {
     if (props.history.location.state?.fromEdit) {
       toggleDialog();
+      setDimensions({ width: window.innerWidth, height: window.innerHeight });
     }
   }, []);
 
@@ -456,6 +454,8 @@ function ProjectDetails(props) {
             </CustomButton>
           </DialogActions>
         </Dialog>
+
+        {open ? <Confetti width={width} height={height} /> : null}
       </>
     );
   } else {
