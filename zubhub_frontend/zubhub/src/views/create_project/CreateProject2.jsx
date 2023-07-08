@@ -47,7 +47,6 @@ function CreateProject2(props) {
   };
 
   const getToastMessage = () => {
-    console.log(props);
     let message = '';
     if (activeStep === 1 && props.match.path === '/projects/create') {
       message = 'createProject.addedToDraft';
@@ -165,8 +164,6 @@ function CreateProject2(props) {
       </Typography>
     </Box>
   ));
-
-  console.log({ formik });
 
   return (
     <div className={classes.container}>

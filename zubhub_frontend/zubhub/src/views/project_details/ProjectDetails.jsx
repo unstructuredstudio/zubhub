@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-
+import { FiShare } from 'react-icons/fi';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
 import Slider from 'react-slick';
@@ -53,6 +53,7 @@ import { nFormatter, parseComments, cloudinaryFactory, getPlayerOptions } from '
 import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import commonStyles from '../../assets/js/styles';
 import { colors } from '../../assets/js/colors.js';
+import { CloseOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -396,17 +397,29 @@ function ProjectDetails(props) {
           <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
         </Dialog>
 
-        <Dialog maxWidth={300} open={open} onClose={toggleDialog}>
-          <DialogTitle>Congratulations your project has successfully created!</DialogTitle>
+        <Dialog className={classes.dialogContainer} maxWidth="xs" open={open} onClose={toggleDialog}>
+          <div style={{ display: 'flex', justifyContent: 'end' }}>
+            <div className={classes.sucessDialogHeadericon}>
+              <FiShare size={30} />
+            </div>
+            <IconButton onClick={toggleDialog}>
+              <CloseOutlined />
+            </IconButton>
+          </div>
+
+          <DialogTitle>
+            <Typography align="center" className={clsx(common_classes.title2, classes.dialogTitle)}>
+              Congratulations your project has successfully created!
+            </Typography>
+          </DialogTitle>
           <DialogContent>
-            <p>Share your project with the world. Post it on the following platforms:</p>
+            <Typography align="center">
+              Share your project with the world. Post it on the following platforms:
+            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
+              <SocialButtons containerStyle={{ gap: 50 }} withColor facebook whatsapp />
+            </div>
           </DialogContent>
-          <DialogActions>
-            <IconButton onClick={toggleDialog}>Close</IconButton>
-            <Button variant="contained" onClick={toggleDialog}>
-              Save
-            </Button>
-          </DialogActions>
         </Dialog>
 
         <Dialog

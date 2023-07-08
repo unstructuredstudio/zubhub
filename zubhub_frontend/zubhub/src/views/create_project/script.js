@@ -191,7 +191,7 @@ export const uploadProject = async (state, props, handleSetState) => {
         token: props.auth.token,
         activity: props.location.state?.activity_id,
         images: state.media_upload.uploaded_images_url || '',
-        video: state.media_upload.uploaded_videos_url[0] || props.values.video_link || 'https://www.youtube.com/watch?v=8NsaXruAjJ8',
+        video: state.media_upload.uploaded_videos_url[0] || props.values.video_link,
         category: props.values.category?.name,
         t: props.t,
         publish: { type: props.step < 3 ? 1 : 4, visible_to: [] }

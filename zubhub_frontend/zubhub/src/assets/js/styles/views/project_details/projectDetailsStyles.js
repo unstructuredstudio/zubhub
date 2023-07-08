@@ -1,6 +1,13 @@
+import { colors } from "../../../colors";
+
 const styles = theme => ({
   root: {
     flex: '1 0 auto',
+  },
+  dialogTitle: {
+    fontSize: '18px !important',
+    lineHeight: '26px !important',
+    marginTop: 0
   },
   projectDetailHeaderStyle: {
     paddingTop: '1.5em',
@@ -39,6 +46,26 @@ const styles = theme => ({
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     backgroundColor: '#ffffff',
     marginRight: '0.5em',
+    alignSelf: 'center'
+  },
+
+  sucessDialogHeadericon: {
+    height: 50, width: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
+    position: 'absolute',
+    alignSelf: 'center',
+    left: '50%',
+    top: -25,
+    backgroundColor: colors.white
+  },
+  dialogContainer: {
+    '& .MuiDialog-paper': {
+      overflow: 'visible !important'
+    }
   },
   headerStyle: {
     maxWidth: '1000px',
