@@ -1,0 +1,30 @@
+import { Dialog, makeStyles } from '@material-ui/core';
+import React from 'react';
+import styles from '../../assets/js/styles';
+import { modalStyles } from './modal.styles';
+
+function Modal({ open, onClose = () => { }, children }) {
+    const classes = makeStyles(modalStyles)();
+
+    return (
+        <Dialog className={classes.dialogContainer} maxWidth="xs" open={open} onClose={onClose}>
+            {children}
+        </Dialog>
+    );
+}
+
+Modal.withIcon = ({ open, onClose = () => { }, children, icon }) => {
+    const classes = makeStyles(modalStyles)();
+    const common_classes = makeStyles(styles)();
+
+    return (
+        <Dialog className={classes.dialogContainer} maxWidth="xs" open={open} onClose={onClose}>
+            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                <div className={classes.sucessDialogHeadericon}>{icon}</div>
+            </div>
+            {children}
+        </Dialog>
+    );
+};
+
+export default Modal;
