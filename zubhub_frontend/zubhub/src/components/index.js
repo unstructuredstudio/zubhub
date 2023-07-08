@@ -5,6 +5,7 @@ import TagsInput from "./form/tagsInput/TagsInput";
 import VideoInput from "./form/videoInput/VideoInput";
 import Sidenav from "./Sidenav/Sidenav";
 import Editor from "./form/editor/Editor";
+import Modal from "./modals/Modal";
 
 export {
     TagsInput,
@@ -13,5 +14,6 @@ export {
     OrDivider,
     VideoInput,
     Dropdown,
-    Editor
+    Editor,
+    Modal
 }

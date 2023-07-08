@@ -20,23 +20,26 @@ import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
 import { toast } from 'react-toastify';
+import { Modal } from '../../components';
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Details', 'Photos/Videos', 'Features'];
 
 function CreateProject2(props) {
-  const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
-  const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const wizardRef = useRef(null);
   const classes = makeStyles(createProjectStyle)({ height });
   const commonClasses = makeStyles(styles)();
+  const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
+  const [activeStep, setActiveStep] = useState(1);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
+  const [publishOrAddTags, setPublishOrAddTags] = useState(false);
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
+  const togglePushishOrAddTags = () => setPublishOrAddTags(!publishOrAddTags);
 
   const handleSetState = obj => {
     if (obj) {
@@ -224,6 +227,8 @@ function CreateProject2(props) {
           >
             {activeStep == 3 ? 'Publish' : 'Next'}
           </CustomButton>
+
+          <Modal.withIcon open={publishOrAddTags} onClose={togglePushishOrAddTags}></Modal.withIcon>
         </Box>
       </Box>
     </div>
