@@ -41,6 +41,13 @@ export const createProjectStyle = theme => ({
             textDecoration: 'underline',
         },
     },
+    dialogTitle1: {
+        fontSize: '18px !important',
+        lineHeight: '26px !important',
+        marginBottom: 0,
+        color: colors["tertiary-dark"] + '!important',
+        marginTop: 40
+    },
     formContainer: {
         borderRadius: 10,
         backgroundColor: colors.white,

@@ -16,32 +16,9 @@ export default function Step3({ formik, ...props }) {
   }, []);
 
   const commonClasses = makeStyles(styles)();
-  const [value, setValue] = useState('');
-  const [remoteTags, setRemoteTags] = useState([]);
-  const [popularTags, setPopularTags] = useState(testTags);
+
   const [categories, setCategories] = useState([]);
 
-  const clearSuggestions = () => setRemoteTags([]);
-
-  const handleChangeTag = async value => {
-    setValue(value);
-    searchTags(value, (error, data) => {
-      if (!error) setRemoteTags(data);
-    });
-  };
-
-  const addTag = value => {
-    console.log(value);
-    const values = [...formik.values.tags, value];
-    formik.setFieldValue('tags', values);
-    clearSuggestions();
-    setValue('');
-  };
-
-  const removeTag = tagIndex => {
-    const tags = [...formik.values.tags].filter((_, index) => index !== tagIndex);
-    formik.setFieldValue('tags', tags);
-  };
   // let valuecategory = formik.values.category?.name ? formik.values.category?.name : { name: formik.values.catogory };
 
   return (
@@ -54,25 +31,6 @@ export default function Step3({ formik, ...props }) {
         value={formik.values.category}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
       />
-
-      <Box marginTop={6} marginBottom={1}>
-        <TagsInput
-          name="tags"
-          label="What hashtag best describes your project?"
-          description="For example, if you made flower from cardboard, you can write: cardboard, flowers, colours or leave it blank if you’re unsure."
-          selectedTags={formik.values.tags}
-          popularTags={popularTags}
-          onChange={handleChangeTag}
-          addTag={addTag}
-          value={value}
-          remoteData={remoteTags}
-          clearSuggestions={clearSuggestions}
-          removeTag={removeTag}
-          placeholder="Start typing to materials used"
-        />
-      </Box>
     </>
   );
 }
-
-const testTags = ['Clothing', 'Animation', 'Painting', 'Science', 'Technology', 'Mechanics', 'Music', 'General'];

@@ -398,7 +398,7 @@ function ProjectDetails(props) {
           <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
         </Dialog>
 
-        <Modal.withIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
+        <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
           <div style={{ display: 'flex', justifyContent: 'end' }}>
             <IconButton onClick={toggleDialog}>
               <CloseOutlined />
@@ -418,7 +418,7 @@ function ProjectDetails(props) {
               <SocialButtons containerStyle={{ gap: 50 }} withColor facebook whatsapp />
             </div>
           </DialogContent>
-        </Modal.withIcon>
+        </Modal.WithIcon>
 
         <Dialog
           open={open_delete_project_modal}
