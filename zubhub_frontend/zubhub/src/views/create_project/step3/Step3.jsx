@@ -29,6 +29,9 @@ export default function Step3({ formik, ...props }) {
         handleChange={handleChange}
         data={categories}
         value={formik.values.category}
+        multiple={true}
+        withCheckbox={true}
+        maxSelection={5}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
       />
     </>
