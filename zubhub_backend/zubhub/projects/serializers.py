@@ -1,4 +1,5 @@
 import re
+from wsgiref.validate import validator
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -12,7 +13,8 @@ from .utils import update_images, update_tags, parse_comment_trees, get_publishe
 from .tasks import update_video_url_if_transform_ready, delete_file_task
 from math import ceil
 from activities.models import Activity
-
+from django.core.exceptions import ValidationError
+from django.db.models import Count
 Creator = get_user_model()
 
 
@@ -91,6 +93,15 @@ class CategorySerializer(serializers.ModelSerializer):
             "name"
         ]
 
+class CategoryValidator:
+    def __call__(self, value):
+        category_names = set(Category.objects.values_list('name', flat=True))
+        provided_names = set(category['name'] for category in value)
+
+        invalid_categories = provided_names - category_names
+        if invalid_categories:
+            raise serializers.ValidationError(f"The following categories do not exist: {', '.join(invalid_categories)}")
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     creator = CreatorMinimalSerializer(read_only=True)
@@ -101,8 +112,12 @@ class ProjectSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField('get_comments')
     images = ImageSerializer(many=True, required=False)
     tags = TagSerializer(many=True, required=False, read_only=True)
-    category = serializers.SlugRelatedField(
-        slug_field="name", queryset=Category.objects.all(), required=False)
+    category = serializers.ListField(
+            child=serializers.DictField(
+                child=serializers.CharField(max_length=100)
+            ),
+            validators=[CategoryValidator()]
+        )    
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
     publish = PublishingRuleSerializer(read_only=True)
@@ -257,7 +272,10 @@ class ProjectSerializer(serializers.ModelSerializer):
                 project.tags.add(tag)
 
             if category:
-                category.projects.add(project)
+                for cat in category:
+                    print(cat,'========')
+                    cat.add(project)
+                    project.category.add(cat)
             if activity is not None:
                 activity.inspired_projects.add(project)
 
