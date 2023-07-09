@@ -53,7 +53,7 @@ function CreateProject2(props) {
   const classes = makeStyles(createProjectStyle)({ height });
   const commonClasses = makeStyles(styles)();
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(1);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [publishOrAddTags, setPublishOrAddTags] = useState(false);
   const [addTagsDialog, setAddTagsDialog] = useState(false);

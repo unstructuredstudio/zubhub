@@ -184,7 +184,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     const tags = props.values['tags'] ? props.values['tags'].map(tag => ({ name: tag })) : [];
 
     const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
-
+    console.log(props);
     create_or_update({
         ...props.values,
         tags,
@@ -194,7 +194,7 @@ export const uploadProject = async (state, props, handleSetState) => {
         activity: props.location.state?.activity_id,
         images: state.media_upload.uploaded_images_url || '',
         video: state.media_upload.uploaded_videos_url[0] || props.values.video_link,
-        category: props.values.category?.name,
+        category: props.values.category,
         t: props.t,
         publish: { type: props.step < 3 ? 1 : 4, visible_to: [] }
     })
@@ -572,7 +572,6 @@ export const validationSchema = Yup.object().shape({
     description: Yup.string().max(10000, 'max').required('required'),
     project_images: Yup.mixed()
         .test('image_is_empty', 'imageOrVideo', function (value) {
-            console.log(this);
             return vars.image_field_touched && !value && !this.parent.video
                 ? false
                 : true;
