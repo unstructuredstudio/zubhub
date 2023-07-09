@@ -52,6 +52,7 @@ import commonStyles from '../../assets/js/styles';
 import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import { cloudinaryFactory, getPlayerOptions, parseComments } from '../../assets/js/utils/scripts';
 import { Modal } from '../../components/index.js';
+import Project from '../../components/project/Project';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -100,6 +101,7 @@ function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const [{ height, width }, setDimensions] = useState({});
+  const [moreProjects, setMoreProjects] = useState([]);
   const { id } = useParams();
   const [open, setOpen] = useState(false);
 
@@ -119,9 +121,17 @@ function ProjectDetails(props) {
         token: props.auth.token,
         t: props.t,
       }),
-    ).then(obj => {
+    ).then(async obj => {
       if (obj.project) {
-        parseComments(obj.project.comments);
+        let { project } = obj;
+        const userProjects = await props.getUserProjects({
+          limit: 4,
+          username: project.creator.username,
+          project_to_omit: project.id,
+        });
+        let moreProjects = userProjects.results;
+        setMoreProjects(moreProjects);
+        parseComments(project.comments);
       }
       handleSetState(obj);
     });
@@ -258,11 +268,11 @@ function ProjectDetails(props) {
                 <div
                   style={{
                     backgroundColor: colors.primary,
-                    // width: '100%',
+                    width: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    margin: '16px 0',
+                    margin: '16px 12px',
                     borderRadius: 8,
                   }}
                 >
@@ -372,6 +382,19 @@ function ProjectDetails(props) {
               <Typography align="center" className={common_classes.title1}>
                 More Projects
               </Typography>
+
+              <Grid container spacing={4}>
+                {moreProjects.map((project, index) => (
+                  <Grid key={index} item xs={12} sm={6} md={6} align="center">
+                    <Project
+                      project={project}
+                      key={project.id}
+                      // updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                      {...props}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
           </Box>
         </Box>
@@ -466,6 +489,7 @@ function ProjectDetails(props) {
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
   getProject: PropTypes.func.isRequired,
+  getUserProjects: PropTypes.func.isRequired,
   suggestCreators: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,
   unpublishComment: PropTypes.func.isRequired,
@@ -510,6 +534,9 @@ const mapDispatchToProps = dispatch => {
     },
     addComment: args => {
       return dispatch(ProjectActions.addComment(args));
+    },
+    getUserProjects: args => {
+      return dispatch(ProjectActions.getUserProjects(args));
     },
   };
 };

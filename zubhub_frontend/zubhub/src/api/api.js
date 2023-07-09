@@ -1,4 +1,5 @@
 import i18next from 'i18next';
+import { sanitizeObject } from '../utils.js';
 /**
  * API class containing all the calls to the backend api endpoints
  */
@@ -260,18 +261,11 @@ class API {
    *
    * @todo - describe method's signature
    */
-  getUserProjects = ({ username, page, limit, token }) => {
-    let url;
-    if (limit && page) {
-      url = `creators/${username}/projects/?limit=${limit}&&${page}`;
-    } else if (limit) {
-      url = `creators/${username}/projects/?limit=${limit}`;
-    } else if (page) {
-      url = `creators/${username}/projects/?${page}`;
-    } else {
-      url = `creators/${username}/projects/`;
-    }
-
+  getUserProjects = ({ username, page, limit, token, project_to_omit }) => {
+    let url = `creators/${username}/projects`;
+    let queryParams = sanitizeObject({ page, limit, project_to_omit })
+    const searchParams = new URLSearchParams(queryParams);
+    url = `${url}?${searchParams}`;
     return this.request({ url, token }).then(res => res.json());
   };
 

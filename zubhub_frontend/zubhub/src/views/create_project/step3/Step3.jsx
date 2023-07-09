@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { step3Style } from './step3.styles';
-import { Box, makeStyles } from '@material-ui/core';
-import styles from '../../../assets/js/styles';
-import { searchTags } from '../script';
-import { Dropdown, TagsInput } from '../../../components';
+import { Dropdown } from '../../../components';
 import { getCategories } from '../script';
 
 export default function Step3({ formik, ...props }) {
@@ -15,11 +11,7 @@ export default function Step3({ formik, ...props }) {
     getCategories(props).then(cats => setCategories(cats.categories));
   }, []);
 
-  const commonClasses = makeStyles(styles)();
-
   const [categories, setCategories] = useState([]);
-
-  // let valuecategory = formik.values.category?.name ? formik.values.category?.name : { name: formik.values.catogory };
 
   return (
     <>
@@ -31,7 +23,7 @@ export default function Step3({ formik, ...props }) {
         value={formik.values.category}
         multiple={true}
         withCheckbox={true}
-        maxSelection={5}
+        maxSelection={3}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
       />
     </>

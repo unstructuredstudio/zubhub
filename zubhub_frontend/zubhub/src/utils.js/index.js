@@ -38,3 +38,20 @@ export const throttle = (func, frequency) => {
 
   return throttler;
 };
+
+export const sanitizeObject = (obj) => {
+  const sanitizedObj = {};
+
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const value = obj[key];
+
+      // Check if the value is not empty
+      if (value !== '' && value !== null && value !== undefined) {
+        sanitizedObj[key] = value;
+      }
+    }
+  }
+
+  return sanitizedObj;
+}
