@@ -55,3 +55,12 @@ export const sanitizeObject = (obj) => {
 
   return sanitizedObj;
 }
+
+export const getUrlQueryObject = () => {
+  if (window) {
+    const params = new URLSearchParams(window.location.search);
+    const queryParams = Object.fromEntries(params.entries());
+    return queryParams
+  }
+  return {}
+}

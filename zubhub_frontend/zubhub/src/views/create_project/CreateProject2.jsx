@@ -16,18 +16,22 @@ import {
   ArrowForwardIosRounded,
   CloseOutlined,
   CloudDoneOutlined,
-  InfoOutlined,
+  Person,
 } from '@material-ui/icons';
 import DoneRounded from '@material-ui/icons/DoneRounded';
-import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
 import clsx from 'clsx';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import StepWizard from 'react-step-wizard';
+import { toast } from 'react-toastify';
+import { colors } from '../../assets/js/colors';
 import styles from '../../assets/js/styles';
+import { Modal, TagsInput } from '../../components';
 import CustomButton from '../../components/button/Button';
 import { useDomElementHeight } from '../../hooks/useDomElementHeight.hook';
 import * as AuthActions from '../../store/actions/authActions';
@@ -38,14 +42,12 @@ import * as script from './script';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
-import { toast } from 'react-toastify';
-import { Modal, TagsInput } from '../../components';
-import { colors } from '../../assets/js/colors';
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Details', 'Photos/Videos', 'Features'];
 
 function CreateProject2(props) {
+  const location = useLocation();
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -53,19 +55,20 @@ function CreateProject2(props) {
   const classes = makeStyles(createProjectStyle)({ height });
   const commonClasses = makeStyles(styles)();
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(3);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [publishOrAddTags, setPublishOrAddTags] = useState(false);
   const [addTagsDialog, setAddTagsDialog] = useState(false);
   const [value, setValue] = useState('');
   const [remoteTags, setRemoteTags] = useState([]);
   const [popularTags, setPopularTags] = useState(script.testTags);
-  const clearSuggestions = () => setRemoteTags([]);
+  const [mode, setMode] = useState('');
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
   const togglePublishOrAddTags = () => setPublishOrAddTags(!publishOrAddTags);
   const toggleAddTagsDialog = () => setAddTagsDialog(!addTagsDialog);
+  const clearSuggestions = () => setRemoteTags([]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -116,6 +119,9 @@ function CreateProject2(props) {
     } else {
       handleSetState(script.getCategories(props));
     }
+    const params = new URLSearchParams(window.location.search);
+    const queryParams = Object.fromEntries(params.entries());
+    if ('mode' in queryParams) setMode(queryParams.mode);
   }, []);
 
   useEffect(() => {
@@ -220,6 +226,10 @@ function CreateProject2(props) {
     </Box>
   ));
 
+  if (!['team', 'personal'].includes(mode)) {
+    return <SelectModeUI setMode={mode => setMode(mode)} />;
+  }
+
   return (
     <div className={classes.container}>
       {/* Banner */}
@@ -273,8 +283,8 @@ function CreateProject2(props) {
           <CustomButton
             onClick={next}
             loading={state.default_state?.loading}
-            primaryButtonStyle
             style={{ marginLeft: 'auto' }}
+            primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}
           >
             {activeStep == 3 ? 'Publish' : 'Next'}
@@ -299,7 +309,7 @@ function CreateProject2(props) {
                 <CustomButton primaryButtonOutlinedStyle onClick={handleAddTags}>
                   Add tags
                 </CustomButton>
-                <CustomButton primaryButtonStyle onClick={submitData}>
+                <CustomButton style={{ marginTop: 40 }} onClick={submitData}>
                   Publish without tags
                 </CustomButton>
               </DialogActions>
@@ -346,6 +356,63 @@ function CreateProject2(props) {
     </div>
   );
 }
+
+const SelectModeUI = ({ setMode }) => {
+  const classes = makeStyles(createProjectStyle)();
+  const commonClasses = makeStyles(styles)();
+  const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const [mode, setModeItem] = useState('');
+  const modes = { personal: 'personal', team: 'team' };
+
+  const handleCreate = () => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('mode', mode);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState(null, null, newUrl);
+    setMode(mode);
+  };
+
+  return (
+    <div className={classes.container}>
+      <Box className={clsx(classes.selectMode)}>
+        <Box sx={{ textAlign: isSmallScreen ? 'left' : 'center' }}>
+          <Typography className={clsx(commonClasses.title1)}>Create Project</Typography>
+          <Typography>
+            Select what kind of project it is, if you worked on the project alone select Personal project, if you worked
+            on your project with other creators select Team project.
+          </Typography>
+        </Box>
+        <div className={clsx(classes.modeItemContainer)}>
+          <div
+            onClick={() => setModeItem(modes.personal)}
+            className={clsx(classes.modeItem, mode == modes.personal ? classes.modeItemSelected : null)}
+          >
+            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
+            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Personal Project</Typography>
+            <Typography>If you worked on the project alone </Typography>
+          </div>
+
+          <div
+            onClick={() => setModeItem(modes.team)}
+            className={clsx(classes.modeItem, mode == modes.team && classes.modeItemSelected)}
+          >
+            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
+            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Team Project</Typography>
+            <Typography>If you worked on the project with other creators </Typography>
+          </div>
+        </div>
+        <CustomButton
+          onClick={handleCreate}
+          primaryButtonStyle
+          style={{ marginTop: 40, alignSelf: 'center' }}
+          disabled={mode.length === 0}
+        >
+          Create Project
+        </CustomButton>
+      </Box>
+    </div>
+  );
+};
 
 CreateProject2.propTypes = {
   auth: PropTypes.object.isRequired,

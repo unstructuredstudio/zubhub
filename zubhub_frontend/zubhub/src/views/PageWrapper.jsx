@@ -105,7 +105,7 @@ function PageWrapper(props) {
   const throttledFetchOptions = useMemo(
     () =>
       throttle(async (query, searchType) => {
-        if (query.length === 0) {
+        if (query?.length === 0) {
           setOptions([]);
           return;
         }
