@@ -7,4 +7,15 @@ export const theme = createTheme({
   circleBox: {
     backgroundColor: '#00B8C4',
   },
+  components: {
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          '& .Mui-checked': {
+            color: 'green', // Replace with your desired checked color
+          },
+        },
+      },
+    },
+  },
 });

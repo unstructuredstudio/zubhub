@@ -69,7 +69,7 @@ export default function Dropdown({
         getOptionLabel={option => option?.name}
         renderOption={labelView}
         renderInput={inputView}
-        getOptionDisabled={getOptionSelected}
+        {...(maxSelection && { getOptionDisabled: getOptionSelected })}
       />
     </FormControl>
   );
