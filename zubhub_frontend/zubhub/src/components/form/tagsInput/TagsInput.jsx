@@ -34,6 +34,8 @@ export default function TagsInput({
     onChange(e.target.value);
   };
 
+  console.log(selectedTags, name);
+
   const handleClickAway = () => setIsSearching(false);
   const handleFocus = () => {
     clearSuggestions();
