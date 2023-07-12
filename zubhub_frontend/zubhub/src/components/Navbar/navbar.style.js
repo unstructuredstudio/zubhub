@@ -93,7 +93,8 @@ export const navbarStyle = theme => ({
     },
     username: {
         color: `${colors.white} !important`,
-        marginBottom: `${0} !important`
+        marginBottom: `${0} !important`,
+        textTransform: 'capitalize'
     },
 
 }) 

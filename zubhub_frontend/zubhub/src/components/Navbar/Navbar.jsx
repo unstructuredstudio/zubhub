@@ -109,11 +109,15 @@ export default function Navbar(props) {
             </div>
 
             <Box>
-              <Typography className={clsx(commonClasses.title2, classes.username)}>Faridah Ade</Typography>
+              <Typography className={clsx(commonClasses.title2, classes.username)}>{props.auth.username}</Typography>
               <Typography className="">Student</Typography>
             </Box>
           </Hidden>
-          <Avatar className={commonClasses.iconBox} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar
+            className={commonClasses.iconBox}
+            alt={props.auth.username.toUpperCase()}
+            src="/static/images/avatar/1.jpg"
+          />
         </Container>
       </div>
       <Container maxWidth="lg">
