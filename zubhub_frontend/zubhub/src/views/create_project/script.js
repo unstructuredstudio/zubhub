@@ -181,7 +181,7 @@ export const uploadProject = async (state, props, handleSetState) => {
         .filter(value => (value ? true : false))
         .join(',');
 
-    const tags = props.values['tags'] ? props.values['tags'].map(tag => ({ name: tag })) : [];
+    const tags = props.values['tags'] ? props.values['tags'].map(tag => typeof tag === 'string' ? { name: tag } : tag) : [];
 
     const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
     console.log(props, 'props');
@@ -494,13 +494,15 @@ export const getProject = (props, state) => {
                     );
                 }
 
+                console.log({ obj });
                 if (obj.project.category) {
-                    props.setFieldValue('category', obj.project.category);
+                    console.log('hello_+++++++++++++++++');
+                    props.setFieldValue('category', [{ name: obj.project.category }]);
                 }
 
-                // if (refs.add_tags_el.current && obj.project.tags) {
-                //     props.setFieldValue('tags', JSON.stringify(obj.project.tags), true);
-                // }
+                if (obj.project.tags) {
+                    props.setFieldValue('tags', obj.project.tags.map(tag => tag.name), true);
+                }
 
                 // if (refs.publish_type_el.current && obj.project.publish) {
                 //     const publish = {

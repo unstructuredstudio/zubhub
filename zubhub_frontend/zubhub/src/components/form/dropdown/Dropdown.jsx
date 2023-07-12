@@ -22,9 +22,13 @@ export default function Dropdown({
   const classes = makeStyles(dropdownStyle)();
   const commonClasses = makeStyles(styles)();
 
+  console.log(value, 'hehhhh====');
+
   if (multiple && value) {
     let valueTemp = [];
-    value.forEach(item => Object.keys(item).length > 0 && valueTemp.push(item));
+    (Array.isArray(value) ? value : [{ name: value }]).forEach(
+      item => Object.keys(item).length > 0 && valueTemp.push(item),
+    );
     value = valueTemp;
   }
 
