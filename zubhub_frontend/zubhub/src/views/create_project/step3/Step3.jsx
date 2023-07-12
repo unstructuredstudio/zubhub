@@ -5,7 +5,7 @@ import { getUrlQueryObject } from '../../../utils.js';
 import { Checkbox, Typography } from '@material-ui/core';
 import { colors } from '../../../assets/js/colors';
 
-export default function Step3({ formik, ...props }) {
+export default function Step3({ formik, handleBlur, ...props }) {
   const handleChange = data => {
     formik.setFieldValue('category', data);
   };
@@ -26,15 +26,16 @@ export default function Step3({ formik, ...props }) {
     { name: 'Co-creator', id: '2' },
   ];
 
-  console.log(creatorValue);
   return (
     <>
       <Dropdown
         label="What category does your project belong too?"
         placeholder="Select Categories"
         handleChange={handleChange}
+        handleBlur={() => handleBlur('category')}
         data={categories}
         value={formik.values.category}
+        error={formik.touched.category && formik.errors.category}
         multiple={true}
         withCheckbox={true}
         maxSelection={3}
@@ -52,12 +53,7 @@ export default function Step3({ formik, ...props }) {
           />
 
           {creatorValue?.name == 'Team' && (
-            <Dropdown
-              placeholder="Select Team name"
-              handleChange={data => setCreatorValue(data)}
-              data={creatorsData}
-              // value={creatorValue}
-            />
+            <Dropdown placeholder="Select Team name" handleChange={data => setCreatorValue(data)} data={creatorsData} />
           )}
 
           {creatorValue?.name == 'Co-creator' && (

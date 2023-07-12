@@ -4,7 +4,7 @@ import styles from '../../../assets/js/styles';
 import { Editor, TagsInput } from '../../../components';
 import { searchTags } from '../script';
 
-export default function Step1({ formik }) {
+export default function Step1({ formik, handleBlur }) {
   const commonClasses = makeStyles(styles)();
   const [value, setValue] = useState('');
   const [remoteTags, setRemoteTags] = useState([]);
@@ -90,6 +90,7 @@ export default function Step1({ formik }) {
           remoteData={remoteTags}
           clearSuggestions={clearSuggestions}
           removeTag={removeTag}
+          handleBlur={() => handleBlur('materials_used')}
           placeholder="Start typing to materials used"
         />
       </Box>

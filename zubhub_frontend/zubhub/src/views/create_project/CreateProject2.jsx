@@ -47,7 +47,6 @@ const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Details', 'Photos/Videos', 'Features'];
 
 function CreateProject2(props) {
-  const location = useLocation();
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -55,7 +54,7 @@ function CreateProject2(props) {
   const classes = makeStyles(createProjectStyle)({ height });
   const commonClasses = makeStyles(styles)();
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(1);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [publishOrAddTags, setPublishOrAddTags] = useState(false);
   const [addTagsDialog, setAddTagsDialog] = useState(false);
@@ -124,16 +123,25 @@ function CreateProject2(props) {
     if ('mode' in queryParams) setMode(queryParams.mode);
   }, []);
 
+  const handleBlur = name => {
+    console.log(name);
+    formik.setTouched({ [name]: true }, true);
+  };
+
   useEffect(() => {
     if (state.success) {
       if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}`, { fromEdit: true });
+        return props.history.push(`/projects/${props.match.params.id}?success=true`);
       }
       go('next');
     }
   }, [state.success]);
+
+  const preview = () => {
+    props.history.push(`/projects/${props.match.params.id}`);
+  };
 
   useEffect(() => {
     if (state.default_state?.loading) {
@@ -154,7 +162,9 @@ function CreateProject2(props) {
   const previous = () => go('prev');
   const next = async () => {
     let error = await checkErrors();
+    console.log(error);
     if (Object.keys(error).length > 0) return;
+
     if (activeStep === 3) {
       return togglePublishOrAddTags();
     }
@@ -179,7 +189,7 @@ function CreateProject2(props) {
 
   const checkErrors = () => {
     if (activeStep === 1) {
-      return formik.setTouched({ title: true, materials_used: true, description: true });
+      return formik.setTouched({ title: true, materials_used: true, description: true }, true);
     }
 
     if (activeStep === 2) {
@@ -187,7 +197,7 @@ function CreateProject2(props) {
     }
 
     if (activeStep === 3) {
-      return formik.setTouched({ categories: true, hashtags: true }, true);
+      return formik.setTouched({ category: true, hashtags: true }, true);
     }
   };
 
@@ -230,22 +240,28 @@ function CreateProject2(props) {
     return <SelectModeUI setMode={mode => setMode(mode)} />;
   }
 
+  if (mode.length == 0) return null;
+
   return (
     <div className={classes.container}>
       {/* Banner */}
       <Box className={classes.banner}>
         <KeyboardBackspaceRoundedIcon />
-        <CustomButton className={classes.previewButton} variant="outlined">
-          Preview
-        </CustomButton>
-        <Box className={clsx(classes.draft, draftStatus === DRAFT_STATUSES.saved && classes.savedToDraft)}>
-          {draftStatus === DRAFT_STATUSES.saving ? <CircularProgress size={20} color="inherit" /> : null}
-          {draftStatus === DRAFT_STATUSES.saved ? <CloudDoneOutlined size={20} color="inherit" /> : null}
+        {props.match.params.id && (
+          <>
+            <CustomButton onClick={preview} className={classes.previewButton} variant="outlined">
+              Preview
+            </CustomButton>
+            <Box className={clsx(classes.draft, draftStatus === DRAFT_STATUSES.saved && classes.savedToDraft)}>
+              {draftStatus === DRAFT_STATUSES.saving ? <CircularProgress size={20} color="inherit" /> : null}
+              {draftStatus === DRAFT_STATUSES.saved ? <CloudDoneOutlined size={20} color="inherit" /> : null}
 
-          <Link className={classes.linkToDraft} href="#">
-            <Typography>{draftContainerText()}</Typography>
-          </Link>
-        </Box>
+              <Link className={classes.linkToDraft} href="#">
+                <Typography>{draftContainerText()}</Typography>
+              </Link>
+            </Box>
+          </>
+        )}
       </Box>
 
       {/* Form */}
@@ -261,7 +277,7 @@ function CreateProject2(props) {
 
           <Box style={{ marginTop: 100 }}>
             <StepWizard initialStep={activeStep} ref={wizardRef}>
-              <Step1 formik={formik} />
+              <Step1 handleBlur={handleBlur} formik={formik} />
               <Step2 formik={formik} />
               <Step3 formik={formik} {...props} />
             </StepWizard>
@@ -309,7 +325,7 @@ function CreateProject2(props) {
                 <CustomButton primaryButtonOutlinedStyle onClick={handleAddTags}>
                   Add tags
                 </CustomButton>
-                <CustomButton style={{ marginTop: 40 }} onClick={submitData}>
+                <CustomButton primaryButtonStyle onClick={submitData}>
                   Publish without tags
                 </CustomButton>
               </DialogActions>

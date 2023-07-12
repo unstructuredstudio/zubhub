@@ -53,6 +53,7 @@ import styles, { sliderSettings } from '../../assets/js/styles/views/project_det
 import { cloudinaryFactory, getPlayerOptions, parseComments } from '../../assets/js/utils/scripts';
 import { Modal } from '../../components/index.js';
 import Project from '../../components/project/Project';
+import { getUrlQueryObject } from '../../utils.js';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -138,9 +139,10 @@ function ProjectDetails(props) {
   }, [id]);
 
   useEffect(() => {
-    if (props.history.location.state?.fromEdit) {
-      toggleDialog();
+    const query = getUrlQueryObject();
+    if (query.success) {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
+      toggleDialog();
     }
   }, []);
 
@@ -160,7 +162,10 @@ function ProjectDetails(props) {
     }
   }, [state.project.video]);
 
-  const toggleDialog = () => setOpen(!open);
+  const toggleDialog = () => {
+    setOpen(!open);
+    props.history.replace(window.location.pathname);
+  };
 
   const handleSetState = obj => {
     if (obj) {
@@ -205,7 +210,7 @@ function ProjectDetails(props) {
                   </Link>
                   {project.creator.id === props.auth.id ? (
                     <Grid container justify="flex-end">
-                      <Link className={classes.textDecorationNone} to={`/projects/${project.id}/edit`}>
+                      <Link className={classes.textDecorationNone} to={`/projects/${project.id}/edit?mode=personal`}>
                         <CustomButton className={common_classes.marginLeft1em} variant="contained" primaryButtonStyle>
                           {t('projectDetails.project.edit')}
                         </CustomButton>
@@ -329,7 +334,7 @@ function ProjectDetails(props) {
                 ) : null}
 
                 <Grid item xs={12} sm={12} md={12}>
-                  <Typography variant="h5" className={common_classes.title2}>
+                  <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.description')}
                   </Typography>
                   <ReactQuill
@@ -341,13 +346,13 @@ function ProjectDetails(props) {
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={12}>
-                  <Typography variant="h5" className={common_classes.title2}>
+                  <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.materials')}
                   </Typography>
                   <div style={{ display: 'flex', gap: 10 }}>{buildMaterialsUsedComponent(classes, state)}</div>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12}>
-                  <Typography variant="h5" className={common_classes.title2}>
+                  <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.category')}
                   </Typography>
                   {project.category ? (
@@ -365,7 +370,7 @@ function ProjectDetails(props) {
 
                 {project.tags.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12}>
-                    <Typography variant="h5" className={common_classes.title2}>
+                    <Typography variant="h5" className={common_classes.title1}>
                       {t('projectDetails.project.hashtags')}
                     </Typography>
 
@@ -427,7 +432,7 @@ function ProjectDetails(props) {
           </div>
 
           <DialogTitle>
-            <Typography align="center" className={clsx(common_classes.title2, classes.dialogTitle)}>
+            <Typography align="center" className={clsx(common_classes.title1, classes.dialogTitle)}>
               Congratulations your project has successfully created!
             </Typography>
           </DialogTitle>
