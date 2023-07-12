@@ -8,13 +8,7 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Typography,
-  Container,
-} from '@material-ui/core';
+import { Grid, Box, ButtonGroup, Typography, Container } from '@material-ui/core';
 
 import { fetchPage, updateDrafts } from './userDraftsScripts';
 
@@ -60,69 +54,47 @@ function UserDrafts(props) {
   } else if (drafts && drafts.length > 0) {
     return (
       <Box className={classes.root}>
-        <Container className={classes.mainContainerStyle}>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
-                {username}'s {t('userDrafts.title')}
-              </Typography>
-            </Grid>
-            {drafts.map(draft => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                className={classes.projectGridStyle}
-                align="center"
-              >
-                <Project
-                  project={draft}
-                  key={draft.id}
-                  updateProjects={res =>
-                    handleSetState(updateDrafts(res, state, props, toast))
-                  }
-                  {...props}
-                />
-              </Grid>
-            ))}
+        <Grid spacing={3} container>
+          <Grid item xs={12}>
+            <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
+              {username}'s {t('userDrafts.title')}
+            </Typography>
           </Grid>
-          <ButtonGroup
-            aria-label={t('userDrafts.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
-            {prev_page ? (
-              <CustomButton
-                className={classes.floatLeft}
-                size="large"
-                startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prev_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
-                primaryButtonStyle
-              >
-                {t('userDrafts.prev')}
-              </CustomButton>
-            ) : null}
-            {next_page ? (
-              <CustomButton
-                className={classes.floatRight}
-                size="large"
-                endIcon={<NavigateNextIcon />}
-                onClick={(e, page = next_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
-                primaryButtonStyle
-              >
-                {t('userDrafts.next')}
-              </CustomButton>
-            ) : null}
-          </ButtonGroup>
-        </Container>
+          {drafts.map(draft => (
+            <Grid item xs={12} sm={6} lg={4} align="center">
+              <Project
+                project={draft}
+                key={draft.id}
+                updateProjects={res => handleSetState(updateDrafts(res, state, props, toast))}
+                {...props}
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <ButtonGroup aria-label={t('userDrafts.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
+          {prev_page ? (
+            <CustomButton
+              className={classes.floatLeft}
+              size="large"
+              startIcon={<NavigateBeforeIcon />}
+              onClick={(e, page = prev_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
+              primaryButtonStyle
+            >
+              {t('userDrafts.prev')}
+            </CustomButton>
+          ) : null}
+          {next_page ? (
+            <CustomButton
+              className={classes.floatRight}
+              size="large"
+              endIcon={<NavigateNextIcon />}
+              onClick={(e, page = next_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
+              primaryButtonStyle
+            >
+              {t('userDrafts.next')}
+            </CustomButton>
+          ) : null}
+        </ButtonGroup>
       </Box>
     );
   } else {
