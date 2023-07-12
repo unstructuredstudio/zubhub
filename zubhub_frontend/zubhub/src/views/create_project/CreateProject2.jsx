@@ -124,7 +124,6 @@ function CreateProject2(props) {
   }, []);
 
   const handleBlur = name => {
-    console.log(name);
     formik.setTouched({ [name]: true }, true);
   };
 

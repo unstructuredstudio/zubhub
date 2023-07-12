@@ -438,7 +438,6 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
 
 
 export const getProject = (props, state) => {
-    console.log(props, 'get project');
     return props
         .getProject({
             id: props.match.params.id,
@@ -484,8 +483,6 @@ export const getProject = (props, state) => {
                     props.setFieldValue('images', files, true);
                 }
 
-                console.log(obj.project);
-
                 if (obj.project.materials_used) {
                     props.setFieldValue(
                         'materials_used',
@@ -494,9 +491,7 @@ export const getProject = (props, state) => {
                     );
                 }
 
-                console.log({ obj });
                 if (obj.project.category) {
-                    console.log('hello_+++++++++++++++++');
                     props.setFieldValue('category', [{ name: obj.project.category }]);
                 }
 
