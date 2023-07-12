@@ -22,6 +22,12 @@ export default function Dropdown({
   const classes = makeStyles(dropdownStyle)();
   const commonClasses = makeStyles(styles)();
 
+  if (multiple && value) {
+    let valueTemp = [];
+    value.forEach(item => Object.keys(item).length > 0 && valueTemp.push(item));
+    value = valueTemp;
+  }
+
   const labelView = (props, ...rest) => {
     const color = rest[0].selected ? colors.primary : colors.light;
     const checked = rest[0].selected;

@@ -21,6 +21,7 @@ export default function TagsInput({
   remoteData,
   clearSuggestions,
   removeTag,
+  handleBlur,
 }) {
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(tagsInputStyles)();
@@ -97,6 +98,7 @@ export default function TagsInput({
           className={classes.input}
           id={name}
           value={value}
+          onBlur={handleBlur}
           name={name}
           placeholder={placeholder}
           onChange={handleChange}
