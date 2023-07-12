@@ -17,7 +17,8 @@ export const sidenavStyle = theme => ({
             color: colors.black,
         },
         '& :hover': {
-            backgroundColor: colors["primary-01"]
+            backgroundColor: colors["primary-01"],
+            cursor: 'pointer'
         }
     },
     logo: {

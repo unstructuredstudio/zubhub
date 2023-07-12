@@ -77,6 +77,8 @@ const About = React.lazy(() => import('./views/about/About'));
 const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 const NotFound = React.lazy(() => import('./views/not_found/NotFound'));
+const Settings = React.lazy(() => import('./views/settings/Settings'));
+
 
 const LazyImport = props => {
   const { LazyComponent, ...restOfProps } = props;
@@ -97,6 +99,15 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+        <Route
+          exact={true}
+          path="/settings"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Settings} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
