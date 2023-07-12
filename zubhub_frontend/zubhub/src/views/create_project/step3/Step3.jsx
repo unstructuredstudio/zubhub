@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dropdown } from '../../../components';
 import { getCategories } from '../script';
-import { getUrlQueryObject } from '../../../utils.js';
+import { TEAM_ENABLED, getUrlQueryObject } from '../../../utils.js';
 import { Checkbox, Typography } from '@material-ui/core';
 import { colors } from '../../../assets/js/colors';
 
@@ -15,8 +15,10 @@ export default function Step3({ formik, handleBlur, ...props }) {
 
   useEffect(() => {
     getCategories(props).then(cats => setCategories(cats.categories));
-    let params = getUrlQueryObject();
-    if ('mode' in params) setMode(params.mode);
+    if (TEAM_ENABLED) {
+      let params = getUrlQueryObject();
+      if ('mode' in params) setMode(params.mode);
+    }
   }, []);
 
   const [categories, setCategories] = useState([]);
@@ -28,7 +30,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
 
   return (
     <>
-      <Dropdown
+      {/* <Dropdown
         label="What category does your project belong too?"
         placeholder="Select Categories"
         handleChange={handleChange}
@@ -40,7 +42,8 @@ export default function Step3({ formik, handleBlur, ...props }) {
         withCheckbox={true}
         maxSelection={3}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
-      />
+      /> */}
+
       {mode === 'team' && (
         <div style={{ marginTop: 40 }}>
           <Dropdown
