@@ -22,8 +22,6 @@ export default function Dropdown({
   const classes = makeStyles(dropdownStyle)();
   const commonClasses = makeStyles(styles)();
 
-  console.log(value, 'hehhhh====');
-
   if (multiple && value) {
     let valueTemp = [];
     (Array.isArray(value) ? value : [{ name: value }]).forEach(
