@@ -375,6 +375,27 @@ function Profile(props) {
                   </div>
             </Paper>
 
+            <Paper   className= {classes.profileLowerStyle}>
+            <Typography
+             gutterBottom
+             component="h2"
+             variant="h6"
+             color="textPrimary"
+             className= {classes.titleStyle}
+            >
+            {t('profile.team')}
+            <CustomButton
+              className={classes.teamButton}
+              variant="contained"
+              margin="normal"
+              primaryButtonStyle
+              onClick={() => props.history.push('/create-team')}
+            >
+              {t('profile.createteam')}
+            </CustomButton>
+            </Typography>
+            </Paper>
+
             {profile.projects_count > 0 || drafts.length > 0 ? (
               username === props.auth.username ? (
                 <ProjectsDraftsGrid

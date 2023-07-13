@@ -25,6 +25,10 @@ const styles = theme => ({
       marginBottom: '1em',
     },
   },
+  teamButton: {
+    float: 'right',
+    marginLeft: theme.spacing(2),
+  },
   profileShareButtonStyle: {
     borderRadius: '50% !important',
   },

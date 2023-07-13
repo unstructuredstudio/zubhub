@@ -66,6 +66,7 @@ const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
   import('./views/activity_details/activity_details'),
 );
+const CreateTeam = React.lazy(() => import('./views/create_team/CreateTeam'));
 const LinkedProjects = React.lazy(() =>
   import('./views/linked_projects/LinkedProjects'),
 );
@@ -520,6 +521,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={Activities}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/create-team"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateTeam}
                 {...routeProps}
                 {...props}
               />
