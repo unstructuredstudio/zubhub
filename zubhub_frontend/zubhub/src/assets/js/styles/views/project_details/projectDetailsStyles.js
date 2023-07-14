@@ -188,7 +188,8 @@ const styles = theme => ({
     '& .ql-editor': {
       fontSize: '1.01rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
-      padding: '4px 0'
+      padding: '4px 0',
+      lineHeight: 1.9,
     },
   },
   materialsUsedStyle: {
@@ -204,7 +205,7 @@ const styles = theme => ({
   tagsBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: 10
+    gap: 20
   },
   tagsStyle: {
     backgroundColor: '#E4E4E4',

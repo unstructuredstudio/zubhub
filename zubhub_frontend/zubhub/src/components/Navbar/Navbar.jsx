@@ -115,7 +115,7 @@ export default function Navbar(props) {
           </Hidden>
           <Avatar
             className={commonClasses.iconBox}
-            alt={props.auth.username.toUpperCase()}
+            alt={props.auth?.username?.toUpperCase()}
             src="/static/images/avatar/1.jpg"
           />
         </Container>

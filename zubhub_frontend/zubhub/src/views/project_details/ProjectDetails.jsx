@@ -349,7 +349,7 @@ function ProjectDetails(props) {
                   <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.materials')}
                   </Typography>
-                  <div style={{ display: 'flex', gap: 10 }}>{buildMaterialsUsedComponent(classes, state)}</div>
+                  <div style={{ display: 'flex', gap: 20 }}>{buildMaterialsUsedComponent(classes, state)}</div>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography variant="h5" className={common_classes.title1}>
@@ -383,8 +383,8 @@ function ProjectDetails(props) {
             </Container>
 
             {/* <Comments context={{ name: 'project', body: project }} handleSetState={handleSetState} {...props} /> */}
-            <Box style={{ marginTop: 20 }}>
-              <Typography align="center" className={common_classes.title1}>
+            <Box style={{ marginTop: 100 }}>
+              <Typography align="center" style={{ marginBottom: 50 }} className={common_classes.title1}>
                 More Projects
               </Typography>
 

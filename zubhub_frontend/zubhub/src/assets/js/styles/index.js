@@ -188,6 +188,11 @@ const styles = theme => ({
   link: {
     textDecoration: 'none',
   },
+  checkbox: {
+    '&.MuiIconButton-root': {
+      padding: '0px !important'
+    }
+  }
 });
 
 export default styles;

@@ -87,10 +87,10 @@ const styles = theme => ({
     width: '100%',
   },
   default: {
-    padding: '4px 20px',
+    padding: '8px 40px',
     textTransform: 'capitalize',
-    fontSize: 12,
-    fontWeight: 'bold'
+    fontSize: 14,
+    fontWeight: '500'
   }
 });
 
