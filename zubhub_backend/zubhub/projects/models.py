@@ -66,7 +66,6 @@ class Category(MP_Node):
             self.slug = slugify(self.name) + "-" + uid
         super().save(*args, **kwargs)
 
-
 class Project(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,

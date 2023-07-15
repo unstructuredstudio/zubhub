@@ -93,15 +93,6 @@ class CategorySerializer(serializers.ModelSerializer):
             "name"
         ]
 
-class CategoryValidator:
-    def __call__(self, value):
-        category_names = set(Category.objects.values_list('name', flat=True))
-        provided_names = set(category['name'] for category in value)
-
-        invalid_categories = provided_names - category_names
-        if invalid_categories:
-            raise serializers.ValidationError(f"The following categories do not exist: {', '.join(invalid_categories)}")
-
 
 class ProjectSerializer(serializers.ModelSerializer):
     creator = CreatorMinimalSerializer(read_only=True)
@@ -112,12 +103,8 @@ class ProjectSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField('get_comments')
     images = ImageSerializer(many=True, required=False)
     tags = TagSerializer(many=True, required=False, read_only=True)
-    category = serializers.ListField(
-            child=serializers.DictField(
-                child=serializers.CharField(max_length=100)
-            ),
-            validators=[CategoryValidator()]
-        )    
+    category = serializers.SlugRelatedField(
+        slug_field="name", queryset=Category.objects.all(), required=False,many=True)
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
     publish = PublishingRuleSerializer(read_only=True)
@@ -272,17 +259,15 @@ class ProjectSerializer(serializers.ModelSerializer):
                 project.tags.add(tag)
 
             if category:
-                for cat in category:
-                    print(cat,'========')
-                    cat.add(project)
-                    project.category.add(cat)
+                project.category.set(category)
+
             if activity is not None:
                 activity.inspired_projects.add(project)
 
             if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
                 update_video_url_if_transform_ready.delay(
                     {"url": project.video, "project_id": project.id})
-
+            
             return project
 
     def update(self, project, validated_data):
