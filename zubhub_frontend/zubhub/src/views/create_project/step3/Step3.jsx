@@ -34,7 +34,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
 
   return (
     <>
-      {/* <Dropdown
+      <Dropdown
         label="What category does your project belong too?"
         placeholder="Select Categories"
         handleChange={handleChange}
@@ -46,9 +46,9 @@ export default function Step3({ formik, handleBlur, ...props }) {
         withCheckbox={true}
         maxSelection={3}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
-      /> */}
+      />
 
-      <label htmlFor="" className={commonClasses.title2}>
+      {/* <label htmlFor="" className={commonClasses.title2}>
         What category does your project belong too? <span className={commonClasses.colorRed}>*</span>
       </label>
       <Typography style={{ marginBottom: 10 }}>
@@ -67,7 +67,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
             </div>
           );
         })}
-      </div>
+      </div> */}
 
       {mode === 'team' && (
         <div style={{ marginTop: 40 }}>
