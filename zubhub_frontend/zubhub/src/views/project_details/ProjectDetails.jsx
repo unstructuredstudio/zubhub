@@ -355,20 +355,22 @@ function ProjectDetails(props) {
                   <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.category')}
                   </Typography>
-                  {project.category ? (
-                    project.category.map(cat => (
-                      <CustomButton
-                        key={cat}
-                        primaryButtonOutlinedStyle
-                        style={{ borderRadius: 4 }}
-                        onClick={() => props.history.push(`/search?q=${cat}`)}
-                      >
-                        {cat}
-                      </CustomButton>
-                    ))
-                  ) : (
-                    <Typography className={classes.categoryStyle}>{t('projectDetails.project.none')}</Typography>
-                  )}
+                  <div style={{ display: 'flex', gap: 20 }}>
+                    {project.category ? (
+                      project.category.map(cat => (
+                        <CustomButton
+                          key={cat}
+                          primaryButtonOutlinedStyle
+                          style={{ borderRadius: 4 }}
+                          onClick={() => props.history.push(`/search?q=${cat}`)}
+                        >
+                          {cat}
+                        </CustomButton>
+                      ))
+                    ) : (
+                      <Typography className={classes.categoryStyle}>{t('projectDetails.project.none')}</Typography>
+                    )}
+                  </div>
                 </Grid>
 
                 {project.tags.length > 0 ? (
