@@ -356,13 +356,16 @@ function ProjectDetails(props) {
                     {t('projectDetails.project.category')}
                   </Typography>
                   {project.category ? (
-                    <CustomButton
-                      primaryButtonOutlinedStyle
-                      style={{ borderRadius: 4 }}
-                      onClick={() => props.history.push(`/search?q=${project.category}`)}
-                    >
-                      {project.category}
-                    </CustomButton>
+                    project.category.map(cat => (
+                      <CustomButton
+                        key={cat}
+                        primaryButtonOutlinedStyle
+                        style={{ borderRadius: 4 }}
+                        onClick={() => props.history.push(`/search?q=${cat}`)}
+                      >
+                        {cat}
+                      </CustomButton>
+                    ))
                   ) : (
                     <Typography className={classes.categoryStyle}>{t('projectDetails.project.none')}</Typography>
                   )}

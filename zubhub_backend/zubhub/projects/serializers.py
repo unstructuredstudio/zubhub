@@ -232,19 +232,15 @@ class ProjectSerializer(serializers.ModelSerializer):
         images_data = validated_data.pop('images')
         tags_data = self.validate_tags(
             self.context['request'].data.get("tags", []))
-        category = None
+        category = validated_data.pop('category')
         activity = validated_data.pop('activity', None)
-        if validated_data.get('category', None):
-            category = validated_data.pop('category')
 
         publish = self.validate_publish(
             self.context['request'].data.get("publish", {}))
 
         with transaction.atomic():
-
             rule = PublishingRule.objects.create(type=publish["type"],
-                                                 publisher_id=str(self.context["request"].user.id))
-
+                                                publisher_id=str(self.context["request"].user.id))
             if rule.type == PublishingRule.PREVIEW:
                 rule.visible_to.set(Creator.objects.filter(
                     username__in=publish["visible_to"]))
@@ -276,9 +272,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         publish = self.validate_publish(self.initial_data.get("publish", {}))
 
         category = None
-        if validated_data.get('category', None):
+        if validated_data.get('category', []):
             category = validated_data.pop('category')
-
+        
         video_data = validated_data.pop("video")
 
         if (project.video.find("cloudinary.com") > -1 or
@@ -308,11 +304,9 @@ class ProjectSerializer(serializers.ModelSerializer):
             update_images(project, images_data)
             update_tags(project, tags_data)
 
-            old_category = project.category
-            if old_category:
-                old_category.projects.remove(project)
             if category:
-                category.projects.add(project)
+                project.category.set(category)
+            else: project.category.set([])
 
             if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
                 update_video_url_if_transform_ready.delay(

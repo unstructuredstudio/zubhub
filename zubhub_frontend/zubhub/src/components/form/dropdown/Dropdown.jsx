@@ -30,6 +30,8 @@ export default function Dropdown({
     value = valueTemp;
   }
 
+  console.log({ value });
+
   const labelView = (props, ...rest) => {
     const color = rest[0].selected ? colors.primary : colors.light;
     const checked = rest[0].selected;

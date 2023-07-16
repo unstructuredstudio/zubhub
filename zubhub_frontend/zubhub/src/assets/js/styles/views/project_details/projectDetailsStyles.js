@@ -159,7 +159,7 @@ const styles = theme => ({
   sliderBoxStyle: {
     [theme.breakpoints.down('1080')]: {
       width: '90%',
-    },
+    }
   },
   carouselImageStyle: {
     borderRadius: '15px',

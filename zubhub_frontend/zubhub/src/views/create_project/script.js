@@ -184,7 +184,6 @@ export const uploadProject = async (state, props, handleSetState) => {
     const tags = props.values['tags'] ? props.values['tags'].map(tag => typeof tag === 'string' ? { name: tag } : tag) : [];
 
     const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
-    console.log(props, 'props');
     create_or_update({
         ...props.values,
         tags,
@@ -194,7 +193,7 @@ export const uploadProject = async (state, props, handleSetState) => {
         activity: props.location.state?.activity_id,
         images: state.media_upload.uploaded_images_url || '',
         video: state.media_upload.uploaded_videos_url[0] || props.values.video_link,
-        category: props.values.category[0].name,
+        category: props.values.category.filter(cat => cat.name).map(cat => cat?.name),
         t: props.t,
         publish: { type: props.step < 3 ? 1 : 4, visible_to: [] }
     })
@@ -492,7 +491,7 @@ export const getProject = (props, state) => {
                 }
 
                 if (obj.project.category) {
-                    props.setFieldValue('category', [{ name: obj.project.category }]);
+                    props.setFieldValue('category', obj.project.category.map(cat => ({ name: cat })), true);
                 }
 
                 if (obj.project.tags) {
