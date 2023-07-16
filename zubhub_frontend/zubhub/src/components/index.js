@@ -6,7 +6,7 @@ import VideoInput from "./form/videoInput/VideoInput";
 import Sidenav from "./Sidenav/Sidenav";
 import Editor from "./form/editor/Editor";
 import Modal from "./modals/Modal";
-
+import Comments from './comments/Comments'
 export {
     TagsInput,
     Sidenav,
@@ -15,5 +15,6 @@ export {
     VideoInput,
     Dropdown,
     Editor,
-    Modal
+    Modal,
+    Comments
 }

@@ -51,7 +51,7 @@ import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
 import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import { cloudinaryFactory, getPlayerOptions, parseComments } from '../../assets/js/utils/scripts';
-import { Modal } from '../../components/index.js';
+import { Comments, Modal } from '../../components/index.js';
 import Project from '../../components/project/Project';
 import { getUrlQueryObject } from '../../utils.js';
 
@@ -387,7 +387,7 @@ function ProjectDetails(props) {
               </Grid>
             </Container>
 
-            {/* <Comments context={{ name: 'project', body: project }} handleSetState={handleSetState} {...props} /> */}
+            <Comments context={{ name: 'project', body: project }} handleSetState={handleSetState} {...props} />
             <Box style={{ marginTop: 100 }}>
               <Typography align="center" style={{ marginBottom: 50 }} className={common_classes.title1}>
                 More Projects
