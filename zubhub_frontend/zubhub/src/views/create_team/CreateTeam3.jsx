@@ -55,6 +55,19 @@ function CreateTeam3(props) {
   const [inspiringExamples, setInspiringExamples] = useState([]);
   const [page, setPage] = useState(1);
 
+  const [selectedProjects, setSelectedProjects] = useState([]);
+
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setSelectedProjects((prevSelectedProjects) => [
+          ...prevSelectedProjects,
+          obj,
+        ]);
+      });
+    }
+  };
+
   React.useEffect(() => {
     let project= API.getUserProjects({username});
     project.then(data=>setProjects(data.results));
@@ -66,13 +79,6 @@ function CreateTeam3(props) {
   //   results: projects
   // } = state;
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        
-      });
-    }
-  };
 
   return (
     <div className={activity_classes.createActivityStepContainer}>

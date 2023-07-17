@@ -9,6 +9,7 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
+import CheckCircleRounded from '@material-ui/icons/CheckCircleRounded';
 import {
   Tooltip,
   Avatar,
@@ -53,10 +54,10 @@ function Project(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
-  const { project, t } = props;
+  const { project, t, isSelected } = props;
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
-      <Card className={classes.root}>
+      <Card className={clsx(classes.root, { [classes.blurred]: isSelected })}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
           <Tooltip
             title={getPublishTypeLabel(project.publish.type)}
@@ -104,6 +105,12 @@ function Project(props) {
           <CardContent
             className={clsx(classes.contentStyle, classes.positionRelative)}
           >
+            {isSelected && (
+              <Box className={classes.projectAdded}>
+                <Typography variant="body1">Project Added</Typography>
+                <CheckCircleRounded />
+              </Box>
+            )}
             <Fab
               className={classes.fabButtonStyle}
               size="small"
@@ -256,6 +263,7 @@ Project.propTypes = {
   toggleLike: PropTypes.func.isRequired,
   toggleSave: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
+  isSelected: PropTypes.bool,
 };
 
 export default Project;
