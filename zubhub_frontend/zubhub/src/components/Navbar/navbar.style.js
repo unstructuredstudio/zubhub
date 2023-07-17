@@ -6,7 +6,8 @@ export const navbarStyle = theme => ({
         backgroundColor: colors.primary,
         '&.MuiPaper-elevation4': {
             boxShadow: 'unset'
-        }
+        },
+        zIndex: 2
     },
     box: {
         backgroundColor: colors.secondary,

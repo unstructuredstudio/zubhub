@@ -8,6 +8,7 @@ import Editor from "./form/editor/Editor";
 import Modal from "./modals/Modal";
 import Comments from './comments/Comments'
 import CustomButton from "./button/Button";
+
 export {
     TagsInput,
     Sidenav,
@@ -18,5 +19,5 @@ export {
     Editor,
     Modal,
     Comments,
-    CustomButton
+    CustomButton,
 }

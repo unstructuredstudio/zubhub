@@ -61,7 +61,7 @@ const links = ({ draftCount, myProjectCount, username }) => [
 ];
 
 const bottomLinks = [
-  { label: 'Settings', link: '/settings', icon: Settings, requireAuth: true },
+  // { label: 'Settings', link: '/settings', icon: Settings, requireAuth: true },
   { label: 'Log Out', action: 'logout', icon: RiLogoutBoxRFill, red: true, requireAuth: true },
 ];
 

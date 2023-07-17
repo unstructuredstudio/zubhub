@@ -213,7 +213,7 @@ function PageWrapper(props) {
   const { zubhub, hero } = props.projects;
 
   const profileMenuOpen = Boolean(anchor_el);
-
+  console.log(props);
   return (
     <>
       <ToastContainer />
@@ -655,6 +655,7 @@ function PageWrapper(props) {
       <Toolbar ref={backToTopEl} className={classes.marginBottom} />
 
       <Container className={classes.childrenContainer} maxWidth="lg">
+        {/* {props.match.path === '/' && <div style={{ minHeight: '80vh' }}>{props.children}</div>} */}
         <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout>
       </Container>
 

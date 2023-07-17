@@ -9,7 +9,7 @@ export const editorStyle = theme => ({
             fontSize: 14,
             borderRadius: 4
         },
-        height: 125,
+        height: 100,
     },
     editorTooltip: ({ position: { left, top, width } }) => ({
         display: 'flex',

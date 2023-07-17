@@ -31,6 +31,10 @@ export default function Step1({ formik, handleBlur }) {
     formik.setFieldValue('materials_used', tags);
   };
 
+  const handleDescriptionChange = value => {
+    formik.setFieldValue('description', value);
+  };
+
   let quillRef = null;
 
   return (
@@ -59,8 +63,16 @@ export default function Step1({ formik, handleBlur }) {
           <label className={commonClasses.title2}>
             Share a few things about your Project <span className={commonClasses.colorRed}>*</span>
           </label>
-          {/* <Editor variant="outlined" name="description" multiline minRows={4} placeholder="Describe your project" /> */}
-          <TextField
+          <Editor
+            value={formik.values.description}
+            onChange={handleDescriptionChange}
+            variant="outlined"
+            name="description"
+            multiline
+            minRows={3}
+            placeholder="Describe your project"
+          />
+          {/* <TextField
             variant="outlined"
             name="description"
             multiline
@@ -71,7 +83,7 @@ export default function Step1({ formik, handleBlur }) {
             onBlur={formik.handleBlur}
             error={formik.touched.description && formik.errors.description ? true : false}
             helperText={formik.touched.description && formik.errors.description}
-          />
+          /> */}
         </FormControl>
       </Box>
 

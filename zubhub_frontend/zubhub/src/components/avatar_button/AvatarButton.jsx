@@ -26,7 +26,6 @@ const AvatarButton = props => {
   return (
     <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
       <div>
-        <HamburgerMenu setDropdownOpen={setDropdownOpen} dropdownOpen={dropdownOpen} />
         <Avatar
           ref={buttonRef}
           onClick={() => (!auth.token ? setDropdownOpen(!dropdownOpen) : goToProfile())}

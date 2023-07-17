@@ -19,7 +19,7 @@ const menu = [
   // { name: 'attachment', icon: AttachFileOutlined },
 ];
 
-export default function Editor(props) {
+export default function Editor({ onChange, value, ...props }) {
   let quillRef = useRef(null);
   const [position, setPosition] = useState({});
   const [isSeleted, setIsSeleted] = useState(false);
@@ -73,6 +73,8 @@ export default function Editor(props) {
       <ReactQuill
         ref={ref => (quillRef = ref)}
         onChangeSelection={onSelectionChange}
+        onChange={onChange}
+        value={value}
         className={classes.editor}
         modules={{ toolbar: false }}
         placeholder="Please describe your project"

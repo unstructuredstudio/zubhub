@@ -37,7 +37,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
     { name: 'Team', id: '1' },
     { name: 'Co-creator', id: '2' },
   ];
-  const isLimit = formik.values.category.length == 3;
+  const isLimit = formik.values.category.filter(cat => cat.name).length == 3;
 
   return (
     <>

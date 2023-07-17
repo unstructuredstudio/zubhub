@@ -11,7 +11,7 @@ const styles = theme => ({
   },
   title1: {
     fontWeight: 'bold',
-    fontSize: '25px !important',
+    fontSize: '30px !important',
     lineHeight: '35px',
     marginBottom: 8,
     color: colors.black

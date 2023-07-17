@@ -44,16 +44,18 @@ import {
   toggleFollow,
   toggleLike,
   toggleSave,
-} from './projectDetailsScripts';
+} from '../project_details/projectDetailsScripts';
 
-import { CloseOutlined } from '@material-ui/icons';
+import { CloseOutlined, DescriptionOutlined } from '@material-ui/icons';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
-import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import styles, { sliderSettings } from './previewProject.styles';
 import { cloudinaryFactory, getPlayerOptions, parseComments } from '../../assets/js/utils/scripts';
 import { Comments, Modal } from '../../components/index.js';
 import Project from '../../components/project/Project';
 import { getUrlQueryObject } from '../../utils.js';
+import Navbar from '../../components/Navbar/Navbar';
+import { images } from '../../assets/images';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -188,209 +190,212 @@ function ProjectDetails(props) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
     return (
-      <>
-        <Box className={classes.root}>
-          <Box className={classes.projectDetailHeaderStyle}>
-            <Container className={classes.headerStyle}>
-              <Typography align="center" className={common_classes.title1} variant="h3" gutterBottom>
-                {project.title}
-              </Typography>
-              {/* Over video */}
-              <Grid container>
-                <Grid item className={classes.creatorProfileStyle}>
-                  <Link className={clsx(classes.textDecorationNone)} to={`/creators/${project.creator.username}`}>
-                    <Avatar
-                      className={classes.creatorAvatarStyle}
-                      src={project.creator.avatar}
-                      alt={project.creator.username}
-                    />
-                    <Typography color="textSecondary" component="span">
-                      {project.creator.username}
-                    </Typography>
-                  </Link>
-                  {project.creator.id === props.auth.id ? (
-                    <Grid container justify="flex-end">
-                      <Link className={classes.textDecorationNone} to={`/projects/${project.id}/edit?mode=personal`}>
-                        <CustomButton className={common_classes.marginLeft1em} variant="contained" primaryButtonStyle>
-                          {t('projectDetails.project.edit')}
-                        </CustomButton>
-                      </Link>
-                      <CustomButton
-                        className={common_classes.marginLeft1em}
-                        variant="contained"
-                        dangerButtonStyle
-                        onClick={() => handleSetState(handleToggleDeleteProjectModal(state))}
-                      >
-                        {t('projectDetails.project.delete.label')}
-                      </CustomButton>
-                    </Grid>
-                  ) : (
+      <div className={classes.previewRoot}>
+        <div className={classes.previewheader}>
+          <div style={{ display: 'flex', alignItems: 'center', marginRight: 'auto' }}>
+            <DescriptionOutlined />
+            <Typography>Preview Draft</Typography>
+          </div>
+
+          <CustomButton
+            onClick={() => props.history.replace(`/projects/${props.match.params.id}/edit`)}
+            primaryButtonOutlinedStyle
+            style={{ padding: '2px 10px' }}
+          >
+            Close
+          </CustomButton>
+        </div>
+        <div className={classes.body}>
+          <div className={classes.navbar}>
+            <img src={images.logo} height={25} />
+          </div>
+          <div className={classes.breadcrum}></div>
+          <Box className={classes.root}>
+            <Box className={classes.projectDetailHeaderStyle}>
+              <Container className={classes.headerStyle}>
+                <Typography align="center" className={common_classes.title1} variant="h3" gutterBottom>
+                  {project.title}
+                </Typography>
+                {/* Over video */}
+                <Grid container>
+                  <Grid item className={classes.creatorProfileStyle}>
+                    <Link className={clsx(classes.textDecorationNone)} to={`/creators/${project.creator.username}`}>
+                      <Avatar
+                        className={classes.creatorAvatarStyle}
+                        src={project.creator.avatar}
+                        alt={project.creator.username}
+                      />
+                      <Typography color="textSecondary" component="span">
+                        {project.creator.username}
+                      </Typography>
+                    </Link>
+
                     <CustomButton
                       className={common_classes.marginLeft1em}
+                      style={{ marginLeft: 'auto' }}
                       variant="contained"
-                      onClick={e => handleSetState(toggleFollow(e, props, project.creator.id, state))}
                       primaryButtonStyle
                     >
-                      {project.creator.followers.includes(props.auth.id)
-                        ? t('projectDetails.project.creator.unfollow')
-                        : t('projectDetails.project.creator.follow')}
+                      {t('projectDetails.project.creator.follow')}
                     </CustomButton>
-                  )}
-                </Grid>
-              </Grid>
-            </Container>
-            <Container className={classes.detailStyle}>
-              <Grid container spacing={3} justify="center">
-                <Grid item xs={12} sm={12} md={12} className={clsx(classes.positionRelative)}>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    className={clsx(classes.videoWrapperStyle, classes.positionRelative)}
-                  >
-                    {project.video ? (
-                      <>
-                        {isCloudinaryVideo(project.video) ? (
-                          <video
-                            id="cloudinary-video-player"
-                            controls
-                            className={clsx('cld-video-player', classes.iframeStyle)}
-                          ></video>
-                        ) : isGdriveORVimeoORYoutube(project.video) ? (
-                          <iframe title={project.title} className={classes.iframeStyle} src={project.video}></iframe>
-                        ) : (
-                          <video src={project.video} className={classes.iframeStyle} controls>
-                            {t('projectDetails.errors.noBrowserSupport')}
-                          </video>
-                        )}
-                      </>
-                    ) : project.images.length > 0 ? (
-                      <img className={classes.iframeStyle} src={project.images[0].image_url} alt={project.title} />
-                    ) : null}
                   </Grid>
                 </Grid>
-                <div
-                  style={{
-                    backgroundColor: colors.primary,
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '16px 12px',
-                    borderRadius: 8,
-                  }}
-                >
-                  <IconButton
-                    className={classes.actionBoxButtonStyle}
-                    aria-label={t('projectDetails.ariaLabels.likeButton.label')}
-                    onClick={e => handleSetState(toggleLike(e, props, project.id))}
-                  >
-                    {project.likes.includes(props.auth.id) ? (
-                      <ClapIcon color={colors.white} arial-label={t('projectDetails.ariaLabels.likeButton.unlilke')} />
-                    ) : (
-                      <ClapBorderIcon
-                        color={colors.white}
-                        arial-label={t('projectDetails.ariaLabels.likeButton.like')}
-                      />
-                    )}
-                  </IconButton>
-                  <IconButton
-                    className={classes.actionBoxButtonStyle}
-                    aria-label={t('projectDetails.ariaLabels.saveButton.label')}
-                    onClick={e => handleSetState(toggleSave(e, props, project.id))}
-                  >
-                    {project.saved_by.includes(props.auth.id) ? (
-                      <BookmarkIcon aria-label={t('projectDetails.ariaLabels.saveButton.unsave')} />
-                    ) : (
-                      <BookmarkBorderIcon aria-label={t('projectDetails.ariaLabels.saveButton.save')} />
-                    )}
-                  </IconButton>
-
-                  <IconButton className={classes.actionBoxButtonStyle}>
-                    <VisibilityIcon />
-                  </IconButton>
-
-                  <SocialButtons />
-                </div>
-                {project.images && project.images.length > 0 ? (
-                  <Grid item xs={12} sm={12} md={12} align="center">
-                    <Box className={classes.sliderBoxStyle}>
-                      <Slider {...sliderSettings(project.images.length)}>
-                        {project.images.map(image => (
-                          <div>
-                            <img
-                              key={image.public_id}
-                              className={classes.carouselImageStyle}
-                              src={image.image_url}
-                              alt={image.public_id}
-                              onClick={e => handleSetState(handleOpenEnlargedImageDialog(e, state))}
-                            />
-                          </div>
-                        ))}
-                      </Slider>
-                    </Box>
+              </Container>
+              <Container className={classes.detailStyle}>
+                <Grid container spacing={3} justify="center">
+                  <Grid item xs={12} sm={12} md={12} className={clsx(classes.positionRelative)}>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      className={clsx(classes.videoWrapperStyle, classes.positionRelative)}
+                    >
+                      {project.video ? (
+                        <>
+                          {isCloudinaryVideo(project.video) ? (
+                            <video
+                              id="cloudinary-video-player"
+                              controls
+                              className={clsx('cld-video-player', classes.iframeStyle)}
+                            ></video>
+                          ) : isGdriveORVimeoORYoutube(project.video) ? (
+                            <iframe title={project.title} className={classes.iframeStyle} src={project.video}></iframe>
+                          ) : (
+                            <video src={project.video} className={classes.iframeStyle} controls>
+                              {t('projectDetails.errors.noBrowserSupport')}
+                            </video>
+                          )}
+                        </>
+                      ) : project.images.length > 0 ? (
+                        <img className={classes.iframeStyle} src={project.images[0].image_url} alt={project.title} />
+                      ) : null}
+                    </Grid>
                   </Grid>
-                ) : null}
+                  <div
+                    style={{
+                      backgroundColor: colors.primary,
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '16px 12px',
+                      borderRadius: 8,
+                    }}
+                  >
+                    <IconButton
+                      className={classes.actionBoxButtonStyle}
+                      aria-label={t('projectDetails.ariaLabels.likeButton.label')}
+                      onClick={e => handleSetState(toggleLike(e, props, project.id))}
+                    >
+                      {project.likes.includes(props.auth.id) ? (
+                        <ClapIcon
+                          color={colors.white}
+                          arial-label={t('projectDetails.ariaLabels.likeButton.unlilke')}
+                        />
+                      ) : (
+                        <ClapBorderIcon
+                          color={colors.white}
+                          arial-label={t('projectDetails.ariaLabels.likeButton.like')}
+                        />
+                      )}
+                    </IconButton>
+                    <IconButton
+                      className={classes.actionBoxButtonStyle}
+                      aria-label={t('projectDetails.ariaLabels.saveButton.label')}
+                      onClick={e => handleSetState(toggleSave(e, props, project.id))}
+                    >
+                      {project.saved_by.includes(props.auth.id) ? (
+                        <BookmarkIcon aria-label={t('projectDetails.ariaLabels.saveButton.unsave')} />
+                      ) : (
+                        <BookmarkBorderIcon aria-label={t('projectDetails.ariaLabels.saveButton.save')} />
+                      )}
+                    </IconButton>
 
-                <Grid item xs={12} sm={12} md={12}>
-                  <Typography variant="h5" className={common_classes.title1}>
-                    {t('projectDetails.project.description')}
-                  </Typography>
-                  <ReactQuill
-                    className={classes.descriptionBodyStyle}
-                    theme={'bubble'}
-                    readOnly={true}
-                    value={project.description || ''}
-                  />
-                </Grid>
+                    <IconButton className={classes.actionBoxButtonStyle}>
+                      <VisibilityIcon />
+                    </IconButton>
 
-                <Grid item xs={12} sm={12} md={12}>
-                  <Typography variant="h5" className={common_classes.title1}>
-                    {t('projectDetails.project.materials')}
-                  </Typography>
-                  <div style={{ display: 'flex', gap: 20 }}>{buildMaterialsUsedComponent(classes, state)}</div>
-                </Grid>
-                <Grid item xs={12} sm={12} md={12}>
-                  <Typography variant="h5" className={common_classes.title1}>
-                    {t('projectDetails.project.category')}
-                  </Typography>
-                  <div style={{ display: 'flex', gap: 20 }}>
-                    {project.category ? (
-                      project.category.map(cat => (
-                        <CustomButton
-                          key={cat}
-                          primaryButtonOutlinedStyle
-                          style={{ borderRadius: 4 }}
-                          onClick={() => props.history.push(`/search?q=${cat}`)}
-                        >
-                          {cat}
-                        </CustomButton>
-                      ))
-                    ) : (
-                      <Typography className={classes.categoryStyle}>{t('projectDetails.project.none')}</Typography>
-                    )}
+                    <SocialButtons />
                   </div>
-                </Grid>
+                  {project.images && project.images.length > 0 ? (
+                    <Grid item xs={12} sm={12} md={12} align="center">
+                      <Box className={classes.sliderBoxStyle}>
+                        <Slider {...sliderSettings(project.images.length)}>
+                          {project.images.map(image => (
+                            <div>
+                              <img
+                                key={image.public_id}
+                                className={classes.carouselImageStyle}
+                                src={image.image_url}
+                                alt={image.public_id}
+                                onClick={e => handleSetState(handleOpenEnlargedImageDialog(e, state))}
+                              />
+                            </div>
+                          ))}
+                        </Slider>
+                      </Box>
+                    </Grid>
+                  ) : null}
 
-                {project.tags.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12}>
                     <Typography variant="h5" className={common_classes.title1}>
-                      {t('projectDetails.project.hashtags')}
+                      {t('projectDetails.project.description')}
                     </Typography>
+                    <ReactQuill
+                      className={classes.descriptionBodyStyle}
+                      theme={'bubble'}
+                      readOnly={true}
+                      value={project.description || ''}
+                    />
+                  </Grid>
 
-                    <div className={classes.tagsBoxStyle}>
-                      {buildTagsComponent(classes, project.tags, props.history)}
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography variant="h5" className={common_classes.title1}>
+                      {t('projectDetails.project.materials')}
+                    </Typography>
+                    <div style={{ display: 'flex', gap: 20 }}>{buildMaterialsUsedComponent(classes, state)}</div>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography variant="h5" className={common_classes.title1}>
+                      {t('projectDetails.project.category')}
+                    </Typography>
+                    <div style={{ display: 'flex', gap: 20 }}>
+                      {project.category ? (
+                        project.category.map(cat => (
+                          <CustomButton
+                            key={cat}
+                            primaryButtonOutlinedStyle
+                            style={{ borderRadius: 4 }}
+                            onClick={() => props.history.push(`/search?q=${cat}`)}
+                          >
+                            {cat}
+                          </CustomButton>
+                        ))
+                      ) : (
+                        <Typography className={classes.categoryStyle}>{t('projectDetails.project.none')}</Typography>
+                      )}
                     </div>
                   </Grid>
-                ) : null}
-              </Grid>
-            </Container>
 
-            <div style={{ marginTop: 100 }}>
+                  {project.tags.length > 0 ? (
+                    <Grid item xs={12} sm={12} md={12}>
+                      <Typography variant="h5" className={common_classes.title1}>
+                        {t('projectDetails.project.hashtags')}
+                      </Typography>
+
+                      <div className={classes.tagsBoxStyle}>
+                        {buildTagsComponent(classes, project.tags, props.history)}
+                      </div>
+                    </Grid>
+                  ) : null}
+                </Grid>
+              </Container>
+
+              {/* <div style={{ marginTop: 100 }}>
               <Comments context={{ name: 'project', body: project }} handleSetState={handleSetState} {...props} />
-            </div>
-            <Box style={{ marginTop: 100 }}>
+            </div> */}
+              {/* <Box style={{ marginTop: 100 }}>
               <Typography align="center" style={{ marginBottom: 50 }} className={common_classes.title1}>
                 More Projects
               </Typography>
@@ -407,9 +412,10 @@ function ProjectDetails(props) {
                   </Grid>
                 ))}
               </Grid>
+            </Box> */}
             </Box>
           </Box>
-        </Box>
+        </div>
 
         <Dialog
           PaperProps={{
@@ -491,7 +497,7 @@ function ProjectDetails(props) {
         </Dialog>
 
         {open ? <Confetti width={width} height={height} /> : null}
-      </>
+      </div>
     );
   } else {
     return <ErrorPage error={t('projectDetails.errors.unexpected')} />;
