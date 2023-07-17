@@ -108,9 +108,9 @@ function Project(props) {
               className={classes.fabButtonStyle}
               size="small"
               aria-label="save button"
-              onClick={(e, id = project.id) => toggleSave(e, id, props)}
+              onClick={(e, id = project?.id) => toggleSave(e, id, props)}
             >
-              {project.saved_by.includes(props.auth.id) ? (
+              {project.saved_by.includes(props.auth?.id) ? (
                 <BookmarkIcon aria-label="unsave" />
               ) : (
                 <BookmarkBorderIcon aria-label="save" />
@@ -123,7 +123,7 @@ function Project(props) {
               variant="extended"
               onClick={(e, id = project.id) => toggleLike(e, id, props)}
             >
-              {project.likes.includes(props.auth.id) ? (
+              {project.likes.includes(props.auth?.id) ? (
                 <ClapIcon arial-label="unlike" />
               ) : (
                 <ClapBorderIcon arial-label="like" />
