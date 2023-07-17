@@ -96,5 +96,9 @@ export const navbarStyle = theme => ({
         marginBottom: `${0} !important`,
         textTransform: 'capitalize'
     },
+    menuDropdown: {
+        // width: 'max-content !important',
+        padding: '10px 20px'
+    }
 
 }) 

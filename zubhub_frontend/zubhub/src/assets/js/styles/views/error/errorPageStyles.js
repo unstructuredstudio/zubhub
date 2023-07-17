@@ -2,7 +2,7 @@ const styles = theme => ({
   root: {
     paddingBottom: '2em',
     display: 'flex',
-    flex: '1 0 auto',
+    // flex: '1 0 auto',
     // background: 'rgba(255,204,0,1)',
     // background:
     //   '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
@@ -41,6 +41,7 @@ const styles = theme => ({
   },
   errorBoxStyle: {
     display: 'flex',
+    textAlign: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',

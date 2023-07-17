@@ -7,6 +7,7 @@ import Sidenav from "./Sidenav/Sidenav";
 import Editor from "./form/editor/Editor";
 import Modal from "./modals/Modal";
 import Comments from './comments/Comments'
+import CustomButton from "./button/Button";
 export {
     TagsInput,
     Sidenav,
@@ -16,5 +17,6 @@ export {
     Dropdown,
     Editor,
     Modal,
-    Comments
+    Comments,
+    CustomButton
 }

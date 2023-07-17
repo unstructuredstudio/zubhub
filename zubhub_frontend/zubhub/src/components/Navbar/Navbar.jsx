@@ -10,8 +10,9 @@ import {
   SwipeableDrawer,
   Typography,
   makeStyles,
+  Menu,
 } from '@material-ui/core';
-import { Menu, Notifications, Search, SearchOutlined, Translate } from '@material-ui/icons';
+import { Menu as MenuIcon, Notifications, Search, SearchOutlined, Translate } from '@material-ui/icons';
 import clsx from 'clsx';
 import React, { forwardRef, useState } from 'react';
 import { images } from '../../assets/images';
@@ -22,6 +23,7 @@ import { handleChangeLanguage } from '../../views/pageWrapperScripts';
 import Sidenav from '../Sidenav/Sidenav';
 import BreadCrumb from '../breadCrumb/breadCrumb';
 import { navbarStyle } from './navbar.style';
+import CustomButton from '../button/Button';
 
 const anchor = 'left';
 
@@ -30,6 +32,16 @@ export default function Navbar(props) {
   const classes = makeStyles(navbarStyle)();
   const commonClasses = makeStyles(commonStyles)();
   const [state, setState] = useState({ left: false });
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [left, setleft] = useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClickListItem = event => {
+    const { screenY, screenX } = event;
+    setleft(screenX);
+    console.log(screenX, screenY);
+    setAnchorEl(event.currentTarget);
+  };
 
   const languages = Object.keys(languageMap).map((ln, index) => (
     <MenuItem key={index} value={ln}>
@@ -44,13 +56,17 @@ export default function Navbar(props) {
     setState({ left: !state.left });
   };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <AppBar id="navbar-root" className={classes.root}>
       <div className={classes.box}>
         <Container className={classes.container} maxWidth="lg">
           <Hidden mdUp>
             <Box onClick={toggleDrawer}>
-              <Menu />
+              <MenuIcon />
             </Box>
           </Hidden>
           {/* Logo */}
@@ -104,7 +120,7 @@ export default function Navbar(props) {
           </Hidden>
 
           <Hidden smDown>
-            <div className={clsx(classes.notification, commonClasses.iconBox)}>
+            <div onClick={handleClickListItem} className={clsx(classes.notification, commonClasses.iconBox)}>
               <Notifications style={{ color: colors.primary, fontSize: 20 }} />
             </div>
 
@@ -113,11 +129,24 @@ export default function Navbar(props) {
               <Typography className="">Student</Typography>
             </Box>
           </Hidden>
-          <Avatar
-            className={commonClasses.iconBox}
-            alt={props.auth?.username?.toUpperCase()}
-            src="/static/images/avatar/1.jpg"
-          />
+          <div onClick={handleClickListItem}>
+            <Avatar
+              className={commonClasses.iconBox}
+              alt={props.auth?.username?.toUpperCase()}
+              src="/static/images/avatar/1.jpg"
+            />
+          </div>
+          <Menu
+            onClose={handleClose}
+            id="lock-menu"
+            anchorEl={anchorEl}
+            // anchorReference="anchorPosition"
+            // anchorPosition={{ left, top: 67 }}
+            className={classes.menuDropdown}
+            open={open}
+          >
+            <CustomButton primaryButtonStyle>Get Started</CustomButton>
+          </Menu>
         </Container>
       </div>
       <Container maxWidth="lg">

@@ -98,7 +98,13 @@ function UserDrafts(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('userDrafts.errors.noUserDrafts')} />;
+    return (
+      <ErrorPage error={t('userDrafts.errors.noUserDrafts')}>
+        <CustomButton primaryButtonStyle href="/projects/create">
+          Create Project
+        </CustomButton>
+      </ErrorPage>
+    );
   }
 }
 

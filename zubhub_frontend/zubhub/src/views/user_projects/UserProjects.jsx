@@ -101,7 +101,13 @@ function UserProjects(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('userProjects.errors.noUserProjects')} />;
+    return (
+      <ErrorPage error={t('userProjects.errors.noUserProjects')}>
+        <CustomButton primaryButtonStyle href="/projects/create">
+          Create Project
+        </CustomButton>
+      </ErrorPage>
+    );
   }
 }
 
