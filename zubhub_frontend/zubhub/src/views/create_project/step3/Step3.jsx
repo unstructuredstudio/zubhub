@@ -10,8 +10,14 @@ import { step3Style } from './step3.styles';
 export default function Step3({ formik, handleBlur, ...props }) {
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(step3Style)();
-  const handleChange = data => {
-    formik.setFieldValue('category', data);
+
+  const handleChange = (data, checked) => {
+    let newCategories = [...formik.values.category];
+    if (checked) {
+      newCategories = newCategories.filter(cat => cat.name !== data.name);
+    } else newCategories.push(data);
+
+    formik.setFieldValue('category', newCategories);
   };
   const [mode, setMode] = useState('');
   const [creatorValue, setCreatorValue] = useState({});
@@ -31,10 +37,11 @@ export default function Step3({ formik, handleBlur, ...props }) {
     { name: 'Team', id: '1' },
     { name: 'Co-creator', id: '2' },
   ];
+  const isLimit = formik.values.category.length == 3;
 
   return (
     <>
-      <Dropdown
+      {/* <Dropdown
         label="What category does your project belong too?"
         placeholder="Select Categories"
         handleChange={handleChange}
@@ -46,28 +53,34 @@ export default function Step3({ formik, handleBlur, ...props }) {
         withCheckbox={true}
         maxSelection={3}
         description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
-      />
+      /> */}
 
-      {/* <label htmlFor="" className={commonClasses.title2}>
+      <label htmlFor="" className={commonClasses.title2}>
         What category does your project belong too? <span className={commonClasses.colorRed}>*</span>
       </label>
       <Typography style={{ marginBottom: 10 }}>
         Select any of the categories that best describe your project. Select none of you are unsure about your category.
       </Typography>
 
-      <div className={classes.pillContainer}>
+      <Grid container spacing={3} className={classes.pillContainer}>
         {categories.map(cat => {
           let selected =
             formik.values.category.filter(selectedCategory => selectedCategory.name === cat.name).length > 0;
-          const color = selected ? colors.primary : colors.light;
+          const color = selected ? colors.primary : isLimit ? '#D9DEE2' : colors.light;
           return (
-            <div item key={cat.name} style={{ border: `solid 1px ${color}` }} className={classes.pill}>
-              <Checkbox className={commonClasses.checkbox} checked={selected} style={{ color, borderWidth: 1 }} />
-              <Typography>{cat.name}</Typography>
-            </div>
+            <Grid item xs={6} md={4} key={cat.name}>
+              <div
+                onClick={() => (isLimit && !selected ? null : handleChange(cat, selected))}
+                className={classes.pill}
+                style={{ border: `solid 1px ${color}` }}
+              >
+                <Checkbox className={commonClasses.checkbox} checked={selected} style={{ color, borderWidth: 1 }} />
+                <Typography style={{ ...(isLimit && !selected && { color }) }}>{cat.name}</Typography>
+              </div>
+            </Grid>
           );
         })}
-      </div> */}
+      </Grid>
 
       {mode === 'team' && (
         <div style={{ marginTop: 40 }}>

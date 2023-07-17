@@ -191,7 +191,10 @@ const styles = theme => ({
   checkbox: {
     '&.MuiIconButton-root': {
       padding: '0px !important'
-    }
+    },
+    '& .MuiSvgIcon-root': {
+      fontSize: '1.2rem'
+    },
   }
 });
 

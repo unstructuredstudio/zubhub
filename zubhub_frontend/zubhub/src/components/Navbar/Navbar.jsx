@@ -24,6 +24,8 @@ import Sidenav from '../Sidenav/Sidenav';
 import BreadCrumb from '../breadCrumb/breadCrumb';
 import { navbarStyle } from './navbar.style';
 import CustomButton from '../button/Button';
+import NotificationButton from '../notification_button/NotificationButton';
+import AvatarButton from '../avatar_button/AvatarButton';
 
 const anchor = 'left';
 
@@ -120,33 +122,17 @@ export default function Navbar(props) {
           </Hidden>
 
           <Hidden smDown>
-            <div onClick={handleClickListItem} className={clsx(classes.notification, commonClasses.iconBox)}>
-              <Notifications style={{ color: colors.primary, fontSize: 20 }} />
-            </div>
+            <NotificationButton />
 
-            <Box>
-              <Typography className={clsx(commonClasses.title2, classes.username)}>{props.auth.username}</Typography>
-              <Typography className="">Student</Typography>
-            </Box>
+            {props.auth.username && (
+              <Box>
+                <Typography className={clsx(commonClasses.title2, classes.username)}>{props.auth.username}</Typography>
+                <Typography className="">Student</Typography>
+              </Box>
+            )}
           </Hidden>
-          <div onClick={handleClickListItem}>
-            <Avatar
-              className={commonClasses.iconBox}
-              alt={props.auth?.username?.toUpperCase()}
-              src="/static/images/avatar/1.jpg"
-            />
-          </div>
-          <Menu
-            onClose={handleClose}
-            id="lock-menu"
-            anchorEl={anchorEl}
-            // anchorReference="anchorPosition"
-            // anchorPosition={{ left, top: 67 }}
-            className={classes.menuDropdown}
-            open={open}
-          >
-            <CustomButton primaryButtonStyle>Get Started</CustomButton>
-          </Menu>
+
+          <AvatarButton {...props} />
         </Container>
       </div>
       <Container maxWidth="lg">

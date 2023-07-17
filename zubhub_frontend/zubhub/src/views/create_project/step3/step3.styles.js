@@ -1,10 +1,20 @@
 export const step3Style = theme => ({
-    pillContainer: { display: 'flex', flexWrap: 'wrap', gap: 15, marginTop: 20 },
+    pillContainer: {
+        // display: 'flex',
+        // flexWrap: 'wrap',
+        // gap: 10,
+        // justifyContent: 'space-between',
+        marginTop: 20
+    },
     pill: {
         borderRadius: 8,
         display: 'flex',
         alignItems: 'center',
-        padding: '6px 15px 6px 6px',
+        padding: '8px 10px 8px 8px',
         gap: 6,
+        '&:hover': {
+            cursor: 'pointer'
+        },
+
     }
 })
