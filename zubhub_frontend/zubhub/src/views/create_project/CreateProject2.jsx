@@ -66,7 +66,9 @@ function CreateProject2(props) {
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
-  const togglePublishOrAddTags = () => setPublishOrAddTags(!publishOrAddTags);
+  const togglePublishOrAddTags = () => {
+    formik.values?.tags.length == 0 ? setPublishOrAddTags(!publishOrAddTags) : toggleAddTagsDialog();
+  };
   const toggleAddTagsDialog = () => setAddTagsDialog(!addTagsDialog);
   const clearSuggestions = () => setRemoteTags([]);
 
