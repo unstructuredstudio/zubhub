@@ -121,9 +121,8 @@ export default function Navbar(props) {
             <SearchOutlined />
           </Hidden>
 
+          <NotificationButton />
           <Hidden smDown>
-            <NotificationButton />
-
             {props.auth.username && (
               <Box>
                 <Typography className={clsx(commonClasses.title2, classes.username)}>{props.auth.username}</Typography>

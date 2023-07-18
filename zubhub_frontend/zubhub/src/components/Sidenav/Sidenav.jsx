@@ -120,11 +120,11 @@ export default function Sidenav() {
                     <Icon size={22} />
                   </ListItemIcon>
                   <ListItemText primary={label} />
-                  {RightIcon && (
+                  {/* {RightIcon && (
                     <ListItemIcon>
                       <RightIcon size={22} />
                     </ListItemIcon>
-                  )}
+                  )} */}
                 </ListItem>
               </Link>
             ),
