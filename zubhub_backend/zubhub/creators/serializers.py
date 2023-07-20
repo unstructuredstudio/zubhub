@@ -5,8 +5,10 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
+from django.utils.translation import gettext_lazy as _
+import csv
 from .admin import badges
+from .models import CreatorGroup, Creator, CreatorGroupMembership
 from .models import Location, PhoneNumber
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
@@ -79,6 +81,12 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
 
+class CreatorGroupMembershipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreatorGroupMembership
+        fields = ('member', 'role')
+
+
 class CreatorSerializer(CreatorMinimalSerializer):
     phone = serializers.CharField(allow_blank=True, default="")
     email = serializers.EmailField(allow_blank=True, default="")
@@ -91,16 +99,18 @@ class CreatorSerializer(CreatorMinimalSerializer):
     badges = serializers.SlugRelatedField(slug_field="badge_title",
                                           read_only=True,
                                           many=True)
+    group_memberships = CreatorGroupMembershipSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Creator
 
         fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
                   'comments', 'dateOfBirth', 'bio', 'followers',
-                  'following_count', 'projects_count', 'members_count', 'tags', 'badges')
+                  'following_count', 'projects_count', 'members_count', 'tags', 'badges', 'group_memberships')
 
     read_only_fields = [
-        "id", "projects_count", "following_count", "dateOfBirth", "tags", "badges"
+        "id", "projects_count", "following_count", "dateOfBirth", "tags", "badges", "group_memberships"
     ]
 
     def validate_email(self, email):
@@ -247,24 +257,37 @@ class ConfirmGroupInviteSerializer(serializers.Serializer):
 
 
 class AddGroupMembersSerializer(serializers.Serializer):
-    group_members = serializers.JSONField(required=False, allow_null=True)
-    csv = serializers.FileField(required=False,
-                                allow_null=True,
-                                allow_empty_file=True)
+    group_members = serializers.ListField(child=serializers.CharField(), required=False, allow_empty=True)
+    csv = serializers.FileField(required=False, allow_null=True, allow_empty_file=True)
 
-    def validate_group_members(self, group_members):
-        if (len(group_members) == 0 and not self.initial_data.get("csv")):
-            raise serializers.ValidationError(
-                _("you must submit group member usernames either through the form or as csv"
-                  ))
-        return group_members
+    def validate(self, data):
+        group_members = data.get('group_members', [])
+        csv_file = data.get('csv', None)
 
-    def validate_csv(self, csv):
-        if (not csv and len(self.initial_data.get("group_members")) == 0):
-            raise serializers.ValidationError(
-                _("you must submit group member usernames either through the form or as csv"
-                  ))
-        return csv
+        if not group_members and not csv_file:
+            raise serializers.ValidationError(_("You must submit group member usernames either through the form or as a CSV."))
+
+        if group_members and csv_file:
+            raise serializers.ValidationError(_("You can only submit group member usernames either through the form or as a CSV, not both."))
+
+        if csv_file:
+            # Validate the contents of the CSV file
+            try:
+                decoded_csv = csv_file.read().decode()
+                csv_data = list(csv.reader(decoded_csv.splitlines()))
+
+                # Check if the CSV has at least one row of data (excluding the header)
+                if len(csv_data) <= 1:
+                    raise serializers.ValidationError(_("CSV file must have at least one row of data (excluding the header)."))
+
+                # Assuming the first column contains usernames
+                data['group_members'] = [row[0] for row in csv_data[1:]]
+            except csv.Error:
+                raise serializers.ValidationError(_("Invalid CSV format. Please provide a valid CSV file."))
+            except Exception as e:
+                raise serializers.ValidationError(_("Error processing the CSV file: {0}".format(str(e))))
+
+        return data
 
 
 class CustomPasswordResetSerializer(PasswordResetSerializer):
@@ -280,3 +303,46 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
             raise serializers.ValidationError(
                 _('No account found with this email. Verify and try again.'))
         return value
+
+
+class CreatorGroupSerializer(serializers.ModelSerializer):
+    members = CreatorGroupMembershipSerializer(many=True, source='creatorgroupmembership_set')
+
+    class Meta:
+        model = CreatorGroup
+        fields = ('creator', 'description', 'members', 'created_on', 'projects_count')
+
+    def create(self, validated_data):
+        members_data = validated_data.pop('creatorgroupmembership_set', [])
+        group = CreatorGroup.objects.create(**validated_data)
+        for member_data in members_data:
+            member = member_data['member']
+            role = member_data.get('role', 'member')  # Default role is 'member' if not provided
+            CreatorGroupMembership.objects.create(group=group, member=member, role=role)
+        return group
+
+    def update(self, instance, validated_data):
+        instance.description = validated_data.get('description', instance.description)
+        instance.save()
+
+        members_data = validated_data.pop('creatorgroupmembership_set', [])
+        existing_members = set(instance.members.all())
+
+        for member_data in members_data:
+            member = member_data['member']
+            role = member_data.get('role', 'member')  # Default role is 'member' if not provided
+
+            # Check if the member is already part of the group
+            if member in existing_members:
+                membership = CreatorGroupMembership.objects.get(group=instance, member=member)
+                membership.role = role
+                membership.save()
+            else:
+                # If the member is not part of the group, add them with the specified role
+                CreatorGroupMembership.objects.create(group=instance, member=member, role=role)
+
+        # Remove any members who were not included in the updated data
+        members_to_remove = existing_members - set([member_data['member'] for member_data in members_data])
+        CreatorGroupMembership.objects.filter(group=instance, member__in=members_to_remove).delete()
+
+        return instance

@@ -179,6 +179,24 @@ class CreatorGroup(models.Model):
         return group_invite_confirmation
 
 
+class CreatorGroupMembership(models.Model):
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('member', 'Member'),
+    ]
+
+    group = models.ForeignKey(
+        CreatorGroup, on_delete=models.CASCADE, related_name='memberships'
+    )
+    member = models.ForeignKey(
+        Creator, on_delete=models.CASCADE, related_name='group_memberships'
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
+
+    def __str__(self):
+        return f"{self.member.username} - {self.role}"
+
+
 class PhoneNumber(models.Model):
 
     user = models.ForeignKey(

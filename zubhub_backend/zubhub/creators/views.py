@@ -31,17 +31,17 @@ from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, GetAnonRateThrottle,
                                   CustomUserRateThrottle)
 
-from .models import Location, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC
-from .serializers import (CreatorListSerializer, CreatorMinimalSerializer,
+from .models import Location, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC, CreatorGroupMembership
+from .serializers import (CreatorGroupSerializer, CreatorListSerializer, CreatorMinimalSerializer,
                           CreatorSerializer, LocationSerializer,
                           VerifyPhoneSerializer, CustomRegisterSerializer,
                           ConfirmGroupInviteSerializer,
-                          AddGroupMembersSerializer)
+                          AddGroupMembersSerializer, CreatorGroupMembershipSerializer)
 from .pagination import CreatorNumberPagination
 from .utils import (perform_send_phone_confirmation,
                     perform_send_email_confirmation, process_avatar,
                     send_group_invite_notification, perform_creator_search, send_notification, activity_log)
-from .permissions import IsOwner
+from .permissions import (IsOwner, IsGroupAdmin)
 
 Creator = get_user_model()
 
@@ -442,23 +442,42 @@ class ConfirmGroupInviteAPIView(APIView):
         return Response({'detail': _('ok')}, status=status.HTTP_200_OK)
 
 
+class UserGroupsAPIView(ListAPIView):
+    """
+    Get paginated list of all groups associated with the user with provided username.
+
+    Requires username.
+    Returns paginated list of groups.
+    """
+
+    serializer_class = CreatorGroupSerializer
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+    pagination_class = ProjectNumberPagination
+
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        creator_groups = CreatorGroup.objects.filter(members__username=username)
+        return creator_groups
+
+
 class GroupMembersAPIView(ListAPIView):
     """
     Fetch paginated list of users in a group.
 
-    Requires username of group. Returns list of users.
+    Requires username of group. Returns list of users with their roles.
     """
 
-    serializer_class = CreatorMinimalSerializer
+    serializer_class = CreatorGroupMembershipSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
         username = self.kwargs.get("username")
-        return Creator.objects.get(
-            username=username).creatorgroup.members.all()
-
+        group = get_object_or_404(CreatorGroup, creator__username=username)
+        return group.memberships.all()
+    
 
 class AddGroupMembersAPIView(GenericAPIView):
     """
@@ -470,7 +489,7 @@ class AddGroupMembersAPIView(GenericAPIView):
     contenttype might need to be set to false.\n
     request body format:\n
         {\n
-            group_members: ["username1","username2"],\n
+            group_members: [{"username": "username1", "role": "member/admin"}, ...],
             csv: "stringified csv"\n
         }\n
     """
@@ -503,9 +522,9 @@ class AddGroupMembersAPIView(GenericAPIView):
                 flat_csv.append(arr[0])
 
         # remove leading and trailing white spaces from username strings
-        group_members = list(map(lambda x: x.strip(), group_members))
+        group_members = list(map(lambda x: x['username'].strip(), group_members))
 
-        group_members = [*group_members, *flat_csv]
+        group_members = [{"username": member, "role": role} for member, role in group_members]
 
         uploaded = Creator.objects.filter(username__in=group_members)
         all_members = creator_group[0].members.all()
@@ -533,7 +552,7 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
 
     serializer_class = CreatorMinimalSerializer
     queryset = Creator.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsGroupAdmin]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_object(self):
@@ -541,13 +560,160 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
         obj = get_object_or_404(self.get_queryset(), pk=pk)
         creatorgroup = self.request.user.creatorgroup
 
-        if obj in creatorgroup.members.all(
-        ) and obj.pk != self.request.user.pk:
-            creatorgroup.members.remove(obj)
-            creatorgroup.save()
+        if obj in creatorgroup.members.all() and obj.pk != self.request.user.pk:
+            membership = creatorgroup.memberships.filter(member=obj).first()
+            if membership:
+                membership.delete()
 
         return obj
 
+
+class DeleteCreatorGroupAPIView(DestroyAPIView):
+    """
+    Delete a CreatorGroup from the database.\n
+
+    Requires authentication and ownership of the group.\n
+    Returns {"details": "ok"}\n
+    """
+    queryset = CreatorGroup.objects.all()
+    serializer_class = CreatorGroupSerializer
+    permission_classes = [IsGroupAdmin]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+    lookup_field = "pk"
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({"details": "ok"}, status=status.HTTP_200_OK)
+ 
+
+class CreatorGroupFollowersAPIView(ListAPIView):
+    """
+    Fetch paginated creator group follower's list.
+
+    Requires group creator's username and group_id.
+    Returns list of users.
+    """
+
+    serializer_class = CreatorMinimalSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+    pagination_class = CreatorNumberPagination
+
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        group_id = self.kwargs.get("group_id")
+        creator_group = CreatorGroup.objects.filter(
+            creator__username=username, pk=group_id
+        ).first()
+
+        if creator_group:
+            return creator_group.members.all()
+
+        return []
+
+
+class CreateAndAddMembersToGroupAPIView(GenericAPIView):
+    """
+    Create a new CreatorGroup and add members to the group.\n
+    Requires authentication.\n
+    Returns basic group profile.\n
+    request body format:\n
+        {\n
+            "description": "string",
+            "group_members": [
+                {"member": "username1", "role": "admin"},
+                {"member": "username2", "role": "member"},
+                ...
+            ],
+            "csv": "stringified csv"\n
+        }\n
+    """
+
+    serializer_class = AddGroupMembersSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Get the authenticated user (the creator)
+        creator = request.user
+
+        # Get the description, group members, and CSV from the request data
+        description = request.data.get('description')
+        group_members_data = request.data.get('group_members', [])
+        csv_data = request.data.get('csv')
+
+        # Create the CreatorGroup object
+        group = CreatorGroup.objects.create(creator=creator, description=description)
+
+        # Add members to the group with roles
+        group_members = []
+        for member_data in group_members_data:
+            member_username = member_data.get('member')
+            role = member_data.get('role', 'member')  # Default role is 'member' if not provided
+
+            member = Creator.objects.get(username=member_username)
+            group_members.append({'member': member, 'role': role})
+
+        group_members.extend(self.process_csv_data(csv_data))
+        for member_data in group_members:
+            member = member_data['member']
+            role = member_data['role']
+            group.memberships.create(member=member, role=role)
+
+        # Construct a response data dictionary with basic group information
+        response_data = {
+            "creator": group.creator.username,
+            "description": group.description,
+            "members": [
+                {"member": membership.member.username, "role": membership.role}
+                for membership in group.memberships.all()
+            ],
+            "created_on": group.created_on,
+            "projects_count": group.projects_count,
+        }
+        return Response(response_data)
+
+    def process_csv_data(self, csv_data):
+        members = []
+        if csv_data:
+            csv_data = csv_data.read().decode()
+            csv_list = csv_data.split(',')
+            members = [{'member': username.strip(), 'role': 'member'} for username in csv_list]
+        return members
+
+
+class EditCreatorGroupAPIView(UpdateAPIView):
+    """
+    Edit CreatorGroup details and update member roles.\n
+    Requires authentication and ownership of the group.\n
+    Returns updated CreatorGroup details.\n
+    """
+
+    queryset = CreatorGroup.objects.all()
+    serializer_class = CreatorGroupSerializer
+    permission_classes = [IsAuthenticated, IsGroupAdmin]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+
+    def perform_update(self, serializer):
+        group = serializer.instance
+        members_data = self.request.data.get('members', [])
+
+        # Update group description
+        serializer.save()
+
+        # Update member roles
+        for member_data in members_data:
+            member_username = member_data.get('member')
+            member_role = member_data.get('role')
+
+            if member_username and member_role:
+                membership = group.memberships.filter(creator__username=member_username).first()
+                if membership:
+                    membership.role = member_role
+                    membership.save()
+
+        return serializer.data
+    
 
 class LocationListAPIView(ListAPIView):
     """
