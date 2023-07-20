@@ -192,7 +192,13 @@ function ProjectDetails(props) {
         <Box className={classes.root}>
           <Box className={classes.projectDetailHeaderStyle}>
             <Container className={classes.headerStyle}>
-              <Typography align="center" className={common_classes.title1} variant="h3" gutterBottom>
+              <Typography
+                align="center"
+                style={{ marginBottom: 40 }}
+                className={common_classes.title1}
+                variant="h3"
+                gutterBottom
+              >
                 {project.title}
               </Typography>
               {/* Over video */}

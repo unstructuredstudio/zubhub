@@ -20,6 +20,9 @@ export const navbarStyle = theme => ({
     },
     logo: {
         height: 30,
+        '&:hover': {
+            cursor: 'pointer'
+        },
         [theme.breakpoints.down('sm')]: {
             height: 18
         },

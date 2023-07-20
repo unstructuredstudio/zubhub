@@ -615,5 +615,5 @@ html,
 }
 
 .MuiTypography-body1,.MuiOutlinedInput-root{
-  font-size: 0.85rem !important;
+  /* font-size: 0.85rem !important; */
 }

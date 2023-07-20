@@ -104,7 +104,7 @@ function App(props) {
           )}
         />
 
-        {/* <Route
+        <Route
           exact={true}
           path="/projects"
           render={routeProps => (
@@ -112,7 +112,7 @@ function App(props) {
               <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
             </PageWrapper>
           )}
-        /> */}
+        />
         {/* <Route
           exact={true}
           path="/projects/:id/preview"

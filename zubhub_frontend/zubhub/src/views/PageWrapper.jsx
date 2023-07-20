@@ -72,6 +72,7 @@ import NotificationButton from '../components/notification_button/NotificationBu
 import BreadCrumb from '../components/breadCrumb/breadCrumb';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 import Navbar from '../components/Navbar/Navbar';
+import NotFoundPage from './not_found/NotFound';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -655,9 +656,16 @@ function PageWrapper(props) {
       <Toolbar ref={backToTopEl} className={classes.marginBottom} />
 
       <Container className={classes.childrenContainer} maxWidth="lg">
-        {/* {props.match.path === '/' && <div style={{ minHeight: '80vh' }}>{props.children}</div>} */}
-        <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout>
+        {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
+        {!props.auth?.token && !['/', '/signup', '/login'].includes(props.match?.path) && (
+          <div style={{ minHeight: '80vh' }}>
+            <NotFoundPage />
+          </div>
+        )}
       </Container>
+      {!props.auth?.token && ['/', '/signup', '/login'].includes(props.match?.path) && (
+        <div style={{ minHeight: '90vh' }}>{props.children}</div>
+      )}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>

@@ -61,6 +61,7 @@ function Projects(props) {
   const { hero } = props.projects;
   const staff_picks = props.projects.staff_picks;
   const { t } = props;
+  console.log(props.projects, '========');
 
   if (loading) {
     return <LoadingPage />;
@@ -69,7 +70,7 @@ function Projects(props) {
       <>
         {projects.length > 0 ? (
           <Box className={classes.root}>
-            {hero && hero.id ? (
+            {!props.auth?.token && hero && hero.id ? (
               <Box className={classes.heroSectionStyle}>
                 <Box className={classes.heroContainerStyle}>
                   <Box className={classes.heroMessageContainerStyle}>

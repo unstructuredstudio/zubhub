@@ -72,7 +72,7 @@ export default function Navbar(props) {
             </Box>
           </Hidden>
           {/* Logo */}
-          <img src={images.logo} className={classes.logo} />
+          <img onClick={() => props.history.push('/')} src={images.logo} className={classes.logo} />
 
           {/* Search Input */}
           <Hidden smDown>
