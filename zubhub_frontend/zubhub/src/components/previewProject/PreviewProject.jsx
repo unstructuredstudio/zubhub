@@ -29,12 +29,12 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
-import CustomButton from '../../components/button/Button';
-import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
+import CustomButton from '../button/Button';
+import SocialButtons from '../social_share_buttons/socialShareButtons.jsx';
 import * as ProjectActions from '../../store/actions/projectActions';
 import * as UserActions from '../../store/actions/userActions';
-import ErrorPage from '../error/ErrorPage';
-import LoadingPage from '../loading/LoadingPage';
+import ErrorPage from '../../views/error/ErrorPage';
+import LoadingPage from '../../views/loading/LoadingPage';
 import {
   deleteProject,
   handleOpenEnlargedImageDialog,
@@ -44,17 +44,17 @@ import {
   toggleFollow,
   toggleLike,
   toggleSave,
-} from '../project_details/projectDetailsScripts';
+} from '../../views/project_details/projectDetailsScripts';
 
 import { CloseOutlined, DescriptionOutlined } from '@material-ui/icons';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
 import styles, { sliderSettings } from './previewProject.styles';
 import { cloudinaryFactory, getPlayerOptions, parseComments } from '../../assets/js/utils/scripts';
-import { Comments, Modal } from '../../components/index.js';
-import Project from '../../components/project/Project';
-import { getUrlQueryObject } from '../../utils.js';
-import Navbar from '../../components/Navbar/Navbar';
+import { Comments, Modal } from '../index.js';
+import Project from '../project/Project';
+import { getUrlQueryObject } from '../../utils.js/index.js';
+import Navbar from '../Navbar/Navbar';
 import { images } from '../../assets/images';
 
 const useStyles = makeStyles(styles);
@@ -95,12 +95,12 @@ const buildTagsComponent = (classes, tags, history) => {
 };
 
 /**
- * @function ProjectDetails View
+ * @function PreviewProject View
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
-function ProjectDetails(props) {
+function PreviewProject({ onClose, ...props }) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const [{ height, width }, setDimensions] = useState({});
@@ -144,7 +144,7 @@ function ProjectDetails(props) {
     const query = getUrlQueryObject();
     if (query.success) {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      toggleDialog();
+      // toggleDialog();
     }
   }, []);
 
@@ -165,8 +165,7 @@ function ProjectDetails(props) {
   }, [state.project.video]);
 
   const toggleDialog = () => {
-    setOpen(!open);
-    props.history.replace(window.location.pathname);
+    // oncl;
   };
 
   const handleSetState = obj => {
@@ -197,11 +196,7 @@ function ProjectDetails(props) {
             <Typography>Preview Draft</Typography>
           </div>
 
-          <CustomButton
-            onClick={() => props.history.replace(`/projects/${props.match.params.id}/edit`)}
-            primaryButtonOutlinedStyle
-            style={{ padding: '2px 10px' }}
-          >
+          <CustomButton onClick={onClose} primaryButtonOutlinedStyle style={{ padding: '2px 10px' }}>
             Close
           </CustomButton>
         </div>
@@ -437,28 +432,6 @@ function ProjectDetails(props) {
           <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
         </Dialog>
 
-        <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
-          <div style={{ display: 'flex', justifyContent: 'end' }}>
-            <IconButton onClick={toggleDialog}>
-              <CloseOutlined />
-            </IconButton>
-          </div>
-
-          <DialogTitle>
-            <Typography align="center" className={clsx(common_classes.title1, classes.dialogTitle)}>
-              Congratulations your project has successfully created!
-            </Typography>
-          </DialogTitle>
-          <DialogContent>
-            <Typography align="center">
-              Share your project with the world. Post it on the following platforms:
-            </Typography>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-              <SocialButtons containerStyle={{ gap: 50 }} withColor facebook whatsapp />
-            </div>
-          </DialogContent>
-        </Modal.WithIcon>
-
         <Dialog
           open={open_delete_project_modal}
           onClose={() => handleSetState(handleToggleDeleteProjectModal(state))}
@@ -504,7 +477,7 @@ function ProjectDetails(props) {
   }
 }
 
-ProjectDetails.propTypes = {
+PreviewProject.propTypes = {
   auth: PropTypes.object.isRequired,
   getProject: PropTypes.func.isRequired,
   getUserProjects: PropTypes.func.isRequired,
@@ -559,4 +532,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(PreviewProject);

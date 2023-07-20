@@ -6,10 +6,17 @@ const styles = theme => ({
         backgroundColor: colors.secondary,
         display: 'flex',
         alignItems: 'center',
-        padding: '0 16px'
+        padding: '0 16px',
     },
     body: {
-        padding: 40
+        margin: 40,
+        border: 'solid 30px white',
+        borderRadius: 50,
+        overflow: 'hidden',
+        [theme.breakpoints.down('sm')]: {
+            margin: '30px 15px',
+            borderWidth: 10
+        }
     },
     previewheader: {
         height: 50,

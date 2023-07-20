@@ -10,9 +10,7 @@ import CreateProject2 from './views/create_project/CreateProject2';
 const SearchResults = React.lazy(() =>
   import('./views/search_results/SearchResults'),
 );
-const PreviewProject = React.lazy(() =>
-  import('./views/previewProject/PreviewProject'),
-);
+
 const Signup = React.lazy(() => import('./views/signup/Signup'));
 const Login = React.lazy(() => import('./views/login/Login'));
 const PasswordReset = React.lazy(() =>
@@ -115,7 +113,7 @@ function App(props) {
             </PageWrapper>
           )}
         /> */}
-        <Route
+        {/* <Route
           exact={true}
           path="/projects/:id/preview"
           render={routeProps => (
@@ -123,7 +121,7 @@ function App(props) {
               <LazyImport LazyComponent={PreviewProject} {...routeProps} {...props} />
             </PageWrapper>
           )}
-        />
+        /> */}
         <Route
           exact={true}
           path="/settings"

@@ -8,6 +8,8 @@ import Editor from "./form/editor/Editor";
 import Modal from "./modals/Modal";
 import Comments from './comments/Comments'
 import CustomButton from "./button/Button";
+import PreviewProject from "./previewProject/PreviewProject";
+
 
 export {
     TagsInput,
@@ -20,4 +22,5 @@ export {
     Modal,
     Comments,
     CustomButton,
+    PreviewProject
 }

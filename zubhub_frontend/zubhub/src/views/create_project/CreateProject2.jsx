@@ -1,6 +1,7 @@
 import {
   Box,
   CircularProgress,
+  Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
@@ -23,7 +24,7 @@ import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRo
 import clsx from 'clsx';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, lazy } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -44,6 +45,8 @@ import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
 import { TEAM_ENABLED } from '../../utils.js';
 
+const PreviewProject = lazy(() => import('../../components/previewProject/PreviewProject'));
+
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Details', 'Photos/Videos', 'Features'];
 
@@ -63,6 +66,7 @@ function CreateProject2(props) {
   const [remoteTags, setRemoteTags] = useState([]);
   const [popularTags, setPopularTags] = useState(script.testTags);
   const [mode, setMode] = useState('');
+  const [preview, setPreview] = useState(false);
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
@@ -141,9 +145,7 @@ function CreateProject2(props) {
     }
   }, [state.success]);
 
-  const preview = () => {
-    props.history.push(`/projects/${props.match.params.id}/preview`);
-  };
+  const togglePreview = () => setPreview(!preview);
 
   useEffect(() => {
     if (state.default_state?.loading) {
@@ -248,12 +250,15 @@ function CreateProject2(props) {
 
   return (
     <div className={classes.container}>
+      <Dialog open={preview} fullScreen>
+        <PreviewProject {...props} onClose={togglePreview} />
+      </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
         <KeyboardBackspaceRoundedIcon />
         {props.match.params.id && (
           <>
-            <CustomButton onClick={preview} className={classes.previewButton} variant="outlined">
+            <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
               Preview
             </CustomButton>
             <Box className={clsx(classes.draft, draftStatus === DRAFT_STATUSES.saved && classes.savedToDraft)}>
