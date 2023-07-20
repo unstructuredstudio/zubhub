@@ -23,7 +23,8 @@ export const videoInputStyles = theme => ({
         borderRadius: 4.5,
         borderRadius: 4,
         overflow: 'hidden',
-        position: 'relative'
+        position: 'relative',
+        margin: '20px 0px'
     },
     img: {
         width: '100%',
