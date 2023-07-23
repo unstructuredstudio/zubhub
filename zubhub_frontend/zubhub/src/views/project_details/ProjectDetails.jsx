@@ -393,10 +393,10 @@ function ProjectDetails(props) {
               </Grid>
             </Container>
 
-            <div style={{ marginTop: 100 }}>
+            <div className={classes.box}>
               <Comments context={{ name: 'project', body: project }} handleSetState={handleSetState} {...props} />
             </div>
-            <Box style={{ marginTop: 100 }}>
+            <Box className={classes.box}>
               <Typography align="center" style={{ marginBottom: 50 }} className={common_classes.title1}>
                 More Projects
               </Typography>

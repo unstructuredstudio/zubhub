@@ -4,6 +4,12 @@ const styles = theme => ({
   root: {
     flex: '1 0 auto',
   },
+  box: {
+    marginTop: 100,
+    [theme.breakpoints.down('md')]: {
+      margin: '100px 1.5rem 0 1.5rem'
+    }
+  },
   dialogTitle: {
     fontSize: '18px !important',
     lineHeight: '26px !important',

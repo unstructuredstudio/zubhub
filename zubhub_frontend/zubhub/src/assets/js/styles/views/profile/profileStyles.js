@@ -15,6 +15,12 @@ const styles = theme => ({
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
+    [theme.breakpoints.down('740')]: {
+      margin: '1em',
+    },
+    border: 'solid 3px rgb(255 209 24)',
+    boxShadow: 'unset',
+    backgroundColor: 'transparent'
   },
   avatarBoxStyle: {
     padding: '0 1em 2.5em 1em',
@@ -25,7 +31,7 @@ const styles = theme => ({
     justifyContent: 'end',
     [theme.breakpoints.down('740')]: {
       padding: '1em 1em 0 1em',
-      marginBottom: '1em',
+      margin: '1em',
     },
   },
   profileShareButtonStyle: {
@@ -121,6 +127,9 @@ const styles = theme => ({
   profileLowerStyle: {
     // margin: '1em',
     padding: '1em',
+    [theme.breakpoints.down('740')]: {
+      margin: '1em',
+    },
   },
   titleStyle: {
     fontWeight: 900,

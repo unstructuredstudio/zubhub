@@ -7,6 +7,9 @@ const styles = theme => ({
 
   profileLowerStyle: {
     // margin: '1em',
+    [theme.breakpoints.down('740')]: {
+      margin: '1em',
+    },
   },
 
   viewAllBtn: {
