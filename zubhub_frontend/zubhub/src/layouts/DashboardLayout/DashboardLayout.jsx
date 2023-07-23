@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }) {
   return (
     <Grid className={classes.root} container>
       <Hidden smDown>
-        <Grid item md={4} lg={3}>
+        <Grid style={{ position: 'relative' }} item md={4} lg={3}>
           <Sidenav />
         </Grid>
       </Hidden>

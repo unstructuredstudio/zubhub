@@ -17,9 +17,11 @@ import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
-import styles from '../../assets/js/styles/views/user_projects/userProjectsStyles';
+import styles1 from '../../assets/js/styles/views/user_projects/userProjectsStyles';
+import { capitalize } from 'lodash';
+import styles from '../../assets/js/styles';
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles1);
 
 /**
  * @function UserProjects View
@@ -29,6 +31,7 @@ const useStyles = makeStyles(styles);
  */
 function UserProjects(props) {
   const classes = useStyles();
+  const commonClasses = makeStyles(styles)();
 
   const [state, setState] = React.useState({
     results: [],
@@ -59,8 +62,8 @@ function UserProjects(props) {
       <Box className={classes.root}>
         <Grid spacing={3} container>
           <Grid item xs={12}>
-            <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
-              {username}'s {t('userProjects.title')}
+            <Typography className={commonClasses.title1} variant="h3" gutterBottom>
+              {capitalize(username)}'s {t('userProjects.title')}
             </Typography>
           </Grid>
           {projects.map(project => (

@@ -61,7 +61,6 @@ function Projects(props) {
   const { hero } = props.projects;
   const staff_picks = props.projects.staff_picks;
   const { t } = props;
-  console.log(props.projects, '========');
 
   if (loading) {
     return <LoadingPage />;

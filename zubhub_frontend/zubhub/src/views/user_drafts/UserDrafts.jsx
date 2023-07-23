@@ -16,16 +16,19 @@ import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
-import styles from '../../assets/js/styles/views/user_projects/userProjectsStyles';
+import styles2 from '../../assets/js/styles/views/user_projects/userProjectsStyles';
 import Project from '../../components/project/Project';
+import styles from '../../assets/js/styles';
+import { capitalize } from 'lodash';
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles2);
 
 /**
  * @function UserDrafts View
  */
 function UserDrafts(props) {
   const classes = useStyles();
+  const commonClasses = makeStyles(styles)();
 
   const [state, setState] = React.useState({
     drafts: [],
@@ -56,8 +59,8 @@ function UserDrafts(props) {
       <Box className={classes.root}>
         <Grid spacing={3} container>
           <Grid item xs={12}>
-            <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
-              {username}'s {t('userDrafts.title')}
+            <Typography className={commonClasses.title1} variant="h3" gutterBottom>
+              {capitalize(username)}'s {t('userDrafts.title')}
             </Typography>
           </Grid>
           {drafts.map(draft => (
