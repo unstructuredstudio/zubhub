@@ -55,6 +55,8 @@ import { Comments, Modal } from '../../components/index.js';
 import Project from '../../components/project/Project';
 import { getUrlQueryObject } from '../../utils.js';
 
+const authenticatedUserProjectsGrid = { xs: 12, sm: 6, md: 6 };
+const unauthenticatedUserProjectsGrid = { xs: 12, sm: 6, md: 3 };
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -396,14 +398,19 @@ function ProjectDetails(props) {
             <div className={classes.box}>
               <Comments context={{ name: 'project', body: project }} handleSetState={handleSetState} {...props} />
             </div>
-            <Box className={classes.box}>
+            <Box style={{ marginBottom: 100 }} className={classes.box}>
               <Typography align="center" style={{ marginBottom: 50 }} className={common_classes.title1}>
                 More Projects
               </Typography>
 
-              <Grid container spacing={4}>
+              <Grid container spacing={4} justifyContent="center">
                 {moreProjects.map((project, index) => (
-                  <Grid key={index} item xs={12} sm={6} md={6} align="center">
+                  <Grid
+                    key={index}
+                    item
+                    {...(props.auth.token ? authenticatedUserProjectsGrid : unauthenticatedUserProjectsGrid)}
+                    align="center"
+                  >
                     <Project
                       project={project}
                       key={project.id}
