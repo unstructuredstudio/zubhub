@@ -1,3 +1,5 @@
+import { colors } from "../../../colors";
+
 const styles = theme => ({
   childrenContainer: { padding: '0' },
   navBarStyle: {
@@ -11,10 +13,10 @@ const styles = theme => ({
     fontSize: '1.15rem',
   },
   mainContainerStyle: {
-    maxWidth: '100vw',
+    // maxWidth: '100vw',
     zIndex: 1,
-    boxShadow:
-      '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
+    // boxShadow:
+    //   '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
   },
   toolBarStyle: {
     padding: '15px 0',
@@ -123,6 +125,11 @@ const styles = theme => ({
     position: 'absolute!important',
     width: '1px',
   },
+  username: {
+    color: `${colors.white} !important`,
+    marginBottom: `${0} !important`,
+    textTransform: 'capitalize'
+  },
 
   searchFormSubmitStyle: {
     padding: 0,
@@ -154,6 +161,7 @@ const styles = theme => ({
   navActionStyle: {
     display: 'flex',
     alignItems: 'center',
+    gap: 20
   },
   avatarStyle: {
     cursor: 'pointer',
