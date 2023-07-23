@@ -17,6 +17,7 @@ from allauth.account.utils import setup_user_email
 from .utils import setup_user_phone
 from projects.models import Comment
 from projects.utils import parse_comment_trees
+from rest_framework.validators import UniqueValidator
 Creator = get_user_model()
 
 
@@ -307,10 +308,17 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
 
 class CreatorGroupSerializer(serializers.ModelSerializer):
     members = CreatorGroupMembershipSerializer(many=True, source='creatorgroupmembership_set')
+    groupname = serializers.CharField(
+        max_length=150,
+        validators=[UniqueValidator(queryset=CreatorGroup.objects.all())],
+        error_messages={
+            'unique': _('A group with that groupname already exists.'),
+        }
+    )
 
     class Meta:
         model = CreatorGroup
-        fields = ('creator', 'description', 'members', 'created_on', 'projects_count')
+        fields = ('groupname', 'description', 'members', 'created_on', 'projects_count')
 
     def create(self, validated_data):
         members_data = validated_data.pop('creatorgroupmembership_set', [])
@@ -322,6 +330,7 @@ class CreatorGroupSerializer(serializers.ModelSerializer):
         return group
 
     def update(self, instance, validated_data):
+        instance.groupname = validated_data.get('groupname', instance.groupname)
         instance.description = validated_data.get('description', instance.description)
         instance.save()
 

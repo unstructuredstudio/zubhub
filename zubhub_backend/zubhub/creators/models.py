@@ -137,40 +137,45 @@ class Setting(models.Model):
 
 
 class CreatorGroup(models.Model):
-    creator = models.OneToOneField(
-        Creator, on_delete=models.CASCADE, primary_key=True)
+    id = models.UUIDField(primary_key=True,
+                          default=uuid.uuid4,
+                          editable=False,
+                          unique=True)
+    groupname = models.CharField(
+        max_length=150,
+        error_messages={
+            'unique': _('A group with that groupname already exists.'),
+        },
+        verbose_name=_('groupname')
+    )
     description = models.CharField(max_length=10000, blank=True, null=True)
     members = models.ManyToManyField(
-        Creator, blank=True, related_name="creator_groups")
+        'self', symmetrical=False, blank=True, related_name="creator_groups"
+    )
     created_on = models.DateTimeField(default=timezone.now)
-    projects_count = models.IntegerField(blank=True, default=0)
+    projects = models.JSONField(default=list)  # Storing project IDs as a JSON list
+    badges = models.ManyToManyField(Badge, blank=True, related_name="creator_group" )
+    tags = models.ManyToManyField(CreatorTag, blank=True, related_name="creator_group")
 
     def __str__(self):
-        return self.creator.username
+        return self.groupname
 
     def get_projects(self, **kwargs):
         limit = kwargs.get("limit")
-        projects = self.creator.projects.all()
-        count = 0
-        members = self.members.prefetch_related("projects")
-        for member in members.all():
-            if not projects:
-                projects = member.projects.all()
-            else:
-                projects |= member.projects.all()
+        # Retrieve the project IDs from the 'projects' field
+        project_ids = self.projects
 
-        if projects:
-            projects = projects.order_by("-created_on")
-            count = projects.count()
-            if limit:
-                projects = projects[0:int(limit)]
+        count = len(project_ids)
+        if limit:
+            # Return the first 'limit' project IDs
+            project_ids = project_ids[:limit]
 
-        # update projects_count if neccessary
+        # update projects_count if necessary
         if self.projects_count != count:
             self.projects_count = count
             self.save()
 
-        return projects
+        return project_ids
 
     def send_group_invite_confirmation(self, **kwargs):
         group_invite_confirmation = GroupInviteConfirmationHMAC(

@@ -30,6 +30,7 @@ from projects.utils import detect_mentions, get_published_projects_for_user
 from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, GetAnonRateThrottle,
                                   CustomUserRateThrottle)
+# from ..projects.models import Project
 
 from .models import Location, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC, CreatorGroupMembership
 from .serializers import (CreatorGroupSerializer, CreatorListSerializer, CreatorMinimalSerializer,
@@ -474,7 +475,7 @@ class GroupMembersAPIView(ListAPIView):
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
-        username = self.kwargs.get("username")
+        username = self.kwargs.get("groupname")
         group = get_object_or_404(CreatorGroup, creator__username=username)
         return group.memberships.all()
     
@@ -626,6 +627,7 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
                 {"member": "username2", "role": "member"},
                 ...
             ],
+            "projects": ["id1", "id2"],
             "csv": "stringified csv"\n
         }\n
     """
@@ -640,10 +642,16 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
         # Get the description, group members, and CSV from the request data
         description = request.data.get('description')
         group_members_data = request.data.get('group_members', [])
+        projects = request.data.get('projects', [])
         csv_data = request.data.get('csv')
 
-        # Create the CreatorGroup object
-        group = CreatorGroup.objects.create(creator=creator, description=description)
+        # Create the CreatorGroup object using groupname as the primary key
+        groupname = request.data.get('groupname')
+        group = CreatorGroup.objects.create(groupname=groupname, description=description)
+        
+        # Set the project IDs to the CreatorGroup model's 'projects' field
+        group.projects = projects
+        group.save()
 
         # Add members to the group with roles
         group_members = []
@@ -660,10 +668,11 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
             role = member_data['role']
             group.memberships.create(member=member, role=role)
 
-        # Construct a response data dictionary with basic group information
+        # Construct a response data dictionary with basic group information and projects
         response_data = {
-            "creator": group.creator.username,
+            "groupname": group.groupname,
             "description": group.description,
+            "projects": group.projects,
             "members": [
                 {"member": membership.member.username, "role": membership.role}
                 for membership in group.memberships.all()
