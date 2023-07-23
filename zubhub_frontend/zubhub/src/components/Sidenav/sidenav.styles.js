@@ -8,6 +8,8 @@ export const sidenavStyle = theme => ({
         [theme.breakpoints.down('sm')]: {
             height: '100%',
         },
+        boxShadow:
+            '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
     },
     label: {
         margin: '5px 0',
@@ -44,5 +46,5 @@ export const sidenavStyle = theme => ({
             color: colors.secondary + ' !important'
         }
     },
-    listContainer: { display: 'flex', flexDirection: 'column', height: '100%' }
+    listContainer: { display: 'flex', flexDirection: 'column', height: '100%', paddingTop: 50 }
 })

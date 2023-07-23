@@ -3,12 +3,15 @@ import { fade } from '@material-ui/core/styles';
 const styles = theme => ({
   root: {
     flex: '1 0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 30
   },
   profileHeaderStyle: {
     paddingTop: '1.5em',
-    background: 'rgba(255,204,0,1)',
-    background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+    // background: 'rgba(255,204,0,1)',
+    // background:
+    //   'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
@@ -116,7 +119,7 @@ const styles = theme => ({
     fontSize: '1.9rem',
   },
   profileLowerStyle: {
-    margin: '1em',
+    // margin: '1em',
     padding: '1em',
   },
   titleStyle: {
@@ -137,16 +140,16 @@ const styles = theme => ({
   aboutMeBox: {
     flexGrow: 1,
     padding: '1em',
-    margin: '1em 0 0 1em',
+    // margin: '1em 0 0 1em',
     borderRadius: '4px 0 0 4px',
     [theme.breakpoints.down('900')]: {
       margin: '1em',
-    borderRadius: '4px',
+      borderRadius: '4px',
     },
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',
-    margin: '1em 1em 0 0',
+    // margin: '1em 1em 0 0',
     padding: '1em',
     width: '40%',
     borderRadius: '0 4px 4px 0',
@@ -217,11 +220,11 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   floatRight: { float: 'right' },
-  editButton: { 
+  editButton: {
     display: 'flex',
     marginTop: '0.5rem',
   },
-  followButton: { 
+  followButton: {
     display: 'flex',
     marginTop: '0.75rem'
   },

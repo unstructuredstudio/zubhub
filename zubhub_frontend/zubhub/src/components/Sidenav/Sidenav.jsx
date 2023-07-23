@@ -61,7 +61,7 @@ const links = ({ draftCount, myProjectCount, username }) => [
 ];
 
 const bottomLinks = [
-  // { label: 'Settings', link: '/settings', icon: Settings, requireAuth: true },
+  { label: 'Settings', link: '/settings', icon: Settings, requireAuth: true },
   { label: 'Log Out', action: 'logout', icon: RiLogoutBoxRFill, red: true, requireAuth: true },
 ];
 
@@ -98,7 +98,7 @@ export default function Sidenav() {
     <div className={classes.container}>
       <List className={classes.listContainer}>
         {isSmallScreen && (
-          <Link style={{ textDecoration: 'none' }} className={classes.logo} href="/">
+          <Link style={{ textDecoration: 'none', padding: '0 30px' }} className={classes.logo} href="/">
             <ListItem>
               <img src={images.logo} />
             </ListItem>
@@ -111,7 +111,7 @@ export default function Sidenav() {
               <Link
                 key={index + label}
                 className={clsx(classes.label, pathname == link && classes.active, red && classes.red)}
-                style={{ textDecoration: 'none' }}
+                style={{ textDecoration: 'none', padding: '0 30px' }}
                 href={link}
                 target={target || '_self'}
               >
@@ -130,31 +130,29 @@ export default function Sidenav() {
             ),
         )}
 
-        <div style={{ marginTop: 'auto' }}>
-          {bottomLinks.map(
-            ({ label, link, icon: Icon, red, action, requireAuth }, index) =>
-              displayLink(requireAuth) && (
-                <Link
-                  key={index + label}
-                  className={clsx(classes.label, pathname == link && classes.active, red && classes.red)}
-                  style={{ textDecoration: 'none' }}
-                  {...(link && { href: link })}
-                  onClick={action == 'logout' ? handleLogout : null}
-                >
-                  <ListItem key={label}>
-                    <ListItemIcon>
-                      {action === 'logout' && isLogginOut ? (
-                        <CircularProgress size={22} color="inherit" />
-                      ) : (
-                        <Icon size={22} />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText primary={label} />
-                  </ListItem>
-                </Link>
-              ),
-          )}
-        </div>
+        {bottomLinks.map(
+          ({ label, link, icon: Icon, red, action, requireAuth }, index) =>
+            displayLink(requireAuth) && (
+              <Link
+                key={index + label}
+                className={clsx(classes.label, pathname == link && classes.active, red && classes.red)}
+                style={{ textDecoration: 'none', padding: '0 30px', marginTop: index == 0 && 'auto' }}
+                {...(link && { href: link })}
+                onClick={action == 'logout' ? handleLogout : null}
+              >
+                <ListItem key={label}>
+                  <ListItemIcon>
+                    {action === 'logout' && isLogginOut ? (
+                      <CircularProgress size={22} color="inherit" />
+                    ) : (
+                      <Icon size={22} />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText primary={label} />
+                </ListItem>
+              </Link>
+            ),
+        )}
       </List>
     </div>
   );
