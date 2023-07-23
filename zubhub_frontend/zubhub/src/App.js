@@ -24,6 +24,10 @@ const PhoneConfirm = React.lazy(() =>
   import('./views/phone_confirm/PhoneConfirm'),
 );
 const Profile = React.lazy(() => import('./views/profile/Profile'));
+const Team = React.lazy(() => import('./views/team/Team'));
+const EditTeam = React.lazy(() =>
+  import('./views/edit_team/EditTeam'),
+);
 const AccounStatus = React.lazy(() =>
   import('./views/account_status/AccountStatus'),
 );
@@ -300,14 +304,14 @@ function App(props) {
           )}
         />
 
-        <Route
+        {/* <Route
           path="/creators/:username"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
             </PageWrapper>
           )}
-        />
+        /> */}
 
         <Route
           path="/account-status"
@@ -318,6 +322,15 @@ function App(props) {
                 {...routeProps}
                 {...props}
               />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/creator/:username" //"/creatorgroup/:groupname"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Team} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
@@ -337,6 +350,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={EditProfile}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/edit-team"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={EditTeam}
                 {...routeProps}
                 {...props}
               />

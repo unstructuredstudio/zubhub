@@ -54,10 +54,18 @@ function Project(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
-  const { project, t, isSelected } = props;
+  const { project, t, isSelected, onProjectSelect} = props;
+  const handleProjectClick = () => {
+    onProjectSelect(project); // Invoke the onProjectSelect callback when a project is clicked
+  };
+
   return (
-    <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
-      <Card className={clsx(classes.root, { [classes.blurred]: isSelected })}>
+    <Link
+      to={`/projects/${project.id}`}
+      className={clsx(classes.textDecorationNone, { [classes.blurred]: isSelected })} // Add the blurred class conditionally
+      onClick={handleProjectClick} // Add onClick event to handle project selection
+    >
+      <Card className={classes.root}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
           <Tooltip
             title={getPublishTypeLabel(project.publish.type)}
@@ -263,7 +271,8 @@ Project.propTypes = {
   toggleLike: PropTypes.func.isRequired,
   toggleSave: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
-  isSelected: PropTypes.bool,
+  onProjectSelect: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool, 
 };
 
 export default Project;

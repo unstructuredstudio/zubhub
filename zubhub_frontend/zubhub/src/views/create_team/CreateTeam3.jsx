@@ -75,9 +75,10 @@ function CreateTeam3(props) {
   }, []);
   
 
-  // const {
-  //   results: projects
-  // } = state;
+  const handleProjectSelect = (project) => {
+    // You can add additional logic here if you want to limit the number of selected projects, etc.
+    setSelectedProjects((prevSelectedProjects) => [...prevSelectedProjects, project]);
+  };
 
 
   return (
@@ -106,16 +107,14 @@ function CreateTeam3(props) {
                           className={classes.projectGridStyle}
                           align="center"
                         >
-                          <Project
-                            project={project}
-                            key={project.id}
-                            updateProjects={res =>
-                              handleSetState(
-                                
-                              )
-                            }
-                            {...props}
-                          />
+                              <Project
+                              project={project}
+                              key={project.id}
+                              updateProjects={(res) => handleSetState(project)}
+                              onProjectSelect={handleProjectSelect} 
+                              t={t} 
+                              isSelected={selectedProjects.includes(project)} 
+                            />
                         </Grid>
                       ))}
                   </Grid>
