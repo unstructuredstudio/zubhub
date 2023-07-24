@@ -9,7 +9,7 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
-import CheckCircleRounded from '@material-ui/icons/CheckCircleRounded';
+
 import {
   Tooltip,
   Avatar,
@@ -54,17 +54,9 @@ function Project(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
-  const { project, t, isSelected, onProjectSelect} = props;
-  const handleProjectClick = () => {
-    onProjectSelect(project); // Invoke the onProjectSelect callback when a project is clicked
-  };
-
+  const { project, t } = props;
   return (
-    <Link
-      to={`/projects/${project.id}`}
-      className={clsx(classes.textDecorationNone, { [classes.blurred]: isSelected })} // Add the blurred class conditionally
-      onClick={handleProjectClick} // Add onClick event to handle project selection
-    >
+    <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
           <Tooltip
@@ -110,15 +102,7 @@ function Project(props) {
           ) : null}
         </CardMedia>
         <CardActionArea className={classes.actionAreaStyle}>
-          <CardContent
-            className={clsx(classes.contentStyle, classes.positionRelative)}
-          >
-            {isSelected && (
-              <Box className={classes.projectAdded}>
-                <Typography variant="body1">Project Added</Typography>
-                <CheckCircleRounded />
-              </Box>
-            )}
+          <CardContent className={clsx(classes.contentStyle, classes.positionRelative)}>
             <Fab
               className={classes.fabButtonStyle}
               size="small"
@@ -179,12 +163,7 @@ function Project(props) {
                   className={classes.creatorUsernameStyle}
                 >
                   <Box>
-                    <Typography
-                      color="textSecondary"
-                      variant="caption"
-                      component="p"
-                      className={classes.username}
-                    >
+                    <Typography color="textSecondary" variant="caption" component="p" className={classes.username}>
                       {project.creator.username}
                     </Typography>
                   </Box>
@@ -192,7 +171,7 @@ function Project(props) {
                 <Box className={classes.tagsContainer}>
                   {project.creator.tags.map((tag, index) => (
                     <>
-                      {index == 0 &&
+                      {index == 0 && (
                         <Link
                           className={clsx(common_classes.baseTagStyle, classes.tagContainer, common_classes.textDecorationNone, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
 
@@ -202,12 +181,9 @@ function Project(props) {
                             {tag}
                           </Typography>
                         </Link>
-                      }
-                      {index == 1 &&
-                        <Link
-                          className={common_classes.textDecorationNone}
-                          to={`#`}
-                        >
+                      )}
+                      {index == 1 && (
+                        <Link className={common_classes.textDecorationNone} to={`#`}>
                           <Typography
 
                             className={clsx(common_classes.baseTagStyle, classes.restOfTags, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
@@ -216,8 +192,7 @@ function Project(props) {
                             + {project.creator.tags.length - 1}
                           </Typography>
                         </Link>
-
-                      }
+                      )}
                     </>
 
                   ))}
@@ -247,15 +222,10 @@ function Project(props) {
                   <CommentIcon /> {project.comments_count}
                 </Typography>
               </Box>
-              <Typography
-                color="textSecondary"
-                variant="caption"
-                component="span"
-                className={classes.date}
-              >
-                {`${dFormatter(project.created_on).value} ${t(
-                  `date.${dFormatter(project.created_on).key}`,
-                )} ${t('date.ago')}`}
+              <Typography color="textSecondary" variant="caption" component="span" className={classes.date}>
+                {`${dFormatter(project.created_on).value} ${t(`date.${dFormatter(project.created_on).key}`)} ${t(
+                  'date.ago',
+                )}`}
               </Typography>
             </Box>
           </CardContent>
@@ -271,8 +241,6 @@ Project.propTypes = {
   toggleLike: PropTypes.func.isRequired,
   toggleSave: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
-  onProjectSelect: PropTypes.func.isRequired,
-  isSelected: PropTypes.bool, 
 };
 
 export default Project;

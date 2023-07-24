@@ -75,15 +75,15 @@ function CreateTeam3(props) {
   }, []);
   
 
-  const handleProjectSelect = (project) => {
-    // You can add additional logic here if you want to limit the number of selected projects, etc.
-    setSelectedProjects((prevSelectedProjects) => [...prevSelectedProjects, project]);
-  };
+  // const handleProjectSelect = (project) => {
+  //   // You can add additional logic here if you want to limit the number of selected projects, etc.
+  //   setSelectedProjects((prevSelectedProjects) => [...prevSelectedProjects, project]);
+  // };
 
 
   return (
     <div className={activity_classes.createActivityStepContainer}>
-      <Grid container spacing={3}>
+      {/* <Grid container spacing={3}>
       <Grid item xs={12} className={common_classes.marginTop1em}>
       <FormLabel
             label={'materialsUsed'}
@@ -111,9 +111,9 @@ function CreateTeam3(props) {
                               project={project}
                               key={project.id}
                               updateProjects={(res) => handleSetState(project)}
-                              onProjectSelect={handleProjectSelect} 
-                              t={t} 
-                              isSelected={selectedProjects.includes(project)} 
+                              // onProjectSelect={handleProjectSelect} 
+                              // t={t} 
+                              // isSelected={selectedProjects.includes(project)} 
                             />
                         </Grid>
                       ))}
@@ -121,7 +121,7 @@ function CreateTeam3(props) {
                 </Paper>
               
       </Grid>
-      </Grid>
+      </Grid> */}
     </div>
   );
 }

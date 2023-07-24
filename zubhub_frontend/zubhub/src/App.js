@@ -70,7 +70,7 @@ const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
   import('./views/activity_details/activity_details'),
 );
-const CreateTeam = React.lazy(() => import('./views/create_team/CreateTeam'));
+const CreateTeam = React.lazy(() => import('./views/create_team/CreateTseam'));
 const LinkedProjects = React.lazy(() =>
   import('./views/linked_projects/LinkedProjects'),
 );
@@ -304,14 +304,14 @@ function App(props) {
           )}
         />
 
-        {/* <Route
+        <Route
           path="/creators/:username"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
             </PageWrapper>
           )}
-        /> */}
+        />
 
         <Route
           path="/account-status"
@@ -327,7 +327,7 @@ function App(props) {
         />
 
         <Route
-          path="/creator/:username" //"/creatorgroup/:groupname"
+          path="/creatorgroup/:groupname"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Team} {...routeProps} {...props} />
