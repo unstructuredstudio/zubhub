@@ -305,7 +305,7 @@ function CreateTseam(props) {
             primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}
           >
-            {activeStep == 3 ? 'Publish' : 'Next'}
+            {activeStep == 3 ? 'Create Team' : 'Next'}
           </CustomButton>
 
           <Modal.WithIcon

@@ -6,96 +6,90 @@ import { Checkbox, Grid, Typography, makeStyles } from '@material-ui/core';
 import { colors } from '../../../assets/js/colors';
 import styles from '../../../assets/js/styles';
 import { step3Style } from './step3.styles';
+import Project from '../../../components/project/Project';
+import { Box, Paper, InputBase, FormControl, TextField, FormLabel } from '@material-ui/core';
+import ZubhubAPI from '../../../api/api';
+const API = new ZubhubAPI();
 
 export default function Step3({ formik, handleBlur, ...props }) {
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(step3Style)();
 
-  const handleChange = (data, checked) => {
-    let newCategories = [...formik.values.category];
-    if (checked) {
-      newCategories = newCategories.filter(cat => cat.name !== data.name);
-    } else newCategories.push(data);
-
-    formik.setFieldValue('category', newCategories);
+  const [projects,setProjects] = React.useState([]);
+  const username= props.auth.username;
+  const [selectedProjects, setSelectedProjects] = useState([]);
+  const handleSetState = (obj) => {
+    if (obj) {
+      Promise.resolve(obj).then((obj) => {
+        setSelectedProjects((prevSelectedProjects) => [
+          ...prevSelectedProjects,
+          obj,
+        ]);
+      });
+    }
   };
-  const [mode, setMode] = useState('');
-  const [creatorValue, setCreatorValue] = useState({});
-  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    console.log(props);
-    // getCategories(props).then(cats => setCategories(cats.categories));
-    
-  }, []);
+    async function fetchProjects() {
+      try {
+        const response = await API.getUserProjects({ username });
+        setProjects(response.results);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    }
 
-  const [categories, setCategories] = useState([]);
+    fetchProjects();
+  }, [username]);
 
-  const creatorsData = [
-    { name: 'Team', id: '1' },
-    { name: 'Co-creator', id: '2' },
-  ];
-  const isLimit = formik.values.category.filter(cat => cat.name).length == 3;
 
   return (
     <>
-      {/* <Dropdown
-        label="What category does your project belong too?"
-        placeholder="Select Categories"
-        handleChange={handleChange}
-        handleBlur={() => handleBlur('category')}
-        data={categories}
-        value={formik.values.category}
-        error={formik.touched.category && formik.errors.category}
-        multiple={true}
-        withCheckbox={true}
-        maxSelection={3}
-        description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
-      /> */}
-
       <label htmlFor="" className={commonClasses.title2}>
-        What category does your project belong too? <span className={commonClasses.colorRed}>*</span>
+        Select a Project you worked on with a Team <span className={commonClasses.colorRed}>*</span>
       </label>
-      <Typography style={{ marginBottom: 10 }}>
+      {/* <Typography style={{ marginBottom: 10 }}>
         Select any of the categories that best describe your project. Select none of you are unsure about your category.
-      </Typography>
-
-      <Grid container spacing={3} className={classes.pillContainer}>
-        {categories.map(cat => {
-          let selected =
-            formik.values.category.filter(selectedCategory => selectedCategory.name === cat.name).length > 0;
-          const color = selected ? colors.primary : isLimit ? '#D9DEE2' : colors.light;
-          return (
-            <Grid item xs={6} md={4} key={cat.name}>
-              <div
-                onClick={() => (isLimit && !selected ? null : handleChange(cat, selected))}
-                className={classes.pill}
-                style={{ border: `solid 1px ${color}` }}
-              >
-                <Checkbox className={commonClasses.checkbox} checked={selected} style={{ color, borderWidth: 1 }} />
-                <Typography style={{ ...(isLimit && !selected && { color }) }}>{cat.name}</Typography>
-              </div>
-            </Grid>
-          );
-        })}
+      </Typography> */}
+      <Grid container spacing={3}>
+      <Grid item xs={12} className={commonClasses.title2}>
+      <FormLabel
+            label={'materialsUsed'}
+            required={true}
+            classes={classes}
+            common_classes={commonClasses}
+            inputOrder={4}
+            fieldLabel={('createTeam.3rdpage.title')}
+          />
       </Grid>
-
-      {mode === 'team' && (
-        <div style={{ marginTop: 40 }}>
-          
-
-          
-
-          {creatorValue?.name == 'Co-creator' && (
-            <>
+      <Grid item xs={12} className={commonClasses.commonClasses}>
+                <Paper className={classes.profileLowerStyle}>
+                  <Grid container>
+                    {Array.isArray(projects) &&
+                      projects.map(project => (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          md={6}
+                          className={classes.projectGridStyle}
+                          align="center"
+                        >
+                              <Project
+                              project={project}
+                              key={project.id}
+                              updateProjects={(res) => handleSetState(project)}
+                              // onProjectSelect={handleProjectSelect} 
+                              // t={t} 
+                              // isSelected={selectedProjects.includes(project)} 
+                            />
+                        </Grid>
+                      ))}
+                  </Grid>
+                </Paper>
               
-              <Typography>
-                Would you like to make this a team? <Checkbox style={{ ...(checked && { color: colors.primary }) }} />
-              </Typography>
-            </>
-          )}
-        </div>
-      )}
+      </Grid>
+      </Grid>
     </>
   );
 }
