@@ -80,6 +80,25 @@ const styles = theme => ({
     flexWrap: 'wrap',
     marginBottom: '0.1em'
   },
+  baseTagStyle: {
+    backgroundColor: '#00B8C4',
+    borderRadius: '50px',
+    color: 'white',
+    padding: '0 0.5em',
+    marginLeft: '0.4em',
+    marginBottom: '0.4em',
+    [theme.breakpoints.down('470')]: {
+      marginLeft: 0,
+      position: 'static',
+      marginBottom: '0.4em',
+    },
+    display: 'flex', 
+    alignItems: 'center', 
+    marginRight: '0.5em',
+  },
+  iconWithSpace: {
+    marginLeft: theme.spacing(0.5)
+  },
   emailStyle: { marginBottom: '0.5em' },
   moreInfoBoxStyle: {
     flexGrow: 1,

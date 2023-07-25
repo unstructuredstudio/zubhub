@@ -528,6 +528,7 @@
 
   "profile": {
     "edit": "Edit",
+    "editTeam": "Edit Team Info",
     "delete": {
       "label": "Delete Account",
       "dialog": {
@@ -553,7 +554,7 @@
     "projectsCount": "Projects",
     "followersCount": "Followers",
     "followingCount": "Following",
-    "membersCount": "members",
+    "membersCount": "Members",
     "about": {
       "label1": "About Me",
       "label2": "Description",
