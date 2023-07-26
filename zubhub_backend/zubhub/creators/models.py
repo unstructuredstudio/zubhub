@@ -137,28 +137,47 @@ class Setting(models.Model):
 
 
 class CreatorGroup(models.Model):
-    id = models.UUIDField(primary_key=True,
-                          default=uuid.uuid4,
-                          editable=False,
-                          unique=True)
     groupname = models.CharField(
         max_length=150,
+        unique=True,
         error_messages={
             'unique': _('A group with that groupname already exists.'),
         },
-        verbose_name=_('groupname')
+        verbose_name=_('groupname'),
+        null=True,
+        blank=True,
     )
+    creator = models.OneToOneField(
+        Creator, on_delete=models.CASCADE)
     description = models.CharField(max_length=10000, blank=True, null=True)
     members = models.ManyToManyField(
         'self', symmetrical=False, blank=True, related_name="creator_groups"
     )
     created_on = models.DateTimeField(default=timezone.now)
     projects = models.JSONField(default=list)  # Storing project IDs as a JSON list
+    projects_count = models.IntegerField(blank=True, default=0)
     badges = models.ManyToManyField(Badge, blank=True, related_name="creator_group" )
     tags = models.ManyToManyField(CreatorTag, blank=True, related_name="creator_group")
+    avatar = models.URLField(max_length=1000, blank=True, null=True)
+    search_vector = SearchVectorField(null=True)
+    followers = models.ManyToManyField(
+        "self", symmetrical=False, blank=True, related_name="following")
+    followers_count = models.IntegerField(blank=True, default=0)
+    
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
 
     def __str__(self):
         return self.groupname
+    
+    def save(self, *args, **kwargs):
+        if not self.avatar:
+            self.avatar = 'https://robohash.org/{0}'.format(self.groupname)
+        
+        self.followers_count = self.followers.count()
+        self.following_count = self.following.count()
+        self.projects_count = self.projects.count()
+        super().save(*args, **kwargs)
 
     def get_projects(self, **kwargs):
         limit = kwargs.get("limit")

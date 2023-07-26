@@ -81,7 +81,7 @@ class Project(models.Model):
                                 blank=True,
                                 default=None,
                                 on_delete=models.SET_DEFAULT,
-                                related_name="group_projects", to_field="id")
+                                related_name="group_projects")
     title = models.CharField(max_length=1000)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)

@@ -476,7 +476,7 @@ class GroupMembersAPIView(ListAPIView):
 
     def get_queryset(self):
         username = self.kwargs.get("groupname")
-        group = get_object_or_404(CreatorGroup, creator__username=username)
+        group = get_object_or_404(CreatorGroup, creatorgroup__username=username)
         return group.memberships.all()
     
 
