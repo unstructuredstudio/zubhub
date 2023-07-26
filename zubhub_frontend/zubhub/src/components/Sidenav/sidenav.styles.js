@@ -4,7 +4,7 @@ export const sidenavStyle = theme => ({
     container: {
         backgroundColor: 'white',
         height: '80vh',
-        borderRadius: 12,
+        borderRadius: 8,
 
         [theme.breakpoints.down('sm')]: {
             height: '100%',
@@ -55,5 +55,5 @@ export const sidenavStyle = theme => ({
             color: colors.secondary + ' !important'
         }
     },
-    listContainer: { display: 'flex', flexDirection: 'column', height: '100%', paddingTop: 50 }
+    listContainer: { display: 'flex', flexDirection: 'column', height: '100%', paddingTop: 30 }
 })

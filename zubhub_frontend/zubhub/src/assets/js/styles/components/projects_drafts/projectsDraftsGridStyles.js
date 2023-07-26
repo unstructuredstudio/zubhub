@@ -10,6 +10,7 @@ const styles = theme => ({
     [theme.breakpoints.down('740')]: {
       margin: '1em',
     },
+    borderRadius: 8, overflow: 'hidden'
   },
 
   viewAllBtn: {

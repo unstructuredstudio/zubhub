@@ -306,7 +306,7 @@ function Profile(props) {
                 {...props}
               />
             ) : (
-              <Box>
+              <Box style={{ borderRadius: 8, overflow: 'hidden' }}>
                 <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
                   {t('profile.projects.label')}
                   <CustomButton

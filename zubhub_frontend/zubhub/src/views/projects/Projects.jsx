@@ -122,7 +122,10 @@ function Projects(props) {
               </Box>
             ) : null}
             <Box className={classes.mainContainerStyle}>
-              <Typography style={{ marginBottom: 30 }} className={common_classes.title1}>
+              <Typography
+                style={{ marginBottom: 30, ...(!props.auth?.token && { marginTop: 50 }) }}
+                className={common_classes.title1}
+              >
                 All Projects
               </Typography>
 

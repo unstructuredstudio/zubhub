@@ -9,9 +9,9 @@ const styles = theme => ({
   },
   profileHeaderStyle: {
     paddingTop: '1.5em',
-    // background: 'rgba(255,204,0,1)',
-    // background:
-    //   'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+    background: 'rgba(255,204,0,1)',
+    background:
+      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
@@ -19,8 +19,9 @@ const styles = theme => ({
       margin: '1em',
     },
     border: 'solid 3px rgb(255 209 24)',
+    borderRadius: 8,
     boxShadow: 'unset',
-    backgroundColor: 'transparent'
+    backgroundColor: 'white'
   },
   avatarBoxStyle: {
     padding: '0 1em 2.5em 1em',
@@ -130,6 +131,7 @@ const styles = theme => ({
     [theme.breakpoints.down('740')]: {
       margin: '1em',
     },
+    borderRadius: 8,
   },
   titleStyle: {
     fontWeight: 900,
@@ -155,13 +157,14 @@ const styles = theme => ({
       margin: '1em',
       borderRadius: '4px',
     },
+    borderRadius: '8px 0 0 8px',
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',
     // margin: '1em 1em 0 0',
     padding: '1em',
     width: '40%',
-    borderRadius: '0 4px 4px 0',
+    borderRadius: '0 8px 8px 0',
     [theme.breakpoints.down('900')]: {
       width: 'auto',
       margin: '1em',

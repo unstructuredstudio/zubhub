@@ -33,31 +33,35 @@ import {
   Publish,
   ExpandMore,
   Image,
+  PostAddOutlined,
 } from '@material-ui/icons';
 import { TEAM_ENABLED } from '../../utils.js';
 import API from '../../api';
 
-const links = ({ draftCount, myProjectCount, username }) => [
+const links = ({ draftCount, myProjectCount, auth }) => [
   { label: 'All Projects', link: '/', icon: Dashboard },
   { label: 'Profile', link: '/profile', icon: Person, reactIcon: true, requireAuth: true },
   { label: 'Create Project', link: '/projects/create', icon: EmojiObjects },
+  ...(auth?.tags.includes('staff')
+    ? [{ label: 'Create Activities', link: '/activities/create', icon: PostAddOutlined }]
+    : []),
   {
     label: `My Drafts(${draftCount})`,
-    link: `/creators/${username}/drafts`,
+    link: `/creators/${auth?.username}/drafts`,
     icon: GiNotebook,
     rightIcon: ExpandMore,
     requireAuth: true,
   },
   {
     label: `My Projects(${myProjectCount})`,
-    link: `/creators/${username}/projects`,
+    link: `/creators/${auth?.username}/projects`,
     icon: Publish,
     rightIcon: ExpandMore,
     requireAuth: true,
   },
   { label: 'Bookmarks', link: '/projects/saved', icon: Bookmark, requireAuth: true },
   ...(TEAM_ENABLED ? [{ label: 'Teams', link: '/dashboard', icon: RiTeamFill }] : []),
-  { label: 'Explore Ideas', link: 'https://kriti.unstructured.studio/', target: '_blank', icon: FeaturedPlayList },
+  { label: 'Explore Activities', link: 'https://kriti.unstructured.studio/', target: '_blank', icon: FeaturedPlayList },
 ];
 
 const bottomLinks = [
@@ -105,7 +109,7 @@ export default function Sidenav() {
           </Link>
         )}
 
-        {links({ draftCount, myProjectCount, username: auth.username }).map(
+        {links({ draftCount, myProjectCount, auth: auth }).map(
           ({ label, link, icon: Icon, red, rightIcon: RightIcon, requireAuth, target }, index) =>
             displayLink(requireAuth) && (
               <Link

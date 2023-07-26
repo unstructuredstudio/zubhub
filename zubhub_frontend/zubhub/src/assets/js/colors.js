@@ -10,3 +10,10 @@ export const colors = {
     white: '#fff',
     green: '#22C55E'
 }
+
+const borders = {
+    borderRadius: 20,
+    borderRadiusMd: 8,
+    borderRadiusSm: 4,
+}
+
