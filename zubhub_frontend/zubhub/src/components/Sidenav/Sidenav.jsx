@@ -90,7 +90,6 @@ export default function Sidenav() {
   const handleLogout = async () => {
     setIsLogginOut(true);
     const res = await dispatch(logout({ token: auth.token, history, t }));
-    console.log(res);
   };
 
   const displayLink = requireAuth => {

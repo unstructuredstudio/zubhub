@@ -44,7 +44,6 @@ export default function VideoInput({ name, label, required, value = [], handleCh
   };
 
   const removeVideo = fromValue => {
-    console.log(fromValue, value, linkValue);
     if (fromValue) {
       return handleChange([]);
     }

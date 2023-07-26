@@ -94,7 +94,6 @@ export const getErrors = (route, field, index, errors, touched) => {
 };
 
 export const imagesToPreview = files => {
-  console.log({ files });
   let imagesToPreview = {};
   if (files) {
     if (files['length']) {

@@ -144,7 +144,6 @@ function PreviewProject({ onClose, ...props }) {
     const query = getUrlQueryObject();
     if (query.success) {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      // toggleDialog();
     }
   }, []);
 

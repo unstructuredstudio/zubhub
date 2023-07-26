@@ -39,7 +39,6 @@ function UploadFile(props) {
   let fieldErrors = getErrors(route, field, index, formikProps.errors, formikProps.touched);
   let fieldValue = getValue(route, field, index, fieldType, formikProps.formikValues);
 
-  console.log({ fieldValue });
   return (
     <div>
       <CustomButton
@@ -87,7 +86,6 @@ function UploadFile(props) {
 
         <Grid container spacing={2}>
           {Object.entries(imagesToPreview(fieldValue)).map(([index, image]) => {
-            console.log({ image });
             return (
               <Grid item key={`imagePreview${index}`} md={4} xs={4} sm={4}>
                 <Paper key={`imagePaper${index}`} className={activity_classes.imagePreviewContainer}>
