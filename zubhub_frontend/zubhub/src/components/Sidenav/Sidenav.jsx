@@ -1,73 +1,23 @@
 import {
+  CircularProgress,
   Link,
-  Box,
-  ListItemIcon,
-  ListItemText,
   List,
   ListItem,
+  ListItemIcon,
+  ListItemText,
   makeStyles,
   useMediaQuery,
-  CircularProgress,
 } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { sidenavStyle } from './sidenav.styles';
-import { useLocation } from 'react-router-dom';
-import { RiTeamFill, RiLogoutBoxRFill } from 'react-icons/ri';
-import { GiNotebook } from 'react-icons/gi';
-import { images } from '../../assets/images';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../store/actions/authActions';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
-import {
-  Bookmark,
-  Dashboard,
-  School,
-  Settings,
-  EmojiObjects,
-  Web,
-  FeaturedPlayList,
-  Person,
-  ExitToApp,
-  Publish,
-  ExpandMore,
-  Image,
-  PostAddOutlined,
-} from '@material-ui/icons';
-import { TEAM_ENABLED } from '../../utils.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
 import API from '../../api';
-
-const links = ({ draftCount, myProjectCount, auth }) => [
-  { label: 'All Projects', link: '/', icon: Dashboard },
-  { label: 'Profile', link: '/profile', icon: Person, reactIcon: true, requireAuth: true },
-  { label: 'Create Project', link: '/projects/create', icon: EmojiObjects },
-  ...(auth?.tags.includes('staff')
-    ? [{ label: 'Create Activities', link: '/activities/create', icon: PostAddOutlined }]
-    : []),
-  {
-    label: `My Drafts(${draftCount})`,
-    link: `/creators/${auth?.username}/drafts`,
-    icon: GiNotebook,
-    rightIcon: ExpandMore,
-    requireAuth: true,
-  },
-  {
-    label: `My Projects(${myProjectCount})`,
-    link: `/creators/${auth?.username}/projects`,
-    icon: Publish,
-    rightIcon: ExpandMore,
-    requireAuth: true,
-  },
-  { label: 'Bookmarks', link: '/projects/saved', icon: Bookmark, requireAuth: true },
-  ...(TEAM_ENABLED ? [{ label: 'Teams', link: '/dashboard', icon: RiTeamFill }] : []),
-  { label: 'Explore Activities', link: 'https://kriti.unstructured.studio/', target: '_blank', icon: FeaturedPlayList },
-];
-
-const bottomLinks = [
-  // { label: 'Settings', link: '/settings', icon: Settings, requireAuth: true },
-  { label: 'Log Out', action: 'logout', icon: RiLogoutBoxRFill, red: true, requireAuth: true },
-];
+import { images } from '../../assets/images';
+import { logout } from '../../store/actions/authActions';
+import { bottomLinks, links } from './data';
+import { sidenavStyle } from './sidenav.styles';
 
 export default function Sidenav() {
   const classes = makeStyles(sidenavStyle)();
@@ -83,8 +33,13 @@ export default function Sidenav() {
 
   useEffect(() => {
     const api = new API();
-    api.getUserDrafts({ username: auth?.username, token: auth?.token }).then(data => setDraftCount(data.count));
-    api.getUserProjects({ username: auth?.username, token: auth?.token }).then(data => setMyProjectCount(data.count));
+    const request1 = api.getUserDrafts({ username: auth?.username, token: auth?.token });
+    const request2 = api.getUserProjects({ username: auth?.username, token: auth?.token });
+    let res = Promise.all([request1, request2]);
+    res.then(data => {
+      setDraftCount(data[0].count);
+      setMyProjectCount(data[1].count);
+    });
   }, []);
 
   const handleLogout = async () => {
@@ -101,20 +56,19 @@ export default function Sidenav() {
     <div className={classes.container}>
       <List className={classes.listContainer}>
         {isSmallScreen && (
-          <Link style={{ textDecoration: 'none', padding: '0 30px' }} className={classes.logo} href="/">
+          <Link className={clsx(classes.logo, classes.link)} href="/">
             <ListItem>
-              <img src={images.logo} />
+              <img alt="Zubhub Logo" src={images.logo} />
             </ListItem>
           </Link>
         )}
 
-        {links({ draftCount, myProjectCount, auth: auth }).map(
-          ({ label, link, icon: Icon, red, rightIcon: RightIcon, requireAuth, target }, index) =>
+        {links({ draftCount, myProjectCount, auth, t }).map(
+          ({ label, link, icon: Icon, red, requireAuth, target }, index) =>
             displayLink(requireAuth) && (
               <Link
                 key={index + label}
-                className={clsx(classes.label, pathname == link && classes.active, red && classes.red)}
-                style={{ textDecoration: 'none', padding: '0 30px' }}
+                className={clsx(classes.label, classes.link, pathname == link && classes.active, red && classes.red)}
                 href={link}
                 target={target || '_self'}
               >
@@ -123,23 +77,18 @@ export default function Sidenav() {
                     <Icon size={22} />
                   </ListItemIcon>
                   <ListItemText primary={label} />
-                  {/* {RightIcon && (
-                    <ListItemIcon>
-                      <RightIcon size={22} />
-                    </ListItemIcon>
-                  )} */}
                 </ListItem>
               </Link>
             ),
         )}
 
-        {bottomLinks.map(
+        {bottomLinks({ t }).map(
           ({ label, link, icon: Icon, red, action, requireAuth }, index) =>
             displayLink(requireAuth) && (
               <Link
                 key={index + label}
-                className={clsx(classes.label, pathname == link && classes.active, red && classes.red)}
-                style={{ textDecoration: 'none', padding: '0 30px', marginTop: index == 0 && 'auto' }}
+                className={clsx(classes.label, classes.link, pathname == link && classes.active, red && classes.red)}
+                style={{ marginTop: index == 0 && 'auto' }}
                 {...(link && { href: link })}
                 onClick={action == 'logout' ? handleLogout : null}
               >

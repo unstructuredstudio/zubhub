@@ -32,6 +32,19 @@
       "unpublishedActivities": "Unpublished Activities",
       "myActivities": "My Activities"
     },
+    "sidebar":{
+      "logout": "Logout",
+      "expoloreActivities":"Explore Activities",
+      "teams":"Teams",
+      "bookmarks":"Bookmarks",
+      "myProjects":"My Projects",
+      "myDrafts":"My Drafts",
+      "createActivities":"Create Activities",
+      "createProject":"Create Project",
+      "profile":"My Profile",
+      "projects":"All Projects",
+      "settings":"Settings"
+    },
 
     "footer": {
       "privacy": "Privacy",

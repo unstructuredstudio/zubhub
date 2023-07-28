@@ -119,37 +119,36 @@ function Project(props) {
                   </Box>
                 </Tooltip>
                 <Box className={classes.tagsContainer}>
-                  {project.creator.tags.map((tag, index) => (
-                    <>
-                      {index == 0 && (
-                        <Link
-                          className={clsx(
-                            common_classes.baseTagStyle,
-                            classes.tagContainer,
-                            common_classes.textDecorationNone,
-                            { [common_classes.extendedTagStyle]: !isBaseTag(tag) },
-                          )}
-                          to={`/search/?q=${tag}&tab=creators`}
+                  {project.creator.tags.map((tag, index) => {
+                    index == 0 && (
+                      <Link
+                        key={index + tag}
+                        className={clsx(
+                          common_classes.baseTagStyle,
+                          classes.tagContainer,
+                          common_classes.textDecorationNone,
+                          { [common_classes.extendedTagStyle]: !isBaseTag(tag) },
+                        )}
+                        to={`/search/?q=${tag}&tab=creators`}
+                      >
+                        <Typography className={classes.tagName} component="div">
+                          {tag}
+                        </Typography>
+                      </Link>
+                    );
+                    index == 1 && (
+                      <Link key={index + tag} className={common_classes.textDecorationNone} to={`#`}>
+                        <Typography
+                          className={clsx(common_classes.baseTagStyle, classes.restOfTags, {
+                            [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                          })}
+                          component="div"
                         >
-                          <Typography className={classes.tagName} component="div">
-                            {tag}
-                          </Typography>
-                        </Link>
-                      )}
-                      {index == 1 && (
-                        <Link className={common_classes.textDecorationNone} to={`#`}>
-                          <Typography
-                            className={clsx(common_classes.baseTagStyle, classes.restOfTags, {
-                              [common_classes.extendedTagStyle]: !isBaseTag(tag),
-                            })}
-                            component="div"
-                          >
-                            + {project.creator.tags.length - 1}
-                          </Typography>
-                        </Link>
-                      )}
-                    </>
-                  ))}
+                          + {project.creator.tags.length - 1}
+                        </Typography>
+                      </Link>
+                    );
+                  })}
                 </Box>
               </Box>
             </Link>

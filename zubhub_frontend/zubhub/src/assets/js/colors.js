@@ -11,7 +11,7 @@ export const colors = {
     green: '#22C55E'
 }
 
-const borders = {
+export const borders = {
     borderRadius: 20,
     borderRadiusMd: 8,
     borderRadiusSm: 4,

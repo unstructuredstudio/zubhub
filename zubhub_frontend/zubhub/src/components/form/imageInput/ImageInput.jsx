@@ -12,7 +12,7 @@ export default function ImageInput({ name, label, required, value, handleChange 
   const handleFileChange = files => {
     const maxAssets = 5;
     if (files?.length > maxAssets || value?.length > maxAssets) {
-      alert('You can only select up to 7 files.');
+      alert('You can only select up to 5 files.');
       return;
     }
     handleChange(Array.from([...files, ...value]));

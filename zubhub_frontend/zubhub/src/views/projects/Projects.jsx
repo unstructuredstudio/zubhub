@@ -152,8 +152,9 @@ function Projects(props) {
                     </Typography>
                   </Grid>
                 ) : null}
-                {projects.map(project => (
+                {projects.map((project, index) => (
                   <Grid
+                    key={project.id}
                     xs={12}
                     sm={6}
                     lg={4}

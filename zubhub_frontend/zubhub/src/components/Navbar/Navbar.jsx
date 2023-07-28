@@ -103,7 +103,7 @@ function PageWrapper(props) {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-    setState({ left: !state.left });
+    setState(oldState => ({ ...oldState, left: !state.left }));
   };
 
   const throttledFetchOptions = useMemo(
@@ -357,7 +357,7 @@ function PageWrapper(props) {
                 )}
               </Hidden>
 
-              <AvatarButton {...props} />
+              <AvatarButton history={props.history} />
             </div>
           </Toolbar>
           {open_search_form ? (

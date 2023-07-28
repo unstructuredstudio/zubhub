@@ -3,7 +3,8 @@ import { colors } from "../../assets/js/colors";
 export const sidenavStyle = theme => ({
     container: {
         backgroundColor: 'white',
-        height: '80vh',
+        minHeight: '80vh',
+        display: 'flex',
         borderRadius: 8,
 
         [theme.breakpoints.down('sm')]: {
@@ -55,5 +56,8 @@ export const sidenavStyle = theme => ({
             color: colors.secondary + ' !important'
         }
     },
-    listContainer: { display: 'flex', flexDirection: 'column', height: '100%', paddingTop: 30 }
+    link: {
+        textDecoration: 'none', padding: '0 30px',
+    },
+    listContainer: { display: 'flex', flex: 1, flexDirection: 'column', paddingTop: 30 }
 })

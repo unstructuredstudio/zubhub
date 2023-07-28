@@ -1,25 +1,25 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
+import { Box, ButtonGroup, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { Grid, Box, ButtonGroup, Typography, Container } from '@material-ui/core';
 
 import { fetchPage, updateProjects } from './userProjectsScripts';
 
-import * as ProjectActions from '../../store/actions/projectActions';
-import CustomButton from '../../components/button/Button';
-import ErrorPage from '../error/ErrorPage';
-import LoadingPage from '../loading/LoadingPage';
-import Project from '../../components/project/Project';
-import styles1 from '../../assets/js/styles/views/user_projects/userProjectsStyles';
 import { capitalize } from 'lodash';
 import styles from '../../assets/js/styles';
+import styles1 from '../../assets/js/styles/views/user_projects/userProjectsStyles';
+import CustomButton from '../../components/button/Button';
+import Project from '../../components/project/Project';
+import * as ProjectActions from '../../store/actions/projectActions';
+import ErrorPage from '../error/ErrorPage';
+import LoadingPage from '../loading/LoadingPage';
 
 const useStyles = makeStyles(styles1);
 

@@ -5,7 +5,6 @@ import CreateActivity from './views/create_activity/create_activity';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
-import CreateProject2 from './views/create_project/CreateProject2';
 
 const SearchResults = React.lazy(() =>
   import('./views/search_results/SearchResults'),
@@ -55,9 +54,7 @@ const Projects = React.lazy(() => import('./views/projects/Projects'));
 const SavedProjects = React.lazy(() =>
   import('./views/saved_projects/SavedProjects'),
 );
-const CreateProject = React.lazy(() =>
-  import('./views/create_project/CreateProject'),
-);
+const CreateProject = React.lazy(() => import('./views/create_project/CreateProject'));
 const ProjectDetails = React.lazy(() =>
   import('./views/project_details/ProjectDetails'),
 );
@@ -393,7 +390,7 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
-                LazyComponent={CreateProject2}
+                LazyComponent={CreateProject}
                 {...routeProps}
                 {...props}
               />
@@ -418,7 +415,7 @@ function App(props) {
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
-                LazyComponent={CreateProject2}
+                LazyComponent={CreateProject}
                 {...routeProps}
                 {...props}
               />
