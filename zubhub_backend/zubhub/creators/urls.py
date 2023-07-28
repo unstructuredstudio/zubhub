@@ -48,7 +48,7 @@ urlpatterns = [
     path('<uuid:pk>/toggle-follow/',
          ToggleFollowAPIView.as_view(),
          name="toggle_follow"),
-    path('<uuid:pk>/remove-member/',
+    path('remove-member/',
          RemoveGroupMemberAPIView.as_view(),
          name="remove_member")
 ]

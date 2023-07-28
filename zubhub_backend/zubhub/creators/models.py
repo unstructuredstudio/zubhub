@@ -137,18 +137,16 @@ class Setting(models.Model):
 
 
 class CreatorGroup(models.Model):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     groupname = models.CharField(
         max_length=150,
         unique=True,
         error_messages={
             'unique': _('A group with that groupname already exists.'),
         },
-        verbose_name=_('groupname'),
-        null=True,
-        blank=True,
+        verbose_name=_('groupname')
     )
-    creator = models.OneToOneField(
-        Creator, on_delete=models.CASCADE)
     description = models.CharField(max_length=10000, blank=True, null=True)
     members = models.ManyToManyField(
         'self', symmetrical=False, blank=True, related_name="creator_groups"
@@ -176,7 +174,10 @@ class CreatorGroup(models.Model):
         
         self.followers_count = self.followers.count()
         self.following_count = self.following.count()
-        self.projects_count = self.projects.count()
+        if self.projects:
+            self.projects_count = len(self.projects)
+        else:
+            self.projects_count = 0
         super().save(*args, **kwargs)
 
     def get_projects(self, **kwargs):
