@@ -103,9 +103,7 @@ function EditProfile(props) {
 
   const { locations, tool_tip_open, open_delete_account_modal,dialog_error, } = state;
   const { t } = props;
-  const handleButtonClick = () => {
-    handleSetState(handleToggleDeleteAccountModal(state));
-  };
+
   return (
   <>
     <Box className={classes.root}>
@@ -126,18 +124,18 @@ function EditProfile(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('Edit Team Info')}
-                </Typography><br></br>
+                  {t('editProfile.welcomeMsg.primary')}
+                </Typography>
                 <Typography
                   className={classes.descStyle}
-                  variant="h6"
-                  color="textPrimary"
+                  variant="body2"
+                  color="textSecondary"
                   component="p"
                 >
-                  {t('Team Name')}
+                  {t('editProfile.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
-                  
+                  <Grid item xs={12}>
                     <Box
                       component="p"
                       className={
@@ -152,8 +150,8 @@ function EditProfile(props) {
                         </Box>
                       )}
                     </Box>
-                  
-                  <Grid item xs={12} sm={12} md={12}>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={6}>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
                       variant="outlined"
@@ -169,7 +167,7 @@ function EditProfile(props) {
                         className={classes.customLabelStyle}
                         htmlFor="username"
                       >
-                        {t('Team Name')}
+                        {t('editProfile.inputs.username.label')}
                       </InputLabel>
                       <ClickAwayListener
                         onClickAway={() => handleSetState(handleTooltipClose())}
@@ -200,7 +198,7 @@ function EditProfile(props) {
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             labelWidth={calculateLabelWidth(
-                              t('Team Name'),
+                              t('editProfile.inputs.username.label'),
                               document,
                             )}
                           />
@@ -218,16 +216,200 @@ function EditProfile(props) {
                             ))}
                       </FormHelperText>
                     </FormControl>
-                    </Grid><Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                    className={classes.descStyle}
-                    variant="h6"
-                    color="textPrimary"
-                    component="p"
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      ref={refs.location_el}
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['user_location']) ||
+                        (props.touched['user_location'] &&
+                          props.errors['user_location'])
+                      }
                     >
-                    {t('About Team')}
-                  </Typography>
-                </Grid>
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        id="user_location"
+                      >
+                        {t('editProfile.inputs.location.label')}
+                      </InputLabel>
+                      <Select
+                        labelId="user_location"
+                        id="user_location"
+                        name="user_location"
+                        className={clsx(classes.customInputStyle)}
+                        value={
+                          props.values.user_location
+                            ? props.values.user_location
+                            : ''
+                        }
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        label="Location"
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {Array.isArray(locations) &&
+                          locations.map(location => (
+                            <MenuItem key={location.name} value={location.name}>
+                              {location.name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
+                        {(props.status && props.status['user_location']) ||
+                          (props.touched['user_location'] &&
+                            props.errors['user_location'] &&
+                            t(
+                              `editProfile.inputs.location.errors.${props.errors['user_location']}`,
+                            ))}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['email']) ||
+                        (props.touched['email'] && props.errors['email'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="email"
+                      >
+                        {t('editProfile.inputs.email.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        ref={refs.email_el}
+                        
+                        className={clsx(classes.customInputStyle)}
+                        id="email"
+                        name="email"
+                        type="text"
+                        value={props.values.email ? props.values.email : ''}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={calculateLabelWidth(
+                          t('editProfile.inputs.email.label'),
+                          document,
+                        )}
+                      />
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['phone']) ||
+                        (props.touched['phone'] && props.errors['phone'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="phone"
+                      >
+                        {t('editProfile.inputs.phone.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        ref={refs.phone_el}
+                        
+                        className={clsx(classes.customInputStyle)}
+                        id="phone"
+                        name="phone"
+                        type="phone"
+                        value={props.values.phone ? props.values.phone : ''}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        labelWidth={calculateLabelWidth(
+                          t('editProfile.inputs.phone.label'),
+                          document,
+                        )}
+                      />
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={6}>
+                    <FormControl
+                      className={clsx(classes.margin, classes.textField)}
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      margin="normal"
+                      error={
+                        (props.status && props.status['password']) ||
+                        (props.touched['password'] && props.errors['password'])
+                      }
+                    >
+                      <InputLabel
+                        className={classes.customLabelStyle}
+                        htmlFor="password"
+                      >
+                        {t('editProfile.inputs.password.label')}
+                      </InputLabel>
+                      <OutlinedInput
+                        className={classes.customInputStyle}
+                        id="password"
+                        name="password"
+                        type={show_password ? 'text' : 'password'}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() =>
+                                handleSetState(handleClickShowPassword(state))
+                              }
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                            >
+                              {show_password ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        labelWidth={calculateLabelWidth(
+                          t('editProfile.inputs.password.label'),
+                          document,
+                        )}
+                      />
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
+                        {(props.status && props.status['password']) ||
+                          (props.touched['password'] &&
+                            props.errors['password'] &&
+                            t(
+                              `editProfile.inputs.password.errors.${props.errors['password']}`,
+                            ))}
+                      </FormHelperText>
+                    </FormControl>
+                  </Grid>
+
                   <Grid item xs={12}>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
@@ -267,7 +449,15 @@ function EditProfile(props) {
                         className={classes.fieldHelperTextStyle}
                         error
                       >
-                      
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                          className={classes.fieldHelperTextStyle}
+                        >
+                          {t('editProfile.inputs.bio.helpText')}
+                        </Typography>
+                        <br />
                         {(props.status && props.status['bio']) ||
                           (props.touched['bio'] &&
                             props.errors['bio'] &&
@@ -277,46 +467,65 @@ function EditProfile(props) {
                       </FormHelperText>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                    className={classes.descStyle}
-                    variant="h6"
-                    color="textPrimary"
-                    component="p"
+
+                  <Grid item xs={12}>
+                    <CustomButton
+                      variant="contained"
+                      size="large"
+                      primaryButtonStyle
+                      type="submit"
+                      fullWidth
+                      customButtonStyle
                     >
-                    {t('Delete Team Profile?')}
-                  </Typography>
-                  <Typography
-                  // gutterBottom
-                  variant="body2"
-                  component="p"
-                  color="textSecondary"
-                  className={classes.descStyle}
-                >
-                    {t('Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.')}
-                  </Typography>
-                  <br></br>
-                  <Typography
-                  // gutterBottom
-                  variant="body2"
-                  component="p"
-                  color="textSecondary"
-                  className={classes.descStyle}
-                >
-                    {t('Deleting your team will also delete any job or talent search associated with this team.')}
-                  </Typography>
-                </Grid>
+                      {t('editProfile.inputs.submit')}
+                    </CustomButton>
+                  </Grid>
                 </Grid>
               <Grid container spacing={3}>
-              
+              <Grid item xs={12}>
+                  <Link to="/profile" className={classes.textDecorationNone}>
+                    <CustomButton
+                      variant="outlined"
+                      size="large"
+                      secondaryButtonStyle
+                      customButtonStyle
+                      fullWidth
+                    >
+                      {t('editProfile.backToProfile')}
+                    </CustomButton>
+                  </Link>
+                </Grid>
               </Grid>
               </form>
-              <br></br><br></br>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                <a href="#!" onClick={handleButtonClick}>
-                  {t('I want to delete this team’s profile')}
-                </a>
+                  <Box className={classes.center}>
+                    <Divider className={classes.divider} />
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      component="p"
+                    >
+                      {t('editProfile.or')}
+                    </Typography>
+                    <Divider className={classes.divider} />
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <CustomButton
+                      variant="outlined"
+                      size="large"
+                      secondaryButtonStyle
+                      dangerButtonStyle
+                      fullWidth
+                      onClick={() =>
+                        handleSetState(handleToggleDeleteAccountModal(state))
+                      }
+                    >
+                      {t('profile.delete.label')}
+                    </CustomButton>
                 </Grid>
               </Grid>
             </CardContent>
@@ -330,7 +539,7 @@ function EditProfile(props) {
             aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
           >
             <DialogTitle id="delete-project">
-              {t('Delete Team Profile?')}
+              {t('profile.delete.dialog.primary')}
             </DialogTitle>
             <Box
               component="p"
@@ -343,7 +552,28 @@ function EditProfile(props) {
               )}
             </Box>{' '}
             <DialogContent>
-              <Typography>{t('Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.')}</Typography>
+              <Typography>{t('profile.delete.dialog.secondary')}</Typography>
+              <FormControl
+                className={clsx(classes.margin, classes.textField)}
+                variant="outlined"
+                size="medium"
+                fullWidth
+                margin="normal"
+              >
+                <InputLabel
+                  className={classes.customLabelStyle}
+                  htmlFor="username"
+                >
+                  {t('profile.delete.dialog.inputs.username')}
+                </InputLabel>
+                <OutlinedInput
+                  className={classes.customInputStyle}
+                  ref={username_check}
+                  name="username"
+                  type="text"
+                  labelWidth={120}
+                />
+              </FormControl>
             </DialogContent>
             <DialogActions>
               <CustomButton
@@ -361,10 +591,10 @@ function EditProfile(props) {
                 onClick={e =>
                   handleSetState(deleteAccount(username_check, props, state))
                 }
-                primaryButtonStyle
+                dangerButtonStyle
                 customButtonStyle
               >
-                {t('Delete')}
+                {t('profile.delete.dialog.procceed')}
               </CustomButton>
             </DialogActions>
           </Dialog>

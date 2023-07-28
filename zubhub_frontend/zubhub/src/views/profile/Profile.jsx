@@ -44,7 +44,7 @@ import {
   handleToggleDeleteAccountModal,
   deleteAccount,
 } from './profileScripts';
-import GroupsIcon from '@material-ui/icons/Group';
+
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
@@ -180,7 +180,7 @@ function Profile(props) {
                     primaryButtonStyle
                     onClick={() => props.history.push('/edit-profile')}
                   >
-                    {t('profile.editTeam')}
+                    {t('profile.edit')}
                   </CustomButton>
                 </>
               ) : (
@@ -211,10 +211,12 @@ function Profile(props) {
                     {sortTags(profile.tags).map(tag => (
                       <Typography
                         key={tag}
-                        className={classes.baseTagStyle}
+                        className={clsx(common_classes.baseTagStyle, {
+                          [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                        })}
                         component="h2"
                       >
-                        {tag}  <GroupsIcon className={classes.iconWithSpace}/>
+                        {tag}
                       </Typography>
                     ))}
                   </Box>
@@ -271,7 +273,7 @@ function Profile(props) {
                         component="h5"
                       >
                         <div className={classes.moreInfoTitleStyle}>
-                        {t('profile.membersCount')}
+                        {t('profile.followingCount')}
                         </div>
                         <div className={classes.moreInfoCountStyle}>
                         {profile.following_count} 
@@ -312,7 +314,7 @@ function Profile(props) {
                   className={classes.titleStyle}
                 >
                   {!profile.members_count
-                    ? t('About Us')
+                    ? t('profile.about.label1')
                     : t('profile.about.label2')}
                 </Typography>
                 {profile.bio
@@ -396,6 +398,14 @@ function Profile(props) {
 
             {profile.projects_count > 0 || drafts.length > 0 ? (
               username === props.auth.username ? (
+                <ProjectsDraftsGrid
+                  profile={profile}
+                  projects={projects}
+                  drafts={drafts}
+                  handleSetState={handleSetState}
+                  {...props}
+                />
+              ) : (
                 <Paper className={classes.profileLowerStyle}>
                   <Typography
                     gutterBottom
@@ -404,7 +414,7 @@ function Profile(props) {
                     color="textPrimary"
                     className={classes.titleStyle}
                   >
-                    {t('Projects')}
+                    {t('profile.projects.label')}
                     <CustomButton
                       className={clsx(classes.floatRight)}
                       variant="outlined"
@@ -444,8 +454,8 @@ function Profile(props) {
                       ))}
                   </Grid>
                 </Paper>
-              ) : null ): null}
-
+              )
+            ) : null}
             <Comments
               context={{ name: 'profile', body: profile }}
               handleSetState={handleSetState}
