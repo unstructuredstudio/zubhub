@@ -1,5 +1,6 @@
 import csv
 from io import StringIO
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from notifications.models import Notification
 from activitylog.models import Activitylog
@@ -33,14 +34,14 @@ from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
 # from ..projects.models import Project
 
 from .models import Location, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC, CreatorGroupMembership
-from .serializers import (CreatorGroupSerializer, CreatorListSerializer, CreatorMinimalSerializer,
+from .serializers import (CreatorGroupSerializer, CreatorListSerializer, CreatorMinimalSerializer, CreatorGroupWithMembershipsSerializer,
                           CreatorSerializer, LocationSerializer,
                           VerifyPhoneSerializer, CustomRegisterSerializer,
-                          ConfirmGroupInviteSerializer,
+                          ConfirmGroupInviteSerializer, CreatorGroupMinimalSerializer,
                           AddGroupMembersSerializer, CreatorGroupMembershipSerializer)
 from .pagination import CreatorNumberPagination
 from .utils import (perform_send_phone_confirmation,
-                    perform_send_email_confirmation, process_avatar,
+                    perform_send_email_confirmation, process_avatar, process_group_avatar,
                     send_group_invite_notification, perform_creator_search, send_notification, activity_log)
 from .permissions import (IsOwner, IsGroupAdmin)
 
@@ -408,6 +409,51 @@ class ToggleFollowAPIView(RetrieveAPIView):
         self.request.user.save()
 
         return obj
+    
+
+class ToggleFollowGroupAPIView(RetrieveAPIView):
+    """
+    Remove/Add authenticated user from/to followers list of user with provided id.
+
+    Requires authentication.
+    Requires user id.
+    Returns user profile of user with provided id.
+    """
+
+    serializer_class = CreatorGroupMinimalSerializer
+    queryset = CreatorGroup.objects.all()
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
+
+    # Set the lookup field to 'groupname' to match your custom URL pattern
+    lookup_field = 'groupname'
+
+    def get_object(self):
+        groupname = self.kwargs.get("groupname")
+        obj = get_object_or_404(CreatorGroup, groupname=groupname)
+        username = self.kwargs.get("username")
+        user = get_object_or_404(Creator, username=username)
+        
+        if user in obj.followers.all():
+            obj.followers.remove(user)
+        else:
+            obj.followers.add(user)
+            
+            # Pass relevant data as the third argument to the send_notification function
+            # send_notification([obj], user, [{}], Notification.Type.FOLLOW, f'/creators/{user.username}')
+            
+            # Pass relevant data as the third argument to the activity_log function
+            # activity_log(
+            #     [obj],
+            #     user,
+            #     [{}],
+            #     Activitylog.Type.FOLLOW,
+            #     f'/creators/{obj.groupname}'  # Use groupname, not obj
+            # )
+
+        obj.save()
+
+        return obj
 
 
 class ConfirmGroupInviteAPIView(APIView):
@@ -458,26 +504,28 @@ class UserGroupsAPIView(ListAPIView):
 
     def get_queryset(self):
         username = self.kwargs.get("username")
-        creator_groups = CreatorGroup.objects.filter(members__username=username)
+        print("Username:", username)
+        creator = get_object_or_404(Creator, username=username)
+        creator_groups = CreatorGroup.objects.filter(memberships__member=creator).prefetch_related('members')
         return creator_groups
 
 
-class GroupMembersAPIView(ListAPIView):
+class GroupMembersAPIView(RetrieveAPIView):
     """
-    Fetch paginated list of users in a group.
+    Fetch the creator group with its memberships.
 
-    Requires username of group. Returns list of users with their roles.
+    Requires groupname of the group. Returns the creator group object with memberships.
     """
 
-    serializer_class = CreatorGroupMembershipSerializer
+    serializer_class = CreatorGroupWithMembershipsSerializer
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
-    pagination_class = CreatorNumberPagination
 
-    def get_queryset(self):
-        username = self.kwargs.get("groupname")
-        group = get_object_or_404(CreatorGroup, creatorgroup__username=username)
-        return group.memberships.all()
+    def retrieve(self, request, *args, **kwargs):
+        groupname = self.kwargs.get("groupname")
+        group = get_object_or_404(CreatorGroup, groupname=groupname)
+        serializer = self.get_serializer(group)
+        return Response(serializer.data)
     
 
 class AddGroupMembersAPIView(GenericAPIView):
@@ -485,62 +533,50 @@ class AddGroupMembersAPIView(GenericAPIView):
     Add new members to group.
 
     Requires authentication.\n
-    Requires body of group_members and/or csv string.\n
+    Requires body of group_members.\n
     Returns group profile.\n
     contenttype might need to be set to false.\n
     request body format:\n
         {\n
             group_members: [{"username": "username1", "role": "member/admin"}, ...],
-            csv: "stringified csv"\n
         }\n
     """
 
     serializer_class = AddGroupMembersSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsGroupAdmin]
     throttle_classes = [PostUserRateThrottle, SustainedRateThrottle]
     allowed_methods = ('POST', 'OPTIONS', 'HEAD')
 
-    def get_queryset(self):
-        creator_group = CreatorGroup.objects.filter(
-            creator=self.request.user).annotate(Count('members'))
-        return creator_group
+    def get_group(self, groupname):
+        groupname = self.kwargs.get("groupname")
+        return get_object_or_404(CreatorGroup, groupname=groupname)
 
-    def post(self, request):
-        creator_group = self.get_queryset()
-        if not creator_group:
-            return Response(CreatorSerializer(request.user).data)
-
+    def post(self, request, groupname):
+        groupname = self.kwargs.get("groupname")
+        group = self.get_group(groupname)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         group_members = serializer.validated_data.get('group_members')
-        csvf = serializer.validated_data.get('csv')
-        csvf = StringIO(csvf.read().decode())
-        csvf = csv.reader(csvf, delimiter=',')
-        csvf = list(csvf)
-        flat_csv = []
-        for index, arr in enumerate(csvf):
-            if index != 0:
-                flat_csv.append(arr[0])
 
-        # remove leading and trailing white spaces from username strings
-        group_members = list(map(lambda x: x['username'].strip(), group_members))
+        for member_data in group_members:
+            member = member_data['member']
+            role = member_data['role']
 
-        group_members = [{"username": member, "role": role} for member, role in group_members]
+            # Get the Creator instance for the member
+            member_obj = get_object_or_404(Creator, username=member)
 
-        uploaded = Creator.objects.filter(username__in=group_members)
-        all_members = creator_group[0].members.all()
-        uploaded_count = uploaded.count()
+            # Check if the member already exists in the group, if not, add them
+            membership, created = CreatorGroupMembership.objects.get_or_create(
+                group=group, member=member_obj, defaults={'role': role}
+            )
 
-        if creator_group[0].members__count > uploaded_count:
-            new_members = all_members.difference(uploaded)
-        else:
-            new_members = uploaded.difference(all_members)
+            if not created:
+                # If the membership already existed, update the role
+                membership.role = role
+                membership.save()
 
-        if new_members.count() > 0:
-            send_group_invite_notification(creator_group[0], new_members)
-
-        return Response(CreatorSerializer(request.user).data)
-
+        return Response({"detail": "User added"}, status=status.HTTP_200_OK)
+    
 
 class RemoveGroupMemberAPIView(RetrieveAPIView):
     """
@@ -553,21 +589,27 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
 
     serializer_class = CreatorMinimalSerializer
     queryset = Creator.objects.all()
-    permission_classes = [IsAuthenticated, IsGroupAdmin]
+    permission_classes = [IsGroupAdmin]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
-    def get_object(self):
-        pk = self.kwargs.get("pk")
-        obj = get_object_or_404(self.get_queryset(), pk=pk)
-        creatorgroup = self.request.user.creatorgroup
+    def retrieve(self, request, *args, **kwargs):
+        groupname = self.kwargs.get("groupname")
+        username = self.kwargs.get("username")
+        group = get_object_or_404(CreatorGroup, groupname=groupname)
+        obj = get_object_or_404(self.get_queryset(), username=username)
 
-        if obj in creatorgroup.members.all() and obj.pk != self.request.user.pk:
-            membership = creatorgroup.memberships.filter(member=obj).first()
+        creatorgroup = group
+
+        # Check if the authenticated user is an admin of the specified group
+        if creatorgroup.groupname == groupname:
+            membership = group.memberships.filter(member=obj).first()
             if membership:
                 membership.delete()
+                return Response({"detail": "User deleted"}, status=status.HTTP_200_OK)
 
-        return obj
-
+        # Return an error response if the user was not removed or if the user is not an admin
+        return Response({"detail": "User was not removed from the group or you do not have permission to perform this action."}, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class DeleteCreatorGroupAPIView(DestroyAPIView):
     """
@@ -580,12 +622,13 @@ class DeleteCreatorGroupAPIView(DestroyAPIView):
     serializer_class = CreatorGroupSerializer
     permission_classes = [IsGroupAdmin]
     throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
-    lookup_field = "pk"
+    lookup_field = "groupname"
 
     def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
+        groupname = self.kwargs.get("groupname")
+        instance = get_object_or_404(CreatorGroup, groupname=groupname)
         self.perform_destroy(instance)
-        return Response({"details": "ok"}, status=status.HTTP_200_OK)
+        return Response({"detail": "Group deleted successfully."}, status=status.HTTP_200_OK)
  
 
 class CreatorGroupFollowersAPIView(ListAPIView):
@@ -602,16 +645,9 @@ class CreatorGroupFollowersAPIView(ListAPIView):
     pagination_class = CreatorNumberPagination
 
     def get_queryset(self):
-        username = self.kwargs.get("username")
-        group_id = self.kwargs.get("group_id")
-        creator_group = CreatorGroup.objects.filter(
-            creator__username=username, pk=group_id
-        ).first()
-
-        if creator_group:
-            return creator_group.members.all()
-
-        return []
+        groupname = self.kwargs.get("groupname")
+        creator_group = CreatorGroup.objects.get(groupname=groupname)
+        return creator_group.followers.all()
 
 
 class CreateAndAddMembersToGroupAPIView(GenericAPIView):
@@ -668,6 +704,8 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
             role = member_data['role']
             group.memberships.create(member=member, role=role)
 
+        process_group_avatar(None, group)
+
         # Construct a response data dictionary with basic group information and projects
         response_data = {
             "groupname": group.groupname,
@@ -679,6 +717,8 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
             ],
             "created_on": group.created_on,
             "projects_count": group.projects_count,
+            "tags":[ tags for tags in group.tags.all()],
+            "badges": [ badges for badges in group.badges.all()]
         }
         return Response(response_data)
 
@@ -700,28 +740,32 @@ class EditCreatorGroupAPIView(UpdateAPIView):
 
     queryset = CreatorGroup.objects.all()
     serializer_class = CreatorGroupSerializer
-    permission_classes = [IsAuthenticated, IsGroupAdmin]
+    permission_classes = [IsGroupAdmin]
     throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
-    def perform_update(self, serializer):
-        group = serializer.instance
-        members_data = self.request.data.get('members', [])
+    lookup_field = 'groupname'
 
-        # Update group description
-        serializer.save()
+    def post(self, request, groupname):
+        # Get the existing CreatorGroup instance
+        creator_group = self.get_object()
 
-        # Update member roles
-        for member_data in members_data:
-            member_username = member_data.get('member')
-            member_role = member_data.get('role')
 
-            if member_username and member_role:
-                membership = group.memberships.filter(creator__username=member_username).first()
-                if membership:
-                    membership.role = member_role
-                    membership.save()
+        # Manually update group description and groupname
+        groupname = request.data.get('groupname')
+        description = request.data.get('description')
 
-        return serializer.data
+        # Validate the data
+        if not groupname or not description:
+            raise ValidationError("Both 'groupname' and 'description' fields are required.")
+
+        # Update the fields and save the changes
+        creator_group.groupname = groupname
+        creator_group.description = description
+        creator_group.save()
+
+        # Serialize and return the updated group data
+        serializer = self.get_serializer(creator_group)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
 
 class LocationListAPIView(ListAPIView):

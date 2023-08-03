@@ -149,7 +149,7 @@ class CreatorGroup(models.Model):
     )
     description = models.CharField(max_length=10000, blank=True, null=True)
     members = models.ManyToManyField(
-        'self', symmetrical=False, blank=True, related_name="creator_groups"
+        'self', symmetrical=False, blank=True, related_name="group_members"
     )
     created_on = models.DateTimeField(default=timezone.now)
     projects = models.JSONField(default=list)  # Storing project IDs as a JSON list
@@ -159,7 +159,7 @@ class CreatorGroup(models.Model):
     avatar = models.URLField(max_length=1000, blank=True, null=True)
     search_vector = SearchVectorField(null=True)
     followers = models.ManyToManyField(
-        "self", symmetrical=False, blank=True, related_name="following")
+        Creator, symmetrical=False, blank=True, related_name="following_group")
     followers_count = models.IntegerField(blank=True, default=0)
     
     class Meta:
@@ -173,7 +173,6 @@ class CreatorGroup(models.Model):
             self.avatar = 'https://robohash.org/{0}'.format(self.groupname)
         
         self.followers_count = self.followers.count()
-        self.following_count = self.following.count()
         if self.projects:
             self.projects_count = len(self.projects)
         else:

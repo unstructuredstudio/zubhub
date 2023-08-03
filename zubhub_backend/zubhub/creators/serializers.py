@@ -82,6 +82,11 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
 
+class CreatorGroupMinimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreatorGroup
+        fields = '__all__'
+
 class CreatorGroupMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = CreatorGroupMembership
@@ -257,39 +262,22 @@ class ConfirmGroupInviteSerializer(serializers.Serializer):
     key = serializers.CharField()
 
 
+class MemberRoleSerializer(serializers.Serializer):
+    member = serializers.CharField()
+    role = serializers.ChoiceField(choices=[('admin', 'Admin'), ('member', 'Member')])
+
+
 class AddGroupMembersSerializer(serializers.Serializer):
-    group_members = serializers.ListField(child=serializers.CharField(), required=False, allow_empty=True)
-    csv = serializers.FileField(required=False, allow_null=True, allow_empty_file=True)
+    group_members = MemberRoleSerializer(many=True, required=True)
 
     def validate(self, data):
         group_members = data.get('group_members', [])
-        csv_file = data.get('csv', None)
 
-        if not group_members and not csv_file:
-            raise serializers.ValidationError(_("You must submit group member usernames either through the form or as a CSV."))
-
-        if group_members and csv_file:
-            raise serializers.ValidationError(_("You can only submit group member usernames either through the form or as a CSV, not both."))
-
-        if csv_file:
-            # Validate the contents of the CSV file
-            try:
-                decoded_csv = csv_file.read().decode()
-                csv_data = list(csv.reader(decoded_csv.splitlines()))
-
-                # Check if the CSV has at least one row of data (excluding the header)
-                if len(csv_data) <= 1:
-                    raise serializers.ValidationError(_("CSV file must have at least one row of data (excluding the header)."))
-
-                # Assuming the first column contains usernames
-                data['group_members'] = [row[0] for row in csv_data[1:]]
-            except csv.Error:
-                raise serializers.ValidationError(_("Invalid CSV format. Please provide a valid CSV file."))
-            except Exception as e:
-                raise serializers.ValidationError(_("Error processing the CSV file: {0}".format(str(e))))
+        if not group_members:
+            raise serializers.ValidationError(_("You must submit at least one group member."))
 
         return data
-
+    
 
 class CustomPasswordResetSerializer(PasswordResetSerializer):
     password_reset_form_class = PasswordResetForm
@@ -306,8 +294,21 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
         return value
 
 
+class CreatorGroupWithMembershipsSerializer(serializers.ModelSerializer):
+    members = CreatorGroupMembershipSerializer(many=True)
+
+    class Meta:
+        model = CreatorGroup
+        fields = ('groupname', 'description', 'members', 'created_on', 'projects_count')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['members'] = CreatorGroupMembershipSerializer(instance.memberships.all(), many=True).data
+        return data
+
+
 class CreatorGroupSerializer(serializers.ModelSerializer):
-    members = CreatorGroupMembershipSerializer(many=True, source='creatorgroupmembership_set')
+    members = CreatorGroupMembershipSerializer(many=True, read_only=True)
     groupname = serializers.CharField(
         max_length=150,
         validators=[UniqueValidator(queryset=CreatorGroup.objects.all())],
@@ -321,20 +322,25 @@ class CreatorGroupSerializer(serializers.ModelSerializer):
         fields = ('groupname', 'description', 'members', 'created_on', 'projects_count')
 
     def create(self, validated_data):
-        members_data = validated_data.pop('creatorgroupmembership_set', [])
+        members_data = validated_data.pop('members', [])
         group = CreatorGroup.objects.create(**validated_data)
         for member_data in members_data:
             member = member_data['member']
             role = member_data.get('role', 'member')  # Default role is 'member' if not provided
             CreatorGroupMembership.objects.create(group=group, member=member, role=role)
         return group
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['members'] = CreatorGroupMembershipSerializer(instance.memberships.all(), many=True).data
+        return data
 
     def update(self, instance, validated_data):
         instance.groupname = validated_data.get('groupname', instance.groupname)
         instance.description = validated_data.get('description', instance.description)
         instance.save()
 
-        members_data = validated_data.pop('creatorgroupmembership_set', [])
+        members_data = validated_data.pop('members', [])
         existing_members = set(instance.members.all())
 
         for member_data in members_data:

@@ -7,7 +7,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from projects.tasks import delete_file_task
-from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp
+from creators.tasks import upload_file_task, send_mass_email, send_mass_text, send_whatsapp, upload_file_task_group
 from creators.models import Setting
 from notifications.models import Notification
 from activitylog.models import Activitylog
@@ -178,6 +178,24 @@ def process_avatar(oldInstance, newInstance):
     elif not oldInstance:
 
         upload_file_task.delay(newInstance.id, newInstance.username)
+
+
+def process_group_avatar(oldInstance, newInstance):
+    """ Upload CreatorGroup avatar to media server and do cleanups where neccessary """
+
+    if oldInstance and oldInstance.groupname != newInstance.groupname:
+        newInstance.avatar = 'https://robohash.org/{0}'.format(
+            newInstance.groupname)
+        newInstance.save()
+
+        if oldInstance.avatar.find("robohash.org") == -1:
+            delete_file_task.delay(oldInstance.avatar)
+
+        upload_file_task_group.delay(newInstance.id, newInstance.groupname)
+
+    elif not oldInstance:
+
+        upload_file_task_group.delay(newInstance.id, newInstance.groupname)
 
 
 def activity_notification(activities, **kwargs):
