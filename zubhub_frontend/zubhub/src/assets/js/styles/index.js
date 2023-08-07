@@ -92,6 +92,7 @@ const styles = theme => ({
   },
   justifySpaceBetween: {
     justifyContent: 'space-between',
+    display: 'flex'
   },
   addOnSmallScreen: {
     [theme.breakpoints.up('555')]: {
@@ -195,6 +196,9 @@ const styles = theme => ({
     '& .MuiSvgIcon-root': {
       fontSize: '1.2rem'
     },
+  },
+  textSmall: {
+    fontSize: '0.9rem'
   }
 });
 

@@ -1,6 +1,6 @@
 import { colors } from "../../../assets/js/colors";
 
-export const orDividerStyle = theme => ({
+export const labeledLineStyle = theme => ({
     container: {
         position: 'relative',
         display: 'flex',

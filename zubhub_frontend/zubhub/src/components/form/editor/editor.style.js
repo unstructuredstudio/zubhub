@@ -2,6 +2,9 @@ import { colors } from "../../../assets/js/colors";
 
 export const editorStyle = theme => ({
     editor: {
+        height: 100,
+    },
+    toolbarDisabled: {
         '& .ql-toolbar': {
             display: 'none'
         },
@@ -9,7 +12,6 @@ export const editorStyle = theme => ({
             fontSize: 14,
             borderRadius: 4
         },
-        height: 100,
     },
     editorTooltip: ({ position: { left, top, width } }) => ({
         display: 'flex',

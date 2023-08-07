@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener, makeStyles } from '@material-ui/core';
+import { Box, ClickAwayListener, FormHelperText, Typography, makeStyles } from '@material-ui/core';
 import {
   DescriptionOutlined,
   FileCopyOutlined,
@@ -9,6 +9,9 @@ import {
 import React, { useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { editorStyle } from './editor.style';
+import FormLabel from '../../form_labels/formLabel';
+import styles from '../../../assets/js/styles';
+import clsx from 'clsx';
 
 const menu = [
   { name: 'copy', icon: FileCopyOutlined },
@@ -19,14 +22,25 @@ const menu = [
   // { name: 'attachment', icon: AttachFileOutlined },
 ];
 
-export default function Editor({ onChange, value, ...props }) {
+export default function Editor({
+  onChange,
+  value,
+  name,
+  placeholder,
+  label,
+  helperText,
+  required,
+  enableToolbar = false,
+  ...props
+}) {
   let quillRef = useRef(null);
   const [position, setPosition] = useState({});
   const [isSeleted, setIsSeleted] = useState(false);
   const classes = makeStyles(editorStyle)({ position });
+  const commonClasses = makeStyles(styles)();
 
   const onSelectionChange = range => {
-    if (range && range.length) {
+    if (!enableToolbar && range && range.length) {
       const { top, bottom, left, right, width } = getSelectedTextBounds();
       setPosition({ top, bottom, left, right, width });
       setIsSeleted(true);
@@ -70,14 +84,22 @@ export default function Editor({ onChange, value, ...props }) {
 
   return (
     <div style={{ position: 'relative' }}>
+      <FormLabel required={required} htmlFor={name}>
+        {label}
+      </FormLabel>
+      <helperText>
+        <Typography className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
+          {helperText}
+        </Typography>
+      </helperText>
       <ReactQuill
         ref={ref => (quillRef = ref)}
         onChangeSelection={onSelectionChange}
         onChange={onChange}
         value={value}
-        className={classes.editor}
-        modules={{ toolbar: false }}
-        placeholder="Please describe your project"
+        className={clsx(classes.editor, !enableToolbar && classes.toolbarDisabled)}
+        modules={{ toolbar: enableToolbar }}
+        placeholder={placeholder}
         {...props}
       />
       {isSeleted ? tooltip : null}

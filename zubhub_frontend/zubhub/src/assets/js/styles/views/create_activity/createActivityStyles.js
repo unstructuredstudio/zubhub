@@ -1,6 +1,5 @@
 export const styles = theme => ({
   createActivityContainer: {
-    backgroundColor: '#FFCD06',
     padding: '5vh 10%',
   },
   createActivityContainerTitle: {

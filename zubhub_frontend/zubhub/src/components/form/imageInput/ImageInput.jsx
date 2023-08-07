@@ -4,15 +4,25 @@ import React, { useRef } from 'react';
 import styles from '../../../assets/js/styles';
 import { imageInputStyles } from './imageInput.styles';
 
-export default function ImageInput({ name, label, required, value, handleChange }) {
+const defaultMessage = 'JPG and PNG Images can be added (Maximum of 5 photos 2MB each)';
+
+export default function ImageInput({
+  name,
+  label,
+  required,
+  value,
+  handleChange,
+  message = defaultMessage,
+  sizeLimit,
+  max = 5,
+}) {
   const commomClasses = makeStyles(styles)();
   const classes = makeStyles(imageInputStyles)();
   const input = useRef(null);
 
   const handleFileChange = files => {
-    const maxAssets = 5;
-    if (files?.length > maxAssets || value?.length > maxAssets) {
-      alert('You can only select up to 5 files.');
+    if (files?.length > max || value?.length > max) {
+      alert(`You can only select up to ${max} files.`);
       return;
     }
     handleChange(Array.from([...files, ...value]));
@@ -35,7 +45,7 @@ export default function ImageInput({ name, label, required, value, handleChange 
       </label>
       <Box onClick={() => input.current.click()} className={classes.container}>
         <CloudUploadOutlined />
-        <Typography>JPG and PNG Images can be added (Maximum of 5 photos 2MB each)</Typography>
+        <Typography>{message}</Typography>
       </Box>
       <Box className={classes.previewContainer}>
         {value?.map((img, index) => (
