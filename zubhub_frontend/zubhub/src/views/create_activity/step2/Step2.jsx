@@ -13,11 +13,11 @@ export default function Step2() {
   const classes = makeStyles(step2Styles)();
   const commonClasses = makeStyles(styles)();
   const handleIntroductionChange = value => {};
-  const [steps, setSteps] = useState([DEFAULT_STEP]);
+  const [steps, setSteps] = useState([{ ...DEFAULT_STEP }]);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const addStep = () => {
-    setSteps([...steps, DEFAULT_STEP]);
+    setSteps([...steps, { ...DEFAULT_STEP }]);
   };
 
   const onStepChange = (data, type, stepIndex) => {
@@ -25,6 +25,8 @@ export default function Step2() {
     let step = stepsTemp[stepIndex];
     step[type] = data;
     stepsTemp[stepIndex] = step;
+    console.log(data, type, stepIndex);
+
     setSteps(stepsTemp);
   };
 
@@ -32,6 +34,7 @@ export default function Step2() {
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -44,6 +47,15 @@ export default function Step2() {
   const moveUp = index => {
     const stepsTemp = [...steps];
   };
+  const moveDown = index => {
+    if (index + 1 < steps.length) {
+      const stepsTemp = [...steps];
+      [stepsTemp[index], stepsTemp[index + 1]] = [stepsTemp[index + 1], stepsTemp[index]];
+      setSteps(stepsTemp);
+    }
+  };
+
+  console.log(steps);
 
   return (
     <div className={classes.container}>
@@ -96,8 +108,8 @@ export default function Step2() {
                 'aria-labelledby': `basic-button${index}`,
               }}
             >
-              <MenuItem onClick={handleClose}>Move up one step</MenuItem>
-              <MenuItem onClick={handleClose}>Move down one step</MenuItem>
+              <MenuItem onClick={() => moveUp(index)}>Move up one step</MenuItem>
+              <MenuItem onClick={() => moveDown(index)}>Move down one step</MenuItem>
               <Divider />
               <MenuItem onClick={() => deleteStep(index)}>Delete step</MenuItem>
             </Menu>
