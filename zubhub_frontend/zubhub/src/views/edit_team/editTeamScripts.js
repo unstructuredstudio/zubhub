@@ -1,6 +1,23 @@
 import * as Yup from 'yup';
 
 /**
+ * @function getUserProfile
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */ export const getTeamProfile = (groupname, props) => {
+  // let username = props.match.params.username;
+
+  // if (!username) {
+  //   username = props.auth.username;
+  // } else if (props.auth.username === username) props.history.replace('/profile');
+  return props.getTeamProfile({
+    groupname,
+    token: props.auth.token
+  });
+};
+
+/**
  * @function getLocations
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
@@ -106,56 +123,14 @@ export const getProfile = (refs, props) => {
  *
  * @todo - describe function's signature
  */
-export const editProfile = (e, props, toast) => {
-  e.preventDefault();
-  let password_match = true;
-  if (props.values.user_location.length < 1) {
-    props.validateField('user_location');
-  } else if (props.values.password.length < 1) {
-    props.validateField('editProfile.inputs.password.errors');
-  } else {
-    props.login({ values: props.values, history: props.history }).catch(error => {
-      try{
-        const messages = JSON.parse(error.message);
-        toast.error(props.t('editProfile.inputs.password.errors.invalid'));
-        password_match = false;
-        return;
-      } catch (err) {
-        toast.error(props.t('err.message'));
-      }
-    }).finally(() => {
-      if (password_match == false) {
-        return;
-      } else {
-        return props
-          .editUserProfile({ ...props.values, token: props.auth.token })
-          .then(_ => {
-            toast.success(props.t('editProfile.toastSuccess'));
-            props.history.push('/profile');
-          })
-          .catch(error => {
-            const messages = JSON.parse(error.message);
-            if (typeof messages === 'object') {
-              const server_errors = {};
-              Object.keys(messages).forEach(key => {
-                if (key === 'non_field_errors') {
-                  server_errors['non_field_errors'] = messages[key][0];
-                } else if (key === 'location') {
-                  server_errors['user_location'] = messages[key][0];
-                } else {
-                  server_errors[key] = messages[key][0];
-                  toast.error(server_errors[key]);
-                }
-              });
-            } else {
-              props.setStatus({
-                non_field_errors: props.t('editProfile.errors.unexpected'),
-              });
-            }
-          });
-      }
-    });
-  }
+export const editProfile = (groupname, bio, props) => {
+  let token=props.auth.token;
+  const body = {
+    groupname: groupname,
+    bio: bio
+  };
+  return props.editTeam({ groupname, body, token });
+  
 };
 
 /**

@@ -45,6 +45,70 @@ export const getUserProfile = args => {
 };
 
 /**
+ * @function getTeamProfile
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getTeamProfile = args => {
+  return dispatch => {
+    let profile;
+    return API.getTeamProfile(args)
+      // .then(res => {
+      //   if (!res.username) {
+      //     throw new Error(args.t('profile.errors.profileFetchError'));
+      //   } else {
+      //     profile = res;
+      //     return dispatch(
+      //       API.teamFollowers(args)
+      //         username: res.username,
+      //         token: args.token,
+      //         t: args.t
+      //       }),
+      //     );
+      //   }
+      // })
+      .then(res => {
+        profile=res;
+        return { ...res, profile, loading: false };
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function editTeamProfile
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const editTeam = args => {
+  return dispatch => {
+    let profile;
+    return API.editTeam(args)
+      .then(res => {
+        profile=res;
+        return { ...res, profile, loading: false };
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
  * @function editUserProfile
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
@@ -162,6 +226,35 @@ export const toggleFollow = args => {
 };
 
 /**
+ * @function toggleTeamFollow
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const toggleTeamFollow = args => {
+  return () => {
+    return API.followTeam(args)
+    // .then(res => {
+      
+    //   } else {
+    //     res = Object.keys(res)
+    //       .map(key => res[key])
+    //       .join('\n');
+    //     throw new Error(res);
+    //   }
+    // })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
  * @function removeMember
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
@@ -260,6 +353,75 @@ export const getFollowers = args => {
             followers: res.results,
             prev_page: res.previous,
             next_page: res.next,
+            loading: false,
+          };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function getTeamFollowers
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getTeamFollowers = args => {
+  return () => {
+    return API.teamFollowers(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+            const followerIds = res.results.map(follower => follower.id);
+              return {
+                followerIds: followerIds,
+                prev_page: res.previous,
+                next_page: res.next,
+                loading: false,
+              };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function getTeamFollowers
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getTeamMembers = args => {
+  return () => {
+    return API.teamMembers(args)
+      .then(res => {
+        if (Array.isArray(res.members)) {
+          return {
+            followers: res.members,
             loading: false,
           };
         } else {

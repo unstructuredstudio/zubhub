@@ -45,6 +45,7 @@ urlpatterns = [
          GroupMembersAPIView.as_view(),
          name='group_members'),
     path('<str:username>/', UserProfileAPIView.as_view(), name='user_profile'),
+    path('group/<str:groupname>/', TeamProfileAPIView.as_view(), name='team_profile'),
     path('<uuid:pk>/toggle-follow/',
          ToggleFollowAPIView.as_view(),
          name="toggle_follow"),

@@ -4,7 +4,7 @@ import styles from '../../../assets/js/styles';
 // import { Editor, TagsInput } from '../../../components';
 import { searchTags } from '../script';
 
-export default function Step1({ formik, handleBlur }) {
+export default function Step1({ formik, formValues, setFormValues, handleBlur }) {
   const commonClasses = makeStyles(styles)();
   const [value, setValue] = useState('');
   const [remoteTags, setRemoteTags] = useState([]);
@@ -47,7 +47,7 @@ export default function Step1({ formik, handleBlur }) {
           </label>
           <TextField
             variant="outlined"
-            name="title"
+            name="groupname"
             placeholder="Choose a name that best suites your team"
             value={formik.values.title}
             onChange={formik.handleChange}
@@ -60,11 +60,11 @@ export default function Step1({ formik, handleBlur }) {
           </label>
           <TextField
             variant="outlined"
-            name="title"
+            name="description"
             multiline
             rows={4}
             placeholder="Tell us a little about your team"
-            value={formik.values.title}
+            value={formik.values.bio}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.title && formik.errors.title ? true : false}

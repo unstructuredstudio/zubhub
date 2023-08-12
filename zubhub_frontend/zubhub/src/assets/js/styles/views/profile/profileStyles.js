@@ -240,6 +240,7 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   floatRight: { float: 'right' },
+  floatCenter: {  margin: '0 auto' },
   editButton: { 
     display: 'flex',
     marginTop: '0.5rem',

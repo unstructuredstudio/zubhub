@@ -6,17 +6,27 @@ import { getUserDrafts } from '../../store/actions/projectActions';
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
- */ export const getUserProfile = props => {
-  let username = props.match.params.username;
+ */ export const getTeamProfile = (groupname, props) => {
+  // let username = props.match.params.username;
 
-  if (!username) {
-    username = props.auth.username;
-  } else if (props.auth.username === username) props.history.replace('/profile');
-  return props.getUserProfile({
-    username,
+  // if (!username) {
+  //   username = props.auth.username;
+  // } else if (props.auth.username === username) props.history.replace('/profile');
+  return props.getTeamProfile({
+    groupname,
     token: props.auth.token,
     t: props.t,
   });
+};
+
+export const fetchPage = (groupname, props) => {
+  let token=props.auth.token;
+  return props.getTeamFollowers({ groupname, token });
+};
+
+export const followTeam = (groupname, username,props) => {
+  let token=props.auth.token;
+  props.toggleTeamFollow({groupname, username, token})
 };
 
 /**

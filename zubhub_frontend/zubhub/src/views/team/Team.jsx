@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import API from '../../api'
 
@@ -34,7 +34,7 @@ import {
 } from '@material-ui/core';
 
 import {
-  getUserProfile,
+  getTeamProfile,
   copyProfileUrl,
   updateProjects,
   toggleFollow,
@@ -43,6 +43,8 @@ import {
   handleMoreMenuClose,
   handleToggleDeleteAccountModal,
   deleteAccount,
+  fetchPage,
+  followTeam,
 } from './teamScripts';
 import GroupsIcon from '@material-ui/icons/Group';
 import CustomButton from '../../components/button/Button';
@@ -79,7 +81,7 @@ function Team(props) {
   const [userActivity, setUserActivity] = useState([])
   const [scrollPosition, setScrollPosition] = useState(0);
   const [nextPage, setNextPage] = useState(false)
-
+  const { groupname } = useParams();
   const [state, setState] = React.useState({
     results: [],
     loading: true,
@@ -90,35 +92,32 @@ function Team(props) {
     drafts: [],
     badge_tags: [],
   });
-
+  const [followers,setFollowers]=React.useState([]);
+  
   React.useEffect(() => {
   try{
     let activitylogObj= new API()
-    const promises = [getUserProfile(props), activitylogObj.getUserActivity(username, page)];
+    const promises = [getTeamProfile(groupname, props), fetchPage(groupname, props)];
     if (username === props.auth.username) {
       promises.push(
-        ProjectActions.getUserDrafts({
-          username,
-          token: props.auth.token,
-          t: props.t,
-          limit: 4,
-        }),
+        // ProjectActions.getUserDrafts({
+        //   username,
+        //   token: props.auth.token,
+        //   t: props.t,
+        //   limit: 4,
+        // }),
       );
     }
 
     Promise.all(promises).then(values => {
       const obj = values[0];
-      const activity = values[1] || {};
-      const drafts = values[2] || {};
-      const badges = obj.profile.badges;
+      const followers = values[1];
 
-      if (obj.profile) {
-        parseComments(obj.profile.comments);
-      }
-      handleSetState({ ...obj, ...drafts, badge_tags: badges });
-      setUserActivity(userActivity   => ([...userActivity, ...activity.results]))
-      const nextPageExist= activity.next? true : false 
-      setNextPage(nextPageExist)
+      // if (obj.profile) {
+      //   parseComments(obj.profile.comments);
+      // }
+      handleSetState({ ...obj });
+      setFollowers(followers);
     });
   } catch (error) {
     console.log(error);
@@ -140,8 +139,6 @@ function Team(props) {
     open_delete_account_modal,
     dialog_error,
     more_anchor_el,
-    drafts,
-    badge_tags,
   } = state;
 
   const more_menu_open = Boolean(more_anchor_el);
@@ -169,16 +166,16 @@ function Team(props) {
                   <Avatar
                     className={classes.avatarStyle}
                     src={profile.avatar}
-                    alt={profile.username}
+                    alt={profile.groupname}
                   />
-                  {props.auth.username === profile.username ? (
+                  {profile.members.some(member => member.member === props.auth.username && member.role === 'admin') ? (
                 <>
                   <CustomButton
                     className={classes.editButton}
                     variant="contained"
                     margin="normal"
                     primaryButtonStyle
-                    onClick={() => props.history.push('/edit-profile')}
+                    onClick={() => props.history.push('/groupname/edit-team')}
                   >
                     {t('profile.editTeam')}
                   </CustomButton>
@@ -190,10 +187,10 @@ function Team(props) {
                   margin="normal"
                   secondaryButtonStyle
                   onClick={() =>
-                    handleSetState(toggleFollow(profile.id, props))
+                    followTeam(groupname, props.auth.username, props)
                   }
                 >
-                  {profile.followers.includes(props.auth.id)
+                  {followers.followerIds.includes(props.auth.id)
                     ? t('profile.unfollow')
                     : t('profile.follow')}
                 </CustomButton>
@@ -205,20 +202,20 @@ function Team(props) {
                     component="h1"
                     color="textPrimary"
                   >
-                    {profile.username}
+                    {profile.groupname}
                   </Typography>
                   <Box className={classes.tagsContainerStyle}>
-                    {sortTags(profile.tags).map(tag => (
+                    
                       <Typography
-                        key={tag}
+                        
                         className={classes.baseTagStyle}
                         component="h2"
                       >
-                        {tag}  <GroupsIcon className={classes.iconWithSpace}/>
+                        Team  <GroupsIcon className={classes.iconWithSpace}/>
                       </Typography>
-                    ))}
+                    
                   </Box>
-                  {props.auth.username === profile.username ? (
+                  {groupname === profile.groupname ? (
                     <>
                       <Typography className={classes.emailStyle} component="h5">
                         {profile.email}
@@ -247,7 +244,7 @@ function Team(props) {
                       </Typography>
                     </Link>
                     <Link
-                      to={`/creators/${profile.username}/followers`}
+                      to={`/teams/${groupname}/followers`}
                       className={classes.textDecorationNone}
                     >
                       <Typography
@@ -258,12 +255,12 @@ function Team(props) {
                         {t('profile.followersCount')}
                         </div>
                         <div className={classes.moreInfoCountStyle}>
-                        {profile.followers.length} 
+                        {profile.followers_count} 
                         </div>
                       </Typography>
                     </Link>
                     <Link
-                      to={`/creators/${profile.username}/following`}
+                      to={`/teams/${groupname}/members`}
                       className={classes.textDecorationNone}
                     >
                       <Typography
@@ -274,28 +271,10 @@ function Team(props) {
                         {t('profile.membersCount')}
                         </div>
                         <div className={classes.moreInfoCountStyle}>
-                        {profile.following_count} 
+                        {profile.members.length} 
                         </div>
                       </Typography>
                     </Link>
-                    {profile.members_count !== null ? (
-                      <Link
-                        to={`/creators/${profile.username}/members`}
-                        className={classes.textDecorationNone}
-                      >
-                        <Typography
-                          className={classes.moreInfoStyle}
-                          component="h5"
-                        >
-                          <div className={classes.moreInfoTitleStyle}>
-                          {t('profile.membersCount')}
-                          </div>
-                          <div className={classes.moreInfoCountStyle}>
-                          {profile.members_count} 
-                          </div>
-                        </Typography>
-                      </Link>
-                    ) : null}
                   </Box>
               </Box> 
             </Container>
@@ -315,14 +294,14 @@ function Team(props) {
                     ? t('About Us')
                     : t('profile.about.label2')}
                 </Typography>
-                {profile.bio
-                  ? profile.bio
+                {profile.description
+                  ? profile.description
                   : !profile.members_count
                   ? t('profile.about.placeholder1')
                   : t('profile.about.placeholder2')}
               </Paper>
 
-              <Paper className={classes.badgeBox}>
+              {/* <Paper className={classes.badgeBox}>
                 <Typography
                     gutterBottom
                     component="h2"
@@ -347,54 +326,10 @@ function Team(props) {
                       ))}
                     </Box>
                   )}
-              </Paper>
+              </Paper> */}
             </div>
 
-            <Paper   className= {classes.profileLowerStyle}>
-            <Typography
-             gutterBottom
-             component="h2"
-             variant="h6"
-             color="textPrimary"
-             className= {classes.titleStyle}
-            >
-            {t('profile.activityLog')}
-            </Typography>
-                  <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
-
-                    {
-                      userActivity.map(activity => (
-                        <UserActivitylog 
-                        activity={activity}
-                        key={activity.id}
-                        />
-                        ))
-                      }
-                  </div>
-            </Paper>
-
-            <Paper   className= {classes.profileLowerStyle}>
-            <Typography
-             gutterBottom
-             component="h2"
-             variant="h6"
-             color="textPrimary"
-             className= {classes.titleStyle}
-            >
-            {t('profile.team')}
-            <CustomButton
-              className={classes.teamButton}
-              variant="contained"
-              margin="normal"
-              primaryButtonStyle
-              onClick={() => props.history.push('/create-team')}
-            >
-              {t('profile.createteam')}
-            </CustomButton>
-            </Typography>
-            </Paper>
-
-            {profile.projects_count > 0 || drafts.length > 0 ? (
+            {profile.projects_count > 0 ? (
               username === props.auth.username ? (
                 <Paper className={classes.profileLowerStyle}>
                   <Typography
@@ -405,6 +340,15 @@ function Team(props) {
                     className={classes.titleStyle}
                   >
                     {t('Projects')}
+                    <CustomButton
+                      className={classes.teamButton}
+                      variant="contained"
+                      margin="normal"
+                      primaryButtonStyle
+                      onClick={() => props.history.push('/create-team')}
+                    >
+                      {t('Add Project')}
+                    </CustomButton>
                     <CustomButton
                       className={clsx(classes.floatRight)}
                       variant="outlined"
@@ -446,11 +390,11 @@ function Team(props) {
                 </Paper>
               ) : null ): null}
 
-            <Comments
+            {/* <Comments
               context={{ name: 'profile', body: profile }}
               handleSetState={handleSetState}
               {...props}
-            />
+            /> */}
           </Container>
         </Box>
         <Dialog
@@ -528,7 +472,7 @@ function Team(props) {
 Team.propTypes = {
   auth: PropTypes.object.isRequired,
   setAuthUser: PropTypes.func.isRequired,
-  getUserProfile: PropTypes.func.isRequired,
+  getTeamProfile: PropTypes.func.isRequired,
   suggestCreators: PropTypes.func.isRequired,
   addComment: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
@@ -549,8 +493,11 @@ const mapDispatchToProps = dispatch => {
     setAuthUser: auth_user => {
       dispatch(AuthActions.setAuthUser(auth_user));
     },
-    getUserProfile: args => {
-      return dispatch(UserActions.getUserProfile(args));
+    getTeamProfile: args => {
+      return dispatch(UserActions.getTeamProfile(args));
+    },
+    getTeamFollowers: args => {
+      return dispatch(UserActions.getTeamFollowers(args));
     },
     suggestCreators: args => {
       return dispatch(UserActions.suggestCreators(args));
@@ -570,8 +517,8 @@ const mapDispatchToProps = dispatch => {
     logout: args => {
       return dispatch(AuthActions.logout(args));
     },
-    toggleFollow: args => {
-      return dispatch(UserActions.toggleFollow(args));
+    toggleTeamFollow: args => {
+      return dispatch(UserActions.toggleTeamFollow(args));
     },
     toggleLike: args => {
       return dispatch(ProjectActions.toggleLike(args));

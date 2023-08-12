@@ -41,6 +41,12 @@ const UserDrafts = React.lazy(() => import('./views/user_drafts/UserDrafts'));
 const UserFollowers = React.lazy(() =>
   import('./views/user_followers/UserFollowers'),
 );
+const TeamFollowers = React.lazy(() =>
+  import('./views/team_followers/TeamFollowers'),
+);
+const TeamMembers = React.lazy(() =>
+  import('./views/team_members/TeamMembers'),
+);
 const UserFollowing = React.lazy(() =>
   import('./views/user_following/UserFollowing'),
 );
@@ -70,7 +76,7 @@ const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
   import('./views/activity_details/activity_details'),
 );
-const CreateTeam = React.lazy(() => import('./views/create_team/CreateTseam'));
+const CreateTeam = React.lazy(() => import('./views/create_team/CreateTeam'));
 const LinkedProjects = React.lazy(() =>
   import('./views/linked_projects/LinkedProjects'),
 );
@@ -265,6 +271,32 @@ function App(props) {
           )}
         />
 
+<Route
+          path="/teams/:groupname/followers"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={TeamFollowers}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/teams/:groupname/members"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={TeamMembers}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
         <Route
           path="/creators/:username/following"
           render={routeProps => (
@@ -327,7 +359,7 @@ function App(props) {
         />
 
         <Route
-          path="/creatorgroup/:groupname"
+          path="/teams/:groupname"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Team} {...routeProps} {...props} />
@@ -358,7 +390,7 @@ function App(props) {
         />
 
         <Route
-          path="/edit-team"
+          path="/:groupname/edit-team"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport

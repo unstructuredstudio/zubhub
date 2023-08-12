@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-
+import { useParams } from 'react-router-dom';
 import { withFormik } from 'formik';
 
 import { toast } from 'react-toastify';
@@ -51,6 +51,7 @@ import {
   deleteAccount,
   handleClickShowPassword,
   handleMouseDownPassword,
+  getTeamProfile,
 } from './editTeamScripts';
 
 import CustomButton from '../../components/button/Button';
@@ -84,14 +85,34 @@ function EditTeam(props) {
     open_delete_account_modal: false,
     show_password: false,
   });
-
+  const [info, setInfo] = React.useState({
+    groupname:"",
+    description:""
+  });
+  const { groupname } = useParams();
+  
   React.useEffect(() => {
     getProfile(refs, props);
+    const promises= getTeamProfile(groupname, props);
+    
     handleSetState(getLocations(props));
+    handleSetInfo(promises);
+
+    // Promise.all(promises).then(values => {
+    //   handleSetInfo({ ...values });
+    // });
   }, []);
 
   const classes = useStyles();
   const { show_password } = state;
+
+  const handleSetInfo = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setInfo(state => ({ ...state, ...obj }));
+      });
+    }
+  };
 
   const handleSetState = obj => {
     if (obj) {
@@ -117,7 +138,7 @@ function EditTeam(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => editProfile(e, props, toast)}
+                onSubmit={e => editProfile(info.groupname, info.bio, props)}
               >
                 <Typography
                   gutterBottom
@@ -161,13 +182,13 @@ function EditTeam(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        (props.status && props.status['username']) ||
-                        (props.touched['username'] && props.errors['username'])
+                        (props.status && props.status['groupname']) ||
+                        (props.touched['groupname'] && props.errors['groupname'])
                       }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
-                        htmlFor="username"
+                        htmlFor="groupname"
                       >
                         {t('Team Name')}
                       </InputLabel>
@@ -190,11 +211,11 @@ function EditTeam(props) {
                           <OutlinedInput
                             ref={refs.username_el}
                             className={clsx(classes.customInputStyle)}
-                            id="username"
-                            name="username"
+                            id="groupname"
+                            name="groupname"
                             type="text"
                             value={
-                              props.values.username ? props.values.username : ''
+                              info.groupname ? info.groupname : ''
                             }
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
@@ -255,7 +276,7 @@ function EditTeam(props) {
                         multiline
                         rows={6}
                         rowsMax={6}
-                        value={props.values.bio ? props.values.bio : ''}
+                        value={info.description ? info.description : ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         labelWidth={calculateLabelWidth(
@@ -275,7 +296,17 @@ function EditTeam(props) {
                               `editProfile.inputs.bio.errors.${props.errors['bio']}`,
                             ))}
                       </FormHelperText>
-                    </FormControl>
+                    </FormControl></Grid><Grid item xs={12}>
+                    <CustomButton
+                      variant="contained"
+                      size="large"
+                      primaryButtonStyle
+                      type="submit"
+                      fullWidth
+                      customButtonStyle
+                    >
+                      {t('editProfile.inputs.submit')}
+                    </CustomButton>
                   </Grid>
                   <Grid item xs={12} sm={12} md={12}>
                     <Typography
@@ -380,6 +411,7 @@ EditTeam.propTypes = {
   getLocations: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
+  getTeamProfile: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -390,11 +422,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    getTeamProfile: args => {
+      return dispatch(UserActions.getTeamProfile(args));
+    },
     getAuthUser: props => {
       return dispatch(AuthActions.getAuthUser(props));
     },
-    editUserProfile: props => {
-      return dispatch(UserActions.editUserProfile(props));
+    editTeam: props => {
+      return dispatch(UserActions.editTeam(props));
     },
     getLocations: _ => {
       return dispatch(AuthActions.getLocations());
@@ -423,6 +458,8 @@ export default connect(
       password: '',
       user_location: '',
       bio: '',
+      groupname:'',
+      description:''
     }),
     validationSchema,
   })(EditTeam),

@@ -110,6 +110,41 @@ class UserProfileAPIView(RetrieveAPIView):
             return CreatorMinimalSerializer
         else:
             return CreatorSerializer
+        
+
+class TeamProfileAPIView(RetrieveAPIView):
+    """
+    Fetch Profile of group with given groupname.
+    Requires username of user.
+    Returns user profile.
+
+    Note that this schema returns the full team profile, but the api sometimes
+    returns a minimal version of the team profile, omitting certain fields that
+    are not neccessary or are sensitive.
+    """
+
+    # queryset = CreatorGroup.objects.filter(is_active=True)
+    lookup_field = "groupname"
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get(self, request, *args, **kwargs):
+        groupname = self.kwargs.get("groupname")
+        group = get_object_or_404(CreatorGroup, groupname=groupname)
+        response_data = {
+            "groupname": group.groupname,
+            "description": group.description,
+            "projects": group.projects,
+            "members": [
+                {"member": membership.member.username, "role": membership.role}
+                for membership in group.memberships.all()
+            ],
+            "created_on": group.created_on,
+            "projects_count": group.projects_count,
+            "avatar":group.avatar,
+            "followers_count":group.followers_count
+        }
+        return Response(response_data)
 
 
 class RegisterCreatorAPIView(RegisterView):
@@ -608,7 +643,7 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
                 return Response({"detail": "User deleted"}, status=status.HTTP_200_OK)
 
         # Return an error response if the user was not removed or if the user is not an admin
-        return Response({"detail": "User was not removed from the group or you do not have permission to perform this action."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"detail": "User was not removed from the group or you do not have permission to perform this action."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
 class DeleteCreatorGroupAPIView(DestroyAPIView):

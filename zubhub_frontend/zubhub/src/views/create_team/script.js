@@ -725,15 +725,11 @@ export const validationSchema = Yup.object().shape({
 
 export const formikSchema = {
     initialValues: {
-        title: undefined,
+        groupname: undefined,
         description: undefined,
-        materials_used: undefined,
-        project_images: [],
-        images: [],
-        video: [],
-        video_link: '',
-        tags: '',
-        category: [{}],
+        selectedProjects: [],
+        admins: undefined,
+        members: undefined,
     },
     validationSchema: validationSchema,
 }
