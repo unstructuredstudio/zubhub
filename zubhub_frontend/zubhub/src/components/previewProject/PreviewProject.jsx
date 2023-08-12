@@ -203,7 +203,7 @@ function PreviewProject({ onClose, ...props }) {
           <div className={classes.navbar}>
             <img src={images.logo} height={25} />
           </div>
-          <div className={classes.breadcrum}></div>
+          {/* <div className={classes.breadcrum}></div> */}
           <Box className={classes.root}>
             <Box className={classes.projectDetailHeaderStyle}>
               <Container className={classes.headerStyle}>

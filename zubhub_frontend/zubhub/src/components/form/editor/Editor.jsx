@@ -9,6 +9,8 @@ import {
 import React, { useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { editorStyle } from './editor.style';
+import clsx from 'clsx';
+import styles from '../../../assets/js/styles';
 
 const menu = [
   { name: 'copy', icon: FileCopyOutlined },
@@ -24,6 +26,7 @@ export default function Editor({ onChange, value, ...props }) {
   const [position, setPosition] = useState({});
   const [isSeleted, setIsSeleted] = useState(false);
   const classes = makeStyles(editorStyle)({ position });
+  const commonClasses = makeStyles(styles)();
 
   const onSelectionChange = range => {
     if (range && range.length) {
@@ -75,7 +78,7 @@ export default function Editor({ onChange, value, ...props }) {
         onChangeSelection={onSelectionChange}
         onChange={onChange}
         value={value}
-        className={classes.editor}
+        className={clsx(classes.editor, commonClasses.inputText)}
         modules={{ toolbar: false }}
         placeholder="Please describe your project"
         {...props}

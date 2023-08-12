@@ -166,7 +166,7 @@ function CreateProject(props) {
   const previous = () => go('prev');
   const next = async () => {
     let error = await checkErrors();
-    console.log(error);
+    console.log('Validation errors', error);
     if (Object.keys(error).length > 0) return;
 
     if (activeStep === 3) {
@@ -369,10 +369,11 @@ function CreateProject(props) {
                 onChange={handleChangeTag}
                 addTag={addTag}
                 value={value}
+                prefix={'#'}
                 remoteData={remoteTags}
                 clearSuggestions={clearSuggestions}
                 removeTag={removeTag}
-                placeholder="Start typing to search"
+                placeholder="Start typing to search #science"
               />
             </DialogContent>
           </Modal>

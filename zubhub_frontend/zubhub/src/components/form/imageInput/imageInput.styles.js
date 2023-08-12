@@ -18,7 +18,8 @@ export const imageInputStyles = theme => ({
         visibility: 'hidden'
     },
     previewBox: {
-        width: 100,
+        minWidth: 100,
+        maxWidth: 100,
         height: 90,
         borderRadius: 4.5,
         borderRadius: 4,
@@ -45,5 +46,5 @@ export const imageInputStyles = theme => ({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    previewContainer: { display: 'flex', gap: 12, marginTop: 20 }
+    previewContainer: { display: 'flex', gap: 12, marginTop: 20, overflow: 'auto' }
 })

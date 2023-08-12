@@ -7,11 +7,14 @@ import { videoInputStyles } from './videoInput.styles';
 import { buildVideoThumbnailURL } from '../../../assets/js/utils/scripts';
 import { refactorVideoUrl } from '../../input/inputScripts';
 import { isGdriveORVimeoORYoutube } from '../../../views/project_details/projectDetailsScripts';
+import clsx from 'clsx';
 
 export default function VideoInput({ name, label, required, value = [], handleChange, linkValue = '' }) {
   const commomClasses = makeStyles(styles)();
   const classes = makeStyles(videoInputStyles)();
   const input = useRef(null);
+  const videoRef = useRef(null);
+  const clickCount = 0;
 
   const handleFileChange = files => {
     const maxAssets = 1;
@@ -43,6 +46,28 @@ export default function VideoInput({ name, label, required, value = [], handleCh
     return null;
   };
 
+  const openVideo = type => {
+    if (type == 'cardmedia') {
+      clickCount++;
+      if (clickCount == 0) {
+        videoRef.current.click();
+        videoRef.current.click();
+      }
+      if (clickCount == 3) {
+        clickCount = 0;
+      }
+      return;
+    }
+
+    videoRef.current.requestFullscreen();
+    document.addEventListener('fullscreenchange', function () {
+      if (!document.fullscreenElement) {
+        // Exit fullscreen, pause the video
+        videoRef.current.pause();
+      }
+    });
+  };
+
   const removeVideo = fromValue => {
     if (fromValue) {
       return handleChange([]);
@@ -54,7 +79,7 @@ export default function VideoInput({ name, label, required, value = [], handleCh
     if (typeof value !== 'string' && value?.length > 0) {
       return value?.map((asset, index) => (
         <Box key={index} className={classes.previewBox}>
-          <video controls>
+          <video onClick={openVideo} ref={videoRef}>
             <source src={getPath(asset)} type={asset.type} />
             Your browser does not support the video tag.
           </video>
@@ -68,7 +93,7 @@ export default function VideoInput({ name, label, required, value = [], handleCh
     if ((linkValue || value.length > 0) && !isGdriveORVimeoORYoutube(refactorVideoUrl(linkValue))) {
       return (
         <Box className={classes.previewBox}>
-          <video controls>
+          <video onClick={openVideo} ref={videoRef}>
             <source src={linkValue} />
             Your browser does not support the video tag.
           </video>
@@ -82,13 +107,14 @@ export default function VideoInput({ name, label, required, value = [], handleCh
     if (linkValue) {
       return (
         <Box className={classes.previewBox}>
-          {}
           <CardMedia
+            ref={videoRef}
+            onClick={() => openVideo('cardmedia')}
             style={{ objectFit: 'contain' }}
             component="iframe"
             title="YouTube Video"
             src={refactorVideoUrl(linkValue)}
-            height="315" // You can adjust the height as needed
+            height="100%" // You can adjust the height as needed
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             frameBorder="0"
             allowFullScreen
@@ -112,7 +138,9 @@ export default function VideoInput({ name, label, required, value = [], handleCh
         <>
           <Box onClick={() => input.current.click()} className={classes.container}>
             <CloudUploadOutlined />
-            <Typography>MP4 or GIFS can be added (Maximum of 1 video and 20MB each)</Typography>
+            <Typography className={clsx(commomClasses.inputTextPlaceholder)}>
+              MP4 or GIFS can be added (Maximum of 1 video and 20MB each)
+            </Typography>
           </Box>
         </>
       )}
@@ -123,9 +151,13 @@ export default function VideoInput({ name, label, required, value = [], handleCh
 
       {value.length == 0 && (
         <TextField
-          placeholder="Paste your video link here"
+          placeholder="Import Video URL (YouTube, Vimeo and Google Drive 
+            are supported) or a video file"
+          title="Import Video URL (YouTube, Vimeo and Google Drive 
+            are supported) or a video file "
           variant="outlined"
           value={linkValue}
+          className={clsx(commomClasses.inputText)}
           onChange={e => handleChange(e.target.value, 'link')}
         />
       )}

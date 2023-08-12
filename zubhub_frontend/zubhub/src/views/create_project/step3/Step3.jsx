@@ -52,14 +52,14 @@ export default function Step3({ formik, handleBlur, ...props }) {
         multiple={true}
         withCheckbox={true}
         maxSelection={3}
-        description="Select any of the categories that best describe your project. Select none of you are unsure about your category."
+        description="Select any of the categories that best describe your project. Select none if you are unsure about your category."
       /> */}
 
       <label htmlFor="" className={commonClasses.title2}>
-        What category does your project belong too? <span className={commonClasses.colorRed}>*</span>
+        What category does your project belong to? <span className={commonClasses.colorRed}>*</span>
       </label>
       <Typography style={{ marginBottom: 10 }}>
-        Select any of the categories that best describe your project. Select none of you are unsure about your category.
+        Select any of the categories that best describe your project. Select none if you are unsure about your category.
       </Typography>
 
       <Grid container spacing={3} className={classes.pillContainer}>
@@ -75,7 +75,9 @@ export default function Step3({ formik, handleBlur, ...props }) {
                 style={{ border: `solid 1px ${color}` }}
               >
                 <Checkbox className={commonClasses.checkbox} checked={selected} style={{ color, borderWidth: 1 }} />
-                <Typography style={{ ...(isLimit && !selected && { color }) }}>{cat.name}</Typography>
+                <Typography className={commonClasses.inputText} style={{ ...(isLimit && !selected && { color }) }}>
+                  {cat.name}
+                </Typography>
               </div>
             </Grid>
           );

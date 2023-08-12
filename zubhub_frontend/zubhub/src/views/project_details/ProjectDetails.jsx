@@ -50,7 +50,7 @@ import { CloseOutlined } from '@material-ui/icons';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
 import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
-import { cloudinaryFactory, getPlayerOptions, parseComments } from '../../assets/js/utils/scripts';
+import { cloudinaryFactory, getPlayerOptions, nFormatter, parseComments } from '../../assets/js/utils/scripts';
 import { Comments, Modal } from '../../components/index.js';
 import Project from '../../components/project/Project';
 import { getUrlQueryObject } from '../../utils.js';
@@ -89,7 +89,7 @@ const buildTagsComponent = (classes, tags, history) => {
       style={{ borderRadius: 4 }}
       onClick={() => history.push(`/search?q=${tag.name}`)}
     >
-      {tag.name}
+      #{tag.name}
     </CustomButton>
   ));
 };
@@ -302,6 +302,7 @@ function ProjectDetails(props) {
                         arial-label={t('projectDetails.ariaLabels.likeButton.like')}
                       />
                     )}
+                    <Typography>{nFormatter(project.likes.length)}</Typography>
                   </IconButton>
                   <IconButton
                     className={classes.actionBoxButtonStyle}
@@ -317,6 +318,7 @@ function ProjectDetails(props) {
 
                   <IconButton className={classes.actionBoxButtonStyle}>
                     <VisibilityIcon />
+                    <Typography style={{ marginLeft: 4 }}>{project.views_count}</Typography>
                   </IconButton>
 
                   <SocialButtons />
@@ -452,8 +454,8 @@ function ProjectDetails(props) {
           </div>
 
           <DialogTitle>
-            <Typography align="center" className={clsx(common_classes.title1, classes.dialogTitle)}>
-              Congratulations your project has successfully created!
+            <Typography align="center" className={clsx(common_classes.title2, classes.dialogTitle)}>
+              Congratulations your project has been successfully created!
             </Typography>
           </DialogTitle>
           <DialogContent>
@@ -461,7 +463,7 @@ function ProjectDetails(props) {
               Share your project with the world. Post it on the following platforms:
             </Typography>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-              <SocialButtons containerStyle={{ gap: 50 }} withColor facebook whatsapp />
+              <SocialButtons containerStyle={{ gap: 50 }} withColor link facebook whatsapp />
             </div>
           </DialogContent>
         </Modal.WithIcon>

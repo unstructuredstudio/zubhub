@@ -22,6 +22,7 @@ export default function TagsInput({
   clearSuggestions,
   removeTag,
   handleBlur,
+  prefix,
 }) {
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(tagsInputStyles)();
@@ -58,10 +59,12 @@ export default function TagsInput({
       onClick={() => handleTagAddition(tag)}
       disabled={selectedTags.includes(tag)}
       className={clsx(classes.button, selectedTags.includes(tag) && classes.disabledButton)}
+      style={{ fontWeight: tag == 'General' && '800' }}
       primaryButtonOutlinedStyle
       key={index}
       startIcon={<Add />}
     >
+      {prefix && `${prefix} `}
       {tag}
     </CustomButton>
   ));
@@ -74,6 +77,7 @@ export default function TagsInput({
       key={index}
       endIcon={<ClearRounded />}
     >
+      {prefix && `${prefix}`}
       {tag}
     </CustomButton>
   ));
@@ -95,7 +99,7 @@ export default function TagsInput({
         <input
           ref={ref}
           onFocus={handleFocus}
-          className={classes.input}
+          className={clsx(classes.input, commonClasses.inputText)}
           id={name}
           value={value}
           onBlur={handleBlur}

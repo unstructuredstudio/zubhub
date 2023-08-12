@@ -9,6 +9,28 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  inputTextPlaceholder: {
+    color: '#B3B3B3',
+    fontSize: '15px !important',
+    fontFamily: 'Raleway, sans-serif !important',
+  },
+  inputText: {
+    fontSize: '15px !important',
+    fontFamily: 'Raleway, sans-serif !important',
+    color: 'rgba(0, 0, 0, 0.87)',
+    '&::placeholder': {
+      color: '#B3B3B3 !important',
+    },
+    '& .ql-editor.ql-blank::before': {
+      color: '#B3B3B3 !important',
+      fontStyle: 'normal !important',
+    },
+    '& .MuiOutlinedInput-input, .ql-editor, .ql-editor.ql-blank::before,input': {
+      fontSize: '15px !important',
+      fontFamily: 'Raleway, sans-serif !important'
+    },
+
+  },
   title1: {
     fontWeight: 'bold',
     fontSize: '30px !important',

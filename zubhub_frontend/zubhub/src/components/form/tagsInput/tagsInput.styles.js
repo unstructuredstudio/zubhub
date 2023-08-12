@@ -23,7 +23,7 @@ export const tagsInputStyles = theme => ({
     input: {
         flex: 1,
         border: 'none',
-        outline: 'none'
+        outline: 'none',
     },
     suggestionBox: {
         position: 'absolute',

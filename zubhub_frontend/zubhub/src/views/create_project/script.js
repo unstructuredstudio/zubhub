@@ -104,6 +104,7 @@ export const searchTags = (value, callBack) => {
 }
 
 export const initUpload = (state, props, handleSetState) => {
+    console.log('jejeje');
     if (!props.auth.token) return props.history.push('/login');
 
     if (!(props.values.images.length !== 0 || props.values.video.length !== 0)) {

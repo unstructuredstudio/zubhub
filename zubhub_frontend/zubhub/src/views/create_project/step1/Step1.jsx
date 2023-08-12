@@ -8,7 +8,17 @@ export default function Step1({ formik, handleBlur }) {
   const commonClasses = makeStyles(styles)();
   const [value, setValue] = useState('');
   const [remoteTags, setRemoteTags] = useState([]);
-  const [popularTags, setPopularTags] = useState(['Glue', 'Water', 'Battery', 'Masuring tape']);
+  const [popularTags, setPopularTags] = useState([
+    'Glue',
+    'Water',
+    'Paint',
+    'Brush',
+    'Battery',
+    'Scissors',
+    'Cardboard',
+    'Measuring tape',
+    // 'General',
+  ]);
   const clearSuggestions = () => setRemoteTags([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,6 +61,7 @@ export default function Step1({ formik, handleBlur }) {
             placeholder="Choose a name that best suites your project i.e Fun with Science"
             value={formik.values.title}
             onChange={formik.handleChange}
+            className={commonClasses.inputText}
             onBlur={formik.handleBlur}
             error={formik.touched.title && formik.errors.title ? true : false}
             helperText={formik.touched.title && formik.errors.title}
@@ -61,7 +72,7 @@ export default function Step1({ formik, handleBlur }) {
       <Box marginTop={3} marginBottom={3}>
         <FormControl fullWidth>
           <label className={commonClasses.title2}>
-            Share a few things about your Project <span className={commonClasses.colorRed}>*</span>
+            Share a few things about your project <span className={commonClasses.colorRed}>*</span>
           </label>
           <Editor
             value={formik.values.description}
@@ -70,7 +81,7 @@ export default function Step1({ formik, handleBlur }) {
             name="description"
             multiline
             minRows={3}
-            placeholder="Describe your project"
+            placeholder="Welcome to the enchanting world of…science and nature!"
           />
           {/* <TextField
             variant="outlined"
