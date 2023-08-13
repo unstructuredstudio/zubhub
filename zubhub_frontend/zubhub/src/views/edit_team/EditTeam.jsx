@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -77,6 +78,7 @@ function EditTeam(props) {
     bio_el: React.useRef(null),
   };
   const username_check= React.useRef(null);
+  const history = useHistory();
 
   const [state, setState] = React.useState({
     locations: [],
@@ -112,8 +114,9 @@ function EditTeam(props) {
         setInfo(state => ({ ...state, ...obj }));
       });
     }
+    
   };
-
+  
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -122,10 +125,10 @@ function EditTeam(props) {
     }
   };
 
-  const { locations, tool_tip_open, open_delete_account_modal,dialog_error, } = state;
+  const { locations, tool_tip_open, open_delete_account_modal,dialog_error } = state;
   const { t } = props;
   const handleButtonClick = () => {
-    handleSetState(handleToggleDeleteAccountModal(state));
+    handleSetState(handleToggleDeleteAccountModal(groupname,props,state));
   };
   return (
   <>
@@ -138,7 +141,7 @@ function EditTeam(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => editProfile(info.groupname, info.bio, props)}
+                onSubmit={e => editProfile(e, groupname,info.groupname, info.description, props)}
               >
                 <Typography
                   gutterBottom
@@ -196,7 +199,7 @@ function EditTeam(props) {
                         onClickAway={() => handleSetState(handleTooltipClose())}
                       >
                         <Tooltip
-                          title={t('editProfile.tooltips.noRealName')}
+                          title={t('Enter your Team Name')}
                           placement="top-start"
                           arrow
                           onClose={() => handleSetState(handleTooltipClose())}
@@ -218,7 +221,7 @@ function EditTeam(props) {
                               info.groupname ? info.groupname : ''
                             }
                             onClick={() => handleSetState(handleTooltipOpen())}
-                            onChange={props.handleChange}
+                            onChange={event => setInfo({ ...info, groupname: event.target.value })}
                             onBlur={props.handleBlur}
                             labelWidth={calculateLabelWidth(
                               t('Team Name'),
@@ -277,7 +280,7 @@ function EditTeam(props) {
                         rows={6}
                         rowsMax={6}
                         value={info.description ? info.description : ''}
-                        onChange={props.handleChange}
+                        onChange={event => setInfo({ ...info, description: event.target.value })}
                         onBlur={props.handleBlur}
                         labelWidth={calculateLabelWidth(
                           t('editProfile.inputs.bio.label'),
@@ -390,7 +393,7 @@ function EditTeam(props) {
               <CustomButton
                 variant="contained"
                 onClick={e =>
-                  handleSetState(deleteAccount(username_check, props, state))
+                  handleSetState(deleteAccount(groupname, props, state))
                 }
                 primaryButtonStyle
                 customButtonStyle
@@ -430,6 +433,9 @@ const mapDispatchToProps = dispatch => {
     },
     editTeam: props => {
       return dispatch(UserActions.editTeam(props));
+    },
+    deleteTeam: props => {
+      return dispatch(UserActions.deleteTeam(props));
     },
     getLocations: _ => {
       return dispatch(AuthActions.getLocations());

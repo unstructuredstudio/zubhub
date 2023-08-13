@@ -45,6 +45,57 @@ export const getUserProfile = args => {
 };
 
 /**
+ * @function getUserTeams
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const deleteTeam = args => {
+  return dispatch => {
+    return API.deleteTeam(args)
+    .then(res => {
+      if (res.detail !== 'Group deleted successfully.') {
+        throw new Error(res.detail);
+      } else {
+        toast.success(args.t('profile.delete.toastSuccess'));
+        // args.logout(args);
+        args.history.push('/profile');
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        return {
+          dialog_error: args.t('profile.delete.errors.unexpected'),
+        };
+      } else {
+        return { dialog_error: error.message };
+      }
+    });
+  };
+};
+
+/**
+ * @function getUserTeams
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getUserTeams = args => {
+  return dispatch => {
+    let profile;
+    return API.userTeams(args)
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
  * @function getTeamProfile
  * @author Hemant <hks@iamhks.com>
  *
@@ -398,6 +449,35 @@ export const getTeamFollowers = args => {
           throw new Error(res);
         }
       })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+export const getTeamFollowersPage = args => {
+  return () => {
+    return API.teamFollowers(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        return {
+          followers: res.results,
+          prev_page: res.previous,
+          next_page: res.next,
+          loading: false,
+        };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           toast.warning(args.t('profile.errors.unexpected'));

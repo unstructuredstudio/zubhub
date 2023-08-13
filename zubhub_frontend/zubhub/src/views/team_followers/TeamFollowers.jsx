@@ -190,7 +190,7 @@ const mapDispatchToProps = dispatch => {
       return dispatch(UserActions.toggleFollow(args));
     },
     getTeamFollowers: args => {
-      return dispatch(UserActions.getTeamFollowers(args));
+      return dispatch(UserActions.getTeamFollowersPage(args));
     },
   };
 };

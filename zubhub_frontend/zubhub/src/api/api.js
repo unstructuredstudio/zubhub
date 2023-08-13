@@ -391,12 +391,13 @@ class API {
   editTeam = ({ groupname, data, token }) => {
     const url = `creators/${groupname}/edit-group/`;
     const method = 'POST';
-    const content_type = false;
-    const body = data;
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
+  
     if (token) {
-      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+      return this.request({ url, method, token, body, content_type }).then(res => res.json());
     } else {
-      return this.request({ url, method }).then(res => res.json());
+      return this.request({ url, method, body, content_type }).then(res => res.json());
     }
   };
 

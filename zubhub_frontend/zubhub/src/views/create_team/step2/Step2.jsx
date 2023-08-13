@@ -99,7 +99,10 @@ export default function Step2({ formik }) {
           options={adminSuggestions}
           getOptionLabel={(option) => option.title}
           value={selectedAdmins}
-          onChange={(event, value) => handleAdminSelect(event, value)}
+          onChange={(event, value) => {
+            handleAdminSelect(event, value);
+            formik.setFieldValue('admins', value); 
+          }}
           renderOption={(option) => (
             <div onClick={(event) => handleAdminSelect(event, [option])}>
               {option.title}
@@ -152,7 +155,10 @@ export default function Step2({ formik }) {
           options={memberSuggestions}
           getOptionLabel={(option) => option.title}
           value={selectedMembers}
-          onChange={(event, value) => handleMemberSelect(event, value)}
+          onChange={(event, value) => {
+            handleMemberSelect(event, value);
+            formik.setFieldValue('members', value);
+          }}
           onInputChange={handleMemberInputChange}
           renderOption={(option) => (
             <div onClick={(event) => handleMemberSelect(event, [option])}>

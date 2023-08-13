@@ -727,7 +727,7 @@ export const formikSchema = {
     initialValues: {
         groupname: undefined,
         description: undefined,
-        selectedProjects: [],
+        projects: [],
         admins: undefined,
         members: undefined,
     },

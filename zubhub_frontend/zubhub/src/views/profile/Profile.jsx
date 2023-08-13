@@ -19,6 +19,8 @@ import {
   Box,
   Container,
   Paper,
+  Card,
+  CardContent,
   Menu,
   MenuItem,
   Dialog,
@@ -43,6 +45,8 @@ import {
   handleMoreMenuClose,
   handleToggleDeleteAccountModal,
   deleteAccount,
+  getUserTeams,
+  followTeam
 } from './profileScripts';
 
 import CustomButton from '../../components/button/Button';
@@ -53,7 +57,7 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import Comments from '../../components/comments/Comments';
-
+import Team from '../../views/team/Team';
 import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 
 import styles from '../../assets/js/styles/views/profile/profileStyles';
@@ -79,7 +83,7 @@ function Profile(props) {
   const [userActivity, setUserActivity] = useState([])
   const [scrollPosition, setScrollPosition] = useState(0);
   const [nextPage, setNextPage] = useState(false)
-
+  const [teams, setTeams] = useState([])
   const [state, setState] = React.useState({
     results: [],
     loading: true,
@@ -90,11 +94,11 @@ function Profile(props) {
     drafts: [],
     badge_tags: [],
   });
-
+  
   React.useEffect(() => {
   try{
     let activitylogObj= new API()
-    const promises = [getUserProfile(props), activitylogObj.getUserActivity(username, page)];
+    const promises = [getUserProfile(props), getUserTeams(props), activitylogObj.getUserActivity(username, page)];
     if (username === props.auth.username) {
       promises.push(
         ProjectActions.getUserDrafts({
@@ -108,8 +112,12 @@ function Profile(props) {
 
     Promise.all(promises).then(values => {
       const obj = values[0];
-      const activity = values[1] || {};
-      const drafts = values[2] || {};
+      const team = values[1].results;
+      // setTeams(team);
+      // setTeams(teams   => ([...teams, ...team]));
+      handleSetTeams(team); 
+      const activity = values[2] || {};
+      const drafts = values[3] || {};
       const badges = obj.profile.badges;
 
       if (obj.profile) {
@@ -131,6 +139,10 @@ function Profile(props) {
         setState(state => ({ ...state, ...obj }));
       });
     }
+  };
+
+  const handleSetTeams = newTeams => {
+    setTeams(teams => [...teams, ...newTeams]);
   };
 
   const {
@@ -383,7 +395,7 @@ function Profile(props) {
              color="textPrimary"
              className= {classes.titleStyle}
             >
-            {t('profile.team')}
+            {t('Teams')}
             <CustomButton
               className={classes.teamButton}
               variant="contained"
@@ -394,6 +406,57 @@ function Profile(props) {
               {t('profile.createteam')}
             </CustomButton>
             </Typography>
+            <Grid container spacing={2}>
+                {teams.map(team => (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={6}
+                    className={classes.projectGridStyle}
+                    align="center"
+                  > 
+                    <Card>
+                    <CardContent className={classes.mediaBoxStyle}>
+                    <Link
+                      to={`/teams/${team.groupname}`}
+                      className={classes.linkStyle}
+                      // Add an event handler to prevent the link from being triggered by the button
+                      onClick={event => {
+                        if (
+                          event.target.classList.contains(classes.editButton) ||
+                          event.target.closest(`.${classes.editButton}`)
+                        ) {
+                          // Prevent the link from being triggered when clicking the button
+                          event.preventDefault();
+                        }
+                      }}
+                    >
+                      {/* <CardContent className={classes.mediaBoxStyle}> */}
+                        <Avatar
+                          className={classes.creatorAvatarStyle}
+                          src={team.avatar}
+                          alt={team.groupname}
+                        />
+                        <Typography variant="h4">{team.groupname}</Typography>
+                        <Typography variant="body1">{team.description}</Typography>
+                        </Link>
+                        <CustomButton
+                            className={classes.editButton}
+                            variant="contained"
+                            margin="normal"
+                            primaryButtonStyle
+                            onClick={() =>followTeam(team.groupname, props.auth.username, props)}
+                          >
+                            {team.members.includes(props.auth.id)
+                              ? t('profile.unfollow')
+                              : t('profile.follow')}
+                          </CustomButton>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             </Paper>
 
             {profile.projects_count > 0 || drafts.length > 0 ? (
@@ -539,6 +602,8 @@ Profile.propTypes = {
   auth: PropTypes.object.isRequired,
   setAuthUser: PropTypes.func.isRequired,
   getUserProfile: PropTypes.func.isRequired,
+  getUserTeams: PropTypes.func.isRequired,
+  followTeam: PropTypes.func.isRequired,
   suggestCreators: PropTypes.func.isRequired,
   addComment: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
@@ -561,6 +626,12 @@ const mapDispatchToProps = dispatch => {
     },
     getUserProfile: args => {
       return dispatch(UserActions.getUserProfile(args));
+    },
+    getUserTeams: args => {
+      return dispatch(UserActions.getUserTeams(args));
+    },
+    toggleTeamFollow: args => {
+      return dispatch(UserActions.toggleTeamFollow(args));
     },
     suggestCreators: args => {
       return dispatch(UserActions.suggestCreators(args));

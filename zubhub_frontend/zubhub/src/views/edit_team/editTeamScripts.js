@@ -104,18 +104,17 @@ export const getProfile = (refs, props) => {
  *
  * @todo - describe function's signature
  */
- export const deleteAccount = (username_el, props) => {
-  if (username_el.current.firstChild.value !== props.auth.username) {
-    return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
-  } else {
-    return props.deleteAccount({
+ export const deleteAccount = (groupname, props, state) => {
+    return props.deleteTeam({
       token: props.auth.token,
       history: props.history,
       logout: props.logout,
       t: props.t,
+      groupname: groupname,
     });
   }
-};
+
+
 
 /**
  * @function editProfile
@@ -123,13 +122,14 @@ export const getProfile = (refs, props) => {
  *
  * @todo - describe function's signature
  */
-export const editProfile = (groupname, bio, props) => {
+export const editProfile = (e, groupname, new_groupname, bio, props) => {
+  e.preventDefault();
   let token=props.auth.token;
-  const body = {
-    groupname: groupname,
-    bio: bio
+  const data = {
+    groupname: new_groupname,
+    description: bio
   };
-  return props.editTeam({ groupname, body, token });
+  return props.editTeam({ groupname, data, token });
   
 };
 

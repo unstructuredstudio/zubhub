@@ -19,6 +19,28 @@ import { getUserDrafts } from '../../store/actions/projectActions';
   });
 };
 
+export const followTeam = (groupname, username,props) => {
+  let token=props.auth.token;
+  props.toggleTeamFollow({groupname, username, token})
+};
+
+/**
+ * @function getUserTeams
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */ export const getUserTeams = props => {
+  let username = props.match.params.username;
+
+  if (!username) {
+    username = props.auth.username;
+  } else if (props.auth.username === username) props.history.replace('/profile');
+  return props.getUserTeams({
+    username,
+    token: props.auth.token,
+  });
+};
+
 /**
  * @function copyProfileUrl
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
