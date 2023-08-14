@@ -103,76 +103,35 @@ export const searchTags = (value, callBack) => {
     }
 }
 
-export const initUpload = (state, props, handleSetState) => {
+export const initUpload = async (state, props, handleSetState, projs) => {
     if (!props.auth.token) return props.history.push('/login');
 
-    if (!(props.values.images.length !== 0 || props.values.video.length !== 0)) {
-        vars.upload_in_progress = true;
-        return uploadProject(state, props, handleSetState);
-    }
+    const groupMembers = [
+        ...props.values.admins.map(admin => ({ member: admin.title, role: 'admin' })),
+        ...props.values.members.map(member => ({ member: member.title, role: 'member' }))
+      ];
+      
+      const data = {
+        groupname: props.values.groupname,
+        description: props.values.description,
+        group_members: groupMembers,
+        projects: projs
+      };
 
-    vars.upload_in_progress = true;
-    state.media_upload.upload_dialog = true;
-    handleSetState({
-        success: false,
-        default_state: {
-            loading: true,
-        },
-        media_upload: {
-            ...state.media_upload,
-            upload_dialog: true,
-            upload_percent: 0,
-        },
-    });
-
-    const promises = [];
-
-    // upload images
-    for (let index = 0; index < props.values.images.filter(img => !img.link).length; index++) {
-        promises.push(uploadImage(props.values.images[index], state, props, handleSetState));
-    }
-
-    // upload videos
-    for (let index = 0; index < props.values.video.length; index++) {
-        promises.push(uploadVideo(props.values.video[index], state, props, handleSetState));
-    }
-
-    // wait for all image and video promises to resolve before continuing
-    Promise.all(promises)
-        .then(all => {
-            const uploaded_images_url = state.media_upload.uploaded_images_url;
-            const uploaded_videos_url = state.media_upload.uploaded_videos_url;
-
-            all.forEach(each => {
-                if (each.public_id) {
-                    uploaded_images_url.push(each);
-                } else if (each.secure_url) {
-                    uploaded_videos_url[0] = each.secure_url;
-                }
-            });
-
-            state = JSON.parse(JSON.stringify(state));
-            state.media_upload.uploaded_images_url = uploaded_images_url;
-            state.media_upload.uploaded_videos_url = uploaded_videos_url;
-
-            uploadProject(state, props, handleSetState);
-        })
-        .catch(error => {
-            // settimeout is used to delay closing the upload_dialog until
-            // state have reflected all prior attempts to set state.
-            // This is to ensure nothing overwrites the dialog closing.
-            // A better approach would be to refactor the app and use
-            // redux for most complex state interactions.
-            setTimeout(
-                () =>
-                    handleSetState({
-                        media_upload: { ...state.media_upload, upload_dialog: false },
-                    }),
-                2000,
-            );
-
-            if (error) toast.warning(error);
-        });
+      const api = new API();
+      const token= props.auth.token;
+    //   api.createTeam({data, token});
+      try {
+        const response = await api.createTeam({ data, token });
+        if (response.groupname) {
+          return 'success';
+        } else {
+          return 'error';
+        }
+      } catch (error) {
+        console.log(error);
+        return 'error';
+      }
 };
 
 

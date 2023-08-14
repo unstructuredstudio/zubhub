@@ -37,6 +37,9 @@ const EditProfile = React.lazy(() =>
 const UserProjects = React.lazy(() =>
   import('./views/user_projects/UserProjects'),
 );
+const TeamProjects = React.lazy(() =>
+  import('./views/team_projects/TeamProjects'),
+);
 const UserDrafts = React.lazy(() => import('./views/user_drafts/UserDrafts'));
 const UserFollowers = React.lazy(() =>
   import('./views/user_followers/UserFollowers'),
@@ -238,6 +241,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={UserProjects}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/teams/:groupname/projects"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={TeamProjects}
                 {...routeProps}
                 {...props}
               />

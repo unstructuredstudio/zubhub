@@ -19,9 +19,11 @@ import {
   CloudDoneOutlined,
   Person,
 } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
 import DoneRounded from '@material-ui/icons/DoneRounded';
 import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
 import clsx from 'clsx';
+import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState, lazy } from 'react';
@@ -50,6 +52,7 @@ import Step3 from './step3/Step3';
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Team Details', 'Add Team Members', 'Select Team Project'];
 
+
 function CreateTeam(props) {
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
@@ -67,6 +70,13 @@ function CreateTeam(props) {
   const [popularTags, setPopularTags] = useState(script.testTags);
   const [mode, setMode] = useState('');
   const [preview, setPreview] = useState(false);
+  // const [selectedProjects, setSelectedProjects] = useState([]);
+  let projs;
+
+  const updateSelectedProjects = (newSelectedProjects) => {
+    projs=newSelectedProjects;
+  };
+
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
@@ -96,25 +106,6 @@ function CreateTeam(props) {
       message = 'createProject.createToastSuccess';
     }
     return message;
-  };
-
-  const handleChangeTag = async value => {
-    setValue(value);
-    script.searchTags(value, (error, data) => {
-      if (!error) setRemoteTags(data);
-    });
-  };
-
-  const addTag = value => {
-    const values = [...formik.values.tags, value];
-    formik.setFieldValue('tags', values);
-    clearSuggestions();
-    setValue('');
-  };
-
-  const removeTag = tagIndex => {
-    const tags = [...formik.values.tags].filter((_, index) => index !== tagIndex);
-    formik.setFieldValue('tags', tags);
   };
 
   useEffect(() => {
@@ -172,13 +163,23 @@ function CreateTeam(props) {
     togglePublishOrAddTags();
     toggleAddTagsDialog();
   };
+  const history = useHistory();
 
   const submitData = async () => {
     try {
-      return (
-        !script.vars.upload_in_progress &&
-        script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState)
-      );
+      if (!script.vars.upload_in_progress) {
+        const uploadStatus = await script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState, projs);
+  
+        if (uploadStatus === 'success') {
+          // Redirect to the desired URL on success
+          const teamGroupName = formik.values.groupname; // Get the groupname from props
+          history.push(`/teams/${teamGroupName}`);
+        } else if (uploadStatus === 'authError') {
+          // Redirect to login page or handle authentication error
+          // You might want to define a function for handling auth errors
+          // handleAuthError();
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -281,7 +282,12 @@ function CreateTeam(props) {
             <StepWizard initialStep={activeStep} ref={wizardRef}>
               <Step1 handleBlur={handleBlur} formik={formik} />
               <Step2 formik={formik} />
-              <Step3 formik={formik} {...props} />
+              <Step3
+                formik={formik}
+                handleBlur={handleBlur}
+                auth={props.auth}
+                updateSelectedProjects={updateSelectedProjects}
+              />
             </StepWizard>
           </Box>
         </Grid>

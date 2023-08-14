@@ -13,6 +13,7 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.apps import apps
+from rest_framework import serializers
 from django.core.exceptions import PermissionDenied
 from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.views import APIView
@@ -24,7 +25,7 @@ from rest_framework.response import Response
 from rest_auth.registration.views import RegisterView
 
 from projects.serializers import CommentSerializer
-from projects.models import Comment, PublishingRule
+from projects.models import Comment, PublishingRule, Project
 from projects.serializers import ProjectListSerializer
 from projects.pagination import ProjectNumberPagination
 from projects.utils import detect_mentions, get_published_projects_for_user
@@ -107,6 +108,29 @@ class UserProfileAPIView(RetrieveAPIView):
     def get_serializer_class(self):
         if self.request and self.kwargs.get(
                 "username") != self.request.user.username:
+            return CreatorMinimalSerializer
+        else:
+            return CreatorSerializer
+        
+class UserProfileIDAPIView(RetrieveAPIView):
+    """
+    Fetch Profile of user with given userid.
+    Requires username of user.
+    Returns user profile.
+
+    Note that this schema returns the full user profile, but the api sometimes
+    returns a minimal version of the user profile, omitting certain fields that
+    are not neccessary or are sensitive.
+    """
+
+    queryset = Creator.objects.filter(is_active=True)
+    lookup_field = "id"
+    permission_classes = [AllowAny]
+    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
+
+    def get_serializer_class(self):
+        if self.request and self.kwargs.get(
+                "id") != self.request.user.id:
             return CreatorMinimalSerializer
         else:
             return CreatorSerializer
@@ -713,7 +737,7 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
         # Get the description, group members, and CSV from the request data
         description = request.data.get('description')
         group_members_data = request.data.get('group_members', [])
-        projects = request.data.get('projects', [])
+        projects = request.data.get('projects')
         csv_data = request.data.get('csv')
 
         # Create the CreatorGroup object using groupname as the primary key
@@ -723,6 +747,13 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
         # Set the project IDs to the CreatorGroup model's 'projects' field
         group.projects = projects
         group.save()
+
+        for project_data in projects:
+            project_id = project_data['id']
+            project = Project.objects.get(id=project_id)
+            project.group = group
+            project.save()
+
 
         # Add members to the group with roles
         group_members = []

@@ -490,35 +490,67 @@ export const getTeamFollowersPage = args => {
 };
 
 /**
- * @function getTeamFollowers
+ * @function getTeamMembers
  * @author Hemant <hks@iamhks.com>
  *
  * @todo - describe function's signature
  */
+// export const getTeamMembers = args => {
+//   return () => {
+//     return API.teamMembers(args)
+//       .then(res => {
+//         if (Array.isArray(res.members)) {
+//           return {
+//             followers: res.members,
+//             loading: false,
+//           };
+//         } else {
+//           res = Object.keys(res)
+//             .map(key => res[key])
+//             .join('\n');
+//           throw new Error(res);
+//         }
+//       })
+//       .catch(error => {
+//         if (error.message.startsWith('Unexpected')) {
+//           toast.warning(args.t('profile.errors.unexpected'));
+//         } else {
+//           toast.warning(error.message);
+//         }
+//         return { loading: false };
+//       });
+//   };
+// };
 export const getTeamMembers = args => {
-  return () => {
-    return API.teamMembers(args)
-      .then(res => {
-        if (Array.isArray(res.members)) {
-          return {
-            followers: res.members,
-            loading: false,
-          };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('profile.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
+  return async () => {
+    try {
+      const teamMembersResponse = await API.teamMembers(args);
+
+      if (Array.isArray(teamMembersResponse.members)) {
+        const memberInfoPromises = teamMembersResponse.members.map(member => API.teamMembersId(member.member));
+
+        const memberInfoResponses = await Promise.all(memberInfoPromises);
+
+        // const combinedData = teamMembersResponse.members.map((member, index) => ({
+        //   ...member,
+        //   additionalInfo: memberInfoResponses[index], // Add additional information here
+        // }));
+
+        return {
+          followers: memberInfoResponses,
+          loading: false,
+        };
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch (error) {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    }
   };
 };
 

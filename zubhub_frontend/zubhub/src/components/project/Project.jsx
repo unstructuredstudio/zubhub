@@ -147,24 +147,24 @@ function Project(props) {
             </Box>
             <Link
               style={{ flexGrow: 1 }}
-              to={`/creators/${project.creator.username}`}
+              to={project.group? `/teams/${project.group.groupname}`:`/creators/${project.creator.username}`}
               className={classes.textDecorationNone}
             >
               <Box className={classes.creatorBoxStyle}>
                 <Avatar
                   className={classes.creatorAvatarStyle}
-                  src={project.creator.avatar}
-                  alt={project.creator.username}
+                  src={project.group?project.group.avatar:project.creator.avatar}
+                  alt={project.group? project.group.groupname: project.creator.username}
                 />
                 <Tooltip
-                  title={project.creator.username}
+                  title={project.group? project.group.groupname: project.creator.username}
                   placement="bottom"
                   arrow
                   className={classes.creatorUsernameStyle}
                 >
                   <Box>
                     <Typography color="textSecondary" variant="caption" component="p" className={classes.username}>
-                      {project.creator.username}
+                      {project.group? project.group.groupname: project.creator.username}
                     </Typography>
                   </Box>
                 </Tooltip>
@@ -175,10 +175,10 @@ function Project(props) {
                         <Link
                           className={clsx(common_classes.baseTagStyle, classes.tagContainer, common_classes.textDecorationNone, { [common_classes.extendedTagStyle]: !isBaseTag(tag) })}
 
-                          to={`/search/?q=${tag}&tab=creators`}
+                          to={project.group?'':`/search/?q=${tag}&tab=creators`}
                         >
                           <Typography className={classes.tagName} component="div">
-                            {tag}
+                            {project.group?'Team':tag}
                           </Typography>
                         </Link>
                       )}

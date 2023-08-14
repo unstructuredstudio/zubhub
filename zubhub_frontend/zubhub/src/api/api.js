@@ -317,6 +317,18 @@ class API {
   };
 
   /**
+   * @method teamMembersId
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  teamMembersId = ( id ) => {
+    const url = `creators/id/${id}/`;
+    const method = 'GET';
+    return this.request({ url, method }).then(res => res.json());
+  };
+
+  /**
    * @method deleteTeam
    * @author Hemant Kumar Singh <hks@iamhks.com>
    *
@@ -410,8 +422,8 @@ class API {
   createTeam = ({ data, token }) => {
     const url = `creators/create-group/`;
     const method = 'POST';
-    const content_type = false;
-    const body = data;
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
     if (token) {
       return this.request({ url, method ,token, body, content_type }).then(res => res.json());
     } else {

@@ -229,7 +229,7 @@ function Team(props) {
                   <Box className={classes.moreInfoBoxStyle}>
                     <Link
                       className={classes.textDecorationNone}
-                      to={`/creators/${profile.username}/projects`}
+                      to={`/teams/${profile.groupname}/projects`}
                     >
                       <Typography
                         className={classes.moreInfoStyle}
@@ -356,7 +356,7 @@ function Team(props) {
                       secondaryButtonStyle
                       onClick={() =>
                         props.history.push(
-                          `/creators/${profile.username}/projects`,
+                          `/teams/${groupname}/projects`,
                         )
                       }
                     >
@@ -364,8 +364,8 @@ function Team(props) {
                     </CustomButton>
                   </Typography>
                   <Grid container>
-                    {Array.isArray(projects) &&
-                      projects.map(project => (
+                    {Array.isArray(profile.projects) &&
+                      profile.projects.map(project => (
                         <Grid
                           item
                           xs={12}

@@ -4,7 +4,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.db import transaction
-from creators.serializers import CreatorMinimalSerializer
+from creators.serializers import CreatorMinimalSerializer, CreatorGroupSerializer
 from .models import Project, Comment, Image, StaffPick, Category, Tag, PublishingRule
 from projects.tasks import filter_spam_task
 from .pagination import ProjectNumberPagination
@@ -108,6 +108,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     publish = PublishingRuleSerializer(read_only=True)
     activity = serializers.SlugRelatedField(
         slug_field="id", queryset=Activity.objects.all(), required=False)
+    group = CreatorGroupSerializer(read_only = True)
 
     class Meta:
         model = Project
@@ -127,7 +128,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             "comments",
             "created_on",
             "publish",
-            "activity"
+            "activity",
+            "group"
         ]
 
     read_only_fields = ["created_on", "views_count"]
@@ -314,6 +316,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class ProjectListSerializer(serializers.ModelSerializer):
     creator = CreatorMinimalSerializer(read_only=True)
+    group = CreatorGroupSerializer(read_only = True)
     images = ImageSerializer(many=True)
     likes = serializers.SlugRelatedField(
         many=True, slug_field='id', read_only=True)
@@ -336,7 +339,8 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "saved_by",
             "comments_count",
             "created_on",
-            "publish"
+            "publish",
+            "group"
         ]
 
 

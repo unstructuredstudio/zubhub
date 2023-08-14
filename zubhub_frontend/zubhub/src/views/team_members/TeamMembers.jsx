@@ -56,7 +56,7 @@ const buildFollowers = (followers, classes, props, state, handleSetState) =>
             src={follower.avatar}
             alt={follower.username}
           />
-          {/* {follower.id !== props.auth.id ? (
+          {follower.id !== props.auth.id ? (
             <CustomButton
               variant="contained"
               onClick={(e, id = follower.id) =>
@@ -68,7 +68,7 @@ const buildFollowers = (followers, classes, props, state, handleSetState) =>
                 ? props.t('userFollowers.follower.unfollow')
                 : props.t('userFollowers.follower.follow')}
             </CustomButton>
-          ) : null} */}
+          ) : null}
           <Typography
             component="h3"
             color="textPrimary"
@@ -126,7 +126,7 @@ function TeamMembers(props) {
                 variant="h3"
                 gutterBottom
               >
-                {groupname}'s {t('userFollowers.title')}
+                {groupname}'s {t('Members')}
               </Typography>
             </Grid>
             {buildFollowers(followers, classes, props, state, handleSetState)}

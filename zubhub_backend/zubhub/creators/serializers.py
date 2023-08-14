@@ -319,7 +319,7 @@ class CreatorGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CreatorGroup
-        fields = ('groupname', 'description', 'members', 'created_on', 'projects_count')
+        fields = ('groupname', 'description', 'projects','members', 'created_on', 'projects_count', 'avatar')
 
     def create(self, validated_data):
         members_data = validated_data.pop('members', [])
