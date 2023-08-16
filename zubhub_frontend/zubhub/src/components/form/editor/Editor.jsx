@@ -87,11 +87,11 @@ export default function Editor({
       <FormLabel required={required} htmlFor={name}>
         {label}
       </FormLabel>
-      <helperText>
+      <FormHelperText>
         <Typography className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
           {helperText}
         </Typography>
-      </helperText>
+      </FormHelperText>
       <ReactQuill
         ref={ref => (quillRef = ref)}
         onChangeSelection={onSelectionChange}

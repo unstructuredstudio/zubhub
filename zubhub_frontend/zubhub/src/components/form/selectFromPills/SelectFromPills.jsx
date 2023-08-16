@@ -1,7 +1,7 @@
 import React from 'react';
 import { colors } from '../../../assets/js/colors';
 import FormLabel from '../../form_labels/formLabel';
-import { Checkbox, Grid, Typography, makeStyles } from '@material-ui/core';
+import { Checkbox, FormHelperText, Grid, Typography, makeStyles } from '@material-ui/core';
 import styles from '../../../assets/js/styles';
 import { selectFromPillsStyles } from './selectFromPills.styles';
 
@@ -13,11 +13,11 @@ export default function SelectFromPills({ label, helperText, name, data, selecte
   return (
     <div>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <helperText>
+      <FormHelperText>
         <Typography className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
           {helperText}
         </Typography>
-      </helperText>
+      </FormHelperText>
 
       <Grid container spacing={3} className={classes.pillContainer}>
         {data.map(item => {

@@ -5,19 +5,20 @@ import { step2Styles } from './Step2.styles';
 import styles from '../../../assets/js/styles';
 import { Add, MoreHoriz } from '@material-ui/icons';
 import clsx from 'clsx';
+import { uniqueId } from 'lodash';
 
-const DEFAULT_STEP = { description: '', attachments: [] };
-let index = 1;
+const idPrefix = 'activitystep';
+const DEFAULT_STEP = { description: '', attachments: [], title: '', id: uniqueId(idPrefix) };
 
 export default function Step2() {
   const classes = makeStyles(step2Styles)();
   const commonClasses = makeStyles(styles)();
   const handleIntroductionChange = value => {};
   const [steps, setSteps] = useState([{ ...DEFAULT_STEP }]);
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const addStep = () => {
-    setSteps([...steps, { ...DEFAULT_STEP }]);
+    const uuid = uniqueId(idPrefix);
+    setSteps([...steps, { ...DEFAULT_STEP, id: uuid }]);
   };
 
   const onStepChange = (data, type, stepIndex) => {
@@ -25,28 +26,25 @@ export default function Step2() {
     let step = stepsTemp[stepIndex];
     step[type] = data;
     stepsTemp[stepIndex] = step;
-    console.log(data, type, stepIndex);
+    // console.log(data, type, stepIndex);
 
     setSteps(stepsTemp);
   };
 
-  const open = Boolean(anchorEl);
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const deleteStep = index => {
-    setSteps(steps.splice(index, 1));
-    handleClose();
+  const deleteStep = id => {
+    setSteps([...steps.filter(step => step.id !== id)]);
   };
 
   const moveUp = index => {
-    const stepsTemp = [...steps];
+    if (index < steps.length) {
+      const array = [...steps];
+      const temp = array[index];
+      array[index] = array[index - 1];
+      array[index - 1] = temp;
+      setSteps(array);
+    }
   };
+
   const moveDown = index => {
     if (index + 1 < steps.length) {
       const stepsTemp = [...steps];
@@ -87,32 +85,26 @@ export default function Step2() {
       </Box>
 
       {steps.map((step, index) => (
-        <div key={index}>
+        <div key={step.id}>
           <div className={clsx(commonClasses.justifySpaceBetween, commonClasses.alignCenter)}>
-            <Typography className={commonClasses.title2}>Step {index + 1}:</Typography>
-            <IconButton
-              id={`basic-button${index}`}
-              aria-controls={open ? `menu${index}` : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick}
-            >
-              <MoreHoriz />
-            </IconButton>
-            <Menu
-              id={`menu${index}`}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                'aria-labelledby': `basic-button${index}`,
-              }}
-            >
-              <MenuItem onClick={() => moveUp(index)}>Move up one step</MenuItem>
-              <MenuItem onClick={() => moveDown(index)}>Move down one step</MenuItem>
-              <Divider />
-              <MenuItem onClick={() => deleteStep(index)}>Delete step</MenuItem>
-            </Menu>
+            <div className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
+              <Typography className={commonClasses.title2}>Step {index + 1}: </Typography>
+              <input
+                style={{ border: 'none', outline: 'none', paddingLeft: 10 }}
+                className={commonClasses.title2}
+                placeholder="Enter step title"
+                onChange={d => onStepChange(d.target.value, 'title', index)}
+              />
+            </div>
+            {steps.length > 1 && (
+              <>
+                <AnchorElemt
+                  deleteStep={() => deleteStep(step.id)}
+                  moveDown={() => moveDown(index)}
+                  moveUp={() => moveUp(index)}
+                />
+              </>
+            )}
           </div>
           <Box className={classes.formItem}>
             <Editor
@@ -142,3 +134,54 @@ const defaultQuillValue = `
   <li></li>
 </ol>
 `;
+
+const AnchorElemt = ({ moveDown, moveUp, deleteStep }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMoveUp = () => {
+    moveUp();
+    handleClose();
+  };
+
+  const handleMoveDown = () => {
+    moveDown();
+    handleClose();
+  };
+
+  return (
+    <>
+      <IconButton
+        id={`basic-button`}
+        aria-controls={open ? `menu` : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <MoreHoriz />
+      </IconButton>
+      <Menu
+        id={`menu`}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': `basic-button`,
+        }}
+      >
+        <MenuItem onClick={handleMoveUp}>Move up one step</MenuItem>
+        <MenuItem onClick={handleMoveDown}>Move down one step</MenuItem>
+        <Divider />
+        <MenuItem onClick={deleteStep}>Delete step</MenuItem>
+      </Menu>
+    </>
+  );
+};
