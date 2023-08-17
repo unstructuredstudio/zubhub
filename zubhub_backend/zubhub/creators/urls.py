@@ -14,6 +14,7 @@ urlpatterns = [
          ConfirmGroupInviteAPIView.as_view(),
          name="confirm_group_invite"),
     path('<str:groupname>/add-members/', AddGroupMembersAPIView.as_view(), name="add_members"),
+    path('teams/', CreatorGroupListAPIView.as_view(), name="teams"),
     path('create-group/', CreateAndAddMembersToGroupAPIView.as_view(), name="create_group"),
     path('<str:groupname>/edit-group/', EditCreatorGroupAPIView.as_view(), name="edit_group"),
     path('groups/<str:username>/', UserGroupsAPIView.as_view(), name="all_groups"),

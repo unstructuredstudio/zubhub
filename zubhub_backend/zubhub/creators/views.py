@@ -40,7 +40,7 @@ from .serializers import (CreatorGroupSerializer, CreatorListSerializer, Creator
                           VerifyPhoneSerializer, CustomRegisterSerializer,
                           ConfirmGroupInviteSerializer, CreatorGroupMinimalSerializer,
                           AddGroupMembersSerializer, CreatorGroupMembershipSerializer)
-from .pagination import CreatorNumberPagination
+from .pagination import CreatorNumberPagination, CreatorGroupNumberPagination
 from .utils import (perform_send_phone_confirmation,
                     perform_send_email_confirmation, process_avatar, process_group_avatar,
                     send_group_invite_notification, perform_creator_search, send_notification, activity_log)
@@ -708,7 +708,20 @@ class CreatorGroupFollowersAPIView(ListAPIView):
         creator_group = CreatorGroup.objects.get(groupname=groupname)
         return creator_group.followers.all()
 
+class CreatorGroupListAPIView(ListAPIView):
+    """
+    Fetch paginated list of creator groups.
 
+    Returns paginated list of creator groups
+    """
+    
+    serializer_class = CreatorGroupSerializer
+    permission_classes = [AllowAny]
+    pagination_class = CreatorGroupNumberPagination
+    
+    def get_queryset(self):
+        return CreatorGroup.objects.all()
+    
 class CreateAndAddMembersToGroupAPIView(GenericAPIView):
     """
     Create a new CreatorGroup and add members to the group.\n
