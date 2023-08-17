@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import Project from '../../../components/project/Project';
 import { Box, Paper, FormLabel } from '@material-ui/core';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { useDispatch } from 'react-redux';
 import ZubhubAPI from '../../../api/api';
 const API = new ZubhubAPI();
@@ -93,8 +94,23 @@ export default function Step3({ updateSelectedProjects, formik, handleBlur, ...p
                       handleProjectClick={handleProjectClick}
                     />
                     <div className={clsx(classes.overLay, selectedProjects.some(p => p.id === project.id) && classes.blurOverLay)}
-                      onClick={()=> selectProjects(project)} >
-                          {selectedProjects.some(p => p.id === project.id) ? <span>Project Added</span> : ''}
+                      onClick={()=> selectProjects(project)}  style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}>
+                          {selectedProjects.some(p => p.id === project.id) ? 
+                          <span
+                            style={{
+                              color: "white",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <CheckCircleIcon style={{ color: "white", marginRight: "5px" }} />
+                            Project Added
+                          </span> : ''}
                     </div>
                     </div>
                   </Grid>

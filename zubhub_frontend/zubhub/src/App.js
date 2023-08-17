@@ -53,6 +53,12 @@ const TeamMembers = React.lazy(() =>
 const UserFollowing = React.lazy(() =>
   import('./views/user_following/UserFollowing'),
 );
+const AllTeams = React.lazy(() =>
+  import('./views/all_teams/AllTeams'),
+);
+const Teams = React.lazy(() =>
+  import('./views/teams/Teams'),
+);
 const GroupMembers = React.lazy(() =>
   import('./views/group_members/GroupMembers'),
 );
@@ -319,6 +325,32 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={UserFollowing}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/teams/all"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={AllTeams}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/teams"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={Teams}
                 {...routeProps}
                 {...props}
               />

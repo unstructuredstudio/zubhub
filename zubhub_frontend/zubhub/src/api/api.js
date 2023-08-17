@@ -377,6 +377,22 @@ class API {
   };
 
   /**
+   * @method allTeams
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  allTeams = ({ token }) => {
+    const url = `creators/teams/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
    * @method addTeamMembers
    * @author Hemant Kumar Singh <hks@iamhks.com>
    *

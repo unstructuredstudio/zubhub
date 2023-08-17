@@ -105,24 +105,37 @@ export const getTeamProfile = args => {
   return dispatch => {
     let profile;
     return API.getTeamProfile(args)
-      // .then(res => {
-      //   if (!res.username) {
-      //     throw new Error(args.t('profile.errors.profileFetchError'));
-      //   } else {
-      //     profile = res;
-      //     return dispatch(
-      //       API.teamFollowers(args)
-      //         username: res.username,
-      //         token: args.token,
-      //         t: args.t
-      //       }),
-      //     );
-      //   }
-      // })
       .then(res => {
         profile=res;
         return { ...res, profile, loading: false };
       })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function getAllTeams
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getAllTeams = args => {
+  return dispatch => {
+    let profile;
+    return API.allTeams(args)
+    .then(res => {
+      profile = res;
+      const filteredResults = res.results.filter(result => result.members.length > 0);
+
+      return { ...res, profile, results: filteredResults, loading: false };
+    })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           toast.warning(args.t('profile.errors.unexpected'));
