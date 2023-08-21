@@ -63,7 +63,7 @@ const StaffPickDetails = React.lazy(() =>
 );
 const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
-  import('./views/activity_details/activity_details'),
+  import('./views/activity_details/ActivityDetailsV2'),
 );
 const LinkedProjects = React.lazy(() =>
   import('./views/linked_projects/LinkedProjects'),

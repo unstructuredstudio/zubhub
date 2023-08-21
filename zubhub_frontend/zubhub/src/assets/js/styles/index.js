@@ -199,6 +199,12 @@ const styles = theme => ({
   },
   textSmall: {
     fontSize: '0.9rem'
+  },
+  boxShadow: {
+    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.09), 0px 2px 2px 0px rgba(0,0,0,0.02), 0px 1px 5px 0px rgba(0,0,0,0.01)'
+  },
+  gap: {
+    gap: 17
   }
 });
 
