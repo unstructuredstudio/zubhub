@@ -26,8 +26,6 @@ export default function Step2() {
     let step = stepsTemp[stepIndex];
     step[type] = data;
     stepsTemp[stepIndex] = step;
-    // console.log(data, type, stepIndex);
-
     setSteps(stepsTemp);
   };
 
@@ -36,7 +34,7 @@ export default function Step2() {
   };
 
   const moveUp = index => {
-    if (index < steps.length) {
+    if (index !== 0 && index < steps.length) {
       const array = [...steps];
       const temp = array[index];
       array[index] = array[index - 1];
@@ -53,13 +51,11 @@ export default function Step2() {
     }
   };
 
-  console.log(steps);
-
   return (
     <div className={classes.container}>
       <Box className={classes.formItem}>
         <Editor
-          // enableToolbar={true}
+          enableToolbar={true}
           onChange={handleIntroductionChange}
           label="Introduction"
           required
@@ -72,7 +68,7 @@ export default function Step2() {
 
       <Box className={classes.formItem}>
         <Editor
-          // enableToolbar={true}
+          enableToolbar={true}
           onChange={handleIntroductionChange}
           label="Materials Used"
           value={defaultQuillValue}
@@ -108,7 +104,7 @@ export default function Step2() {
           </div>
           <Box className={classes.formItem}>
             <Editor
-              // enableToolbar={true}
+              enableToolbar={true}
               onChange={data => onStepChange(data, 'description', index)}
               value={step.description}
               placeholder="Type Description..."
