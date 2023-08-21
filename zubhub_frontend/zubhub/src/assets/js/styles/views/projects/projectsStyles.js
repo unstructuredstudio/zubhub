@@ -22,6 +22,17 @@ const styles = theme => ({
     justifyContent: 'center',
     width: '100vw',
   },
+  SectionStyle: {
+    backgroundColor: '#FFFFFF',
+    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    display: 'flex',
+    paddingTop: '2.3em',
+    paddingBottom: '2.85em',
+    justifyContent: 'center',
+    width: '100%',
+  },
   heroContainerStyle: {
     width: '100%',
     maxWidth: '1190px',
@@ -31,12 +42,19 @@ const styles = theme => ({
       flexDirection: 'column-reverse',
     },
   },
+  MessageContainerStyle: {
+    flexGrow: 1,
+    // color: 'white',
+  },
   heroMessageContainerStyle: {
     flexGrow: 1,
     color: 'white',
   },
   heroMessageSecondaryStyle: {
     fontSize: '2.2rem',
+  },
+  MessageSecondaryStyle: {
+    fontSize: '1.643rem',
   },
   heroMessagePrimaryStyle: {
     fontSize: '2.2rem',

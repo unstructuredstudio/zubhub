@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
 import { connect } from 'react-redux';
-
+import CheckIcon from '@material-ui/icons/CheckCircle';
 import { toast } from 'react-toastify';
-
+import child from '../../assets/images/child.jpg';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -80,14 +80,21 @@ function Projects(props) {
                       <Typography className={classes.heroMessagePrimaryStyle}>
                         {hero.title}
                       </Typography>
-                      <CustomButton
+                      {props.auth.username? (<CustomButton
                         className={classes.heroButtonStyle}
                         size="small"
                         primaryButtonStyle
                         onClick={() => props.history.push('/projects/create')}
                       >
                         {t('projects.shareProject')}
-                      </CustomButton>
+                      </CustomButton>) :(<CustomButton
+                        className={classes.heroButtonStyle}
+                        size="small"
+                        primaryButtonStyle
+                        onClick={() => props.history.push('/signup')}
+                      >
+                        {t('projects.teams.button')}
+                      </CustomButton>)}
                     </Box>
                     <Box
                       className={clsx(classes.heroImageContainerStyle, {
@@ -247,6 +254,183 @@ function Projects(props) {
               </Container>
             </Box>
           )}
+          <Box className={classes.SectionStyle}>
+                  <Box className={classes.heroContainerStyle}>
+                    <Box className={classes.MessageContainerStyle}>
+                      <Typography className={classes.heroMessagePrimaryStyle}>
+                        {t('projects.child.title')}
+                      </Typography>
+                      <Typography className={classes.MessageSecondaryStyle}>
+                      <CheckIcon style={{ color: '#00B8C4' }}/>{t('projects.child.1')}
+                      </Typography>
+                      <Typography className={classes.MessageSecondaryStyle}>
+                      <CheckIcon style={{ color: '#00B8C4' }}/>{t('projects.child.2')}
+                      </Typography>
+                      <Typography className={classes.MessageSecondaryStyle}>
+                      <CheckIcon style={{ color: '#00B8C4' }}/>{t('projects.child.3')}
+                      </Typography>
+                      <CustomButton
+                        className={classes.heroButtonStyle}
+                        size="small"
+                        primaryButtonStyle
+                        onClick={() => props.history.push('/ambassadors')}
+                      >
+                        {t('projects.zubhubAmbassadors')}
+                      </CustomButton>
+                    </Box>
+                    <Box
+                      className={clsx(classes.heroImageContainerStyle, {
+                        [common_classes.displayNone]: !hero.activity_url,
+                      })}
+                    >
+                      <a
+                        className={classes.heroImageLinkStyle}
+                        href={hero.activity_url}
+                        target="__blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          className={classes.heroImageStyle}
+                          src={child}
+                          alt=""
+                        />
+                      </a>
+                    </Box>
+                  </Box>
+                </Box>
+
+          <Box className={classes.SectionStyle}>
+            <Box className={classes.heroContainerStyle}>
+              <Box className={classes.MessageContainerStyle}>
+                <Typography className={classes.heroMessagePrimaryStyle}>
+                  {t('projects.teams.title')}
+                </Typography>
+                <Typography className={classes.MessageSecondaryStyle}>
+                {t('projects.teams.1')}
+                </Typography>
+                <Typography className={classes.MessageSecondaryStyle}>
+                {t('projects.teams.2')}
+                </Typography>
+                {props.auth.username? (<CustomButton
+                  className={classes.heroButtonStyle}
+                  size="small"
+                  primaryButtonStyle
+                  onClick={() => props.history.push('/create-team')}
+                >
+                  {t('projects.teams.button2')}
+                </CustomButton>) :(<CustomButton
+                  className={classes.heroButtonStyle}
+                  size="small"
+                  primaryButtonStyle
+                  onClick={() => props.history.push('/signup')}
+                >
+                  {t('projects.teams.button')}
+                </CustomButton>)}
+              </Box>
+              <Box
+                className={clsx(classes.heroImageContainerStyle, {
+                  [common_classes.displayNone]: !hero.activity_url,
+                })}
+              >
+                <a
+                  className={classes.heroImageLinkStyle}
+                  href={hero.activity_url}
+                  target="__blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    className={classes.heroImageStyle}
+                    src={child}
+                    alt=""
+                  />
+                </a>
+              </Box>
+            </Box>
+          </Box>
+
+          <Box className={classes.heroSectionStyle}>
+            <Box className={classes.heroContainerStyle}>
+              <Box className={classes.heroMessageContainerStyle}>
+                <Typography className={classes.heroMessagePrimaryStyle}>
+                  {t('projects.teams.title')}
+                </Typography>
+                <Typography className={classes.MessageSecondaryStyle}>
+                {t('projects.teams.1')}
+                </Typography>
+                <Typography className={classes.MessageSecondaryStyle}>
+                {t('projects.teams.2')}
+                </Typography>
+                <CustomButton
+                  className={classes.heroButtonStyle}
+                  size="small"
+                  primaryButtonStyle
+                  onClick={() => props.history.push('/ambassadors')}
+                >
+                  {t('projects.teams.button')}
+                </CustomButton>
+              </Box>
+              <Box
+                className={clsx(classes.heroImageContainerStyle, {
+                  [common_classes.displayNone]: !hero.activity_url,
+                })}
+              >
+                <a
+                  className={classes.heroImageLinkStyle}
+                  href={hero.activity_url}
+                  target="__blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    className={classes.heroImageStyle}
+                    src={child}
+                    alt=""
+                  />
+                </a>
+              </Box>
+            </Box>
+          </Box>
+
+          <Box className={classes.SectionStyle}>
+            <Box className={classes.heroContainerStyle}>
+              <Box className={classes.MessageContainerStyle}>
+                <Typography className={classes.heroMessagePrimaryStyle}>
+                  {t('projects.teams.title')}
+                </Typography>
+                <Typography className={classes.MessageSecondaryStyle}>
+                {t('projects.teams.1')}
+                </Typography>
+                <Typography className={classes.MessageSecondaryStyle}>
+                {t('projects.teams.2')}
+                </Typography>
+                <CustomButton
+                  className={classes.heroButtonStyle}
+                  size="small"
+                  primaryButtonStyle
+                  onClick={() => props.history.push('/ambassadors')}
+                >
+                  {t('projects.teams.button')}
+                </CustomButton>
+              </Box>
+              <Box
+                className={clsx(classes.heroImageContainerStyle, {
+                  [common_classes.displayNone]: !hero.activity_url,
+                })}
+              >
+                <a
+                  className={classes.heroImageLinkStyle}
+                  href={hero.activity_url}
+                  target="__blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    className={classes.heroImageStyle}
+                    src={child}
+                    alt=""
+                  />
+                </a>
+              </Box>
+            </Box>
+          </Box>
     </>
     );
   } else {
