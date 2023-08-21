@@ -255,10 +255,11 @@
   },
 
   "projects": {
-    "shareProject": "Share a Project",
+    "shareProject": "Share your work!",
     "exploreIdeas": "Explore Ideas",
     "zubhubAmbassadors": "Be our Ambassador",
     "newStuff": "New Stuff",
+    "login":"Login to view more",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",

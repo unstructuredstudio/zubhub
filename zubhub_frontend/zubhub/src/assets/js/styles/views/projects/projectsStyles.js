@@ -51,11 +51,18 @@ const styles = theme => ({
     marginRight: '1em',
     marginTop: '1.2em',
   },
+  heroBtnStyle: {
+    textTransform: 'none',
+    padding: '0 1em',
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    marginRight: '1em',
+    marginLeft: '1.5em',
+    marginTop: '1.2em',
+  },
   heroImageContainerStyle: {
     display: 'flex',
-    transform: 'rotate(-12deg)',
     [theme.breakpoints.down('1000')]: {
-      transform: 'rotate(0deg)',
     },
     [theme.breakpoints.down('500')]: {
       flexDirection: 'column',
@@ -84,13 +91,12 @@ const styles = theme => ({
   heroImageStyle: {
     marginLeft: '2em',
     marginRight: '2em',
-    border: '0.3em solid #FFCE0C',
-    borderRadius: '5px',
     height: '10em',
     width: '16em',
     [theme.breakpoints.down('500')]: {
       marginLeft: '0',
       marginRight: '0',
+      // marginTop: '100em',
     },
   },
 
