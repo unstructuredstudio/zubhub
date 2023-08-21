@@ -287,13 +287,15 @@
     },
     "reviews":{
       "title": "Student Reviews",
-      "review": "For me, ZubHub has grown incredibly important. I would advise anyone interested in creating projects and sharing to check it out.",
+      "review": "“For me, ZubHub has grown incredibly important. I would advise anyone interested in creating projects and sharing to check it out.”",
       "name": "Faridah Ejibunu",
       "designation": "ZubHub Ambassador"
     },
     "global":{
       "title":"Join a growing community of thousands of creators!",
-      "body": "Be a part of an active community of educators and creators. Create projects, create activities, share ideas, and connect with the global tech community."
+      "body": "Be a part of an active community of educators and creators. Create projects, create activities, share ideas, and connect with the global tech community.",
+      "button": "Get Started, It's Free!",
+      "button2": "Log In"
     }
   },
 
