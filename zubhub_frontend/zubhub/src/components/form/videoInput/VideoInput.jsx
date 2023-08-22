@@ -8,8 +8,9 @@ import { buildVideoThumbnailURL } from '../../../assets/js/utils/scripts';
 import { refactorVideoUrl } from '../../input/inputScripts';
 import { isGdriveORVimeoORYoutube } from '../../../views/project_details/projectDetailsScripts';
 import clsx from 'clsx';
+import _ from 'lodash';
 
-export default function VideoInput({ name, label, required, value = [], handleChange, linkValue = '' }) {
+function VideoInput({ name, label, required, value = [], handleChange, linkValue = '' }) {
   const commomClasses = makeStyles(styles)();
   const classes = makeStyles(videoInputStyles)();
   const input = useRef(null);
@@ -156,9 +157,9 @@ export default function VideoInput({ name, label, required, value = [], handleCh
           title="Import Video URL (YouTube, Vimeo and Google Drive 
             are supported) or a video file "
           variant="outlined"
-          value={linkValue}
+          defaultValue={linkValue}
           className={clsx(commomClasses.inputText)}
-          onChange={e => handleChange(e.target.value, 'link')}
+          onChange={_.debounce(e => handleChange(e.target.value, 'link'), 500)}
         />
       )}
 
@@ -174,3 +175,5 @@ export default function VideoInput({ name, label, required, value = [], handleCh
     </FormControl>
   );
 }
+
+export default VideoInput;

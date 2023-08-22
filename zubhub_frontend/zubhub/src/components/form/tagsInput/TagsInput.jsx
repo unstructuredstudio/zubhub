@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import styles from '../../../assets/js/styles';
 import CustomButton from '../../button/Button';
 import { tagsInputStyles } from './tagsInput.styles';
+import _ from 'lodash';
 
 export default function TagsInput({
   label,
@@ -94,18 +95,18 @@ export default function TagsInput({
         {label} {required && <span className={commonClasses.colorRed}>*</span>}
       </label>
       <Typography style={{ marginBottom: 10 }}>{description}</Typography>
-      <Box className={classes.tagsContainer}>
+      <Box className={clsx(classes.tagsContainer, error && commonClasses.borderRed)}>
         {selectedTags}
         <input
           ref={ref}
           onFocus={handleFocus}
           className={clsx(classes.input, commonClasses.inputText)}
           id={name}
-          value={value}
-          onBlur={handleBlur}
+          defaultValue={value}
+          onBlur={() => handleBlur({ target: { name, value: selectedTags } })}
           name={name}
           placeholder={placeholder}
-          onChange={handleChange}
+          onChange={_.debounce(handleChange, 500)}
           onKeyDown={handleKeyDown}
         />
       </Box>

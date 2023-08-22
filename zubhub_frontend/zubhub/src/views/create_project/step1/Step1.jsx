@@ -1,10 +1,12 @@
 import { Box, FormControl, TextField, makeStyles } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styles from '../../../assets/js/styles';
 import { Editor, TagsInput } from '../../../components';
 import { searchTags } from '../script';
+import TextInput from '../../../components/form/textInput/TextInput';
+import _ from 'lodash';
 
-export default function Step1({ formik, handleBlur }) {
+function Step1({ formik, handleBlur }) {
   const commonClasses = makeStyles(styles)();
   const [value, setValue] = useState('');
   const [remoteTags, setRemoteTags] = useState([]);
@@ -20,9 +22,8 @@ export default function Step1({ formik, handleBlur }) {
     // 'General',
   ]);
   const clearSuggestions = () => setRemoteTags([]);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = async value => {
+  const handleTagChange = async value => {
     setValue(value);
     searchTags(value, (error, data) => {
       if (!error) setRemoteTags(data);
@@ -41,60 +42,46 @@ export default function Step1({ formik, handleBlur }) {
     formik.setFieldValue('materials_used', tags);
   };
 
-  const handleDescriptionChange = value => {
-    formik.setFieldValue('description', value);
-  };
-
-  let quillRef = null;
+  useEffect(() => {
+    console.log('changed');
+  }, [value, remoteTags, popularTags]);
 
   return (
     <div>
-      {/* <Editor /> */}
-      <Box marginY={6}>
+      <Box marginTop={6}>
         <FormControl fullWidth>
-          <label className={commonClasses.title2}>
-            Name your project <span className={commonClasses.colorRed}>*</span>
-          </label>
-          <TextField
+          <TextInput
+            label="Name your project"
+            required={true}
             variant="outlined"
             name="title"
             placeholder="Choose a name that best suites your project i.e Fun with Science"
-            value={formik.values.title}
-            onChange={formik.handleChange}
+            defaultValue={formik.values.title}
+            onChange={_.debounce(formik.handleChange, 500)}
             className={commonClasses.inputText}
             onBlur={formik.handleBlur}
-            error={formik.touched.title && formik.errors.title ? true : false}
+            error={formik.touched.title ? formik.errors.title : ''}
             helperText={formik.touched.title && formik.errors.title}
           />
         </FormControl>
       </Box>
 
-      <Box marginTop={3} marginBottom={3}>
+      <Box marginTop={6} marginBottom={5}>
         <FormControl fullWidth>
-          <label className={commonClasses.title2}>
-            Share a few things about your project <span className={commonClasses.colorRed}>*</span>
-          </label>
           <Editor
-            value={formik.values.description}
-            onChange={handleDescriptionChange}
-            variant="outlined"
-            name="description"
-            multiline
-            minRows={3}
-            placeholder="Welcome to the enchanting world of…science and nature!"
-          />
-          {/* <TextField
-            variant="outlined"
-            name="description"
-            multiline
-            minRows={4}
-            placeholder="Choose a name that best suites your project i.e Fun with Science"
+            label="Share a few things about your project"
+            required={true}
             value={formik.values.description}
             onChange={formik.handleChange}
+            enableToolbar={true}
+            variant="outlined"
+            name="description"
+            multiline
+            error={formik.touched.description ? formik.errors.description : ''}
+            minRows={3}
             onBlur={formik.handleBlur}
-            error={formik.touched.description && formik.errors.description ? true : false}
-            helperText={formik.touched.description && formik.errors.description}
-          /> */}
+            placeholder="Welcome to the enchanting world of…science and nature!"
+          />
         </FormControl>
       </Box>
 
@@ -107,16 +94,18 @@ export default function Step1({ formik, handleBlur }) {
           selectedTags={formik.values.materials_used}
           error={formik.touched.materials_used && formik.errors.materials_used}
           popularTags={popularTags}
-          onChange={handleChange}
+          onChange={handleTagChange}
           addTag={addTag}
           value={value}
           remoteData={remoteTags}
           clearSuggestions={clearSuggestions}
           removeTag={removeTag}
-          handleBlur={() => handleBlur('materials_used')}
+          handleBlur={formik.handleBlur}
           placeholder="Start typing to materials used"
         />
       </Box>
     </div>
   );
 }
+
+export default memo(Step1);

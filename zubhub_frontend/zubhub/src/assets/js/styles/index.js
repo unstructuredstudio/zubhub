@@ -82,6 +82,15 @@ const styles = theme => ({
   colorRed: {
     color: 'red',
   },
+  borderRed: {
+    borderColor: `${colors.red} !important`,
+    '& .ql-container.ql-snow': {
+      borderColor: `${colors.red} !important`
+    },
+    '& .ql-toolbar.ql-snow': {
+      borderColor: `${colors.red} !important`
+    }
+  },
   positionRelative: {
     position: 'relative',
   },

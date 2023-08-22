@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react';
 import styles from '../../../assets/js/styles';
 import { imageInputStyles } from './imageInput.styles';
 import { useEffect } from 'react';
-
+import _ from 'lodash';
 const uniqueId = 'imgContainer';
 
 export default function ImageInput({ name, label, required, value, handleChange }) {
@@ -22,23 +22,23 @@ export default function ImageInput({ name, label, required, value, handleChange 
   }, []);
 
   useEffect(() => {
-    isImageContainerScroll();
+    debounce();
   }, [value]);
 
   const isImageContainerScroll = () => {
     const scrollableDiv = document.getElementById(uniqueId);
     if (scrollableDiv?.scrollWidth > scrollableDiv?.clientWidth) {
       if (!isScrollable) {
-        console.log(!isScrollable, scrollableDiv?.scrollWidth, scrollableDiv?.clientWidth);
         setIsScrollable(true);
       }
     } else {
       if (isScrollable) {
-        console.log(!isScrollable, scrollableDiv?.scrollWidth, scrollableDiv?.clientWidth);
         setIsScrollable(false);
       }
     }
   };
+
+  const debounce = _.debounce(isImageContainerScroll, 10);
 
   const scrollImages = to => {
     const scrollableDiv = document.getElementById(uniqueId);
