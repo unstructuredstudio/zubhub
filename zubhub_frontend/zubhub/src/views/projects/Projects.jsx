@@ -78,27 +78,23 @@ function Projects(props) {
                 <Box className={classes.heroSectionStyle}>
                   <Box className={classes.heroContainerStyle}>
                     <Box className={classes.heroMessageContainerStyle}>
+                    <br/><br/><Typography className={classes.heroMessageSecondaryStyle}>
+                        {t('projects.1')}
+                      </Typography><br/>
                       <Typography className={classes.heroMessageSecondaryStyle}>
-                        {hero.description}
-                      </Typography>
+                        {t('projects.2')}
+                      </Typography><br/>
                       <Typography className={classes.heroMessagePrimaryStyle}>
                         {hero.title}
-                      </Typography>
-                      {props.auth.username? (<CustomButton
+                      </Typography><br/>
+                      <CustomButton
                         className={classes.heroButtonStyle}
                         size="small"
                         primaryButtonStyle
                         onClick={() => props.history.push('/projects/create')}
                       >
                         {t('projects.shareProject')}
-                      </CustomButton>) :(<CustomButton
-                        className={classes.heroButtonStyle}
-                        size="small"
-                        primaryButtonStyle
-                        onClick={() => props.history.push('/signup')}
-                      >
-                        {t('projects.shareProject')}
-                      </CustomButton>)}
+                      </CustomButton>
                     </Box>
                     <Box
                       className={clsx(classes.heroImageContainerStyle, {
@@ -129,7 +125,15 @@ function Projects(props) {
                   {...props}
                 />
               ))}
-            <Grid container>
+              <CustomButton
+                  className={classes.heroBtnStyle}
+                  size="small"
+                  primaryButtonStyle
+                  onClick={() => props.history.push('/login')}
+                >
+                  {t('projects.login')}
+              </CustomButton>
+            {/* <Grid container>
               {staff_picks && staff_picks.length > 0 ? (
                 <Grid item xs={12}>
                   <Typography
@@ -162,51 +166,9 @@ function Projects(props) {
                   />
                 </Grid>
               ))}
-            </Grid>
+            </Grid> */}
             <Grid>
-              {props.auth.username ? '' :(<CustomButton
-                  className={classes.heroBtnStyle}
-                  size="small"
-                  primaryButtonStyle
-                  onClick={() => props.history.push('/login')}
-                >
-                  {t('projects.login')}
-              </CustomButton>)}
-              
             </Grid>
-            <div
-              aria-label={t('projects.ariaLabels.prevNxtButtons')}
-              className={classes.buttonGroupStyle}
-            >
-              {prev_page ? (
-                <CustomButton
-                className={clsx(classes.floatLeft, classes.buttonGroupStyleAlternative)}
-                  size="large"
-                  startIcon={<NavigateBeforeIcon />}
-                  onClick={(e, page = prev_page.split('?')[1]) => {
-                    handleSetState({ loading: true });
-                    handleSetState(fetchPage(page, props));
-                  }}
-                  primaryButtonStyle
-                >
-                  {t('projects.prev')}
-                </CustomButton>
-              ) : null}
-              {next_page ? (
-                <CustomButton
-                  className={clsx(classes.floatRight, classes.buttonGroupStyleAlternative)} 
-                  size="large"
-                  endIcon={<NavigateNextIcon />}
-                  onClick={(e, page = next_page.split('?')[1]) => {
-                    handleSetState({ loading: true });
-                    handleSetState(fetchPage(page, props));
-                  }}
-                  primaryButtonStyle
-                >
-                  {t('projects.next')}
-                </CustomButton>
-              ) : null}
-            </div>
           </Box>
             </Box>
           ) : (
@@ -252,21 +214,22 @@ function Projects(props) {
               </Container>
             </Box>
           )}
+          
           <Box className={classes.SectionStyle}>
                   <Box className={classes.heroContainerStyle}>
                     <Box className={classes.MessageContainerStyle}>
-                      <Typography className={classes.heroMessagePrimaryStyle}>
+                    <br/><Typography className={classes.MessagePrimaryStyle}>
                         {t('projects.child.title')}
-                      </Typography>
+                      </Typography><br/><br/>
                       <Typography className={classes.MessageSecondaryStyle}>
-                      <CheckIcon style={{ color: '#00B8C4' }}/>{t('projects.child.1')}
-                      </Typography>
+                      <CheckIcon style={{ color: '#00B8C4' }}/>  {t('projects.child.1')}
+                      </Typography><br/>
                       <Typography className={classes.MessageSecondaryStyle}>
-                      <CheckIcon style={{ color: '#00B8C4' }}/>{t('projects.child.2')}
-                      </Typography>
+                      <CheckIcon style={{ color: '#00B8C4' }}/>  {t('projects.child.2')}
+                      </Typography><br/>
                       <Typography className={classes.MessageSecondaryStyle}>
-                      <CheckIcon style={{ color: '#00B8C4' }}/>{t('projects.child.3')}
-                      </Typography>
+                      <CheckIcon style={{ color: '#00B8C4' }}/>  {t('projects.child.3')}
+                      </Typography><br/>
                       <CustomButton
                         className={classes.heroButtonStyle}
                         size="small"
@@ -293,30 +256,23 @@ function Projects(props) {
           <Box className={classes.SectionStyle}>
             <Box className={classes.heroContainerStyle}>
               <Box className={classes.MessageContainerStyle}>
-                <Typography className={classes.heroMessagePrimaryStyle}>
+              <br/><Typography className={classes.MessagePrimaryStyle}>
                   {t('projects.teams.title')}
-                </Typography>
+                </Typography><br></br>
                 <Typography className={classes.MessageSecondaryStyle}>
                 {t('projects.teams.1')}
-                </Typography>
+                </Typography><br/>
                 <Typography className={classes.MessageSecondaryStyle}>
                 {t('projects.teams.2')}
                 </Typography>
-                {props.auth.username? (<CustomButton
-                  className={classes.heroButtonStyle}
-                  size="small"
-                  primaryButtonStyle
-                  onClick={() => props.history.push('/create-team')}
-                >
-                  {t('projects.teams.button2')}
-                </CustomButton>) :(<CustomButton
+                <CustomButton
                   className={classes.heroButtonStyle}
                   size="small"
                   primaryButtonStyle
                   onClick={() => props.history.push('/signup')}
                 >
                   {t('projects.teams.button')}
-                </CustomButton>)}
+                </CustomButton>
               </Box>
               <Box
                 className={clsx(classes.teamsImageContainerStyle, {
@@ -338,7 +294,7 @@ function Projects(props) {
             <div className={classes.carouselSlide}>
                 <Box className={classes.heroContainerStyle}>
                   <Box className={classes.heroMessageContainerStyle}>
-                    <Typography className={classes.heroMessagePrimaryStyle}>
+                    <Typography className={classes.MessagePrimaryStyle}>
                       {t('projects.reviews.title')}
                     </Typography>
                     <Typography className={classes.heroMessageSecondaryStyle}>
@@ -401,11 +357,14 @@ function Projects(props) {
           <Box className={classes.SectionStyle}>
             <Box className={classes.heroContainerStyle}>
               <Box className={classes.MessageContainerStyle}>
-                <Typography className={classes.heroMessagePrimaryStyle}>
+              <br/><Typography className={classes.MessagePrimaryStyle}>
                   {t('projects.global.title')}
-                </Typography>
+                </Typography><br></br>
                 <Typography className={classes.MessageSecondaryStyle}>
                 {t('projects.global.body')}
+                </Typography><br/>
+                <Typography className={classes.MessageSecondaryStyle}>
+                {t('projects.global.body2')}
                 </Typography>
                 <CustomButton
                   className={classes.heroButtonStyle}

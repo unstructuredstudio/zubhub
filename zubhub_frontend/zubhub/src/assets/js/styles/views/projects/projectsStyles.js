@@ -86,10 +86,14 @@ const styles = theme => ({
     fontSize: '2.2rem',
   },
   MessageSecondaryStyle: {
-    fontSize: '1.643rem',
+    fontSize: '1.5rem',
   },
   heroMessagePrimaryStyle: {
     fontSize: '2.2rem',
+    fontWeight: 1000,
+  },
+  MessagePrimaryStyle: {
+    fontSize: '2.5rem',
     fontWeight: 1000,
   },
 
@@ -141,8 +145,8 @@ const styles = theme => ({
   heroImageStyle: {
     marginLeft: '2em',
     marginRight: '2em',
-    height: '20em',
-    width: '30em',
+    height: '27.5em',
+    width: '40em',
     [theme.breakpoints.down('500')]: {
       marginLeft: '0',
       marginRight: '0',
@@ -163,8 +167,8 @@ const styles = theme => ({
   teamsImageStyle: {
     marginLeft: '2em',
     marginRight: '2em',
-    height: '20em',
-    width: '35em',
+    height: '18em',
+    width: '34em',
     [theme.breakpoints.down('500')]: {
       marginLeft: '0',
       marginRight: '0',
@@ -185,8 +189,8 @@ const styles = theme => ({
   globalImageStyle: {
     marginLeft: '2em',
     marginRight: '2em',
-    height: '15em',
-    width: '15em',
+    height: '20em',
+    width: '20em',
     [theme.breakpoints.down('500')]: {
       marginLeft: '0',
       marginRight: '0',

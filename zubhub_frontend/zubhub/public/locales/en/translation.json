@@ -255,6 +255,8 @@
   },
 
   "projects": {
+    "1":"Get inspired by our collection of ideas.",
+    "2":"Tinker with materials and tools around you.",
     "shareProject": "Share your work!",
     "exploreIdeas": "Explore Ideas",
     "zubhubAmbassadors": "Become an Ambassador",
@@ -293,7 +295,8 @@
     },
     "global":{
       "title":"Join a growing community of thousands of creators!",
-      "body": "Be a part of an active community of educators and creators. Create projects, create activities, share ideas, and connect with the global tech community.",
+      "body": "Be a part of an active community of educators and creators.",
+      "body2":"Create projects, create activities, share ideas, and connect with the global tech community.",
       "button": "Get Started, It's Free!",
       "button2": "Log In"
     }
