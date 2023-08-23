@@ -1,0 +1,2274 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/rest-auth/logout/:
+    get:
+      operationId: listLogouts
+      description: 'Calls Django logout method and delete the Token object
+
+        assigned to the current User object.
+
+
+        Accepts/Returns nothing.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+        - api
+    post:
+      operationId: createLogout
+      description: 'Calls Django logout method and delete the Token object
+
+        assigned to the current User object.
+
+
+        Accepts/Returns nothing.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+        - api
+  /api/rest-auth/user/:
+    get:
+      operationId: retrieveUserDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+      tags:
+        - api
+    put:
+      operationId: updateUserDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+      tags:
+        - api
+    patch:
+      operationId: partialUpdateUserDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserDetails'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetails'
+          description: ''
+      tags:
+        - api
+  /api/creators/auth-user/:
+    get:
+      operationId: retrieveCreator
+      description: "Fetch the profile of the authenticated user. \n\nRequires authentication.\n\
+        Returns user profile object."
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/creators/search/:
+    get:
+      operationId: listCreators
+      description: 'Fulltext search of users.
+
+
+        Requires search term.
+
+        Returns paginated list of users that match the search term'
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/creators/locations/:
+    get:
+      operationId: listLocations
+      description: 'Fetch all countries from the database.
+
+
+        Takes no input.
+
+        Returns list of all countries.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+          description: ''
+      tags:
+        - api
+  /api/creators/{username}/projects/:
+    get:
+      operationId: listProjectLists
+      description: 'Get paginated list of all projects created by user with provided
+        username.
+
+
+        Requires username.
+
+        Returns paginated list projects'
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+        - name: project_to_omit
+          required: false
+          in: query
+          description: The id of a project that should not be included in the result.
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectList'
+          description: ''
+      tags:
+        - api
+  /api/creators/{username}/followers/:
+    get:
+      operationId: listCreators
+      description: "Fetch paginated user follower's list.
+
+
+        Requires username of user.
+
+        Returns list of users."
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/creators/{username}/following/:
+    get:
+      operationId: listCreators
+      description: 'Fetch paginated list of users being followed by the user with
+        the provided username.
+
+
+        Requires username of user.
+
+        Returns list of users.'
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/creators/{username}/members/:
+    get:
+      operationId: listCreators
+      description: 'Fetch paginated list of users in a group.
+
+
+        Requires username of group. Returns list of users.'
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/creators/{username}/:
+    get:
+      operationId: retrieveCreator
+      description: 'Fetch Profile of user with given username.
+
+
+        Requires username of user.
+
+        Returns user profile.'
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/creators/{id}/toggle-follow/:
+    get:
+      operationId: retrieveCreator
+      description: 'Remove/Add authenticated user from/to followers list of user with
+        provided id.
+
+
+        Requires authentication.
+
+        Requires user id.
+
+        Returns user profile of user with provided id.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this creator.
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/creators/{id}/remove-member/:
+    get:
+      operationId: retrieveCreator
+      description: "Remove user from group.\n\nRequires authentication.\nid of user\
+        \ to be removed from group. \nReturns profile of user removed from group."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this creator.
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/projects/:
+    get:
+      operationId: listProjects
+      description: 'Fetch paginated list of projects.
+
+
+        Returns paginated list of projects'
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectList'
+          description: ''
+      tags:
+        - api
+  /api/projects/tags/search/:
+    get:
+      operationId: listTags
+      description: 'Fulltext search of project tags.
+
+
+        Requires query string.
+
+        Returns list of matching tags'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+          description: ''
+      tags:
+        - api
+  /api/projects/search/:
+    get:
+      operationId: listProjectLists
+      description: 'Fulltext search of projects.
+
+
+        Requires query string.
+
+        Returns paginated list of matching projects.'
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectList'
+          description: ''
+      tags:
+        - api
+  /api/projects/saved/:
+    get:
+      operationId: listProjectLists
+      description: 'Fetch paginated list of projects saved by authenticated user.
+
+
+        Requires authentication.
+
+        Returns paginated list of projects.'
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=4
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://api.example.org/accounts/?page=2
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectList'
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/toggle-like/:
+    get:
+      operationId: retrieveProject
+      description: 'Like/Unlike a project.
+
+
+        Requires authentication.
+
+        Rquires project id.
+
+        Returns project details.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/toggle-save/:
+    get:
+      operationId: retrieveProject
+      description: "Add/Remove a project from authenticated user's bookmark.
+
+
+        Requires authentication.
+
+        Rquires project id.
+
+        Returns project details."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/:
+    get:
+      operationId: retrieveProject
+      description: 'Fetch Project details.
+
+
+        Rquires project id.
+
+        Returns project details.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+      tags:
+        - api
+  /api/projects/categories/:
+    get:
+      operationId: listCategorys
+      description: 'Fetch list of project categories.
+
+
+        Returns list of categories.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+          description: ''
+      tags:
+        - api
+  /api/projects/staff-picks/:
+    get:
+      operationId: listStaffPicks
+      description: "Get List of staff-picks.\n\nA staff-pick is a list of projects\
+        \ curated by zubhub staffs.\n\nReturns list of staff-picks.\n\nresponse data\
+        \ format:\n\n    [\n\n        {\n\n            \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"\
+        ,\n\n            \"title\": \"string\",\n\n            \"description\": \"\
+        string\",\n\n            \"projects\": [paginated list of projects],\n\n \
+        \           \"created_on\": \"2022-02-20T11:58:30.082Z\"\n\n        }\n\n\
+        \    ]"
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffPick'
+          description: ''
+      tags:
+        - api
+  /api/projects/staff-picks/{id}/:
+    get:
+      operationId: retrieveStaffPick
+      description: "Get staff-pick details.\n\nA staff-pick is a list of projects\
+        \ curated by zubhub staffs.\n\nRequires staff-pick id.\n\nReturns a single\
+        \ staff-pick.\n\nresponse data format:\n\n    {\n\n        \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"\
+        ,\n\n        \"title\": \"string\",\n\n        \"description\": \"string\"\
+        ,\n\n        \"projects\": [paginated list of projects],\n\n        \"created_on\"\
+        : \"2022-02-20T11:58:30.082Z\"\n\n    }"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this staff pick.
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffPick'
+          description: ''
+      tags:
+        - api
+  /api/upload-file-to-local/:
+    get:
+      operationId: listUploadFileToLocals
+      description: "Upload File To Storage backend.\n\n\nRequires Authentication.\n\
+        \n------------------------\n\n\"GET\":\n\nReturns {\"local\":True|False} indicating\
+        \ if we are to store \n\nmedia files on our custom media server or not.\n\n\
+        ------------------------\n\n\"POST\":\n\nReturns {\"secure_url\":\"url of\
+        \ uploaded file\"}\n\nRequest body format:\n\n    {\n\n        file: <media\
+        \ file>,\n\n        key: <file storage path str>\n\n    }"
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+        - api
+    post:
+      operationId: createUploadFileToLocal
+      description: "Upload File To Storage backend.\n\n\nRequires Authentication.\n\
+        \n------------------------\n\n\"GET\":\n\nReturns {\"local\":True|False} indicating\
+        \ if we are to store \n\nmedia files on our custom media server or not.\n\n\
+        ------------------------\n\n\"POST\":\n\nReturns {\"secure_url\":\"url of\
+        \ uploaded file\"}\n\nRequest body format:\n\n    {\n\n        file: <media\
+        \ file>,\n\n        key: <file storage path str>\n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+        - api
+  /api/hero/:
+    get:
+      operationId: retrieveHero
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hero'
+          description: ''
+      tags:
+        - api
+  /api/help/:
+    get:
+      operationId: retrieveHelp
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Help'
+          description: ''
+      tags:
+        - api
+  /api/privacy/:
+    get:
+      operationId: retrievePrivacy
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Privacy'
+          description: ''
+      tags:
+        - api
+  /api/faqs/:
+    get:
+      operationId: listFAQs
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FAQList'
+          description: ''
+      tags:
+        - api
+  /web-schema/:
+    get:
+      operationId: listWebSchemas
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+        - web-schema
+  /media-schema/:
+    get:
+      operationId: listMediaSchemas
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+        - media-schema
+  /markdown-to-html/:
+    get:
+      operationId: listMarkdownToHtmls
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+        - markdown-to-html
+  /api/rest-auth/password/reset/:
+    post:
+      operationId: createPasswordReset
+      description: 'Calls Django Auth PasswordResetForm save method.
+
+
+        Accepts the following POST parameters: email
+
+        Returns the success/fail message.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordReset'
+          description: ''
+      tags:
+        - api
+  /api/rest-auth/password/reset/confirm/:
+    post:
+      operationId: createPasswordResetConfirm
+      description: "Password reset e-mail link is confirmed, therefore\nthis resets\
+        \ the user's password.\n\nAccepts the following POST parameters: token, uid,\n\
+        \    new_password1, new_password2\nReturns the success/fail message."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirm'
+          description: ''
+      tags:
+        - api
+  /api/rest-auth/login/:
+    post:
+      operationId: createLogin
+      description: "Check the credentials and return the REST Token
+
+        if the credentials are valid and authenticated.
+
+        Calls Django Auth login method to register User ID
+
+        in Django session framework
+
+
+        Accept the following POST parameters: username, password
+
+        Return the REST Framework Token Object's key."
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login'
+          description: ''
+      tags:
+        - api
+  /api/rest-auth/password/change/:
+    post:
+      operationId: createPasswordChange
+      description: 'Calls Django Auth SetPasswordForm save method.
+
+
+        Accepts the following POST parameters: new_password1, new_password2
+
+        Returns the success/fail message.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordChange'
+          description: ''
+      tags:
+        - api
+  /api/rest-auth/registration/:
+    post:
+      operationId: createCustomRegister
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomRegister'
+          description: ''
+      tags:
+        - api
+  /api/rest-auth/registration/verify-email/:
+    post:
+      operationId: createVerifyEmail
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VerifyEmail'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyEmail'
+          description: ''
+      tags:
+        - api
+  /api/creators/register/:
+    post:
+      operationId: createCustomRegister
+      description: "Register a user.\n\n\nReturns basic user profile.\n\nrequest body\
+        \ format:\n\n    {\n\n        \"username\": \"string\",\n\n        \"email\"\
+        : \"\",\n\n        \"password1\": \"string\",\n\n        \"password2\": \"\
+        string\",\n\n        \"phone\": \"\",\n\n        \"dateOfBirth\": \"2022-02-20\"\
+        ,\n\n        \"location\": \"string\",\n\n        \"bio\": \"\",\n\n     \
+        \   \"subscribe\": false\n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomRegister'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomRegister'
+          description: ''
+      tags:
+        - api
+  /api/creators/verify-phone/:
+    post:
+      operationId: createVerifyPhone
+      description: "Verify user's phone number.\n\n\nReturns {\"details\": \"ok\"\
+        }.\n\nrequest body format:\n\n    {\n\n        key: \"dksledfjklskdjlskdjlsjkdlkslekdjsldk\"\
+        \n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+        - api
+  /api/creators/confirm-group-invite/:
+    post:
+      operationId: createConfirmGroupInvite
+      description: "Confirms user's group invite.\n\n\nRequires verification key.\
+        \ Returns {\"details\": \"ok\"}.\n\nrequest body format:\n\n    {\n\n    \
+        \    key: \"dksledfjklskdjlskdjlsjkdlkslekdjsldk\"\n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+        - api
+  /api/creators/add-members/:
+    post:
+      operationId: createAddGroupMembers
+      description: "Add new members to group.\n\nRequires authentication.\n\nRequires\
+        \ body of group_members and/or csv string.\n\nReturns group profile.\n\ncontenttype\
+        \ might need to be set to false.\n\nrequest body format:\n\n    {\n\n    \
+        \    group_members: [\"username1\",\"username2\"],\n\n        csv: \"stringified\
+        \ csv\"\n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddGroupMembers'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddGroupMembers'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AddGroupMembers'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddGroupMembers'
+          description: ''
+      tags:
+        - api
+  /api/creators/{id}/add-comment/:
+    post:
+      operationId: createComment
+      description: "Comment on user's profile.\n\nRequires authentication.\n\nRequires\
+        \ user id.\n\nReturns user profile.\n\nrequest body format:\n\n    {\n\n \
+        \       text: \"comment text\",\n\n        parent_id: \"id of parent comment\
+        \ or None\"\n\n    }"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+      tags:
+        - api
+  /api/projects/create/:
+    post:
+      operationId: createProject
+      description: "Create new Project.\n\n\nRequires authentication. Returns project\
+        \ details.\n\nRequest body format:\n\n    {\n\n        \"title\": \"string\"\
+        ,\n\n        \"description\": \"string\",\n\n        \"images\": [\n\n   \
+        \         {\n\n            \"image_url\": \"string\",\n\n            \"public_id\"\
+        : \"string\"\n\n            }\n\n        ],\n\n        \"video\": \"string\"\
+        ,\n\n        \"materials_used\": \"string\",\n\n        \"category\": \"string\"\
+        \n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/add-comment/:
+    post:
+      operationId: createComment
+      description: "Comment on project.\n\nRequires authentication.\n\nRequires project\
+        \ id.\n\nReturns project details.\n\nrequest body format:\n\n    {\n\n   \
+        \     text: \"comment text\",\n\n        parent_id: \"id of parent comment\
+        \ or None\"\n\n    }"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+      tags:
+        - api
+  /api/upload-file/:
+    post:
+      operationId: createUploadFile
+      description: "Upload Image To Storage Backend.\n\n\nRequires Authentication.\n\
+        \nReturns {\"image_url\":\"url of uploaded image\"}\n\nRequest body format:\n\
+        \n    {\n\n        file: <image>,\n\n        folder: <storage folder>\n\n\
+        \    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+        - api
+  /api/delete-file/:
+    post:
+      operationId: createDeleteFile
+      description: "Delete File from Storage Backend.\n\n\nRequires authentication.\n\
+        \nrequest body format:\n\n    {\n\n        url: <url of file to delete>\n\n\
+        \    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+        - api
+  /api/signature/:
+    post:
+      operationId: createSigGen
+      description: "Generate Cloudinary Upload Signature\nRequires Authentication.\n\
+        request body format:\n{\n    \"username\":\"\",\n    \"filename\":\"\",\n\
+        \    \"upload_preset\":\"\"\n}"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+        - api
+  /api/creators/edit-creator/:
+    put:
+      operationId: updateCreator
+      description: "Edit user profile.\n\n\nRequires authentication.\n\nReturns user\
+        \ profile\n\nrequest body format:\n\n    {\n\n        \"username\": \"string\"\
+        ,\n\n        \"email\": \"\",\n\n        \"phone\": \"\",\n\n        \"avatar\"\
+        : \"string\",\n\n        \"location\": \"string\",\n\n        \"bio\": \"\
+        string\"\n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Creator'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Creator'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Creator'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+    patch:
+      operationId: partialUpdateCreator
+      description: "Edit user profile.\n\n\nRequires authentication.\n\nReturns user\
+        \ profile\n\nrequest body format:\n\n    {\n\n        \"username\": \"string\"\
+        ,\n\n        \"email\": \"\",\n\n        \"phone\": \"\",\n\n        \"avatar\"\
+        : \"string\",\n\n        \"location\": \"string\",\n\n        \"bio\": \"\
+        string\"\n\n    }"
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Creator'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Creator'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Creator'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Creator'
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/update/:
+    put:
+      operationId: updateProject
+      description: "Update project.\n\nRequires authentication.\n\nRequires project\
+        \ id.\n\nReturns project details.\n\nrequest body format:\n\n    {\n\n   \
+        \     \"title\": \"string\",\n\n        \"description\": \"string\",\n\n \
+        \       \"images\": [\n\n            {\n\n            \"image_url\": \"string\"\
+        ,\n\n            \"public_id\": \"string\"\n\n            }\n\n        ],\n\
+        \n        \"video\": \"string\",\n\n        \"materials_used\": \"string\"\
+        ,\n\n        \"category\": \"string\"\n\n    }"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+      tags:
+        - api
+    patch:
+      operationId: partialUpdateProject
+      description: "Update project.\n\nRequires authentication.\n\nRequires project\
+        \ id.\n\nReturns project details.\n\nrequest body format:\n\n    {\n\n   \
+        \     \"title\": \"string\",\n\n        \"description\": \"string\",\n\n \
+        \       \"images\": [\n\n            {\n\n            \"image_url\": \"string\"\
+        ,\n\n            \"public_id\": \"string\"\n\n            }\n\n        ],\n\
+        \n        \"video\": \"string\",\n\n        \"materials_used\": \"string\"\
+        ,\n\n        \"category\": \"string\"\n\n    }"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/unpublish-comment/:
+    put:
+      operationId: updateComment
+      description: 'Unpublish a comment.
+
+
+        Requires comment id.
+
+        Returns unpublished comment.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A unique integer value identifying this comment.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+      tags:
+        - api
+    patch:
+      operationId: partialUpdateComment
+      description: 'Unpublish a comment.
+
+
+        Requires comment id.
+
+        Returns unpublished comment.'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A unique integer value identifying this comment.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+      tags:
+        - api
+  /api/creators/delete/:
+    delete:
+      operationId: destroyCreator
+      description: 'Delete user from database.
+
+
+
+        Requires authentication.
+
+
+        Returns {details: "ok"}'
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/delete/:
+    delete:
+      operationId: destroyProject
+      description: 'Delete a project from database.
+
+
+        Requires authentication.
+
+        Requires project id.
+
+        Returns {details: "ok"}'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+        - api
+  /api/projects/{id}/delete-comment/:
+    delete:
+      operationId: destroyComment
+      description: 'Delete a comment from database.
+
+
+        Requires authentication.
+
+        Requires comment id.
+
+        Returns {details: "ok"}'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: A unique integer value identifying this comment.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+        - api
+components:
+  schemas:
+    UserDetails:
+      type: object
+      properties:
+        pk:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+\z
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+        - username
+    Creator:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+\z
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          default: ''
+        phone:
+          type: string
+          default: ''
+        avatar:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 1000
+          pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+            d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+            ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\\
+            .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
+            .?|localhost))(?::\\d{2,5})?(?:[/?#][^\\s]*)?\\z"
+        location:
+          type: string
+        comments:
+          type: string
+          readOnly: true
+        dateOfBirth:
+          type: string
+          format: date
+          readOnly: true
+        bio:
+          type: string
+          nullable: true
+          maxLength: 255
+        followers:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        following_count:
+          type: integer
+          readOnly: true
+        projects_count:
+          type: string
+          readOnly: true
+        members_count:
+          type: string
+          readOnly: true
+        role:
+          type: string
+          readOnly: true
+      required:
+        - username
+        - location
+    Location:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+      required:
+        - name
+    ProjectList:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        creator:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            username:
+              type: string
+              description: Required. 150 characters or fewer. Letters, digits and
+                @/./+/-/_ only.
+              pattern: ^[\w.@+-]+\z
+              maxLength: 150
+            email:
+              type: string
+              format: email
+              default: ''
+            phone:
+              type: string
+              default: ''
+            avatar:
+              type: string
+              format: uri
+              nullable: true
+              maxLength: 1000
+              pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+                d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+                ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF\
+                0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+                -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\d{2,5})?(?:[/?#][^\\\
+                s]*)?\\z"
+            location:
+              type: string
+            comments:
+              type: string
+              readOnly: true
+            dateOfBirth:
+              type: string
+              format: date
+              readOnly: true
+            bio:
+              type: string
+              nullable: true
+              maxLength: 255
+            followers:
+              type: array
+              items:
+                type: string
+              readOnly: true
+            following_count:
+              type: integer
+              readOnly: true
+            projects_count:
+              type: string
+              readOnly: true
+            members_count:
+              type: string
+              readOnly: true
+            role:
+              type: string
+              readOnly: true
+          required:
+            - username
+            - location
+          readOnly: true
+        title:
+          type: string
+          maxLength: 1000
+        description:
+          type: string
+          nullable: true
+          maxLength: 10000
+        video:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 1000
+          pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+            d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+            ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\\
+            .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
+            .?|localhost))(?::\\d{2,5})?(?:[/?#][^\\s]*)?\\z"
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              image_url:
+                type: string
+                format: uri
+                maxLength: 1000
+                pattern:
+                  "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+                  d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\\
+                  [[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1\
+                  -\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+                  -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\\
+                  d{2,5})?(?:[/?#][^\\s]*)?\\z"
+              public_id:
+                type: string
+                nullable: true
+                maxLength: 1000
+            required:
+              - image_url
+        views_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        likes:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        saved_by:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        comments_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - title
+        - images
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+      required:
+        - name
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        creator:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            username:
+              type: string
+              description: Required. 150 characters or fewer. Letters, digits and
+                @/./+/-/_ only.
+              pattern: ^[\w.@+-]+\z
+              maxLength: 150
+            email:
+              type: string
+              format: email
+              default: ''
+            phone:
+              type: string
+              default: ''
+            avatar:
+              type: string
+              format: uri
+              nullable: true
+              maxLength: 1000
+              pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+                d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+                ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF\
+                0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+                -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\d{2,5})?(?:[/?#][^\\\
+                s]*)?\\z"
+            location:
+              type: string
+            comments:
+              type: string
+              readOnly: true
+            dateOfBirth:
+              type: string
+              format: date
+              readOnly: true
+            bio:
+              type: string
+              nullable: true
+              maxLength: 255
+            followers:
+              type: array
+              items:
+                type: string
+              readOnly: true
+            following_count:
+              type: integer
+              readOnly: true
+            projects_count:
+              type: string
+              readOnly: true
+            members_count:
+              type: string
+              readOnly: true
+            role:
+              type: string
+              readOnly: true
+          required:
+            - username
+            - location
+          readOnly: true
+        title:
+          type: string
+          maxLength: 1000
+        description:
+          type: string
+          nullable: true
+          maxLength: 10000
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              image_url:
+                type: string
+                format: uri
+                maxLength: 1000
+                pattern:
+                  "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+                  d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\\
+                  [[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1\
+                  -\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
+                  -\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\.?|localhost))(?::\\\
+                  d{2,5})?(?:[/?#][^\\s]*)?\\z"
+              public_id:
+                type: string
+                nullable: true
+                maxLength: 1000
+            required:
+              - image_url
+        video:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 1000
+          pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+            d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+            ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\\
+            .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
+            .?|localhost))(?::\\d{2,5})?(?:[/?#][^\\s]*)?\\z"
+        materials_used:
+          type: string
+          maxLength: 5000
+        tags:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                maxLength: 100
+            required:
+              - name
+          readOnly: true
+        category:
+          type: string
+        likes:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        saved_by:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        views_count:
+          type: integer
+          readOnly: true
+        comments:
+          type: string
+          readOnly: true
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - title
+        - materials_used
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+      required:
+        - name
+    StaffPick:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          maxLength: 1000
+        description:
+          type: string
+          maxLength: 1000
+        projects:
+          type: string
+          readOnly: true
+        created_on:
+          type: string
+          format: date-time
+      required:
+        - title
+        - description
+    Hero:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 50
+        description:
+          type: string
+          nullable: true
+          maxLength: 100
+        image_url:
+          type: string
+          format: uri
+          maxLength: 1000
+          pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+            d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+            ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\\
+            .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
+            .?|localhost))(?::\\d{2,5})?(?:[/?#][^\\s]*)?\\z"
+        activity_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 1000
+          pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+            d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+            ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\\
+            .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
+            .?|localhost))(?::\\d{2,5})?(?:[/?#][^\\s]*)?\\z"
+        explore_ideas_url:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 1000
+          pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+            d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\[[0-9a-f:.]+\\\
+            ]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1-\uFFFF0-9])?(?:\\\
+            .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
+            .?|localhost))(?::\\d{2,5})?(?:[/?#][^\\s]*)?\\z"
+      required:
+        - title
+    Help:
+      type: object
+      properties:
+        about:
+          type: string
+          nullable: true
+    Privacy:
+      type: object
+      properties:
+        privacy_policy:
+          type: string
+          nullable: true
+        terms_of_use:
+          type: string
+          nullable: true
+        edited_on:
+          type: string
+          format: date-time
+          nullable: true
+    FAQList:
+      type: object
+      properties:
+        question:
+          type: string
+          nullable: true
+        answer:
+          type: string
+          nullable: true
+    PasswordReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email
+    PasswordResetConfirm:
+      type: object
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+        - new_password1
+        - new_password2
+        - uid
+        - token
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+        - password
+    PasswordChange:
+      type: object
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+      required:
+        - new_password1
+        - new_password2
+    CustomRegister:
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 150
+          minLength: 1
+        email:
+          type: string
+          format: email
+          default: ''
+        password1:
+          type: string
+          writeOnly: true
+        password2:
+          type: string
+          writeOnly: true
+        phone:
+          type: string
+          default: ''
+        dateOfBirth:
+          type: string
+          format: date
+        location:
+          type: string
+        bio:
+          type: string
+          default: ''
+          maxLength: 255
+        subscribe:
+          type: boolean
+          default: false
+      required:
+        - username
+        - password1
+        - password2
+        - dateOfBirth
+        - location
+    VerifyEmail:
+      type: object
+      properties:
+        key:
+          type: string
+      required:
+        - key
+    AddGroupMembers:
+      type: object
+      properties:
+        group_members:
+          type: object
+          nullable: true
+        csv:
+          type: string
+          format: binary
+          nullable: true
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        creator:
+          type: string
+          readOnly: true
+        text:
+          type: string
+          maxLength: 10000
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - text

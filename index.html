@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Zubhub Developer Documentation</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Home";
+        var mkdocs_page_input_path = "README.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Zubhub Developer Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Installation And Environment Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="index.html#intro">Intro</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#development-setup">Development Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#windows-specific-setup">Windows Specific Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#api-documentation">API Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#contributions">Contributions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Stack Deployment Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="DEPLOYMENT/index.html#steps-to-be-followed">Steps To Be Followed</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="DEPLOYMENT/index.html#create-a-vm-and-set-up-the-server">Create A VM And Set Up The Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="DEPLOYMENT/index.html#clone-the-repository-from-github">Clone The Repository From Github</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="DEPLOYMENT/index.html#run-deploy_unscalable_fullstack.sh">Run deploy_unscalable_fullstack.sh</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="DEPLOYMENT/index.html#set-appropriate-env-variables">Set Appropriate Env Variables</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="DEPLOYMENT/index.html#repeat-2-and-3">Repeat 2 and 3</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Docs</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="overview/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="web_container/index.html">Web Container</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="media_container/index.html">Media Container</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="others/index.html">Others</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Zubhub Developer Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li class="breadcrumb-item active">Home</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p><img alt="CI/CD" src="https://github.com/unstructuredstudio/zubhub/actions/workflows/build_deploy_backend.yml/badge.svg" /></p>
+<p><img src="logo.png" width="350"></p>
+<h1 id="intro">Intro</h1>
+<p><strong>ZubHub</strong> is an open-source, documentation &amp; collaboration tool for activity-based learning. It is available for custom use for schools, libraries, hackerspaces, educational organizations, etc. Imagine your own online community built around your educational activities! </p>
+<p>Zubhub is designed and developed by <a href="https://unstructured.studio">Unstructured Studio</a>. We are an educational non-profit organization incorporated in Canada and India. We have our own ZubHub and we use it to expand access to low-cost creative learning opportunities to children and educators. On our ZubHub, children, and educators can get inspired by a collection of activity ideas and projects, learn how to build with the materials and tools that they already have access to, and share their creations with others. Some of the primary features are creator portfolios, community-curated projects, discussion-based collaboration, and workshops. ZubHub takes inspiration from the research conducted on the <a href="https://www.media.mit.edu/projects/build-in-progress/overview/">Build In Progress</a> platform at the MIT Media Lab. :smiley:</p>
+<table>
+<thead>
+<tr>
+<th>ZubHub is currently in public beta. A public ZubHub instance is hosted here: https://zubhub.unstructured.studio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Want to know more about ZubHub and our feature roadmap? Head to 👉 <a href="https://github.com/unstructuredstudio/zubhub/wiki">ZubHub Wiki</a>!</p>
+<p><img width="800" alt="screenshot" src="https://user-images.githubusercontent.com/288353/216785034-05025129-fd99-414a-868d-7103fc38bf68.png"></p>
+<h1 id="development-setup">Development Setup</h1>
+<p>Follow the instructions below to set up your local development environment</p>
+<h2 id="steps">Steps</h2>
+<ol>
+<li>Install <a href="https://git-scm.com/downloads">Git</a>. ( <a href="#install-git">jump to section</a> )</li>
+<li><a href="https://github.com/unstructuredstudio/zubhub/fork">Fork</a> and clone zubhub repository. ( <a href="#fork-and-clone-zubhub-repository">jump to section</a> )</li>
+<li>Install <a href="https://docs.docker.com/get-docker/">docker</a>. ( <a href="#install-docker">jump to section</a> )</li>
+<li>Install <a href="https://docs.docker.com/compose/install/">docker-compose</a>. ( <a href="#install-docker-compose">jump to section</a> )</li>
+<li>Install <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/">Node.js 14 and npm 7 or later</a>. ( <a href="#install-node-and-npm">jump to section</a> )</li>
+<li>Install make. ( <a href="#install-make">jump to section</a> )</li>
+<li>Setup Backend. ( <a href="#setup-backend">jump to section</a> )</li>
+<li>Setup Frontend. ( <a href="#setup-frontend">jump to section</a> )</li>
+</ol>
+<p><br/>
+<br/></p>
+<h2 id="windows-specific-setup">Windows Specific Setup</h2>
+<ul>
+<li>
+<p>Install <strong>Docker</strong> and <strong>Docker Compose</strong> by installing <a href="https://docs.docker.com/desktop/windows/install/">Docker Desktop for Windows</a>.</p>
+</li>
+<li>
+<p><strong>Install tools (git, make, cygwin):</strong>
+  The easiest way is to use a package manager like <a href="https://chocolatey.org/install">Chocolatey</a>. Follow the installation instructions for Windows Powershell (Admin), then run <code>choco install make git cygwin</code> to install all packages.
+  Follow the prompt requests allowing script execution. In the end, verify that packages are available with <code>make --version</code> and <code>git --version</code>, it should return a version for each command. Contributors also reported that installing <a href="https://wiki.mozilla.org/MozillaBuild">MozillaBuild</a> automates the installation of a number of these tools.
+  At this point, you need to disable the config <strong>core.autocrlf</strong> before cloning the <strong>zubhub</strong> repository, otherwise, all files will use Windows line-endings (CRLF), and docker images will fail to build. To do so, open a Powershell as Admin (right-click on the Start Menu, select Windows Powershell (Admin)), and run:</p>
+</li>
+</ul>
+<pre><code class="language-sh">git config --system --unset core.autocrlf
+git config --global core.autocrlf false
+</code></pre>
+<p>You can use <code>git config -l</code> to verify that the value for <strong>core.autocrlf</strong> is correctly set.</p>
+<p><br/>
+<br/></p>
+<h2 id="install-git">Install Git</h2>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> You can skip this step if you already have <strong>git</strong> installed on your machine. To check if <strong>git</strong> is running on your machine, run the following command <code>git --version</code>.</p>
+</blockquote>
+<ul>
+<li>click on this <a href="https://git-scm.com/downloads">link</a>, select your operating system from the options given, then download and install <strong>git</strong> on your local machine.</li>
+</ul>
+<p><br/>
+<br/></p>
+<h2 id="fork-and-clone-zubhub-repository">Fork and clone Zubhub repository</h2>
+<ul>
+<li>
+<p><a href="https://github.com/unstructuredstudio/zubhub/fork">fork</a> the <strong>zubhub</strong> repository to your Github account.</p>
+</li>
+<li>
+<p>On the homepage of the cloned repository in your own Github account, click on the <strong>code</strong> button, copy the URL in the dropdown then run the following code in your computer terminal:</p>
+</li>
+</ul>
+<pre><code class="language-sh">      $ git clone &lt;copied url&gt;
+</code></pre>
+<p>The copied URL will have the format of <code>https://github.com/&lt;your github username&gt;/zubhub.git</code></p>
+<p><br/>
+<br/></p>
+<h2 id="install-docker">Install Docker</h2>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> You can skip this step if you already have <strong>docker</strong> installed on your machine. To check if <strong>docker</strong> is running on your machine, run the following command <code>docker --version</code>.</p>
+</blockquote>
+<ul>
+<li>Click on this <a href="https://docs.docker.com/get-docker/">link</a>, select your operating system from the options given, then download and install docker on your local machine.</li>
+</ul>
+<p><br/>
+<br/></p>
+<h2 id="install-docker-compose">Install Docker Compose</h2>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> You can skip this step if you already have <strong>docker-compose</strong> installed on your machine. To check if <strong>docker-compose</strong> is running on your machine, run the following command <code>docker-compose --version</code>.</p>
+</blockquote>
+<ul>
+<li>Click on this <a href="https://docs.docker.com/compose/install/">link</a>, go through the page and select your operating system from the options given, then follow the given instructions to download and install <strong>docker-compose</strong> on your local machine.</li>
+</ul>
+<p><br/>
+<br/></p>
+<h2 id="install-node-and-npm">Install Node and NPM</h2>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> You can skip this step if you already have <strong>node</strong> and <strong>npm</strong> installed on your machine. To check if <strong>node</strong> and <strong>npm</strong> are already installed on your machine, run the following command <code>node --version</code> and <code>npm --version</code>.</p>
+</blockquote>
+<ul>
+<li>Click on this <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/">link</a> and follow the given instructions to install <strong>node</strong> and <strong>npm</strong> on your local machine.</li>
+</ul>
+<p><br/>
+<br/></p>
+<h2 id="install-make">Install Make</h2>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> You can skip this step if you already have <strong>make</strong> installed on your machine. To check if <strong>make</strong> is running on your machine, run the following command <code>make --version</code>.</p>
+</blockquote>
+<ul>
+<li>If you are on a Linux machine, you can install <strong>make</strong> through this <a href="https://www.gnu.org/software/make/">link</a>.</li>
+<li>If you are on a Mac machine, you can google the specific steps of installing <strong>make</strong> on a mac machine.</li>
+<li>If you are on a Windows machine, you should refer to the <strong>Windows Specific Setup</strong> section at the beginning of the <strong>Developer Setup</strong> section.</li>
+</ul>
+<p><br/>
+<br/></p>
+<h2 id="setup-backend">Setup Backend</h2>
+<ul>
+<li>From the root of the repository, run:</li>
+</ul>
+<pre><code class="language-sh">       $ cd ./zubhub_backend
+</code></pre>
+<ul>
+<li>Run:</li>
+</ul>
+<pre><code class="language-sh">       $ make init
+</code></pre>
+<p>This will run all the initial setups required and start the server, generate the minimal <strong>.env file</strong> required to run the backend, spins-up all containers defined in the backend docker-compose file, applies all necessary migrations to the database, and creates a default admin user with username and password of <strong>dummy</strong> and <strong>dummy_password</strong> respectively.</p>
+<p>In case you're facing issues after running the above, like make: Error,
+kindly run this before the above command:</p>
+<pre><code class="language-sh">       $ docker-compose up
+</code></pre>
+<ul>
+<li>Run the server:</li>
+</ul>
+<p>Subsequently, to start and stop the docker containers, you run the following</p>
+<p>To start:</p>
+<pre><code class="language-sh">       $ make start
+</code></pre>
+<p>To stop:</p>
+<pre><code class="language-sh">       $ make stop or make down
+</code></pre>
+<p>You can run test by running <code>make test</code>.
+For other make commands: run <strong>make help</strong></p>
+<p>Visit http://localhost:8000 on your browser to access the API documentation.</p>
+<p><br/>
+<br/></p>
+<h2 id="setup-frontend">Setup Frontend</h2>
+<ul>
+<li>Create a file named <strong>.env</strong> in the frontend root folder (same directory with package.json)</li>
+<li>Copy the content of <strong>.env.example</strong> and paste into the new .env file.</li>
+<li>On your terminal/command line, navigate to <strong>./zubhub/zubhub_frontend/zubhub</strong> directory</li>
+</ul>
+<h3 id="using-npm"><strong>Using npm</strong></h3>
+<p>This is advisable for a better development experience.</p>
+<ul>
+<li>Run <code>npm install</code> to install the dependencies.</li>
+<li>Run <code>npm start</code> to start the frontend.</li>
+</ul>
+<h3 id="using-the-docker-container"><strong>Using the Docker Container</strong></h3>
+<p>Use this when you are done with making your changes and you want to test your code on the Docker container.</p>
+<ul>
+<li>Run <code>make start</code> to spin up the frontend container.</li>
+</ul>
+<p>Visit <strong>localhost:3000</strong> on your browser to access the frontend.</p>
+<p><br/>
+<br/></p>
+<h1 id="deployment">Deployment</h1>
+<p>ZubHub is currently deployed on its main website using Github Actions that act as our build and deployment tooling. If you are interested in deploying Zubhub on your VM for testing and hosting purposes, follow the <a href="./DEPLOYMENT/index.html">Single VM Deployment</a> instructions.</p>
+<p><br/>
+<br/></p>
+<h1 id="api-documentation">API Documentation</h1>
+<ul>
+<li><a href="./overview/index.html">Architecture Overview</a></li>
+<li><a href="./web_container/index.html">Web Server</a></li>
+<li><a href="./media_container/index.html">Media Server</a></li>
+<li><a href="./others/index.html">Database and ER Diagram</a></li>
+<li><a href="./others/index.html">Background Tasks</a></li>
+<li><a href="./others/index.html">Reverse-Proxy</a></li>
+</ul>
+<p><br/>
+<br/></p>
+<h1 id="contributions">Contributions</h1>
+<p>Contributions are welcome! We suggest you first go through the <a href="CONTRIBUTING/index.html">Contribution Guidelines and Code of Conduct</a> and the <a href="https://github.com/unstructuredstudio/zubhub/wiki/Feature-Roadmap-&amp;-Ideas-2022">Feature Roadmap and Ideas</a> we have been working on. Search the Issues to see there are no duplicates or overlaps before filing new feature requests and bugs.</p>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> If you are interested in the API documentation instead, you need to follow the <a href="#setup-backend">instructions</a> above about running the backend on your local machine and afterward visit <strong>localhost:8000</strong> on your browser to view the API documentation.</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.5.2
+Build Date UTC : 2023-08-23 22:53:43.574325+00:00
+-->

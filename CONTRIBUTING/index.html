@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Contribution Guidelines - Zubhub Developer Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Contribution Guidelines";
+        var mkdocs_page_input_path = "CONTRIBUTING.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Zubhub Developer Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Installation And Environment Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="../index.html#intro">Intro</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#development-setup">Development Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#windows-specific-setup">Windows Specific Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#api-documentation">API Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#contributions">Contributions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Stack Deployment Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="../DEPLOYMENT/index.html#steps-to-be-followed">Steps To Be Followed</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../DEPLOYMENT/index.html#create-a-vm-and-set-up-the-server">Create A VM And Set Up The Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../DEPLOYMENT/index.html#clone-the-repository-from-github">Clone The Repository From Github</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../DEPLOYMENT/index.html#run-deploy_unscalable_fullstack.sh">Run deploy_unscalable_fullstack.sh</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../DEPLOYMENT/index.html#set-appropriate-env-variables">Set Appropriate Env Variables</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../DEPLOYMENT/index.html#repeat-2-and-3">Repeat 2 and 3</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Docs</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="../overview/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../web_container/index.html">Web Container</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../media_container/index.html">Media Container</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../others/index.html">Others</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Zubhub Developer Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li class="breadcrumb-item active">Contribution Guidelines</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="contribution-guidelines">Contribution Guidelines</h1>
+<p>Thanks for your willingness to contribute to ZubHub!</p>
+<p>The following are a set of guidelines to follow when contributing to this project.</p>
+<h2 id="have-a-question-idea-or-suggestion">Have A Question, Idea or Suggestion?</h2>
+<p>Start by reviewing current and past issues to see if your question/idea/suggestion has already been reported or discussed before. If what you are proposing is completely new, start by formalizing the idea and create an issue in the repository. In the text, make sure you have the following sections at the very least. 1) Motivation 2) <a href="https://en.wikipedia.org/wiki/User_story">User Story</a> The existing committers on this project work to reach consensus around project direction and issue solutions within issue threads (when appropriate). If it is a security issue, please do not file an issue on Github and read <a href="#security-issues">this</a></p>
+<h2 id="code-reviews">Code Reviews</h2>
+<p>All submissions should come in the form of pull requests and need to be reviewed by project committers. Read <a href="https://help.github.com/articles/about-pull-requests/">GitHub's pull request documentation</a> for more information on sending pull requests.</p>
+<h2 id="from-contributor-to-committer">From Contributor To Committer</h2>
+<p>We love contributions from our community! If you'd like to go a step beyond contributor and become a committer with full write access and a say in the project, you must be invited to the project. The existing committers employ an internal nomination process that must reach lazy consensus (silence is approval) before invitations are issued. If you feel you are qualified and want to get more deeply involved, feel free to reach out to existing committers to have a conversation about that.</p>
+<h2 id="security-issues">Security Issues</h2>
+<p>Security issues shouldn't be reported on the repository issue tracker. Instead, mail us at admin@unstructured.studio with details about the issue including any screenshots, PoC or any other relevant detail.</p>
+<h2 id="code-of-conduct">Code of Conduct</h2>
+<p>All contributors, commiters and users should conform and agree to the Unstructured Studio Code of Conduct when engaging with ZubHub community. The Code of Conduct is a set of guidelines that explains how our community behaves and what we value to members and outsiders. The Code of Conduct is a living document and will be updated when and if it is deemed necessary.</p>
+<p>The Code of Conduct is not "code" in the sense of being an algorithm or a computer program. The Code of Conduct is not "blindly and algorithmically" executed but is instead enforced by humans making real decisions based on all of the available information and using all available context.</p>
+<h3 id="overview">Overview</h3>
+<p>We welcome individuals regardless of ability, age, background, body size, education, ethnicity, family status, gender identity and expression, geographic location, level of experience, marital status, nationality, national origin, native language, personal appearance, race and/or ethnicity, religion, sexual identity and orientation, socioeconomic status, or any other dimension of diversity.</p>
+<p>Technical, organization and any other discussions on our channels, repositories, issue-tracker, ZubHub platform, and posts should focus on education, creativity and open source tools/techology related to it. Our aim is to make participation in our project and our community a harassment-free experience for everyone. Therefore, avoid personal attacks on others, and  avoid inflammatory language and speech that perpetuates discrimination. Furthermore we request you not to use ZubHub, Unstructured Studio this platform as a basis to engage in personal campaigns against other organizations or individuals.</p>
+<h3 id="engagement-standards">Engagement Standards</h3>
+<p>Our goal always remains that all engagements are net positive, constructive and joyful! Demeaning or negative engagements are unacceptable on our platforms</p>
+<h4 id="examples-of-behavior-that-contributes-to-creating-a-positive-environment-include">Examples of behavior that contributes to creating a positive environment include:</h4>
+<ul>
+<li>Using welcoming and inclusive language 🤗</li>
+<li>Being kind to others ❤️</li>
+<li>Behaving with civility 🙏</li>
+<li>Being respectful of differing viewpoints and experiences 🤗</li>
+<li>Gracefully accepting constructive criticism 🤔</li>
+<li>Focusing on what is best for the community 🧑‍🤝‍🧑</li>
+<li>Showing empathy towards other community members 👋</li>
+</ul>
+<h4 id="examples-of-unacceptable-behavior-include">Examples of unacceptable behavior include:</h4>
+<ul>
+<li>The use of sexualized language or imagery and unwelcome sexual attention or advances</li>
+<li>Initiating controversy for controversy’s sake (repeatedly asking disingenuous questions under a guise of sincerity)</li>
+<li>Saying insulting/derogatory comments and making personal attacks</li>
+<li>Repeatedly instigating conflict, and baiting people into arguments</li>
+<li>Public or private harassment</li>
+<li>Publishing someone else’s private information, such as a physical or electronic address, without explicit permission</li>
+<li>Deliberate intimidation, stalking, or following</li>
+<li>Violent threats or language directed against another person</li>
+<li>Sexist, racist, homophobic, transphobic, ableist, or exclusionary statements, even if they were meant as jokes</li>
+<li>Excessive swearing</li>
+<li>Unwelcome physical contact</li>
+<li>Sustained disruption of talks or other events</li>
+<li>Other conduct which could reasonably be considered inappropriate in a professional setting even if the conduct may be legal under the laws of some jurisdiction.</li>
+</ul>
+<p>If you feel that someone's behavior is inconsistent with the Unstructured Studio Code of Conduct, please reach out to us at admin@unstructured.studio. We, the Unstructured Studio contributors and commiters pledge to  act upon it! </p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

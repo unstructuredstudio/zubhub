@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Deploy Fullstack App In One VM. - Zubhub Developer Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Deploy Fullstack App In One VM.";
+        var mkdocs_page_input_path = "DEPLOYMENT.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Zubhub Developer Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Installation And Environment Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="../index.html#intro">Intro</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#development-setup">Development Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#windows-specific-setup">Windows Specific Setup</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#api-documentation">API Documentation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../index.html#contributions">Contributions</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Stack Deployment Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="index.html#steps-to-be-followed">Steps To Be Followed</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#create-a-vm-and-set-up-the-server">Create A VM And Set Up The Server</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#clone-the-repository-from-github">Clone The Repository From Github</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#run-deploy_unscalable_fullstack.sh">Run deploy_unscalable_fullstack.sh</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#set-appropriate-env-variables">Set Appropriate Env Variables</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="index.html#repeat-2-and-3">Repeat 2 and 3</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Docs</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="" href="../overview/index.html">Overview</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../web_container/index.html">Web Container</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../media_container/index.html">Media Container</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../others/index.html">Others</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Zubhub Developer Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a> &raquo;</li>
+      <li class="breadcrumb-item active">Deploy Fullstack App In One VM.</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="deploy-fullstack-app-in-one-vm">Deploy Fullstack App In One VM.</h1>
+<h2 id="steps-to-be-followed">Steps to be followed:</h2>
+<ol>
+<li>create a VM and set up the server.</li>
+<li>clone the repository from Github.</li>
+<li>run deploy_unscalable_fullstack.sh</li>
+<li>set appropriate env variables</li>
+<li>repeat 2 and 3</li>
+</ol>
+<h2 id="create-a-vm-and-set-up-the-server">Create a VM and set up the server:</h2>
+<p>(you can skip this step if you already have a server running. Note that we assume that your server is Ubuntu 20.04. The auto-installation of docker and docker-compose might not work as expected on a server that is not Ubuntu 20.04)</p>
+<ol>
+<li>Head over to your cloud provider of choice and create a VM.</li>
+<li>When done with VM creation, set up your VM (things like firewall, permissions, etc).
+   Note that this deployment should always be done while logged in as root user or else it might fail. Also, ensure that your /home directory is empty, or at least doesn't contain any files or folders named zubhub, zubhub_frontend, or zubhub_backend.</li>
+</ol>
+<h2 id="clone-the-repository-from-github">Clone the repository from Github</h2>
+<ol>
+<li>still logged in as root, cd into/home and clone the repository</li>
+</ol>
+<pre><code class="language-commandline">cd /home
+git clone &lt;github repository url&gt;
+</code></pre>
+<p>In our case, our repository URL is https://github.com/unstructuredstudio/zubhub</p>
+<h2 id="run-deploy_unscalable_fullstacksh">Run deploy_unscalable_fullstack.sh</h2>
+<ol>
+<li>after you must have cloned the Github repository, cd into the cloned repo and run the deploy_unscalable_fullstack.sh</li>
+</ol>
+<pre><code class="language-commandline">cd /home/zubhub
+sudo bash ./deploy_unscalable_fullstack.sh
+</code></pre>
+<p><strong>Note</strong> You need to be in the path /home/zubhub.</p>
+<h2 id="set-appropriate-env-variables">Set appropriate env variables</h2>
+<ol>
+<li>After the initial build is done, cd into /home/zubhub_backend and edit the .env variable there, adding the appropriate variables</li>
+</ol>
+<pre><code class="language-commandline">cd /home/zubhub_backend
+nano .env
+</code></pre>
+<ol>
+<li>cd into /home/zubhub_frontend/zubhub and edit the .env variable there, adding the appropriate variables</li>
+</ol>
+<pre><code class="language-commandline">cd /home/zubhub_frontend/zubhub
+nano .env
+</code></pre>
+<p>Note that without the appropriate .env variables, the app won't run correctly</p>
+<h2 id="repeat-2-and-3">Repeat 2 and 3</h2>
+<p>Finally, repeat steps 2 and 3. once done, head over to your browser and try accessing the app with the frontend URL.</p>
+<ol>
+<li>Once loaded, create a new user (this user will be made the admin later).</li>
+<li>Open a new tab and input <backend url>/admin,
+   When prompted for authentication, input username: dummy, password: dummy_password.</li>
+<li>Once logged in to the admin, head over to "creators", select the user you created through the frontend and give this user is_admin and is_staff status.</li>
+<li>Logout of the admin and try logging in to the admin again with the newly created user's username and password,
+   if successful you can now delete the dummy user.</li>
+</ol>
+<p>Note: It is extremely important that you take this step seriously. Don't forget to delete the dummy user.
+Only vetted accounts should have the is_staff and is_admin status.</p>
+<h1 id="debug">DEBUG</h1>
+<p>If you suddenly start getting ssl errors, it is possible that the ssl volume became corrupted. To fix this, just run the below command on the VM containing the nginx reverse-proxy container, then try re-deploying the project:</p>
+<pre><code class="language-commandline">docker volume rm ssl_data
+</code></pre>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
