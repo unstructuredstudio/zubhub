@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import styles from '../../assets/js/styles/index';
 import { colors } from '../../assets/js/colors';
 import { ExpandMore, MoreVert } from '@material-ui/icons';
-import { CustomButton, Gallery, ImageInput, VideoInput } from '../../components';
+import { Comments, CustomButton, Gallery, ImageInput, VideoInput } from '../../components';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -90,24 +90,9 @@ export default function ActivityDetailsV2() {
 
         <SocialButtons />
       </div>
+
       <Collapsible title={'Introduction'}>
-        <div
-          style={{
-            backgroundColor: '#eee',
-            backgroundImage: 'url()',
-            height: 150,
-            backgroundSize: 'fit',
-            borderRadius: 8,
-            padding: 0,
-            overflow: 'hidden',
-          }}
-        >
-          <img
-            style={{ width: '100%' }}
-            src="https://plus.unsplash.com/premium_photo-1679280550151-4c56e920b277?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60"
-            alt="activity image"
-          />
-        </div>
+        <Gallery images={materials_used_images.slice(3)} />
         <Typography>
           Lorem ipsum dolor sit amet consectetur. Nulla ullamcorper adipiscing urna non enim ullamcorper a. Non
           dignissim sit cras pellentesque vestibulum cursus tincidunt porttitor. Ut nulla urna in egestas arcu quis
@@ -135,9 +120,55 @@ export default function ActivityDetailsV2() {
       </Collapsible>
 
       <Collapsible title={'Materials Used'}>
-        {/* <ImageInput value={materials_used_images} /> */}
-        <Gallery images={materials_used_images} />
+        <Gallery images={materials_used_images} displayType="linear" />
+        <Typography>
+          When making your own Led light, these a few materials you would need and where to get them. I hope this is
+          helpful ! Copper Wire Light Battery Foil Paper -
+          https://www.jumia.com.ng/tower-foil-434mm-x-8m-x3-packs-35312513.htm
+        </Typography>
       </Collapsible>
+
+      <Collapsible title={'Step 1: Sorting out your Materials'}>
+        <Gallery images={materials_used_images.slice(0, 1)} />
+        <Typography>
+          Lorem ipsum dolor sit amet consectetur. Nulla ullamcorper adipiscing urna non enim ullamcorper a. Non
+          dignissim sit cras pellentesque vestibulum cursus tincidunt porttitor.
+        </Typography>
+      </Collapsible>
+
+      <Collapsible title={'Step 2: Bend your wire'}>
+        <Gallery videos={videos} />
+        <Typography>
+          Lorem ipsum dolor sit amet consectetur. Nulla ullamcorper adipiscing urna non enim ullamcorper a. Non
+          dignissim sit cras pellentesque vestibulum cursus tincidunt porttitor. Ut nulla urna in egestas arcu quis
+          ornare. Sum dolor sit amet consectetur.
+        </Typography>
+      </Collapsible>
+
+      <div style={{ marginTop: 40 }} className={clsx(classes.card, commonClasses.boxShadow)}>
+        <div
+          className={clsx(
+            commonClasses.displayFlex,
+            commonClasses.flexColumn,
+            commonClasses.justifyCenter,
+            commonClasses.gap,
+          )}
+        >
+          <Typography align="center" className={commonClasses.title1}>
+            Did you like this activity?
+          </Typography>
+          <Typography align="center">Be the first to create it</Typography>
+          <CustomButton style={{ alignSelf: 'center' }} primaryButtonStyle>
+            Create It!
+          </CustomButton>
+        </div>
+
+        <Typography style={{ marginTop: 50 }} align="center" className={commonClasses.title1}>
+          More Activities
+        </Typography>
+
+        {/* <Comments context={{ name: 'profile', body: {} }} /> */}
+      </div>
     </div>
   );
 }
@@ -210,17 +241,13 @@ const Collapsible = ({ title, children }) => {
   );
 };
 
+const videos = ['https://www.youtube.com/watch?v=ssjJ3N7LV1c'];
+
 const materials_used_images = [
-  {
-    link: true,
-    name: 'https://plus.unsplash.com/premium_photo-1679280550151-4c56e920b277?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  },
-  {
-    link: true,
-    name: 'https://images.unsplash.com/photo-1523247297454-ef69fd04e051?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  },
-  {
-    link: true,
-    name: 'https://images.unsplash.com/photo-1448697138198-9aa6d0d84bf4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  },
+  'https://plus.unsplash.com/premium_photo-1679280550151-4c56e920b277?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
+  'https://images.unsplash.com/photo-1523247297454-ef69fd04e051?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
+  'https://images.unsplash.com/photo-1448697138198-9aa6d0d84bf4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
+  'https://plus.unsplash.com/premium_photo-1679280550151-4c56e920b277?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
+  'https://images.unsplash.com/photo-1523247297454-ef69fd04e051?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
+  'https://images.unsplash.com/photo-1448697138198-9aa6d0d84bf4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
 ];
