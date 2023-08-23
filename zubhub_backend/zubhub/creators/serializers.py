@@ -184,6 +184,15 @@ class CustomRegisterSerializer(RegisterSerializer):
     bio = serializers.CharField(allow_blank=True, default="", max_length=255)
     subscribe = serializers.BooleanField(default=False)
 
+    def validate_username(self, username):
+        # Check if the value is a valid email
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if re.match(pattern, username):
+            # If it's a valid email, raise an error
+            raise serializers.ValidationError(_("Username cannot be an email."))
+        
+        return username
+
     def validate_email(self, email):
         if (len(email) == 0 and len(self.initial_data.get("phone", "")) == 0):
             raise serializers.ValidationError(

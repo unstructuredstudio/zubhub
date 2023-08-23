@@ -28,10 +28,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
 
   return [
     <IconButton
-      className={cn(
-        classes.hamburgerButtonStyle,
-        common_classes.addOnSmallScreen,
-      )}
+      className={cn(classes.hamburgerButtonStyle, common_classes.addOnSmallScreen)}
       aria-label="hamburger_menu"
       aria-haspopup="true"
       onClick={() => {
@@ -88,38 +85,20 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
           </Typography>
         </MenuItem>
       </Link>
-      {auth.tags.filter(tag => tag === 'staff' || tag === 'educator').length >
-        0 && (
+      {auth.tags.filter(tag => tag === 'staff' || tag === 'educator').length > 0 && (
         <>
           <Link
             to="/activities/create"
-            className={clsx(
-              classes.menuItemStyle,
-              common_classes.textDecorationNone,
-            )}
+            className={clsx(classes.menuItemStyle, common_classes.textDecorationNone)}
             onClick={() => setHamburgerMenuOpen(false)}
           >
-            <MenuItem
-              className={clsx(
-                common_classes.addOnSmallScreen,
-                classes.paddingItem,
-              )}
-            >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                component="span"
-              >
+            <MenuItem className={clsx(common_classes.addOnSmallScreen, classes.paddingItem)}>
+              <Typography variant="subtitle2" color="textPrimary" component="span">
                 {t('pageWrapper.navbar.createActivityMenu')}
               </Typography>
             </MenuItem>
           </Link>
-          <Box
-            className={clsx(
-              classes.menuItemStyle,
-              common_classes.addOnSmallScreen,
-            )}
-          >
+          <Box className={clsx(classes.menuItemStyle, common_classes.addOnSmallScreen)}>
             <MenuItem
               className={clsx(classes.paddingItem)}
               onClick={() => {
@@ -127,25 +106,15 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
                 setHamburgerMenuOpen(false);
               }}
             >
-              <Typography
-                variant="subtitle2"
-                color="textPrimary"
-                component="span"
-              >
+              <Typography variant="subtitle2" color="textPrimary" component="span">
                 {t('pageWrapper.navbar.myActivities')}
               </Typography>
             </MenuItem>
           </Box>
         </>
       )}
-      {auth.tags.filter(tag => tag === 'staff' || tag === 'moderator').length >
-        0 && (
-        <Box
-          className={clsx(
-            common_classes.addOnSmallScreen,
-            classes.menuItemStyle,
-          )}
-        >
+      {auth.tags.filter(tag => tag === 'staff' || tag === 'moderator').length > 0 && (
+        <Box className={clsx(common_classes.addOnSmallScreen, classes.menuItemStyle)}>
           <MenuItem
             className={clsx(classes.paddingItem)}
             onClick={() => {
@@ -153,11 +122,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
               setHamburgerMenuOpen(false);
             }}
           >
-            <Typography
-              variant="subtitle2"
-              color="textPrimary"
-              component="span"
-            >
+            <Typography variant="subtitle2" color="textPrimary" component="span">
               {t('pageWrapper.navbar.unpublishedActivities')}
             </Typography>
           </MenuItem>
@@ -228,15 +193,9 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
       </Link>
       <MenuItem
         className={clsx(classes.logOutStyle, common_classes.textDecorationNone)}
-        onClick={() =>
-          dispatch(AuthActions.logout({ token: auth.token, history, t }))
-        }
+        onClick={() => dispatch(AuthActions.logout({ token: auth.token, history, t }))}
       >
-        <Typography
-          className={clsx(common_classes.colorRed, classes.paddingItem)}
-          variant="subtitle2"
-          component="span"
-        >
+        <Typography className={clsx(common_classes.colorRed, classes.paddingItem)} variant="subtitle2" component="span">
           {t('pageWrapper.navbar.logout')}
         </Typography>
       </MenuItem>

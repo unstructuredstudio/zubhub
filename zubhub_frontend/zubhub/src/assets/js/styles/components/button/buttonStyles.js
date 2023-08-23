@@ -1,10 +1,23 @@
+import { colors } from "../../../colors";
+
 const styles = theme => ({
   primaryButtonStyle: {
     backgroundColor: '#00B8C4',
+
     borderRadius: 30,
     color: 'white',
     '&:hover': {
       backgroundColor: '#03848C',
+    },
+  },
+  primaryButtonOutlinedStyle: {
+    backgroundColor: 'transparent',
+    border: `1px solid ${colors.primary}`,
+    borderRadius: 30,
+    color: colors.primary,
+    '&:hover': {
+      backgroundColor: '#00B8C4',
+      color: colors.white
     },
   },
   primaryButtonStyle2: {
@@ -73,6 +86,12 @@ const styles = theme => ({
   fullWidth: {
     width: '100%',
   },
+  default: {
+    padding: '8px 40px',
+    textTransform: 'capitalize',
+    fontSize: 14,
+    fontWeight: '500'
+  }
 });
 
 export default styles;
