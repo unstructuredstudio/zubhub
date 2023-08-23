@@ -13,10 +13,7 @@ import MaterialsUsed from '../../components/materialsUsed/materialsUsed';
 import UploadFile from '../../components/upload_file/uploadFile';
 import Input from '../../components/input/input';
 import FormLabel from '../../components/form_labels/formLabel';
-import {
-  getValue,
-  getErrors,
-} from '../../views/create_activity/createActivityScripts';
+import { getValue, getErrors } from '../../views/create_activity/createActivityScripts';
 const useProjectStyles = makeStyles(projectStyles);
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -32,13 +29,8 @@ function CreateActivityStep2(props) {
     setDisableVideo(props.formikProps.formikValues['video'] ? true : false);
   }, [props.formikProps.formikValues]);
 
-  let fieldErrors = getErrors(
-    undefined,
-    'video',
-    -1,
-    formikProps.errors,
-    formikProps.touched,
-  );
+  let fieldErrors = getErrors(undefined, 'video', -1, formikProps.errors, formikProps.touched);
+
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
@@ -56,12 +48,8 @@ function CreateActivityStep2(props) {
             activity_classes={activity_classes}
             common_classes={common_classes}
             addMoreLabel={t('createActivity.inputs.materials_used.addMore')}
-            encouragingText={t(
-              'createActivity.inputs.materials_used.encouragingText',
-            )}
-            imagesButtonLabel={t(
-              'createActivity.inputs.materials_used.images.label',
-            )}
+            encouragingText={t('createActivity.inputs.materials_used.encouragingText')}
+            imagesButtonLabel={t('createActivity.inputs.materials_used.images.label')}
             formikProps={formikProps}
             validateSteps={validateSteps}
             t={t}
@@ -83,22 +71,14 @@ function CreateActivityStep2(props) {
             activity_classes={activity_classes}
             fieldType={{ simple: true, nested: false, array: false }}
             helperText={t('createActivity.inputs.facilitation_tips.helperText')}
-            placeholder={t(
-              'createActivity.inputs.facilitation_tips.placeholder',
-            )}
+            placeholder={t('createActivity.inputs.facilitation_tips.placeholder')}
             formikProps={props.formikProps}
             validateSteps={props.validateSteps}
             vars={vars}
             t={props.t}
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sm={6}
-          className={common_classes.marginTop1em}
-        >
+        <Grid item xs={12} md={6} sm={6} className={common_classes.marginTop1em}>
           <FormLabel
             label={'ActivityImages'}
             required={true}
@@ -110,9 +90,7 @@ function CreateActivityStep2(props) {
           <UploadFile
             name={'activity_images'}
             fileType={'image/*'}
-            uploadButtonLabel={t(
-              'createActivity.inputs.materials_used.images.label',
-            )}
+            uploadButtonLabel={t('createActivity.inputs.materials_used.images.label')}
             classes={classes}
             activity_classes={activity_classes}
             fieldType={{ simple: true, nested: false, array: false }}
@@ -120,19 +98,10 @@ function CreateActivityStep2(props) {
             validateSteps={validateSteps}
             t={t}
             multiple={true}
-            countFilesText={[
-              props.t('createActivity.inputs.image'),
-              props.t('createActivity.inputs.images'),
-            ]}
+            countFilesText={[props.t('createActivity.inputs.image'), props.t('createActivity.inputs.images')]}
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={12}
-          sm={12}
-          className={common_classes.marginTop1em}
-        >
+        <Grid item xs={12} md={12} sm={12} className={common_classes.marginTop1em}>
           <FormLabel
             label={'ActivityVideo'}
             required={true}
@@ -168,13 +137,8 @@ function CreateActivityStep2(props) {
               countFilesText={['video added', 'videos added']}
             />
           </Grid>
-          <Typography
-            variant="h10"
-            className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}
-          >
-            {fieldErrors
-              ? t(`createActivity.inputs.video.errors.${fieldErrors}`)
-              : ''}
+          <Typography variant="h10" className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}>
+            {fieldErrors ? t(`createActivity.inputs.video.errors.${fieldErrors}`) : ''}
           </Typography>
         </Grid>
       </Grid>

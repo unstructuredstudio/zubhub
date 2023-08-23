@@ -21,14 +21,13 @@ function ErrorPage(props) {
   return (
     <Box className={classes.root} style={propStyle ? propStyle : null}>
       <Container className={classes.mainContainerStyle}>
-        <img
-          className={classes.disconnectedStyle}
-          src={disconnected}
-          alt={props.error}
-        />
+        <img className={classes.disconnectedStyle} src={disconnected} alt={props.error} />
         <Box className={classes.errorBoxStyle}>
           <Typography variant="h1">Oops!!</Typography>
-          <Typography variant="h5">{props.error}</Typography>
+          <Typography style={{ marginBottom: 50 }} variant="h5">
+            {props.error}
+          </Typography>
+          {props.children}
         </Box>
       </Container>
     </Box>

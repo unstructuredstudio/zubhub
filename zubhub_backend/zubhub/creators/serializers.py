@@ -186,7 +186,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 
     def validate_username(self, username):
         # Check if the value is a valid email
-        pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if re.match(pattern, username):
             # If it's a valid email, raise an error
             raise serializers.ValidationError(_("Username cannot be an email."))
