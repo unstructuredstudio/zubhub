@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import styles from '../../assets/js/styles/index';
 import { colors } from '../../assets/js/colors';
 import { ExpandMore, MoreVert } from '@material-ui/icons';
-import { CustomButton, ImageInput, VideoInput } from '../../components';
+import { CustomButton, Gallery, ImageInput, VideoInput } from '../../components';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -135,7 +135,8 @@ export default function ActivityDetailsV2() {
       </Collapsible>
 
       <Collapsible title={'Materials Used'}>
-        <ImageInput value={materials_used_images} />
+        {/* <ImageInput value={materials_used_images} /> */}
+        <Gallery images={materials_used_images} />
       </Collapsible>
     </div>
   );

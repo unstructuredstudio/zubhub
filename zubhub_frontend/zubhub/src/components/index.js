@@ -10,7 +10,7 @@ import Comments from './comments/Comments'
 import CustomButton from "./button/Button";
 import PreviewProject from "./previewProject/PreviewProject";
 import SelectFromPills from "./form/selectFromPills/SelectFromPills";
-
+import Gallery from "./gallery/Gallery";
 
 export {
     TagsInput,
@@ -24,5 +24,6 @@ export {
     Comments,
     CustomButton,
     PreviewProject,
-    SelectFromPills
+    SelectFromPills,
+    Gallery
 }

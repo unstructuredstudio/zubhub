@@ -84,9 +84,11 @@ export default function Step2() {
         <div key={step.id}>
           <div className={clsx(commonClasses.justifySpaceBetween, commonClasses.alignCenter)}>
             <div className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
-              <Typography className={commonClasses.title2}>Step {index + 1}: </Typography>
+              <Typography style={{ whiteSpace: 'nowrap' }} className={commonClasses.title2}>
+                Step {index + 1}:{' '}
+              </Typography>
               <input
-                style={{ border: 'none', outline: 'none', paddingLeft: 10 }}
+                style={{ border: 'none', outline: 'none', paddingLeft: 10, minWidth: '100%' }}
                 className={commonClasses.title2}
                 placeholder="Enter step title"
                 onChange={d => onStepChange(d.target.value, 'title', index)}
