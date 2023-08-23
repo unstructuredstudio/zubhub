@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import { RiFacebookCircleFill, RiWhatsappFill } from 'react-icons/ri';
+import { colors } from '../../assets/js/colors';
 
 const useStyles = makeStyles(styles);
 const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {} }) => {
@@ -66,7 +67,7 @@ const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {
                 });
             }}
           >
-            <LinkIcon />
+            <LinkIcon style={{ color: withColor ? colors.black : colors.white }} />
           </IconButton>
         )}
       </ButtonGroup>

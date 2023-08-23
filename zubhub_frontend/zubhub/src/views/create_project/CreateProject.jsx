@@ -141,6 +141,7 @@ function CreateProject(props) {
       if (activeStep === 3) {
         return props.history.push(`/projects/${props.match.params.id}?success=true`);
       }
+      setState({ ...state, success: false });
       go('next');
     }
   }, [state.success]);
@@ -166,7 +167,7 @@ function CreateProject(props) {
   const previous = () => go('prev');
   const next = async () => {
     let error = await checkErrors();
-    console.log(error);
+    console.log('Validation errors', error);
     if (Object.keys(error).length > 0) return;
 
     if (activeStep === 3) {
@@ -191,9 +192,11 @@ function CreateProject(props) {
     }
   };
 
-  const checkErrors = () => {
+  const checkErrors = async () => {
+    console.log(formik.errors);
+    formik.setFieldError('category', false, false);
     if (activeStep === 1) {
-      return formik.setTouched({ title: true, materials_used: true, description: true }, true);
+      return formik.setTouched({ title: true, materials_used: true, description: true, category: false }, true);
     }
 
     if (activeStep === 2) {
@@ -369,10 +372,11 @@ function CreateProject(props) {
                 onChange={handleChangeTag}
                 addTag={addTag}
                 value={value}
+                prefix={'#'}
                 remoteData={remoteTags}
                 clearSuggestions={clearSuggestions}
                 removeTag={removeTag}
-                placeholder="Start typing to search"
+                placeholder="Start typing to search #science"
               />
             </DialogContent>
           </Modal>

@@ -2,7 +2,16 @@ import { colors } from "../../../assets/js/colors";
 
 export const editorStyle = theme => ({
     editor: {
-        height: 100,
+        height: 150,
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: 4,
+        '& .ql-container.ql-snow': {
+            borderRadius: '0 0 4px 4px !important'
+        },
+        '& .ql-toolbar.ql-snow': {
+            borderRadius: '4px 4px 0 0 !important'
+        }
     },
     toolbarDisabled: {
         '& .ql-toolbar': {
@@ -10,7 +19,7 @@ export const editorStyle = theme => ({
         },
         '& .ql-container.ql-snow': {
             fontSize: 14,
-            borderRadius: 4
+            flex: 1,
         },
     },
     editorTooltip: ({ position: { left, top, width } }) => ({

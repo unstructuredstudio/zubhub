@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import styles from '../../../assets/js/styles';
 import CustomButton from '../../button/Button';
 import { tagsInputStyles } from './tagsInput.styles';
+import _ from 'lodash';
 
 export default function TagsInput({
   label,
@@ -22,6 +23,7 @@ export default function TagsInput({
   clearSuggestions,
   removeTag,
   handleBlur,
+  prefix,
 }) {
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(tagsInputStyles)();
@@ -58,10 +60,12 @@ export default function TagsInput({
       onClick={() => handleTagAddition(tag)}
       disabled={selectedTags.includes(tag)}
       className={clsx(classes.button, selectedTags.includes(tag) && classes.disabledButton)}
+      style={{ fontWeight: tag == 'General' && '800' }}
       primaryButtonOutlinedStyle
       key={index}
       startIcon={<Add />}
     >
+      {prefix && `${prefix} `}
       {tag}
     </CustomButton>
   ));
@@ -74,6 +78,7 @@ export default function TagsInput({
       key={index}
       endIcon={<ClearRounded />}
     >
+      {prefix && `${prefix}`}
       {tag}
     </CustomButton>
   ));
@@ -90,18 +95,18 @@ export default function TagsInput({
         {label} {required && <span className={commonClasses.colorRed}>*</span>}
       </label>
       <Typography style={{ marginBottom: 10 }}>{description}</Typography>
-      <Box className={classes.tagsContainer}>
+      <Box className={clsx(classes.tagsContainer, error && commonClasses.borderRed)}>
         {selectedTags}
         <input
           ref={ref}
           onFocus={handleFocus}
-          className={classes.input}
+          className={clsx(classes.input, commonClasses.inputText)}
           id={name}
-          value={value}
-          onBlur={handleBlur}
+          defaultValue={value}
+          onBlur={() => handleBlur({ target: { name, value: selectedTags } })}
           name={name}
           placeholder={placeholder}
-          onChange={handleChange}
+          onChange={_.debounce(handleChange, 500)}
           onKeyDown={handleKeyDown}
         />
       </Box>

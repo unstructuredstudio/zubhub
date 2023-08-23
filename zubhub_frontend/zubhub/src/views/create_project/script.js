@@ -181,9 +181,17 @@ export const uploadProject = async (state, props, handleSetState) => {
         .filter(value => (value ? true : false))
         .join(',');
 
-    const tags = props.values['tags'] ? props.values['tags'].map(tag => typeof tag === 'string' ? { name: tag } : tag) : [];
-
+    const tags = props.values['tags']
+        ? props.values['tags'].map(tag => typeof tag === 'string' ? { name: tag } : tag)
+        : [];
     const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
+    let additionalFiles = props.values.images.filter(file => file?.image_url)
+    if (additionalFiles.length < props.values.images.length) {
+        additionalFiles = [...additionalFiles, ...state.media_upload.uploaded_images_url]?.map(({ image_url, public_id }) => ({ image_url, public_id }))
+        console.log(additionalFiles);
+    }
+    console.log(props.values.images, state.media_upload.uploaded_images_url, 'images');
+
     create_or_update({
         ...props.values,
         tags,
@@ -191,14 +199,23 @@ export const uploadProject = async (state, props, handleSetState) => {
         id: props.match.params.id,
         token: props.auth.token,
         activity: props.location.state?.activity_id,
-        images: state.media_upload.uploaded_images_url || '',
-        video: state.media_upload.uploaded_videos_url[0] || props.values.video_link,
+        images: additionalFiles || '',
+        video: (props.values.video_link || state.media_upload.uploaded_videos_url[0]) || '',
         category: props.values.category.filter(cat => cat.name).map(cat => cat?.name),
         t: props.t,
         publish: { type: props.step < 3 ? 1 : 4, visible_to: [] }
     })
-        .then((id) => {
-            handleSetState({ ...state, default_state: { loading: false }, success: true, id: `${id}` })
+        .then((project) => {
+            state.media_upload.uploaded_images_url = []
+            const files = project.images.map(img => ({
+                ...img,
+                name: img.image_url,
+                type: 'image/*',
+                size: 1000000,
+                link: true
+            }));
+            props.setFieldValue('images', files, true);
+            handleSetState({ ...state, default_state: { loading: false }, success: true, id: `${project.id}` })
         })
         .catch(error => {
             console.log(error, 'error');
@@ -419,6 +436,7 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
                 });
             })
             .send((err, data) => {
+
                 if (err) {
                     if (err.message.startsWith('Unexpected')) {
                         const error = props.t('createProject.errors.unexpected');
@@ -472,8 +490,9 @@ export const getProject = (props, state) => {
                     //         }`,
                     //     )}`;
 
-                    const files = obj.project.images.map(url => ({
-                        name: url.image_url,
+                    const files = obj.project.images.map(image => ({
+                        ...image,
+                        name: image.image_url,
                         type: 'image/*',
                         size: 1000000,
                         link: true
@@ -683,7 +702,7 @@ export const validationSchema = Yup.object().shape({
 
             return !is_empty;
         }),
-    category: Yup.string().min(1, 'min'),
+    category: Yup.string(),
     // tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
     //     if (tags) {
     //         tags = JSON.parse(tags);

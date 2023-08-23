@@ -23,12 +23,14 @@ body {
   /* height: 100%; */
   margin: 0;
   padding: '2em';
-  font-size: 9px;
+  font-size: 14px;
   background: rgba(255,204,0,1);
   background: linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%);
   background-repeat: no-repeat;
 }
-
+*{
+  scroll-behavior: smooth;
+}
 html,
 #root {
   /* height: 100%; */
@@ -617,3 +619,22 @@ html,
 .MuiTypography-body1,.MuiOutlinedInput-root{
   /* font-size: 0.85rem !important; */
 }
+
+/* .ql-editor.ql-blank::before {
+  color:#B3B3B3 !important;
+  font-style: normal !important;
+}
+
+.MuiOutlinedInput-input, .ql-editor, .ql-editor.ql-blank::before {
+  font-size: 15px !important;
+  font-family: 'Raleway', sans-serif !important;
+}
+
+.MuiOutlinedInput-input, .ql-editor {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+input::placeholder {
+  color:#B3B3B3 !important;
+} */
+

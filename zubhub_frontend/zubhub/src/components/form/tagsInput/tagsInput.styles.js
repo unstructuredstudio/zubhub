@@ -8,7 +8,8 @@ export const tagsInputStyles = theme => ({
         border: 'solid 1px #C4C4C4',
         display: 'flex',
         flexWrap: 'wrap',
-        padding: '18.5px 14px',
+        padding: '8px 14px',
+        minHeight: 50,
         borderRadius: 4,
         gap: 12
     },
@@ -23,7 +24,7 @@ export const tagsInputStyles = theme => ({
     input: {
         flex: 1,
         border: 'none',
-        outline: 'none'
+        outline: 'none',
     },
     suggestionBox: {
         position: 'absolute',
