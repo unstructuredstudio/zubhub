@@ -71,20 +71,19 @@ jobs:
 
       - name: Copy file via scp
         uses: appleboy/scp-action@master
-        env:
-          HOST: ${{ secrets.DO_BACKEND_HOST }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
-          KEY: ${{ secrets.DO_SSHKEY }}
         with:
+          host: ${{ secrets.DO_BACKEND_HOST }}
+          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
           source: "."
           target: "/home/zubhub-services/zubhub"
 
       - name: Executing remote  command
         uses: appleboy/ssh-action@master
         with:
-          HOST: ${{ secrets.DO_BACKEND_HOST }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
-          KEY: ${{ secrets.DO_SSHKEY }}
+          host: ${{ secrets.DO_BACKEND_HOST }}
+          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
           script: |
             cp /home/zubhub-services/zubhub/zubhub_backend/compose/deploy_backend.sh /home/zubhub-services/
             sudo bash /home/zubhub-services/deploy_backend.sh
