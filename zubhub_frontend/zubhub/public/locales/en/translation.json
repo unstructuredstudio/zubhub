@@ -289,9 +289,19 @@
     },
     "reviews":{
       "title": "Student Reviews",
+      "1":{
       "review": "“For me, ZubHub has grown incredibly important. I would advise anyone interested in creating projects and sharing to check it out.”",
       "name": "Faridah Ejibunu",
-      "designation": "ZubHub Ambassador"
+      "designation": "ZubHub Ambassador"},
+      "2":{
+        "review": "“The fact that anyone in the world can have an online presence for their work and show it to the world all for free just amazes me.”",
+        "name": "Hemant Kumar Singh",
+        "designation": "ZubHub Ambassador"},
+      "3":{
+        "review": "“ZubHub contributes immensely to people from not so well socio-econimic backgrounds, I would high recommend it.”",
+        "name": "Yaya Mamoudou",
+        "designation": "ZubHub Ambassador"}
+    
     },
     "global":{
       "title":"Join a growing community of thousands of creators!",
