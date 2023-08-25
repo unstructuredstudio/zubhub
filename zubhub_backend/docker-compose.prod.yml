@@ -34,7 +34,7 @@ services:
       - web
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: bitnami/rabbitmq:3.11
     env_file: .env
     deploy:
       replicas: 1
