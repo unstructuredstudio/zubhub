@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+
 import { connect } from 'react-redux';
-import CheckIcon from '@material-ui/icons/CheckCircle';
-import CheckIcon from '@material-ui/icons/CheckCircle';
+
 import { toast } from 'react-toastify';
-import child from '../../assets/images/child.jpg';
+
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -41,34 +39,13 @@ function Projects(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
 
-  const [activeSlide, setActiveSlide] = React.useState(0);
-
-  const handleSlideChange = index => {
-    setActiveSlide(index);
-  };
-
   const [state, setState] = React.useState({
     loading: true,
-    isMobileView: false,
   });
 
   React.useEffect(() => {
     fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
-
-    const checkMobileView = () => {
-      setState((prevState) => ({
-        ...prevState,
-        isMobileView: window.innerWidth < 500, // Adjust the breakpoint as needed
-      }));
-    };
-
-    checkMobileView(); // Initial check
-    window.addEventListener('resize', checkMobileView);
-
-    return () => {
-      window.removeEventListener('resize', checkMobileView);
-    };
   }, []);
 
   const handleSetState = obj => {
@@ -79,12 +56,8 @@ function Projects(props) {
     }
   };
 
-  const { loading, isMobileView } = state;
-  const {
-    results: projects,
-    previous: prev_page,
-    next: next_page,
-  } = props.projects.all_projects;
+  const { loading } = state;
+  const { results: projects, previous: prev_page, next: next_page } = props.projects.all_projects;
   const { hero } = props.projects;
   const staff_picks = props.projects.staff_picks;
   const { t } = props;
@@ -94,403 +67,174 @@ function Projects(props) {
   } else if (projects && projects.length >= 0) {
     return (
       <>
-        {projects.length > 0 ?
-          (
-            <Box className={classes.root}>
-              {hero && hero.id ? (
-                 <Box className={classes.heroSectionStyle}>
-                 <Box className={classes.heroContainerStyle}>
-                   {state.isMobileView && hero && hero.id && (
-                     <Box className={classes.heroImageContainerStyle}>
-                       <img
-                         className={classes.heroImageStyle}
-                         src={hero.image_url}
-                         alt=""
-                       />
-                     </Box>
-                   )}
-                   <Box className={classes.heroMessageContainerStyle}>
-                     <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
-                       {t('projects.1')}
-                     </Typography>
-                     <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
-                       {t('projects.2')}
-                     </Typography>
-                     <Typography className={classes.heroMessagePrimaryStyle}>
-                       {hero.title}
-                     </Typography>
-                     <br />
-                     <CustomButton
-                       className={classes.heroButtonStyle}
-                       size="small"
-                       primaryButtonStyle
-                       onClick={() => props.history.push('/projects/create')}
-                     >
-                       {t('projects.shareProject')}
-                     </CustomButton>
-                   </Box>
-                   {!state.isMobileView && hero && hero.id && (
-                     <Box className={classes.heroImageContainerStyle}> 
-                       <img
-                         className={classes.heroImageStyle}
-                         src={hero.image_url}
-                         alt=""
-                       />
-                     </Box>
-                   )}
-                 </Box>
-               </Box>
-              ) : null}
-            
-          <Box className={classes.mainContainerStyle}>
-            {staff_picks &&
-              staff_picks.map(staff_pick => (
-                <StaffPick
-                  key={staff_pick.id}
-                  staff_pick={staff_pick}
-                  updateProjects={res =>
-                    handleSetState(
-                      updateStaffPicks(res, staff_pick.id, props, toast),
-                    )
-                  }
-                  {...props}
-                />
-              ))}
-              <CustomButton
-                  className={classes.heroBtnStyle}
-                  size="small"
-                  primaryButtonStyle
-                  onClick={() => props.history.push('/login')}
-                >
-                  {t('projects.login')}
-              </CustomButton>
-            {/* <Grid container>
-              {staff_picks && staff_picks.length > 0 ? (
-                <Grid item xs={12}>
-                  <Typography
-                    gutterBottom
-                    component="h2"
-                    variant="h6"
-                    color="textPrimary"
-                    className={classes.titleStyle}
-                  >
-                    {t('projects.allProjects')}
-                  </Typography>
-                </Grid>
-              ) : null}
-              {projects.map(project => (
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  align="center"
-                  className={classes.projectGridStyle}
-                >
-                  <Project
-                    project={project}
-                    key={project.id}
-                    updateProjects={res =>
-                      handleSetState(updateProjects(res, props, toast))
-                    }
-                    {...props}
-                  />
-                </Grid>
-              ))}
-            </Grid> */}
-            <Grid>
-            </Grid>
-          </Box>
-            </Box>
-          ) : (
-            <Box className={classes.root}>
-              <Container className={classes.welcomeContainerStyle}>
-                <img
-                  className={classes.welcomeStyle}
-                  src={hikingIcon}
-                  alt={'Create project'}
-                />
-                <Box className={classes.welcomeBoxStyle}>
-                  <Typography variant="h1">{t('projects.welcome')}!</Typography>
-                  <Typography variant="h5">{t('projects.errors.noProject')}</Typography>
-                  <Box>
+        {projects.length > 0 ? (
+          <Box className={classes.root}>
+            {!props.auth?.token && hero && hero.id ? (
+              <Box className={classes.heroSectionStyle}>
+                <Box className={classes.heroContainerStyle}>
+                  <Box className={classes.heroMessageContainerStyle}>
+                    <Typography className={classes.heroMessageSecondaryStyle}>{hero.description}</Typography>
+                    <Typography className={classes.heroMessagePrimaryStyle}>{hero.title}</Typography>
                     <CustomButton
                       className={classes.heroButtonStyle}
                       size="small"
                       primaryButtonStyle
                       onClick={() => props.history.push('/projects/create')}
                     >
-                      {t('projects.createProject')}
+                      {t('projects.shareProject')}
                     </CustomButton>
                     <a
                       className={common_classes.textDecorationNone}
-                      href={
-                        hero.explore_ideas_url
-                          ? hero.explore_ideas_url
-                          : 'https://kriti.unstructured.studio/'
-                      }
+                      href={hero.explore_ideas_url ? hero.explore_ideas_url : 'https://kriti.unstructured.studio/'}
                       target="__blank"
                       rel="noreferrer"
                     >
-                      <CustomButton
-                        className={classes.heroButtonStyle}
-                        size="small"
-                        darkDangerButtonStyle
-                      >
+                      <CustomButton className={classes.heroButtonStyle} size="small" darkDangerButtonStyle>
                         {t('projects.exploreIdeas')}
                       </CustomButton>
                     </a>
+                    <CustomButton
+                      className={classes.heroButtonStyle}
+                      size="small"
+                      customWarningButtonStyle
+                      onClick={() => props.history.push('/ambassadors')}
+                    >
+                      {t('projects.zubhubAmbassadors')}
+                    </CustomButton>
+                  </Box>
+                  <Box
+                    className={clsx(classes.heroImageContainerStyle, {
+                      [common_classes.displayNone]: !hero.activity_url,
+                    })}
+                  >
+                    <img className={classes.heroImageTextSmallStyle} src={new_stuff} alt={t('projects.newStuff')} />
+                    <img className={classes.heroImageTextStyle} src={new_stuff} alt={t('projects.newStuff')} />
+                    <a
+                      className={classes.heroImageLinkStyle}
+                      href={hero.activity_url}
+                      target="__blank"
+                      rel="noreferrer"
+                    >
+                      <img className={classes.heroImageStyle} src={hero.image_url} alt="" />
+                    </a>
                   </Box>
                 </Box>
-              </Container>
+              </Box>
+            ) : null}
+            <Box className={classes.mainContainerStyle}>
+              <Typography
+                style={{ marginBottom: 30, ...(!props.auth?.token && { marginTop: 50 }) }}
+                className={common_classes.title1}
+              >
+                All Projects
+              </Typography>
+
+              {staff_picks &&
+                staff_picks.map(staff_pick => (
+                  <StaffPick
+                    key={staff_pick.id}
+                    staff_pick={staff_pick}
+                    updateProjects={res => handleSetState(updateStaffPicks(res, staff_pick.id, props, toast))}
+                    {...props}
+                  />
+                ))}
+              <Grid spacing={3} container>
+                {staff_picks && staff_picks.length > 0 ? (
+                  <Grid item xs={12}>
+                    <Typography
+                      gutterBottom
+                      component="h2"
+                      variant="h6"
+                      color="textPrimary"
+                      className={classes.titleStyle}
+                    >
+                      {t('projects.allProjects')}
+                    </Typography>
+                  </Grid>
+                ) : null}
+                {projects.map((project, index) => (
+                  <Grid
+                    key={project.id}
+                    xs={12}
+                    sm={6}
+                    lg={4}
+                    item
+                    align="center"
+                    // className={classes.projectGridStyle}
+                  >
+                    <Project
+                      project={project}
+                      key={project.id}
+                      updateProjects={res => handleSetState(updateProjects(res, props, toast))}
+                      {...props}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+              <div aria-label={t('projects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
+                {prev_page ? (
+                  <CustomButton
+                    className={clsx(classes.floatLeft, classes.buttonGroupStyleAlternative)}
+                    size="large"
+                    startIcon={<NavigateBeforeIcon />}
+                    onClick={(e, page = prev_page.split('?')[1]) => {
+                      handleSetState({ loading: true });
+                      handleSetState(fetchPage(page, props));
+                    }}
+                    primaryButtonStyle
+                  >
+                    {t('projects.prev')}
+                  </CustomButton>
+                ) : null}
+                {next_page ? (
+                  <CustomButton
+                    className={clsx(classes.floatRight, classes.buttonGroupStyleAlternative)}
+                    size="large"
+                    endIcon={<NavigateNextIcon />}
+                    onClick={(e, page = next_page.split('?')[1]) => {
+                      handleSetState({ loading: true });
+                      handleSetState(fetchPage(page, props));
+                    }}
+                    primaryButtonStyle
+                  >
+                    {t('projects.next')}
+                  </CustomButton>
+                ) : null}
+              </div>
             </Box>
-          )}
-          
-          <Box className={classes.SectionStyle}>
-                  <Box className={classes.heroContainerStyle}>
-                  {state.isMobileView ? '' :(
-                  <Box
-                      className={clsx(classes.ambassadorImageStyle, {
-                        [common_classes.displayNone]: !hero.activity_url,
-                      })}
-                      style={{ marginTop: state.isMobileView ? '0' : '2em' }}
-                    >
-                        <img
-                          className={classes.ambassadorImageStyle}
-                          src={child}
-                          alt=""
-                        />
-                    </Box>)}
-                    <Box className={classes.MessageContainerStyle} style={{ marginLeft: state.isMobileView ? '0' : '15em' }}>
-                    <br/><Typography className={classes.MessagePrimaryStyle}>
-                        {t('projects.child.title')}
-                      </Typography><br/><br/>
-                      <Typography className={classes.MessageSecondaryStyle}>
-                      <CheckIcon style={{ color: '#00B8C4' }}/>  {t('projects.child.1')}
-                      </Typography><br/>
-                      <Typography className={classes.MessageSecondaryStyle}>
-                      <CheckIcon style={{ color: '#00B8C4' }}/>  {t('projects.child.2')}
-                      </Typography><br/>
-                      <Typography className={classes.MessageSecondaryStyle}>
-                      <CheckIcon style={{ color: '#00B8C4' }}/>  {t('projects.child.3')}
-                      </Typography><br/>
-                      <CustomButton
-                        className={classes.heroButtonStyle}
-                        size="small"
-                        primaryButtonStyle
-                        onClick={() => props.history.push('/ambassadors')}
-                      >
-                        {t('projects.zubhubAmbassadors')}
-                      </CustomButton>
-                    </Box>
-                    {state.isMobileView ? (
-                  <Box
-                      className={clsx(classes.ambassadorImageStyle, {
-                        [common_classes.displayNone]: !hero.activity_url,
-                      })}
-                    >
-                        <img
-                          className={classes.ambassadorImageStyle}
-                          src={child}
-                          alt=""
-                        />
-                    </Box>):''}
-                  </Box>
+          </Box>
+        ) : (
+          <Box className={classes.root}>
+            <Container className={classes.welcomeContainerStyle}>
+              <img className={classes.welcomeStyle} src={hikingIcon} alt={'Create project'} />
+              <Box className={classes.welcomeBoxStyle}>
+                <Typography variant="h1">{t('projects.welcome')}!</Typography>
+                <Typography variant="h5">{t('projects.errors.noProject')}</Typography>
+                <Box>
+                  <CustomButton
+                    className={classes.heroButtonStyle}
+                    size="small"
+                    primaryButtonStyle
+                    onClick={() => props.history.push('/projects/create')}
+                  >
+                    {t('projects.createProject')}
+                  </CustomButton>
+                  <a
+                    className={common_classes.textDecorationNone}
+                    href={hero.explore_ideas_url ? hero.explore_ideas_url : 'https://kriti.unstructured.studio/'}
+                    target="__blank"
+                    rel="noreferrer"
+                  >
+                    <CustomButton className={classes.heroButtonStyle} size="small" darkDangerButtonStyle>
+                      {t('projects.exploreIdeas')}
+                    </CustomButton>
+                  </a>
                 </Box>
-
-          <Box className={classes.SectionStyle}>
-            <Box className={classes.heroContainerStyle}>
-              <Box className={classes.MessageContainerStyle}>
-              <br/><Typography className={classes.MessagePrimaryStyle}>
-                  {t('projects.teams.title')}
-                </Typography><br></br>
-                <Typography className={classes.MessageSecondaryStyle}>
-                {t('projects.teams.1')}
-                </Typography><br/>
-                <Typography className={classes.MessageSecondaryStyle}>
-                {t('projects.teams.2')}
-                </Typography>
-                <CustomButton
-                  className={classes.heroButtonStyle}
-                  size="small"
-                  primaryButtonStyle
-                  onClick={() => props.history.push('/signup')}
-                >
-                  {t('projects.teams.button')}
-                </CustomButton>
               </Box>
-              <Box
-                className={clsx(classes.teamsImageContainerStyle, {
-                  [common_classes.displayNone]: !hero.activity_url,
-                })}
-                style={{ marginTop: state.isMobileView ? '0' : '4em' }}
-              >
-                  <img
-                    className={classes.teamsImageStyle}
-                    src={teams}
-                    alt=""
-                  />
-              </Box>
-            </Box>
+            </Container>
           </Box>
-
-          <Box
-      className={clsx(classes.heroSectionStyle, classes.centerCarousel)}
-      style={{
-        backgroundColor: activeSlide === 1 ? '#00B8C4' : activeSlide === 2 ? '#292535' : '#DC3545', // Replace 'default-color' with your actual default background color
-      }}
-    >
-            <div className={classes.carouselContainer}>
-              <Carousel showThumbs={false} infiniteLoop={true} showStatus={false} onChange={handleSlideChange}>
-                <div className={classes.carouselSlide}>
-                  <Box className={classes.heroContainerStyle}>
-                    <Box className={classes.heroMessageContainerStyle} style={{ textAlign: 'left' }}>
-                      <Typography
-                        className={classes.MessagePrimaryStyle}
-                      >
-                        {t('projects.reviews.title')}
-                      </Typography>
-                      <Typography className={classes.heroMessageSecondaryStyle}>
-                        {t('projects.reviews.1.review')}
-                      </Typography>
-                      <Typography className={classes.heroMessagePrimaryStyle}>
-                        {t('projects.reviews.1.name')}
-                      </Typography>
-                      <Typography className={classes.MessageSecondaryStyle}>
-                        {t('projects.reviews.1.designation')}
-                      </Typography>
-                    </Box>
-                    <Box
-                      className={clsx(classes.heroImageContainerStyle, {
-                        [common_classes.displayNone]: !hero.activity_url,
-                      })}
-                    >
-                      <img
-                        className={classes.reviewImageStyle}
-                        src={review1}
-                        alt=""
-                        style={{ width: '200px', height: '200px' }}
-                      />
-                    </Box>
-                  </Box>
-                </div>
-                <div className={classes.carouselSlide} style={{ backgroundColor: '#00B8C4' }}>  
-                <Box className={classes.heroContainerStyle}>
-                    <Box className={classes.heroMessageContainerStyle} style={{ textAlign: 'left' }}>
-                      <Typography
-                        className={classes.MessagePrimaryStyle}
-                      >
-                        {t('projects.reviews.title')}
-                      </Typography>
-                      <Typography className={classes.heroMessageSecondaryStyle}>
-                        {t('projects.reviews.2.review')}
-                      </Typography>
-                      <Typography className={classes.heroMessagePrimaryStyle}>
-                        {t('projects.reviews.2.name')}
-                      </Typography>
-                      <Typography className={classes.MessageSecondaryStyle}>
-                        {t('projects.reviews.2.designation')}
-                      </Typography>
-                    </Box>
-                    <Box
-                      className={clsx(classes.heroImageContainerStyle, {
-                        [common_classes.displayNone]: !hero.activity_url,
-                      })}
-                    >
-                      <img
-                        className={classes.reviewImageStyle}
-                        src={review2}
-                        alt=""
-                        style={{ width: '200px', height: '200px' }}
-                      />
-                    </Box>
-                  </Box>  
-                </div>
-                <div className={classes.carouselSlide} style={{ backgroundColor: '#292535' }}>  
-                <Box className={classes.heroContainerStyle}>
-                    <Box className={classes.heroMessageContainerStyle} style={{ textAlign: 'left' }}>
-                      <Typography
-                        className={classes.MessagePrimaryStyle}
-                      >
-                        {t('projects.reviews.title')}
-                      </Typography>
-                      <Typography className={classes.heroMessageSecondaryStyle}>
-                        {t('projects.reviews.3.review')}
-                      </Typography>
-                      <Typography className={classes.heroMessagePrimaryStyle}>
-                        {t('projects.reviews.3.name')}
-                      </Typography>
-                      <Typography className={classes.MessageSecondaryStyle}>
-                        {t('projects.reviews.3.designation')}
-                      </Typography>
-                    </Box>
-                    <Box
-                      className={clsx(classes.heroImageContainerStyle, {
-                        [common_classes.displayNone]: !hero.activity_url,
-                      })}
-                    >
-                      <img
-                        className={classes.reviewImageStyle}
-                        src={review3}
-                        alt=""
-                        style={{ width: '200px', height: '200px' }}
-                      />
-                    </Box>
-                  </Box>  
-                </div>
-              </Carousel>
-            </div>
-          </Box>
-
-
-
-          <Box className={classes.SectionStyle}>
-            <Box className={classes.heroContainerStyle}>
-              <Box className={classes.MessageContainerStyle}>
-              <br/><Typography className={classes.MessagePrimaryStyle}>
-                  {t('projects.global.title')}
-                </Typography><br></br>
-                <Typography className={classes.MessageSecondaryStyle}>
-                {t('projects.global.body')}
-                </Typography><br/>
-                <Typography className={classes.MessageSecondaryStyle}>
-                {t('projects.global.body2')}
-                </Typography>
-                <CustomButton
-                  className={classes.heroButtonStyle}
-                  size="small"
-                  primaryButtonStyle
-                  onClick={() => props.history.push('/signup')}
-                >
-                  {t('projects.global.button')}
-                </CustomButton>
-                
-                <CustomButton
-                  className={classes.heroButtonStyle}
-                  variant="outlined"
-                  size="small"
-                  secondaryButtonStyle
-                  onClick={() => props.history.push('/login')}
-                >
-                  {t('projects.global.button2')}
-                </CustomButton>
-              </Box>
-              <Box
-                className={clsx(classes.heroImageContainerStyle, {
-                  [common_classes.displayNone]: !hero.activity_url,
-                })}
-              >
-                  <img
-                    className={classes.globalImageStyle}
-                    src={global}
-                    alt=""
-                  />
-              </Box>
-            </Box>
-          </Box>
-    </>
+        )}
+      </>
     );
   } else {
     return <ErrorPage error={t('projects.errors.unexpected')} />;
