@@ -1,4 +1,5 @@
 import re
+from wsgiref.validate import validator
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -12,7 +13,8 @@ from .utils import update_images, update_tags, parse_comment_trees, get_publishe
 from .tasks import update_video_url_if_transform_ready, delete_file_task
 from math import ceil
 from activities.models import Activity
-
+from django.core.exceptions import ValidationError
+from django.db.models import Count
 Creator = get_user_model()
 
 
@@ -102,7 +104,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, required=False)
     tags = TagSerializer(many=True, required=False, read_only=True)
     category = serializers.SlugRelatedField(
-        slug_field="name", queryset=Category.objects.all(), required=False)
+        slug_field="name", queryset=Category.objects.all(), required=False,many=True)
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
     publish = PublishingRuleSerializer(read_only=True)
@@ -155,12 +157,18 @@ class ProjectSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
     def validate_video(self, video):
+        if(self.initial_data.get('publish').get('type') == 1):
+            return video
+        
         if(video == "" and len(self.initial_data.get("images")) == 0):
             raise serializers.ValidationError(
                 _("You must provide either image(s), video file, or video URL to create your project!"))
         return video
 
     def validate_images(self, images):
+        if(self.initial_data.get('publish').get('type') == 1):
+            return images
+        
         if(len(images) == 0 and len(self.initial_data["video"]) == 0):
             raise serializers.ValidationError(
                 _("You must provide either image(s), video file, or video URL to create your project!"))
@@ -226,19 +234,15 @@ class ProjectSerializer(serializers.ModelSerializer):
         images_data = validated_data.pop('images')
         tags_data = self.validate_tags(
             self.context['request'].data.get("tags", []))
-        category = None
+        category = validated_data.pop('category')
         activity = validated_data.pop('activity', None)
-        if validated_data.get('category', None):
-            category = validated_data.pop('category')
 
         publish = self.validate_publish(
             self.context['request'].data.get("publish", {}))
 
         with transaction.atomic():
-
             rule = PublishingRule.objects.create(type=publish["type"],
-                                                 publisher_id=str(self.context["request"].user.id))
-
+                                                publisher_id=str(self.context["request"].user.id))
             if rule.type == PublishingRule.PREVIEW:
                 rule.visible_to.set(Creator.objects.filter(
                     username__in=publish["visible_to"]))
@@ -253,14 +257,15 @@ class ProjectSerializer(serializers.ModelSerializer):
                 project.tags.add(tag)
 
             if category:
-                category.projects.add(project)
+                project.category.set(category)
+
             if activity is not None:
                 activity.inspired_projects.add(project)
 
             if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
                 update_video_url_if_transform_ready.delay(
                     {"url": project.video, "project_id": project.id})
-
+            
             return project
 
     def update(self, project, validated_data):
@@ -269,9 +274,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         publish = self.validate_publish(self.initial_data.get("publish", {}))
 
         category = None
-        if validated_data.get('category', None):
+        if validated_data.get('category', []):
             category = validated_data.pop('category')
-
+        
         video_data = validated_data.pop("video")
 
         if (project.video.find("cloudinary.com") > -1 or
@@ -301,11 +306,9 @@ class ProjectSerializer(serializers.ModelSerializer):
             update_images(project, images_data)
             update_tags(project, tags_data)
 
-            old_category = project.category
-            if old_category:
-                old_category.projects.remove(project)
             if category:
-                category.projects.add(project)
+                project.category.set(category)
+            else: project.category.set([])
 
             if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
                 update_video_url_if_transform_ready.delay(

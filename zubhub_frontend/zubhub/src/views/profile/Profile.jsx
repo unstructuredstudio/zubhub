@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
-import API from '../../api'
+import API from '../../api';
 
 import { makeStyles } from '@material-ui/core/styles';
 import ShareIcon from '@material-ui/icons/Share';
@@ -80,7 +80,7 @@ function Profile(props) {
   const common_classes = useCommonStyles();
   const username = props.match.params.username || props.auth.username;
   const [page, setPage] = useState(1);
-  const [userActivity, setUserActivity] = useState([])
+  const [userActivity, setUserActivity] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [nextPage, setNextPage] = useState(false)
   const [teams, setTeams] = useState([])
@@ -120,17 +120,17 @@ function Profile(props) {
       const drafts = values[3] || {};
       const badges = obj.profile.badges;
 
-      if (obj.profile) {
-        parseComments(obj.profile.comments);
-      }
-      handleSetState({ ...obj, ...drafts, badge_tags: badges });
-      setUserActivity(userActivity   => ([...userActivity, ...activity.results]))
-      const nextPageExist= activity.next? true : false 
-      setNextPage(nextPageExist)
-    });
-  } catch (error) {
-    console.log(error);
-  }
+        if (obj.profile) {
+          parseComments(obj.profile.comments);
+        }
+        handleSetState({ ...obj, ...drafts, badge_tags: badges });
+        setUserActivity(userActivity => [...userActivity, ...activity.results]);
+        const nextPageExist = activity.next ? true : false;
+        setNextPage(nextPageExist);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, [page]);
 
   const handleSetState = obj => {
@@ -159,12 +159,12 @@ function Profile(props) {
   const more_menu_open = Boolean(more_anchor_el);
   const { t } = props;
 
-  const handleScroll = (e) => {
+  const handleScroll = e => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && nextPage) { 
-            setPage(page => page + 1)
+    if (bottom && nextPage) {
+      setPage(page => page + 1);
     }
- }
+  };
 
   if (loading) {
     return <LoadingPage />;
@@ -173,50 +173,36 @@ function Profile(props) {
       <>
         <Box className={classes.root}>
           <Paper className={classes.profileHeaderStyle}>
-            <Container maxWidth="md"
-            style={{padding: '0 3em'}}
-            >
-              <Box className= {classes.flexClass}>
+            <Container maxWidth="md" style={{ padding: '0 3em' }}>
+              <Box className={classes.flexClass}>
                 <Box className={classes.avatarBoxStyle}>
-                  <Avatar
-                    className={classes.avatarStyle}
-                    src={profile.avatar}
-                    alt={profile.username}
-                  />
+                  <Avatar className={classes.avatarStyle} src={profile.avatar} alt={profile.username} />
                   {props.auth.username === profile.username ? (
-                <>
-                  <CustomButton
-                    className={classes.editButton}
-                    variant="contained"
-                    margin="normal"
-                    primaryButtonStyle
-                    onClick={() => props.history.push('/edit-profile')}
-                  >
-                    {t('profile.edit')}
-                  </CustomButton>
-                </>
-              ) : (
-                <CustomButton
-                  className={classes.followButton}
-                  variant="outlined"
-                  margin="normal"
-                  secondaryButtonStyle
-                  onClick={() =>
-                    handleSetState(toggleFollow(profile.id, props))
-                  }
-                >
-                  {profile.followers.includes(props.auth.id)
-                    ? t('profile.unfollow')
-                    : t('profile.follow')}
-                </CustomButton>
-              )}
+                    <>
+                      <CustomButton
+                        className={classes.editButton}
+                        variant="contained"
+                        margin="normal"
+                        primaryButtonStyle
+                        onClick={() => props.history.push('/edit-profile')}
+                      >
+                        {t('profile.edit')}
+                      </CustomButton>
+                    </>
+                  ) : (
+                    <CustomButton
+                      className={classes.followButton}
+                      variant="outlined"
+                      margin="normal"
+                      secondaryButtonStyle
+                      onClick={() => handleSetState(toggleFollow(profile.id, props))}
+                    >
+                      {profile.followers.includes(props.auth.id) ? t('profile.unfollow') : t('profile.follow')}
+                    </CustomButton>
+                  )}
                 </Box>
                 <Box className={classes.ProfileNameStyle}>
-                  <Typography
-                    className={classes.userNameStyle}
-                    component="h1"
-                    color="textPrimary"
-                  >
+                  <Typography className={classes.userNameStyle} component="h1" color="textPrimary">
                     {profile.username}
                   </Typography>
                   <Box className={classes.tagsContainerStyle}>
@@ -242,137 +228,78 @@ function Profile(props) {
                       </Typography>
                     </>
                   ) : null}
-                </Box> 
-                  <Box className={classes.moreInfoBoxStyle}>
-                    <Link
-                      className={classes.textDecorationNone}
-                      to={`/creators/${profile.username}/projects`}
-                    >
-                      <Typography
-                        className={classes.moreInfoStyle}
-                        component="h5"
-                      >
-                        <div className={classes.moreInfoTitleStyle}>
-                        {t('profile.projectsCount')}
-                        </div>
-                        <div className={classes.moreInfoCountStyle}>
-                        {profile.projects_count}
-                        </div>
+                </Box>
+                <Box className={classes.moreInfoBoxStyle}>
+                  <Link className={classes.textDecorationNone} to={`/creators/${profile.username}/projects`}>
+                    <Typography className={classes.moreInfoStyle} component="h5">
+                      <div className={classes.moreInfoTitleStyle}>{t('profile.projectsCount')}</div>
+                      <div className={classes.moreInfoCountStyle}>{profile.projects_count}</div>
+                    </Typography>
+                  </Link>
+                  <Link to={`/creators/${profile.username}/followers`} className={classes.textDecorationNone}>
+                    <Typography className={classes.moreInfoStyle} component="h5">
+                      <div className={classes.moreInfoTitleStyle}>{t('profile.followersCount')}</div>
+                      <div className={classes.moreInfoCountStyle}>{profile.followers.length}</div>
+                    </Typography>
+                  </Link>
+                  <Link to={`/creators/${profile.username}/following`} className={classes.textDecorationNone}>
+                    <Typography className={classes.moreInfoStyle} component="h5">
+                      <div className={classes.moreInfoTitleStyle}>{t('profile.followingCount')}</div>
+                      <div className={classes.moreInfoCountStyle}>{profile.following_count}</div>
+                    </Typography>
+                  </Link>
+                  {profile.members_count !== null ? (
+                    <Link to={`/creators/${profile.username}/members`} className={classes.textDecorationNone}>
+                      <Typography className={classes.moreInfoStyle} component="h5">
+                        <div className={classes.moreInfoTitleStyle}>{t('profile.membersCount')}</div>
+                        <div className={classes.moreInfoCountStyle}>{profile.members_count}</div>
                       </Typography>
                     </Link>
-                    <Link
-                      to={`/creators/${profile.username}/followers`}
-                      className={classes.textDecorationNone}
-                    >
-                      <Typography
-                        className={classes.moreInfoStyle}
-                        component="h5"
-                      >
-                        <div className={classes.moreInfoTitleStyle}>
-                        {t('profile.followersCount')}
-                        </div>
-                        <div className={classes.moreInfoCountStyle}>
-                        {profile.followers.length} 
-                        </div>
-                      </Typography>
-                    </Link>
-                    <Link
-                      to={`/creators/${profile.username}/following`}
-                      className={classes.textDecorationNone}
-                    >
-                      <Typography
-                        className={classes.moreInfoStyle}
-                        component="h5"
-                      >
-                        <div className={classes.moreInfoTitleStyle}>
-                        {t('profile.followingCount')}
-                        </div>
-                        <div className={classes.moreInfoCountStyle}>
-                        {profile.following_count} 
-                        </div>
-                      </Typography>
-                    </Link>
-                    {profile.members_count !== null ? (
-                      <Link
-                        to={`/creators/${profile.username}/members`}
-                        className={classes.textDecorationNone}
-                      >
-                        <Typography
-                          className={classes.moreInfoStyle}
-                          component="h5"
-                        >
-                          <div className={classes.moreInfoTitleStyle}>
-                          {t('profile.membersCount')}
-                          </div>
-                          <div className={classes.moreInfoCountStyle}>
-                          {profile.members_count} 
-                          </div>
-                        </Typography>
-                      </Link>
-                    ) : null}
-                  </Box>
-              </Box> 
+                  ) : null}
+                </Box>
+              </Box>
             </Container>
           </Paper>
 
-          <Container maxWidth="md">
-            <div className= {classes.aboutMeBadgeBox}>
-              <Paper className={classes.aboutMeBox}>
-                <Typography
-                  gutterBottom
-                  component="h2"
-                  variant="h6"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
-                  {!profile.members_count
-                    ? t('profile.about.label1')
-                    : t('profile.about.label2')}
-                </Typography>
-                {profile.bio
-                  ? profile.bio
-                  : !profile.members_count
-                  ? t('profile.about.placeholder1')
-                  : t('profile.about.placeholder2')}
-              </Paper>
+          <div className={classes.aboutMeBadgeBox}>
+            <Paper className={classes.aboutMeBox}>
+              <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
+                {!profile.members_count ? t('profile.about.label1') : t('profile.about.label2')}
+              </Typography>
+              {profile.bio
+                ? profile.bio
+                : !profile.members_count
+                ? t('profile.about.placeholder1')
+                : t('profile.about.placeholder2')}
+            </Paper>
 
-              <Paper className={classes.badgeBox}>
-                <Typography
-                    gutterBottom
-                    component="h2"
-                    variant="h6"
-                    color="textPrimary"
-                    className={classes.badgeTitleStyle}
-                  >
-                    {t('profile.badge.badges')}
-                  </Typography>
-                  {!badge_tags.length > 0 ? (
-                    t('profile.badge.addBadges')
-                  ) : (
-                    <Box className={classes.badgeContainerStyle}>
-                      {badge_tags.map(tag => (
-                        <Typography
-                          key={tag}
-                          className={clsx(classes.badgeStyle)}
-                          component="h2"
-                        >
-                          {tag}
-                        </Typography>
-                      ))}
-                    </Box>
-                  )}
-              </Paper>
-            </div>
+            <Paper className={classes.badgeBox}>
+              <Typography
+                gutterBottom
+                component="h2"
+                variant="h6"
+                color="textPrimary"
+                className={classes.badgeTitleStyle}
+              >
+                {t('profile.badge.badges')}
+              </Typography>
+              {!badge_tags.length > 0 ? (
+                t('profile.badge.addBadges')
+              ) : (
+                <Box className={classes.badgeContainerStyle}>
+                  {badge_tags.map(tag => (
+                    <Typography key={tag} className={clsx(classes.badgeStyle)} component="h2">
+                      {tag}
+                    </Typography>
+                  ))}
+                </Box>
+              )}
+            </Paper>
+          </div>
 
-            <Paper   className= {classes.profileLowerStyle}>
-            <Typography
-             gutterBottom
-             component="h2"
-             variant="h6"
-             color="textPrimary"
-             className= {classes.titleStyle}
-            >
-            {t('profile.activityLog')}
+          <Paper className={classes.profileLowerStyle}>
+            <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
+              {t('profile.activityLog')}
             </Typography>
                   <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
 
@@ -459,85 +386,54 @@ function Profile(props) {
               </Grid>
             </Paper>
 
-            {profile.projects_count > 0 || drafts.length > 0 ? (
-              username === props.auth.username ? (
-                <ProjectsDraftsGrid
-                  profile={profile}
-                  projects={projects}
-                  drafts={drafts}
-                  handleSetState={handleSetState}
-                  {...props}
-                />
-              ) : (
-                <Paper className={classes.profileLowerStyle}>
-                  <Typography
-                    gutterBottom
-                    component="h2"
-                    variant="h6"
-                    color="textPrimary"
-                    className={classes.titleStyle}
+          {profile.projects_count > 0 || drafts.length > 0 ? (
+            username === props.auth.username ? (
+              <ProjectsDraftsGrid
+                profile={profile}
+                projects={projects}
+                drafts={drafts}
+                handleSetState={handleSetState}
+                {...props}
+              />
+            ) : (
+              <Box style={{ borderRadius: 8, overflow: 'hidden' }}>
+                <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
+                  {t('profile.projects.label')}
+                  <CustomButton
+                    className={clsx(classes.floatRight)}
+                    variant="outlined"
+                    margin="normal"
+                    secondaryButtonStyle
+                    onClick={() => props.history.push(`/creators/${profile.username}/projects`)}
                   >
-                    {t('profile.projects.label')}
-                    <CustomButton
-                      className={clsx(classes.floatRight)}
-                      variant="outlined"
-                      margin="normal"
-                      secondaryButtonStyle
-                      onClick={() =>
-                        props.history.push(
-                          `/creators/${profile.username}/projects`,
-                        )
-                      }
-                    >
-                      {t('profile.projects.viewAll')}
-                    </CustomButton>
-                  </Typography>
-                  <Grid container>
-                    {Array.isArray(projects) &&
-                      projects.map(project => (
-                        <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          md={6}
-                          className={classes.projectGridStyle}
-                          align="center"
-                        >
-                          <Project
-                            project={project}
-                            key={project.id}
-                            updateProjects={res =>
-                              handleSetState(
-                                updateProjects(res, state, props, toast),
-                              )
-                            }
-                            {...props}
-                          />
-                        </Grid>
-                      ))}
-                  </Grid>
-                </Paper>
-              )
-            ) : null}
-            <Comments
-              context={{ name: 'profile', body: profile }}
-              handleSetState={handleSetState}
-              {...props}
-            />
-          </Container>
+                    {t('profile.projects.viewAll')}
+                  </CustomButton>
+                </Typography>
+                <Grid container>
+                  {Array.isArray(projects) &&
+                    projects.map(project => (
+                      <Grid item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
+                        <Project
+                          project={project}
+                          key={project.id}
+                          updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                          {...props}
+                        />
+                      </Grid>
+                    ))}
+                </Grid>
+              </Box>
+            )
+          ) : null}
+          <Comments context={{ name: 'profile', body: profile }} handleSetState={handleSetState} {...props} />
         </Box>
         <Dialog
           open={open_delete_account_modal}
           onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
           aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
         >
-          <DialogTitle id="delete-project">
-            {t('profile.delete.dialog.primary')}
-          </DialogTitle>
-          <Box
-            component="p"
-            className={dialog_error !== null && classes.errorBox}
-          >
+          <DialogTitle id="delete-project">{t('profile.delete.dialog.primary')}</DialogTitle>
+          <Box component="p" className={dialog_error !== null && classes.errorBox}>
             {dialog_error !== null && (
               <Box component="span" className={classes.error}>
                 {dialog_error}
@@ -553,10 +449,7 @@ function Profile(props) {
               fullWidth
               margin="normal"
             >
-              <InputLabel
-                className={classes.customLabelStyle}
-                htmlFor="username"
-              >
+              <InputLabel className={classes.customLabelStyle} htmlFor="username">
                 {t('profile.delete.dialog.inputs.username')}
               </InputLabel>
               <OutlinedInput
@@ -571,9 +464,7 @@ function Profile(props) {
           <DialogActions>
             <CustomButton
               variant="outlined"
-              onClick={() =>
-                handleSetState(handleToggleDeleteAccountModal(state))
-              }
+              onClick={() => handleSetState(handleToggleDeleteAccountModal(state))}
               color="primary"
               secondaryButtonStyle
             >
@@ -581,9 +472,7 @@ function Profile(props) {
             </CustomButton>
             <CustomButton
               variant="contained"
-              onClick={e =>
-                handleSetState(deleteAccount(username_el, props, state))
-              }
+              onClick={e => handleSetState(deleteAccount(username_el, props, state))}
               dangerButtonStyle
               customButtonStyle
             >

@@ -1,19 +1,16 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../../assets/js/styles/components/notification_panel/notificationPanelStyles';
 import { makeStyles } from '@material-ui/core/styles';
 import NotificationPanelButton from './NotificationPanelButton';
 import cn from 'classnames';
-import NotificationPanelPopper from './NotificationPanelPopper';
+import PanelPopper from './PanelPopper';
 import Notification from '../notification/Notification';
-import { useMediaQuery, CircularProgress } from '@material-ui/core';
+import { useMediaQuery, CircularProgress, Typography } from '@material-ui/core';
 import API from '../../api/api';
 import { useSelector } from 'react-redux';
+import { Notifications } from '@material-ui/icons';
+import { colors } from '../../assets/js/colors';
+import CustomButton from '../button/Button';
 
 const useStyles = makeStyles(styles);
 
@@ -37,9 +34,7 @@ const notificationSort = (a, b) => {
 const NotificationPanel = ({ open, anchorEl, onClose }) => {
   const classes = useStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
-  const [notificationViewType, setNotificationViewType] = useState(
-    NOTIFICATION_VIEW_TYPE.ALL,
-  );
+  const [notificationViewType, setNotificationViewType] = useState(NOTIFICATION_VIEW_TYPE.ALL);
   const token = useSelector(state => state.auth.token);
   const [page, setPage] = useState(1);
   const [notifications, setNotifications] = useState({});
@@ -49,10 +44,7 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
   const notificationsWrapperRef = useRef();
 
   const newNotifications = useMemo(
-    () =>
-      Object.values(notifications)
-        .sort(notificationSort)
-        .filter(isNewNotification),
+    () => Object.values(notifications).sort(notificationSort).filter(isNewNotification),
     [notifications],
   );
   const earlierNotifications = useMemo(
@@ -137,11 +129,7 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
   }, [open, token]);
 
   const handleScroll = ({ target }) => {
-    if (
-      !loading &&
-      !outOfNotifications &&
-      target.scrollTop + target.clientHeight >= target.scrollHeight - 50
-    ) {
+    if (!loading && !outOfNotifications && target.scrollTop + target.clientHeight >= target.scrollHeight - 50) {
       setPage(page => page + 1);
       setLoading(true);
     }
@@ -157,11 +145,7 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
   };
 
   const getLoadingSpinner = () => (
-    <CircularProgress
-      className={classes.circularProgressStyle}
-      size={30}
-      thickness={6}
-    />
+    <CircularProgress className={classes.circularProgressStyle} size={30} thickness={6} />
   );
 
   const getAllNotificationView = () => {
@@ -169,56 +153,30 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
     const hasEarlierNotifications = earlierNotifications.length > 0;
 
     return (
-      <div
-        className={classes.notificationsWrapper}
-        onScroll={handleScroll}
-        ref={notificationsWrapperRef}
-      >
-        {hasNewNotifications && (
-          <h2 className={classes.panelSubheadingTextStyle}>New</h2>
-        )}
+      <div className={classes.notificationsWrapper} onScroll={handleScroll} ref={notificationsWrapperRef}>
+        {hasNewNotifications && <h2 className={classes.panelSubheadingTextStyle}>New</h2>}
         {topLoading && getLoadingSpinner()}
         {newNotifications.map(notification => (
-          <Notification
-            notification={notification}
-            onNotificationClick={() => onNotificationClick(notification)}
-          />
+          <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
         ))}
-        {hasEarlierNotifications && (
-          <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>
-        )}
+        {hasEarlierNotifications && <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>}
         {earlierNotifications.map(notification => (
-          <Notification
-            notification={notification}
-            onNotificationClick={() => onNotificationClick(notification)}
-          />
+          <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
         ))}
-        {!topLoading &&
-          !loading &&
-          !hasNewNotifications &&
-          !hasEarlierNotifications && (
-            <p>You have no notifications in this category.</p>
-          )}
+        {!topLoading && !loading && !hasNewNotifications && !hasEarlierNotifications && (
+          <p>You have no notifications in this category.</p>
+        )}
         {loading && getLoadingSpinner()}
       </div>
     );
   };
 
   const getUnreadNotificationView = () => (
-    <div
-      className={classes.notificationsWrapper}
-      onScroll={handleScroll}
-      ref={notificationsWrapperRef}
-    >
+    <div className={classes.notificationsWrapper} onScroll={handleScroll} ref={notificationsWrapperRef}>
       {unreadNotifications.map(notification => (
-        <Notification
-          notification={notification}
-          onNotificationClick={() => onNotificationClick(notification)}
-        />
+        <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
       ))}
-      {!loading && unreadNotifications.length === 0 && (
-        <p>You have no notifications in this category.</p>
-      )}
+      {!loading && unreadNotifications.length === 0 && <p>You have no notifications in this category.</p>}
       {loading && getLoadingSpinner()}
     </div>
   );
@@ -229,37 +187,46 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
   };
 
   return (
-    <NotificationPanelPopper open={open} anchorEl={anchorEl}>
-      <div
-        className={cn(
-          classes.popperStyle,
-          mediaQuery ? classes.fullscreenPopperStyle : '',
+    <PanelPopper open={open} anchorEl={anchorEl}>
+      <div className={cn(classes.popperStyle, mediaQuery ? classes.fullscreenPopperStyle : '')}>
+        {token && (
+          <>
+            <div className={classes.panelHeaderStyle}>
+              <h1 className={classes.panelHeaderTextStyle}>Notifications</h1>
+              <div className={classes.panelHeaderButtons}>
+                <NotificationPanelButton
+                  selected={notificationViewType === NOTIFICATION_VIEW_TYPE.ALL}
+                  onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.ALL)}
+                >
+                  All
+                </NotificationPanelButton>
+                <NotificationPanelButton
+                  selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
+                  onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.UNREAD)}
+                >
+                  Unread
+                </NotificationPanelButton>
+              </div>
+            </div>
+            {notificationViewType === NOTIFICATION_VIEW_TYPE.ALL
+              ? getAllNotificationView()
+              : getUnreadNotificationView()}
+          </>
         )}
-      >
-        <div className={classes.panelHeaderStyle}>
-          <h1 className={classes.panelHeaderTextStyle}>Notifications</h1>
-          <div className={classes.panelHeaderButtons}>
-            <NotificationPanelButton
-              selected={notificationViewType === NOTIFICATION_VIEW_TYPE.ALL}
-              onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.ALL)}
-            >
-              All
-            </NotificationPanelButton>
-            <NotificationPanelButton
-              selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
-              onClick={handleNotificationTabChange(
-                NOTIFICATION_VIEW_TYPE.UNREAD,
-              )}
-            >
-              Unread
-            </NotificationPanelButton>
-          </div>
-        </div>
-        {notificationViewType === NOTIFICATION_VIEW_TYPE.ALL
-          ? getAllNotificationView()
-          : getUnreadNotificationView()}
+        {!token && (
+          <>
+            <div className={classes.logedOutPanel}>
+              <Notifications style={{ color: colors.primary, fontSize: 35 }} />
+              <h3>Sign In to see notifications from your favourite creators!</h3>
+              <Typography>Get inspired by thousands of creators around the world. </Typography>
+              <CustomButton style={{ alignSelf: 'normal', marginTop: 14 }} href="/login" primaryButtonStyle>
+                Get Started
+              </CustomButton>
+            </div>
+          </>
+        )}
       </div>
-    </NotificationPanelPopper>
+    </PanelPopper>
   );
 };
 

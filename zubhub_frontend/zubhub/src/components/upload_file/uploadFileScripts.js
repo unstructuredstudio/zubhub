@@ -53,17 +53,17 @@ export const handleFileFieldChange = (
       route
         ? inputIndex >= 0
           ? errors[route] &&
-            errors[route][inputIndex] &&
-            errors[route][inputIndex][field] &&
-            formikProps.setFieldValue(name, undefined, false)
+          errors[route][inputIndex] &&
+          errors[route][inputIndex][field] &&
+          formikProps.setFieldValue(name, undefined, false)
           : errors[route] &&
-            errors[route][field] &&
-            formikProps.setFieldValue(name, undefined, false)
+          errors[route][field] &&
+          formikProps.setFieldValue(name, undefined, false)
         : inputIndex >= 0
-        ? errors[field] &&
+          ? errors[field] &&
           errors[field][inputIndex] &&
           formikProps.setFieldValue(name, undefined, false)
-        : errors[field] && formikProps.setFieldValue(name, undefined, false);
+          : errors[field] && formikProps.setFieldValue(name, undefined, false);
     });
   }
   //validateSteps();
@@ -73,20 +73,20 @@ export const getErrors = (route, field, index, errors, touched) => {
   return route
     ? index < 0
       ? errors[route] &&
-        errors[route][field] &&
-        touched[route] &&
-        touched[route][field] &&
-        errors[route][field]
+      errors[route][field] &&
+      touched[route] &&
+      touched[route][field] &&
+      errors[route][field]
       : errors[route] &&
-        errors[route][index] &&
-        errors[route][index][field] &&
-        touched[route] &&
-        touched[route][index] &&
-        touched[route][index][field] &&
-        errors[route][index][field]
+      errors[route][index] &&
+      errors[route][index][field] &&
+      touched[route] &&
+      touched[route][index] &&
+      touched[route][index][field] &&
+      errors[route][index][field]
     : index < 0
-    ? errors[field] && touched[field] && errors[field]
-    : errors[field] &&
+      ? errors[field] && touched[field] && errors[field]
+      : errors[field] &&
       errors[field][index] &&
       touched[field] &&
       touched[field][index] &&
@@ -276,14 +276,14 @@ export const uploadFile = (
       );
     } else if (res && res.local === false) {
       // if (file.type.split('/')[0] === 'image') {
-        return uploadImageToDO(
-          file,
-          handleSetState,
-          route,
-          field,
-          fieldType,
-          index,
-        );
+      return uploadImageToDO(
+        file,
+        handleSetState,
+        route,
+        field,
+        fieldType,
+        index,
+      );
       // } else {
       //   return uploadVideoToCloudinary(
       //     file,
@@ -316,7 +316,7 @@ export const uploadFileToLocal = (
     let file = fileBeforeCompression;
     try {
       file = await compress(fileBeforeCompression);
-    } catch (error) {}
+    } catch (error) { }
     let fileFieldName = '';
     let NameArray = [route, field, index];
     NameArray.forEach(item => {
@@ -357,7 +357,7 @@ export const uploadFileToLocal = (
             );
             let loadProgress = Math.round(
               Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
-                state.countFiles,
+              state.countFiles,
             );
 
             return {
@@ -416,7 +416,7 @@ export const uploadImageToDO = async (
       fileFieldName += item;
     }
   });
- 
+
   return new Promise((resolve, reject) => {
     const params = {
       Bucket: `${doConfig.bucketName}`,
@@ -437,7 +437,7 @@ export const uploadImageToDO = async (
     };
 
     DO.upload(params, err => {
-      
+
       reject({ message: 'uploadError', file: file.name, error: err });
       handleSetState(state => {
         return { ...state, submitting: false };
@@ -449,7 +449,7 @@ export const uploadImageToDO = async (
           loadedPercent[fileFieldName] = Math.round((e.loaded * 100) / e.total);
           let loadProgress = Math.round(
             Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
-              state.countFiles,
+            state.countFiles,
           );
 
           return {

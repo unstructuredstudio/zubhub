@@ -13,6 +13,14 @@ const styles = theme => ({
     borderRadius: '200px 0px 1000px 0px',
     zIndex: '2000',
   },
+  container: {
+    backgroundColor: 'white',
+    minWidth: 200,
+    zIndex: 20,
+    padding: '20px 15px',
+    borderRadius: '20px',
+    boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
+  }
 });
 
 export default styles;

@@ -351,6 +351,7 @@ class UserProjectsAPIView(ListAPIView):
     def get_queryset(self):
         username = self.kwargs.get("username")
         limit = self.request.GET.get("limit")
+        project_to_omit = self.request.GET.get('project_to_omit')
         creator = Creator.objects.get(username=username)
 
         if limit:
@@ -358,12 +359,16 @@ class UserProjectsAPIView(ListAPIView):
                 return creator.creatorgroup.get_projects(limit=limit)
             else:
                 all = creator.projects.exclude(publish__type=PublishingRule.DRAFT)
+                if(project_to_omit):
+                    all = all.exclude(id=project_to_omit)
                 return get_published_projects_for_user(self.request.user, all)[:int(limit)]
         else:
             if hasattr(creator, "creatorgroup"):
                 return creator.creatorgroup.get_projects()
             else:
                 all = creator.projects.exclude(publish__type=PublishingRule.DRAFT)
+                if(project_to_omit):
+                    all = all.exclude(id=project_to_omit)
                 return get_published_projects_for_user(self.request.user, all)
 
 class UserDraftsAPIView(ListAPIView):

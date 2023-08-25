@@ -32,6 +32,19 @@
       "unpublishedActivities": "Unpublished Activities",
       "myActivities": "My Activities"
     },
+    "sidebar":{
+      "logout": "Logout",
+      "expoloreActivities":"Explore Activities",
+      "teams":"Teams",
+      "bookmarks":"Bookmarks",
+      "myProjects":"My Projects",
+      "myDrafts":"My Drafts",
+      "createActivities":"Create Activities",
+      "createProject":"Create Project",
+      "profile":"My Profile",
+      "projects":"All Projects",
+      "settings":"Settings"
+    },
 
     "footer": {
       "privacy": "Privacy",
@@ -386,6 +399,8 @@
       "videoFile": "Video file added",
       "videoURL": "Video URL added"
     },
+    "addedToDraft":"Project added as draft successfully!",
+    "savedStep":"Project has been saved successfully!",
     "createToastSuccess": "Your project was created successfully!",
     "updateToastSuccess": "Your project was updated successfully!",
     "errors": {
@@ -446,6 +461,7 @@
         "follow": "Follow",
         "unfollow": "Unfollow"
       },
+      "hashtags":"Project Hashtags",
       "description": "Description",
       "materials": "Materials Used",
       "category": "Category",

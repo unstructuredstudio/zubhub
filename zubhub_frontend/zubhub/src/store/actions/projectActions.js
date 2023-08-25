@@ -24,13 +24,13 @@ export const setProjects = projects => {
  * @todo - describe function's signature
  */
 export const createProject = props => {
+
   return () => {
     return API.createProject(props).then(res => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(props.t('createProject.createToastSuccess'));
-        return props.history.push('/profile');
+        return res;
       }
     });
   };
@@ -70,8 +70,8 @@ export const updateProject = props => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        toast.success(props.t('createProject.updateToastSuccess'));
-        return props.history.push('/profile');
+        return res
+        // toast.success(props.t('createProject.updateToastSuccess'));
       }
     });
   };
