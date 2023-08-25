@@ -8,9 +8,9 @@ import CheckIcon from '@material-ui/icons/CheckCircle';
 import { toast } from 'react-toastify';
 import child from '../../assets/images/child.jpg';
 import teams from '../../assets/images/teams.JPG';
-import review1 from '../../assets/images/review1.png';
-import review2 from '../../assets/images/review2.png';
-import review3 from '../../assets/images/review3.png';
+import review1 from '../../assets/images/faridah.png';
+import review2 from '../../assets/images/hemant.png';
+import review3 from '../../assets/images/yaya.png';
 import global from '../../assets/images/global.JPG';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
@@ -376,7 +376,7 @@ function Projects(props) {
                         className={classes.reviewImageStyle}
                         src={review1}
                         alt=""
-                        style={{ width: '200px', height: '200px' }}
+                        style={{ width: '200px', height: '200px', borderRadius: '50%', border: '6px solid white', }}
                       />
                     </Box>
                   </Box>
@@ -408,7 +408,7 @@ function Projects(props) {
                         className={classes.reviewImageStyle}
                         src={review2}
                         alt=""
-                        style={{ width: '200px', height: '200px' }}
+                        style={{ width: '200px', height: '200px', borderRadius: '50%', border: '6px solid white',  }}
                       />
                     </Box>
                   </Box>  
@@ -440,7 +440,7 @@ function Projects(props) {
                         className={classes.reviewImageStyle}
                         src={review3}
                         alt=""
-                        style={{ width: '200px', height: '200px' }}
+                        style={{ width: '200px', height: '200px', borderRadius: '50%', border: '6px solid white',  }}
                       />
                     </Box>
                   </Box>  
