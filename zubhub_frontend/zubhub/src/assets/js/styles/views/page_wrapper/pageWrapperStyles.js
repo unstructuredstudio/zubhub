@@ -292,7 +292,7 @@ const styles = theme => ({
     fontSize: '1.3rem',
   },
   marginBottom: {
-    marginBottom: '45px',
+    marginBottom: '0px',
   },
 });
 

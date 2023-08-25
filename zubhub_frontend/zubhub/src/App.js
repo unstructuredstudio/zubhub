@@ -51,6 +51,7 @@ const GroupInviteConfirm = React.lazy(() =>
   import('./views/group_invite_confirm/GroupInviteConfirm'),
 );
 const Projects = React.lazy(() => import('./views/projects/Projects'));
+const Home = React.lazy(() => import('./views/home/Home'));
 const SavedProjects = React.lazy(() =>
   import('./views/saved_projects/SavedProjects'),
 );
@@ -91,12 +92,12 @@ function App(props) {
   return (
     <Router>
       <Switch>
-        <Route
+      <Route
           exact={true}
           path="/"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+              <LazyImport LazyComponent={Home} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />
