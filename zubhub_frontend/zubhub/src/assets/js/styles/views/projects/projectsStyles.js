@@ -145,6 +145,17 @@ const styles = theme => ({
   heroImageStyle: {
     marginLeft: '2em',
     marginRight: '2em',
+    height: '100%',
+    width: '100%',
+    [theme.breakpoints.down('500')]: {
+      marginLeft: '0',
+      marginRight: '0',
+      // marginTop: '100em',
+    },
+  },
+  desktopheroImageStyle: {
+    marginLeft: '2em',
+    marginRight: '2em',
     height: '27.5em',
     width: '40em',
     [theme.breakpoints.down('500')]: {
@@ -156,6 +167,17 @@ const styles = theme => ({
   ambassadorImageStyle: {
     marginLeft: '2em',
     marginRight: '2em',
+    height: '100%',
+    width: '100%',
+    [theme.breakpoints.down('500')]: {
+      marginLeft: '0',
+      marginRight: '0',
+      // marginTop: '100em',
+    },
+  },
+  desktopambassadorImageStyle: {
+    marginLeft: '2em',
+    marginRight: '2em',
     height: '25em',
     width: '35em',
     [theme.breakpoints.down('500')]: {
@@ -165,6 +187,17 @@ const styles = theme => ({
     },
   },
   teamsImageStyle: {
+    marginLeft: '2em',
+    marginRight: '2em',
+    height: '100%',
+    width: '100%',
+    [theme.breakpoints.down('500')]: {
+      marginLeft: '0',
+      marginRight: '0',
+      // marginTop: '100em',
+    },
+  },
+  desktopteamsImageStyle: {
     marginLeft: '2em',
     marginRight: '2em',
     height: '18em',

@@ -38,7 +38,7 @@ function StaffPick(props) {
             className={classes.titleStyle}
           >
             {staff_pick.title}
-            <CustomButton
+            {/* <CustomButton
               className={clsx(common_classes.floatRight)}
               variant="outlined"
               margin="normal"
@@ -48,7 +48,7 @@ function StaffPick(props) {
               }
             >
               {rest.t('staffPicks.viewAll')}
-            </CustomButton>
+            </CustomButton> */}
           </Typography>
         </Grid>
         {staff_pick.projects.results.map((project, index) =>

@@ -123,6 +123,7 @@ function Projects(props) {
                      <Typography className={classes.heroMessageSecondaryStyle}>
                        {t('projects.2')}
                      </Typography>
+                     <br />
                      <Typography className={classes.heroMessagePrimaryStyle}>
                        {hero.title}
                      </Typography>
@@ -257,13 +258,13 @@ function Projects(props) {
                   <Box className={classes.heroContainerStyle}>
                   {state.isMobileView ? '' :(
                   <Box
-                      className={clsx(classes.ambassadorImageStyle, {
+                      className={clsx(classes.desktopambassadorImageStyle, {
                         [common_classes.displayNone]: !hero.activity_url,
                       })}
                       style={{ marginTop: state.isMobileView ? '0' : '2em' }}
                     >
                         <img
-                          className={classes.ambassadorImageStyle}
+                          className={classes.desktopambassadorImageStyle}
                           src={child}
                           alt=""
                         />
@@ -326,6 +327,7 @@ function Projects(props) {
                   {t('projects.teams.button')}
                 </CustomButton>
               </Box>
+              {state.isMobileView ? (
               <Box
                 className={clsx(classes.teamsImageContainerStyle, {
                   [common_classes.displayNone]: !hero.activity_url,
@@ -337,7 +339,19 @@ function Projects(props) {
                     src={teams}
                     alt=""
                   />
-              </Box>
+              </Box>): (
+              <Box
+                className={clsx(classes.teamsImageContainerStyle, {
+                  [common_classes.displayNone]: !hero.activity_url,
+                })}
+                style={{ marginTop: state.isMobileView ? '0' : '4em' }}
+              >
+                  <img
+                    className={classes.desktopteamsImageStyle}
+                    src={teams}
+                    alt=""
+                  />
+              </Box>)}
             </Box>
           </Box>
 
