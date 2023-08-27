@@ -28,7 +28,7 @@ function StaffPick(props) {
     staff_pick.projects.results &&
     staff_pick.projects.results.length > 0 ? (
     <Box className={classes.root}>
-      <Grid container>
+      <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography
             gutterBottom
@@ -58,6 +58,7 @@ function StaffPick(props) {
               xs={12}
               sm={6}
               md={4}
+              spacing={4}
               align="center"
               className={classes.projectGridStyle}
               key={project.id}
