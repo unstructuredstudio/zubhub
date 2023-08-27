@@ -96,7 +96,7 @@ function Project(props) {
               </Typography>
             </Box>
             <Link
-              style={{ flexGrow: 1 }}
+              style={{ marginTop: 'auto' }}
               to={`/creators/${project.creator.username}`}
               className={classes.textDecorationNone}
             >
