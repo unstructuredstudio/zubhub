@@ -55,6 +55,7 @@ export default function Step1({ formik, formValues, setFormValues, handleBlur })
             error={formik.touched.title && formik.errors.title ? true : false}
             helperText={formik.touched.title && formik.errors.title}
           />
+          <br />
           <label className={commonClasses.title2}>
            About Team <span className={commonClasses.colorRed}>*</span>
           </label>
