@@ -59,6 +59,7 @@ class ProjectCreateAPIView(CreateAPIView):
 
     def perform_create(self, serializer):
         obj = serializer.save(creator=self.request.user)
+
         self.request.user.save()
 
         creator = Creator.objects.get(id = obj.creator_id)
@@ -73,6 +74,8 @@ class ProjectCreateAPIView(CreateAPIView):
                 Notification.Type.FOLLOWING_PROJECT,
                 f'/creators/{self.request.user.username}'
             )
+        
+        
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """

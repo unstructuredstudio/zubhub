@@ -1,34 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Box, CircularProgress, Dialog, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
-import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
-import { withFormik } from 'formik';
-import clsx from 'clsx';
-import CustomButton from '../../components/button/Button';
-import {
-  validationSchema,
-  initUpload,
-  deserialize,
-} from './createActivityScripts';
-import * as activityActions from '../../store/actions/activityActions';
-import * as AuthActions from '../../store/actions/authActions';
-import {
-  Grid,
-  Box,
-  Typography,
-  Dialog,
-  CircularProgress,
-} from '@material-ui/core';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import clsx from 'clsx';
+import { withFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import commonStyles from '../../assets/js/styles';
+import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
+import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
+import CustomButton from '../../components/button/Button';
+import MultiStepProgressBar from '../../components/multi_step_progress_bar/multiStepProgressBar';
+import * as activityActions from '../../store/actions/activityActions';
+import * as AuthActions from '../../store/actions/authActions';
+import LoadingPage from '../loading/LoadingPage';
+import { deserialize, initUpload, validationSchema } from './createActivityScripts';
 import CreateActivityStep1 from './create_activity_step1';
 import CreateActivityStep2 from './create_activity_step2';
 import CreateActivityStep3 from './create_activity_step3';
-import LoadingPage from '../loading/LoadingPage';
-import commonStyles from '../../assets/js/styles';
-import MultiStepProgressBar from '../../components/multi_step_progress_bar/multiStepProgressBar';
 const useStyles = makeStyles(styles);
 const useProjectStyles = makeStyles(projectStyles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -86,17 +75,13 @@ function CreateActivity(props) {
       }
     }
   };
-  const [deserializingForEdit, setDeserializingForEdit] = useState(
-    id ? true : false,
-  );
+  const [deserializingForEdit, setDeserializingForEdit] = useState(id ? true : false);
 
   const submitButtonRef = React.useRef(null);
   const [readyForSubmit, setReadyForSubmit] = useState(false);
   useEffect(() => {
     if (id) {
-      const activityToUpdate = props.activities?.all_activities.filter(
-        item => item.id === id,
-      )[0];
+      const activityToUpdate = props.activities?.all_activities.filter(item => item.id === id)[0];
       if (activityToUpdate) {
         deserialize(activityToUpdate, props.setFieldValue);
         setDeserializingForEdit(false);
@@ -114,13 +99,9 @@ function CreateActivity(props) {
     //validateSteps();
     setStep(step => {
       if (step === 1) {
-        requiredFieldsByStep[0].map(item =>
-          props.setFieldTouched(item, true, true),
-        );
+        requiredFieldsByStep[0].map(item => props.setFieldTouched(item, true, true));
       } else {
-        requiredFieldsByStep[1].map(item =>
-          props.setFieldTouched(item, true, false),
-        );
+        requiredFieldsByStep[1].map(item => props.setFieldTouched(item, true, false));
         props.setFieldTouched('making_steps', true, false);
       }
       return step + 1;
@@ -128,7 +109,7 @@ function CreateActivity(props) {
     validateSteps();
     window.scrollTo(0, 0);
   };
- 
+
   return (
     <>
       {deserializingForEdit ? (
@@ -136,11 +117,7 @@ function CreateActivity(props) {
       ) : (
         <div className={classes.createActivityContainer}>
           <Box className={classes.createActivityBoxContainer}>
-            <Typography
-              variant="h3"
-              component="h2"
-              className={classes.createActivityContainerTitle}
-            >
+            <Typography variant="h3" component="h2" className={classes.createActivityContainerTitle}>
               {t(`createActivity.welcomeMsg.${id ? 'edit' : 'primary'}`)}
             </Typography>
             <MultiStepProgressBar step={verifiedStep} stepCount={4} />
@@ -163,9 +140,7 @@ function CreateActivity(props) {
                   className={clsx(
                     common_classes.marginTop3em,
                     common_classes.displayFlex,
-                    step === 1
-                      ? common_classes.justifyRight
-                      : common_classes.justifySpaceBetween,
+                    step === 1 ? common_classes.justifyRight : common_classes.justifySpaceBetween,
                   )}
                 >
                   {step > 1 ? (
@@ -235,9 +210,7 @@ function CreateActivity(props) {
             open={newActivityObject.submitting}
             aria-labelledby="upload progress dialog"
           >
-            <Box
-              className={project_classes.uploadProgressIndicatorContainerStyle}
-            >
+            <Box className={project_classes.uploadProgressIndicatorContainerStyle}>
               <CircularProgress
                 className={project_classes.uploadProgressStyle}
                 variant="determinate"

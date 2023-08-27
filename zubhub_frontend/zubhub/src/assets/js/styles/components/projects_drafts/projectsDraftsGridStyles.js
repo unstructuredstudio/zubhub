@@ -6,27 +6,31 @@ const styles = theme => ({
   },
 
   profileLowerStyle: {
-    margin: '1em',
+    // margin: '1em',
+    [theme.breakpoints.down('740')]: {
+      margin: '1em',
+    },
+    borderRadius: 8, overflow: 'hidden'
   },
 
-  viewAllBtn: { 
+  viewAllBtn: {
     marginLeft: '2em',
   },
 
   gridStyle: {
-    marginBottom: '2em',
+    // marginBottom: '2em',
   },
 
   tabStyle: {
-      '&.Mui-selected': {
-        color: '#00B8C4',
-        fontWeight: 'bold',
-        backgroundColor: '#ffffff',
-      },
+    '&.Mui-selected': {
+      color: '#00B8C4',
+      fontWeight: 'bold',
+      backgroundColor: '#ffffff',
+    },
 
-      backgroundColor: '#EDEDED',
-      width: '50%',
-      maxWidth: '50%',
+    backgroundColor: '#EDEDED',
+    width: '50%',
+    maxWidth: '50%',
   },
 
   indicator: {
