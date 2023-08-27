@@ -1,31 +1,27 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
+import { Box, ButtonGroup, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Typography,
-  Container,
-} from '@material-ui/core';
 
 import { fetchPage, updateProjects } from './userProjectsScripts';
 
-import * as ProjectActions from '../../store/actions/projectActions';
+import { capitalize } from 'lodash';
+import styles from '../../assets/js/styles';
+import styles1 from '../../assets/js/styles/views/user_projects/userProjectsStyles';
 import CustomButton from '../../components/button/Button';
+import Project from '../../components/project/Project';
+import * as ProjectActions from '../../store/actions/projectActions';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
-import Project from '../../components/project/Project';
-import styles from '../../assets/js/styles/views/user_projects/userProjectsStyles';
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles1);
 
 /**
  * @function UserProjects View
@@ -35,6 +31,7 @@ const useStyles = makeStyles(styles);
  */
 function UserProjects(props) {
   const classes = useStyles();
+  const commonClasses = makeStyles(styles)();
 
   const [state, setState] = React.useState({
     results: [],
@@ -63,73 +60,57 @@ function UserProjects(props) {
   } else if (projects && projects.length > 0) {
     return (
       <Box className={classes.root}>
-        <Container className={classes.mainContainerStyle}>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
-                {username}'s {t('userProjects.title')}
-              </Typography>
-            </Grid>
-            {projects.map(project => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                className={classes.projectGridStyle}
-                align="center"
-              >
-                <Project
-                  project={project}
-                  key={project.id}
-                  updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props, toast))
-                  }
-                  {...props}
-                />
-              </Grid>
-            ))}
+        <Grid spacing={3} container>
+          <Grid item xs={12}>
+            <Typography className={commonClasses.title1} variant="h3" gutterBottom>
+              {capitalize(username)}'s {t('userProjects.title')}
+            </Typography>
           </Grid>
-          <ButtonGroup
-            aria-label={t('userProjects.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
-            {prev_page ? (
-              <CustomButton
-                className={classes.floatLeft}
-                size="large"
-                startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prev_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
-                primaryButtonStyle
-              >
-                {t('userProjects.prev')}
-              </CustomButton>
-            ) : null}
-            {next_page ? (
-              <CustomButton
-                className={classes.floatRight}
-                size="large"
-                endIcon={<NavigateNextIcon />}
-                onClick={(e, page = next_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
-                primaryButtonStyle
-              >
-                {t('userProjects.next')}
-              </CustomButton>
-            ) : null}
-          </ButtonGroup>
-        </Container>
+          {projects.map(project => (
+            <Grid item xs={6} sm={4} md={6} lg={4} className={classes.projectGridStyle} align="center">
+              <Project
+                project={project}
+                key={project.id}
+                updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                {...props}
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <ButtonGroup aria-label={t('userProjects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
+          {prev_page ? (
+            <CustomButton
+              className={classes.floatLeft}
+              size="large"
+              startIcon={<NavigateBeforeIcon />}
+              onClick={(e, page = prev_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
+              primaryButtonStyle
+            >
+              {t('userProjects.prev')}
+            </CustomButton>
+          ) : null}
+          {next_page ? (
+            <CustomButton
+              className={classes.floatRight}
+              size="large"
+              endIcon={<NavigateNextIcon />}
+              onClick={(e, page = next_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
+              primaryButtonStyle
+            >
+              {t('userProjects.next')}
+            </CustomButton>
+          ) : null}
+        </ButtonGroup>
       </Box>
     );
   } else {
-    return <ErrorPage error={t('userProjects.errors.noUserProjects')} />;
+    return (
+      <ErrorPage error={t('userProjects.errors.noUserProjects')}>
+        <CustomButton primaryButtonStyle href="/projects/create">
+          Create Project
+        </CustomButton>
+      </ErrorPage>
+    );
   }
 }
 

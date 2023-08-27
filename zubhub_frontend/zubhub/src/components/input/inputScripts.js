@@ -1,4 +1,4 @@
-const refactorVideoUrl = url => {
+export const refactorVideoUrl = url => {
   if (url.includes('youtube.com')) {
     url = url.split('&')[0];
     return url.replace('watch?v=', 'embed/');
@@ -13,11 +13,10 @@ const refactorVideoUrl = url => {
     } else {
       if (url.includes('https://vimeo.com')) {
         return url.replace('https://vimeo.com', 'player.vimeo.com/video');
-      } else {
-        return url;
       }
     }
   }
+  return url;
 };
 
 export const handleInputBlur = (e, name, formikProps, validateSteps) => {

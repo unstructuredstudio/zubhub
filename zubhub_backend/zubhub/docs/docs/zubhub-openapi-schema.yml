@@ -22,7 +22,7 @@ paths:
                 items: {}
           description: ''
       tags:
-      - api
+        - api
     post:
       operationId: createLogout
       description: 'Calls Django logout method and delete the Token object
@@ -47,7 +47,7 @@ paths:
               schema: {}
           description: ''
       tags:
-      - api
+        - api
   /api/rest-auth/user/:
     get:
       operationId: retrieveUserDetails
@@ -73,7 +73,7 @@ paths:
                 $ref: '#/components/schemas/UserDetails'
           description: ''
       tags:
-      - api
+        - api
     put:
       operationId: updateUserDetails
       description: 'Reads and updates UserModel fields
@@ -109,7 +109,7 @@ paths:
                 $ref: '#/components/schemas/UserDetails'
           description: ''
       tags:
-      - api
+        - api
     patch:
       operationId: partialUpdateUserDetails
       description: 'Reads and updates UserModel fields
@@ -145,7 +145,7 @@ paths:
                 $ref: '#/components/schemas/UserDetails'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/auth-user/:
     get:
       operationId: retrieveCreator
@@ -160,7 +160,7 @@ paths:
                 $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/search/:
     get:
       operationId: listCreators
@@ -171,12 +171,12 @@ paths:
 
         Returns paginated list of users that match the search term'
       parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       responses:
         '200':
           content:
@@ -203,7 +203,7 @@ paths:
                       $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/locations/:
     get:
       operationId: listLocations
@@ -224,7 +224,7 @@ paths:
                   $ref: '#/components/schemas/Location'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{username}/projects/:
     get:
       operationId: listProjectLists
@@ -236,18 +236,24 @@ paths:
 
         Returns paginated list projects'
       parameters:
-      - name: username
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
+        - name: project_to_omit
+          required: false
+          in: query
+          description: The id of a project that should not be included in the result.
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -274,29 +280,29 @@ paths:
                       $ref: '#/components/schemas/ProjectList'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{username}/followers/:
     get:
       operationId: listCreators
-      description: 'Fetch paginated user follower''s list.
+      description: "Fetch paginated user follower's list.
 
 
         Requires username of user.
 
-        Returns list of users.'
+        Returns list of users."
       parameters:
-      - name: username
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       responses:
         '200':
           content:
@@ -323,7 +329,7 @@ paths:
                       $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{username}/following/:
     get:
       operationId: listCreators
@@ -335,18 +341,18 @@ paths:
 
         Returns list of users.'
       parameters:
-      - name: username
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       responses:
         '200':
           content:
@@ -373,7 +379,7 @@ paths:
                       $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{username}/members/:
     get:
       operationId: listCreators
@@ -382,18 +388,18 @@ paths:
 
         Requires username of group. Returns list of users.'
       parameters:
-      - name: username
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: username
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       responses:
         '200':
           content:
@@ -420,7 +426,7 @@ paths:
                       $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{username}/:
     get:
       operationId: retrieveCreator
@@ -431,13 +437,13 @@ paths:
 
         Returns user profile.'
       parameters:
-      - name: username
-        in: path
-        required: true
-        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-          only.
-        schema:
-          type: string
+        - name: username
+          in: path
+          required: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -446,7 +452,7 @@ paths:
                 $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{id}/toggle-follow/:
     get:
       operationId: retrieveCreator
@@ -460,12 +466,12 @@ paths:
 
         Returns user profile of user with provided id.'
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A UUID string identifying this creator.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this creator.
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -474,19 +480,19 @@ paths:
                 $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{id}/remove-member/:
     get:
       operationId: retrieveCreator
       description: "Remove user from group.\n\nRequires authentication.\nid of user\
         \ to be removed from group. \nReturns profile of user removed from group."
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A UUID string identifying this creator.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this creator.
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -495,7 +501,7 @@ paths:
                 $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/:
     get:
       operationId: listProjects
@@ -504,12 +510,12 @@ paths:
 
         Returns paginated list of projects'
       parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       responses:
         '200':
           content:
@@ -536,7 +542,7 @@ paths:
                       $ref: '#/components/schemas/ProjectList'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/tags/search/:
     get:
       operationId: listTags
@@ -557,7 +563,7 @@ paths:
                   $ref: '#/components/schemas/Tag'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/search/:
     get:
       operationId: listProjectLists
@@ -568,12 +574,12 @@ paths:
 
         Returns paginated list of matching projects.'
       parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       responses:
         '200':
           content:
@@ -600,7 +606,7 @@ paths:
                       $ref: '#/components/schemas/ProjectList'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/saved/:
     get:
       operationId: listProjectLists
@@ -611,12 +617,12 @@ paths:
 
         Returns paginated list of projects.'
       parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
+        - name: page
+          required: false
+          in: query
+          description: A page number within the paginated result set.
+          schema:
+            type: integer
       responses:
         '200':
           content:
@@ -643,7 +649,7 @@ paths:
                       $ref: '#/components/schemas/ProjectList'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/toggle-like/:
     get:
       operationId: retrieveProject
@@ -656,12 +662,12 @@ paths:
 
         Returns project details.'
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -670,25 +676,25 @@ paths:
                 $ref: '#/components/schemas/Project'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/toggle-save/:
     get:
       operationId: retrieveProject
-      description: 'Add/Remove a project from authenticated user''s bookmark.
+      description: "Add/Remove a project from authenticated user's bookmark.
 
 
         Requires authentication.
 
         Rquires project id.
 
-        Returns project details.'
+        Returns project details."
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -697,7 +703,7 @@ paths:
                 $ref: '#/components/schemas/Project'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/:
     get:
       operationId: retrieveProject
@@ -708,12 +714,12 @@ paths:
 
         Returns project details.'
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A UUID string identifying this project.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -722,7 +728,7 @@ paths:
                 $ref: '#/components/schemas/Project'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/categories/:
     get:
       operationId: listCategorys
@@ -741,7 +747,7 @@ paths:
                   $ref: '#/components/schemas/Category'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/staff-picks/:
     get:
       operationId: listStaffPicks
@@ -763,7 +769,7 @@ paths:
                   $ref: '#/components/schemas/StaffPick'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/staff-picks/{id}/:
     get:
       operationId: retrieveStaffPick
@@ -774,12 +780,12 @@ paths:
         ,\n\n        \"projects\": [paginated list of projects],\n\n        \"created_on\"\
         : \"2022-02-20T11:58:30.082Z\"\n\n    }"
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A UUID string identifying this staff pick.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this staff pick.
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -788,7 +794,7 @@ paths:
                 $ref: '#/components/schemas/StaffPick'
           description: ''
       tags:
-      - api
+        - api
   /api/upload-file-to-local/:
     get:
       operationId: listUploadFileToLocals
@@ -808,7 +814,7 @@ paths:
                 items: {}
           description: ''
       tags:
-      - api
+        - api
     post:
       operationId: createUploadFileToLocal
       description: "Upload File To Storage backend.\n\n\nRequires Authentication.\n\
@@ -833,7 +839,7 @@ paths:
               schema: {}
           description: ''
       tags:
-      - api
+        - api
   /api/hero/:
     get:
       operationId: retrieveHero
@@ -847,7 +853,7 @@ paths:
                 $ref: '#/components/schemas/Hero'
           description: ''
       tags:
-      - api
+        - api
   /api/help/:
     get:
       operationId: retrieveHelp
@@ -861,7 +867,7 @@ paths:
                 $ref: '#/components/schemas/Help'
           description: ''
       tags:
-      - api
+        - api
   /api/privacy/:
     get:
       operationId: retrievePrivacy
@@ -875,7 +881,7 @@ paths:
                 $ref: '#/components/schemas/Privacy'
           description: ''
       tags:
-      - api
+        - api
   /api/faqs/:
     get:
       operationId: listFAQs
@@ -891,7 +897,7 @@ paths:
                   $ref: '#/components/schemas/FAQList'
           description: ''
       tags:
-      - api
+        - api
   /web-schema/:
     get:
       operationId: listWebSchemas
@@ -906,7 +912,7 @@ paths:
                 items: {}
           description: ''
       tags:
-      - web-schema
+        - web-schema
   /media-schema/:
     get:
       operationId: listMediaSchemas
@@ -921,7 +927,7 @@ paths:
                 items: {}
           description: ''
       tags:
-      - media-schema
+        - media-schema
   /markdown-to-html/:
     get:
       operationId: listMarkdownToHtmls
@@ -936,7 +942,7 @@ paths:
                 items: {}
           description: ''
       tags:
-      - markdown-to-html
+        - markdown-to-html
   /api/rest-auth/password/reset/:
     post:
       operationId: createPasswordReset
@@ -966,7 +972,7 @@ paths:
                 $ref: '#/components/schemas/PasswordReset'
           description: ''
       tags:
-      - api
+        - api
   /api/rest-auth/password/reset/confirm/:
     post:
       operationId: createPasswordResetConfirm
@@ -993,11 +999,11 @@ paths:
                 $ref: '#/components/schemas/PasswordResetConfirm'
           description: ''
       tags:
-      - api
+        - api
   /api/rest-auth/login/:
     post:
       operationId: createLogin
-      description: 'Check the credentials and return the REST Token
+      description: "Check the credentials and return the REST Token
 
         if the credentials are valid and authenticated.
 
@@ -1008,7 +1014,7 @@ paths:
 
         Accept the following POST parameters: username, password
 
-        Return the REST Framework Token Object''s key.'
+        Return the REST Framework Token Object's key."
       parameters: []
       requestBody:
         content:
@@ -1029,7 +1035,7 @@ paths:
                 $ref: '#/components/schemas/Login'
           description: ''
       tags:
-      - api
+        - api
   /api/rest-auth/password/change/:
     post:
       operationId: createPasswordChange
@@ -1059,7 +1065,7 @@ paths:
                 $ref: '#/components/schemas/PasswordChange'
           description: ''
       tags:
-      - api
+        - api
   /api/rest-auth/registration/:
     post:
       operationId: createCustomRegister
@@ -1084,7 +1090,7 @@ paths:
                 $ref: '#/components/schemas/CustomRegister'
           description: ''
       tags:
-      - api
+        - api
   /api/rest-auth/registration/verify-email/:
     post:
       operationId: createVerifyEmail
@@ -1109,7 +1115,7 @@ paths:
                 $ref: '#/components/schemas/VerifyEmail'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/register/:
     post:
       operationId: createCustomRegister
@@ -1139,7 +1145,7 @@ paths:
                 $ref: '#/components/schemas/CustomRegister'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/verify-phone/:
     post:
       operationId: createVerifyPhone
@@ -1162,7 +1168,7 @@ paths:
               schema: {}
           description: ''
       tags:
-      - api
+        - api
   /api/creators/confirm-group-invite/:
     post:
       operationId: createConfirmGroupInvite
@@ -1185,7 +1191,7 @@ paths:
               schema: {}
           description: ''
       tags:
-      - api
+        - api
   /api/creators/add-members/:
     post:
       operationId: createAddGroupMembers
@@ -1214,7 +1220,7 @@ paths:
                 $ref: '#/components/schemas/AddGroupMembers'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/{id}/add-comment/:
     post:
       operationId: createComment
@@ -1223,12 +1229,12 @@ paths:
         \       text: \"comment text\",\n\n        parent_id: \"id of parent comment\
         \ or None\"\n\n    }"
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1248,7 +1254,7 @@ paths:
                 $ref: '#/components/schemas/Comment'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/create/:
     post:
       operationId: createProject
@@ -1279,7 +1285,7 @@ paths:
                 $ref: '#/components/schemas/Project'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/add-comment/:
     post:
       operationId: createComment
@@ -1288,12 +1294,12 @@ paths:
         \     text: \"comment text\",\n\n        parent_id: \"id of parent comment\
         \ or None\"\n\n    }"
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1313,7 +1319,7 @@ paths:
                 $ref: '#/components/schemas/Comment'
           description: ''
       tags:
-      - api
+        - api
   /api/upload-file/:
     post:
       operationId: createUploadFile
@@ -1337,7 +1343,7 @@ paths:
               schema: {}
           description: ''
       tags:
-      - api
+        - api
   /api/delete-file/:
     post:
       operationId: createDeleteFile
@@ -1360,7 +1366,7 @@ paths:
               schema: {}
           description: ''
       tags:
-      - api
+        - api
   /api/signature/:
     post:
       operationId: createSigGen
@@ -1383,7 +1389,7 @@ paths:
               schema: {}
           description: ''
       tags:
-      - api
+        - api
   /api/creators/edit-creator/:
     put:
       operationId: updateCreator
@@ -1412,7 +1418,7 @@ paths:
                 $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
     patch:
       operationId: partialUpdateCreator
       description: "Edit user profile.\n\n\nRequires authentication.\n\nReturns user\
@@ -1440,7 +1446,7 @@ paths:
                 $ref: '#/components/schemas/Creator'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/update/:
     put:
       operationId: updateProject
@@ -1452,12 +1458,12 @@ paths:
         \n        \"video\": \"string\",\n\n        \"materials_used\": \"string\"\
         ,\n\n        \"category\": \"string\"\n\n    }"
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A UUID string identifying this project.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1477,7 +1483,7 @@ paths:
                 $ref: '#/components/schemas/Project'
           description: ''
       tags:
-      - api
+        - api
     patch:
       operationId: partialUpdateProject
       description: "Update project.\n\nRequires authentication.\n\nRequires project\
@@ -1488,12 +1494,12 @@ paths:
         \n        \"video\": \"string\",\n\n        \"materials_used\": \"string\"\
         ,\n\n        \"category\": \"string\"\n\n    }"
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A UUID string identifying this project.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1513,7 +1519,7 @@ paths:
                 $ref: '#/components/schemas/Project'
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/unpublish-comment/:
     put:
       operationId: updateComment
@@ -1524,12 +1530,12 @@ paths:
 
         Returns unpublished comment.'
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this comment.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A unique integer value identifying this comment.
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1549,7 +1555,7 @@ paths:
                 $ref: '#/components/schemas/Comment'
           description: ''
       tags:
-      - api
+        - api
     patch:
       operationId: partialUpdateComment
       description: 'Unpublish a comment.
@@ -1559,12 +1565,12 @@ paths:
 
         Returns unpublished comment.'
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this comment.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A unique integer value identifying this comment.
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -1584,7 +1590,7 @@ paths:
                 $ref: '#/components/schemas/Comment'
           description: ''
       tags:
-      - api
+        - api
   /api/creators/delete/:
     delete:
       operationId: destroyCreator
@@ -1601,7 +1607,7 @@ paths:
         '204':
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/delete/:
     delete:
       operationId: destroyProject
@@ -1614,17 +1620,17 @@ paths:
 
         Returns {details: "ok"}'
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A UUID string identifying this project.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A UUID string identifying this project.
+          schema:
+            type: string
       responses:
         '204':
           description: ''
       tags:
-      - api
+        - api
   /api/projects/{id}/delete-comment/:
     delete:
       operationId: destroyComment
@@ -1637,17 +1643,17 @@ paths:
 
         Returns {details: "ok"}'
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: A unique integer value identifying this comment.
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          description: A unique integer value identifying this comment.
+          schema:
+            type: string
       responses:
         '204':
           description: ''
       tags:
-      - api
+        - api
 components:
   schemas:
     UserDetails:
@@ -1674,7 +1680,7 @@ components:
           type: string
           maxLength: 150
       required:
-      - username
+        - username
     Creator:
       type: object
       properties:
@@ -1736,8 +1742,8 @@ components:
           type: string
           readOnly: true
       required:
-      - username
-      - location
+        - username
+        - location
     Location:
       type: object
       properties:
@@ -1745,7 +1751,7 @@ components:
           type: string
           maxLength: 100
       required:
-      - name
+        - name
     ProjectList:
       type: object
       properties:
@@ -1815,8 +1821,8 @@ components:
               type: string
               readOnly: true
           required:
-          - username
-          - location
+            - username
+            - location
           readOnly: true
         title:
           type: string
@@ -1844,7 +1850,8 @@ components:
                 type: string
                 format: uri
                 maxLength: 1000
-                pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+                pattern:
+                  "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
                   d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\\
                   [[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1\
                   -\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
@@ -1855,7 +1862,7 @@ components:
                 nullable: true
                 maxLength: 1000
             required:
-            - image_url
+              - image_url
         views_count:
           type: integer
           maximum: 2147483647
@@ -1879,8 +1886,8 @@ components:
           format: date-time
           readOnly: true
       required:
-      - title
-      - images
+        - title
+        - images
     Tag:
       type: object
       properties:
@@ -1888,7 +1895,7 @@ components:
           type: string
           maxLength: 100
       required:
-      - name
+        - name
     Project:
       type: object
       properties:
@@ -1958,8 +1965,8 @@ components:
               type: string
               readOnly: true
           required:
-          - username
-          - location
+            - username
+            - location
           readOnly: true
         title:
           type: string
@@ -1977,7 +1984,8 @@ components:
                 type: string
                 format: uri
                 maxLength: 1000
-                pattern: "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
+                pattern:
+                  "^(?:[a-z0-9.+-]*)://(?:[^\\s:@/]+(?::[^\\s:@/]*)?@)?(?:(?:25[0-5]|2[0-4]\\\
                   d|[0-1]?\\d?\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}|\\\
                   [[0-9a-f:.]+\\]|([a-z\xA1-\uFFFF0-9](?:[a-z\xA1-\uFFFF0-9-]{0,61}[a-z\xA1\
                   -\uFFFF0-9])?(?:\\.(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1\
@@ -1988,7 +1996,7 @@ components:
                 nullable: true
                 maxLength: 1000
             required:
-            - image_url
+              - image_url
         video:
           type: string
           format: uri
@@ -2011,7 +2019,7 @@ components:
                 type: string
                 maxLength: 100
             required:
-            - name
+              - name
           readOnly: true
         category:
           type: string
@@ -2036,8 +2044,8 @@ components:
           format: date-time
           readOnly: true
       required:
-      - title
-      - materials_used
+        - title
+        - materials_used
     Category:
       type: object
       properties:
@@ -2048,7 +2056,7 @@ components:
           type: string
           maxLength: 100
       required:
-      - name
+        - name
     StaffPick:
       type: object
       properties:
@@ -2069,8 +2077,8 @@ components:
           type: string
           format: date-time
       required:
-      - title
-      - description
+        - title
+        - description
     Hero:
       type: object
       properties:
@@ -2111,7 +2119,7 @@ components:
             .(?!-)[a-z\xA1-\uFFFF0-9-]{1,63}(?<!-))*\\.(?!-)(?:[a-z\xA1-\uFFFF-]{2,63}|xn--[a-z0-9]{1,59})(?<!-)\\\
             .?|localhost))(?::\\d{2,5})?(?:[/?#][^\\s]*)?\\z"
       required:
-      - title
+        - title
     Help:
       type: object
       properties:
@@ -2147,7 +2155,7 @@ components:
           type: string
           format: email
       required:
-      - email
+        - email
     PasswordResetConfirm:
       type: object
       properties:
@@ -2162,10 +2170,10 @@ components:
         token:
           type: string
       required:
-      - new_password1
-      - new_password2
-      - uid
-      - token
+        - new_password1
+        - new_password2
+        - uid
+        - token
     Login:
       type: object
       properties:
@@ -2177,7 +2185,7 @@ components:
         password:
           type: string
       required:
-      - password
+        - password
     PasswordChange:
       type: object
       properties:
@@ -2188,8 +2196,8 @@ components:
           type: string
           maxLength: 128
       required:
-      - new_password1
-      - new_password2
+        - new_password1
+        - new_password2
     CustomRegister:
       type: object
       properties:
@@ -2223,18 +2231,18 @@ components:
           type: boolean
           default: false
       required:
-      - username
-      - password1
-      - password2
-      - dateOfBirth
-      - location
+        - username
+        - password1
+        - password2
+        - dateOfBirth
+        - location
     VerifyEmail:
       type: object
       properties:
         key:
           type: string
       required:
-      - key
+        - key
     AddGroupMembers:
       type: object
       properties:
@@ -2263,4 +2271,4 @@ components:
           format: date-time
           readOnly: true
       required:
-      - text
+        - text

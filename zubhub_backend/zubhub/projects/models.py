@@ -66,7 +66,6 @@ class Category(MP_Node):
             self.slug = slugify(self.name) + "-" + uid
         super().save(*args, **kwargs)
 
-
 class Project(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
@@ -79,11 +78,7 @@ class Project(models.Model):
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.CharField(max_length=5000)
-    category = models.ForeignKey("projects.Category",
-                                 on_delete=models.SET_NULL,
-                                 null=True,
-                                 blank=True,
-                                 related_name="projects")
+    category = models.ManyToManyField("projects.Category", related_name="projects")
     views = models.ManyToManyField(Creator,
                                    blank=True,
                                    related_name="projects_viewed")

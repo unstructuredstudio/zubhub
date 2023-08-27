@@ -28,7 +28,7 @@ function StaffPick(props) {
     staff_pick.projects.results &&
     staff_pick.projects.results.length > 0 ? (
     <Box className={classes.root}>
-      <Grid container>
+      <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography
             gutterBottom
@@ -38,7 +38,7 @@ function StaffPick(props) {
             className={classes.titleStyle}
           >
             {staff_pick.title}
-            <CustomButton
+            {/* <CustomButton
               className={clsx(common_classes.floatRight)}
               variant="outlined"
               margin="normal"
@@ -48,7 +48,7 @@ function StaffPick(props) {
               }
             >
               {rest.t('staffPicks.viewAll')}
-            </CustomButton>
+            </CustomButton> */}
           </Typography>
         </Grid>
         {staff_pick.projects.results.map((project, index) =>
@@ -58,6 +58,7 @@ function StaffPick(props) {
               xs={12}
               sm={6}
               md={4}
+              spacing={4}
               align="center"
               className={classes.projectGridStyle}
               key={project.id}

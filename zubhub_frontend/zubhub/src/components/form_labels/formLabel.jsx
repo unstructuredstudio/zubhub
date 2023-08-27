@@ -1,22 +1,16 @@
 import React from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
+import styles from '../../assets/js/styles';
 
-function FormLabel(props) {
-  const { label, classes, common_classes, inputOrder, fieldLabel, required } =
-    props;
+function FormLabel({ required, htmlFor, children, ...props }) {
+  const commonClasses = makeStyles(styles)();
+
   return (
-    <label htmlFor={label}>
-      <Typography
-        color="textSecondary"
-        className={clsx(
-          classes.customLabelStyle,
-          // common_classes.marginBottom1em,
-        )}
-      >
-        <Box className={classes.fieldNumberStyle}>{inputOrder}</Box>
-        {fieldLabel}
-        {required ? <p className={classes.requiredLabelStyle}>*</p> : ''}
+    <label htmlFor={htmlFor}>
+      <Typography color="textSecondary" className={clsx(commonClasses.marginBottom1em, commonClasses.title2)}>
+        {children}
+        {required ? <span className={commonClasses.colorRed}>*</span> : ''}
       </Typography>
     </label>
   );
