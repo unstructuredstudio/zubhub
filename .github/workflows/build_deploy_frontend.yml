@@ -49,19 +49,18 @@ jobs:
 
       - name: Copy file via scp
         uses: appleboy/scp-action@master
-        env:
-          HOST: ${{ secrets.DO_FRONTEND_HOST }}
-          USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
-          KEY: ${{ secrets.DO_SSHKEY }}
         with:
+          host: ${{ secrets.DO_FRONTEND_HOST }}
+          username: ${{ secrets.DO_FRONTEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
           source: "."
           target: "/home/zubhub-frontend/zubhub"
 
       - name: Executing remote  command
         uses: appleboy/ssh-action@master
         with:
-          HOST: ${{ secrets.DO_FRONTEND_HOST }}
-          USERNAME: ${{ secrets.DO_FRONTEND_USERNAME }}
-          PORT: ${{ secrets.DO_SSHPORT }}
-          KEY: ${{ secrets.DO_SSHKEY }}
+          host: ${{ secrets.DO_FRONTEND_HOST }}
+          username: ${{ secrets.DO_FRONTEND_USERNAME }}
+          port: ${{ secrets.DO_SSHPORT }}
+          key: ${{ secrets.DO_SSHKEY }}
           script: "cp /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/deploy_frontend.sh /home/zubhub-frontend/ && sudo bash /home/zubhub-frontend/deploy_frontend.sh"

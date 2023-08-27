@@ -421,7 +421,7 @@ function PageWrapper(props) {
             </ClickAwayListener>
           ) : null}
         </Container>
-        <BreadCrumb />
+        {/* <BreadCrumb /> */}
         <SwipeableDrawer anchor={anchor} open={state.left} onClose={toggleDrawer} onOpen={toggleDrawer}>
           <Sidenav />
         </SwipeableDrawer>

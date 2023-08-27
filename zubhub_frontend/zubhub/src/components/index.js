@@ -1,29 +1,23 @@
+import Sidenav from "./Sidenav/Sidenav";
+import CustomButton from "./button/Button";
+import Comments from './comments/Comments';
 import Dropdown from "./form/dropdown/Dropdown";
+import Editor from "./form/editor/Editor";
 import ImageInput from "./form/imageInput/ImageInput";
 import LabeledLine from "./form/labeledLine/LabeledLine";
+import OrDivider from "./form/orDivider/OrDivider";
+import SelectFromPills from "./form/selectFromPills/SelectFromPills";
 import TagsInput from "./form/tagsInput/TagsInput";
 import VideoInput from "./form/videoInput/VideoInput";
-import Sidenav from "./Sidenav/Sidenav";
-import Editor from "./form/editor/Editor";
-import Modal from "./modals/Modal";
-import Comments from './comments/Comments'
-import CustomButton from "./button/Button";
-import PreviewProject from "./previewProject/PreviewProject";
-import SelectFromPills from "./form/selectFromPills/SelectFromPills";
 import Gallery from "./gallery/Gallery";
+import Modal from "./modals/Modal";
+import PreviewProject from "./previewProject/PreviewProject";
+
 
 export {
-    TagsInput,
-    Sidenav,
-    ImageInput,
-    LabeledLine,
-    VideoInput,
-    Dropdown,
-    Editor,
-    Modal,
     Comments,
-    CustomButton,
-    PreviewProject,
-    SelectFromPills,
-    Gallery
-}
+    CustomButton, Dropdown,
+    Editor, Gallery, ImageInput,
+    LabeledLine, Modal, OrDivider, PreviewProject,
+    SelectFromPills, Sidenav, TagsInput, VideoInput
+};

@@ -255,10 +255,13 @@
   },
 
   "projects": {
-    "shareProject": "Share a Project",
+    "1":"Get inspired by our collection of ideas.",
+    "2":"Tinker with materials and tools around you.",
+    "shareProject": "Share your work!",
     "exploreIdeas": "Explore Ideas",
-    "zubhubAmbassadors": "Be our Ambassador",
+    "zubhubAmbassadors": "Become an Ambassador",
     "newStuff": "New Stuff",
+    "login":"Login to view more",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
@@ -270,6 +273,42 @@
     "errors": {
       "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
       "noProject": "Seems like you have arrived at a new and fresh ZubHub! There are no projects at this moment. Maybe try creating one?"
+    },
+    "child":{
+      "title":"Get Creative With ZubHub",
+      "1":"Connect with a global community  of curious creatives.",
+      "2":"Freedom to express yourself in different creative ways.",
+      "3":"Work as a team with co creators."
+    },
+    "teams":{
+      "title":"ZubHub for Teams",
+      "1":"Set your team up for success with reimagined learning to empower their personal and professional growth.",
+      "2":"With inspiring activities on science, art, technology and more, your whole team will have deep knowledge and expertise at their fingertips.",
+      "button":"Sign Up - It's free!",
+      "button2":"Create Team"
+    },
+    "reviews":{
+      "title": "Creator Reviews",
+      "1":{
+      "review": "“For me, ZubHub has grown incredibly important. I would advise anyone interested in creating projects and sharing to check it out.”",
+      "name": "Faridah Ejibunu",
+      "designation": "ZubHub Ambassador"},
+      "2":{
+        "review": "“The fact that anyone in the world can have an online presence for their work and show it to the world all for free just amazes me.”",
+        "name": "Hemant Kumar Singh",
+        "designation": "ZubHub Ambassador"},
+      "3":{
+        "review": "“ZubHub contributes immensely to people from not so well socio-econimic backgrounds, I would high recommend it.”",
+        "name": "Yaya Mamoudou",
+        "designation": "ZubHub Ambassador"}
+    
+    },
+    "global":{
+      "title":"Join a growing community of thousands of creators!",
+      "body": "Be a part of an active community of educators and creators.",
+      "body2":"Create projects, create activities, share ideas, and connect with the global community.",
+      "button": "Get Started, It's Free!",
+      "button2": "Log In"
     }
   },
 

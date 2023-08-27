@@ -1,4 +1,5 @@
 import { Box, Checkbox, FormControl, Radio, TextField, Typography, makeStyles } from '@material-ui/core';
+import { Box, Checkbox, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React from 'react';
 import { colors } from '../../../assets/js/colors';
@@ -16,6 +17,7 @@ export default function Dropdown({
   handleChange,
   error,
   helperText,
+  description,
   maxSelection,
   withCheckbox,
 }) {

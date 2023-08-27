@@ -28,7 +28,7 @@ export default function ImageInput({
   useEffect(() => {
     isImageContainerScroll();
     if (window) {
-      window.addEventListener('resize', debounce);
+      window.addEventListener('resize', isImageContainerScroll);
     }
   }, []);
 
