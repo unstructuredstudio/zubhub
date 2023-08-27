@@ -1,11 +1,10 @@
-import { Box, Checkbox, FormControl, Radio, TextField, Typography, makeStyles } from '@material-ui/core';
 import { Box, Checkbox, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import clsx from 'clsx';
 import React from 'react';
 import { colors } from '../../../assets/js/colors';
 import styles from '../../../assets/js/styles';
 import { dropdownStyle } from './dropdown.style';
-import clsx from 'clsx';
 
 export default function Dropdown({
   label,

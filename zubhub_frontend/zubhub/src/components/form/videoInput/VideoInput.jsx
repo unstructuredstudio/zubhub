@@ -6,7 +6,7 @@ import React, { useRef } from 'react';
 import styles from '../../../assets/js/styles';
 import { isGdriveORVimeoORYoutube } from '../../../views/project_details/projectDetailsScripts';
 import { refactorVideoUrl } from '../../input/inputScripts';
-import OrDivider from '../orDivider/OrDivider';
+import LabeledLine from '../labeledLine/LabeledLine';
 import { videoInputStyles } from './videoInput.styles';
 
 function VideoInput({ name, label, required, value = [], handleChange, linkValue = '' }) {
@@ -39,7 +39,7 @@ function VideoInput({ name, label, required, value = [], handleChange, linkValue
     if (value.length === 0 && linkValue.length === 0) {
       return (
         <Box marginY={3}>
-          <OrDivider />
+          <LabeledLine />
         </Box>
       );
     }
