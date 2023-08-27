@@ -1,14 +1,17 @@
+import { colors } from "../../../colors";
+
 const styles = theme => ({
   popperContainerStyle: {
     top: '48px !important',
   },
-  popperStyle: {
-    backgroundColor: 'white',
-    zIndex: 20,
-    padding: '20px 15px',
-    borderRadius: '20px',
-    boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
-  },
+  // popperStyle: {
+  //   backgroundColor: 'white',
+  //   minWidth: 200,
+  //   zIndex: 20,
+  //   padding: '20px 15px',
+  //   borderRadius: '20px',
+  //   boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
+  // },
   fullscreenPopperStyle: {
     width: '100vw',
     height: '100vh',
@@ -22,6 +25,14 @@ const styles = theme => ({
     gap: '10px',
     color: 'var(--primary-color3)',
     padding: '2.5px 0px',
+  },
+  logedOutPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    maxWidth: 200,
+    color: colors.black,
+    textAlign: 'center',
+    alignItems: 'center'
   },
   panelHeaderButtons: {
     display: 'flex',

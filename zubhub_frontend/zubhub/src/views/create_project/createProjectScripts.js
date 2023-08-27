@@ -9,6 +9,7 @@ import {
 } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
+import API from '../../api';
 import styled from 'styled-components';
 
 const ImageUploadButton = styled.button`
@@ -213,6 +214,21 @@ export const handleSuggestTags = (e, props, state, handleSetState) => {
   }
 };
 
+export const searchTags = (value, callBack) => {
+  clearTimeout(vars.timer.id);
+  const api = new API()
+  if (value !== '') {
+    vars.timer.id = setTimeout(async () => {
+      try {
+        const res = await api.suggestTags(value)
+        callBack(undefined, res);
+      } catch (error) {
+        callBack(error);
+      }
+    }, 500);
+  }
+}
+
 /**
  * @function suggestTags
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -260,13 +276,11 @@ export const removeTag = (_, props, value) => {
  * @todo - describe function's signature
  */
 export const handleImageFieldChange = (refs, props, state, handleSetState) => {
-  refs.image_count_el.current.innerText = `${
-    refs.image_el.current.files.length
-  } ${props.t(
-    `createProject.inputs.${
-      refs.image_el.current.files.length < 2 ? 'image' : 'images'
-    }`,
-  )}`;
+  refs.image_count_el.current.innerText = `${refs.image_el.current.files.length
+    } ${props.t(
+      `createProject.inputs.${refs.image_el.current.files.length < 2 ? 'image' : 'images'
+      }`,
+    )}`;
   console.log('image uploaded', refs.image_el.current.files);
   props.setFieldValue('project_images', refs.image_el.current).then(errors => {
     if (!errors['project_images']) {
@@ -717,9 +731,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
     : [];
 
-  const create_or_update = props.match.params.id
-    ? props.updateProject
-    : props.createProject;
+  const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
 
   create_or_update({
     ...props.values,
@@ -1034,13 +1046,11 @@ export const getProject = (refs, props, state) => {
         }
 
         if (refs.image_count_el.current && obj.project.images.length > 0) {
-          refs.image_count_el.current.innerText = `${
-            obj.project.images.length
-          } ${props.t(
-            `createProject.inputs.${
-              obj.project.images.length < 2 ? 'image' : 'images'
-            }`,
-          )}`;
+          refs.image_count_el.current.innerText = `${obj.project.images.length
+            } ${props.t(
+              `createProject.inputs.${obj.project.images.length < 2 ? 'image' : 'images'
+              }`,
+            )}`;
 
           const files = obj.project.images.map(url => ({
             name: url,
@@ -1108,15 +1118,15 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
       e.target === refs.video_file_el.current
         ? refs.video_file_el.current
         : e.target === refs.video_el.current.firstChild
-        ? e.target
-        : '';
+          ? e.target
+          : '';
 
     type =
       e.target === refs.video_file_el.current
         ? 'videoFile'
         : e.target === refs.video_el.current.firstChild
-        ? 'videoURL'
-        : null;
+          ? 'videoURL'
+          : null;
   }
 
   props.setStatus({ ...props.status, video: '' });
@@ -1189,6 +1199,7 @@ export const checkMediaFilesErrorState = (refs, props) => {
  *
  * @todo - describe object's function
  */
+
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
   description: Yup.string().max(10000, 'max').required('required'),
@@ -1231,70 +1242,70 @@ export const validationSchema = Yup.object().shape({
         return true;
       }
     }),
-  video: Yup.mixed()
-    .test('should_be_video_file', 'shouldBeVideoFile', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'string') {
-        return true;
-      } else if (typeof value === 'object') {
-        let not_a_video = false;
-        for (let index = 0; index < value.files.length; index++) {
-          if (value.files[index].type.split('/')[0] !== 'video') {
-            not_a_video = true;
-          }
-        }
-        return not_a_video ? false : true;
-      }
-      return false;
-    })
-    .test('should_be_url', 'shouldBeURL', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'object') {
-        return true;
-      } else if (typeof value === 'string') {
-        const res = value.match(
-          /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-        );
-        return res !== null ? true : false;
-      }
+  // video: Yup.mixed()
+  //   .test('should_be_video_file', 'shouldBeVideoFile', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       let not_a_video = false;
+  //       for (let index = 0; index < value.files.length; index++) {
+  //         if (value.files[index].type.split('/')[0] !== 'video') {
+  //           not_a_video = true;
+  //         }
+  //       }
+  //       return not_a_video ? false : true;
+  //     }
+  //     return false;
+  //   })
+  //   .test('should_be_url', 'shouldBeURL', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       const res = value.match(
+  //         /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+  //       );
+  //       return res !== null ? true : false;
+  //     }
 
-      return false;
-    })
-    .test('max-video-url-length', 'maxVideoURLLength', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'object') {
-        return true;
-      } else if (typeof value === 'string') {
-        return value.length > 2048 ? false : true;
-      }
+  //     return false;
+  //   })
+  //   .test('max-video-url-length', 'maxVideoURLLength', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       return value.length > 2048 ? false : true;
+  //     }
 
-      return false;
-    })
-    .test('max-video-file-size', 'maxVideoFileSize', value => {
-      if (!value) {
-        return true;
-      } else if (typeof value === 'string') {
-        return true;
-      } else if (typeof value === 'object') {
-        let max = false;
-        for (let index = 0; index < value.files.length; index++) {
-          if (value.files[index].size / 1000 > 60240) {
-            max = true;
-          }
-        }
-        return max ? false : true;
-      }
+  //     return false;
+  //   })
+  //   .test('max-video-file-size', 'maxVideoFileSize', value => {
+  //     if (!value) {
+  //       return true;
+  //     } else if (typeof value === 'string') {
+  //       return true;
+  //     } else if (typeof value === 'object') {
+  //       let max = false;
+  //       for (let index = 0; index < value.files.length; index++) {
+  //         if (value.files[index].size / 1000 > 60240) {
+  //           max = true;
+  //         }
+  //       }
+  //       return max ? false : true;
+  //     }
 
-      return false;
-    })
-    .test('video_is_empty', 'imageOrVideo', function (value) {
-      return vars.video_field_touched && !value && !this.parent.project_images
-        ? false
-        : true;
-    }),
+  //     return false;
+  //   })
+  //   .test('video_is_empty', 'imageOrVideo', function (value) {
+  //     return vars.video_field_touched && !value && !this.parent.project_images
+  //       ? false
+  //       : true;
+  //   }),
   materials_used: Yup.string()
     .max(10000, 'max')
     .test('empty', 'required', value => {
@@ -1325,28 +1336,28 @@ export const validationSchema = Yup.object().shape({
       return true;
     }
   }),
-  publish: Yup.mixed()
-    .test('visible_to_required', 'visible_to_required', publish => {
-      if (
-        publish.type === publish_type['Preview'] &&
-        publish.visible_to.length < 1
-      ) {
-        return false;
-      } else {
-        return true;
-      }
-    })
-    .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
-      const re = /^[a-z0-9@._+-]{1,150}$/i;
-      let unsupported = false;
-      for (let username of publish.visible_to) {
-        console.log('kdlskdlksd', username);
-        if (!re.test(username)) {
-          unsupported = true;
-        }
-      }
-      return unsupported ? false : true;
-    }),
+  // publish: Yup.mixed()
+  //   .test('visible_to_required', 'visible_to_required', publish => {
+  //     if (
+  //       publish.type === publish_type['Preview'] &&
+  //       publish.visible_to.length < 1
+  //     ) {
+  //       return false;
+  //     } else {
+  //       return true;
+  //     }
+  //   })
+  //   .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
+  //     const re = /^[a-z0-9@._+-]{1,150}$/i;
+  //     let unsupported = false;
+  //     for (let username of publish.visible_to) {
+  //       console.log('kdlskdlksd', username);
+  //       if (!re.test(username)) {
+  //         unsupported = true;
+  //       }
+  //     }
+  //     return unsupported ? false : true;
+  //   }),
 });
 
 /**

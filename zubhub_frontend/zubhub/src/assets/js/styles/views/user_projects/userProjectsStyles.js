@@ -1,14 +1,16 @@
 const styles = theme => ({
   root: {
-    paddingBottom: '2em',
+    [theme.breakpoints.down('sm')]: {
+      padding: '2rem 16px',
+    },
     flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'var(--primary-color2)',
-    background:
-      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+    // background: 'var(--primary-color2)',
+    // background:
+    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     '& .MuiGrid-root.MuiGrid-container': {
       width: '100%',
     },
@@ -24,7 +26,7 @@ const styles = theme => ({
     textAlign: 'center',
   },
   projectGridStyle: {
-    marginBottom: '2em',
+    // marginBottom: '2em',
   },
   buttonGroupStyle: {
     paddingLeft: '2em',

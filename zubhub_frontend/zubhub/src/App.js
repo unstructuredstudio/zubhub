@@ -7,10 +7,12 @@ import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
 import ZubhubAPI from '../src/api/api';
 import { updateTheme } from './theme';
+import ScrollToTop from './ScrollToTop';
 
 const SearchResults = React.lazy(() =>
   import('./views/search_results/SearchResults'),
 );
+
 const Signup = React.lazy(() => import('./views/signup/Signup'));
 const Login = React.lazy(() => import('./views/login/Login'));
 const PasswordReset = React.lazy(() =>
@@ -52,12 +54,11 @@ const GroupInviteConfirm = React.lazy(() =>
   import('./views/group_invite_confirm/GroupInviteConfirm'),
 );
 const Projects = React.lazy(() => import('./views/projects/Projects'));
+const Home = React.lazy(() => import('./views/home/Home'));
 const SavedProjects = React.lazy(() =>
   import('./views/saved_projects/SavedProjects'),
 );
-const CreateProject = React.lazy(() =>
-  import('./views/create_project/CreateProject'),
-);
+const CreateProject = React.lazy(() => import('./views/create_project/CreateProject'));
 const ProjectDetails = React.lazy(() =>
   import('./views/project_details/ProjectDetails'),
 );
@@ -79,6 +80,8 @@ const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 const NotFound = React.lazy(() => import('./views/not_found/NotFound'));
 const API = new ZubhubAPI();
+const Settings = React.lazy(() => import('./views/settings/Settings'));
+
 
 const LazyImport = props => {
   const { LazyComponent, ...restOfProps } = props;
@@ -112,13 +115,42 @@ function App(props) {
   return (
     <ThemeContext.Provider value={theme}>
     <Router>
+      <ScrollToTop/>
       <Switch>
-        <Route
+      <Route
           exact={true}
           path="/"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Home} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          exact={true}
+          path="/projects"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+        {/* <Route
+          exact={true}
+          path="/projects/:id/preview"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={PreviewProject} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        /> */}
+        <Route
+          exact={true}
+          path="/settings"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Settings} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

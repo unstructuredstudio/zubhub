@@ -6,9 +6,9 @@ const styles = theme => ({
     paddingTop: '2em',
     paddingBottom: '2em',
     flex: '1 0 auto',
-    background: 'var(--primary-color2)',
-    background:
-      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+    // background: 'var(--primary-color2)',
+    // background:
+    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
   containerStyle: {
     maxWidth: '600px',
