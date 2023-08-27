@@ -5,6 +5,7 @@ import CreateActivity from './views/create_activity/create_activity';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
+import ScrollToTop from './ScrollToTop';
 
 const SearchResults = React.lazy(() =>
   import('./views/search_results/SearchResults'),
@@ -91,6 +92,7 @@ const LazyImport = props => {
 function App(props) {
   return (
     <Router>
+      <ScrollToTop/>
       <Switch>
       <Route
           exact={true}

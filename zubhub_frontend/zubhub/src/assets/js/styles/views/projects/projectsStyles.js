@@ -111,7 +111,6 @@ const styles = theme => ({
     fontSize: '1.2rem',
     fontWeight: 700,
     marginRight: '1em',
-    marginLeft: '1.5em',
     marginTop: '1.2em',
   },
   heroImageContainerStyle: {

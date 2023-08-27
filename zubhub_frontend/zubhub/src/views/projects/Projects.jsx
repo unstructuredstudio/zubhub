@@ -122,12 +122,6 @@ function Projects(props) {
               </Box>
             ) : null}
             <Box className={classes.mainContainerStyle}>
-              <Typography
-                style={{ marginBottom: 30, ...(!props.auth?.token && { marginTop: 50 }) }}
-                className={common_classes.title1}
-              >
-                All Projects
-              </Typography>
 
               {staff_picks &&
                 staff_picks.map(staff_pick => (

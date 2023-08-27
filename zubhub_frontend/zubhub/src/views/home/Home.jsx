@@ -132,7 +132,7 @@ function Projects(props) {
                        className={classes.heroButtonStyle}
                        size="small"
                        primaryButtonStyle
-                       onClick={() => props.history.push('/projects/create')}
+                       onClick={() => props.history.push('/login')}
                      >
                        {t('projects.shareProject')}
                      </CustomButton>
@@ -172,42 +172,7 @@ function Projects(props) {
                 >
                   {t('projects.login')}
               </CustomButton>
-            {/* <Grid container>
-              {staff_picks && staff_picks.length > 0 ? (
-                <Grid item xs={12}>
-                  <Typography
-                    gutterBottom
-                    component="h2"
-                    variant="h6"
-                    color="textPrimary"
-                    className={classes.titleStyle}
-                  >
-                    {t('projects.allProjects')}
-                  </Typography>
-                </Grid>
-              ) : null}
-              {projects.map(project => (
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  align="center"
-                  className={classes.projectGridStyle}
-                >
-                  <Project
-                    project={project}
-                    key={project.id}
-                    updateProjects={res =>
-                      handleSetState(updateProjects(res, props, toast))
-                    }
-                    {...props}
-                  />
-                </Grid>
-              ))}
-            </Grid> */}
-            <Grid>
-            </Grid>
+
           </Box>
             </Box>
           ) : (
