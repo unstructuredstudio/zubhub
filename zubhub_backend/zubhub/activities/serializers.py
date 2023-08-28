@@ -70,7 +70,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     images = ActivityImageSerializer(
         many=True, required=False, source="activity_images")
     category = serializers.SlugRelatedField(
-        slug_field="name", queryset=Category.objects.all(), required=False)
+        slug_field="name", queryset=Category.objects.all(), many=True, required=False)    
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
     saved_count = serializers.IntegerField(read_only=True)
@@ -88,6 +88,8 @@ class ActivitySerializer(serializers.ModelSerializer):
             "inspired_projects",
             "creators",
             "title",
+            "introduction",
+            "class_grade",
             "motivation",
             "images",
             "video",
@@ -107,6 +109,7 @@ class ActivitySerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        print(validated_data,'=================')
         if 'inspiring_artist' in validated_data:
             validated_data['inspiring_artist'] = create_inspiring_artist(
                 validated_data.pop('inspiring_artist'))
@@ -119,8 +122,13 @@ class ActivitySerializer(serializers.ModelSerializer):
         making_steps = validated_data.pop('making_steps', None)
 
         inspiring_examples = validated_data.pop('inspiring_examples', None)
+        category = validated_data.pop('category',None)
 
         activity = Activity.objects.create(**validated_data)
+
+        if(category):
+            activity.category.set(category)
+
         if making_steps:
             create_making_steps(activity, making_steps)
         if inspiring_examples:
