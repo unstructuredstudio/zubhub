@@ -9,11 +9,20 @@ def create_inspiring_artist(inspiring_artist_data):
 
 
 def create_making_steps(activity, making_steps):
-    for step in making_steps:
-        if(step.get('image')):
-            saved_image = Image.objects.create(**step['image'])
-            step['image'] = saved_image
-        ActivityMakingStep.objects.create(activity=activity, **step)
+    for step_data in making_steps:
+        step_images_data = step_data.pop('image', [])  # Extract and remove the 'image' key
+
+        # Create the ActivityMakingStep instance
+        step = ActivityMakingStep.objects.create(activity=activity, **step_data)
+
+        # Create or retrieve Image instances and associate them with the step
+        step_images = []
+        for image_info in step_images_data:
+            image = Image.objects.create(**image_info)
+            step_images.append(image)
+
+        # Associate the Image instances with the step using the set() method
+        step.image.set(step_images)
 
 
 def create_inspiring_examples(activity, inspiring_examples):

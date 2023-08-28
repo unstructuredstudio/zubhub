@@ -43,7 +43,7 @@ class ActivityImageSerializer(serializers.ModelSerializer):
 
 
 class ActivityMakingStepSerializer(serializers.ModelSerializer):
-    image = ImageSerializer(required=False, allow_null=True)
+    image = ImageSerializer(required=False, allow_null=True, many=True )
     step_order = serializers.IntegerField()
 
     class Meta:
@@ -109,7 +109,6 @@ class ActivitySerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        print(validated_data,'=================')
         if 'inspiring_artist' in validated_data:
             validated_data['inspiring_artist'] = create_inspiring_artist(
                 validated_data.pop('inspiring_artist'))
@@ -131,6 +130,7 @@ class ActivitySerializer(serializers.ModelSerializer):
 
         if making_steps:
             create_making_steps(activity, making_steps)
+            print(activity,'====================')
         if inspiring_examples:
             create_inspiring_examples(
                 activity, inspiring_examples)

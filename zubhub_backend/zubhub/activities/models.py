@@ -132,8 +132,9 @@ class ActivityMakingStep(models.Model):
                                  null=True,
                                  related_name="making_steps",
                                  blank=True)
-    image = models.ForeignKey(Image,
-                              on_delete=models.CASCADE,
+    image = models.ManyToManyField(Image,
+                            #   on_delete=models.CASCADE,
+                            
                               null=True,
                               blank=True)
     description = models.TextField(max_length=10000, blank=True)
