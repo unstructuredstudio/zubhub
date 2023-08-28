@@ -14,8 +14,10 @@ export default function Dropdown({
   placeholder,
   required,
   handleChange,
+  onBlur = () => {},
   error,
   helperText,
+  name,
   description,
   maxSelection,
   withCheckbox,
@@ -51,6 +53,7 @@ export default function Dropdown({
     <TextField
       {...params}
       variant="outlined"
+      onBlur={() => onBlur({ name, target: { value } })}
       error={error}
       helperText={error}
       placeholder={placeholder}

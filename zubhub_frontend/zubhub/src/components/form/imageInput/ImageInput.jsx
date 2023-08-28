@@ -64,11 +64,14 @@ export default function ImageInput({
   };
 
   const handleFileChange = files => {
-    if (files?.length > max || value?.length > max) {
+    if (files?.length + value?.length > max) {
       alert(`You can only select up to ${max} files.`);
       return;
     }
-    handleChange(Array.from([...files, ...value]));
+
+    const images = Array.from([...files, ...value]);
+
+    handleChange(images);
   };
 
   const getPath = file => {

@@ -6,11 +6,15 @@ import styles from '../../../assets/js/styles';
 import { Add, MoreHoriz } from '@material-ui/icons';
 import clsx from 'clsx';
 import { uniqueId } from 'lodash';
+import { useFormik } from 'formik';
+import { step2Schema } from '../script';
 
 const idPrefix = 'activitystep';
 const DEFAULT_STEP = { description: '', attachments: [], title: '', id: uniqueId(idPrefix) };
 
 export default function Step2() {
+  const formik = useFormik(step2Schema);
+
   const classes = makeStyles(step2Styles)();
   const commonClasses = makeStyles(styles)();
   const handleIntroductionChange = value => {};
@@ -51,33 +55,48 @@ export default function Step2() {
     }
   };
 
+  console.log(formik.values, 'step2');
+
   return (
     <div className={classes.container}>
       <Box className={classes.formItem}>
         <Editor
           enableToolbar={true}
-          onChange={handleIntroductionChange}
+          value={formik.values.introduction}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.introduction && formik.errors.introduction}
+          name="introduction"
           label="Introduction"
           required
           placeholder="Start writting"
         />
         <LabeledLine label="ATTACH" />
 
-        <ImageInput message={imageInputMessage} />
+        <ImageInput
+          handleChange={data => formik.setFieldValue('images', data)}
+          value={formik.values.images}
+          message={imageInputMessage}
+        />
       </Box>
 
       <Box className={classes.formItem}>
         <Editor
           enableToolbar={true}
-          onChange={handleIntroductionChange}
           label="Materials Used"
-          value={defaultQuillValue}
+          onChange={formik.handleChange}
+          value={formik.values.materials_used}
+          name="materials_used"
           required
           placeholder="1. "
         />
         <LabeledLine label="ATTACH" />
 
-        <ImageInput message={imageInputMessage} />
+        <ImageInput
+          handleChange={data => formik.setFieldValue('materials_used_image', data)}
+          value={formik.values.materials_used_image}
+          message={imageInputMessage}
+        />
       </Box>
 
       {steps.map((step, index) => (

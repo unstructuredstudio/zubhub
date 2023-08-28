@@ -1,11 +1,11 @@
 import { FormControl, FormHelperText, TextField, Typography, makeStyles } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import styles from '../../../assets/js/styles';
 import { textInputStyles } from './TextInput.styles';
 import clsx from 'clsx';
 import FormLabel from '../../form_labels/formLabel';
 
-export default function TextInput({
+function TextInput({
   label,
   required,
   placeholder,
@@ -52,3 +52,5 @@ export default function TextInput({
     </FormControl>
   );
 }
+
+export default memo(TextInput);

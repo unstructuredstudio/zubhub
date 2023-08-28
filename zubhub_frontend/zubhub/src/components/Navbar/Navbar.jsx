@@ -94,6 +94,7 @@ function PageWrapper(props) {
     anchor_el: null,
     loading: false,
     open_search_form: false,
+    left: false,
   });
 
   const [options, setOptions] = useState([]);

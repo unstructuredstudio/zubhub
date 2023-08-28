@@ -64,20 +64,15 @@ export const vars = {
     },
 };
 
-export const testTags = ['Clothing', 'Animation', 'Painting', 'Science', 'Technology', 'Mechanics', 'Music', 'General'];
 
 
 
-export const getCategories = (props) => {
-    return getCategories({ t: props.t });
-};
 
 
 export const handleMaterialsUsedFieldBlur = props => {
     props.setStatus({ ...props.status, materials_used: '' });
     props.setFieldTouched('materials_used', true);
 };
-
 
 export const removeMetaData = (images, state, handleSetState) => {
     const newWorker = worker();
@@ -87,21 +82,6 @@ export const removeMetaData = (images, state, handleSetState) => {
     });
 };
 
-
-export const searchTags = (value, callBack) => {
-    clearTimeout(vars.timer.id);
-    const api = new API()
-    if (value !== '') {
-        vars.timer.id = setTimeout(async () => {
-            try {
-                const res = await api.suggestTags(value)
-                callBack(undefined, res);
-            } catch (error) {
-                callBack(error);
-            }
-        }, 500);
-    }
-}
 
 export const initUpload = (state, props, handleSetState) => {
     if (!props.auth.token) return props.history.push('/login');
@@ -522,221 +502,62 @@ export const getProject = (props, state) => {
 };
 
 
-export const checkMediaFilesErrorState = (refs, props) => {
-    if (props.auth.token) {
-        if (props.touched['project_images'] && props.errors['project_images']) {
-            refs.image_upload_button_el.current.setAttribute(
-                'style',
-                'border-color:#F54336; color:#F54336',
-            );
-        } else {
-            refs.image_upload_button_el.current.setAttribute(
-                'style',
-                'border-color: 1px solid rgba(0, 0, 0, 0.23); color:#00B8C4',
-            );
-        }
-
-        if (props.touched['video'] && props.errors['video']) {
-            refs.video_upload_button_el.current.setAttribute(
-                'style',
-                'border-color:#F54336; color:#F54336',
-            );
-        } else {
-            refs.video_upload_button_el.current.setAttribute(
-                'style',
-                'border-color: 1px solid rgba(0, 0, 0, 0.23); color:#00B8C4',
-            );
-        }
-
-        if (props.touched['project_images']) {
-            vars.image_field_touched = true;
-        } else {
-            vars.image_field_touched = false;
-        }
-
-        if (props.touched['video']) {
-            vars.video_field_touched = true;
-        } else {
-            vars.video_field_touched = false;
-        }
-    }
-};
-
-
-export const validationSchema = Yup.object().shape({
+export const step1Validation = Yup.object().shape({
     title: Yup.string().max(100, 'max').required('required'),
-    description: Yup.string().max(10000, 'max').required('required'),
-    project_images: Yup.mixed()
-        .test('image_is_empty', 'imageOrVideo', function (value) {
-            return vars.image_field_touched && !value && !this.parent.video
-                ? false
-                : true;
-        })
-        .test('not_an_image', 'onlyImages', value => {
-            if (value) {
-                let not_an_image = false;
-                for (let index = 0; index < value.files?.length; index++) {
-                    if (value.files[index].type.split('/')[0] !== 'image') {
-                        not_an_image = true;
-                    }
-                }
-                return not_an_image ? false : true;
-            } else {
-                return true;
-            }
-        })
-        .test('too_many_images', 'tooManyImages', value => {
-            if (value) {
-                return value.files?.length > 10 ? false : true;
-            } else {
-                return true;
-            }
-        })
-        .test('image_size_too_large', 'imageSizeTooLarge', value => {
-            if (value) {
-                let image_size_too_large = false;
-                for (let index = 0; index < value.files?.length; index++) {
-                    if (value.files[index].size / 1000 > 10240) {
-                        image_size_too_large = true;
-                    }
-                }
-                return image_size_too_large ? false : true;
-            } else {
-                return true;
-            }
-        }),
-    // video: Yup.mixed()
-    //   .test('should_be_video_file', 'shouldBeVideoFile', value => {
-    //     if (!value) {
-    //       return true;
-    //     } else if (typeof value === 'string') {
-    //       return true;
-    //     } else if (typeof value === 'object') {
-    //       let not_a_video = false;
-    //       for (let index = 0; index < value.files.length; index++) {
-    //         if (value.files[index].type.split('/')[0] !== 'video') {
-    //           not_a_video = true;
-    //         }
-    //       }
-    //       return not_a_video ? false : true;
-    //     }
-    //     return false;
-    //   })
-    //   .test('should_be_url', 'shouldBeURL', value => {
-    //     if (!value) {
-    //       return true;
-    //     } else if (typeof value === 'object') {
-    //       return true;
-    //     } else if (typeof value === 'string') {
-    //       const res = value.match(
-    //         /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.|:)[a-z0-9]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-    //       );
-    //       return res !== null ? true : false;
-    //     }
-
-    //     return false;
-    //   })
-    //   .test('max-video-url-length', 'maxVideoURLLength', value => {
-    //     if (!value) {
-    //       return true;
-    //     } else if (typeof value === 'object') {
-    //       return true;
-    //     } else if (typeof value === 'string') {
-    //       return value.length > 2048 ? false : true;
-    //     }
-
-    //     return false;
-    //   })
-    //   .test('max-video-file-size', 'maxVideoFileSize', value => {
-    //     if (!value) {
-    //       return true;
-    //     } else if (typeof value === 'string') {
-    //       return true;
-    //     } else if (typeof value === 'object') {
-    //       let max = false;
-    //       for (let index = 0; index < value.files.length; index++) {
-    //         if (value.files[index].size / 1000 > 60240) {
-    //           max = true;
-    //         }
-    //       }
-    //       return max ? false : true;
-    //     }
-
-    //     return false;
-    //   })
-    //   .test('video_is_empty', 'imageOrVideo', function (value) {
-    //     return vars.video_field_touched && !value && !this.parent.project_images
-    //       ? false
-    //       : true;
-    //   }),
-    materials_used: Yup.string()
-        .max(10000, 'max')
-        .test('empty', 'required', value => {
-            let is_empty = true;
-
-            value &&
-                value.split(',').forEach(material => {
-                    if (material) {
-                        is_empty = false;
-                    }
-                });
-
-            return !is_empty;
-        }),
-    category: Yup.string().min(1, 'min'),
-    // tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
-    //     if (tags) {
-    //         tags = JSON.parse(tags);
-    //         const re = /^[0-9A-Za-z\s\-]+$/;
-    //         let unsupported = false;
-    //         for (let tag of tags) {
-    //             if (!re.test(tag.name)) {
-    //                 unsupported = true;
-    //             }
-    //         }
-    //         return unsupported ? false : true;
-    //     } else {
-    //         return true;
-    //     }
-    // }),
-    // publish: Yup.mixed()
-    //   .test('visible_to_required', 'visible_to_required', publish => {
-    //     if (
-    //       publish.type === publish_type['Preview'] &&
-    //       publish.visible_to.length < 1
-    //     ) {
-    //       return false;
-    //     } else {
-    //       return true;
-    //     }
-    //   })
-    //   .test('visible_to_unsupported', 'visible_to_unsupported', publish => {
-    //     const re = /^[a-z0-9@._+-]{1,150}$/i;
-    //     let unsupported = false;
-    //     for (let username of publish.visible_to) {
-    //       console.log('kdlskdlksd', username);
-    //       if (!re.test(username)) {
-    //         unsupported = true;
-    //       }
-    //     }
-    //     return unsupported ? false : true;
-    //   }),
+    class_grade: Yup.object().shape({ name: Yup.string() }).nullable(),
+    category: Yup.array()
+        .of(
+            Yup.object().shape({
+                name: Yup.string().required('Name is required')
+            })
+        ),
 });
 
-export const formikSchema = {
+export const step1Schema = {
     initialValues: {
         title: undefined,
-        description: undefined,
-        materials_used: undefined,
-        project_images: [],
-        images: [],
-        video: [],
-        video_link: '',
-        tags: '',
-        category: [{}],
+        class_grade: null,
+        category: [],
     },
-    validationSchema: validationSchema,
+    validationSchema: step1Validation,
 }
+
+export const step2Validation = Yup.object().shape({
+    introduction: Yup.string().max(500, 'max').required('required'),
+    materials_used: Yup.string(),
+    images: Yup.array()
+        .of(
+            Yup.object().shape({
+                file_url: Yup.string(),
+                public_id: Yup.string()
+            })
+        ),
+    making_steps: Yup.array().of(Yup.object().shape({
+        title: Yup.string().required(),
+        description: Yup.string().required(),
+        step_order: Yup.number().required(),
+        images: Yup.object().shape({
+            file_url: Yup.string(),
+            public_id: Yup.string()
+        }),
+        materials_used_image: Yup.object().shape({
+            file_url: Yup.string(),
+            public_id: Yup.string()
+        })
+    }))
+});
+
+export const step2Schema = {
+    initialValues: {
+        introduction: undefined,
+        images: [],
+        materials_used: null,
+        making_steps: [],
+        materials_used_image: []
+    },
+    validationSchema: step2Validation,
+}
+
 
 export class UploadMedia {
     constructor(

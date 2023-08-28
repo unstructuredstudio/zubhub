@@ -1,52 +1,64 @@
-import { FormControl, TextField, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
-import styles from '../../../assets/js/styles';
-import FormLabel from '../../../components/form_labels/formLabel';
-import TextInput from '../../../components/form/textInput/TextInput';
-import { Dropdown, SelectFromPills } from '../../../components';
-import { step1Styles } from './Step1.styles';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { Dropdown, SelectFromPills } from '../../../components';
+import TextInput from '../../../components/form/textInput/TextInput';
 import { getCategories } from '../../../store/actions/projectActions';
+import { step1Schema } from '../script';
+import { step1Styles } from './Step1.styles';
+import _ from 'lodash';
 
 export default function Step1({ formik, ...props }) {
-  const commonClasses = makeStyles(styles)();
   const classes = makeStyles(step1Styles)();
   const [categories, setCategories] = useState([]);
   const { t } = useTranslation();
 
   useEffect(() => {
     getCategories({ t })().then(data => setCategories(data.categories));
-    return () => {};
+    return () => {
+      setCategories([]);
+    };
   }, []);
-
-  const handleClassGradeChange = data => {
-    console.log(data);
-  };
-
-  const handleCategories = data => {};
 
   return (
     <div className={classes.container}>
-      <TextInput label="Activity Title" placeholder="What did you make?" required />
+      <TextInput
+        defaultValue={formik.values.title}
+        onChange={_.debounce(formik.handleChange, 500)}
+        onBlur={formik.handleBlur}
+        error={formik.touched.title && formik.errors.title}
+        name={'title'}
+        label="Activity Title"
+        placeholder="What did you make?"
+        required
+      />
+
       <SelectFromPills
-        onChange={handleCategories}
+        name="category"
         label="What category does your activity belong too? "
         helperText="Select three categories that best describe your project. Select none if you are unsure about your category."
         data={categories}
+        onChange={data => formik.setFieldValue('category', data)}
+        selectedItems={formik.values.category}
+        // error={formik.touched.category && formik.errors.category}
+        // onBlur={formik.handleBlur}
+        limit={3}
       />
+
       <Dropdown
         label="Select Class Grade for this activity"
         helperText="What class grade best suites this activity"
         placeholder="Select Class grade"
-        handleChange={handleClassGradeChange}
-        // handleBlur={() => handleBlur('category')}
+        name="class_grade"
+        handleChange={value => formik.setFieldValue('class_grade', value)}
+        // onBlur={data => {
+        //   formik.setTouched({ class_grade: true });
+        //   formik.handleBlur(data);
+        // }}
+        value={formik.values.class_grade}
         data={grades}
-        // value={formik.values.category}
-        // error={formik.touched.category && formik.errors.category}
-        // multiple={true}
-        // withCheckbox={true}
-        // maxSelection={3}
+        // error={formik.touched.class_grade && formik.errors.class_grade}
       />
     </div>
   );

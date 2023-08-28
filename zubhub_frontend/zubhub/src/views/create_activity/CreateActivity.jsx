@@ -40,30 +40,24 @@ const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Activity Basics', 'Activity Details'];
 
 export default function CreateActivity(props) {
-  const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const wizardRef = useRef(null);
+
   const classes = makeStyles(createActivityStyles)({ height });
   const commonClasses = makeStyles(styles)();
-  const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
-  const [activeStep, setActiveStep] = useState(1);
+
+  const wizardRef = useRef(null);
+
+  const [activeStep, setActiveStep] = useState(2);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
-  const [publishOrAddTags, setPublishOrAddTags] = useState(false);
+  const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
   const [addTagsDialog, setAddTagsDialog] = useState(false);
-  const [value, setValue] = useState('');
-  const [remoteTags, setRemoteTags] = useState([]);
-  const [popularTags, setPopularTags] = useState(script.testTags);
-  const [mode, setMode] = useState('');
+  const [completedSteps, setcompletedSteps] = useState([]);
   const [preview, setPreview] = useState(false);
+  const [mode, setMode] = useState('');
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
-  const togglePublishOrAddTags = () => {
-    formik.values?.tags.length == 0 ? setPublishOrAddTags(!publishOrAddTags) : toggleAddTagsDialog();
-  };
-  const toggleAddTagsDialog = () => setAddTagsDialog(!addTagsDialog);
-  const clearSuggestions = () => setRemoteTags([]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -87,41 +81,18 @@ export default function CreateActivity(props) {
     return message;
   };
 
-  //   const handleChangeTag = async value => {
-  //     setValue(value);
-  //     script.searchTags(value, (error, data) => {
-  //       if (!error) setRemoteTags(data);
-  //     });
-  //   };
-
-  //   const addTag = value => {
-  //     const values = [...formik.values.tags, value];
-  //     formik.setFieldValue('tags', values);
-  //     clearSuggestions();
-  //     setValue('');
-  //   };
-
-  //   const removeTag = tagIndex => {
-  //     const tags = [...formik.values.tags].filter((_, index) => index !== tagIndex);
-  //     formik.setFieldValue('tags', tags);
-  //   };
-
-  //   useEffect(() => {
-  //     if (props.match.params.id) {
-  //       Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
-  //         handleSetState({ ...result[0], ...result[1] }),
-  //       );
-  //     } else {
-  //       handleSetState(script.getCategories(props));
-  //     }
-  //     const params = new URLSearchParams(window.location.search);
-  //     const queryParams = Object.fromEntries(params.entries());
-  //     if ('mode' in queryParams) setMode(queryParams.mode);
-  //   }, []);
-
-  const handleBlur = name => {
-    formik.setTouched({ [name]: true }, true);
-  };
+  // useEffect(() => {
+  //   if (props.match.params.id) {
+  //     Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
+  //       handleSetState({ ...result[0], ...result[1] }),
+  //     );
+  //   } else {
+  //     handleSetState(script.getCategories(props));
+  //   }
+  //   const params = new URLSearchParams(window.location.search);
+  //   const queryParams = Object.fromEntries(params.entries());
+  //   if ('mode' in queryParams) setMode(queryParams.mode);
+  // }, []);
 
   useEffect(() => {
     if (state.success) {
@@ -150,51 +121,39 @@ export default function CreateActivity(props) {
     if (draftStatus === DRAFT_STATUSES.saved) return !isSmallScreen ? 'Saved to draft' : '';
   };
 
-  const formik = useFormik(script.formikSchema);
+  const formikStep1 = useFormik(script.step1Schema);
+  const formikStep2 = useFormik(script.step2Schema);
 
   const previous = () => go('prev');
   const next = async () => {
-    // let error = await checkErrors();
-    // console.log(error);
-    // if (Object.keys(error).length > 0) return;
-
-    // if (activeStep === 3) {
-    //   return togglePublishOrAddTags();
-    // }
+    let error = await checkErrors();
+    console.log(error);
+    if (Object.keys(error).length > 0) return;
     go('next');
 
     // submitData();
   };
 
-  const handleAddTags = () => {
-    togglePublishOrAddTags();
-    toggleAddTagsDialog();
-  };
-
   const submitData = async () => {
     try {
-      return (
-        !script.vars.upload_in_progress &&
-        script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState)
-      );
+      // return (
+      //   !script.vars.upload_in_progress &&
+      //   script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState)
+      // );
     } catch (error) {
       console.log(error);
     }
   };
 
-  //   const checkErrors = () => {
-  //     if (activeStep === 1) {
-  //       return formik.setTouched({ title: true, materials_used: true, description: true }, true);
-  //     }
+  const checkErrors = () => {
+    if (activeStep === 1) {
+      return formikStep1.setTouched({ title: true }, true);
+    }
 
-  //     if (activeStep === 2) {
-  //       return formik.setTouched({ video: true, project_images: true }, true);
-  //     }
-
-  //     if (activeStep === 3) {
-  //       return formik.setTouched({ category: true, hashtags: true }, true);
-  //     }
-  //   };
+    if (activeStep === 2) {
+      // return formik.setTouched({ video: true, project_images: true }, true);
+    }
+  };
 
   const go = direction => {
     if (direction === 'next') {
@@ -267,8 +226,8 @@ export default function CreateActivity(props) {
 
           <Box style={{ marginTop: 100 }}>
             <StepWizard initialStep={activeStep} ref={wizardRef}>
-              <Step1 formik={formik} />
-              <Step2 />
+              <Step1 formik={formikStep1} />
+              <Step2 formik={formikStep2} />
             </StepWizard>
           </Box>
         </Grid>
@@ -294,68 +253,6 @@ export default function CreateActivity(props) {
           >
             {activeStep == 2 ? 'Publish' : 'Next'}
           </CustomButton>
-
-          {/* <Modal.WithIcon
-            icon={<AiOutlineExclamationCircle color={colors['tertiary-dark']} fontSize={25} />}
-            open={publishOrAddTags}
-            onClose={togglePublishOrAddTags}
-          >
-            <DialogTitle>
-              <Typography className={clsx(commonClasses.title2, classes.dialogTitle1)}>
-                Would you like to tag your project?
-              </Typography>
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Add relevant hashtags to your project for more visibility on ZubHub. If your project is generic in
-                nature, use General tag.
-              </DialogContentText>
-              <DialogActions className={commonClasses.justifySpaceBetween}>
-                <CustomButton primaryButtonOutlinedStyle onClick={handleAddTags}>
-                  Add tags
-                </CustomButton>
-                <CustomButton primaryButtonStyle onClick={submitData}>
-                  Publish without tags
-                </CustomButton>
-              </DialogActions>
-            </DialogContent>
-          </Modal.WithIcon> */}
-
-          {/* <Modal open={addTagsDialog} onClose={toggleAddTagsDialog}>
-            <DialogActions className={commonClasses.justifySpaceBetween}>
-              <CustomButton onClick={toggleAddTagsDialog} style={{ padding: 15 }} startIcon={<CloseOutlined />}>
-                Close
-              </CustomButton>
-              <CustomButton onClick={submitData} style={{ margin: '0 15px' }} primaryButtonStyle>
-                Publish
-              </CustomButton>
-            </DialogActions>
-
-            <DialogTitle>
-              <Typography align="center" className={commonClasses.title2}>
-                What hashtag best describes your project?
-              </Typography>
-              <Typography align="center">
-                For example, if you made flower from cardboard, you can write: cardboard, flowers, colours or leave it
-                blank if you’re unsure.
-              </Typography>
-            </DialogTitle>
-
-            <DialogContent style={{ paddingBottom: 30 }}>
-              <TagsInput
-                name="tags"
-                selectedTags={formik.values.tags}
-                popularTags={popularTags}
-                onChange={handleChangeTag}
-                addTag={addTag}
-                value={value}
-                remoteData={remoteTags}
-                clearSuggestions={clearSuggestions}
-                removeTag={removeTag}
-                placeholder="Start typing to search"
-              />
-            </DialogContent>
-          </Modal> */}
         </Box>
       </Box>
     </div>
