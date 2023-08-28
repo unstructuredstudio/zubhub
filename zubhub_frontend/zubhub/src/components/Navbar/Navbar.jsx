@@ -352,7 +352,8 @@ function PageWrapper(props) {
                     <Typography className={clsx(common_classes.title2, classes.username)}>
                       {props.auth.username}
                     </Typography>
-                    <Typography className="">Student</Typography>
+                    {/* Todo: Change this subheading based on current role of user */}
+                    <Typography className="">Creator</Typography>
                   </Box>
                 )}
               </Hidden>

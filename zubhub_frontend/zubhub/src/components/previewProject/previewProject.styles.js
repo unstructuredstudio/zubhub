@@ -218,7 +218,7 @@ const styles = theme => ({
     },
     descriptionHeadingStyle: {
         marginTop: '1em',
-        fontWeight: 900,
+        fontWeight: 'bold',
         fontSize: '2.2rem',
     },
     descriptionBodyStyle: {

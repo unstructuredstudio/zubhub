@@ -62,11 +62,11 @@ function SavedProjects(props) {
     return (
       <Box className={classes.root}>
         <Container className={classes.mainContainerStyle}>
-          <Grid container>
+          <Grid container spacing={3}>
             <Grid item xs={12}>
               <Typography
                 className={classes.pageHeaderStyle}
-                variant="h3"
+                variant="h4"
                 gutterBottom
               >
                 {t('savedProjects.title')}
