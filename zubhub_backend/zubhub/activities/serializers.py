@@ -49,7 +49,7 @@ class ActivityMakingStepSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityMakingStep
         fields = [
-            "image", "description", "step_order"
+            "image", "description", "step_order", "title"
         ]
 
 

@@ -42,19 +42,13 @@ class Activity(models.Model):
     creators = models.ManyToManyField(Creator,
                                       related_name="activities_created")
     title = models.CharField(max_length=500)
-    category = models.ManyToManyField("projects.Category",blank=True,null=True,  related_name="activities")
+    category = models.ManyToManyField("projects.Category",blank=True,  related_name="activities")
     introduction = models.CharField(max_length=10000,blank=True)
     class_grade = models.CharField(max_length=50, blank=True)
     
     learning_goals = models.TextField(max_length=10000, blank=True)
     facilitation_tips = models.TextField(max_length=10000, blank=True)
     motivation = models.TextField(max_length=10000, blank=True)
-
-    # category = models.ForeignKey(Category,
-    #                              on_delete=models.SET_NULL,
-    #                              null=True,
-    #                              blank=True,
-    #                              related_name="activities")
     video = models.URLField(max_length=1000, blank=True, null=True)
     materials_used = models.TextField(max_length=5000)
     materials_used_image = models.ForeignKey(Image,
@@ -132,11 +126,9 @@ class ActivityMakingStep(models.Model):
                                  null=True,
                                  related_name="making_steps",
                                  blank=True)
-    image = models.ManyToManyField(Image,
-                            #   on_delete=models.CASCADE,
-                            
-                              null=True,
-                              blank=True)
+    
+    title = models.TextField(max_length=500,null=True)
+    image = models.ManyToManyField(Image,blank=True)
     description = models.TextField(max_length=10000, blank=True)
     step_order = models.IntegerField()
 
