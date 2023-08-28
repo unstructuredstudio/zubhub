@@ -61,16 +61,15 @@ function Activities(props) {
     } else {
       return (
         <div>
-          <Grid container className={classes.activityListContainer}>
+          <Grid container spacing={3}>
             {activityList &&
               activityList.map((activity, index) => (
                 <Grid
                   key={`activityContainer-${index}`}
                   item
                   xs={12}
-                  sm={12}
-                  md={6}
-                  lg={6}
+                  sm={6}
+                  lg={4}
                   align="center"
                   className={classes.activityBoxContainer}
                 >
