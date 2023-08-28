@@ -15,9 +15,7 @@ const styles = theme => ({
     width: '100%',
   },
   pageHeaderStyle: {
-    marginTop: '1em',
-    fontWeight: 900,
-    textAlign: 'center',
+    fontWeight: 'bold',
   },
   projectGridStyle: {
     marginBottom: '2em',
