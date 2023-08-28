@@ -55,7 +55,7 @@ function Ambassadors(props) {
     return <LoadingPage />;
   } else if (Object.keys(ambassadors).length > 0 && ambassadors.ambassadors) {
     return (
-      <Box >
+      <Box className={classes.root}>
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
             <Typography className={classes.ambassadorsHeadingStyle}>
