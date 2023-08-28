@@ -130,7 +130,6 @@ class ActivitySerializer(serializers.ModelSerializer):
 
         if making_steps:
             create_making_steps(activity, making_steps)
-            print(activity,'====================')
         if inspiring_examples:
             create_inspiring_examples(
                 activity, inspiring_examples)
