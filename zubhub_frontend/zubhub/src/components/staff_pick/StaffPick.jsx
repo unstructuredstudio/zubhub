@@ -32,9 +32,9 @@ function StaffPick(props) {
         <Grid item xs={12}>
           <Typography
             gutterBottom
-            component="h2"
-            variant="h6"
-            color="textPrimary"
+            // component="h2"
+            // variant="h6"
+            // color="textPrimary"
             className={classes.titleStyle}
           >
             {staff_pick.title}

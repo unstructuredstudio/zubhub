@@ -55,7 +55,7 @@ function Ambassadors(props) {
     return <LoadingPage />;
   } else if (Object.keys(ambassadors).length > 0 && ambassadors.ambassadors) {
     return (
-      <Box className={classes.root}>
+      <Box >
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
             <Typography className={classes.ambassadorsHeadingStyle}>
@@ -73,7 +73,7 @@ function Ambassadors(props) {
             </Typography>
 
 
-          <Grid container>
+          <Grid container spacing={3}>
             {ambassadors.projects.results.map(project => (
               <Grid
                 item

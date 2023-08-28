@@ -20,7 +20,7 @@ const styles = theme => ({
     padding: '0 30px',
   },
   ttitleStyle: {
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '1.7rem',
     [theme.breakpoints.up('1600')]: {
       fontSize: '2.5rem',
