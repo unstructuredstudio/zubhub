@@ -525,25 +525,13 @@ export const step1Schema = {
 export const step2Validation = Yup.object().shape({
     introduction: Yup.string().max(500, 'max').required('required'),
     materials_used: Yup.string(),
-    images: Yup.array()
-        .of(
-            Yup.object().shape({
-                file_url: Yup.string(),
-                public_id: Yup.string()
-            })
-        ),
+    images: Yup.array(),
     making_steps: Yup.array().of(Yup.object().shape({
-        title: Yup.string().required(),
+        title: Yup.string(),
         description: Yup.string().required(),
-        step_order: Yup.number().required(),
-        images: Yup.object().shape({
-            file_url: Yup.string(),
-            public_id: Yup.string()
-        }),
-        materials_used_image: Yup.object().shape({
-            file_url: Yup.string(),
-            public_id: Yup.string()
-        })
+        step_order: Yup.number(),
+        images: Yup.array(),
+        materials_used_image: Yup.array()
     }))
 });
 
@@ -551,7 +539,7 @@ export const step2Schema = {
     initialValues: {
         introduction: undefined,
         images: [],
-        materials_used: null,
+        materials_used: '<ol> <li></li></ol>',
         making_steps: [],
         materials_used_image: []
     },
@@ -660,3 +648,15 @@ export class UploadMedia {
 }
 
 
+export const submitForm = ({ step1Values, step2Values }, setState) => {
+    let imagesToUpload = {}
+    if (step2Values) {
+        imagesToUpload.images = step2Values.images
+        imagesToUpload.materials_used_image = step2Values.materials_used_image
+        imagesToUpload.making_steps = {}
+        step2Values.making_steps?.forEach((step, index) => {
+            imagesToUpload.making_steps[`${index}`] = step.images
+        })
+    }
+    console.log(imagesToUpload);
+} 

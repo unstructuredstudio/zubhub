@@ -8,16 +8,16 @@ import clsx from 'clsx';
 import { uniqueId } from 'lodash';
 import { useFormik } from 'formik';
 import { step2Schema } from '../script';
+import _ from 'lodash';
 
 const idPrefix = 'activitystep';
-const DEFAULT_STEP = { description: '', attachments: [], title: '', id: uniqueId(idPrefix) };
+const DEFAULT_STEP = { description: '', images: [], title: '', id: uniqueId(idPrefix) };
 
-export default function Step2() {
-  const formik = useFormik(step2Schema);
+export default function Step2({ formik }) {
+  // const formik = useFormik(step2Schema);
 
   const classes = makeStyles(step2Styles)();
   const commonClasses = makeStyles(styles)();
-  const handleIntroductionChange = value => {};
   const [steps, setSteps] = useState([{ ...DEFAULT_STEP }]);
 
   const addStep = () => {
@@ -26,12 +26,17 @@ export default function Step2() {
   };
 
   const onStepChange = (data, type, stepIndex) => {
+    console.log(data, 'data');
     let stepsTemp = [...steps];
     let step = stepsTemp[stepIndex];
     step[type] = data;
     stepsTemp[stepIndex] = step;
     setSteps(stepsTemp);
   };
+
+  useEffect(() => {
+    formik.setFieldValue('making_steps', steps);
+  }, [steps]);
 
   const deleteStep = id => {
     setSteps([...steps.filter(step => step.id !== id)]);
@@ -55,7 +60,7 @@ export default function Step2() {
     }
   };
 
-  console.log(formik.values, 'step2');
+  // console.log(formik.values);
 
   return (
     <div className={classes.container}>
@@ -87,7 +92,7 @@ export default function Step2() {
           onChange={formik.handleChange}
           value={formik.values.materials_used}
           name="materials_used"
-          required
+          // required
           placeholder="1. "
         />
         <LabeledLine label="ATTACH" />
@@ -110,7 +115,7 @@ export default function Step2() {
                 style={{ border: 'none', outline: 'none', paddingLeft: 10, minWidth: '100%' }}
                 className={commonClasses.title2}
                 placeholder="Enter step title"
-                onChange={d => onStepChange(d.target.value, 'title', index)}
+                onChange={_.debounce(d => onStepChange(d.target.value, 'title', index), 500)}
               />
             </div>
             {steps.length > 1 && (
@@ -126,13 +131,17 @@ export default function Step2() {
           <Box className={classes.formItem}>
             <Editor
               enableToolbar={true}
-              onChange={data => onStepChange(data, 'description', index)}
+              onChange={data => onStepChange(data.target.value, 'description', index)}
               value={step.description}
               placeholder="Type Description..."
             />
             <LabeledLine label="ATTACH" />
 
-            <ImageInput message={imageInputMessage} />
+            <ImageInput
+              message={imageInputMessage}
+              value={step.images}
+              handleChange={data => onStepChange(data, 'images', index)}
+            />
           </Box>
         </div>
       ))}

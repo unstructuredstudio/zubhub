@@ -48,7 +48,7 @@ export default function CreateActivity(props) {
 
   const wizardRef = useRef(null);
 
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(1);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
   const [addTagsDialog, setAddTagsDialog] = useState(false);
@@ -128,10 +128,12 @@ export default function CreateActivity(props) {
   const next = async () => {
     let error = await checkErrors();
     console.log(error);
-    if (Object.keys(error).length > 0) return;
-    go('next');
+    if (Object.keys(error || {}).length > 0) return;
 
-    // submitData();
+    go('next');
+    if (activeStep == 2) {
+      script.submitForm({ step1Values: formikStep1.values, step2Values: formikStep2.values });
+    }
   };
 
   const submitData = async () => {
@@ -151,7 +153,7 @@ export default function CreateActivity(props) {
     }
 
     if (activeStep === 2) {
-      // return formik.setTouched({ video: true, project_images: true }, true);
+      return formikStep2.setTouched({ introduction: true }, true);
     }
   };
 
