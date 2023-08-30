@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { s3 as DO, doConfig, Compress, slugify } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
-import API from '../../api';
+import ZubhubAPI from '../../api';
+const API = new ZubhubAPI();
 
 
 export const vars = {
@@ -226,7 +227,7 @@ export const uploadVideo = (video, state, props, handleSetState) => {
             token: props.auth.token,
         };
 
-        return props.shouldUploadToLocal(args).then(res => {
+        return API.shouldUploadToLocal(args).then(res => {
             if (res && res.local === true) {
                 return uploadVideoToLocal(video, state, props, handleSetState);
             } else if (res && res.local === false) {
@@ -325,7 +326,7 @@ export const uploadImage = (image, state, props, handleSetState) => {
         token: props.auth.token,
     };
 
-    return props.shouldUploadToLocal(args).then(res => {
+    return API.shouldUploadToLocal(args).then(res => {
         if (res && res.local === true) {
             return uploadImageToLocal(image, state, props, handleSetState);
         } else if (res && res.local === false) {
@@ -648,7 +649,7 @@ export class UploadMedia {
 }
 
 
-export const submitForm = ({ step1Values, step2Values }, setState) => {
+export const submitForm = ({ step1Values, step2Values, props, state, handleSetState }, callback) => {
     let imagesToUpload = {}
     if (step2Values) {
         imagesToUpload.images = step2Values.images
@@ -658,5 +659,44 @@ export const submitForm = ({ step1Values, step2Values }, setState) => {
             imagesToUpload.making_steps[`${index}`] = step.images
         })
     }
-    console.log(imagesToUpload);
-} 
+
+    FormFilesUpload(imagesToUpload, props, state, handleSetState)
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+}
+
+const FormFilesUpload = async (files, props, state, handleSetState) => {
+    // The files parametter is in the format 
+    // {[key]:value} where :
+    // - key represents the field 
+    // - value represents an array of files belonging to the field.
+    // - Value can also be an object of keys with their arrays values too
+
+    let promises = new Map()
+
+    Object.keys(files).map(field => {
+        const list = files[field];
+        const isArrayFilled = Array.isArray(list) && list.length > 0;
+        const isObjectFilled = !isArrayFilled && Object.keys(list).length > 0
+
+        if (isArrayFilled) {
+            const fieldFilesUploadPromises = [];
+            list.forEach(file => fieldFilesUploadPromises.push(uploadImage(file, state, props, handleSetState)))
+            promises.set(field, fieldFilesUploadPromises);
+        }
+
+        if (isObjectFilled) {
+            Object.keys(list).forEach((key, index) => {
+                const fieldFilesUploadPromises = [];
+                list[key].forEach(file => fieldFilesUploadPromises.push(uploadImage(file, state, props, handleSetState)))
+                promises.set(`${field}[${index}]`, fieldFilesUploadPromises);
+            })
+        }
+    });
+
+    const promisesArray = Array.from(promises.entries());
+
+    return Promise.all(promisesArray.map(([name, promise]) =>
+        Promise.all(promise).then(files => ({ name, files }))
+    ))
+}

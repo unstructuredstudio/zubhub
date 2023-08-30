@@ -35,6 +35,7 @@ import * as script from './script';
 import CreateActivityStep1 from './create_activity_step1';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
+import { useSelector } from 'react-redux';
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Activity Basics', 'Activity Details'];
@@ -45,10 +46,11 @@ export default function CreateActivity(props) {
 
   const classes = makeStyles(createActivityStyles)({ height });
   const commonClasses = makeStyles(styles)();
+  const auth = useSelector(state => state.auth);
 
   const wizardRef = useRef(null);
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(2);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
   const [addTagsDialog, setAddTagsDialog] = useState(false);
@@ -126,14 +128,20 @@ export default function CreateActivity(props) {
 
   const previous = () => go('prev');
   const next = async () => {
-    let error = await checkErrors();
-    console.log(error);
-    if (Object.keys(error || {}).length > 0) return;
+    // let error = await checkErrors();
+    // console.log(error);
+    // if (Object.keys(error || {}).length > 0) return;
 
-    go('next');
-    if (activeStep == 2) {
-      script.submitForm({ step1Values: formikStep1.values, step2Values: formikStep2.values });
-    }
+    // go('next');
+    // if (activeStep == 2) {
+    script.submitForm({
+      step1Values: formikStep1.values,
+      step2Values: formikStep2.values,
+      props: { ...props, auth },
+      state,
+      handleSetState: setState,
+    });
+    // }
   };
 
   const submitData = async () => {
