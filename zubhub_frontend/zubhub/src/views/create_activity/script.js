@@ -649,7 +649,7 @@ export class UploadMedia {
 }
 
 
-export const submitForm = ({ step1Values, step2Values, props, state, handleSetState }, callback) => {
+export const submitForm = async ({ step1Values, step2Values, props, state, handleSetState }, callback) => {
     let imagesToUpload = {}
     if (step2Values) {
         imagesToUpload.images = step2Values.images
@@ -660,12 +660,12 @@ export const submitForm = ({ step1Values, step2Values, props, state, handleSetSt
         })
     }
 
-    FormFilesUpload(imagesToUpload, props, state, handleSetState)
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+    const res = await formFilesUpload(imagesToUpload, props, state, handleSetState)
+
+    console.log(res);
 }
 
-const FormFilesUpload = async (files, props, state, handleSetState) => {
+const formFilesUpload = async (files, props, state, handleSetState) => {
     // The files parametter is in the format 
     // {[key]:value} where :
     // - key represents the field 
@@ -674,7 +674,7 @@ const FormFilesUpload = async (files, props, state, handleSetState) => {
 
     let promises = new Map()
 
-    Object.keys(files).map(field => {
+    Object.keys(files).forEach(field => {
         const list = files[field];
         const isArrayFilled = Array.isArray(list) && list.length > 0;
         const isObjectFilled = !isArrayFilled && Object.keys(list).length > 0
