@@ -650,6 +650,7 @@ export class UploadMedia {
 
 
 export const submitForm = async ({ step1Values, step2Values, props, state, handleSetState }, callback) => {
+    // Add all images present in th form in the imagesToUpload object for upload.
     let imagesToUpload = {}
     if (step2Values) {
         imagesToUpload.images = step2Values.images
@@ -660,15 +661,15 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
         })
     }
 
+    // Upload all files present in the form and get their remote data.
     const res = await formFilesUpload(imagesToUpload, props, state, handleSetState);
 
     if (res.error) {
-        console.log('Failed to upload Files');
+        alert('Failed to upload Files; Please try again');
         return;
     }
 
-    console.log(step1Values);
-
+    // Add 
     const formData = {
         ...step1Values,
         ...step2Values,
@@ -679,6 +680,7 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
 
     let makinStepsImages = []
 
+    // replace non uploaded images in formData fields with uploaded images
     res.forEach(obj => {
         if (obj.name.startsWith('making_steps')) {
             return makinStepsImages.push(obj)
@@ -697,6 +699,7 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
         formData[obj.name] = obj.files.map(item => replaceImageUrlWithFileUrl(item))
     })
 
+    // Assign making steps uploaded and formated images to their associated steps
     if (makinStepsImages.length > 0) {
         const makingStepsWithUploadedImages = formData.making_steps.map((stepData, index) => {
             const data = {
@@ -711,21 +714,27 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
         formData.making_steps = makingStepsWithUploadedImages
     }
 
-    const createActivity = await API.createActivity(props.auth?.token, formData);
+    // API call to the create activity endpoint
+    const response = await API.createActivity(props.auth?.token, formData);
 }
 
 const replaceImageUrlWithFileUrl = (obj) => {
-    const data = { ...obj, file_url: obj.image_url }
-    delete data.image_url
-    return data
+    if (!('file_url' in obj)) {
+        obj = { ...obj, file_url: obj.image_url }
+    }
+
+    delete obj.image_url
+
+    return obj
 }
 
-const formFilesUpload = async (files, props, state, handleSetState) => {
+const formFilesUpload = (files, props, state, handleSetState) => {
     // The files parametter is in the format 
     // {[key]:value} where :
-    // - key represents the field 
+    // - key represents the field
     // - value represents an array of files belonging to the field.
-    // - Value can also be an object of keys with their arrays values too
+    // - Value can also be an object of keys with their arrays values.
+    // - returns a Promise containing {name:string, files:[]}[] or error
 
     let promises = new Map();
 
@@ -754,6 +763,6 @@ const formFilesUpload = async (files, props, state, handleSetState) => {
     const promisesArray = Array.from(promises.entries());
 
     return Promise.all(promisesArray.map(([name, promise]) =>
-        Promise.all(promise).then(files => ({ name, files })).catch(err => ({ error: err }))
-    ));
+        Promise.all(promise).then(files => ({ name, files }))
+    )).catch(err => ({ error: err }));
 }
