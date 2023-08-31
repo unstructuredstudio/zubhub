@@ -29,10 +29,10 @@ export default function SelectFromPills({
     } else newCategories.push(data);
 
     setSelected(newCategories);
-    _.debounce(() => {
-      onChange(newCategories);
-      onBlur({ name, target: { value: newCategories } });
-    }, 500);
+    // _.debounce(() => {
+    onChange(newCategories);
+    // onBlur({ name, target: { value: newCategories } });
+    // }, 500);
   };
 
   const isLimit = limit ? selected?.filter(selectedItem => selectedItem.name).length == limit : false;

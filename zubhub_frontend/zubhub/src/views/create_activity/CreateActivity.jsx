@@ -50,7 +50,7 @@ export default function CreateActivity(props) {
 
   const wizardRef = useRef(null);
 
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(1);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
   const [addTagsDialog, setAddTagsDialog] = useState(false);
@@ -128,20 +128,20 @@ export default function CreateActivity(props) {
 
   const previous = () => go('prev');
   const next = async () => {
-    // let error = await checkErrors();
-    // console.log(error);
-    // if (Object.keys(error || {}).length > 0) return;
+    let error = await checkErrors();
+    console.log(error);
+    if (Object.keys(error || {}).length > 0) return;
 
-    // go('next');
-    // if (activeStep == 2) {
-    script.submitForm({
-      step1Values: formikStep1.values,
-      step2Values: formikStep2.values,
-      props: { ...props, auth },
-      state,
-      handleSetState: setState,
-    });
-    // }
+    go('next');
+    if (activeStep == 2) {
+      script.submitForm({
+        step1Values: formikStep1.values,
+        step2Values: formikStep2.values,
+        props: { ...props, auth },
+        state,
+        handleSetState: setState,
+      });
+    }
   };
 
   const submitData = async () => {
@@ -171,7 +171,9 @@ export default function CreateActivity(props) {
         wizardRef.current.nextStep();
         let completedStepsTemp = [...new Set([...completedSteps, activeStep])];
         setcompletedSteps(completedStepsTemp);
-        setActiveStep(step => step + 1);
+        if (activeStep !== 2) {
+          setActiveStep(step => step + 1);
+        }
       }
     }
     if (direction === 'prev') {

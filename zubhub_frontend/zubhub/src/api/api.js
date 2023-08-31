@@ -887,26 +887,17 @@ class API {
       materials_used,
       materials_used_image,
       facilitation_tips,
-      activity_images,
+      images,
+      class_grade,
+      introduction,
       making_steps,
       inspiring_examples,
       inspiring_artist,
       video,
     } = args;
 
-    const body = JSON.stringify({
-      title: title,
-      motivation: motivation,
-      learning_goals: learning_goals,
-      materials_used: materials_used,
-      materials_used_image: materials_used_image,
-      facilitation_tips: facilitation_tips,
-      images: activity_images,
-      making_steps: making_steps,
-      inspiring_examples: inspiring_examples,
-      inspiring_artist: inspiring_artist,
-      video: video,
-    });
+
+    const body = JSON.stringify(args);
     return this.request({ url, method, token, body });
     // .then(res => res.json());
   };

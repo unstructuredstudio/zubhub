@@ -39,7 +39,7 @@ export default function Step1({ formik, ...props }) {
         label="What category does your activity belong too? "
         helperText="Select three categories that best describe your project. Select none if you are unsure about your category."
         data={categories}
-        onChange={data => formik.setFieldValue('category', data)}
+        onChange={_.debounce(data => formik.setFieldValue('category', data), 200)}
         selectedItems={formik.values.category}
         // error={formik.touched.category && formik.errors.category}
         // onBlur={formik.handleBlur}
