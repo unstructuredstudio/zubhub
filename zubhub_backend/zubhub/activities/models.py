@@ -46,11 +46,11 @@ class Activity(models.Model):
     introduction = models.CharField(max_length=10000,blank=True)
     class_grade = models.CharField(max_length=50, blank=True)
     
-    learning_goals = models.TextField(max_length=10000, blank=True)
-    facilitation_tips = models.TextField(max_length=10000, blank=True)
-    motivation = models.TextField(max_length=10000, blank=True)
+    learning_goals = models.TextField(max_length=10000, blank=True, null=True)
+    facilitation_tips = models.TextField(max_length=10000, blank=True, null=True)
+    motivation = models.TextField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
-    materials_used = models.TextField(max_length=5000)
+    materials_used = models.TextField(max_length=5000, blank=True, null=True)
     materials_used_image = models.ForeignKey(Image,
                                              on_delete=models.SET_NULL,
                                              null=True,
