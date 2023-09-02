@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { activityDefailsStyles } from './ActivityDetails.styles';
 import { Avatar, Divider, IconButton, Menu, MenuItem, Typography, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
@@ -12,11 +12,18 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import { useTranslation } from 'react-i18next';
-
-export default function ActivityDetailsV2() {
+import { useDispatch } from 'react-redux';
+export default function ActivityDetailsV2(props) {
   const classes = makeStyles(activityDefailsStyles)();
   const commonClasses = makeStyles(styles)();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(props.match.params.id);
+
+    return () => {};
+  }, []);
 
   return (
     <div style={{ margin: '0 24px' }}>

@@ -133,15 +133,14 @@ export default function CreateActivity(props) {
     if (Object.keys(error || {}).length > 0) return;
 
     go('next');
-    if (activeStep == 2) {
-      script.submitForm({
-        step1Values: formikStep1.values,
-        step2Values: formikStep2.values,
-        props: { ...props, auth },
-        state,
-        handleSetState: setState,
-      });
-    }
+    script.submitForm({
+      step1Values: formikStep1.values,
+      step2Values: formikStep2.values,
+      props: { ...props, auth },
+      state,
+      handleSetState: setState,
+      step: activeStep,
+    });
   };
 
   const submitData = async () => {

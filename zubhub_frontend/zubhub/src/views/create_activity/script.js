@@ -649,73 +649,95 @@ export class UploadMedia {
 }
 
 
-export const submitForm = async ({ step1Values, step2Values, props, state, handleSetState }, callback) => {
-    // Add all images present in th form in the imagesToUpload object for upload.
-    let imagesToUpload = {}
-    if (step2Values) {
-        imagesToUpload.images = step2Values.images
-        imagesToUpload.materials_used_image = step2Values.materials_used_image
-        imagesToUpload.making_steps = {}
-        step2Values.making_steps?.forEach((step, index) => {
-            imagesToUpload.making_steps[`${index}`] = step.images
-        })
+export const submitForm = async ({ step1Values, step2Values, props, state, handleSetState, step }, callback) => {
+    let res;
+
+    if (step === 2) {
+        // Add all images present in th form in the imagesToUpload object for upload.
+        let imagesToUpload = {}
+        if (step2Values) {
+            imagesToUpload.images = step2Values.images
+            imagesToUpload.materials_used_image = step2Values.materials_used_image
+            imagesToUpload.making_steps = {}
+            step2Values.making_steps?.forEach((step, index) => {
+                imagesToUpload.making_steps[`${index}`] = step.images
+            })
+        }
+
+        // Upload all files present in the form and get their remote data.
+        res = await formFilesUpload(imagesToUpload, props, state, handleSetState);
+
+        if (res.error) {
+            alert('Failed to upload Files; Please try again');
+            return;
+        }
     }
 
-    // Upload all files present in the form and get their remote data.
-    const res = await formFilesUpload(imagesToUpload, props, state, handleSetState);
-
-    if (res.error) {
-        alert('Failed to upload Files; Please try again');
-        return;
+    const formDataStep1 = {
+        category: step1Values.category.map(item => item.name),
+        class_grade: step1Values.class_grade.name,
+        title: step1Values.title
     }
 
     // Add 
     const formData = {
-        ...step1Values,
-        ...step2Values,
-        category: step1Values.category.map(item => item.name),
-        class_grade: step1Values.class_grade.name,
-        publish: true
+        ...formDataStep1,
+        ...step === 2 ? step2Values : {},
+        publish: step === 2 ? true : false
     };
 
-    let makinStepsImages = []
+    if (step === 2) {
+        let makinStepsImages = []
 
-    // replace non uploaded images in formData fields with uploaded images
-    res.forEach(obj => {
-        if (obj.name.startsWith('making_steps')) {
-            return makinStepsImages.push(obj)
-        }
+        // replace non uploaded images in formData fields with uploaded images
+        res.forEach(obj => {
+            if (obj.name.startsWith('making_steps')) {
+                return makinStepsImages.push(obj)
+            }
 
-        if (obj.name === 'images') {
-            formData[obj.name] = obj.files.map(item => ({ image: replaceImageUrlWithFileUrl(item) }))
-            return
-        }
+            if (obj.name === 'images') {
+                formData[obj.name] = obj.files.map(item => ({ image: replaceImageUrlWithFileUrl(item) }))
+                return
+            }
 
-        if (obj.name === 'materials_used_image') {
-            formData[obj.name] = { file_url: obj.files[0].image_url, public_id: obj.files[0].public_id }
-            return
-        }
+            if (obj.name === 'materials_used_image') {
+                formData[obj.name] = { file_url: obj.files[0].image_url, public_id: obj.files[0].public_id }
+                return
+            }
 
-        formData[obj.name] = obj.files.map(item => replaceImageUrlWithFileUrl(item))
-    })
-
-    // Assign making steps uploaded and formated images to their associated steps
-    if (makinStepsImages.length > 0) {
-        const makingStepsWithUploadedImages = formData.making_steps.map((stepData, index) => {
-            const data = {
-                ...stepData,
-                image: makinStepsImages[index].files.map(item => replaceImageUrlWithFileUrl(item)), step_order: index + 1
-            };
-            delete data.id;
-            delete data.images
-            return data;
+            formData[obj.name] = obj.files.map(item => replaceImageUrlWithFileUrl(item))
         })
 
-        formData.making_steps = makingStepsWithUploadedImages
+        // Assign making steps uploaded and formated images to their associated steps
+        if (makinStepsImages.length > 0) {
+            const makingStepsWithUploadedImages = formData.making_steps.map((stepData, index) => {
+                const data = {
+                    ...stepData,
+                    image: makinStepsImages[index].files.map(item => replaceImageUrlWithFileUrl(item)), step_order: index + 1
+                };
+                delete data.id;
+                delete data.images
+                return data;
+            })
+
+            formData.making_steps = makingStepsWithUploadedImages
+        }
     }
 
-    // API call to the create activity endpoint
-    const response = await API.createActivity(props.auth?.token, formData);
+    const activityId = props.match.params?.id
+
+    if (props.match.params.id) {
+        const response = await API.updateActivity(props.auth.token, activityId, formData)
+    }
+    else {
+        // API call to the create activity endpoint
+        const response = await API.createActivity(props.auth?.token, formData);
+    }
+
+
+
+
+
 }
 
 const replaceImageUrlWithFileUrl = (obj) => {
