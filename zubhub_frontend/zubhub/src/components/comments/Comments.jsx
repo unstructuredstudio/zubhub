@@ -25,8 +25,6 @@ const useStyles = makeStyles(styles);
 function Comments(props) {
   const classes = useStyles();
 
-  console.log(props);
-
   const [state, setState] = React.useState({
     open_delete_comment_modal: false,
     delete_comment_dialog_error: false,

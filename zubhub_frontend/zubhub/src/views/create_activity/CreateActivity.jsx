@@ -59,14 +59,6 @@ export default function CreateActivity(props) {
   const [preview, setPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    console.log('activeStep');
-  }, [activeStep]);
-
-  useEffect(() => {
-    console.log('state');
-  }, [state]);
-
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
 
@@ -136,16 +128,6 @@ export default function CreateActivity(props) {
       },
     );
   };
-
-  useEffect(() => {
-    console.log('formikStep1');
-  }, [formikStep1]);
-
-  useEffect(() => {
-    console.log('formikStep2');
-  }, [formikStep2]);
-
-  console.log(formikStep2.values);
 
   const checkErrors = () => {
     if (activeStep === 1) {

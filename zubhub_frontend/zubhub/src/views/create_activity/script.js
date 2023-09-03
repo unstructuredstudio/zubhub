@@ -440,45 +440,30 @@ export const getActivity = (props, state) => {
 
                 if (obj.title) {
                     step1Data.title = obj.title
-                    // formikStep1.setFieldValue('title', obj.title);
                 }
 
                 if (obj.category) {
                     step1Data.category = obj.category.map(cat => ({ name: cat, id: cat }))
-
-                    // formikStep1.setFieldValue('category', obj.category.map(cat => ({ name: cat, id: cat })));
                 }
 
                 if (obj.class_grade) {
                     step1Data.class_grade = class_grades.find(item => item.name === obj.class_grade)
-                    console.log(obj.class_grade, class_grades, '++++++++++++++++++++++++++++');
-
-                    // formikStep1.setFieldValue('class_grade', class_grades.find(item => item.name === obj.class_grade));
                 }
 
                 if (obj.introduction) {
                     step2Data.introduction = obj.introduction
-
-                    // formikStep2.setFieldValue('introduction', obj.introduction);
                 }
 
                 if (obj.images) {
                     step2Data.images = obj.images?.map(img => ({ ...img.image, name: img.image.file_url, link: true }))
-
-                    // formikStep2.setFieldValue('images', obj.images?.map(img => ({ ...img.image, name: img.image.file_url, link: true })));
                 }
 
                 if (obj.materials_used) {
-                    // console.log();
                     step2Data.materials_used = obj.materials_used
-
-                    // formikStep2.setFieldValue('materials_used', obj.materials_used);
                 }
 
                 if (obj.materials_used_image) {
                     step2Data.materials_used_image = [{ ...obj.materials_used_image, link: true, name: obj.materials_used_image.file_url }]
-
-                    // formikStep2.setFieldValue('materials_used_image', [{ ...obj.materials_used_image, link: true, name: obj.materials_used_image.file_url }]);
                 }
 
                 if (obj.making_steps) {
@@ -488,10 +473,7 @@ export const getActivity = (props, state) => {
                         return { ...step, id: uniqueId(idPrefix) }
                     })
                     step2Data.making_steps = steps;
-                    // formikStep2.setFieldValue('making_steps', steps);
                 }
-
-                console.log(step2Data, '===---------');
 
                 formikStep1.setValues(step1Data, true)
                 formikStep2.setValues(step2Data, true)
@@ -586,7 +568,6 @@ export class UploadMedia {
         ) {
             const data = JSON.parse(this.xhr.response);
             const secure_url = data.secure_url;
-            console.log(data);
             this.resolve({ secure_url });
         } else if (
             this.xhr.status === 200 &&
@@ -758,8 +739,10 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
         if (!activityId) {
             props.history.replace(`/activities/${data.id}/edit`)
         }
-        console.log(data);
         callback(true)
+    }
+    else {
+        callback(false)
     }
 }
 
