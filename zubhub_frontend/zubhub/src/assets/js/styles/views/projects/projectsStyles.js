@@ -21,6 +21,7 @@ const styles = theme => ({
     paddingBottom: '2.85em',
     justifyContent: 'center',
     width: '100vw',
+    marginBottom: '2em'
   },
   imageLeft: {
     flexDirection: 'row', 
@@ -239,7 +240,7 @@ const styles = theme => ({
     marginBottom: '2em',
   },
   titleStyle: {
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '1.5rem',
     marginTop: '2em',
     marginLeft: '0.67em',
