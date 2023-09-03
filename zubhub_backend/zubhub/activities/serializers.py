@@ -184,10 +184,20 @@ class ActivitySerializer(serializers.ModelSerializer):
             update_inspiring_examples(
                 activity, validated_data.pop('inspiring_examples'))
         activity.title = validated_data.get('title')
+
+        if validated_data.get('introduction'):
+            activity.introduction = validated_data.get('introduction')
+
         activity.motivation = validated_data.get('motivation')
         activity.facilitation_tips = validated_data.get('facilitation_tips')
         activity.learning_goals = validated_data.get('learning_goals')
-        activity.materials_used = validated_data.get('materials_used')
+
+        if validated_data.get('publish'):
+            activity.publish =  validated_data.get('publish')
+
+        if validated_data.get('materials_used'):
+            activity.materials_used = validated_data.get('materials_used')
+            
         activity.video = validated_data.get('video')
         activity.save()
         return activity
