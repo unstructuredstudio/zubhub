@@ -651,6 +651,17 @@ class API {
   };
 
   /**
+  * @method getActivity
+  * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
+  *
+  * @todo - describe method's signature
+  */
+  getActivity = ({ token, id }) => {
+    const url = `activities/${id}`;
+    return this.request({ token, url }).then(res => res.json());
+  };
+
+  /**
    * @method getCategories
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *
@@ -930,8 +941,12 @@ class API {
     return this.request({ url, method, token });
   };
 
-  getActivities = () => {
-    const url = 'activities/';
+  getActivities = (params) => {
+
+    let queryParams = sanitizeObject(params)
+    const searchParams = new URLSearchParams(queryParams);
+    let url = `activities`;
+    url = `${url}?${searchParams}`;
     return this.request({ url, method: 'GET' });
     // .then(res => res.json());
   };

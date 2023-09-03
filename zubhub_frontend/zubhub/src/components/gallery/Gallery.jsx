@@ -11,12 +11,15 @@ import { isGdriveORVimeoORYoutube } from '../../views/project_details/projectDet
 const uniqueId = 'imgContainer';
 
 // displayType can be linear or grid
-export default function Gallery({ type = 'image', images = [], videos = [], displayType = 'grid' }) {
+export default function Gallery({ type = 'image', images = [], videos = [] }) {
   const classes = makeStyles(galleryStyles)({ imgSize: images.length });
   const commonClasses = makeStyles(styles)();
 
   const [isScrollable, setIsScrollable] = useState(false);
   const videoRef = useRef(null);
+
+  let displayType = 'grid';
+  if (images.length > 3 || videos.length > 3) displayType = 'linear';
 
   useEffect(() => {
     isImageContainerScroll();

@@ -3,10 +3,18 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { s3 as DO, doConfig, Compress, slugify } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
-import { site_mode, publish_type } from '../../assets/js/utils/constants';
 import ZubhubAPI from '../../api';
+import { uniqueId } from 'lodash';
+const idPrefix = 'activitystep';
+
 const API = new ZubhubAPI();
 
+export const class_grades = [
+    { name: 'Grade 1-3', value: '1-3' },
+    { name: 'Grade 4-6', value: '4-6' },
+    { name: 'Grade 7-9', value: '7-9' },
+    { name: 'Grade 10-12', value: '10-12' },
+];
 
 export const vars = {
     image_field_touched: false,
@@ -417,88 +425,78 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
 };
 
 
-export const getProject = (props, state) => {
-    return props
-        .getProject({
-            id: props.match.params.id,
-            token: props.auth.token,
-        })
+export const getActivity = (props, state) => {
+
+    return API.getActivity({
+        id: props.match.params.id,
+        token: props.auth.token,
+    })
         .then(obj => {
-            if (!obj.project) {
-                return obj;
-            } else {
-                const { media_upload } = state;
+            if (obj) {
+                const { formikStep1, formikStep2 } = props
+                const step1Data = {}
+                const step2Data = {}
 
-                if (obj.project.title) {
-                    props.setFieldValue('title', obj.project.title);
+
+                if (obj.title) {
+                    step1Data.title = obj.title
+                    // formikStep1.setFieldValue('title', obj.title);
                 }
 
-                if (obj.project.description) {
-                    props.setFieldValue('description', obj.project.description);
-                    // refs.desc_el.current.editor.root.innerHTML = obj.project.description;
+                if (obj.category) {
+                    step1Data.category = obj.category.map(cat => ({ name: cat, id: cat }))
+
+                    // formikStep1.setFieldValue('category', obj.category.map(cat => ({ name: cat, id: cat })));
                 }
 
-                if (obj.project.video) {
-                    // refs.video_selection_feedback_el.current.innerText = `${props.t(
-                    //     'createProject.inputs.videoURL',
-                    // )}`;
+                if (obj.class_grade) {
+                    step1Data.class_grade = class_grades.find(item => item.name === obj.class_grade)
+                    console.log(obj.class_grade, class_grades, '++++++++++++++++++++++++++++');
 
-                    props.setFieldValue('video_link', obj.project.video, true);
+                    // formikStep1.setFieldValue('class_grade', class_grades.find(item => item.name === obj.class_grade));
                 }
 
-                if (obj.project.images.length > 0) {
-                    // refs.image_count_el.current.innerText = `${obj.project.images.length
-                    //     } ${props.t(
-                    //         `createProject.inputs.${obj.project.images.length < 2 ? 'image' : 'images'
-                    //         }`,
-                    //     )}`;
+                if (obj.introduction) {
+                    step2Data.introduction = obj.introduction
 
-                    const files = obj.project.images.map(url => ({
-                        name: url.image_url,
-                        type: 'image/*',
-                        size: 1000000,
-                        link: true
-                    }));
-
-                    props.setFieldValue('images', files, true);
+                    // formikStep2.setFieldValue('introduction', obj.introduction);
                 }
 
-                if (obj.project.materials_used) {
-                    props.setFieldValue(
-                        'materials_used',
-                        obj.project.materials_used.split(','),
-                        true,
-                    );
+                if (obj.images) {
+                    step2Data.images = obj.images?.map(img => ({ ...img.image, name: img.image.file_url, link: true }))
+
+                    // formikStep2.setFieldValue('images', obj.images?.map(img => ({ ...img.image, name: img.image.file_url, link: true })));
                 }
 
-                if (obj.project.category) {
-                    props.setFieldValue('category', obj.project.category.map(cat => ({ name: cat })), true);
+                if (obj.materials_used) {
+                    // console.log();
+                    step2Data.materials_used = obj.materials_used
+
+                    // formikStep2.setFieldValue('materials_used', obj.materials_used);
                 }
 
-                if (obj.project.tags) {
-                    props.setFieldValue('tags', obj.project.tags.map(tag => tag.name), true);
+                if (obj.materials_used_image) {
+                    step2Data.materials_used_image = [{ ...obj.materials_used_image, link: true, name: obj.materials_used_image.file_url }]
+
+                    // formikStep2.setFieldValue('materials_used_image', [{ ...obj.materials_used_image, link: true, name: obj.materials_used_image.file_url }]);
                 }
 
-                // if (refs.publish_type_el.current && obj.project.publish) {
-                //     const publish = {
-                //         type: obj.project.publish.type,
-                //         visible_to: obj.project.publish.visible_to.map(
-                //             creator => creator.username,
-                //         ),
-                //     };
-                //     props.setFieldValue('publish', publish, true);
-                // }
+                if (obj.making_steps) {
+                    const steps = obj.making_steps.map(step => {
+                        step.images = step.image.map(img => ({ ...img, name: img.file_url, link: true }))
+                        delete step.image
+                        return { ...step, id: uniqueId(idPrefix) }
+                    })
+                    step2Data.making_steps = steps;
+                    // formikStep2.setFieldValue('making_steps', steps);
+                }
 
-                media_upload.uploaded_images_url = obj.project.images;
-                media_upload.uploaded_videos_url = obj.project.video
-                    ? [obj.project.video]
-                    : [];
+                console.log(step2Data, '===---------');
 
-                return {
-                    materials_used: obj.project.materials_used.split(','),
-                    media_upload,
-                };
+                formikStep1.setValues(step1Data, true)
+                formikStep2.setValues(step2Data, true)
             }
+            return obj
         });
 };
 
@@ -524,7 +522,7 @@ export const step1Schema = {
 }
 
 export const step2Validation = Yup.object().shape({
-    introduction: Yup.string().max(500, 'max').required('required'),
+    introduction: Yup.string().max(1000, 'max').required('required'),
     materials_used: Yup.string(),
     images: Yup.array(),
     making_steps: Yup.array().of(Yup.object().shape({
@@ -546,7 +544,6 @@ export const step2Schema = {
     },
     validationSchema: step2Validation,
 }
-
 
 export class UploadMedia {
     constructor(
@@ -589,6 +586,7 @@ export class UploadMedia {
         ) {
             const data = JSON.parse(this.xhr.response);
             const secure_url = data.secure_url;
+            console.log(data);
             this.resolve({ secure_url });
         } else if (
             this.xhr.status === 200 &&
@@ -650,24 +648,35 @@ export class UploadMedia {
 
 
 export const submitForm = async ({ step1Values, step2Values, props, state, handleSetState, step }, callback) => {
-    let res;
+
+    let fileUploadResponse;
+    const uploadedImages = { images: [], materials_used_image: [], making_steps: {} };
+    const imagesToUpload = { images: [], materials_used_image: [], making_steps: {} };
 
     if (step === 2) {
         // Add all images present in th form in the imagesToUpload object for upload.
-        let imagesToUpload = {}
+
         if (step2Values) {
-            imagesToUpload.images = step2Values.images
-            imagesToUpload.materials_used_image = step2Values.materials_used_image
-            imagesToUpload.making_steps = {}
+            step2Values.images.forEach(img => {
+                if (img.link) uploadedImages.images = [...uploadedImages.images, img]
+                else imagesToUpload.images = [...imagesToUpload.images, img]
+            })
+
+            step2Values.materials_used_image?.forEach(img => {
+                if (img.link) uploadedImages.materials_used_image = [...uploadedImages.materials_used_image, img]
+                else imagesToUpload.materials_used_image = [...imagesToUpload.materials_used_image, img]
+            })
+
             step2Values.making_steps?.forEach((step, index) => {
-                imagesToUpload.making_steps[`${index}`] = step.images
+                uploadedImages.making_steps[`${index}`] = step.images.filter(img => img.link)
+                imagesToUpload.making_steps[`${index}`] = step.images.filter(img => !img.link);
             })
         }
 
         // Upload all files present in the form and get their remote data.
-        res = await formFilesUpload(imagesToUpload, props, state, handleSetState);
+        fileUploadResponse = await formFilesUpload(imagesToUpload, props, state, handleSetState);
 
-        if (res.error) {
+        if (fileUploadResponse.error) {
             alert('Failed to upload Files; Please try again');
             return;
         }
@@ -687,33 +696,39 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
     };
 
     if (step === 2) {
-        let makinStepsImages = []
+        let makinStepsImages = fileUploadResponse.filter(item => item.name.startsWith('making_steps'))
+        let images = fileUploadResponse.filter(item => item.name === 'images')
+        let materials_used_image = fileUploadResponse.find(item => item.name === 'materials_used_image')
+
+        images = images[0]?.files.map(item => ({ image: replaceImageUrlWithFileUrl(item) }))
+        formData['images'] = [...(images || []), ...uploadedImages.images.map(item => ({ image: replaceImageUrlWithFileUrl(item) }))]
+
+        if (materials_used_image) {
+            formData['materials_used_image'] = {
+                file_url: materials_used_image.files[0].image_url,
+                public_id: materials_used_image.files[0].public_id
+            }
+        }
+
+        if (!materials_used_image && uploadedImages.materials_used_image[0]) {
+            materials_used_image = uploadedImages.materials_used_image[0]
+            formData['materials_used_image'] = {
+                file_url: materials_used_image.file_url,
+                public_id: materials_used_image.public_id
+            }
+        }
+
 
         // replace non uploaded images in formData fields with uploaded images
-        res.forEach(obj => {
-            if (obj.name.startsWith('making_steps')) {
-                return makinStepsImages.push(obj)
-            }
-
-            if (obj.name === 'images') {
-                formData[obj.name] = obj.files.map(item => ({ image: replaceImageUrlWithFileUrl(item) }))
-                return
-            }
-
-            if (obj.name === 'materials_used_image') {
-                formData[obj.name] = { file_url: obj.files[0].image_url, public_id: obj.files[0].public_id }
-                return
-            }
-
-            formData[obj.name] = obj.files.map(item => replaceImageUrlWithFileUrl(item))
-        })
 
         // Assign making steps uploaded and formated images to their associated steps
         if (makinStepsImages.length > 0) {
             const makingStepsWithUploadedImages = formData.making_steps.map((stepData, index) => {
+                const uploaded = uploadedImages.making_steps[index]
                 const data = {
                     ...stepData,
-                    image: makinStepsImages[index].files.map(item => replaceImageUrlWithFileUrl(item)), step_order: index + 1
+                    image: [...makinStepsImages[index].files.map(item => replaceImageUrlWithFileUrl(item)), ... (uploaded || [])],
+                    step_order: index + 1
                 };
                 delete data.id;
                 delete data.images
@@ -725,19 +740,27 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
     }
 
     const activityId = props.match.params?.id
+    let createOrUpdateResponse;
 
     if (props.match.params.id) {
-        const response = await API.updateActivity(props.auth.token, activityId, formData)
+        // API call to the update activity
+        createOrUpdateResponse = await API.updateActivity(props.auth.token, activityId, formData)
     }
+
     else {
-        // API call to the create activity endpoint
-        const response = await API.createActivity(props.auth?.token, formData);
+        // API call to the create activity
+        createOrUpdateResponse = await API.createActivity(props.auth?.token, formData);
     }
 
+    const data = await createOrUpdateResponse.json();
 
-
-
-
+    if (data) {
+        if (!activityId) {
+            props.history.replace(`/activities/${data.id}/edit`)
+        }
+        console.log(data);
+        callback(true)
+    }
 }
 
 const replaceImageUrlWithFileUrl = (obj) => {

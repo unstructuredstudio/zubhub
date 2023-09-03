@@ -45,7 +45,7 @@ import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
 import { TEAM_ENABLED } from '../../utils.js/index.js';
 
-const PreviewProject = lazy(() => import('../../components/previewProject/PreviewProject'));
+const PreviewProject = lazy(() => import('../../components/previewProject/PreviewActivity'));
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Details', 'Photos/Videos', 'Features'];

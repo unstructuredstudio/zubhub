@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { colors } from '../../../assets/js/colors';
 import FormLabel from '../../form_labels/formLabel';
 import { Checkbox, FormControl, FormHelperText, Grid, Typography, makeStyles } from '@material-ui/core';
@@ -36,6 +36,10 @@ export default function SelectFromPills({
   };
 
   const isLimit = limit ? selected?.filter(selectedItem => selectedItem.name).length == limit : false;
+
+  useEffect(() => {
+    setSelected(selectedItems);
+  }, [selectedItems]);
 
   return (
     <FormControl error={error}>

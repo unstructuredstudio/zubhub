@@ -23,7 +23,6 @@ function TextInput({
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(textInputStyles)();
 
-  console.log(error);
   return (
     <FormControl fullWidth error={error}>
       <FormLabel required={required} htmlFor={name}>

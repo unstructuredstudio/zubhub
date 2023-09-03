@@ -6,14 +6,12 @@ import styles from '../../../assets/js/styles';
 import { Add, MoreHoriz } from '@material-ui/icons';
 import clsx from 'clsx';
 import { uniqueId } from 'lodash';
-import { useFormik } from 'formik';
-import { step2Schema } from '../script';
 import _ from 'lodash';
 
 const idPrefix = 'activitystep';
 const DEFAULT_STEP = { description: '', images: [], title: '', id: uniqueId(idPrefix) };
 
-export default function Step2({ formik }) {
+export default function Step2({ formik, id }) {
   // const formik = useFormik(step2Schema);
 
   const classes = makeStyles(step2Styles)();
@@ -26,17 +24,20 @@ export default function Step2({ formik }) {
   };
 
   const onStepChange = (data, type, stepIndex) => {
-    console.log(data, 'data');
+    console.log(data, type, stepIndex);
     let stepsTemp = [...steps];
     let step = stepsTemp[stepIndex];
     step[type] = data;
     stepsTemp[stepIndex] = step;
     setSteps(stepsTemp);
+    formik.setFieldValue('making_steps', stepsTemp);
+    // _.debounce(() => formik.setFieldValue('making_steps', stepsTemp), 500);
   };
 
   useEffect(() => {
-    formik.setFieldValue('making_steps', steps);
-  }, [steps]);
+    const isDefault = formik.values.making_steps?.length > 0 ? false : true;
+    setSteps(!isDefault ? [...formik.values.making_steps] : [{ ...DEFAULT_STEP }]);
+  }, [formik.values.making_steps]);
 
   const deleteStep = id => {
     setSteps([...steps.filter(step => step.id !== id)]);
@@ -59,8 +60,6 @@ export default function Step2({ formik }) {
       setSteps(stepsTemp);
     }
   };
-
-  // console.log(formik.values);
 
   return (
     <div className={classes.container}>
@@ -96,10 +95,9 @@ export default function Step2({ formik }) {
           placeholder="1. "
         />
         <LabeledLine label="ATTACH" />
-
         <ImageInput
           handleChange={data => formik.setFieldValue('materials_used_image', data)}
-          value={formik.values.materials_used_image}
+          value={formik.values.materials_used_image || []}
           message={imageInputMessage}
         />
       </Box>
@@ -114,6 +112,7 @@ export default function Step2({ formik }) {
               <input
                 style={{ border: 'none', outline: 'none', paddingLeft: 10, minWidth: '100%' }}
                 className={commonClasses.title2}
+                defaultValue={step.title}
                 placeholder="Enter step title"
                 onChange={_.debounce(d => onStepChange(d.target.value, 'title', index), 500)}
               />

@@ -5,34 +5,28 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { connect, useSelector } from 'react-redux';
 
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { makeStyles } from '@material-ui/core/styles';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import SearchIcon from '@material-ui/icons/Search';
 import TranslateIcon from '@material-ui/icons/Translate';
 
 import {
   AppBar,
-  Avatar,
   Box,
   ClickAwayListener,
   Container,
-  CssBaseline,
   FormControl,
   FormGroup,
   Hidden,
   IconButton,
   InputAdornment,
   InputLabel,
-  Menu,
   MenuItem,
   Select,
   SwipeableDrawer,
   TextField,
   Toolbar,
-  Tooltip,
   Typography,
   useScrollTrigger,
 } from '@material-ui/core';
@@ -42,9 +36,6 @@ import {
   fetchHero,
   handleChangeLanguage,
   handleProfileMenuClose,
-  handleProfileMenuOpen,
-  handleToggleSearchForm,
-  logout,
 } from '../../views/pageWrapperScripts';
 
 import { getQueryParams, SearchType } from '../../views/search_results/searchResultsScripts';
@@ -52,20 +43,17 @@ import { getQueryParams, SearchType } from '../../views/search_results/searchRes
 import logo from '../../assets/images/logos/logo.png';
 import commonStyles from '../../assets/js/styles';
 import styles from '../../assets/js/styles/views/page_wrapper/pageWrapperStyles';
-import CustomButton from '../../components/button/Button.js';
 import * as AuthActions from '../../store/actions/authActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 
+import { Menu as MenuIcon, SearchOutlined } from '@material-ui/icons';
 import API from '../../api';
 import languageMap from '../../assets/js/languageMap.json';
 import Autocomplete from '../../components/autocomplete/Autocomplete';
 import Option from '../../components/autocomplete/Option';
-import BreadCrumb from '../../components/breadCrumb/breadCrumb';
 import InputSelect from '../../components/input_select/InputSelect';
-import Navbar from '../../components/Navbar/Navbar';
 import NotificationButton from '../../components/notification_button/NotificationButton';
 import { throttle } from '../../utils.js';
-import { SearchOutlined, Menu as MenuIcon } from '@material-ui/icons';
 import AvatarButton from '../avatar_button/AvatarButton';
 import Sidenav from '../Sidenav/Sidenav';
 

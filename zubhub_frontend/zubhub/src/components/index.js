@@ -1,5 +1,6 @@
 import Sidenav from "./Sidenav/Sidenav";
 import CustomButton from "./button/Button";
+import Collapsible from "./collapsible/Collapsible";
 import Comments from './comments/Comments';
 import Dropdown from "./form/dropdown/Dropdown";
 import Editor from "./form/editor/Editor";
@@ -11,13 +12,15 @@ import TagsInput from "./form/tagsInput/TagsInput";
 import VideoInput from "./form/videoInput/VideoInput";
 import Gallery from "./gallery/Gallery";
 import Modal from "./modals/Modal";
-import PreviewProject from "./previewProject/PreviewProject";
-
+import PreviewActivity from "./previewProject/PreviewActivity";
+import PreviewProject from "./previewProject/PreviewActivity";
 
 export {
     Comments,
     CustomButton, Dropdown,
     Editor, Gallery, ImageInput,
     LabeledLine, Modal, OrDivider, PreviewProject,
-    SelectFromPills, Sidenav, TagsInput, VideoInput
+    SelectFromPills, Sidenav, TagsInput, VideoInput,
+    Collapsible,
+    PreviewActivity
 };

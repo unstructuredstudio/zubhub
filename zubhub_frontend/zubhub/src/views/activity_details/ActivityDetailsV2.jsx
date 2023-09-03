@@ -1,43 +1,102 @@
-import React, { useEffect, useState } from 'react';
-import { activityDefailsStyles } from './ActivityDetails.styles';
-import { Avatar, Divider, IconButton, Menu, MenuItem, Typography, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
-import styles from '../../assets/js/styles/index';
-import { colors } from '../../assets/js/colors';
-import { ExpandMore, MoreVert } from '@material-ui/icons';
-import { Comments, CustomButton, Gallery, ImageInput, VideoInput } from '../../components';
-import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
-import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import {
+  Avatar,
+  CircularProgress,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+  makeStyles,
+} from '@material-ui/core';
+import { CloseOutlined, ExpandMore, MoreVert } from '@material-ui/icons';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import clsx from 'clsx';
+import React, { useEffect, useState } from 'react';
+import ReactConfetti from 'react-confetti';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { FiShare } from 'react-icons/fi';
+import ReactQuill from 'react-quill';
+import { useSelector } from 'react-redux';
+import ZubHubAPI from '../../api';
+import { colors } from '../../assets/js/colors';
+import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
+import styles from '../../assets/js/styles/index';
+import { CustomButton, Gallery, Modal } from '../../components';
+import Activity from '../../components/activity/activity';
+import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
+import { getUrlQueryObject } from '../../utils.js';
+import { activityDefailsStyles } from './ActivityDetails.styles';
+
+const API = new ZubHubAPI();
+const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
+const unauthenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 3 };
+
 export default function ActivityDetailsV2(props) {
   const classes = makeStyles(activityDefailsStyles)();
   const commonClasses = makeStyles(styles)();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const [activity, setActivity] = useState({});
+  const [{ height, width }, setDimensions] = useState({});
+  const [open, setOpen] = useState(false);
+  const creator = activity.creators?.[0];
+  const auth = useSelector(state => state.auth);
+  const [moreActivities, setMoreActivities] = useState([]);
+  const [isLoading, setIsLoading] = useState({});
 
   useEffect(() => {
-    console.log(props.match.params.id);
+    API.getActivity({ token: auth?.token, id: props.match.params.id }).then(data => {
+      setActivity(data);
+    });
 
-    return () => {};
+    const query = getUrlQueryObject();
+    if (query.success) {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+      toggleDialog();
+    }
+
+    API.getActivities({ limit: 4 })
+      .then(res => res.json())
+      .then(data => setMoreActivities(data));
   }, []);
+
+  const handleDelete = () => {
+    setIsLoading({ ...isLoading, delete: true });
+    API.deleteActivity({ token: auth.token, id: activity.id })
+      .then(() => props.history.push(`/activities`))
+      .finally(() => setIsLoading({ ...isLoading, delete: false }));
+  };
+
+  const handleEdit = () => {
+    props.history.push(`${props.location.pathname}/edit`);
+  };
+
+  const toggleDialog = () => {
+    setOpen(!open);
+    props.history.replace(window.location.pathname);
+  };
 
   return (
     <div style={{ margin: '0 24px' }}>
+      {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={clsx(classes.header, classes.card)}>
         <Typography align="center" className={clsx(commonClasses.title1)}>
-          Making a Led Light
+          {activity?.title}
         </Typography>
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32 }}>
           <div style={{ gap: 8 }} className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
-            <Avatar className={classes.creatorAvatarStyle} src={''} alt={'Faridah_ux'} />
+            <Avatar className={classes.creatorAvatarStyle} src={creator?.avatar} alt={'Faridah_ux'} />
             <div>
-              <Typography style={{ fontWeight: '500', fontSize: 16 }} color={colors.black} component="span">
-                Faridah_ux
+              <Typography
+                style={{ fontWeight: '500', fontSize: 16, textTransform: 'capitalize' }}
+                color={colors.black}
+                component="span"
+              >
+                {creator?.username}
               </Typography>
               <br />
               <Typography color="textSecondary" component="span">
@@ -45,7 +104,7 @@ export default function ActivityDetailsV2(props) {
               </Typography>
             </div>
           </div>
-          <AnchorElemt />
+          <AnchorElemt isLoading={isLoading.delete} onDelete={handleDelete} onEdit={handleEdit} />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32, gap: 10 }}>
@@ -99,58 +158,62 @@ export default function ActivityDetailsV2(props) {
       </div>
 
       <Collapsible title={'Introduction'}>
-        <Gallery images={materials_used_images.slice(3)} />
-        <Typography>
-          Lorem ipsum dolor sit amet consectetur. Nulla ullamcorper adipiscing urna non enim ullamcorper a. Non
-          dignissim sit cras pellentesque vestibulum cursus tincidunt porttitor. Ut nulla urna in egestas arcu quis
-          ornare. Sum dolor sit amet consectetur. Nulla ullamcorper adipiscing urna non enim.
-        </Typography>
+        {activity.images?.length > 0 && <Gallery images={activity.images?.map(img => img.image?.file_url)} />}
+        <ReactQuill
+          className={classes.descriptionBodyStyle}
+          theme={'bubble'}
+          readOnly={true}
+          value={activity.introduction || ''}
+        />
       </Collapsible>
 
-      <Collapsible title={'Category'}>
-        <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
-          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-            Mechanical
-          </CustomButton>
-          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-            Science
-          </CustomButton>
-        </div>
-      </Collapsible>
+      {activity.category?.length > 0 && (
+        <Collapsible title={'Categories'}>
+          <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
+            {activity.category?.map((cat, index) => (
+              <CustomButton key={index} primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
+                {cat}
+              </CustomButton>
+            ))}
+          </div>
+        </Collapsible>
+      )}
 
-      <Collapsible title={'Class Grade'}>
-        <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
-          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-            Grade 4-6
-          </CustomButton>
-        </div>
-      </Collapsible>
+      {activity.class_grade && (
+        <Collapsible title={'Class Grade'}>
+          <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
+            <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
+              {activity.class_grade}
+            </CustomButton>
+          </div>
+        </Collapsible>
+      )}
 
-      <Collapsible title={'Materials Used'}>
-        <Gallery images={materials_used_images} displayType="linear" />
-        <Typography>
-          When making your own Led light, these a few materials you would need and where to get them. I hope this is
-          helpful ! Copper Wire Light Battery Foil Paper -
-          https://www.jumia.com.ng/tower-foil-434mm-x-8m-x3-packs-35312513.htm
-        </Typography>
-      </Collapsible>
+      {activity.materials_used && (
+        <Collapsible title={'Materials Used'}>
+          {activity.materials_used_image && <Gallery images={[activity.materials_used_image?.file_url]} />}
+          <ReactQuill
+            className={classes.descriptionBodyStyle}
+            theme={'bubble'}
+            readOnly={true}
+            value={activity.materials_used || ''}
+          />
+        </Collapsible>
+      )}
 
-      <Collapsible title={'Step 1: Sorting out your Materials'}>
-        <Gallery images={materials_used_images.slice(0, 1)} />
-        <Typography>
-          Lorem ipsum dolor sit amet consectetur. Nulla ullamcorper adipiscing urna non enim ullamcorper a. Non
-          dignissim sit cras pellentesque vestibulum cursus tincidunt porttitor.
-        </Typography>
-      </Collapsible>
-
-      <Collapsible title={'Step 2: Bend your wire'}>
-        <Gallery videos={videos} />
-        <Typography>
-          Lorem ipsum dolor sit amet consectetur. Nulla ullamcorper adipiscing urna non enim ullamcorper a. Non
-          dignissim sit cras pellentesque vestibulum cursus tincidunt porttitor. Ut nulla urna in egestas arcu quis
-          ornare. Sum dolor sit amet consectetur.
-        </Typography>
-      </Collapsible>
+      {activity.making_steps?.map((step, index) => (
+        <Collapsible key={index} title={`Step ${step?.step_order}: ${step.title}`}>
+          {step.image?.length > 0 && <Gallery images={step.image?.map(img => img?.file_url)} />}
+          {step.description && (
+            <ReactQuill
+              className={classes.descriptionBodyStyle}
+              theme={'bubble'}
+              readOnly={true}
+              value={step.description || ''}
+            />
+          )}
+        </Collapsible>
+      ))}
 
       <div style={{ marginTop: 40 }} className={clsx(classes.card, commonClasses.boxShadow)}>
         <div
@@ -170,17 +233,67 @@ export default function ActivityDetailsV2(props) {
           </CustomButton>
         </div>
 
-        <Typography style={{ marginTop: 50 }} align="center" className={commonClasses.title1}>
+        <Typography
+          style={{
+            marginTop: 50,
+            marginBottom: 30,
+            fontSize: 22,
+            fontWeight: 'bold',
+            color: colors.black,
+          }}
+          align="center"
+        >
           More Activities
         </Typography>
 
-        {/* <Comments context={{ name: 'profile', body: {} }} /> */}
+        <Grid container spacing={4} justifyContent="center">
+          {moreActivities.map((activity, index) => (
+            <Grid
+              key={index}
+              item
+              {...(auth.token ? authenticatedUserActivitiesGrid : unauthenticatedUserActivitiesGrid)}
+              align="center"
+            >
+              <Activity
+                activity={activity}
+                key={activity.id}
+                t={t}
+                // updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                {...props}
+              />
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* <Comments context={{ name: 'activity', body: { ...activity, comments: [] } }} {...{ ...props, auth }} /> */}
       </div>
+
+      <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <IconButton onClick={toggleDialog}>
+            <CloseOutlined />
+          </IconButton>
+        </div>
+
+        <DialogTitle>
+          <Typography align="center" className={clsx(commonClasses.title2, classes.dialogTitle)}>
+            Congratulations your Activity has been successfully created!
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography align="center">
+            Share your activity with the world. Post it on the following platforms:
+          </Typography>
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
+            <SocialButtons containerStyle={{ gap: 50 }} withColor link facebook whatsapp />
+          </div>
+        </DialogContent>
+      </Modal.WithIcon>
     </div>
   );
 }
 
-const AnchorElemt = ({ moveDown, moveUp, deleteStep }) => {
+const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
@@ -192,13 +305,13 @@ const AnchorElemt = ({ moveDown, moveUp, deleteStep }) => {
     setAnchorEl(null);
   };
 
-  const handleMoveUp = () => {
-    moveUp();
+  const handledelete = () => {
+    onDelete();
     handleClose();
   };
 
-  const handleMoveDown = () => {
-    moveDown();
+  const handleEdit = () => {
+    onEdit();
     handleClose();
   };
 
@@ -211,7 +324,7 @@ const AnchorElemt = ({ moveDown, moveUp, deleteStep }) => {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <MoreVert />
+        {isLoading ? <CircularProgress size={20} color="inherit" /> : <MoreVert />}
       </IconButton>
       <Menu
         id={`menu`}
@@ -222,9 +335,9 @@ const AnchorElemt = ({ moveDown, moveUp, deleteStep }) => {
           'aria-labelledby': `basic-button`,
         }}
       >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={handledelete}>Delete</MenuItem>
       </Menu>
     </>
   );

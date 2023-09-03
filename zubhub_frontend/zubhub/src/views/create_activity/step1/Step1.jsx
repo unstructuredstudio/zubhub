@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Dropdown, SelectFromPills } from '../../../components';
 import TextInput from '../../../components/form/textInput/TextInput';
 import { getCategories } from '../../../store/actions/projectActions';
-import { step1Schema } from '../script';
+import { class_grades, step1Schema } from '../script';
 import { step1Styles } from './Step1.styles';
 import _ from 'lodash';
 
@@ -57,16 +57,9 @@ export default function Step1({ formik, ...props }) {
         //   formik.handleBlur(data);
         // }}
         value={formik.values.class_grade}
-        data={grades}
+        data={class_grades}
         // error={formik.touched.class_grade && formik.errors.class_grade}
       />
     </div>
   );
 }
-
-const grades = [
-  { name: 'Grade 1-3', value: '1-3' },
-  { name: 'Grade 4-6', value: '4-6' },
-  { name: 'Grade 7-9', value: '7-9' },
-  { name: 'Grade 10-12', value: '10-12' },
-];

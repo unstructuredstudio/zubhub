@@ -13,7 +13,7 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react';
-import { CustomButton, Modal, TagsInput } from '../../components';
+import { CustomButton, Modal, PreviewActivity, TagsInput } from '../../components';
 import StepWizard from 'react-step-wizard';
 import {
   ArrowBackIosRounded,
@@ -40,6 +40,8 @@ import { useSelector } from 'react-redux';
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Activity Basics', 'Activity Details'];
 
+let firstRender = true;
+
 export default function CreateActivity(props) {
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -53,10 +55,17 @@ export default function CreateActivity(props) {
   const [activeStep, setActiveStep] = useState(1);
   const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
-  const [addTagsDialog, setAddTagsDialog] = useState(false);
   const [completedSteps, setcompletedSteps] = useState([]);
   const [preview, setPreview] = useState(false);
-  const [mode, setMode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    console.log('activeStep');
+  }, [activeStep]);
+
+  useEffect(() => {
+    console.log('state');
+  }, [state]);
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
@@ -69,53 +78,27 @@ export default function CreateActivity(props) {
     }
   };
 
-  const getToastMessage = () => {
-    let message = '';
-    if (activeStep === 1 && props.match.path === '/projects/create') {
-      message = 'createProject.addedToDraft';
-    }
-    if ([1, 2].includes(activeStep) && props.match.params.id) {
-      message = 'createProject.savedStep';
-    }
-    if (activeStep === 3 && props.match.params.id) {
-      message = 'createProject.createToastSuccess';
-    }
-    return message;
-  };
-
-  // useEffect(() => {
-  //   if (props.match.params.id) {
-  //     Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
-  //       handleSetState({ ...result[0], ...result[1] }),
-  //     );
-  //   } else {
-  //     handleSetState(script.getCategories(props));
-  //   }
-  //   const params = new URLSearchParams(window.location.search);
-  //   const queryParams = Object.fromEntries(params.entries());
-  //   if ('mode' in queryParams) setMode(queryParams.mode);
-  // }, []);
-
   useEffect(() => {
-    if (state.success) {
-      if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
-      toast.success(props.t(getToastMessage()));
-      if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}?success=true`);
+    if (firstRender) {
+      if (props.match.params.id) {
+        setIsLoading(true);
+        script
+          .getActivity({ ...props, auth, formikStep1, formikStep2 }, state)
+          .then(result => {})
+          .finally(() => setIsLoading(false));
       }
-      go('next');
     }
-  }, [state.success]);
+  }, []);
 
   const togglePreview = () => setPreview(!preview);
 
   useEffect(() => {
-    if (state.default_state?.loading) {
+    if (isLoading) {
       setDraftStatus(DRAFT_STATUSES.saving);
     } else {
       setDraftStatus(DRAFT_STATUSES.saved);
     }
-  }, [state.default_state?.loading]);
+  }, [isLoading]);
 
   const draftContainerText = () => {
     if (draftStatus === DRAFT_STATUSES.idle) return 'Draft';
@@ -129,30 +112,40 @@ export default function CreateActivity(props) {
   const previous = () => go('prev');
   const next = async () => {
     let error = await checkErrors();
+
     console.log(error);
     if (Object.keys(error || {}).length > 0) return;
 
-    go('next');
-    script.submitForm({
-      step1Values: formikStep1.values,
-      step2Values: formikStep2.values,
-      props: { ...props, auth },
-      state,
-      handleSetState: setState,
-      step: activeStep,
-    });
+    setIsLoading(true);
+
+    script.submitForm(
+      {
+        step1Values: formikStep1.values,
+        step2Values: formikStep2.values,
+        props: { ...props, auth },
+        state,
+        handleSetState: handleSetState,
+        step: activeStep,
+      },
+      success => {
+        if (success) {
+          if (activeStep == 1) go('next');
+          if (activeStep == 2) props.history.push(`/activities/${props.match.params.id}?success=true`);
+          setIsLoading(false);
+        }
+      },
+    );
   };
 
-  const submitData = async () => {
-    try {
-      // return (
-      //   !script.vars.upload_in_progress &&
-      //   script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState)
-      // );
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    console.log('formikStep1');
+  }, [formikStep1]);
+
+  useEffect(() => {
+    console.log('formikStep2');
+  }, [formikStep2]);
+
+  console.log(formikStep2.values);
 
   const checkErrors = () => {
     if (activeStep === 1) {
@@ -204,7 +197,7 @@ export default function CreateActivity(props) {
   return (
     <div className={classes.container}>
       <Dialog open={preview} fullScreen>
-        {/* <PreviewProject {...props} onClose={togglePreview} /> */}
+        <PreviewActivity {...props} onClose={togglePreview} />
       </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
@@ -238,7 +231,7 @@ export default function CreateActivity(props) {
           <Box style={{ marginTop: 100 }}>
             <StepWizard initialStep={activeStep} ref={wizardRef}>
               <Step1 formik={formikStep1} />
-              <Step2 formik={formikStep2} />
+              <Step2 formik={formikStep2} id={props.match?.params.id} />
             </StepWizard>
           </Box>
         </Grid>
@@ -257,7 +250,7 @@ export default function CreateActivity(props) {
 
           <CustomButton
             onClick={next}
-            loading={state.default_state?.loading}
+            loading={isLoading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}

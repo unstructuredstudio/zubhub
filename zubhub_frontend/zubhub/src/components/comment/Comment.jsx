@@ -12,11 +12,7 @@ import { Avatar, Box, Typography, Menu, MenuItem } from '@material-ui/core';
 
 import CustomButton from '../../components/button/Button';
 import CommentInput from '../../components/comment_input/CommentInput';
-import {
-  countComments,
-  nFormatter,
-  dFormatter,
-} from '../../assets/js/utils/scripts';
+import { countComments, nFormatter, dFormatter } from '../../assets/js/utils/scripts';
 
 import {
   toggleRepliesCollapsed,
@@ -62,20 +58,8 @@ function Comment(props) {
     }
   };
 
-  const {
-    replies_collapsed,
-    reply_input_collapsed,
-    reply_depth,
-    comment_menu_anchor_el,
-  } = state;
-  const {
-    auth,
-    t,
-    comment,
-    parent,
-    handleUnpublishComment,
-    handleToggleDeleteCommentModal,
-  } = props;
+  const { replies_collapsed, reply_input_collapsed, reply_depth, comment_menu_anchor_el } = state;
+  const { auth, t, comment, parent, handleUnpublishComment, handleToggleDeleteCommentModal } = props;
   const commentMenuOpen = Boolean(comment_menu_anchor_el);
 
   return (
@@ -86,45 +70,34 @@ function Comment(props) {
             common_classes.textDecorationNone,
             !parent ? classes.commentMetaStyle : classes.subCommentMetaStyle,
           )}
-          to={`/creators/${comment.creator.username}`}
+          to={`/creators/${comment.creator?.username}`}
         >
           <Avatar
-            className={
-              !parent
-                ? classes.commentAvatarStyle
-                : classes.subCommentAvatarStyle
-            }
+            className={!parent ? classes.commentAvatarStyle : classes.subCommentAvatarStyle}
             src={comment.creator.avatar}
-            alt={comment.creator.username}
+            alt={comment.creator?.username}
           />
           <Box>
             <Typography color="textPrimary" className={clsx('comment-creator')}>
-              {comment.creator.username}
+              {comment.creator?.username}
             </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              className={clsx('comment-created-on')}
-            >
-              {`${dFormatter(comment.created_on).value} ${t(
-                `date.${dFormatter(comment.created_on).key}`,
-              )} ${t('date.ago')}`}{' '}
+            <Typography variant="body2" color="textSecondary" className={clsx('comment-created-on')}>
+              {`${dFormatter(comment.created_on).value} ${t(`date.${dFormatter(comment.created_on).key}`)} ${t(
+                'date.ago',
+              )}`}{' '}
             </Typography>
           </Box>
         </Link>
         {auth.tags.includes('staff') || auth.tags.includes('moderator') ? (
           <>
             <CustomButton
-              className={clsx(
-                common_classes.positionAbsolute,
-                classes.commentMenuButtonStyle,
-              )}
+              className={clsx(common_classes.positionAbsolute, classes.commentMenuButtonStyle)}
               onClick={e => handleSetState(handleCommentMenuOpen(e))}
             >
               <MoreVertIcon />
             </CustomButton>
             <Menu
-              disableScrollLock = {true}
+              disableScrollLock={true}
               className={classes.commentMenuStyle}
               id="comment_menu"
               anchorEl={comment_menu_anchor_el}
@@ -141,11 +114,7 @@ function Comment(props) {
               onClose={e => handleSetState(handleCommentMenuClose(e))}
             >
               <MenuItem>
-                <Typography
-                  variant="subtitle2"
-                  component="span"
-                  onClick={() => handleUnpublishComment(comment.id)}
-                >
+                <Typography variant="subtitle2" component="span" onClick={() => handleUnpublishComment(comment.id)}>
                   {t('comments.unpublish')}
                 </Typography>
               </MenuItem>
@@ -165,40 +134,24 @@ function Comment(props) {
       </Box>
       <Box className={classes.commentTextSectionStyle}>
         <Typography
-          className={
-            !parent ? classes.commentTextStyle : classes.subCommentTextStyle
-          }
+          className={!parent ? classes.commentTextStyle : classes.subCommentTextStyle}
           dangerouslySetInnerHTML={{ __html: comment.text }}
         ></Typography>
 
-        {Array.isArray(comment.replies) &&
-        comment.replies.length > 0 &&
-        reply_depth < 3 ? (
+        {Array.isArray(comment.replies) && comment.replies.length > 0 && reply_depth < 3 ? (
           <CustomButton
-            className={
-              !parent
-                ? classes.showRepliesButtonStyle
-                : classes.subShowRepliesButtonStyle
-            }
-            endIcon={
-              replies_collapsed ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />
-            }
+            className={!parent ? classes.showRepliesButtonStyle : classes.subShowRepliesButtonStyle}
+            endIcon={replies_collapsed ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
             onClick={e => handleSetState(toggleRepliesCollapsed(e, state))}
           >
-            {!replies_collapsed
-              ? t('comments.showReplies')
-              : t('comments.hideReplies')}
+            {!replies_collapsed ? t('comments.showReplies') : t('comments.hideReplies')}
             {` ( ${nFormatter(countComments(comment.replies))} )`}
           </CustomButton>
         ) : null}
 
         {reply_depth < 3 ? (
           <CustomButton
-            className={
-              !parent
-                ? classes.showRepliesButtonStyle
-                : classes.subShowRepliesButtonStyle
-            }
+            className={!parent ? classes.showRepliesButtonStyle : classes.subShowRepliesButtonStyle}
             endIcon={<ReplyIcon />}
             onClick={e => handleSetState(toggleReplyInputCollapsed(e, state))}
           >
@@ -207,14 +160,8 @@ function Comment(props) {
         ) : null}
 
         <Box className={classes.commentReplyStyle}>
-          <a
-            href="#"
-            className={classes.commentThreadLineStyle}
-            aria-hidden="true"
-          ></a>
-          {reply_input_collapsed ? (
-            <CommentInput parent_id={comment.id} {...props} />
-          ) : null}
+          <a href="#" className={classes.commentThreadLineStyle} aria-hidden="true"></a>
+          {reply_input_collapsed ? <CommentInput parent_id={comment.id} {...props} /> : null}
           {Array.isArray(comment.replies) &&
             comment.replies.length > 0 &&
             replies_collapsed &&

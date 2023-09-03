@@ -6,6 +6,16 @@ export const activityDefailsStyles = theme => ({
         backgroundColor: colors.white,
         padding: 24
     },
+    descriptionBodyStyle: {
+        marginBottom: '0.7em',
+        color: 'rgba(0, 0, 0, 0.54)',
+        '& .ql-editor': {
+            fontSize: '1.01rem',
+            fontFamily: 'Raleway,Roboto,sans-serif',
+            padding: '4px 0',
+            lineHeight: 1.9,
+        },
+    },
     card: {
         borderRadius: 8,
         backgroundColor: colors.white,
