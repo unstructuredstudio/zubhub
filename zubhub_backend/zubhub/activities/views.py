@@ -79,7 +79,14 @@ class PublishedActivitiesAPIView(ListAPIView):
     permission_classes = [AllowAny]
     
     def get_queryset(self):
-        return Activity.objects.filter(publish= True)
+        limit = self.request.query_params.get('limit', 10000)
+
+        try:
+            limit = int(limit)
+        except ValueError:
+            limit = 10
+
+        return Activity.objects.filter(publish= True)[:limit]
     
 class UnPublishedActivitiesAPIView(ListAPIView):
     """
