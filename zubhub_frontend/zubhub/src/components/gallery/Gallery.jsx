@@ -8,12 +8,11 @@ import styles from '../../assets/js/styles';
 import { refactorVideoUrl } from '../input/inputScripts';
 import { isGdriveORVimeoORYoutube } from '../../views/project_details/projectDetailsScripts';
 
-const uniqueId = 'imgContainer';
-
 // displayType can be linear or grid
 export default function Gallery({ type = 'image', images = [], videos = [] }) {
   const classes = makeStyles(galleryStyles)({ imgSize: images.length });
   const commonClasses = makeStyles(styles)();
+  const ref = useRef(null);
 
   const [isScrollable, setIsScrollable] = useState(false);
   const videoRef = useRef(null);
@@ -33,7 +32,7 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
   }, [images]);
 
   const isImageContainerScroll = () => {
-    const scrollableDiv = document.getElementById(uniqueId);
+    const scrollableDiv = ref.current;
     if (scrollableDiv?.scrollWidth > scrollableDiv?.clientWidth) {
       if (!isScrollable) {
         setIsScrollable(true);
@@ -46,7 +45,7 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
   };
 
   const scrollImages = to => {
-    const scrollableDiv = document.getElementById(uniqueId);
+    const scrollableDiv = ref.current;
     const scrollAmount = 100;
 
     if (to == '>') {
@@ -116,9 +115,11 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
   if (displayType === 'linear') {
     return (
       <>
-        <div id={uniqueId} className={classes.containerLinear}>
-          {images.length > 0 && renderImages}
-          {videos.length > 0 && renderVideos}
+        <div ref={ref} className={classes.containerLinear}>
+          <div>
+            {images.length > 0 && renderImages}
+            {videos.length > 0 && renderVideos}
+          </div>
         </div>
         {isScrollable && (
           <div className={clsx(commonClasses.displayFlex, commonClasses.justifyCenter)} style={{ marginTop: 10 }}>

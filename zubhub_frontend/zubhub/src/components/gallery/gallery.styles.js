@@ -1,7 +1,7 @@
 export const galleryStyles = theme => ({
     container: ({ imgSize }) => {
         let columns = '1fr'
-        let rows = '150px';
+        let rows = '200px';
 
         if (imgSize == 2) {
             columns = '1.5fr 1fr'
@@ -9,7 +9,7 @@ export const galleryStyles = theme => ({
 
         if (imgSize > 2) {
             columns = '1.5fr 1fr'
-            rows = '75px 75px'
+            rows = '100px 100px'
         }
 
         return {
@@ -33,18 +33,28 @@ export const galleryStyles = theme => ({
         }
     },
     containerLinear: {
-        display: 'flex',
-        gap: 12,
         marginTop: 20,
         overflow: 'auto',
         '& > div': {
-            minWidth: 100,
-            maxWidth: 100,
-            height: 90,
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 12,
+            width: 'fit-content'
+        },
+        '& > div > div': {
+            height: 200,
+            width: 200,
             borderRadius: 4.5,
             borderRadius: 4,
             overflow: 'hidden',
-            position: 'relative'
+            position: 'relative',
+            background: '#eee',
+
+            '& img': {
+                height: '100%',
+                width: '100%',
+                objectFit: 'cover'
+            }
         }
     }
 })
