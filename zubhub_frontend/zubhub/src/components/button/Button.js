@@ -56,8 +56,9 @@ const CustomButton = React.forwardRef((props, ref) => {
     <Button
       ref={ref}
       classes={muiClasses}
-      className={btnClasses}
-      disabled={disabled ? disabled : false}
+      className={clsx(btnClasses, classes.default)}
+      disabled={disabled || loading}
+      {...rest}
     >
       {children}
       {loading && <CircularProgress size={20} color="inherit" />}

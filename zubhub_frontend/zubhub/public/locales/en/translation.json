@@ -710,7 +710,8 @@
       "prevNxtButtons": "previous and next page buttons"
     },
     "errors": {
-      "noUserProjects": "User has not created any projects yet. Check back later!"
+      "noUserProjects": "User has not created any projects yet. Check back later!",
+      "noTeams": "There are no teams created. Check back later!"
     }
   },
 

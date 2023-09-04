@@ -1,4 +1,3 @@
-import { TEAM_ENABLED } from '../../utils.js';
 import { GiNotebook } from 'react-icons/gi';
 import { RiLogoutBoxRFill, RiTeamFill } from 'react-icons/ri';
 import {
@@ -33,7 +32,7 @@ export const links = ({ draftCount, myProjectCount, auth, t }) => [
         requireAuth: true,
     },
     { label: t('pageWrapper.sidebar.bookmarks'), link: '/projects/saved', icon: Bookmark, requireAuth: true },
-    ...(TEAM_ENABLED ? [{ label: t('pageWrapper.sidebar.teams'), link: '/dashboard', icon: RiTeamFill }] : []),
+    ...([{ label: t('pageWrapper.sidebar.teams'), link: '/teams/all', icon: RiTeamFill }]),
     { label: t('pageWrapper.sidebar.expoloreActivities'), link: 'https://kriti.unstructured.studio/', target: '_blank', icon: FeaturedPlayList },
 ];
 

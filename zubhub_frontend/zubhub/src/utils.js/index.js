@@ -64,7 +64,3 @@ export const getUrlQueryObject = () => {
   }
   return {}
 }
-
-
-
-export const TEAM_ENABLED = false

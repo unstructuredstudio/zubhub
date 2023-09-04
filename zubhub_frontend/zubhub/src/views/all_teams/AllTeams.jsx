@@ -167,7 +167,7 @@ function TeamProjects(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('userProjects.errors.noUserProjects')} />;
+    return <ErrorPage error={t('userProjects.errors.noTeams')} />;
   }
 }
 

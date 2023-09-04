@@ -3,6 +3,7 @@ import { Box, Paper, Grid, InputBase, Typography, FormControl, TextField, makeSt
 import styles from '../../../assets/js/styles';
 import API from '../../../api/api';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 export default function Step2({ formik }) {
   const useStyles = makeStyles(styles);
@@ -81,8 +82,9 @@ export default function Step2({ formik }) {
       <label className={commonClasses.commonClasses}>
            Invite Team Members <span className={commonClasses.colorRed}>*</span>
           </label>
+          <br />
           <Grid item xs={12} className={commonClasses.commonClasses}>
-            <Paper className={commonClasses.commonClasses}>
+            <Paper className={commonClasses.commonClasses} style={{ padding: '16px' }}>
                 <Typography
                 gutterBottom
                 component="h3"
@@ -92,7 +94,13 @@ export default function Step2({ formik }) {
                 >
                 {('Admin')}
                 </Typography>
-                {('Admins can assign admin status to other team members, add and remove team members, add team to a project, delete team profile')}
+                {/* <ErrorOutlineIcon /> {('Admins can assign admin status to other team members, add and remove team members, add team to a project, delete team profile')} */}
+                <div style={{ display: 'flex', alignItems: '' }}>
+                  <ErrorOutlineIcon style={{ marginRight: '8px', fontWeight: 'normal', fontSize: '18px'  }} />
+                  <span>
+                    {('Admins can assign admin status to other team members, add and remove team members, add team to a project, delete team profile')}
+                  </span>
+                </div>
             </Paper><br></br></Grid>
             <Autocomplete
           multiple // Allow multiple selections
@@ -138,7 +146,7 @@ export default function Step2({ formik }) {
 
         <Grid item xs={12}> <br></br><br></br> </Grid>
           <Grid item xs={12} className={commonClasses.commonClasses}>
-            <Paper className={commonClasses.commonClasses}>
+            <Paper className={commonClasses.commonClasses} style={{ padding: '16px' }}>
                 <Typography
                 gutterBottom
                 component="h3"
@@ -148,7 +156,12 @@ export default function Step2({ formik }) {
                 >
                 {('Member')}
                 </Typography>
-                {('Members can add team to a project, view team members and leave at their convenience')}
+                <div style={{ display: 'flex', alignItems: '' }}>
+                  <ErrorOutlineIcon style={{ marginRight: '8px', fontWeight: 'normal', fontSize: '18px'  }} />
+                  <span>
+                  {('Members can add team to a project, view team members and leave at their convenience')}
+                  </span>
+                </div>
             </Paper><br></br></Grid>
             <Autocomplete
           multiple // Allow multiple selections
