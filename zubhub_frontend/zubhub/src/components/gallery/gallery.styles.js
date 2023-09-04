@@ -14,7 +14,7 @@ export const galleryStyles = theme => ({
 
         return {
             display: 'grid',
-            gap: 12,
+            gap: 20,
             gridTemplateColumns: columns,
             gridTemplateRows: rows,
             '& > div:nth-child(1)': {
@@ -38,7 +38,7 @@ export const galleryStyles = theme => ({
         '& > div': {
             display: 'flex',
             justifyContent: 'center',
-            gap: 12,
+            gap: 20,
             width: 'fit-content'
         },
         '& > div > div': {
