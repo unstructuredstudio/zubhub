@@ -15,7 +15,7 @@ import styles from '../../assets/js/styles/views/activities/activitiesStyles';
 import { makeStyles } from '@material-ui/core/styles';
 import ErrorPage from '../error/ErrorPage';
 import DefaultStyles from '../../assets/js/styles';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Typography } from '@material-ui/core';
 import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
 
@@ -63,6 +63,9 @@ function Activities(props) {
     } else {
       return (
         <div className={commonClasses.smallScreenPadding}>
+          <Typography style={{ marginBottom: 50 }} className={commonClasses.title1}>
+            Activities
+          </Typography>
           <Grid container spacing={3}>
             {activityList &&
               activityList.map((activity, index) => (
