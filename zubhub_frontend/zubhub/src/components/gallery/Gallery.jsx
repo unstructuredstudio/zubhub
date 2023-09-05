@@ -1,4 +1,6 @@
-import { CardMedia, Grid, IconButton, makeStyles } from '@material-ui/core';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+
+import { CardMedia, Dialog, Grid, IconButton, makeStyles } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react';
 import { galleryStyles } from './gallery.styles';
 import _ from 'lodash';
@@ -7,12 +9,16 @@ import clsx from 'clsx';
 import styles from '../../assets/js/styles';
 import { refactorVideoUrl } from '../input/inputScripts';
 import { isGdriveORVimeoORYoutube } from '../../views/project_details/projectDetailsScripts';
+import { Carousel } from 'react-responsive-carousel';
+import { colors } from '../../assets/js/colors';
 
 // displayType can be linear or grid
 export default function Gallery({ type = 'image', images = [], videos = [] }) {
   const classes = makeStyles(galleryStyles)({ imgSize: images.length });
   const commonClasses = makeStyles(styles)();
   const ref = useRef(null);
+  const [preview, setPreview] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(0);
 
   const [isScrollable, setIsScrollable] = useState(false);
   const videoRef = useRef(null);
@@ -30,6 +36,15 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
   useEffect(() => {
     throttle();
   }, [images]);
+
+  const togglePreview = (index = 0) => {
+    if (!preview) setSelectedItem(index);
+    setPreview(prev => !prev);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason == 'backdropClick') togglePreview();
+  };
 
   const isImageContainerScroll = () => {
     const scrollableDiv = ref.current;
@@ -60,7 +75,7 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
 
   const renderImages = images.map((img, index) => {
     return (
-      <div key={index.toString()}>
+      <div onClick={() => togglePreview(index)} key={index.toString()}>
         <img src={img} />
       </div>
     );
@@ -75,6 +90,27 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
       }
     });
   };
+
+  const previewImages = (
+    <Dialog onClose={handleClose} open={preview}>
+      <Carousel selectedItem={selectedItem} showThumbs={true} showIndicators={false} swipeable axis="horizontal">
+        {images.map((img, index) => (
+          <div
+            style={{
+              height: '90%',
+              width: '100%',
+              // backgroundColor: colors.white,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            key={index}
+          >
+            <img style={{ height: '80%', width: '100%', objectFit: 'contain' }} src={img} />
+          </div>
+        ))}
+      </Carousel>
+    </Dialog>
+  );
 
   const renderVideos = videos.map((vid, index) => {
     return (
@@ -108,6 +144,7 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
       <div className={classes.container}>
         {images.length > 0 && renderImages}
         {videos.length > 0 && renderVideos}
+        {previewImages}
       </div>
     );
   }
@@ -119,6 +156,7 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
           <div>
             {images.length > 0 && renderImages}
             {videos.length > 0 && renderVideos}
+            {previewImages}
           </div>
         </div>
         {isScrollable && (
