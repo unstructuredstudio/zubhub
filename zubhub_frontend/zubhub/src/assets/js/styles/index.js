@@ -239,6 +239,13 @@ const styles = theme => ({
   },
   gap: {
     gap: 17
+  },
+  smallScreenPadding: {
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
+
+    },
   }
 });
 

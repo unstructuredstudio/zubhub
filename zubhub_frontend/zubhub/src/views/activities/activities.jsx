@@ -14,7 +14,7 @@ import Activity from '../../components/activity/activity';
 import styles from '../../assets/js/styles/views/activities/activitiesStyles';
 import { makeStyles } from '@material-ui/core/styles';
 import ErrorPage from '../error/ErrorPage';
-
+import DefaultStyles from '../../assets/js/styles';
 import { Grid, Box } from '@material-ui/core';
 import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
@@ -25,6 +25,8 @@ function Activities(props) {
   const [loading, setLoading] = useState(true);
   const { activities } = useSelector(state => state);
   let [activityList, setActivityList] = useState([]);
+
+  const commonClasses = makeStyles(DefaultStyles)();
 
   useEffect(() => {
     setActivityList(activities.all_activities);
@@ -60,7 +62,7 @@ function Activities(props) {
       return <ErrorPage error={props.t('activities.errors.emptyList')} />;
     } else {
       return (
-        <div>
+        <div className={commonClasses.smallScreenPadding}>
           <Grid container spacing={3}>
             {activityList &&
               activityList.map((activity, index) => (
