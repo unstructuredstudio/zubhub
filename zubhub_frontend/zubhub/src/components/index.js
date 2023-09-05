@@ -14,6 +14,7 @@ import Gallery from "./gallery/Gallery";
 import Modal from "./modals/Modal";
 import PreviewActivity from "./previewProject/PreviewActivity";
 import PreviewProject from "./previewProject/PreviewActivity";
+import Pill from "./pill/Pill";
 
 export {
     Comments,
@@ -22,5 +23,6 @@ export {
     LabeledLine, Modal, OrDivider, PreviewProject,
     SelectFromPills, Sidenav, TagsInput, VideoInput,
     Collapsible,
-    PreviewActivity
+    PreviewActivity,
+    Pill
 };

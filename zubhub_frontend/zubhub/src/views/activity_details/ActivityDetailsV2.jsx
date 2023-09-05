@@ -25,7 +25,7 @@ import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
 import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import styles from '../../assets/js/styles/index';
-import { CustomButton, Gallery, Modal } from '../../components';
+import { CustomButton, Gallery, Modal, Pill } from '../../components';
 import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
@@ -207,9 +207,7 @@ export default function ActivityDetailsV2(props) {
         <Collapsible title={'Categories'}>
           <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
             {activity.category?.map((cat, index) => (
-              <CustomButton key={index} primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-                {cat}
-              </CustomButton>
+              <Pill key={index} text={cat} />
             ))}
           </div>
         </Collapsible>
@@ -218,9 +216,7 @@ export default function ActivityDetailsV2(props) {
       {activity.class_grade && (
         <Collapsible title={'Class Grade'}>
           <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
-            <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-              {activity.class_grade}
-            </CustomButton>
+            <Pill text={activity.class_grade} />
           </div>
         </Collapsible>
       )}

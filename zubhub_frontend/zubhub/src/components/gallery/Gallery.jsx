@@ -99,7 +99,6 @@ export default function Gallery({ type = 'image', images = [], videos = [] }) {
             style={{
               height: '90%',
               width: '100%',
-              // backgroundColor: colors.white,
               display: 'flex',
               alignItems: 'center',
             }}
