@@ -17,7 +17,7 @@ const styles = theme => ({
   },
   ambassadorsHeadingStyle: {
     fontSize: '2rem',
-    fontWeight: '900',
+    fontWeight: 'bold',
     color: 'black',
     margin: '1em 0',
   },

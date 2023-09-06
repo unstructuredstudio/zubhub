@@ -1,32 +1,31 @@
+import { colors } from "../../../colors";
+
 const styles = theme => ({
   root: {
     flex: '1 0 auto',
   },
+  box: {
+    marginTop: 100,
+    [theme.breakpoints.down('md')]: {
+      margin: '100px 1.5rem 0 1.5rem'
+    }
+  },
+  dialogTitle: {
+    fontSize: '18px !important',
+    lineHeight: '26px !important',
+    marginTop: 0
+  },
   projectDetailHeaderStyle: {
     paddingTop: '1.5em',
-    boxShadow:
-      '0px 2px 1px -1px rgba(0,0,0,0), 0px 1px 1px 0px rgba(0,0,0,0), 0px 1px 3px 0px rgba(0,0,0,0)',
-    background: 'rgba(255,204,0,1)',
-    background:
-      '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      '-webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,204,0,1)), color-stop(25%, rgba(255,229,133,1)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
-    background:
-      '-webkit-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      '-o-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      '-ms-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    filter:
-      "progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffcc00', endColorstr='#ffffff', GradientType=0 )",
+
+    background: 'transparent',
+
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
   },
   titleStyle: {
-    fontWeight: 900,
+    fontWeight: 800,
     textAlign: 'center',
   },
   metaInfoStyle: {
@@ -35,6 +34,7 @@ const styles = theme => ({
     alignItems: 'center',
   },
   creatorProfileStyle: {
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     marginBottom: '1em',
@@ -44,7 +44,7 @@ const styles = theme => ({
     },
     [theme.breakpoints.down('500')]: {
       width: '100%',
-      justifyContent: 'space-between',
+      // justifyContent: 'space-between',
     },
   },
   creatorAvatarStyle: {
@@ -52,12 +52,38 @@ const styles = theme => ({
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     backgroundColor: '#ffffff',
     marginRight: '0.5em',
+    alignSelf: 'center'
+  },
+
+  sucessDialogHeadericon: {
+    height: 50, width: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
+    position: 'absolute',
+    alignSelf: 'center',
+    left: '50%',
+    top: -25,
+    backgroundColor: colors.white
+  },
+  dialogContainer: {
+    '& .MuiDialog-paper': {
+      overflow: 'visible !important'
+    }
   },
   headerStyle: {
     maxWidth: '1000px',
+    [theme.breakpoints.up('md')]: {
+      padding: '0px',
+    },
   },
   detailStyle: {
     maxWidth: '1000px',
+    [theme.breakpoints.up('md')]: {
+      padding: '0px',
+    },
   },
   videoWrapperStyle: {
     backgroundColor: 'black',
@@ -72,6 +98,8 @@ const styles = theme => ({
     },
   },
   iframeStyle: {
+    borderRadius: 6,
+    overflow: 'hidden',
     position: 'absolute',
     borderStyle: 'none',
     top: 0,
@@ -123,21 +151,6 @@ const styles = theme => ({
     },
   },
   actionBoxButtonStyle: {
-    margin: '0.5em',
-    display: 'flex',
-    maxWidth: '100%',
-    minWidth: 0,
-    flexDirection: 'column',
-    '& span': { display: 'flex', flexDirection: 'column' },
-    [theme.breakpoints.down('1080')]: {
-      flexDirection: 'row',
-      margin: '0.2em',
-      padding: '7px',
-      '& span': {
-        flexDirection: 'row',
-      },
-    },
-    textAlign: 'center',
     color: 'white',
     '& MuiFab-root:hover': {
       color: '#F2F2F2',
@@ -152,7 +165,7 @@ const styles = theme => ({
   sliderBoxStyle: {
     [theme.breakpoints.down('1080')]: {
       width: '90%',
-    },
+    }
   },
   carouselImageStyle: {
     borderRadius: '15px',
@@ -172,15 +185,17 @@ const styles = theme => ({
   },
   descriptionHeadingStyle: {
     marginTop: '1em',
-    fontWeight: 900,
+    fontWeight: '900',
     fontSize: '2.2rem',
   },
   descriptionBodyStyle: {
     marginBottom: '0.7em',
     color: 'rgba(0, 0, 0, 0.54)',
     '& .ql-editor': {
-      fontSize: '1.5rem',
+      fontSize: '1.01rem',
       fontFamily: 'Raleway,Roboto,sans-serif',
+      padding: '4px 0',
+      lineHeight: 1.9,
     },
   },
   materialsUsedStyle: {
@@ -196,6 +211,7 @@ const styles = theme => ({
   tagsBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',
+    gap: 20
   },
   tagsStyle: {
     backgroundColor: '#E4E4E4',
@@ -254,7 +270,7 @@ const styles = theme => ({
   largeLabel: {
     fontSize: '1.3rem',
   },
-  positionRelative: { position: 'relative' },
+  positionRelative: { position: 'relative', borderRadius: 6, overflow: 'hidden' },
   positionAbsolute: { position: 'absolute' },
   marginBottom1em: { marginBottom: '1em' },
   errorBox: {

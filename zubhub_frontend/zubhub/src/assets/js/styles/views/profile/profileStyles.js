@@ -3,6 +3,9 @@ import { fade } from '@material-ui/core/styles';
 const styles = theme => ({
   root: {
     flex: '1 0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 30
   },
   profileHeaderStyle: {
     paddingTop: '1.5em',
@@ -12,6 +15,13 @@ const styles = theme => ({
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
+    [theme.breakpoints.down('740')]: {
+      margin: '1em',
+    },
+    border: 'solid 3px rgb(255 209 24)',
+    borderRadius: 8,
+    boxShadow: 'unset',
+    backgroundColor: 'white'
   },
   avatarBoxStyle: {
     padding: '0 1em 2.5em 1em',
@@ -22,7 +32,7 @@ const styles = theme => ({
     justifyContent: 'end',
     [theme.breakpoints.down('740')]: {
       padding: '1em 1em 0 1em',
-      marginBottom: '1em',
+      margin: '1em',
     },
   },
   profileShareButtonStyle: {
@@ -62,7 +72,7 @@ const styles = theme => ({
   userNameStyle: {
     wordBreak: 'break-all',
     lineHeight: '1.2',
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '2rem',
     [theme.breakpoints.down('740')]: {
       display: 'flex',
@@ -116,15 +126,19 @@ const styles = theme => ({
     fontSize: '1.9rem',
   },
   profileLowerStyle: {
-    margin: '1em',
+    // margin: '1em',
     padding: '1em',
+    [theme.breakpoints.down('740')]: {
+      margin: '1em',
+    },
+    borderRadius: 8,
   },
   titleStyle: {
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '1.5rem',
   },
   badgeTitleStyle: {
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '1.5rem',
     color: '#00B8C4',
   },
@@ -137,19 +151,20 @@ const styles = theme => ({
   aboutMeBox: {
     flexGrow: 1,
     padding: '1em',
-    margin: '1em 0 0 1em',
+    // margin: '1em 0 0 1em',
     borderRadius: '4px 0 0 4px',
     [theme.breakpoints.down('900')]: {
       margin: '1em',
-    borderRadius: '4px',
+      borderRadius: '4px',
     },
+    borderRadius: '8px 0 0 8px',
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',
-    margin: '1em 1em 0 0',
+    // margin: '1em 1em 0 0',
     padding: '1em',
     width: '40%',
-    borderRadius: '0 4px 4px 0',
+    borderRadius: '0 8px 8px 0',
     [theme.breakpoints.down('900')]: {
       width: 'auto',
       margin: '1em',
@@ -217,11 +232,11 @@ const styles = theme => ({
     textDecoration: 'none',
   },
   floatRight: { float: 'right' },
-  editButton: { 
+  editButton: {
     display: 'flex',
     marginTop: '0.5rem',
   },
-  followButton: { 
+  followButton: {
     display: 'flex',
     marginTop: '0.75rem'
   },

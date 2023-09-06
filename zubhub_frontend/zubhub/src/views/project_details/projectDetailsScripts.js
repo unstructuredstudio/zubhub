@@ -60,6 +60,7 @@ export const deleteProject = (props, state) => {
  * @todo - describe function's signature
  */
 export const toggleSave = (e, props, id) => {
+
   e.preventDefault();
   if (!props.auth.token) {
     props.history.push('/login');
