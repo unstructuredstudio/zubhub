@@ -174,10 +174,9 @@ function CreateTeam(props) {
           // Redirect to the desired URL on success
           const teamGroupName = formik.values.groupname; // Get the groupname from props
           history.push(`/teams/${teamGroupName}`);
-        } else if (uploadStatus === 'authError') {
-          // Redirect to login page or handle authentication error
-          // You might want to define a function for handling auth errors
-          // handleAuthError();
+        } else {
+          const apiError = uploadStatus;
+          toast.error(`An unexpected error occurred. Please check if you have entered all details properly and try again.`);
         }
       }
     } catch (error) {

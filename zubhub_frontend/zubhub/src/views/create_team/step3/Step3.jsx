@@ -76,7 +76,7 @@ export default function Step3({ updateSelectedProjects, formik, handleBlur, ...p
         </Grid>
         <Grid item xs={12} className={commonClasses.commonClasses}>
           <Paper className={classes.profileLowerStyle}>
-            <Grid container>
+            <Grid container spacing={3}>
               {Array.isArray(projects) &&
                 projects.map((project) => (
                   <Grid
@@ -87,7 +87,7 @@ export default function Step3({ updateSelectedProjects, formik, handleBlur, ...p
                     className={classes.projectGridStyle}
                     align="center"
                   >
-                    <div style={{position:'relative'}}>
+                    <div style={{ position: 'relative', marginLeft: '16px', marginRight: '16px' }}>
                     <Project
                       project={project}
                       t={t}

@@ -130,6 +130,13 @@ function EditTeam(props) {
   const handleButtonClick = () => {
     handleSetState(handleToggleDeleteAccountModal(groupname,props,state));
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await editProfile(e, groupname, info.groupname, info.description, props);
+    if (success) {
+      history.push(`/teams/${info.groupname}`);
+    }
+  };
   return (
   <>
     <Box className={classes.root}>
@@ -141,7 +148,7 @@ function EditTeam(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => editProfile(e, groupname,info.groupname, info.description, props)}
+                onSubmit={handleSubmit}
               >
                 <Typography
                   gutterBottom
@@ -328,16 +335,6 @@ function EditTeam(props) {
                   className={classes.descStyle}
                 >
                     {t('Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.')}
-                  </Typography>
-                  <br></br>
-                  <Typography
-                  // gutterBottom
-                  variant="body2"
-                  component="p"
-                  color="textSecondary"
-                  className={classes.descStyle}
-                >
-                    {t('Deleting your team will also delete any job or talent search associated with this team.')}
                   </Typography>
                 </Grid>
                 </Grid>

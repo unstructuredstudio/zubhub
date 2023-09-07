@@ -343,44 +343,43 @@ function Profile(props) {
                     className={classes.projectGridStyle}
                     align="center"
                   > 
+                  
+                  <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>
                     <Card>
-                    <CardContent className={classes.mediaBoxStyle}>
-                    <Link
-                      to={`/teams/${team.groupname}`}
-                      className={classes.linkStyle}
-                      // Add an event handler to prevent the link from being triggered by the button
-                      onClick={event => {
-                        if (
-                          event.target.classList.contains(classes.editButton) ||
-                          event.target.closest(`.${classes.editButton}`)
-                        ) {
-                          // Prevent the link from being triggered when clicking the button
-                          event.preventDefault();
-                        }
-                      }}
-                    >
-                      {/* <CardContent className={classes.mediaBoxStyle}> */}
+                      <CardContent className={classes.mediaBoxStyle}>
                         <Avatar
                           className={classes.creatorAvatarStyle}
                           src={team.avatar}
                           alt={team.groupname}
                         />
-                        <Typography variant="h4">{team.groupname}</Typography>
-                        <Typography variant="body1">{team.description}</Typography>
-                        </Link>
+                        <Typography className={classes.titleStyle} variant="h5" component="h2">
+                          {team.groupname}
+                        </Typography>
+                        <Typography
+                          className={classes.descriptionStyle}
+                          variant="subtitle2"
+                          color="textSecondary"
+                          component="p"
+                        >
+                          {team.description}
+                        </Typography>
                         <CustomButton
-                            className={classes.editButton}
-                            variant="contained"
-                            margin="normal"
-                            primaryButtonStyle
-                            onClick={() =>followTeam(team.groupname, props.auth.username, props)}
-                          >
-                            {team.members.includes(props.auth.id)
-                              ? t('profile.unfollow')
-                              : t('profile.follow')}
-                          </CustomButton>
+                          className={classes.followButton}
+                          variant="outlined"
+                          margin="normal"
+                          secondaryButtonStyle
+                          onClick={() => followTeam(team.groupname, props.auth.username, props)}
+                          style={{
+                            fontSize: '12px', // Adjust the font size as needed
+                            padding: '6px 12px', // Adjust the padding to change the button size
+                          }}
+                        >
+                          {team.members.includes(props.auth.id) ? t('profile.unfollow') : t('profile.follow')}
+                        </CustomButton>
                       </CardContent>
                     </Card>
+                  </Link>
+
                   </Grid>
                 ))}
               </Grid>

@@ -160,6 +160,17 @@ const styles = theme => ({
     fontWeight: 'bold',
     fontSize: '1.5rem',
   },
+  descriptionStyle: {
+    // flexGrow: 1,
+    '& p': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: 'vertical',
+      height: '90%',
+    },
+  },
   badgeTitleStyle: {
     fontWeight: 'bold',
     fontSize: '1.5rem',
@@ -180,7 +191,7 @@ const styles = theme => ({
       margin: '1em',
       borderRadius: '4px',
     },
-    borderRadius: '8px 0 0 8px',
+    borderRadius: '8px',
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',

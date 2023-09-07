@@ -193,10 +193,10 @@ function TeamProjects(props) {
                         <Typography variant="body1">{team.description}</Typography>
                         </Link>
                         <CustomButton
-                            className={classes.editButton}
-                            variant="contained"
+                            className={classes.followButton}
+                            variant="outlined"
                             margin="normal"
-                            primaryButtonStyle
+                            secondaryButtonStyle
                             onClick={() =>followTeam(team.groupname, props.auth.username, props)}
                           >
                             {team.members.includes(props.auth.id)

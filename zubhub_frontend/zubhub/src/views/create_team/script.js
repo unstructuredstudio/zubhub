@@ -126,11 +126,11 @@ export const initUpload = async (state, props, handleSetState, projs) => {
         if (response.groupname) {
           return 'success';
         } else {
-          return 'error';
+          return response;
         }
       } catch (error) {
         console.log(error);
-        return 'error';
+        return error;
       }
 };
 

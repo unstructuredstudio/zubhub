@@ -280,7 +280,6 @@ function Team(props) {
             </Container>
           </Paper>
 
-          <Container maxWidth="md">
             <div className= {classes.aboutMeBadgeBox}>
               <Paper className={classes.aboutMeBox}>
                 <Typography
@@ -300,7 +299,7 @@ function Team(props) {
                   ? t('profile.about.placeholder1')
                   : t('profile.about.placeholder2')}
               </Paper>
-
+             
               {/* <Paper className={classes.badgeBox}>
                 <Typography
                     gutterBottom
@@ -340,7 +339,7 @@ function Team(props) {
                     className={classes.titleStyle}
                   >
                     {t('Projects')}
-                    <CustomButton
+                    {/* <CustomButton
                       className={classes.teamButton}
                       variant="contained"
                       margin="normal"
@@ -348,7 +347,7 @@ function Team(props) {
                       onClick={() => props.history.push('/create-team')}
                     >
                       {t('Add Project')}
-                    </CustomButton>
+                    </CustomButton> */}
                     <CustomButton
                       className={clsx(classes.floatRight)}
                       variant="outlined"
@@ -395,7 +394,6 @@ function Team(props) {
               handleSetState={handleSetState}
               {...props}
             /> */}
-          </Container>
         </Box>
         <Dialog
           open={open_delete_account_modal}
