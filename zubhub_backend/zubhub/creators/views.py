@@ -843,8 +843,38 @@ class EditCreatorGroupAPIView(UpdateAPIView):
             raise ValidationError("Both 'groupname' and 'description' fields are required.")
 
         # Update the fields and save the changes
-        creator_group.groupname = groupname
-        creator_group.description = description
+        if groupname is not None:
+            creator_group.groupname = groupname
+        if description is not None:
+            creator_group.description = description
+
+        # Get the list of project IDs to add and remove
+        add_projects = request.data.get('add_projects')
+        remove_projects = request.data.get('remove_projects')
+
+        # Update projects if provided
+        if add_projects:
+            for project_data in add_projects:
+                project_id = project_data.get('id')
+                if project_id:
+                    try:
+                        project = Project.objects.get(id=project_id)
+                        project.group = creator_group
+                        project.save()
+                    except Project.DoesNotExist:
+                        raise Http404("Project doesn't exist")
+
+        if remove_projects:
+            for project_data in remove_projects:
+                project_id = project_data.get('id')
+                if project_id:
+                    try:
+                        project = Project.objects.get(id=project_id)
+                        project.group = None
+                        project.save()
+                    except Project.DoesNotExist:
+                        raise Http404("Project doesn't exist") 
+        
         creator_group.save()
 
         # Serialize and return the updated group data
