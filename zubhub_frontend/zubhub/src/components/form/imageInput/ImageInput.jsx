@@ -8,7 +8,18 @@ import { useEffect } from 'react';
 import _ from 'lodash';
 const uniqueId = 'imgContainer';
 
-export default function ImageInput({ name, label, required, value, handleChange }) {
+const defaultMessage = 'JPG and PNG Images can be added (Maximum of 5 photos 2MB each)';
+
+export default function ImageInput({
+  name,
+  label,
+  required,
+  value,
+  handleChange,
+  message = defaultMessage,
+  sizeLimit,
+  max = 5,
+}) {
   const commomClasses = makeStyles(styles)();
   const classes = makeStyles(imageInputStyles)();
   const input = useRef(null);
@@ -53,12 +64,14 @@ export default function ImageInput({ name, label, required, value, handleChange 
   };
 
   const handleFileChange = files => {
-    const maxAssets = 5;
-    if (files?.length > maxAssets || value?.length > maxAssets) {
-      alert('You can only select up to 5 files.');
+    if (files?.length + value?.length > max) {
+      alert(`You can only select up to ${max} files.`);
       return;
     }
-    handleChange(Array.from([...files, ...value]));
+
+    const images = Array.from([...files, ...value]);
+
+    handleChange(images);
   };
 
   const getPath = file => {
@@ -78,9 +91,7 @@ export default function ImageInput({ name, label, required, value, handleChange 
       </label>
       <Box onClick={() => input.current.click()} className={classes.container}>
         <CloudUploadOutlined />
-        <Typography className={clsx(commomClasses.inputTextPlaceholder)}>
-          JPG and PNG Images can be added (Maximum of 5 photos 2MB each)
-        </Typography>
+        <Typography>{message}</Typography>
       </Box>
       <Box id={uniqueId} className={classes.previewContainer}>
         {value?.map((img, index) => (

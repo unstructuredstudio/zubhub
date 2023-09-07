@@ -51,7 +51,7 @@ import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
 import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import { cloudinaryFactory, getPlayerOptions, nFormatter, parseComments } from '../../assets/js/utils/scripts';
-import { Comments, Modal } from '../../components/index.js';
+import { Comments, Modal, Pill } from '../../components/index.js';
 import Project from '../../components/project/Project';
 import { getUrlQueryObject } from '../../utils.js';
 
@@ -68,11 +68,7 @@ const useCommonStyles = makeStyles(commonStyles);
  */
 const buildMaterialsUsedComponent = (classes, state) => {
   const arr = state.project.materials_used && state.project.materials_used.split(',');
-  return arr.map((material, index) => (
-    <CustomButton key={index} primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-      {material}
-    </CustomButton>
-  ));
+  return arr.map((material, index) => <Pill key={index} text={material} />);
 };
 
 /**
@@ -83,14 +79,15 @@ const buildMaterialsUsedComponent = (classes, state) => {
  */
 const buildTagsComponent = (classes, tags, history) => {
   return tags.map((tag, index) => (
-    <CustomButton
-      key={index}
-      primaryButtonOutlinedStyle
-      style={{ borderRadius: 4 }}
-      onClick={() => history.push(`/search?q=${tag.name}`)}
-    >
-      #{tag.name}
-    </CustomButton>
+    <Pill key={index} text={`#${tag.name}`} />
+    // <CustomButton
+    //   key={index}
+    //   primaryButtonOutlinedStyle
+    //   style={{ borderRadius: 4 }}
+    //   onClick={() => history.push(`/search?q=${tag.name}`)}
+    // >
+    //   #{tag.name}
+    // </CustomButton>
   ));
 };
 
@@ -368,14 +365,15 @@ function ProjectDetails(props) {
                   <div style={{ display: 'flex', gap: 20 }}>
                     {project.category ? (
                       project.category.map(cat => (
-                        <CustomButton
-                          key={cat}
-                          primaryButtonOutlinedStyle
-                          style={{ borderRadius: 4 }}
-                          onClick={() => props.history.push(`/search?q=${cat}`)}
-                        >
-                          {cat}
-                        </CustomButton>
+                        <Pill key={cat} text={cat} />
+                        // <CustomButton
+                        //   key={cat}
+                        //   primaryButtonOutlinedStyle
+                        //   style={{ borderRadius: 4 }}
+                        //   onClick={() => props.history.push(`/search?q=${cat}`)}
+                        // >
+                        //   {cat}
+                        // </CustomButton>
                       ))
                     ) : (
                       <Typography className={classes.categoryStyle}>{t('projectDetails.project.none')}</Typography>

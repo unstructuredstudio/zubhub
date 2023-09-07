@@ -10,7 +10,7 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       padding: '0 24px'
     },
-  },  
+  },
   heroSectionStyle: {
     backgroundColor: '#DC3545',
     boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
@@ -24,9 +24,9 @@ const styles = theme => ({
     marginBottom: '2em'
   },
   imageLeft: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column', 
+      flexDirection: 'column',
     },
   },
   centerCarousel: {
@@ -38,7 +38,7 @@ const styles = theme => ({
     },
   },
   carouselContainer: {
-    maxWidth: '100%', 
+    maxWidth: '100%',
   },
   carouselSlide: {
     display: 'flex',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import CreateActivity from './views/create_activity/create_activity';
+import CreateActivity from './views/create_activity/CreateActivity';
 
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
@@ -65,7 +65,7 @@ const StaffPickDetails = React.lazy(() =>
 );
 const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
-  import('./views/activity_details/activity_details'),
+  import('./views/activity_details/ActivityDetailsV2'),
 );
 const LinkedProjects = React.lazy(() =>
   import('./views/linked_projects/LinkedProjects'),
@@ -92,14 +92,24 @@ const LazyImport = props => {
 function App(props) {
   return (
     <Router>
-      <ScrollToTop/>
+      <ScrollToTop />
       <Switch>
-      <Route
+        <Route
           exact={true}
           path="/"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport LazyComponent={Home} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          exact={true}
+          path="/projects"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
             </PageWrapper>
           )}
         />

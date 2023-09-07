@@ -651,6 +651,17 @@ class API {
   };
 
   /**
+  * @method getActivity
+  * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
+  *
+  * @todo - describe method's signature
+  */
+  getActivity = ({ token, id }) => {
+    const url = `activities/${id}`;
+    return this.request({ token, url }).then(res => res.json());
+  };
+
+  /**
    * @method getCategories
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *
@@ -887,26 +898,17 @@ class API {
       materials_used,
       materials_used_image,
       facilitation_tips,
-      activity_images,
+      images,
+      class_grade,
+      introduction,
       making_steps,
       inspiring_examples,
       inspiring_artist,
       video,
     } = args;
 
-    const body = JSON.stringify({
-      title: title,
-      motivation: motivation,
-      learning_goals: learning_goals,
-      materials_used: materials_used,
-      materials_used_image: materials_used_image,
-      facilitation_tips: facilitation_tips,
-      images: activity_images,
-      making_steps: making_steps,
-      inspiring_examples: inspiring_examples,
-      inspiring_artist: inspiring_artist,
-      video: video,
-    });
+
+    const body = JSON.stringify(args);
     return this.request({ url, method, token, body });
     // .then(res => res.json());
   };
@@ -914,33 +916,21 @@ class API {
   updateActivity = (token, id, args) => {
     const url = `activities/${id}/update/`;
     const method = 'PATCH';
-    const {
-      title,
-      motivation,
-      learning_goals,
-      materials_used,
-      materials_used_image,
-      facilitation_tips,
-      activity_images,
-      making_steps,
-      inspiring_examples,
-      inspiring_artist,
-      video,
-    } = args;
+    // const {
+    //   title,
+    //   motivation,
+    //   learning_goals,
+    //   materials_used,
+    //   materials_used_image,
+    //   facilitation_tips,
+    //   activity_images,
+    //   making_steps,
+    //   inspiring_examples,
+    //   inspiring_artist,
+    //   video,
+    // } = args;
 
-    const body = JSON.stringify({
-      title: title,
-      motivation: motivation,
-      learning_goals: learning_goals,
-      materials_used: materials_used,
-      materials_used_image: materials_used_image,
-      facilitation_tips: facilitation_tips,
-      images: activity_images,
-      making_steps: making_steps,
-      inspiring_examples: inspiring_examples,
-      inspiring_artist: inspiring_artist,
-      video: video,
-    });
+    const body = JSON.stringify(args);
     return this.request({ url, method, token, body });
     //.then(res => res.json());
   };
@@ -951,8 +941,12 @@ class API {
     return this.request({ url, method, token });
   };
 
-  getActivities = () => {
-    const url = 'activities/';
+  getActivities = (params) => {
+
+    let queryParams = sanitizeObject(params)
+    const searchParams = new URLSearchParams(queryParams);
+    let url = `activities`;
+    url = `${url}?${searchParams}`;
     return this.request({ url, method: 'GET' });
     // .then(res => res.json());
   };

@@ -122,7 +122,6 @@ function Projects(props) {
               </Box>
             ) : null}
             <Box className={classes.mainContainerStyle}>
-
               {staff_picks &&
                 staff_picks.map(staff_pick => (
                   <StaffPick
