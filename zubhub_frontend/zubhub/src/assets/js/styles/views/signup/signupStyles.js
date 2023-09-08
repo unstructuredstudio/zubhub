@@ -6,6 +6,9 @@ const styles = theme => ({
     paddingTop: '2em',
     paddingBottom: '2em',
     flex: '1 0 auto',
+    [theme.breakpoints.down('400')]: {
+      marginTop:'30px',
+    },
     // background: 'rgba(255,204,0,1)',
     // background:
     //   'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
@@ -15,6 +18,7 @@ const styles = theme => ({
     [theme.breakpoints.up('1600')]: {
       maxWidth: '950px',
     },
+  
   },
   cardStyle: {
     border: 0,
