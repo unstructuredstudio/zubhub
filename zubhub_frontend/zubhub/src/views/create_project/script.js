@@ -6,7 +6,6 @@ import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // e
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
 import API from '../../api';
 
-
 export const vars = {
     image_field_touched: false,
     video_field_touched: false,
