@@ -9,6 +9,9 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  flexColumn: {
+    flexDirection: 'column'
+  },
   inputTextPlaceholder: {
     color: '#B3B3B3',
     fontSize: '15px !important',
@@ -123,6 +126,7 @@ const styles = theme => ({
   },
   justifySpaceBetween: {
     justifyContent: 'space-between',
+    display: 'flex'
   },
   addOnSmallScreen: {
     [theme.breakpoints.up('555')]: {
@@ -225,6 +229,22 @@ const styles = theme => ({
     },
     '& .MuiSvgIcon-root': {
       fontSize: '1.2rem'
+    },
+  },
+  textSmall: {
+    fontSize: '0.9rem'
+  },
+  boxShadow: {
+    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.09), 0px 2px 2px 0px rgba(0,0,0,0.08), 0px 1px 5px 0px rgba(0,0,0,0.17)'
+  },
+  gap: {
+    gap: 17
+  },
+  smallScreenPadding: {
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
+
     },
   }
 });

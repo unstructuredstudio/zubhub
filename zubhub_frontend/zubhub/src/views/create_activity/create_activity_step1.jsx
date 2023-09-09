@@ -3,11 +3,7 @@ import clsx from 'clsx';
 import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
-import {
-  vars,
-  handleTextFieldChange,
-  handleTextFieldBlur,
-} from '../create_project/createProjectScripts';
+import { vars, handleTextFieldChange, handleTextFieldBlur } from '../create_project/createProjectScripts';
 import CustomButton from '../../components/button/Button';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';

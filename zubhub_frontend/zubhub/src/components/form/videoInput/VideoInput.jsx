@@ -1,14 +1,13 @@
 import { Box, CardMedia, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
 import { ClearRounded, CloudUploadOutlined } from '@material-ui/icons';
-import React, { useRef } from 'react';
-import styles from '../../../assets/js/styles';
-import OrDivider from '../orDivider/OrDivider';
-import { videoInputStyles } from './videoInput.styles';
-import { buildVideoThumbnailURL } from '../../../assets/js/utils/scripts';
-import { refactorVideoUrl } from '../../input/inputScripts';
-import { isGdriveORVimeoORYoutube } from '../../../views/project_details/projectDetailsScripts';
 import clsx from 'clsx';
 import _ from 'lodash';
+import React, { useRef } from 'react';
+import styles from '../../../assets/js/styles';
+import { isGdriveORVimeoORYoutube } from '../../../views/project_details/projectDetailsScripts';
+import { refactorVideoUrl } from '../../input/inputScripts';
+import LabeledLine from '../labeledLine/LabeledLine';
+import { videoInputStyles } from './videoInput.styles';
 
 function VideoInput({ name, label, required, value = [], handleChange, linkValue = '' }) {
   const commomClasses = makeStyles(styles)();
@@ -40,7 +39,7 @@ function VideoInput({ name, label, required, value = [], handleChange, linkValue
     if (value.length === 0 && linkValue.length === 0) {
       return (
         <Box marginY={3}>
-          <OrDivider />
+          <LabeledLine />
         </Box>
       );
     }
