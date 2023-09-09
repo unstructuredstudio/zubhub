@@ -205,7 +205,7 @@ export default function ActivityDetailsV2(props) {
 
       {activity.category?.length > 0 && (
         <Collapsible title={'Categories'}>
-          <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
+          <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
             {activity.category?.map((cat, index) => (
               <Pill key={index} text={cat} />
             ))}
@@ -215,7 +215,7 @@ export default function ActivityDetailsV2(props) {
 
       {activity.class_grade && (
         <Collapsible title={'Class Grade'}>
-          <div className={clsx(commonClasses.displayFlex, commonClasses.gap)}>
+          <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
             <Pill text={activity.class_grade} />
           </div>
         </Collapsible>

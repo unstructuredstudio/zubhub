@@ -12,6 +12,9 @@ const styles = theme => ({
   flexColumn: {
     flexDirection: 'column'
   },
+  flexWrap: {
+    flexWrap: 'wrap'
+  },
   inputTextPlaceholder: {
     color: '#B3B3B3',
     fontSize: '15px !important',
