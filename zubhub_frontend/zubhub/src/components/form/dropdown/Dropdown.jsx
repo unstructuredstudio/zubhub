@@ -1,7 +1,7 @@
 import { Box, Checkbox, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { colors } from '../../../assets/js/colors';
 import styles from '../../../assets/js/styles';
 import { dropdownStyle } from './dropdown.style';
@@ -19,11 +19,13 @@ export default function Dropdown({
   helperText,
   name,
   description,
+  onInput = () => {},
   maxSelection,
-  withCheckbox,
+  withCheckbox = true,
 }) {
   const classes = makeStyles(dropdownStyle)();
   const commonClasses = makeStyles(styles)();
+  const memoizedValue = useMemo(() => value, [value]);
 
   if (multiple && value) {
     let valueTemp = [];
@@ -38,7 +40,7 @@ export default function Dropdown({
     const checked = rest[0].selected;
     return (
       <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: 15, alignItems: 'center' }} {...props}>
-        {multiple ? <Checkbox checked={checked} style={{ color }} /> : null}
+        {multiple && withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
         {!multiple ? (
           <div className={clsx(classes.radio, checked && classes.activeRadio)}>
             <div></div>
@@ -86,11 +88,13 @@ export default function Dropdown({
         options={data}
         autoHighlight
         multiple={multiple}
-        value={value}
+        value={memoizedValue}
+        onInput={e => onInput(e.target.value)}
         onChange={(e, value) => handleChange(value)}
-        getOptionLabel={option => option?.name}
+        getOptionLabel={option => option?.name || ''}
         renderOption={labelView}
         renderInput={inputView}
+        getOptionSelected={(option, value) => option.id === value.id} // Customize the equality test
         {...(maxSelection && { getOptionDisabled: getOptionSelected })}
       />
     </FormControl>
