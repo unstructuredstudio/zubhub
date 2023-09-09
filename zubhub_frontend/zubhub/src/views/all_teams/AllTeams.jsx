@@ -1,9 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import { toast } from 'react-toastify';
 
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
@@ -20,14 +17,11 @@ import {
   Avatar
 } from '@material-ui/core';
 
-import { fetchPage, updateProjects, followTeam } from './allteamScripts';
-
-import * as ProjectActions from '../../store/actions/projectActions';
+import { fetchPage, followTeam } from './allteamScripts';
 import * as UserActions from '../../store/actions/userActions';
 import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
-import Project from '../../components/project/Project';
 import styles from '../../assets/js/styles/views/user_projects/userProjectsStyles';
 
 const useStyles = makeStyles(styles);
@@ -38,7 +32,7 @@ const useStyles = makeStyles(styles);
  *
  * @todo - describe function's signature
  */
-function TeamProjects(props) {
+function AllTeams(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -62,8 +56,7 @@ function TeamProjects(props) {
 
   const { results: teams, prev_page, next_page, loading } = state;
   const { t } = props;
-  const {groupname} = useParams();
-  const username=groupname;
+
   if (loading) {
     return <LoadingPage />;
   } else if (teams && teams.length > 0) {
@@ -111,9 +104,9 @@ function TeamProjects(props) {
                         </Typography>
                         <CustomButton
                           className={classes.editButton}
-                          variant="contained"
+                          variant="outlined"
                           margin="normal"
-                          primaryButtonStyle
+                          secondaryButtonStyle
                           onClick={() => followTeam(team.groupname, props.auth.username, props)}
                         >
                           {team.members.includes(props.auth.id) ? t('profile.unfollow') : t('profile.follow')}
@@ -164,11 +157,9 @@ function TeamProjects(props) {
   }
 }
 
-TeamProjects.propTypes = {
+AllTeams.propTypes = {
   auth: PropTypes.object.isRequired,
-  getTeamProfile: PropTypes.func.isRequired,
-  toggleLike: PropTypes.func.isRequired,
-  toggleSave: PropTypes.func.isRequired,
+  getAllTeams: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -179,16 +170,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getTeamProfile: args => {
+    getAllTeams: args => {
       return dispatch(UserActions.getAllTeams(args));
-    },
-    toggleLike: args => {
-      return dispatch(ProjectActions.toggleLike(args));
-    },
-    toggleSave: args => {
-      return dispatch(ProjectActions.toggleSave(args));
     },
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TeamProjects);
+export default connect(mapStateToProps, mapDispatchToProps)(AllTeams);
