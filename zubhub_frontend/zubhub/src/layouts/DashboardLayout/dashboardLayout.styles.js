@@ -12,9 +12,15 @@ export const dashboardLayoutStyles = theme => ({
             padding: `0 ${theme.spacing(4)}px`,
         },
     },
-    body: {
+    body: ({ height }) => ({
         [theme.breakpoints.up('md')]: {
             paddingLeft: theme.spacing(4),
         },
-    },
+
+        [theme.breakpoints.down('sm')]: {
+            // paddingLeft: theme.spacing(4),
+            paddingTop: height,
+        },
+
+    }),
 });

@@ -24,8 +24,8 @@ const menu = [
 ];
 
 function Editor({
-  onChange,
-  onBlur,
+  onChange = () => {},
+  onBlur = () => {},
   value,
   name,
   placeholder,
