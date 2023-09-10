@@ -25,7 +25,7 @@ import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
 import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import styles from '../../assets/js/styles/index';
-import { CustomButton, Gallery, Modal, Pill } from '../../components';
+import { Collapsible, CustomButton, Gallery, Modal, Pill } from '../../components';
 import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
@@ -114,7 +114,7 @@ export default function ActivityDetailsV2(props) {
     <div ref={ref} style={{ margin: '0 24px' }}>
       {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={clsx(classes.header, classes.card)}>
-        <Typography align="center" className={clsx(commonClasses.title1)}>
+        <Typography align="center" className={clsx(commonClasses.title1, commonClasses.textCapitalize)}>
           {activity?.title}
         </Typography>
 
@@ -152,17 +152,7 @@ export default function ActivityDetailsV2(props) {
           </CustomButton>
         </div>
       </div>
-      <div
-        style={{
-          backgroundColor: colors.primary,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '16px 0',
-          borderRadius: 8,
-        }}
-      >
+      <div className={classes.socialButtons}>
         <IconButton
           className={classes.actionBoxButtonStyle}
           aria-label={t('projectDetails.ariaLabels.likeButton.label')}
@@ -265,16 +255,7 @@ export default function ActivityDetailsV2(props) {
           </CustomButton>
         </div>
 
-        <Typography
-          style={{
-            marginTop: 50,
-            marginBottom: 30,
-            fontSize: 22,
-            fontWeight: 'bold',
-            color: colors.black,
-          }}
-          align="center"
-        >
+        <Typography className={classes.moreTextTitle} align="center">
           More Activities
         </Typography>
 
@@ -316,7 +297,7 @@ export default function ActivityDetailsV2(props) {
           <Typography align="center">
             Share your activity with the world. Post it on the following platforms:
           </Typography>
-          <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
+          <div className={clsx(commonClasses.displayFlex, commonClasses.justifyCenter)} style={{ margin: '20px 0' }}>
             <SocialButtons containerStyle={{ gap: 50 }} withColor link facebook whatsapp />
           </div>
         </DialogContent>
@@ -374,32 +355,3 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
     </>
   );
 };
-
-const Collapsible = ({ title, children }) => {
-  const classes = makeStyles(activityDefailsStyles)();
-  const commonClasses = makeStyles(styles)();
-  const [open, setOpen] = useState(true);
-
-  return (
-    <div className={clsx(classes.card, classes.expandableMargin, commonClasses.boxShadow)}>
-      <div className={clsx(commonClasses.displayFlex, commonClasses.justifySpaceBetween, commonClasses.alignCenter)}>
-        <Typography className={commonClasses.title2}>{title}</Typography>
-        <IconButton onClick={() => setOpen(prev => !prev)}>
-          <ExpandMore />
-        </IconButton>
-      </div>
-      <div className={clsx(classes.closed, open && classes.expanded)}>{children}</div>
-    </div>
-  );
-};
-
-const videos = ['https://www.youtube.com/watch?v=ssjJ3N7LV1c'];
-
-const materials_used_images = [
-  'https://plus.unsplash.com/premium_photo-1679280550151-4c56e920b277?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  'https://images.unsplash.com/photo-1523247297454-ef69fd04e051?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  'https://images.unsplash.com/photo-1448697138198-9aa6d0d84bf4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  'https://plus.unsplash.com/premium_photo-1679280550151-4c56e920b277?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  'https://images.unsplash.com/photo-1523247297454-ef69fd04e051?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-  'https://images.unsplash.com/photo-1448697138198-9aa6d0d84bf4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dGFibGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60',
-];

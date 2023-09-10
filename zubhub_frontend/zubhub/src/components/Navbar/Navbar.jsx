@@ -210,8 +210,8 @@ function PageWrapper(props) {
   const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
-      <AppBar id="navbar-root" className={classes.navBarStyle}>
-        <Container className={classes.mainContainerStyle}>
+      <AppBar className={classes.navBarStyle}>
+        <Container id="navbar-root" className={classes.mainContainerStyle}>
           <Toolbar className={classes.toolBarStyle}>
             <Hidden mdUp>
               <Box style={{ marginRight: 10 }} onClick={toggleDrawer}>
