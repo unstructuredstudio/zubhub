@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 import API from '../../api';
-
+import { TEAM_ENABLED } from '../../utils.js';
 import { makeStyles } from '@material-ui/core/styles';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -314,7 +314,7 @@ function Profile(props) {
                   </div>
             </Paper>
 
-            <Paper   className= {classes.profileLowerStyle}>
+            {TEAM_ENABLED== true ? (<Paper   className= {classes.profileLowerStyle}>
             <Typography
              gutterBottom
              component="h2"
@@ -383,7 +383,7 @@ function Profile(props) {
                   </Grid>
                 ))}
               </Grid>
-            </Paper>
+            </Paper>):null}
 
           {profile.projects_count > 0 || drafts.length > 0 ? (
             username === props.auth.username ? (

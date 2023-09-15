@@ -45,7 +45,7 @@ import * as script from './script';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
-// import { TEAM_ENABLED } from '../../utils.js';
+import { TEAM_ENABLED } from '../../utils.js';
 
 // const PreviewProject = lazy(() => import('../../components/previewProject/PreviewProject'));
 
@@ -233,13 +233,13 @@ function CreateTeam(props) {
     </Box>
   ));
 
-  // if (TEAM_ENABLED) {
-  //   if (!['team', 'personal'].includes(mode)) {
-  //     return <SelectModeUI setMode={mode => setMode(mode)} />;
-  //   }
+  if (TEAM_ENABLED) {
+    if (!['team', 'personal'].includes(mode)) {
+      return <SelectModeUI setMode={mode => setMode(mode)} />;
+    }
 
-  //   if (mode.length == 0) return null;
-  // }
+    if (mode.length == 0) return null;
+  }
 
   return (
     <div className={classes.container}>

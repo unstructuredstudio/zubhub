@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dropdown } from '../../../components';
 import { getCategories } from '../script';
-import { getUrlQueryObject } from '../../../utils.js';
+import { TEAM_ENABLED, getUrlQueryObject } from '../../../utils.js';
 import { Checkbox, Grid, Typography, makeStyles } from '@material-ui/core';
 import { colors } from '../../../assets/js/colors';
 import styles from '../../../assets/js/styles';
@@ -27,6 +27,10 @@ export default function Step3({ formik, handleBlur, ...props }) {
     getCategories(props).then(cats => setCategories(cats.categories));
       let params = getUrlQueryObject();
       if ('mode' in params) setMode(params.mode);
+      if (TEAM_ENABLED) {
+        let params = getUrlQueryObject();
+        if ('mode' in params) setMode(params.mode);
+      }
   }, []);
 
   const [categories, setCategories] = useState([]);
