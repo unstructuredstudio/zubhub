@@ -4,12 +4,6 @@ export const createProjectStyle = theme => ({
     container: {
         color: colors.gray,
     },
-    disconnectedStyle: {
-        height: '20em',
-        alignItems:'center',
-        [theme.breakpoints.down('500')]: {
-          height: '10em',
-        }},
     banner: ({ height }) => ({
         backgroundColor: colors.white,
         padding: '15px',

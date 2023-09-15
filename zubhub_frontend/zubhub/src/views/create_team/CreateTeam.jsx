@@ -11,7 +11,6 @@ import {
   Typography,
   makeStyles,
   useMediaQuery,
-  Container
 } from '@material-ui/core';
 import {
   ArrowBackIosRounded,
@@ -46,7 +45,7 @@ import * as script from './script';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
-import disconnected from '../../assets/images/disconnected-chains.svg';
+// import { TEAM_ENABLED } from '../../utils.js';
 
 // const PreviewProject = lazy(() => import('../../components/previewProject/PreviewProject'));
 
@@ -55,7 +54,6 @@ const steps = ['Team Details', 'Add Team Members', 'Select Team Project'];
 
 
 function CreateTeam(props) {
-  const TEAM_ENABLED=false;
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -126,7 +124,6 @@ function CreateTeam(props) {
   const handleBlur = name => {
     formik.setTouched({ [name]: true }, true);
   };
-  
 
   useEffect(() => {
     if (state.success) {
@@ -243,22 +240,6 @@ function CreateTeam(props) {
 
   //   if (mode.length == 0) return null;
   // }
-  if (!TEAM_ENABLED) {
-    return (
-      <Box className={classes.root}>
-        <Container className={classes.mainContainerStyle}>
-          <img className={classes.disconnectedStyle} src={disconnected} alt="Work in Progress" />
-          <Box className={classes.errorBoxStyle}>
-            <Typography variant="h1">Work in Progress</Typography>
-            <Typography style={{ marginBottom: 50 }} variant="h5">
-              This feature is currently under development.
-            </Typography>
-            {/* You can add any additional content or message here */}
-          </Box>
-        </Container>
-      </Box>
-    );
-  }
 
   return (
     <div className={classes.container}>
