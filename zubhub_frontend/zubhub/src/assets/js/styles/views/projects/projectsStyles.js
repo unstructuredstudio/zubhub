@@ -27,7 +27,7 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       padding: '0 24px'
     },
-  },  
+  },
   heroSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
     boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
@@ -38,11 +38,12 @@ const styles = theme => ({
     paddingBottom: '2.85em',
     justifyContent: 'center',
     width: '100vw',
+    marginBottom: '2em'
   },
   imageLeft: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column', 
+      flexDirection: 'column',
     },
   },
   centerCarousel: {
@@ -54,7 +55,7 @@ const styles = theme => ({
     },
   },
   carouselContainer: {
-    maxWidth: '100%', 
+    maxWidth: '100%',
   },
   carouselSlide: {
     display: 'flex',
@@ -256,7 +257,7 @@ const styles = theme => ({
     marginBottom: '2em',
   },
   titleStyle: {
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '1.5rem',
     marginTop: '2em',
     marginLeft: '0.67em',

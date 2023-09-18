@@ -1,8 +1,8 @@
 export const style = theme => ({
   activityCardContainer: {
     position: 'relative',
-    maxWidth: '350px',
-    minWidth: '300px',
+    // maxWidth: '350px',
+    // minWidth: '300px',
     height: '95%',
   },
   activityCard: {
@@ -24,6 +24,7 @@ export const style = theme => ({
   activityCardImage: {
     width: '100%',
     position: 'absolute',
+    objectFit: 'cover',
     height: '100%',
   },
   mediaBoxStyle: {

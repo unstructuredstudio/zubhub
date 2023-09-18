@@ -224,17 +224,37 @@ function PageWrapper(props) {
 
       <Container className={classes.childrenContainer} maxWidth="lg">
         {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
-        {!props.auth?.token && !['/', '/signup', '/login', '/projects/:id', '/ambassadors', '/creators/:username'].includes(props.match?.path) && (
-          <div style={{ minHeight: '80vh' }}>
-            <NotFoundPage />
-          </div>
-        )}
+        {!props.auth?.token &&
+          ![
+            '/',
+            '/signup',
+            '/login',
+            '/projects/:id',
+            '/ambassadors',
+            '/creators/:username',
+            '/privacy_policy',
+            '/terms_of_use',
+            '/about',
+            '/challenge',
+          ].includes(props.match?.path) && (
+            <div style={{ minHeight: '80vh' }}>
+              <NotFoundPage />
+            </div>
+          )}
       </Container>
-      {!props.auth?.token && ['/', '/signup', '/login', '/projects/:id', '/ambassadors', '/creators/:username'].includes(props.match?.path) && (
-          <div style={{minHeight: '90vh'}}>
-            {props.children}
-          </div>
-      )}
+      {!props.auth?.token &&
+        [
+          '/',
+          '/signup',
+          '/login',
+          '/projects/:id',
+          '/ambassadors',
+          '/creators/:username',
+          '/privacy_policy',
+          '/terms_of_use',
+          '/about',
+          '/challenge',
+        ].includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>

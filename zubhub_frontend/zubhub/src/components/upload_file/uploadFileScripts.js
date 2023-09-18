@@ -183,20 +183,20 @@ export const FormMediaUpload = (
       type: 'array',
       files: formikValues['activity_images'] && formikValues['activity_images'],
     },
-    {
-      field: 'video',
-      type: 'simple',
-      files: formikValues['video'] && formikValues['video'],
-    },
-    {
-      route: 'inspiring_artist',
-      field: 'inspiring_artist.image',
-      type: 'object',
-      files:
-        formikValues['inspiring_artist'] &&
-        formikValues['inspiring_artist']['image'] &&
-        formikValues['inspiring_artist']['image'],
-    },
+    // {
+    //   field: 'video',
+    //   type: 'simple',
+    //   files: formikValues['video'] && formikValues['video'],
+    // },
+    // {
+    //   route: 'inspiring_artist',
+    //   field: 'inspiring_artist.image',
+    //   type: 'object',
+    //   files:
+    //     formikValues['inspiring_artist'] &&
+    //     formikValues['inspiring_artist']['image'] &&
+    //     formikValues['inspiring_artist']['image'],
+    // },
     {
       route: 'making_steps',
       field: 'image',
@@ -205,14 +205,14 @@ export const FormMediaUpload = (
         formikValues['making_steps'] &&
         getFilesFromNested(formikValues['making_steps']),
     },
-    {
-      route: 'inspiring_examples',
-      field: 'image',
-      type: 'objectsArray',
-      files:
-        formikValues['inspiring_examples'] &&
-        getFilesFromNested(formikValues['inspiring_examples']),
-    },
+    // {
+    //   route: 'inspiring_examples',
+    //   field: 'image',
+    //   type: 'objectsArray',
+    //   files:
+    //     formikValues['inspiring_examples'] &&
+    //     getFilesFromNested(formikValues['inspiring_examples']),
+    // },
   ];
 
   let countFiles = 0;
@@ -241,9 +241,9 @@ export const FormMediaUpload = (
       });
     }
   });
-  handleSetState(state => {
-    return { ...state, countFiles: countFiles };
-  });
+  // handleSetState(state => {
+  //   return { ...state, countFiles: countFiles };
+  // });
   return promises;
 };
 

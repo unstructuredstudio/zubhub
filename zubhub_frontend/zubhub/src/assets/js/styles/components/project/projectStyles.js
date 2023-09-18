@@ -4,10 +4,6 @@ const styles = theme => ({
     height: '100%',
     paddingTop: 0,
     paddingBottom: '0!important',
-    // marginTop: '1em',
-    // marginBottom: '1em',
-    // marginLeft: '1em',
-    // marginRight: '1em',
     borderRadius: '15px',
     textAlign: 'left',
     backgroundColor: '#ffffff',
@@ -30,7 +26,7 @@ const styles = theme => ({
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   mediaBoxStyle: {
     width: '100%',

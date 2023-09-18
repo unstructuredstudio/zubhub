@@ -73,7 +73,7 @@ function Ambassadors(props) {
             </Typography>
 
 
-          <Grid container>
+          <Grid container spacing={3}>
             {ambassadors.projects.results.map(project => (
               <Grid
                 item

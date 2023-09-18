@@ -29,7 +29,7 @@ const styles = theme => ({
     '& img': {
       height: '2em',
     },
-    [theme.breakpoints.down('332')]: {
+    [theme.breakpoints.down('420')]: {
       '& img': {
         height: '1.5em',
       },

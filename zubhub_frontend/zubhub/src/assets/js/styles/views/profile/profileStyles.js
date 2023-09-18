@@ -72,7 +72,7 @@ const styles = theme => ({
   userNameStyle: {
     wordBreak: 'break-all',
     lineHeight: '1.2',
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '2rem',
     [theme.breakpoints.down('740')]: {
       display: 'flex',
@@ -134,11 +134,11 @@ const styles = theme => ({
     borderRadius: 8,
   },
   titleStyle: {
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '1.5rem',
   },
   badgeTitleStyle: {
-    fontWeight: 900,
+    fontWeight: 'bold',
     fontSize: '1.5rem',
     color: 'var(--primary-color3)',
   },

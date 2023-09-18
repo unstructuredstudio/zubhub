@@ -1,5 +1,6 @@
 import { Box, Checkbox, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import clsx from 'clsx';
 import React from 'react';
 import { colors } from '../../../assets/js/colors';
 import styles from '../../../assets/js/styles';
@@ -13,7 +14,10 @@ export default function Dropdown({
   placeholder,
   required,
   handleChange,
+  onBlur = () => {},
   error,
+  helperText,
+  name,
   description,
   maxSelection,
   withCheckbox,
@@ -33,8 +37,13 @@ export default function Dropdown({
     const color = rest[0].selected ? colors.primary : colors.light;
     const checked = rest[0].selected;
     return (
-      <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: 5, alignItems: 'center' }} {...props}>
-        {withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
+      <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: 15, alignItems: 'center' }} {...props}>
+        {multiple ? <Checkbox checked={checked} style={{ color }} /> : null}
+        {!multiple ? (
+          <div className={clsx(classes.radio, checked && classes.activeRadio)}>
+            <div></div>
+          </div>
+        ) : null}
         <Typography style={{ fontWeight: '500' }}>{props.name}</Typography>
       </Box>
     );
@@ -44,6 +53,7 @@ export default function Dropdown({
     <TextField
       {...params}
       variant="outlined"
+      onBlur={() => onBlur({ name, target: { value } })}
       error={error}
       helperText={error}
       placeholder={placeholder}
@@ -65,7 +75,12 @@ export default function Dropdown({
       <label htmlFor="" className={commonClasses.title2}>
         {label} {required && <span className={commonClasses.colorRed}>*</span>}
       </label>
-      {description && <Typography style={{ marginBottom: 10 }}>{description}</Typography>}
+
+      {helperText && (
+        <Typography className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
+          {helperText}
+        </Typography>
+      )}
       <Autocomplete
         sx={{ width: 300 }}
         options={data}

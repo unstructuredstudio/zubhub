@@ -31,7 +31,7 @@ const styles = theme => ({
   },
   pageHeaderStyle: {
     marginTop: '1em',
-    fontWeight: 900,
+    fontWeight: 'bold',
     textAlign: 'center',
   },
   buttonGroupStyle: {
