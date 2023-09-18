@@ -17,4 +17,3 @@ export const borders = {
     borderRadiusMd: 8,
     borderRadiusSm: 4,
 }
-

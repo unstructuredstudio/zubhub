@@ -255,6 +255,200 @@ class API {
   };
 
   /**
+   * @method getTeamProfile - get the team profile of the user that the groupname belongs to
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  getTeamProfile = ({ groupname, token }) => {
+    const url = `creators/group/${groupname}/`;
+    if (token) {
+      return this.request({ url, token }).then(res => res.json());
+    } else {
+      return this.request({ url }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method removeTeamMember
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  removeTeamMember = ({ groupname, username, token }) => {
+    const url = `creators/${groupname}/remove-member/${username}/`;
+    const method = 'DELETE';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method followTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  followTeam = ({ groupname, username, token }) => {
+    const url = `creators/${groupname}/toggle-follow/${username}/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method teamMembers
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  teamMembers = ({ groupname, token }) => {
+    const url = `creators/${groupname}/members/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method teamMembersId
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  teamMembersId = ( id ) => {
+    const url = `creators/id/${id}/`;
+    const method = 'GET';
+    return this.request({ url, method }).then(res => res.json());
+  };
+
+  /**
+   * @method deleteTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  deleteTeam = ({ groupname, token }) => {
+    const url = `creators/${groupname}/delete-group/`;
+    const method = 'DELETE';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method teamFollowers
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  teamFollowers = ({ groupname, token }) => {
+    const url = `creators/${groupname}/group-followers/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method userTeams
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  userTeams = ({ username, token }) => {
+    const url = `creators/groups/${username}/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method allTeams
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  allTeams = ({ token }) => {
+    const url = `creators/teams/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method addTeamMembers
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  addTeamMembers = ({ groupname, data, token }) => {
+    const url = `creators/${groupname}/add-members/`;
+    const method = 'POST';
+    const content_type = false;
+    const body = data;
+    if (token) {
+      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method editTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  editTeam = ({ groupname, data, token }) => {
+    const url = `creators/${groupname}/edit-group/`;
+    const method = 'POST';
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
+  
+    if (token) {
+      return this.request({ url, method, token, body, content_type }).then(res => res.json());
+    } else {
+      return this.request({ url, method, body, content_type }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method createTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  createTeam = ({ data, token }) => {
+    const url = `creators/create-group/`;
+    const method = 'POST';
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
+    if (token) {
+      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
    * @method getUserProjects - get a paginated list of projects
    *         created by the user with the provided username
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>

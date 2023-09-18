@@ -25,10 +25,12 @@ export default function Step3({ formik, handleBlur, ...props }) {
 
   useEffect(() => {
     getCategories(props).then(cats => setCategories(cats.categories));
-    if (TEAM_ENABLED) {
       let params = getUrlQueryObject();
       if ('mode' in params) setMode(params.mode);
-    }
+      if (TEAM_ENABLED) {
+        let params = getUrlQueryObject();
+        if ('mode' in params) setMode(params.mode);
+      }
   }, []);
 
   const [categories, setCategories] = useState([]);

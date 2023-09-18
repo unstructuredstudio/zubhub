@@ -19,9 +19,11 @@ import {
   CloudDoneOutlined,
   Person,
 } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
 import DoneRounded from '@material-ui/icons/DoneRounded';
 import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
 import clsx from 'clsx';
+import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState, lazy } from 'react';
@@ -32,24 +34,26 @@ import StepWizard from 'react-step-wizard';
 import { toast } from 'react-toastify';
 import { colors } from '../../assets/js/colors';
 import styles from '../../assets/js/styles';
-import { Modal, TagsInput } from '../../components';
+import Modal from '../../components/modals/Modal';
 import CustomButton from '../../components/button/Button';
-import { useDomElementHeight } from '../../hooks/useDomElementHeight.hook';
+import { useDomElementHeight } from '../../hooks/userDomElementHeight.hook';
 import * as AuthActions from '../../store/actions/authActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 import * as UserActions from '../../store/actions/userActions';
-import { createProjectStyle } from './createProject.style';
+import { createProjectStyle } from './createTeam.style';
 import * as script from './script';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
-import { TEAM_ENABLED } from '../../utils.js/index.js';
-const PreviewProject = lazy(() => import('../../components/previewProject/PreviewActivity'));
+import { TEAM_ENABLED } from '../../utils.js';
+
+// const PreviewProject = lazy(() => import('../../components/previewProject/PreviewProject'));
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
-const steps = ['Details', 'Photos/Videos', 'Features'];
+const steps = ['Team Details', 'Add Team Members', 'Select Team Project'];
 
-function CreateProject(props) {
+
+function CreateTeam(props) {
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -66,6 +70,13 @@ function CreateProject(props) {
   const [popularTags, setPopularTags] = useState(script.testTags);
   const [mode, setMode] = useState('');
   const [preview, setPreview] = useState(false);
+  // const [selectedProjects, setSelectedProjects] = useState([]);
+  let projs;
+
+  const updateSelectedProjects = (newSelectedProjects) => {
+    projs=newSelectedProjects;
+  };
+
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
@@ -97,32 +108,13 @@ function CreateProject(props) {
     return message;
   };
 
-  const handleChangeTag = async value => {
-    setValue(value);
-    script.searchTags(value, (error, data) => {
-      if (!error) setRemoteTags(data);
-    });
-  };
-
-  const addTag = value => {
-    const values = [...formik.values.tags, value];
-    formik.setFieldValue('tags', values);
-    clearSuggestions();
-    setValue('');
-  };
-
-  const removeTag = tagIndex => {
-    const tags = [...formik.values.tags].filter((_, index) => index !== tagIndex);
-    formik.setFieldValue('tags', tags);
-  };
-
   useEffect(() => {
     if (props.match.params.id) {
-      Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
-        handleSetState({ ...result[0], ...result[1] }),
-      );
+      // Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
+      //   handleSetState({ ...result[0], ...result[1] }),
+      // );
     } else {
-      handleSetState(script.getCategories(props));
+      // handleSetState(script.getCategories(props));
     }
     const params = new URLSearchParams(window.location.search);
     const queryParams = Object.fromEntries(params.entries());
@@ -140,7 +132,6 @@ function CreateProject(props) {
       if (activeStep === 3) {
         return props.history.push(`/projects/${props.match.params.id}?success=true`);
       }
-      setState({ ...state, success: false });
       go('next');
     }
   }, [state.success]);
@@ -165,45 +156,45 @@ function CreateProject(props) {
 
   const previous = () => go('prev');
   const next = async () => {
-    let error = await checkErrors();
-    console.log('Validation errors', error);
-    if (Object.keys(error).length > 0) return;
-
-    if (activeStep === 3) {
-      return togglePublishOrAddTags();
-    }
-    submitData();
+    go('next');
   };
 
   const handleAddTags = () => {
     togglePublishOrAddTags();
     toggleAddTagsDialog();
   };
+  const history = useHistory();
 
   const submitData = async () => {
     try {
-      return (
-        !script.vars.upload_in_progress &&
-        script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState)
-      );
+      if (!script.vars.upload_in_progress) {
+        const uploadStatus = await script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState, projs);
+  
+        if (uploadStatus === 'success') {
+          // Redirect to the desired URL on success
+          const teamGroupName = formik.values.groupname; // Get the groupname from props
+          history.push(`/teams/${teamGroupName}`);
+        } else {
+          const apiError = uploadStatus;
+          toast.error(`An unexpected error occurred. Please check if you have entered all details properly and try again.`);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const checkErrors = async () => {
-    console.log(formik.errors);
-    formik.setFieldError('category', false, false);
+  const checkErrors = () => {
     if (activeStep === 1) {
-      return formik.setTouched({ title: true, materials_used: true, description: true, category: false }, true);
+      return formik.setTouched({ title: true, bio: true }, true);
     }
 
     if (activeStep === 2) {
-      return formik.setTouched({ video: true, project_images: true }, true);
+      return formik.setTouched({ admins: true, members: true }, true);
     }
 
     if (activeStep === 3) {
-      return formik.setTouched({ category: true, hashtags: true }, true);
+      return formik.setTouched({ selectedProjects: true }, true);
     }
   };
 
@@ -250,11 +241,10 @@ function CreateProject(props) {
     if (mode.length == 0) return null;
   }
 
-
   return (
     <div className={classes.container}>
       <Dialog open={preview} fullScreen>
-        <PreviewProject {...props} onClose={togglePreview} />
+        {/* <PreviewProject {...props} onClose={togglePreview} /> */}
       </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
@@ -280,8 +270,8 @@ function CreateProject(props) {
       <Box className={classes.formContainer}>
         <Grid item md={12} lg={12}>
           <Box sx={{ textAlign: isSmallScreen ? 'left' : 'center' }}>
-            <Typography className={clsx(commonClasses.title1)}>Create Project</Typography>
-            <Typography>Tell us about your amazing project !</Typography>
+            <Typography className={clsx(commonClasses.title1)}>Create Team</Typography>
+            <Typography>Create a team for group of creatives</Typography>
           </Box>
 
           {/* Step Navigation UI */}
@@ -291,7 +281,12 @@ function CreateProject(props) {
             <StepWizard initialStep={activeStep} ref={wizardRef}>
               <Step1 handleBlur={handleBlur} formik={formik} />
               <Step2 formik={formik} />
-              <Step3 formik={formik} {...props} />
+              <Step3
+                formik={formik}
+                handleBlur={handleBlur}
+                auth={props.auth}
+                updateSelectedProjects={updateSelectedProjects}
+              />
             </StepWizard>
           </Box>
         </Grid>
@@ -309,13 +304,13 @@ function CreateProject(props) {
           )}
 
           <CustomButton
-            onClick={next}
+            onClick={activeStep == 3 ?submitData :next}
             loading={state.default_state?.loading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}
           >
-            {activeStep == 3 ? 'Publish' : 'Next'}
+            {activeStep == 3 ? 'Create Team' : 'Next'}
           </CustomButton>
 
           <Modal.WithIcon
@@ -365,19 +360,18 @@ function CreateProject(props) {
             </DialogTitle>
 
             <DialogContent style={{ paddingBottom: 30 }}>
-              <TagsInput
+              {/* <TagsInput
                 name="tags"
                 selectedTags={formik.values.tags}
                 popularTags={popularTags}
                 onChange={handleChangeTag}
                 addTag={addTag}
                 value={value}
-                prefix={'#'}
                 remoteData={remoteTags}
                 clearSuggestions={clearSuggestions}
                 removeTag={removeTag}
-                placeholder="Start typing to search #science"
-              />
+                placeholder="Start typing to search"
+              /> */}
             </DialogContent>
           </Modal>
         </Box>
@@ -443,13 +437,9 @@ const SelectModeUI = ({ setMode }) => {
   );
 };
 
-CreateProject.propTypes = {
+CreateTeam.propTypes = {
   auth: PropTypes.object.isRequired,
-  getProject: PropTypes.func.isRequired,
-  getCategories: PropTypes.func.isRequired,
-  suggestTags: PropTypes.func.isRequired,
-  createProject: PropTypes.func.isRequired,
-  updateProject: PropTypes.func.isRequired,
+
 };
 
 const mapStateToProps = state => {
@@ -461,31 +451,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSignature: args => {
-      return dispatch(AuthActions.getSignature(args));
-    },
-    getProject: values => {
-      return dispatch(ProjectActions.getProject(values));
-    },
-    getCategories: values => {
-      return dispatch(ProjectActions.getCategories(values));
-    },
-    suggestTags: args => {
-      return dispatch(ProjectActions.suggestTags(args));
-    },
-    suggestCreators: args => {
-      return dispatch(UserActions.suggestCreators(args));
-    },
-    createProject: props => {
-      return dispatch(ProjectActions.createProject(props));
-    },
-    updateProject: props => {
-      return dispatch(ProjectActions.updateProject(props));
-    },
-    shouldUploadToLocal: args => {
-      return dispatch(ProjectActions.shouldUploadToLocal(args));
-    },
+
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateProject);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTeam);

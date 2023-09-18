@@ -12,6 +12,28 @@ const styles = theme => ({
       width: '100%',
     },
   },
+  titleStyle: {
+    fontWeight: 900,
+    fontSize: '1.3rem',
+  },
+  descriptionStyle: {
+    // flexGrow: 1,
+    '& p': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: 'vertical',
+      height: '90%',
+    },
+  },
+  textDecorationNone: {
+    textDecoration: 'none',
+  },
+  followButton: {
+    display: 'flex',
+    marginTop: '0.75rem'
+  },
   mainContainerStyle: {
     maxWidth: '1190px',
     width: '100%',

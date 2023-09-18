@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
 from projects.utils import clean_comment_text, clean_project_desc
+from creators.models import CreatorGroup
 #from activities.models import Activity
 
 Creator = get_user_model()
@@ -74,6 +75,12 @@ class Project(models.Model):
     creator = models.ForeignKey(Creator,
                                 on_delete=models.CASCADE,
                                 related_name="projects")
+    group = models.ForeignKey(CreatorGroup,
+                                null=True,
+                                blank=True,
+                                default=None,
+                                on_delete=models.SET_DEFAULT,
+                                related_name="group_projects")
     title = models.CharField(max_length=1000)
     description = models.CharField(max_length=10000, blank=True, null=True)
     video = models.URLField(max_length=1000, blank=True, null=True)
