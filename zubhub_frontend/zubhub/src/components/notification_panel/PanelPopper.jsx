@@ -19,7 +19,7 @@ const modifiers = {
 
 const fullscreenModifiers = {};
 
-const PanelPopper = ({ open, anchorEl, children }) => {
+const PanelPopper = ({ open, anchorEl, children, signUpStyles }) => {
   const classes = useStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
 
@@ -34,7 +34,7 @@ const PanelPopper = ({ open, anchorEl, children }) => {
       style={{ zIndex: mediaQuery ? 2 : 'unset' }}
     >
       {!mediaQuery && <div x-arrow="true" className={classes.popperArrowStyle}></div>}
-      <div className={classes.container}>{children}</div>
+      { signUpStyles ? <div className={classes.signUpcontainer}>{children}</div> : <div className={classes.container}>{children}</div>}
     </Popper>
   );
 };

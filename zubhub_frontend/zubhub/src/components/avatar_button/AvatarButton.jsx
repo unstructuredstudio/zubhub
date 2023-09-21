@@ -14,7 +14,7 @@ const AvatarButton = props => {
   const commonClasses = makeStyles(commonStyles)();
   const classes = makeStyles(styles)();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const [signupStyles, setsignupStyles] = useState(false)
   const buttonRef = useRef();
   const auth = useSelector(state => state.auth);
   const goToProfile = () => {
@@ -23,17 +23,26 @@ const AvatarButton = props => {
     }
   };
 
+  const onClickSignUp = () =>{
+    (!auth.token ? setDropdownOpen(!dropdownOpen) : goToProfile())
+    setsignupStyles(true)
+  } 
+
+  const oncloseSignUp = () =>{
+    setDropdownOpen(false)
+    setsignupStyles(false)
+  }
   return (
-    <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
+    <ClickAwayListener onClickAway={oncloseSignUp}>
       <div>
         <Avatar
           ref={buttonRef}
-          onClick={() => (!auth.token ? setDropdownOpen(!dropdownOpen) : goToProfile())}
+          onClick={onClickSignUp}
           className={commonClasses.iconBox}
           alt={auth?.username?.toUpperCase()}
           src="/static/images/avatar/1.jpg"
         />
-        <PanelPopper open={dropdownOpen} anchorEl={buttonRef}>
+        <PanelPopper open={dropdownOpen} anchorEl={buttonRef} signUpStyles={signupStyles}>
           <div className={classes.container}>
             <Avatar style={{ fontSize: 35, color: colors.primary, backgroundColor: colors.white }} />
             <h3>Sign Up or Log In to your ZubHub account</h3>
