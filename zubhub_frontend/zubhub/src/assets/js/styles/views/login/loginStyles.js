@@ -22,7 +22,7 @@ const styles = theme => ({
     color: 'white',
     padding: '0 30px',
   },
-  ttitleStyle: {
+  titleStyle: {
     fontWeight: 'bold',
     fontSize: '1.7rem',
     [theme.breakpoints.up('1600')]: {
