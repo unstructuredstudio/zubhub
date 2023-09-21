@@ -137,46 +137,88 @@ class Setting(models.Model):
 
 
 class CreatorGroup(models.Model):
-    creator = models.OneToOneField(
-        Creator, on_delete=models.CASCADE, primary_key=True)
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    groupname = models.CharField(
+        max_length=150,
+        unique=True,
+        error_messages={
+            'unique': _('A group with that groupname already exists.'),
+        },
+        verbose_name=_('groupname')
+    )
     description = models.CharField(max_length=10000, blank=True, null=True)
     members = models.ManyToManyField(
-        Creator, blank=True, related_name="creator_groups")
+        'self', symmetrical=False, blank=True, related_name="group_members"
+    )
     created_on = models.DateTimeField(default=timezone.now)
+    projects = models.JSONField(default=list)  # Storing project IDs as a JSON list
     projects_count = models.IntegerField(blank=True, default=0)
+    badges = models.ManyToManyField(Badge, blank=True, related_name="creator_group" )
+    tags = models.ManyToManyField(CreatorTag, blank=True, related_name="creator_group")
+    avatar = models.URLField(max_length=1000, blank=True, null=True)
+    search_vector = SearchVectorField(null=True)
+    followers = models.ManyToManyField(
+        Creator, symmetrical=False, blank=True, related_name="following_group")
+    followers_count = models.IntegerField(blank=True, default=0)
+    
+    class Meta:
+        indexes = (GinIndex(fields=["search_vector"]),)
 
     def __str__(self):
-        return self.creator.username
+        return self.groupname
+    
+    def save(self, *args, **kwargs):
+        if not self.avatar:
+            self.avatar = 'https://robohash.org/{0}'.format(self.groupname)
+        
+        self.followers_count = self.followers.count()
+        if self.projects:
+            self.projects_count = len(self.projects)
+        else:
+            self.projects_count = 0
+        super().save(*args, **kwargs)
 
     def get_projects(self, **kwargs):
         limit = kwargs.get("limit")
-        projects = self.creator.projects.all()
-        count = 0
-        members = self.members.prefetch_related("projects")
-        for member in members.all():
-            if not projects:
-                projects = member.projects.all()
-            else:
-                projects |= member.projects.all()
+        # Retrieve the project IDs from the 'projects' field
+        project_ids = self.projects
 
-        if projects:
-            projects = projects.order_by("-created_on")
-            count = projects.count()
-            if limit:
-                projects = projects[0:int(limit)]
+        count = len(project_ids)
+        if limit:
+            # Return the first 'limit' project IDs
+            project_ids = project_ids[:limit]
 
-        # update projects_count if neccessary
+        # update projects_count if necessary
         if self.projects_count != count:
             self.projects_count = count
             self.save()
 
-        return projects
+        return project_ids
 
     def send_group_invite_confirmation(self, **kwargs):
         group_invite_confirmation = GroupInviteConfirmationHMAC(
             kwargs.get("creator"), self.creator)
         group_invite_confirmation.send()
         return group_invite_confirmation
+
+
+class CreatorGroupMembership(models.Model):
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('member', 'Member'),
+    ]
+
+    group = models.ForeignKey(
+        CreatorGroup, on_delete=models.CASCADE, related_name='memberships'
+    )
+    member = models.ForeignKey(
+        Creator, on_delete=models.CASCADE, related_name='group_memberships'
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
+
+    def __str__(self):
+        return f"{self.member.username} - {self.role}"
 
 
 class PhoneNumber(models.Model):

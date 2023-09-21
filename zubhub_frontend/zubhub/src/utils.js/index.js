@@ -65,6 +65,4 @@ export const getUrlQueryObject = () => {
   return {}
 }
 
-
-
-export const TEAM_ENABLED = true
+export const TEAM_ENABLED = false
