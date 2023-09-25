@@ -1085,24 +1085,8 @@ class API {
   createActivity = (token, args) => {
     const url = 'activities/create/';
     const method = 'POST';
-    const {
-      title,
-      motivation,
-      learning_goals,
-      materials_used,
-      materials_used_image,
-      facilitation_tips,
-      images,
-      class_grade,
-      introduction,
-      making_steps,
-      inspiring_examples,
-      inspiring_artist,
-      video,
-    } = args;
-
-
     const body = JSON.stringify(args);
+
     return this.request({ url, method, token, body });
     // .then(res => res.json());
   };

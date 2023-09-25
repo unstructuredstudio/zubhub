@@ -88,11 +88,9 @@ export const createProjectStyle = theme => ({
         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
         [theme.breakpoints.down('sm')]: {
             margin: '24px',
-            marginTop: 24 * 4
         },
         [theme.breakpoints.down('xs')]: {
             margin: '18px',
-            marginTop: 24 * 2,
             padding: '32px'
         },
     },

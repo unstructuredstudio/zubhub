@@ -21,7 +21,7 @@ const styles = theme => ({
     background: 'transparent',
 
     [theme.breakpoints.down('511')]: {
-      paddingTop: '4em',
+      // paddingTop: '4em',
     },
   },
   titleStyle: {
