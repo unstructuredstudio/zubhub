@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Dropdown } from '../../../components';
-import { getCategories } from '../script';
+import { getCategories, searchCreators } from '../script';
 import { TEAM_ENABLED, getUrlQueryObject } from '../../../utils.js';
 import { Checkbox, Grid, Typography, makeStyles } from '@material-ui/core';
 import { colors } from '../../../assets/js/colors';
 import styles from '../../../assets/js/styles';
 import { step3Style } from './step3.styles';
+import _ from 'lodash';
 
 export default function Step3({ formik, handleBlur, ...props }) {
   const commonClasses = makeStyles(styles)();
@@ -19,42 +20,45 @@ export default function Step3({ formik, handleBlur, ...props }) {
 
     formik.setFieldValue('category', newCategories);
   };
+
+  const [categories, setCategories] = useState([]);
+  const [creators, setCreators] = useState([]);
   const [mode, setMode] = useState('');
   const [creatorValue, setCreatorValue] = useState({});
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     getCategories(props).then(cats => setCategories(cats.categories));
-    if (TEAM_ENABLED) {
       let params = getUrlQueryObject();
       if ('mode' in params) setMode(params.mode);
-    }
+      if (TEAM_ENABLED) {
+        let params = getUrlQueryObject();
+        if ('mode' in params) setMode(params.mode);
+      }
   }, []);
-
-  const [categories, setCategories] = useState([]);
 
   const creatorsData = [
     { name: 'Team', id: '1' },
     { name: 'Co-creator', id: '2' },
   ];
+
+  const getCreators = query => {
+    searchCreators({ token: props.auth?.token, query_string: query }, data => {
+      const selectedCreators = formik.values.creators.map(creator => creator?.id);
+      const unselectedCreators = data.filter(creator => !selectedCreators.includes(creator.id));
+      setCreators(unselectedCreators);
+    });
+  };
+
+  const handleCreatorsChange = data => {
+    formik.setFieldValue('creators', data);
+    setCreators([]);
+  };
+
   const isLimit = formik.values.category.filter(cat => cat.name).length == 3;
 
   return (
     <>
-      {/* <Dropdown
-        label="What category does your project belong too?"
-        placeholder="Select Categories"
-        handleChange={handleChange}
-        handleBlur={() => handleBlur('category')}
-        data={categories}
-        value={formik.values.category}
-        error={formik.touched.category && formik.errors.category}
-        multiple={true}
-        withCheckbox={true}
-        maxSelection={3}
-        description="Select any of the categories that best describe your project. Select none if you are unsure about your category."
-      /> */}
-
       <label htmlFor="" className={commonClasses.title2}>
         What category does your project belong to? <span className={commonClasses.colorRed}>*</span>
       </label>
@@ -89,27 +93,40 @@ export default function Step3({ formik, handleBlur, ...props }) {
           <Dropdown
             label="Add Team or Co-creator"
             placeholder="Select Team or Co-creation"
-            handleChange={data => setCreatorValue(data)}
+            handleChange={data => {
+              setCreatorValue(data);
+              formik.setFieldValue('creators', []);
+            }}
             data={creatorsData}
             value={creatorValue}
             description="What team or creator did you work with for this project?"
           />
 
           {creatorValue?.name == 'Team' && (
-            <Dropdown placeholder="Select Team name" handleChange={data => setCreatorValue(data)} data={creatorsData} />
+            <Dropdown placeholder="Select Team name" handleChange={data => {}} data={creatorsData} />
           )}
 
           {creatorValue?.name == 'Co-creator' && (
             <>
               <Dropdown
+                error={formik.touched.creators && formik.errors.creators}
+                onBlur={formik.handleBlur}
+                name="creators"
                 placeholder="Select Co-creators"
-                handleChange={data => setCreatorValue(data)}
-                data={creatorsData}
-                // value={creatorValue}
+                handleChange={handleCreatorsChange}
+                data={creators}
+                value={formik.values.creators}
+                onInput={_.debounce(getCreators, 50)}
                 multiple={true}
+                withCheckbox={false}
               />
               <Typography>
-                Would you like to make this a team? <Checkbox style={{ ...(checked && { color: colors.primary }) }} />
+                Would you like to make this a team?{' '}
+                <Checkbox
+                  onChange={() => setChecked(prev => !prev)}
+                  checked={checked}
+                  style={{ ...(checked && { color: colors.primary }) }}
+                />
               </Typography>
             </>
           )}

@@ -583,6 +583,7 @@
 
   "profile": {
     "edit": "Edit",
+    "editTeam": "Edit Team Info",
     "delete": {
       "label": "Delete Account",
       "dialog": {
@@ -608,7 +609,7 @@
     "projectsCount": "Projects",
     "followersCount": "Followers",
     "followingCount": "Following",
-    "membersCount": "members",
+    "membersCount": "Members",
     "about": {
       "label1": "About Me",
       "label2": "Description",
@@ -616,6 +617,8 @@
       "placeholder2": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
     "activityLog": "Activity Log",
+    "team": "Team",
+    "createteam": "Create Team",
     "badge": {
       "badges": "Badges",
       "addBadges": "Seems like you have not created any project yet, add projects to your profile to get badges 😉!"
@@ -707,7 +710,8 @@
       "prevNxtButtons": "previous and next page buttons"
     },
     "errors": {
-      "noUserProjects": "User has not created any projects yet. Check back later!"
+      "noUserProjects": "User has not created any projects yet. Check back later!",
+      "noTeams": "There are no teams created. Check back later!"
     }
   },
 
@@ -830,6 +834,41 @@
     "answer": "Answer",
     "errors": {
       "page_empty": "This page is empty"
+    }
+  },
+
+  "createTeam": {
+    "welcomeMsg": {
+      "primary": "Create a Team",
+      "edit": "Update Team"
+    },
+    "inputs": {
+      "title": {
+        "label": "Team Name",
+        "errors": {
+          "max": "your name shouldn't be more than 50 characters",
+          "required": "This field is required"
+        }
+      },
+      "bio": {
+        "label": "About Team"
+      },
+      "next": "Next",
+      "previous": "Previous",
+      "Submit": "Submit",
+      "Edit": "Edit"
+    },
+    "2ndpage": {
+      "title": "Invite Team Members",
+      "members": "Members",
+      "admins" : "Admin",
+      "member-placeholder": "Members can add team to a project, view team members and leave at their convenience",
+      "admin-placeholder": "Admins can assign admin status to other team members, add and remove team members, add team to a project, delete team profile",
+      "member-input-placeholder": "Enter the list of members",
+      "admin-input-placeholder": "Enter the list of admins"
+    },
+    "3rdpage":{
+      "title":"Select Project you worked on with a Team"
     }
   },
 

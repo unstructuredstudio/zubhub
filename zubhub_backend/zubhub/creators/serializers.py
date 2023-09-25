@@ -5,8 +5,10 @@ import re
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
+from django.utils.translation import gettext_lazy as _
+import csv
 from .admin import badges
+from .models import CreatorGroup, Creator, CreatorGroupMembership
 from .models import Location, PhoneNumber
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
@@ -15,6 +17,7 @@ from allauth.account.utils import setup_user_email
 from .utils import setup_user_phone
 from projects.models import Comment
 from projects.utils import parse_comment_trees
+from rest_framework.validators import UniqueValidator
 Creator = get_user_model()
 
 
@@ -79,6 +82,17 @@ class CreatorMinimalSerializer(serializers.ModelSerializer):
         return parse_comment_trees(user, root_comments, creators_dict)
 
 
+class CreatorGroupMinimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreatorGroup
+        fields = '__all__'
+
+class CreatorGroupMembershipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CreatorGroupMembership
+        fields = ('member', 'role')
+
+
 class CreatorSerializer(CreatorMinimalSerializer):
     phone = serializers.CharField(allow_blank=True, default="")
     email = serializers.EmailField(allow_blank=True, default="")
@@ -91,16 +105,18 @@ class CreatorSerializer(CreatorMinimalSerializer):
     badges = serializers.SlugRelatedField(slug_field="badge_title",
                                           read_only=True,
                                           many=True)
+    group_memberships = CreatorGroupMembershipSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Creator
 
         fields = ('id', 'username', 'email', 'phone', 'avatar', 'location',
                   'comments', 'dateOfBirth', 'bio', 'followers',
-                  'following_count', 'projects_count', 'members_count', 'tags', 'badges')
+                  'following_count', 'projects_count', 'members_count', 'tags', 'badges', 'group_memberships')
 
     read_only_fields = [
-        "id", "projects_count", "following_count", "dateOfBirth", "tags", "badges"
+        "id", "projects_count", "following_count", "dateOfBirth", "tags", "badges", "group_memberships"
     ]
 
     def validate_email(self, email):
@@ -255,26 +271,22 @@ class ConfirmGroupInviteSerializer(serializers.Serializer):
     key = serializers.CharField()
 
 
+class MemberRoleSerializer(serializers.Serializer):
+    member = serializers.CharField()
+    role = serializers.ChoiceField(choices=[('admin', 'Admin'), ('member', 'Member')])
+
+
 class AddGroupMembersSerializer(serializers.Serializer):
-    group_members = serializers.JSONField(required=False, allow_null=True)
-    csv = serializers.FileField(required=False,
-                                allow_null=True,
-                                allow_empty_file=True)
+    group_members = MemberRoleSerializer(many=True, required=True)
 
-    def validate_group_members(self, group_members):
-        if (len(group_members) == 0 and not self.initial_data.get("csv")):
-            raise serializers.ValidationError(
-                _("you must submit group member usernames either through the form or as csv"
-                  ))
-        return group_members
+    def validate(self, data):
+        group_members = data.get('group_members', [])
 
-    def validate_csv(self, csv):
-        if (not csv and len(self.initial_data.get("group_members")) == 0):
-            raise serializers.ValidationError(
-                _("you must submit group member usernames either through the form or as csv"
-                  ))
-        return csv
+        if not group_members:
+            raise serializers.ValidationError(_("You must submit at least one group member."))
 
+        return data
+    
 
 class CustomPasswordResetSerializer(PasswordResetSerializer):
     password_reset_form_class = PasswordResetForm
@@ -289,3 +301,72 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
             raise serializers.ValidationError(
                 _('No account found with this email. Verify and try again.'))
         return value
+
+
+class CreatorGroupWithMembershipsSerializer(serializers.ModelSerializer):
+    members = CreatorGroupMembershipSerializer(many=True)
+
+    class Meta:
+        model = CreatorGroup
+        fields = ('groupname', 'description', 'members', 'created_on', 'projects_count')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['members'] = CreatorGroupMembershipSerializer(instance.memberships.all(), many=True).data
+        return data
+
+
+class CreatorGroupSerializer(serializers.ModelSerializer):
+    members = CreatorGroupMembershipSerializer(many=True, read_only=True)
+    groupname = serializers.CharField(
+        max_length=150,
+        validators=[UniqueValidator(queryset=CreatorGroup.objects.all())],
+        error_messages={
+            'unique': _('A group with that groupname already exists.'),
+        }
+    )
+
+    class Meta:
+        model = CreatorGroup
+        fields = ('groupname', 'description', 'projects','members', 'created_on', 'projects_count', 'avatar')
+
+    def create(self, validated_data):
+        members_data = validated_data.pop('members', [])
+        group = CreatorGroup.objects.create(**validated_data)
+        for member_data in members_data:
+            member = member_data['member']
+            role = member_data.get('role', 'member')  # Default role is 'member' if not provided
+            CreatorGroupMembership.objects.create(group=group, member=member, role=role)
+        return group
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['members'] = CreatorGroupMembershipSerializer(instance.memberships.all(), many=True).data
+        return data
+
+    def update(self, instance, validated_data):
+        instance.groupname = validated_data.get('groupname', instance.groupname)
+        instance.description = validated_data.get('description', instance.description)
+        instance.save()
+
+        members_data = validated_data.pop('members', [])
+        existing_members = set(instance.members.all())
+
+        for member_data in members_data:
+            member = member_data['member']
+            role = member_data.get('role', 'member')  # Default role is 'member' if not provided
+
+            # Check if the member is already part of the group
+            if member in existing_members:
+                membership = CreatorGroupMembership.objects.get(group=instance, member=member)
+                membership.role = role
+                membership.save()
+            else:
+                # If the member is not part of the group, add them with the specified role
+                CreatorGroupMembership.objects.create(group=instance, member=member, role=role)
+
+        # Remove any members who were not included in the updated data
+        members_to_remove = existing_members - set([member_data['member'] for member_data in members_data])
+        CreatorGroupMembership.objects.filter(group=instance, member__in=members_to_remove).delete()
+
+        return instance

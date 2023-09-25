@@ -36,7 +36,7 @@ const styles = theme => ({
     // filter:
     //   "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
     [theme.breakpoints.down('511')]: {
-      paddingTop: '4em',
+      // paddingTop: '4em',
     },
   },
   titleStyle: {

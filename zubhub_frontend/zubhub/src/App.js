@@ -28,6 +28,10 @@ const PhoneConfirm = React.lazy(() =>
   import('./views/phone_confirm/PhoneConfirm'),
 );
 const Profile = React.lazy(() => import('./views/profile/Profile'));
+const Team = React.lazy(() => import('./views/team/Team'));
+const EditTeam = React.lazy(() =>
+  import('./views/edit_team/EditTeam'),
+);
 const AccounStatus = React.lazy(() =>
   import('./views/account_status/AccountStatus'),
 );
@@ -37,12 +41,27 @@ const EditProfile = React.lazy(() =>
 const UserProjects = React.lazy(() =>
   import('./views/user_projects/UserProjects'),
 );
+const TeamProjects = React.lazy(() =>
+  import('./views/team_projects/TeamProjects'),
+);
 const UserDrafts = React.lazy(() => import('./views/user_drafts/UserDrafts'));
 const UserFollowers = React.lazy(() =>
   import('./views/user_followers/UserFollowers'),
 );
+const TeamFollowers = React.lazy(() =>
+  import('./views/team_followers/TeamFollowers'),
+);
+const TeamMembers = React.lazy(() =>
+  import('./views/team_members/TeamMembers'),
+);
 const UserFollowing = React.lazy(() =>
   import('./views/user_following/UserFollowing'),
+);
+const AllTeams = React.lazy(() =>
+  import('./views/all_teams/AllTeams'),
+);
+const Teams = React.lazy(() =>
+  import('./views/teams/Teams'),
 );
 const GroupMembers = React.lazy(() =>
   import('./views/group_members/GroupMembers'),
@@ -69,6 +88,7 @@ const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() =>
   import('./views/activity_details/ActivityDetailsV2'),
 );
+const CreateTeam = React.lazy(() => import('./views/create_team/CreateTeam'));
 const LinkedProjects = React.lazy(() =>
   import('./views/linked_projects/LinkedProjects'),
 );
@@ -300,6 +320,19 @@ function App(props) {
         />
 
         <Route
+          path="/teams/:groupname/projects"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={TeamProjects}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/creators/:username/drafts"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
@@ -325,12 +358,64 @@ function App(props) {
           )}
         />
 
+<Route
+          path="/teams/:groupname/followers"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={TeamFollowers}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/teams/:groupname/members"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={TeamMembers}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
         <Route
           path="/creators/:username/following"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={UserFollowing}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/teams/all"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={AllTeams}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/team"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={Teams}
                 {...routeProps}
                 {...props}
               />
@@ -387,6 +472,15 @@ function App(props) {
         />
 
         <Route
+          path="/teams/:groupname"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Team} {...routeProps} {...props} />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
           path="/profile"
           render={routeProps => (
             <PageWrapper {...routeProps} {...props}>
@@ -401,6 +495,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={EditProfile}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/:groupname/edit-team"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={EditTeam}
                 {...routeProps}
                 {...props}
               />
@@ -585,6 +692,19 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={Activities}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+
+        <Route
+          path="/create-team"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={CreateTeam}
                 {...routeProps}
                 {...props}
               />

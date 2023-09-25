@@ -21,6 +21,7 @@ function Step1({ formik, handleBlur }) {
     'Measuring tape',
     // 'General',
   ]);
+
   const clearSuggestions = () => setRemoteTags([]);
 
   const handleTagChange = async value => {

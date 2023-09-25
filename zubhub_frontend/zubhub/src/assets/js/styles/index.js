@@ -12,6 +12,12 @@ const styles = theme => ({
   flexColumn: {
     flexDirection: 'column'
   },
+  flexWrap: {
+    flexWrap: 'wrap'
+  },
+  textCapitalize: {
+    textTransform: 'capitalize'
+  },
   inputTextPlaceholder: {
     color: '#B3B3B3',
     fontSize: '15px !important',

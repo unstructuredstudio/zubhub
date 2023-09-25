@@ -74,6 +74,31 @@ def upload_file_task(self, user_id, username):
     except Exception as e:
         raise self.retry(exc=e, countdown=int(
             uniform(2, 4) ** self.request.retries))
+    
+
+@shared_task(name="creators.tasks.upload_file_task_group", bind=True, acks_late=True, max_retries=10)
+def upload_file_task_group(self, user_id, username):
+    from creators.models import CreatorGroup
+
+    creator = CreatorGroup.objects.filter(id=user_id)
+
+    key = 'avatar/{0}'.format(username)
+
+    try:
+        res = requests.get(creator[0].avatar)
+        res = upload_file_to_media_server(res.content, key)
+        res = res.json()
+        res = res["url"]
+
+        if isinstance(res, str):
+            creator.update(avatar=res)
+        else:
+            raise Exception()
+
+    except Exception as e:
+        raise self.retry(exc=e, countdown=int(
+            uniform(2, 4) ** self.request.retries))
+    
 
 @shared_task(name="creators.tasks.update_creator_tag_index_task", bind=True, acks_late=True, max_retries=10)
 def update_creator_tag_index_task(self):

@@ -14,6 +14,9 @@ const styles = theme => ({
     [theme.breakpoints.up('1600')]: {
       maxWidth: '950px',
     },
+    [theme.breakpoints.down('400')]: {
+      marginTop:'30px',
+    },
   },
   cardStyle: {
     border: 0,
@@ -22,7 +25,7 @@ const styles = theme => ({
     color: 'white',
     padding: '0 30px',
   },
-  ttitleStyle: {
+  titleStyle: {
     fontWeight: 'bold',
     fontSize: '1.7rem',
     [theme.breakpoints.up('1600')]: {

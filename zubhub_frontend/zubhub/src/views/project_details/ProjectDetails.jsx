@@ -356,13 +356,15 @@ function ProjectDetails(props) {
                   <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.materials')}
                   </Typography>
-                  <div style={{ display: 'flex', gap: 20 }}>{buildMaterialsUsedComponent(classes, state)}</div>
+                  <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                    {buildMaterialsUsedComponent(classes, state)}
+                  </div>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12}>
                   <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.category')}
                   </Typography>
-                  <div style={{ display: 'flex', gap: 20 }}>
+                  <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
                     {project.category ? (
                       project.category.map(cat => (
                         <Pill key={cat} text={cat} />

@@ -44,7 +44,6 @@ import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import Step3 from './step3/Step3';
 import { TEAM_ENABLED } from '../../utils.js/index.js';
-
 const PreviewProject = lazy(() => import('../../components/previewProject/PreviewActivity'));
 
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
@@ -250,6 +249,7 @@ function CreateProject(props) {
 
     if (mode.length == 0) return null;
   }
+
 
   return (
     <div className={classes.container}>

@@ -35,6 +35,10 @@ const styles = theme => ({
       margin: '1em',
     },
   },
+  teamButton: {
+    float: 'right',
+    marginLeft: theme.spacing(2),
+  },
   profileShareButtonStyle: {
     borderRadius: '50% !important',
   },
@@ -85,6 +89,25 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
     marginBottom: '0.1em'
+  },
+  baseTagStyle: {
+    backgroundColor: '#00B8C4',
+    borderRadius: '50px',
+    color: 'white',
+    padding: '0 0.5em',
+    marginLeft: '0.4em',
+    marginBottom: '0.4em',
+    [theme.breakpoints.down('470')]: {
+      marginLeft: 0,
+      position: 'static',
+      marginBottom: '0.4em',
+    },
+    display: 'flex', 
+    alignItems: 'center', 
+    marginRight: '0.5em',
+  },
+  iconWithSpace: {
+    marginLeft: theme.spacing(0.5)
   },
   emailStyle: { marginBottom: '0.5em' },
   moreInfoBoxStyle: {
@@ -137,6 +160,17 @@ const styles = theme => ({
     fontWeight: 'bold',
     fontSize: '1.5rem',
   },
+  descriptionStyle: {
+    // flexGrow: 1,
+    '& p': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: 'vertical',
+      height: '90%',
+    },
+  },
   badgeTitleStyle: {
     fontWeight: 'bold',
     fontSize: '1.5rem',
@@ -157,7 +191,7 @@ const styles = theme => ({
       margin: '1em',
       borderRadius: '4px',
     },
-    borderRadius: '8px 0 0 8px',
+    borderRadius: '8px',
   },
   badgeBox: {
     backgroundColor: 'var(--secondary-color3)',
