@@ -44,13 +44,16 @@ const styles = theme => ({
   },
   followersGridStyle: {
     marginBottom: '2em',
+    display:'grid',
+    gridTemplateColumns:'auto auto',
   },
   cardStyle: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: '94%',
-    maxWidth: 345,
+    // height: '94%',
+    // width: 500,
+    // padding:'1rem',
     paddingTop: 0,
     paddingBottom: '0 !important',
     marginTop: '1em',
@@ -62,8 +65,9 @@ const styles = theme => ({
   avatarStyle: {
     width: '100%',
     height: 'auto',
-    paddingTop: '1.5em',
-    paddingBottom: '1.5em',
+    paddingLeft:"5rem",
+    paddingRight:'5rem',
+    paddingBottom: '1rem',
     '& img': {
       width: '6em',
       backgroundColor: 'white',
@@ -123,6 +127,61 @@ const styles = theme => ({
   largeLabel: {
     fontSize: '1.3rem',
   },
+  editIconContainer:{
+   marginLeft:'3rem',
+  display:'flex',
+  justifyContent:'end',
+  alignItems:'end',
+  marginTop:'1rem' ,
+  paddingLeft:'10rem',
+  },
+  editIcon:{
+    backgroundColor:'gray',
+    padding:'0.4rem',
+    borderRadius:'0.5rem',
+    color:'white'
+  },
+  popper:{
+    paddingRight: '0.2rem',
+    backgroundColor: 'white',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+  },
+  memberrole:{
+    display: 'flex',
+     flexDirection: 'column',
+      paddingBottom: '1rem',
+  },
+  roleItem:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap:'0.5rem',
+    marginLeft:'1rem'
+  },
+  checkedrole:{
+    fontFamily: 'sans-serif',
+       marginRight:'5rem',
+        fontSize: '1rem',
+         fontWeight: 'bold'
+  },
+  uncheckedRole:{
+    fontFamily: 'sans-serif',
+     marginLeft:"2.5rem",
+      fontSize: '1rem',
+        fontWeight: 'bold',
+  },
+  removeButton:{
+    fontFamily: 'sans-serif',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    padding: '5px',
+    whiteSpace: 'nowrap',
+    color: 'red',
+    marginLeft:"2.5rem",
+    
+  },
+ 
 });
 
 export default styles;

@@ -537,21 +537,24 @@ export const getTeamFollowersPage = args => {
 export const getTeamMembers = args => {
   return async () => {
     try {
-      const teamMembersResponse = await API.teamMembers(args);
-
+      const teamMembersResponse = await API.teamMembers(args); //uses the creators/${groupname}/members/ to get the group members for that group name
+        // console.log(`data from the getTeamMembers API ${JSON.stringify(teamMembersResponse.members)}`); //get all the members of a group
       if (Array.isArray(teamMembersResponse.members)) {
-        const memberInfoPromises = teamMembersResponse.members.map(member => API.teamMembersId(member.member));
+        const memberInfoPromises = teamMembersResponse.members.map(member => API.teamMembersId(member.member));//extracts the array of all the members from the creatorsgroup instance and for each memeber in the array id get the full details about the member/creator using the Api creators/id/${memberId}
 
-        const memberInfoResponses = await Promise.all(memberInfoPromises);
+        const memberInfoResponses = await Promise.all(memberInfoPromises);//retuns or resolve just the array of details of each memeber that is gotten from the membersInfoResponse
+        // console.log(`data from the getTeamMembers that is sent to the TeamMember page  ${JSON.stringify(memberInfoResponses)}`);
 
-        // const combinedData = teamMembersResponse.members.map((member, index) => ({
-        //   ...member,
-        //   additionalInfo: memberInfoResponses[index], // Add additional information here
-        // }));
-
+        const combinedData = teamMembersResponse.members.map((member, index) => ({
+          ...member,
+          additionalInfo: memberInfoResponses[index], // Add additional information here
+        }));
+        // console.log(`combined data ${JSON.stringify(combinedData)}`);
+        // console.log(`memberInfo ${JSON.stringify(memberInfoResponses)}`);
         return {
           followers: memberInfoResponses,
           loading: false,
+          teamMembersIdAndRole:combinedData
         };
       } else {
         throw new Error('Invalid response');

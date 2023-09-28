@@ -34,7 +34,11 @@ const PanelPopper = ({ open, anchorEl, children, signUpStyles }) => {
       style={{ zIndex: mediaQuery ? 2 : 'unset' }}
     >
       {!mediaQuery && <div x-arrow="true" className={classes.popperArrowStyle}></div>}
-      { signUpStyles ? <div className={classes.signUpcontainer}>{children}</div> : <div className={classes.container}>{children}</div>}
+      {signUpStyles ? (
+        <div className={classes.signUpcontainer}>{children}</div>
+      ) : (
+        <div className={classes.container}>{children}</div>
+      )}
     </Popper>
   );
 };

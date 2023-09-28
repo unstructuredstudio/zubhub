@@ -185,13 +185,12 @@ const styles = theme => ({
   aboutMeBox: {
     flexGrow: 1,
     padding: '1em',
-    // margin: '1em 0 0 1em',
-    borderRadius: '4px 0 0 4px',
+    borderRadius: '4px 0px 0px 4px', //fix issue of space between about me and badges
     [theme.breakpoints.down('900')]: {
       margin: '1em',
       borderRadius: '4px',
     },
-    borderRadius: '8px',
+    // borderRadius: '8px',
   },
   badgeBox: {
     backgroundColor: '#FFF7D4',
