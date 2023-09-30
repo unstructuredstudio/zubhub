@@ -115,7 +115,7 @@ function Profile(props) {
       const team = values[1].results;
       // setTeams(team);
       // setTeams(teams   => ([...teams, ...team]));
-      handleSetTeams(team); 
+      handleSetTeams(team);  //gets the teams for a particular user or let me say a group for a particular user
       const activity = values[2] || {};
       const drafts = values[3] || {};
       const badges = obj.profile.badges;
@@ -165,6 +165,11 @@ function Profile(props) {
       setPage(page => page + 1);
     }
   };
+
+
+  if( teams) {
+    console.log(`TeamaTamsTeams ${JSON.stringify(teams)}`);
+  }
 
   if (loading) {
     return <LoadingPage />;

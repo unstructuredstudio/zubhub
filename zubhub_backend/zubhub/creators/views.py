@@ -628,16 +628,26 @@ class AddGroupMembersAPIView(GenericAPIView):
 
             # Get the Creator instance for the member
             member_obj = get_object_or_404(Creator, username=member)
+            membership = CreatorGroupMembership.objects.filter(group=group, member=member_obj).first()
 
-            # Check if the member already exists in the group, if not, add them
-            membership, created = CreatorGroupMembership.objects.get_or_create(
-                group=group, member=member_obj, defaults={'role': role}
-            )
-
-            if not created:
-                # If the membership already existed, update the role
+            # These are some of the modifications i am making to the backend in this case when a user has a membership to a particular group
+            if membership is None:
+                # If the membership doesn't exist, create a new one
+                membership = CreatorGroupMembership.objects.create(group=group, member=member_obj, role=role)
+            else:
+                # If the membership already exists, update the role
                 membership.role = role
                 membership.save()
+
+            # Check if the member already exists in the group, if not, add them
+            # membership, created = CreatorGroupMembership.objects.get_or_create(
+            #     group=group, member=member_obj, defaults={'role': role}
+            # )
+
+            # if not created:
+            #     # If the membership already existed, update the role
+            #     membership.role = role
+            #     membership.save()
 
         return Response({"detail": "User added"}, status=status.HTTP_200_OK)
     

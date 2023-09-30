@@ -15,7 +15,8 @@ export const getUserProfile = args => {
   return dispatch => {
     let profile;
     return API.getUserProfile(args)
-      .then(res => {
+      .then(res => { 
+        console.log(`logggginh the users profile ${JSON.stringify(res)}`);
         if (!res.username) {
           throw new Error(args.t('profile.errors.profileFetchError'));
         } else {
@@ -95,6 +96,26 @@ export const getUserTeams = args => {
   };
 };
 
+export const addMembersToTeam = args => {
+  return dispatch =>{
+    return API.addTeamMembers(args)
+    .then(res => {
+      if(res.detail !=="User added"){
+        toast.success(args.t('user.added.toastSuccess'))
+        args.history.push(`/creator/${res.groupname}/members`)
+        return { ...res}
+      }else{
+        throw new Error(res.detail)
+      }
+    }).catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+    })
+  }
+}
 /**
  * @function getTeamProfile
  * @author Hemant <hks@iamhks.com>
@@ -126,12 +147,16 @@ export const getTeamProfile = args => {
  *
  * @todo - describe function's signature
  */
+
+// This is a thunk that gets its value from the allTeam api from the django backend
 export const getAllTeams = args => {
   return dispatch => {
     let profile;
+  
     return API.allTeams(args)
     .then(res => {
       profile = res;
+      console.log(`getting the actual value of the args that is apssed to all the the redux actions ${JSON.stringify(args)}`);
       const filteredResults = res.results.filter(result => result.members.length > 0);
 
       return { ...res, profile, results: filteredResults, loading: false };

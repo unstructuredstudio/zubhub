@@ -105,7 +105,6 @@ export const searchTags = (value, callBack) => {
 
 export const initUpload = async (state, props, handleSetState, projs) => {
     if (!props.auth.token) return props.history.push('/login');
-
     const groupMembers = [
         ...props.values.admins.map(admin => ({ member: admin.title, role: 'admin' })),
         ...props.values.members.map(member => ({ member: member.title, role: 'member' }))

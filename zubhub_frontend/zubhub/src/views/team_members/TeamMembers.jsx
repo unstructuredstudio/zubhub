@@ -20,15 +20,24 @@ import LoadingPage from '../loading/LoadingPage';
 import styles from '../../assets/js/styles/views/user_followers/userFollowersStyles';
 import { ClickAwayListener } from '@material-ui/core';
 import { Popper } from '@material-ui/core';
-const useStyles = makeStyles(styles);
+import * as  script from '../create_team/script'
+import Step2 from '../create_team/step2/Step2';
+import { useFormik } from 'formik';
+import style from '../../assets/js/styles/views/profile/profileStyles'
 
+const useStyles = makeStyles(styles);
+const Styles = makeStyles(style)
 /**
  * @function buildFollowers Component
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
-const AddTeamMemberCard = (follower, classes, props, state, handleSetState) => (
+const AddTeamMemberCard = (follower, classes, classe, groupname, id, props, state, handleSetState) => (
+  <Link 
+  className={classe.textDecorationNone}
+  to={`/add/${groupname}`}
+  >
   <Card
     style={{
       display: 'flex',
@@ -58,97 +67,97 @@ const AddTeamMemberCard = (follower, classes, props, state, handleSetState) => (
         paddingBottom: '1.5rem',
       }}
     >
+      
       <CustomButton variant="contained" primaryButtonStyle>
         {follower.buttonText}
       </CustomButton>
+  
     </Box>
   </Card>
+  </Link>
 );
-const buildFollowers = (updatedfollowers, open, setOpen, classes, props, state, handleSetState) =>
-  updatedfollowers.map((follower, index) => (
-    <Grid
-      item
-      // xs={12}
-      // sm={6}
-      // md={4}
-      // lg={3}
-      className={classes.followersGridStyle}
-      align="start"
-      key={follower.id}
-    >
-      {index === 0
-        ? AddTeamMemberCard(follower, classes, props, state, handleSetState)
-        :  (
-            //  <Link className={classes.textDecorationNone} to={`/creators/${follower.username}`}>
-            // follower.additionalInfo.id !== props.auth.id &&
-            <Card className={classes.cardStyle}>
-              <div className={classes.editIconContainer} onClick={() => setOpen(!open)}>
-                <MdOutlineModeEdit size={30} className={classes.editIcon} />
-                {open && (
-                  <ClickAwayListener onClickAway={() => setOpen(!open)}>
-                    <Popper
-                      open={open}
-                      anchorEl={document.querySelector(`.${classes.editIconContainer}`)}
-                      placement="bottom"
-                      className={classes.popper}
-                    >
-                      <div className={classes.memberrole}>
-                        {follower.role === 'admin' ? (
-                          <div className={classes.roleItem}>
-                            <GiCheckMark size={15} />
-                            <h1 className={classes.checkedrole}>Admin</h1>
-                          </div>
-                        ) : (
-                          <h1 className={classes.uncheckedRole}>Admin</h1>
-                        )}
-                        {follower.role === 'member' ? (
-                          <div className={classes.roleItem}>
-                            <GiCheckMark size={15} />
-                            <h1 className={classes.checkedrole}>Member</h1>
-                          </div>
-                        ) : (
-                          <h1 className={classes.uncheckedRole}>Member</h1>
-                        )}
-                        <hr style={{ paddingLeft: '6rem', paddingRight: '3rem', height: '1px' }} />
-                        {
-                          follower.additionalInfo.id !== props.auth.id ? (
-                            <span className={classes.removeButton}  onClick={() => alert("hello to the world")}>Remove</span>
-                          ):(
-                            <span className={classes.removeButton}  onClick={() => alert("hello to the world")}>Leave Team</span>
-                          )
-                        }
-                      </div>
-                    </Popper>
-                  </ClickAwayListener>
-                )}
-              </div>
-              <Avatar
-                className={classes.avatarStyle}
-                src={follower.additionalInfo.avatar}
-                alt={follower.additionalInfo.username}
-              />
-              {follower.additionalInfo.id !== props.auth.id ? (
-                <CustomButton
-                  variant="contained"
-                  onClick={(e, id = follower.additionalInfo.id) =>
-                    handleSetState(toggleFollow(e, props, state, id, toast))
-                  }
-                  primaryButtonStyle
-                >
-                  {follower.additionalInfo.followers.includes(props.auth.id)
-                    ? props.t('userFollowers.follower.unfollow')
-                    : props.t('userFollowers.follower.follow')}
-                </CustomButton>
-              ) : null}
-              <Typography component="h3" color="textPrimary" className={classes.userNameStyle}>
-                {follower.additionalInfo.username}
-              </Typography>
-            </Card>
-          )
-          //  </Link>
-      }
-    </Grid>
-  ));
+const buildFollowers = (updatedfollowers, open, classe, groupname, setOpen, classes, props, state, handleSetState) => {
+  return (
+    <>
+      {updatedfollowers.map((follower, index) => (
+        <Grid
+          item
+          className={classes.followersGridStyle}
+          align="start"
+          key={follower.id}
+        >
+          {index === 0
+            ? AddTeamMemberCard(follower, classes, classe, groupname, props, state, handleSetState)
+            : (
+              <Card className={classes.cardStyle}>
+                <div className={classes.editIconContainer} onClick={() => setOpen(!open)}>
+                  <MdOutlineModeEdit size={30} className={classes.editIcon} />
+                  {open && (
+                    <ClickAwayListener onClickAway={() => setOpen(!open)}>
+                      <Popper
+                        open={open}
+                        anchorEl={document.querySelector(`.${classes.editIconContainer}`)}
+                        placement="bottom"
+                        className={classes.popper}
+                      >
+                        <div className={classes.memberrole}>
+                          {follower.role === 'admin' ? (
+                            <div className={classes.roleItem}>
+                              <GiCheckMark size={15} />
+                              <h1 className={classes.checkedrole}>Admin</h1>
+                            </div>
+                          ) : (
+                            <h1 className={classes.uncheckedRole}>Admin</h1>
+                          )}
+                          {follower.role === 'member' ? (
+                            <div className={classes.roleItem}>
+                              <GiCheckMark size={15} />
+                              <h1 className={classes.checkedrole}>Member</h1>
+                            </div>
+                          ) : (
+                            <h1 className={classes.uncheckedRole}>Member</h1>
+                          )}
+                          <hr style={{ paddingLeft: '6rem', paddingRight: '3rem', height: '1px' }} />
+                          {
+                            follower.additionalInfo.id !== props.auth.id ? (
+                              <span className={classes.removeButton} onClick={() => alert("hello to the world")}>Remove</span>
+                            ) : (
+                              <span className={classes.removeButton} onClick={() => alert("hello to the world")}>Leave Team</span>
+                            )
+                          }
+                        </div>
+                      </Popper>
+                    </ClickAwayListener>
+                  )}
+                </div>
+                <Avatar
+                  className={classes.avatarStyle}
+                  src={follower.additionalInfo.avatar}
+                  alt={follower.additionalInfo.username}
+                />
+                {follower.additionalInfo.id !== props.auth.id ? (
+                  <CustomButton
+                    variant="contained"
+                    onClick={(e, id = follower.additionalInfo.id) =>
+                      handleSetState(toggleFollow(e, props, state, id, toast))
+                    }
+                    primaryButtonStyle
+                  >
+                    {follower.additionalInfo.followers.includes(props.auth.id)
+                      ? props.t('userFollowers.follower.unfollow')
+                      : props.t('userFollowers.follower.follow')}
+                  </CustomButton>
+                ) : null}
+                <Typography component="h3" color="textPrimary" className={classes.userNameStyle}>
+                  {follower.additionalInfo.username}
+                </Typography>
+              </Card>
+            )}
+        </Grid>
+      ))}
+    </>
+  );
+}
 
 /**
  * @function UserFollowers View
@@ -157,8 +166,13 @@ const buildFollowers = (updatedfollowers, open, setOpen, classes, props, state, 
  * @todo - describe function's signature
  */
 function TeamMembers(props) {
+
   const classes = useStyles();
+  const classe = Styles()
+
   const { groupname } = useParams();
+
+  const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
     followers: [],
     prev_page: null,
@@ -166,17 +180,19 @@ function TeamMembers(props) {
     loading: true,
     teamMembersIdAndRole: [],
   });
-  const [open, setOpen] = React.useState(false);
+
+  const gpname = props.match.params.groupname
+  if(groupname) {
+  }
+  const formik = useFormik(script.formikSchema)
   React.useEffect(() => {
     let obj = fetchPage(groupname, props);
     handleSetState(obj);
-    // console.log(`getting the value of the authtoken ${props.auth.token}`);
   }, []);
 
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
-        // console.log(`the value of the obj in the Team ${JSON.stringify(obj.teamMembersIdAndRole)}`);
         setState(state => ({ ...state, ...obj }));
       });
     }
@@ -189,9 +205,10 @@ function TeamMembers(props) {
   };
   const { followers, teamMembersIdAndRole, prev_page, next_page, loading } = state;
 
-  if (followers) {
-    console.log(`I am trying to see the structure of the teamMembersIdAndRole ${JSON.stringify(teamMembersIdAndRole)}`);
-  }
+
+  // if (followers) {
+  //   console.log(`I am trying to see the structure of the teamMembersIdAndRole ${JSON.stringify(teamMembersIdAndRole)}`);
+  // }
   const updatedfollowers = [addNewMemberActionObject, ...teamMembersIdAndRole];
   const username = props.match.params.username;
   const { t } = props;
@@ -207,7 +224,7 @@ function TeamMembers(props) {
                 {groupname}'s {t('Members')}
               </Typography>
             </Grid>
-            {buildFollowers(updatedfollowers, open, setOpen, classes, props, state, handleSetState)}
+            {buildFollowers(updatedfollowers,  open,  classe, groupname, setOpen, classes, props, state, handleSetState)}
           </Grid>
           <ButtonGroup aria-label={t('userFollowers.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
@@ -271,3 +288,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamMembers);
+

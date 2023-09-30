@@ -399,11 +399,12 @@ class API {
    *
    * @todo - describe method's signature
    */
+  // issue-734
   addTeamMembers = ({ groupname, data, token }) => {
     const url = `creators/${groupname}/add-members/`;
     const method = 'POST';
-    const content_type = false;
-    const body = data;
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
     if (token) {
       return this.request({ url, method ,token, body, content_type }).then(res => res.json());
     } else {
