@@ -3,7 +3,7 @@ import React from 'react';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles } from '@material-ui/core/styles';
 
-import styles from '../../assets/js/styles/components/notification_panel/notificationPanelPopperStyles';
+import styles from '../../assets/js/styles/components/notification_panel/panelPopperStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -19,7 +19,7 @@ const modifiers = {
 
 const fullscreenModifiers = {};
 
-const NotificationPanelPopper = ({ open, anchorEl, children }) => {
+const PanelPopper = ({ open, anchorEl, children, signUpStyles }) => {
   const classes = useStyles();
   const mediaQuery = useMediaQuery('(max-width: 600px)');
 
@@ -33,12 +33,10 @@ const NotificationPanelPopper = ({ open, anchorEl, children }) => {
       className={mediaQuery ? classes.popperContainerStyle : ''}
       style={{ zIndex: mediaQuery ? 2 : 'unset' }}
     >
-      {!mediaQuery && (
-        <div x-arrow="true" className={classes.popperArrowStyle}></div>
-      )}
-      {children}
+      {!mediaQuery && <div x-arrow="true" className={classes.popperArrowStyle}></div>}
+      { signUpStyles ? <div className={classes.signUpcontainer}>{children}</div> : <div className={classes.container}>{children}</div>}
     </Popper>
   );
 };
 
-export default NotificationPanelPopper;
+export default PanelPopper;

@@ -45,6 +45,134 @@ export const getUserProfile = args => {
 };
 
 /**
+ * @function getUserTeams
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const deleteTeam = args => {
+  return dispatch => {
+    return API.deleteTeam(args)
+    .then(res => {
+      if (res.detail !== 'Group deleted successfully.') {
+        throw new Error(res.detail);
+      } else {
+        toast.success(args.t('profile.delete.toastSuccess'));
+        // args.logout(args);
+        args.history.push('/profile');
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        return {
+          dialog_error: args.t('profile.delete.errors.unexpected'),
+        };
+      } else {
+        return { dialog_error: error.message };
+      }
+    });
+  };
+};
+
+/**
+ * @function getUserTeams
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getUserTeams = args => {
+  return dispatch => {
+    let profile;
+    return API.userTeams(args)
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function getTeamProfile
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getTeamProfile = args => {
+  return dispatch => {
+    let profile;
+    return API.getTeamProfile(args)
+      .then(res => {
+        profile=res;
+        return { ...res, profile, loading: false };
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function getAllTeams
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getAllTeams = args => {
+  return dispatch => {
+    let profile;
+    return API.allTeams(args)
+    .then(res => {
+      profile = res;
+      const filteredResults = res.results.filter(result => result.members.length > 0);
+
+      return { ...res, profile, results: filteredResults, loading: false };
+    })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function editTeamProfile
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const editTeam = args => {
+  return dispatch => {
+    let profile;
+    return API.editTeam(args)
+      .then(res => {
+        profile=res;
+        return { ...res, profile, loading: false };
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
  * @function editUserProfile
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
@@ -150,6 +278,35 @@ export const toggleFollow = args => {
           throw new Error(res);
         }
       })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function toggleTeamFollow
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const toggleTeamFollow = args => {
+  return () => {
+    return API.followTeam(args)
+    // .then(res => {
+      
+    //   } else {
+    //     res = Object.keys(res)
+    //       .map(key => res[key])
+    //       .join('\n');
+    //     throw new Error(res);
+    //   }
+    // })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           toast.warning(args.t('profile.errors.unexpected'));
@@ -277,6 +434,136 @@ export const getFollowers = args => {
         }
         return { loading: false };
       });
+  };
+};
+
+/**
+ * @function getTeamFollowers
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getTeamFollowers = args => {
+  return () => {
+    return API.teamFollowers(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+            const followerIds = res.results.map(follower => follower.id);
+              return {
+                followerIds: followerIds,
+                prev_page: res.previous,
+                next_page: res.next,
+                loading: false,
+              };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+export const getTeamFollowersPage = args => {
+  return () => {
+    return API.teamFollowers(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        return {
+          followers: res.results,
+          prev_page: res.previous,
+          next_page: res.next,
+          loading: false,
+        };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('profile.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
+ * @function getTeamMembers
+ * @author Hemant <hks@iamhks.com>
+ *
+ * @todo - describe function's signature
+ */
+// export const getTeamMembers = args => {
+//   return () => {
+//     return API.teamMembers(args)
+//       .then(res => {
+//         if (Array.isArray(res.members)) {
+//           return {
+//             followers: res.members,
+//             loading: false,
+//           };
+//         } else {
+//           res = Object.keys(res)
+//             .map(key => res[key])
+//             .join('\n');
+//           throw new Error(res);
+//         }
+//       })
+//       .catch(error => {
+//         if (error.message.startsWith('Unexpected')) {
+//           toast.warning(args.t('profile.errors.unexpected'));
+//         } else {
+//           toast.warning(error.message);
+//         }
+//         return { loading: false };
+//       });
+//   };
+// };
+export const getTeamMembers = args => {
+  return async () => {
+    try {
+      const teamMembersResponse = await API.teamMembers(args);
+
+      if (Array.isArray(teamMembersResponse.members)) {
+        const memberInfoPromises = teamMembersResponse.members.map(member => API.teamMembersId(member.member));
+
+        const memberInfoResponses = await Promise.all(memberInfoPromises);
+
+        // const combinedData = teamMembersResponse.members.map((member, index) => ({
+        //   ...member,
+        //   additionalInfo: memberInfoResponses[index], // Add additional information here
+        // }));
+
+        return {
+          followers: memberInfoResponses,
+          loading: false,
+        };
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch (error) {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    }
   };
 };
 

@@ -1,4 +1,5 @@
 import i18next from 'i18next';
+import { sanitizeObject } from '../utils.js';
 /**
  * API class containing all the calls to the backend api endpoints
  */
@@ -51,14 +52,14 @@ class API {
         withCredentials: 'true',
         headers: content_type
           ? new Headers({
-              Authorization: `Token ${token}`,
-              'Content-Type': content_type,
-              'Accept-Language': `${i18next.language},en;q=0.5`,
-            })
+            Authorization: `Token ${token}`,
+            'Content-Type': content_type,
+            'Accept-Language': `${i18next.language},en;q=0.5`,
+          })
           : new Headers({
-              Authorization: `Token ${token}`,
-              'Accept-Language': `${i18next.language},en;q=0.5`,
-            }),
+            Authorization: `Token ${token}`,
+            'Accept-Language': `${i18next.language},en;q=0.5`,
+          }),
         body,
       });
     } else if (token) {
@@ -254,24 +255,211 @@ class API {
   };
 
   /**
+   * @method getTeamProfile - get the team profile of the user that the groupname belongs to
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  getTeamProfile = ({ groupname, token }) => {
+    const url = `creators/group/${groupname}/`;
+    if (token) {
+      return this.request({ url, token }).then(res => res.json());
+    } else {
+      return this.request({ url }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method removeTeamMember
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  removeTeamMember = ({ groupname, username, token }) => {
+    const url = `creators/${groupname}/remove-member/${username}/`;
+    const method = 'DELETE';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method followTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  followTeam = ({ groupname, username, token }) => {
+    const url = `creators/${groupname}/toggle-follow/${username}/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method teamMembers
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  teamMembers = ({ groupname, token }) => {
+    const url = `creators/${groupname}/members/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method teamMembersId
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  teamMembersId = ( id ) => {
+    const url = `creators/id/${id}/`;
+    const method = 'GET';
+    return this.request({ url, method }).then(res => res.json());
+  };
+
+  /**
+   * @method deleteTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  deleteTeam = ({ groupname, token }) => {
+    const url = `creators/${groupname}/delete-group/`;
+    const method = 'DELETE';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method teamFollowers
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  teamFollowers = ({ groupname, token }) => {
+    const url = `creators/${groupname}/group-followers/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method userTeams
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  userTeams = ({ username, token }) => {
+    const url = `creators/groups/${username}/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method allTeams
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  allTeams = ({ token }) => {
+    const url = `creators/teams/`;
+    const method = 'GET';
+    if (token) {
+      return this.request({ url, method ,token }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method addTeamMembers
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  addTeamMembers = ({ groupname, data, token }) => {
+    const url = `creators/${groupname}/add-members/`;
+    const method = 'POST';
+    const content_type = false;
+    const body = data;
+    if (token) {
+      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method editTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  editTeam = ({ groupname, data, token }) => {
+    const url = `creators/${groupname}/edit-group/`;
+    const method = 'POST';
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
+  
+    if (token) {
+      return this.request({ url, method, token, body, content_type }).then(res => res.json());
+    } else {
+      return this.request({ url, method, body, content_type }).then(res => res.json());
+    }
+  };
+
+  /**
+   * @method createTeam
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  createTeam = ({ data, token }) => {
+    const url = `creators/create-group/`;
+    const method = 'POST';
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
+    if (token) {
+      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
    * @method getUserProjects - get a paginated list of projects
    *         created by the user with the provided username
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *
    * @todo - describe method's signature
    */
-  getUserProjects = ({ username, page, limit, token }) => {
-    let url;
-    if (limit && page) {
-      url = `creators/${username}/projects/?limit=${limit}&&${page}`;
-    } else if (limit) {
-      url = `creators/${username}/projects/?limit=${limit}`;
-    } else if (page) {
-      url = `creators/${username}/projects/?${page}`;
-    } else {
-      url = `creators/${username}/projects/`;
-    }
-
+  getUserProjects = ({ username, page, limit, token, project_to_omit }) => {
+    let url = `creators/${username}/projects`;
+    let queryParams = sanitizeObject({ page, limit, project_to_omit })
+    const searchParams = new URLSearchParams(queryParams);
+    url = `${url}?${searchParams}`;
     return this.request({ url, token }).then(res => res.json());
   };
 
@@ -657,6 +845,17 @@ class API {
   };
 
   /**
+  * @method getActivity
+  * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
+  *
+  * @todo - describe method's signature
+  */
+  getActivity = ({ token, id }) => {
+    const url = `activities/${id}`;
+    return this.request({ token, url }).then(res => res.json());
+  };
+
+  /**
    * @method getCategories
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *
@@ -807,11 +1006,11 @@ class API {
     return this.request({ url }).then(res => res.json());
   };
 
-    /**
-   * @method getChallenge
-   * @author Suchakra Sharma <suchakra@unstructured.studio>
-   *
-   */
+  /**
+ * @method getChallenge
+ * @author Suchakra Sharma <suchakra@unstructured.studio>
+ *
+ */
   getChallenge = () => {
     const url = `challenge/`;
 
@@ -850,8 +1049,8 @@ class API {
    */
   getAmbassadors = ({ token, page }) => {
     const url = page
-    ? `ambassadors/?page=${page}`
-    : `ambassadors`;
+      ? `ambassadors/?page=${page}`
+      : `ambassadors`;
 
     return this.request({ token, url }).then(res => res.json());
   };
@@ -886,33 +1085,8 @@ class API {
   createActivity = (token, args) => {
     const url = 'activities/create/';
     const method = 'POST';
-    const {
-      title,
-      motivation,
-      learning_goals,
-      materials_used,
-      materials_used_image,
-      facilitation_tips,
-      activity_images,
-      making_steps,
-      inspiring_examples,
-      inspiring_artist,
-      video,
-    } = args;
+    const body = JSON.stringify(args);
 
-    const body = JSON.stringify({
-      title: title,
-      motivation: motivation,
-      learning_goals: learning_goals,
-      materials_used: materials_used,
-      materials_used_image: materials_used_image,
-      facilitation_tips: facilitation_tips,
-      images: activity_images,
-      making_steps: making_steps,
-      inspiring_examples: inspiring_examples,
-      inspiring_artist: inspiring_artist,
-      video: video,
-    });
     return this.request({ url, method, token, body });
     // .then(res => res.json());
   };
@@ -920,33 +1094,21 @@ class API {
   updateActivity = (token, id, args) => {
     const url = `activities/${id}/update/`;
     const method = 'PATCH';
-    const {
-      title,
-      motivation,
-      learning_goals,
-      materials_used,
-      materials_used_image,
-      facilitation_tips,
-      activity_images,
-      making_steps,
-      inspiring_examples,
-      inspiring_artist,
-      video,
-    } = args;
+    // const {
+    //   title,
+    //   motivation,
+    //   learning_goals,
+    //   materials_used,
+    //   materials_used_image,
+    //   facilitation_tips,
+    //   activity_images,
+    //   making_steps,
+    //   inspiring_examples,
+    //   inspiring_artist,
+    //   video,
+    // } = args;
 
-    const body = JSON.stringify({
-      title: title,
-      motivation: motivation,
-      learning_goals: learning_goals,
-      materials_used: materials_used,
-      materials_used_image: materials_used_image,
-      facilitation_tips: facilitation_tips,
-      images: activity_images,
-      making_steps: making_steps,
-      inspiring_examples: inspiring_examples,
-      inspiring_artist: inspiring_artist,
-      video: video,
-    });
+    const body = JSON.stringify(args);
     return this.request({ url, method, token, body });
     //.then(res => res.json());
   };
@@ -957,8 +1119,12 @@ class API {
     return this.request({ url, method, token });
   };
 
-  getActivities = () => {
-    const url = 'activities/';
+  getActivities = (params) => {
+
+    let queryParams = sanitizeObject(params)
+    const searchParams = new URLSearchParams(queryParams);
+    let url = `activities`;
+    url = `${url}?${searchParams}`;
     return this.request({ url, method: 'GET' });
     // .then(res => res.json());
   };

@@ -48,7 +48,7 @@ services:
   rabbitmq:
     container_name: rabbitmq
     env_file: .env
-    image: rabbitmq:3-management
+    image: bitnami/rabbitmq
     restart: on-failure
     ports:
       - 5672:5672

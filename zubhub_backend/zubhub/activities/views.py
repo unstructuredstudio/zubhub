@@ -9,6 +9,10 @@ from .permissions import IsStaffOrModeratorOrEducator, IsOwner, IsStaffOrModerat
 from django.shortcuts import get_object_or_404
 from .models import *
 from .serializers import *
+from django.db import transaction
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import AnonymousUser
+
 
 
 class ActivityListAPIView(ListAPIView):
@@ -33,6 +37,37 @@ class UserActivitiesAPIView(ListAPIView):
     def get_queryset(self):
         return self.request.user.activities_created.all()
 
+class ActivityDetailsAPIView(RetrieveAPIView):
+    """
+    Fetch Activity details.
+
+    Rquires activity id.
+    Returns activity details.
+    """
+
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(queryset, pk=pk)
+        
+        if obj:
+            with transaction.atomic():
+                if isinstance(self.request.user, AnonymousUser):
+                    obj.views_count += 1
+                    obj.save()
+                else:
+                    if not self.request.user in obj.views.all():
+                        obj.views.add(self.request.user)
+                        obj.views_count += 1
+                        obj.save()
+            return obj
+    
+        else:
+            raise Exception()
 
 class PublishedActivitiesAPIView(ListAPIView):
     """
@@ -44,7 +79,14 @@ class PublishedActivitiesAPIView(ListAPIView):
     permission_classes = [AllowAny]
     
     def get_queryset(self):
-        return Activity.objects.filter(publish= True)
+        limit = self.request.query_params.get('limit', 10000)
+
+        try:
+            limit = int(limit)
+        except ValueError:
+            limit = 10
+
+        return Activity.objects.filter(publish= True)[:limit]
     
 class UnPublishedActivitiesAPIView(ListAPIView):
     """

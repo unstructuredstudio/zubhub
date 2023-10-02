@@ -94,8 +94,8 @@ class CreatorTagAdmin(admin.ModelAdmin):
 
 
 class CreatorGroupAdmin(admin.ModelAdmin):
-    list_display = ["creator", group_projects, group_members, 'created_on']
-    search_fields = ['creator']
+    list_display = ('groupname', 'description', 'created_on')
+    search_fields = ['groupname']
     list_filter = ["created_on"]
 
     def get_readonly_fields(self, request, obj=None):

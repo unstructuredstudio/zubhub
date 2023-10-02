@@ -24,6 +24,7 @@ export const setAuthUser = auth_user => {
  *
  * @todo - describe function's signature
  */
+
 export const login = args => {
   return dispatch => {
     return API.login(args.values)
@@ -36,7 +37,7 @@ export const login = args => {
           payload: { token: res.key },
         });
       })
-      .then(() => args.history.push('/profile'));
+      .then(() => args.history.push('/'));
   };
 };
 

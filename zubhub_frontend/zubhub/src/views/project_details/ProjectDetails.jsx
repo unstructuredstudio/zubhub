@@ -1,65 +1,62 @@
-import React from 'react';
-import { useMediaQuery } from '@material-ui/core';
-import { Link, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { IconButton, useMediaQuery } from '@material-ui/core';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-
+import React, { useEffect, useState } from 'react';
+import { FiShare } from 'react-icons/fi';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
+import { connect } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
+import Confetti from 'react-confetti';
 
+import {
+  Avatar,
+  Box,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import {
-  Avatar,
-  Box,
-  Typography,
-  Grid,
-  Container,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@material-ui/core';
 
-import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
-import * as UserActions from '../../store/actions/userActions';
-import * as ProjectActions from '../../store/actions/projectActions';
+import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
-import Comments from '../../components/comments/Comments';
+import SocialButtons from '../../components/social_share_buttons/socialShareButtons.jsx';
+import * as ProjectActions from '../../store/actions/projectActions';
+import * as UserActions from '../../store/actions/userActions';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
-import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import {
+  deleteProject,
   handleOpenEnlargedImageDialog,
   handleToggleDeleteProjectModal,
-  isVideoFromGdrive,
-  deleteProject,
-  toggleSave,
-  toggleLike,
-  toggleFollow,
   isCloudinaryVideo,
   isGdriveORVimeoORYoutube,
-  handleMobileShare,
+  toggleFollow,
+  toggleLike,
+  toggleSave,
 } from './projectDetailsScripts';
 
-import {
-  nFormatter,
-  parseComments,
-  cloudinaryFactory,
-  getPlayerOptions,
-} from '../../assets/js/utils/scripts';
-import styles, {
-  sliderSettings,
-} from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import { CloseOutlined } from '@material-ui/icons';
+import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
+import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import { cloudinaryFactory, getPlayerOptions, nFormatter, parseComments } from '../../assets/js/utils/scripts';
+import { Comments, Modal, Pill } from '../../components/index.js';
+import Project from '../../components/project/Project';
+import { getUrlQueryObject } from '../../utils.js';
 
+const authenticatedUserProjectsGrid = { xs: 12, sm: 6, md: 6 };
+const unauthenticatedUserProjectsGrid = { xs: 12, sm: 6, md: 3 };
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -70,17 +67,8 @@ const useCommonStyles = makeStyles(commonStyles);
  * @todo - describe function's signature
  */
 const buildMaterialsUsedComponent = (classes, state) => {
-  const arr =
-    state.project.materials_used && state.project.materials_used.split(',');
-  return arr.map((material, index) => (
-    <Typography
-      key={index}
-      component="span"
-      className={classes.materialsUsedStyle}
-    >
-      {material}
-    </Typography>
-  ));
+  const arr = state.project.materials_used && state.project.materials_used.split(',');
+  return arr.map((material, index) => <Pill key={index} text={material} />);
 };
 
 /**
@@ -91,13 +79,15 @@ const buildMaterialsUsedComponent = (classes, state) => {
  */
 const buildTagsComponent = (classes, tags, history) => {
   return tags.map((tag, index) => (
-    <CustomButton
-      key={index}
-      className={classes.tagsStyle}
-      onClick={() => history.push(`/search?q=${tag.name}`)}
-    >
-      {tag.name}
-    </CustomButton>
+    <Pill key={index} text={`#${tag.name}`} />
+    // <CustomButton
+    //   key={index}
+    //   primaryButtonOutlinedStyle
+    //   style={{ borderRadius: 4 }}
+    //   onClick={() => history.push(`/search?q=${tag.name}`)}
+    // >
+    //   #{tag.name}
+    // </CustomButton>
   ));
 };
 
@@ -110,8 +100,10 @@ const buildTagsComponent = (classes, tags, history) => {
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const mediaQuery = useMediaQuery('(max-width: 600px)');
+  const [{ height, width }, setDimensions] = useState({});
+  const [moreProjects, setMoreProjects] = useState([]);
   const { id } = useParams();
+  const [open, setOpen] = useState(false);
 
   const [state, setState] = React.useState({
     project: {},
@@ -129,13 +121,29 @@ function ProjectDetails(props) {
         token: props.auth.token,
         t: props.t,
       }),
-    ).then(obj => {
+    ).then(async obj => {
       if (obj.project) {
-        parseComments(obj.project.comments);
+        let { project } = obj;
+        const userProjects = await props.getUserProjects({
+          limit: 4,
+          username: project.creator.username,
+          project_to_omit: project.id,
+        });
+        let moreProjects = userProjects.results;
+        setMoreProjects(moreProjects);
+        parseComments(project.comments);
       }
       handleSetState(obj);
     });
   }, [id]);
+
+  useEffect(() => {
+    const query = getUrlQueryObject();
+    if (query.success) {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+      toggleDialog();
+    }
+  }, []);
 
   React.useEffect(() => {
     if (state.project.video && isCloudinaryVideo(state.project.video)) {
@@ -152,6 +160,11 @@ function ProjectDetails(props) {
       });
     }
   }, [state.project.video]);
+
+  const toggleDialog = () => {
+    setOpen(!open);
+    props.history.replace(window.location.pathname);
+  };
 
   const handleSetState = obj => {
     if (obj) {
@@ -176,21 +189,21 @@ function ProjectDetails(props) {
     return (
       <>
         <Box className={classes.root}>
-          <Paper className={classes.projectDetailHeaderStyle}>
+          <Box className={classes.projectDetailHeaderStyle}>
             <Container className={classes.headerStyle}>
               <Typography
-                className={classes.titleStyle}
+                align="center"
+                style={{ marginBottom: 40 }}
+                className={common_classes.title1}
                 variant="h3"
                 gutterBottom
               >
                 {project.title}
               </Typography>
-              <Grid container justify="space-around">
+              {/* Over video */}
+              <Grid container>
                 <Grid item className={classes.creatorProfileStyle}>
-                  <Link
-                    className={clsx(classes.textDecorationNone)}
-                    to={`/creators/${project.creator.username}`}
-                  >
+                  <Link className={clsx(classes.textDecorationNone)} to={`/creators/${project.creator.username}`}>
                     <Avatar
                       className={classes.creatorAvatarStyle}
                       src={project.creator.avatar}
@@ -202,15 +215,8 @@ function ProjectDetails(props) {
                   </Link>
                   {project.creator.id === props.auth.id ? (
                     <Grid container justify="flex-end">
-                      <Link
-                        className={classes.textDecorationNone}
-                        to={`/projects/${project.id}/edit`}
-                      >
-                        <CustomButton
-                          className={common_classes.marginLeft1em}
-                          variant="contained"
-                          primaryButtonStyle
-                        >
+                      <Link className={classes.textDecorationNone} to={`/projects/${project.id}/edit?mode=personal`}>
+                        <CustomButton className={common_classes.marginLeft1em} variant="contained" primaryButtonStyle>
                           {t('projectDetails.project.edit')}
                         </CustomButton>
                       </Link>
@@ -218,9 +224,7 @@ function ProjectDetails(props) {
                         className={common_classes.marginLeft1em}
                         variant="contained"
                         dangerButtonStyle
-                        onClick={() =>
-                          handleSetState(handleToggleDeleteProjectModal(state))
-                        }
+                        onClick={() => handleSetState(handleToggleDeleteProjectModal(state))}
                       >
                         {t('projectDetails.project.delete.label')}
                       </CustomButton>
@@ -229,11 +233,7 @@ function ProjectDetails(props) {
                     <CustomButton
                       className={common_classes.marginLeft1em}
                       variant="contained"
-                      onClick={e =>
-                        handleSetState(
-                          toggleFollow(e, props, project.creator.id, state),
-                        )
-                      }
+                      onClick={e => handleSetState(toggleFollow(e, props, project.creator.id, state))}
                       primaryButtonStyle
                     >
                       {project.creator.followers.includes(props.auth.id)
@@ -245,145 +245,81 @@ function ProjectDetails(props) {
               </Grid>
             </Container>
             <Container className={classes.detailStyle}>
-              <Grid container justify="center">
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  className={clsx(classes.positionRelative)}
-                >
+              <Grid container spacing={3} justify="center">
+                <Grid item xs={12} sm={12} md={12} className={clsx(classes.positionRelative)}>
                   <Grid
                     item
                     xs={12}
                     sm={12}
                     md={12}
-                    className={clsx(
-                      classes.videoWrapperStyle,
-                      classes.positionRelative,
-                    )}
+                    className={clsx(classes.videoWrapperStyle, classes.positionRelative)}
                   >
                     {project.video ? (
-                      isCloudinaryVideo(project.video) ? (
-                        <video
-                          id="cloudinary-video-player"
-                          controls
-                          className={clsx(
-                            'cld-video-player',
-                            classes.iframeStyle,
-                          )}
-                        ></video>
-                      ) : isGdriveORVimeoORYoutube(project.video) ? (
-                        <iframe
-                          title={project.title}
-                          className={classes.iframeStyle}
-                          src={project.video}
-                        ></iframe>
-                      ) : (
-                        <video
-                          src={project.video}
-                          className={classes.iframeStyle}
-                          controls
-                        >
-                          {t('projectDetails.errors.noBrowserSupport')}
-                        </video>
-                      )
+                      <>
+                        {isCloudinaryVideo(project.video) ? (
+                          <video
+                            id="cloudinary-video-player"
+                            controls
+                            className={clsx('cld-video-player', classes.iframeStyle)}
+                          ></video>
+                        ) : isGdriveORVimeoORYoutube(project.video) ? (
+                          <iframe title={project.title} className={classes.iframeStyle} src={project.video}></iframe>
+                        ) : (
+                          <video src={project.video} className={classes.iframeStyle} controls>
+                            {t('projectDetails.errors.noBrowserSupport')}
+                          </video>
+                        )}
+                      </>
                     ) : project.images.length > 0 ? (
-                      <img
-                        className={classes.iframeStyle}
-                        src={project.images[0].image_url}
-                        alt={project.title}
-                      />
+                      <img className={classes.iframeStyle} src={project.images[0].image_url} alt={project.title} />
                     ) : null}
                   </Grid>
-                  <div
-                    className={mediaQuery ? classes.actionBoxMobileWrapper : ''}
-                  >
-                    {mediaQuery && (
-                      <CustomButton
-                        className={common_classes.marginLeft1em}
-                        style={{ marginLeft: 0 }}
-                        variant="contained"
-                        primaryButtonStyle
-                        onClick={e => handleMobileShare(project)}
-                      >
-                        Share
-                      </CustomButton>
-                    )}
-                    <Box display="flex" justifyContent="flex-end">
-                      <Box className={classes.actionBoxStyle}>
-                        <CustomButton
-                          className={classes.actionBoxButtonStyle}
-                          size="small"
-                          aria-label={t(
-                            'projectDetails.ariaLabels.likeButton.label',
-                          )}
-                          variant="extended"
-                          onClick={e =>
-                            handleSetState(toggleLike(e, props, project.id))
-                          }
-                        >
-                          <Box className={classes.iconsBoxStyle}>
-                            {project.likes.includes(props.auth.id) ? (
-                              <ClapIcon
-                                arial-label={t(
-                                  'projectDetails.ariaLabels.likeButton.unlilke',
-                                )}
-                              />
-                            ) : (
-                              <ClapBorderIcon
-                                arial-label={t(
-                                  'projectDetails.ariaLabels.likeButton.like',
-                                )}
-                              />
-                            )}
-                          </Box>
-                          <Typography>
-                            {nFormatter(project.likes.length)}
-                          </Typography>
-                        </CustomButton>
-                        <CustomButton
-                          className={classes.actionBoxButtonStyle}
-                          size="small"
-                          aria-label={t(
-                            'projectDetails.ariaLabels.saveButton.label',
-                          )}
-                          onClick={e =>
-                            handleSetState(toggleSave(e, props, project.id))
-                          }
-                        >
-                          <Box className={classes.iconsBoxStyle}>
-                            {project.saved_by.includes(props.auth.id) ? (
-                              <BookmarkIcon
-                                aria-label={t(
-                                  'projectDetails.ariaLabels.saveButton.unsave',
-                                )}
-                              />
-                            ) : (
-                              <BookmarkBorderIcon
-                                aria-label={t(
-                                  'projectDetails.ariaLabels.saveButton.save',
-                                )}
-                              />
-                            )}
-                          </Box>
-                        </CustomButton>
-                        <Typography
-                          color="textSecondary"
-                          variant="caption"
-                          component="span"
-                          className={classes.actionBoxButtonStyle}
-                        >
-                          <Box className={classes.iconsBoxStyle}>
-                            <VisibilityIcon />
-                          </Box>
-                          <Typography>{project.views_count}</Typography>
-                        </Typography>
-                        {!mediaQuery && <SocialButtons />}
-                      </Box>
-                    </Box>
-                  </div>
                 </Grid>
+                <div
+                  style={{
+                    backgroundColor: colors.primary,
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '16px 12px',
+                    borderRadius: 8,
+                  }}
+                >
+                  <IconButton
+                    className={classes.actionBoxButtonStyle}
+                    aria-label={t('projectDetails.ariaLabels.likeButton.label')}
+                    onClick={e => handleSetState(toggleLike(e, props, project.id))}
+                  >
+                    {project.likes.includes(props.auth.id) ? (
+                      <ClapIcon color={colors.white} arial-label={t('projectDetails.ariaLabels.likeButton.unlilke')} />
+                    ) : (
+                      <ClapBorderIcon
+                        color={colors.white}
+                        arial-label={t('projectDetails.ariaLabels.likeButton.like')}
+                      />
+                    )}
+                    <Typography>{nFormatter(project.likes.length)}</Typography>
+                  </IconButton>
+                  <IconButton
+                    className={classes.actionBoxButtonStyle}
+                    aria-label={t('projectDetails.ariaLabels.saveButton.label')}
+                    onClick={e => handleSetState(toggleSave(e, props, project.id))}
+                  >
+                    {project.saved_by.includes(props.auth.id) ? (
+                      <BookmarkIcon aria-label={t('projectDetails.ariaLabels.saveButton.unsave')} />
+                    ) : (
+                      <BookmarkBorderIcon aria-label={t('projectDetails.ariaLabels.saveButton.save')} />
+                    )}
+                  </IconButton>
+
+                  <IconButton className={classes.actionBoxButtonStyle}>
+                    <VisibilityIcon />
+                    <Typography style={{ marginLeft: 4 }}>{project.views_count}</Typography>
+                  </IconButton>
+
+                  <SocialButtons />
+                </div>
                 {project.images && project.images.length > 0 ? (
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>
@@ -395,11 +331,7 @@ function ProjectDetails(props) {
                               className={classes.carouselImageStyle}
                               src={image.image_url}
                               alt={image.public_id}
-                              onClick={e =>
-                                handleSetState(
-                                  handleOpenEnlargedImageDialog(e, state),
-                                )
-                              }
+                              onClick={e => handleSetState(handleOpenEnlargedImageDialog(e, state))}
                             />
                           </div>
                         ))}
@@ -407,11 +339,9 @@ function ProjectDetails(props) {
                     </Box>
                   </Grid>
                 ) : null}
+
                 <Grid item xs={12} sm={12} md={12}>
-                  <Typography
-                    variant="h5"
-                    className={classes.descriptionHeadingStyle}
-                  >
+                  <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.description')}
                   </Typography>
                   <ReactQuill
@@ -421,58 +351,79 @@ function ProjectDetails(props) {
                     value={project.description || ''}
                   />
                 </Grid>
-                {project.tags.length > 0 ? (
-                  <Grid item xs={12} sm={12} md={12}>
-                    <Box className={classes.tagsBoxStyle}>
-                      {buildTagsComponent(classes, project.tags, props.history)}
-                    </Box>
-                  </Grid>
-                ) : null}
+
                 <Grid item xs={12} sm={12} md={12}>
-                  <Typography
-                    variant="h5"
-                    className={classes.descriptionHeadingStyle}
-                  >
+                  <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.materials')}
                   </Typography>
-                  <Typography
-                    className={classes.descriptionBodyStyle}
-                    color="textSecondary"
-                  >
+                  <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
                     {buildMaterialsUsedComponent(classes, state)}
-                  </Typography>
+                  </div>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12}>
-                  <Typography
-                    variant="h5"
-                    className={classes.descriptionHeadingStyle}
-                  >
+                  <Typography variant="h5" className={common_classes.title1}>
                     {t('projectDetails.project.category')}
                   </Typography>
-                  {project.category ? (
-                    <CustomButton
-                      className={classes.categoryStyle}
-                      onClick={() =>
-                        props.history.push(`/search?q=${project.category}`)
-                      }
-                    >
-                      {project.category}
-                    </CustomButton>
-                  ) : (
-                    <Typography className={classes.categoryStyle}>
-                      {t('projectDetails.project.none')}
-                    </Typography>
-                  )}
+                  <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                    {project.category ? (
+                      project.category.map(cat => (
+                        <Pill key={cat} text={cat} />
+                        // <CustomButton
+                        //   key={cat}
+                        //   primaryButtonOutlinedStyle
+                        //   style={{ borderRadius: 4 }}
+                        //   onClick={() => props.history.push(`/search?q=${cat}`)}
+                        // >
+                        //   {cat}
+                        // </CustomButton>
+                      ))
+                    ) : (
+                      <Typography className={classes.categoryStyle}>{t('projectDetails.project.none')}</Typography>
+                    )}
+                  </div>
                 </Grid>
+
+                {project.tags.length > 0 ? (
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography variant="h5" className={common_classes.title1}>
+                      {t('projectDetails.project.hashtags')}
+                    </Typography>
+
+                    <div className={classes.tagsBoxStyle}>
+                      {buildTagsComponent(classes, project.tags, props.history)}
+                    </div>
+                  </Grid>
+                ) : null}
               </Grid>
             </Container>
 
-            <Comments
-              context={{ name: 'project', body: project }}
-              handleSetState={handleSetState}
-              {...props}
-            />
-          </Paper>
+            <div className={classes.box}>
+              <Comments context={{ name: 'project', body: project }} handleSetState={handleSetState} {...props} />
+            </div>
+            <Box style={{ marginBottom: 100 }} className={classes.box}>
+              <Typography align="center" style={{ marginBottom: 50 }} className={common_classes.title1}>
+                More Projects
+              </Typography>
+
+              <Grid container spacing={4} justifyContent="center">
+                {moreProjects.map((project, index) => (
+                  <Grid
+                    key={index}
+                    item
+                    {...(props.auth.token ? authenticatedUserProjectsGrid : unauthenticatedUserProjectsGrid)}
+                    align="center"
+                  >
+                    <Project
+                      project={project}
+                      key={project.id}
+                      // updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                      {...props}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Box>
         </Box>
 
         <Dialog
@@ -492,12 +443,30 @@ function ProjectDetails(props) {
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
-          <img
-            className={classes.enlargedImageStyle}
-            src={enlarged_image_url}
-            alt={`${project.title}`}
-          />
+          <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
         </Dialog>
+
+        <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
+          <div style={{ display: 'flex', justifyContent: 'end' }}>
+            <IconButton onClick={toggleDialog}>
+              <CloseOutlined />
+            </IconButton>
+          </div>
+
+          <DialogTitle>
+            <Typography align="center" className={clsx(common_classes.title2, classes.dialogTitle)}>
+              Congratulations your project has been successfully created!
+            </Typography>
+          </DialogTitle>
+          <DialogContent>
+            <Typography align="center">
+              Share your project with the world. Post it on the following platforms:
+            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
+              <SocialButtons containerStyle={{ gap: 50 }} withColor link facebook whatsapp />
+            </div>
+          </DialogContent>
+        </Modal.WithIcon>
 
         <Dialog
           open={open_delete_project_modal}
@@ -505,9 +474,7 @@ function ProjectDetails(props) {
           aria-labelledby={t('projectDetails.ariaLabels.deleteProject')}
         >
           <DialogTitle id="delete-project">
-            <Typography variant="h4">
-              {t('projectDetails.project.delete.dialog.primary')}
-            </Typography>
+            <Typography variant="h4">{t('projectDetails.project.delete.dialog.primary')}</Typography>
           </DialogTitle>
           {delete_project_dialog_error !== null && (
             <Box component="p" className={classes.errorBox}>
@@ -517,16 +484,12 @@ function ProjectDetails(props) {
             </Box>
           )}
           <DialogContent>
-            <Typography>
-              {t('projectDetails.project.delete.dialog.secondary')}
-            </Typography>
+            <Typography>{t('projectDetails.project.delete.dialog.secondary')}</Typography>
           </DialogContent>
           <DialogActions className={classes.dialogButtonContainer}>
             <CustomButton
               variant="outlined"
-              onClick={() =>
-                handleSetState(handleToggleDeleteProjectModal(state))
-              }
+              onClick={() => handleSetState(handleToggleDeleteProjectModal(state))}
               color="primary"
               secondaryButtonStyle
             >
@@ -541,6 +504,8 @@ function ProjectDetails(props) {
             </CustomButton>
           </DialogActions>
         </Dialog>
+
+        {open ? <Confetti width={width} height={height} /> : null}
       </>
     );
   } else {
@@ -551,6 +516,7 @@ function ProjectDetails(props) {
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
   getProject: PropTypes.func.isRequired,
+  getUserProjects: PropTypes.func.isRequired,
   suggestCreators: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,
   unpublishComment: PropTypes.func.isRequired,
@@ -595,6 +561,9 @@ const mapDispatchToProps = dispatch => {
     },
     addComment: args => {
       return dispatch(ProjectActions.addComment(args));
+    },
+    getUserProjects: args => {
+      return dispatch(ProjectActions.getUserProjects(args));
     },
   };
 };

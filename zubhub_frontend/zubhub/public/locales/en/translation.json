@@ -32,6 +32,19 @@
       "unpublishedActivities": "Unpublished Activities",
       "myActivities": "My Activities"
     },
+    "sidebar":{
+      "logout": "Logout",
+      "expoloreActivities":"Explore Activities",
+      "teams":"Teams",
+      "bookmarks":"Bookmarks",
+      "myProjects":"My Projects",
+      "myDrafts":"My Drafts",
+      "createActivity":"Create Activity",
+      "createProject":"Create Project",
+      "profile":"My Profile",
+      "projects":"All Projects",
+      "settings":"Settings"
+    },
 
     "footer": {
       "privacy": "Privacy",
@@ -242,10 +255,13 @@
   },
 
   "projects": {
-    "shareProject": "Share a Project",
+    "1":"Get inspired by our collection of ideas.",
+    "2":"Tinker with materials and tools around you.",
+    "shareProject": "Share your work!",
     "exploreIdeas": "Explore Ideas",
-    "zubhubAmbassadors": "Be our Ambassador",
+    "zubhubAmbassadors": "Become an Ambassador",
     "newStuff": "New Stuff",
+    "login":"Login to view more",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
@@ -257,6 +273,42 @@
     "errors": {
       "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
       "noProject": "Seems like you have arrived at a new and fresh ZubHub! There are no projects at this moment. Maybe try creating one?"
+    },
+    "child":{
+      "title":"Get Creative With ZubHub",
+      "1":"Connect with a global community  of curious creatives.",
+      "2":"Freedom to express yourself in different creative ways.",
+      "3":"Work as a team with co creators."
+    },
+    "teams":{
+      "title":"ZubHub for Teams",
+      "1":"Set your team up for success with reimagined learning to empower their personal and professional growth.",
+      "2":"With inspiring activities on science, art, technology and more, your whole team will have deep knowledge and expertise at their fingertips.",
+      "button":"Sign Up - It's free!",
+      "button2":"Create Team"
+    },
+    "reviews":{
+      "title": "Creator Reviews",
+      "1":{
+      "review": "“For me, ZubHub has grown incredibly important. I would advise anyone interested in creating projects and sharing to check it out.”",
+      "name": "Faridah Ejibunu",
+      "designation": "ZubHub Ambassador"},
+      "2":{
+        "review": "“The fact that anyone in the world can have an online presence for their work and show it to the world all for free just amazes me.”",
+        "name": "Hemant Kumar Singh",
+        "designation": "ZubHub Ambassador"},
+      "3":{
+        "review": "“ZubHub contributes immensely to people from not so well socio-econimic backgrounds, I would high recommend it.”",
+        "name": "Yaya Mamoudou",
+        "designation": "ZubHub Ambassador"}
+    
+    },
+    "global":{
+      "title":"Join a growing community of thousands of creators!",
+      "body": "Be a part of an active community of educators and creators.",
+      "body2":"Create projects, create activities, share ideas, and connect with the global community.",
+      "button": "Get Started, It's Free!",
+      "button2": "Log In"
     }
   },
 
@@ -386,6 +438,8 @@
       "videoFile": "Video file added",
       "videoURL": "Video URL added"
     },
+    "addedToDraft":"Project added as draft successfully!",
+    "savedStep":"Project has been saved successfully!",
     "createToastSuccess": "Your project was created successfully!",
     "updateToastSuccess": "Your project was updated successfully!",
     "errors": {
@@ -446,6 +500,7 @@
         "follow": "Follow",
         "unfollow": "Unfollow"
       },
+      "hashtags":"Project Hashtags",
       "description": "Description",
       "materials": "Materials Used",
       "category": "Category",
@@ -528,16 +583,17 @@
 
   "profile": {
     "edit": "Edit",
+    "editTeam": "Edit Team Info",
     "delete": {
       "label": "Delete Account",
       "dialog": {
         "primary": "Delete Account",
-        "secondary": "Are you sure you want to delete your account? You can't undo this action!! If you still want procceed, type your username into the field below and click PROCEED",
+        "secondary": "Are you sure you want to delete your account? You can't undo this action!! If you still want proceed, type your username into the field below and click PROCEED",
         "inputs": {
           "username": "Your Username"
         },
         "cancel": "Cancel",
-        "procceed": "Procceed"
+        "proceed": "Proceed"
       },
       "ariaLabels": {
         "deleteAccount": "delete account"
@@ -553,7 +609,7 @@
     "projectsCount": "Projects",
     "followersCount": "Followers",
     "followingCount": "Following",
-    "membersCount": "members",
+    "membersCount": "Members",
     "about": {
       "label1": "About Me",
       "label2": "Description",
@@ -561,6 +617,8 @@
       "placeholder2": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
     "activityLog": "Activity Log",
+    "team": "Team",
+    "createteam": "Create Team",
     "badge": {
       "badges": "Badges",
       "addBadges": "Seems like you have not created any project yet, add projects to your profile to get badges 😉!"
@@ -652,7 +710,8 @@
       "prevNxtButtons": "previous and next page buttons"
     },
     "errors": {
-      "noUserProjects": "User has not created any projects yet. Check back later!"
+      "noUserProjects": "User has not created any projects yet. Check back later!",
+      "noTeams": "There are no teams created. Check back later!"
     }
   },
 
@@ -775,6 +834,41 @@
     "answer": "Answer",
     "errors": {
       "page_empty": "This page is empty"
+    }
+  },
+
+  "createTeam": {
+    "welcomeMsg": {
+      "primary": "Create a Team",
+      "edit": "Update Team"
+    },
+    "inputs": {
+      "title": {
+        "label": "Team Name",
+        "errors": {
+          "max": "your name shouldn't be more than 50 characters",
+          "required": "This field is required"
+        }
+      },
+      "bio": {
+        "label": "About Team"
+      },
+      "next": "Next",
+      "previous": "Previous",
+      "Submit": "Submit",
+      "Edit": "Edit"
+    },
+    "2ndpage": {
+      "title": "Invite Team Members",
+      "members": "Members",
+      "admins" : "Admin",
+      "member-placeholder": "Members can add team to a project, view team members and leave at their convenience",
+      "admin-placeholder": "Admins can assign admin status to other team members, add and remove team members, add team to a project, delete team profile",
+      "member-input-placeholder": "Enter the list of members",
+      "admin-input-placeholder": "Enter the list of admins"
+    },
+    "3rdpage":{
+      "title":"Select Project you worked on with a Team"
     }
   },
 

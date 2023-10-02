@@ -1,18 +1,28 @@
+import { colors } from '../../../colors';
+
 const styles = theme => ({
   popperContainerStyle: {
     top: '48px !important',
   },
   popperStyle: {
     backgroundColor: 'white',
+    minWidth: 200,
     zIndex: 20,
     padding: '20px 15px',
     borderRadius: '20px',
-    boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
+    [theme.breakpoints.down('400')]: {
+      marginTop: 12,
+    },
+    [theme.breakpoints.up('400')]: {
+      marginTop: -12,
+    },
+    boxShadow: '0px 0px 0px 0px rgb(0 0 0 / 25%)',
+    // backgroundColor:'purple'
   },
   fullscreenPopperStyle: {
     width: '100vw',
     height: '100vh',
-    /* height: 'auto', */
+    //  height: 'auto',
     borderRadius: '0px',
   },
   panelHeaderStyle: {
@@ -22,6 +32,31 @@ const styles = theme => ({
     gap: '10px',
     color: '#00B8C4',
     padding: '2.5px 0px',
+  },
+  logedOutPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    // maxWidth:600,
+    color: colors.black,
+    textAlign: 'center',
+    alignItems: 'center',
+    marginRight:'10%',
+    [theme.breakpoints.down('600')]: {
+      maxWidth: 250,
+      borderRadius: 10,
+      boxShadow: ' 0 2px 4px rgba(0, 0, 0, 0.2)',
+      zIndex: 1,
+      paddingBottom: 10,
+      paddingLeft: 10,
+      paddingRight: 10,
+      marginTop: 10,
+      marginLeft: '10%',
+    },
+    [theme.breakpoints.up('400')]: {
+      marginLeft: '20%',
+    },
+
+    //  backgroundColor:'red'
   },
   panelHeaderButtons: {
     display: 'flex',

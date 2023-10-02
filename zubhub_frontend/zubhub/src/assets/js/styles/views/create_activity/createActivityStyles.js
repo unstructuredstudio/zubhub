@@ -1,11 +1,10 @@
 export const styles = theme => ({
   createActivityContainer: {
-    backgroundColor: '#FFCD06',
     padding: '5vh 10%',
   },
   createActivityContainerTitle: {
     color: 'white',
-    fontWeight: 900,
+    fontWeight: 'bold',
   },
   CreateActivityFormContainer: {
     backgroundColor: 'white',

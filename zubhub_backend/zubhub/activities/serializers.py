@@ -43,13 +43,13 @@ class ActivityImageSerializer(serializers.ModelSerializer):
 
 
 class ActivityMakingStepSerializer(serializers.ModelSerializer):
-    image = ImageSerializer(required=False, allow_null=True)
+    image = ImageSerializer(required=False, allow_null=True, many=True )
     step_order = serializers.IntegerField()
 
     class Meta:
         model = ActivityMakingStep
         fields = [
-            "image", "description", "step_order"
+            "image", "description", "step_order", "title"
         ]
 
 
@@ -70,7 +70,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     images = ActivityImageSerializer(
         many=True, required=False, source="activity_images")
     category = serializers.SlugRelatedField(
-        slug_field="name", queryset=Category.objects.all(), required=False)
+        slug_field="name", queryset=Category.objects.all(), many=True, required=False)    
     created_on = serializers.DateTimeField(read_only=True)
     views_count = serializers.IntegerField(read_only=True)
     saved_count = serializers.IntegerField(read_only=True)
@@ -88,6 +88,8 @@ class ActivitySerializer(serializers.ModelSerializer):
             "inspired_projects",
             "creators",
             "title",
+            "introduction",
+            "class_grade",
             "motivation",
             "images",
             "video",
@@ -119,8 +121,13 @@ class ActivitySerializer(serializers.ModelSerializer):
         making_steps = validated_data.pop('making_steps', None)
 
         inspiring_examples = validated_data.pop('inspiring_examples', None)
+        category = validated_data.pop('category',None)
 
         activity = Activity.objects.create(**validated_data)
+
+        if(category):
+            activity.category.set(category)
+
         if making_steps:
             create_making_steps(activity, making_steps)
         if inspiring_examples:
@@ -177,10 +184,20 @@ class ActivitySerializer(serializers.ModelSerializer):
             update_inspiring_examples(
                 activity, validated_data.pop('inspiring_examples'))
         activity.title = validated_data.get('title')
+
+        if validated_data.get('introduction'):
+            activity.introduction = validated_data.get('introduction')
+
         activity.motivation = validated_data.get('motivation')
         activity.facilitation_tips = validated_data.get('facilitation_tips')
         activity.learning_goals = validated_data.get('learning_goals')
-        activity.materials_used = validated_data.get('materials_used')
+
+        if validated_data.get('publish'):
+            activity.publish =  validated_data.get('publish')
+
+        if validated_data.get('materials_used'):
+            activity.materials_used = validated_data.get('materials_used')
+            
         activity.video = validated_data.get('video')
         activity.save()
         return activity

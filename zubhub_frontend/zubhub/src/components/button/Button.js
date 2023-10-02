@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import classNames from 'classnames';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
 import styles from '../../assets/js/styles/components/button/buttonStyles';
+import clsx from 'clsx'
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles(styles);
 
@@ -23,6 +22,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     children,
     primaryButtonStyle,
     primaryButtonStyle2,
+    primaryButtonOutlinedStyle,
     primaryButtonStyle3,
     secondaryButtonStyle,
     dangerButtonStyle,
@@ -34,6 +34,7 @@ const CustomButton = React.forwardRef((props, ref) => {
     className,
     muiClasses,
     disabled,
+    loading,
     ...rest
   } = props;
   const btnClasses = classNames({
@@ -47,18 +48,20 @@ const CustomButton = React.forwardRef((props, ref) => {
     [classes.mediaUploadButtonStyle]: mediaUploadButtonStyle,
     [classes.customButtonStyle]: customButtonStyle,
     [classes.fullWidth]: fullWidth,
+    [classes.primaryButtonOutlinedStyle]: primaryButtonOutlinedStyle,
     [className]: className,
   });
 
   return (
     <Button
       ref={ref}
-      {...rest}
       classes={muiClasses}
-      className={btnClasses}
-      disabled={disabled ? disabled : false}
+      className={clsx(btnClasses, classes.default)}
+      disabled={disabled || loading}
+      {...rest}
     >
       {children}
+      {loading && <CircularProgress size={20} color="inherit" />}
     </Button>
   );
 });
