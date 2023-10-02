@@ -142,7 +142,7 @@ function Profile(props) {
   };
 
   const handleSetTeams = newTeams => {
-    setTeams(teams => [...teams, ...newTeams]);
+    newTeams && setTeams(teams => [...teams, ...newTeams]);
   };
 
   const {
