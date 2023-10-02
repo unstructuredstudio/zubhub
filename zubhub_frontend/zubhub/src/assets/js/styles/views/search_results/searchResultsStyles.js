@@ -5,9 +5,9 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // background: 'rgba(255,204,0,1)',
+    // background: 'var(--primary-color2)',
     // background:
-    //   'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     '& .MuiGrid-root.MuiGrid-container': {
       width: '100%',
     },
@@ -79,7 +79,7 @@ const styles = theme => ({
   },
 
   selectedTabStyle: {
-    borderBottom: '4px solid #DC3545 !important',
+    borderBottom: '4px solid var(--primary-color1) !important',
   },
   tabStyle: {
     width: '50%',

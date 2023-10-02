@@ -30,7 +30,7 @@ const styles = theme => ({
     flexFlow: 'row wrap',
     alignItems: 'center',
     gap: '10px',
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     padding: '2.5px 0px',
   },
   logedOutPanel: {
@@ -66,7 +66,7 @@ const styles = theme => ({
     gap: '10px',
   },
   circularProgressStyle: {
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     alignSelf: 'center',
     margin: '20px',
   },
@@ -90,7 +90,7 @@ const styles = theme => ({
   },
   panelSubheadingTextStyle: {
     fontWeight: '600',
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     padding: '5px 0px',
     position: 'sticky',
     top: '0px',

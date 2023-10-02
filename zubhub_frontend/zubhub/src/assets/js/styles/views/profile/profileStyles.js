@@ -9,9 +9,9 @@ const styles = theme => ({
   },
   profileHeaderStyle: {
     paddingTop: '1.5em',
-    background: 'rgba(255,204,0,1)',
+    background: 'var(--primary-color2)',
     background:
-      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
@@ -131,10 +131,10 @@ const styles = theme => ({
     borderRadius: '5px',
     padding: '1em 1em',
     margin: '0.5em',
-    backgroundColor: '#E0F6F8',
+    backgroundColor: 'var(--secondary-color5)',
     fontWeight: 'bold',
     fontSize: '0.85rem',
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     lineHeight: '1',
     width: '5.5rem',
     [theme.breakpoints.down('740')]: {
@@ -174,7 +174,7 @@ const styles = theme => ({
   badgeTitleStyle: {
     fontWeight: 'bold',
     fontSize: '1.5rem',
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
   },
   aboutMeBadgeBox: {
     display: 'flex',
@@ -194,7 +194,7 @@ const styles = theme => ({
     borderRadius: '8px',
   },
   badgeBox: {
-    backgroundColor: '#FFF7D4',
+    backgroundColor: 'var(--secondary-color3)',
     // margin: '1em 1em 0 0',
     padding: '1em',
     width: '40%',
@@ -211,9 +211,9 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   badgeStyle: {
-    backgroundColor: '#FFD11A',
+    backgroundColor: 'var(--primary-color2)',
     borderRadius: '50px',
-    color: '#9F861E',
+    color: 'var(--secondary-color4)',
     fontWeight: 600,
     padding: '0 0.5em',
     margin: '0.3em',
@@ -227,7 +227,7 @@ const styles = theme => ({
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
-      color: '#00B8C4',
+      color: 'var(--primary-color3)',
     },
   },
 
@@ -237,24 +237,24 @@ const styles = theme => ({
   customInputStyle: {
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '2px solid #00B8C4',
-      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+      border: '2px solid var(--primary-color3)',
+      boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '2px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+        border: '2px solid var(--primary-color3)',
+        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '2px solid #00B8C4',
-        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
+        border: '2px solid var(--primary-color3)',
+        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
       },
     },
   },
   secondaryLink: {
-    color: '#00B8C4',
+    color: 'var(--primary-color3)',
     '&:hover': {
-      color: '#03848C',
+      color: 'var(--secondary-color6)',
     },
   },
   center: {
@@ -283,11 +283,11 @@ const styles = theme => ({
     padding: '1em',
     borderRadius: 6,
     borderWidth: '1px',
-    borderColor: '#a94442',
-    backgroundColor: '#ffcdd2',
+    borderColor: 'var(--primary-color2)',
+    backgroundColor: 'var(--secondary-color1)',
   },
   error: {
-    color: '#a94442',
+    color: 'var(--primary-color2)',
   },
 });
 
