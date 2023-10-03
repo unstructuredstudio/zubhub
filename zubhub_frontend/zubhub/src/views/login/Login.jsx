@@ -38,7 +38,7 @@ import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import styles from '../../assets/js/styles/views/login/loginStyles';
 import { calculateLabelWidth } from '../../assets/js/utils/scripts';
-
+import { useForceUpdate } from '../../hooks/useForceUpdate.hook';
 const useStyles = makeStyles(styles);
 
 /**
@@ -48,6 +48,7 @@ const useStyles = makeStyles(styles);
  * @todo - describe function's signature
  */
 function Login(props) {
+  useForceUpdate();
   const classes = useStyles();
 
   const [state, setState] = React.useState({
