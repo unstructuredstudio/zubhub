@@ -7,29 +7,12 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    // background: 'var(--primary-color2)',
-    // background:
-    //   '-moz-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   '-webkit-gradient(left top, left bottom, color-stop(0%, var(--primary-color2)), color-stop(25%, var(--primary-color2)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
-    // background:
-    //   '-webkit-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   '-o-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   '-ms-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // filter:
-    //   "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
-    // '& .MuiGrid-root.MuiGrid-container': {
-    //   width: '100%',
     [theme.breakpoints.down('sm')]: {
       padding: '0 24px'
     },
   },
   heroSectionStyle: {
-    backgroundColor: 'var(--primary-color1)',
+    backgroundColor: '#DC3545',
     boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
     WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
     MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',

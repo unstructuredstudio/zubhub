@@ -22,19 +22,19 @@ const styles = theme => ({
   },
 
   tabStyle: {
-      '&.Mui-selected': {
-        color: 'var(--primary-color3)',
-        fontWeight: 'bold',
-        backgroundColor: '#ffffff',
-      },
+    '&.Mui-selected': {
+      color: '#00B8C4',
+      fontWeight: 'bold',
+      backgroundColor: '#ffffff',
+    },
 
-      backgroundColor: 'var(--text-color3)',
-      width: '50%',
-      maxWidth: '50%',
+    backgroundColor: '#EDEDED',
+    width: '50%',
+    maxWidth: '50%',
   },
 
   indicator: {
-    backgroundColor: "var(--primary-color3)",
+    backgroundColor: "#00B8C4",
     height: '5px',
   }
 });

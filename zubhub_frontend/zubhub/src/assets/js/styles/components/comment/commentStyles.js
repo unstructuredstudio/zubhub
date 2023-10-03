@@ -66,11 +66,11 @@ const styles = theme => ({
     },
   },
   commentAvatarStyle: {
-    backgroundColor: 'var(--text-color3)',
+    backgroundColor: '#c4c4c4',
     marginRight: '1em',
   },
   subCommentAvatarStyle: {
-    backgroundColor: 'var(--text-color3)',
+    backgroundColor: '#c4c4c4',
     marginRight: '0.5em',
     height: '35px',
     width: '35px',
@@ -81,7 +81,7 @@ const styles = theme => ({
     // display: "flex",
   },
   commentThreadLineStyle: {
-    backgroundColor: 'var(--primary-color3)',
+    backgroundColor: '#00B8C4',
     width: '3px',
     height: '100%',
     marginRight: '2em',
@@ -91,20 +91,20 @@ const styles = theme => ({
   },
   showRepliesButtonStyle: {
     marginTop: '0.5em',
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     borderRadius: '50px',
     '&:hover': {
-      color: 'var(--secondary-color6)',
+      color: '#03848C',
     },
   },
 
   subShowRepliesButtonStyle: {
     marginTop: '0.3em',
     marginLeft: '1.5em',
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     borderRadius: '50px',
     '&:hover': {
-      color: 'var(--secondary-color6)',
+      color: '#03848C',
     },
   },
   commentReplyStyle: {

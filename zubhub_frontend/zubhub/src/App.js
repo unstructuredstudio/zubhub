@@ -1,12 +1,10 @@
-import React, { useContext }  from 'react';
+import React from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import CreateActivity from './views/create_activity/create_activity';
-import { useEffect, useState } from "react";
+import CreateActivity from './views/create_activity/CreateActivity';
+
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
-import ZubhubAPI from '../src/api/api';
-import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
 
 const SearchResults = React.lazy(() =>
@@ -99,7 +97,6 @@ const About = React.lazy(() => import('./views/about/About'));
 const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 const NotFound = React.lazy(() => import('./views/not_found/NotFound'));
-const API = new ZubhubAPI();
 const Settings = React.lazy(() => import('./views/settings/Settings'));
 
 
@@ -112,28 +109,8 @@ const LazyImport = props => {
   );
 };
 
-const ThemeContext = React.createContext();
-
 function App(props) {
-
-  const theme = useContext(ThemeContext);
-
-  useEffect(() => {
-    handleThemeChange();
-  }, []);
-
-  const handleThemeChange = async () => {
-    try {
-      const data = await API.theme();
-
-      updateTheme(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <ThemeContext.Provider value={theme}>
     <Router>
       <ScrollToTop />
       <Switch>
@@ -722,7 +699,6 @@ function App(props) {
         />
       </Switch>
     </Router>
-    </ThemeContext.Provider>
   );
 }
 

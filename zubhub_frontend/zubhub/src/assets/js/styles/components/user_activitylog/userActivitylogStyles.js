@@ -7,7 +7,7 @@ const styles = themes => ({
     message: {
         fontSize: '16px',
         font: 'Raleway',
-        color: 'var(--text-color1)',
+        color: '#000000',
         marginBottom: '0px',
         marginLeft: '16px',
         textDecoration: 'none',
@@ -17,7 +17,7 @@ const styles = themes => ({
     time: {
         marginTop: '0px',
         fontSize: '14px',
-        color: 'var(--primary-color3)',
+        color: '#00B8C4',
         marginLeft: '16px',
     },
       text: {
@@ -31,7 +31,7 @@ const styles = themes => ({
         paddingLeft: '1.5%',
         paddingRight: '20px',
         '&:hover': {
-            backgroundColor: 'var(--secondary-color3)',
+            backgroundColor: '#FFF7D4',
             fontColor: '#FFFFFF',
             borderRadius: '17px',
         },

@@ -1,9 +1,7 @@
 from math import floor
 import uuid
-from django.shortcuts import get_object_or_404
-from django.utils.html import format_html
-from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, ChallengeSerializer, PrivacySerializer, AmbassadorsSerializer, ThemeSerializer
-from .models import Hero, FAQ, Privacy, Help, Challenge, Ambassadors, AdminSettings, Theme
+from .serializers import HeroSerializer, FAQListSerializer, HelpSerializer, ChallengeSerializer, PrivacySerializer, AmbassadorsSerializer
+from .models import Hero, FAQ, Privacy, Help, Challenge, Ambassadors, AdminSettings
 from .utils import delete_file_from_media_server, upload_file_to_media_server, get_sig
 from projects.permissions import PostUserRateThrottle, GetUserRateThrottle, SustainedRateThrottle
 from rest_framework.permissions import IsAuthenticated
@@ -344,16 +342,3 @@ def MediaSchemaAPIView(request):
     from .utils import get_media_schema
     res = get_media_schema()
     return Response(res.json())
-
-class ThemeAPIView(RetrieveAPIView):
-    """
-    Get "Theme Zubhub".
-    """
-
-    queryset = Theme.objects.all()
-    serializer_class = ThemeSerializer
-    permission_classes = [AllowAny]
-    throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
-    
-    def get_object(self):
-        return get_object_or_404(Theme, status=1)

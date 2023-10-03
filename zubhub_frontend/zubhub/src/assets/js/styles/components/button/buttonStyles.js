@@ -2,11 +2,12 @@ import { colors } from "../../../colors";
 
 const styles = theme => ({
   primaryButtonStyle: {
-    backgroundColor: 'var(--primary-color3)',
+    backgroundColor: '#00B8C4',
+
     borderRadius: 30,
     color: 'white',
     '&:hover': {
-      backgroundColor: 'var(--secondary-color6)',
+      backgroundColor: '#03848C',
     },
   },
   primaryButtonOutlinedStyle: {
@@ -15,31 +16,31 @@ const styles = theme => ({
     borderRadius: 30,
     color: colors.primary,
     '&:hover': {
-      backgroundColor: 'var(--primary-color3)',
+      backgroundColor: '#00B8C4',
       color: colors.white
     },
   },
   primaryButtonStyle2: {
-    backgroundColor: 'var(--primary-color2)',
+    backgroundColor: '#FFD73D',
     '&:hover': {
-      backgroundColor: 'var(--primary-color2)',
+      backgroundColor: '#EFBF06',
     },
   },
   primaryButtonStyle3: {
-    backgroundColor: 'var(--primary-color1)',
-    border: '2px solid var(--primary-color2)',
+    backgroundColor: '#DC3545',
+    border: '2px solid #FFCE0C',
     borderRadius: 30,
     color: 'white',
     '&:hover': {
-      backgroundColor: 'var(--secondary-color1)',
+      backgroundColor: '#B41423',
     },
   },
   secondaryButtonStyle: {
     borderRadius: 30,
     backgroundColor: 'white',
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     '&:hover': {
-      color: 'var(--secondary-color6)',
+      color: '#03848C',
       backgroundColor: 'rgba(255,255,255,0.8)',
     },
   },
@@ -49,25 +50,25 @@ const styles = theme => ({
     color: 'white',
     '&:hover': {
       color: 'white',
-      backgroundColor: 'var(--secondary-color2)',
+      backgroundColor: '#9A0036',
     },
   },
   darkDangerButtonStyle: {
     borderRadius: 30,
-    backgroundColor: 'var(--secondary-color2)',
+    backgroundColor: '#9A0036',
     color: 'white',
     '&:hover': {
       color: 'white',
-      backgroundColor: 'var(--secondary-color2)',
+      backgroundColor: '#5E0423',
     },
   },
   customWarningButtonStyle: {
     borderRadius: 30,
-    backgroundColor: 'var(--primary-color2)',
+    backgroundColor: '#FECB00',
     color: 'white',
     '&:hover': {
       color: 'white',
-      backgroundColor: 'var(--secondary-color4)',
+      backgroundColor: '#C49d00',
     },
   },
   mediaUploadButtonStyle: {
