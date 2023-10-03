@@ -17,24 +17,9 @@ const styles = theme => ({
   },
   projectDetailHeaderStyle: {
     paddingTop: '1.5em',
+
     background: 'transparent',
-    // boxShadow:
-    //   '0px 2px 1px -1px rgba(0,0,0,0), 0px 1px 1px 0px rgba(0,0,0,0), 0px 1px 3px 0px rgba(0,0,0,0)',
-    // background: 'var(--primary-color2)',
-    // background:
-    //   '-moz-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   '-webkit-gradient(left top, left bottom, color-stop(0%, var(--primary-color2)), color-stop(25%, var(--primary-color2)), color-stop(61%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)))',
-    // background:
-    //   '-webkit-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   '-o-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   '-ms-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // background:
-    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-    // filter:
-    //   "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
+
     [theme.breakpoints.down('511')]: {
       // paddingTop: '4em',
     },
@@ -128,9 +113,9 @@ const styles = theme => ({
     zIndex: 1,
   },
   actionBoxStyle: {
-    backgroundColor: 'var(--primary-color3)',
+    backgroundColor: '#00B8C4',
     '&:hover': {
-      backgroundColor: 'var(--secondary-color6)',
+      backgroundColor: '#03848C',
     },
     borderRadius: '15px',
     position: 'absolute',
@@ -217,9 +202,9 @@ const styles = theme => ({
     display: 'inline-block',
     fontSize: '1.5rem',
     padding: '0.2em 0.5em',
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     borderRadius: '15px',
-    border: '1px solid var(--primary-color3)',
+    border: '1px solid #00B8C4',
     marginRight: '0.5em',
     marginBottom: '0.5em',
   },
@@ -229,7 +214,7 @@ const styles = theme => ({
     gap: 20
   },
   tagsStyle: {
-    backgroundColor: 'var(--text-color3)',
+    backgroundColor: '#E4E4E4',
     textTransform: 'lowercase',
     color: 'black',
     border: 'none',
@@ -255,17 +240,17 @@ const styles = theme => ({
     marginTop: '2.5em',
     marginBottom: '2.5em',
     borderRadius: '15px',
-    backgroundColor: 'var(--text-color3)',
+    backgroundColor: '#E4E4E4',
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
-      color: 'var(--primary-color3)',
+      color: '#00B8C4',
     },
   },
   secondaryLink: {
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     '&:hover': {
-      color: 'var(--secondary-color6)',
+      color: '#03848C',
     },
   },
 
@@ -293,11 +278,11 @@ const styles = theme => ({
     padding: '1em',
     borderRadius: 6,
     borderWidth: '1px',
-    borderColor: 'var(--primary-color2)',
-    backgroundColor: 'var(--secondary-color1)',
+    borderColor: '#a94442',
+    backgroundColor: '#ffcdd2',
   },
   error: {
-    color: 'var(--primary-color2)',
+    color: '#a94442',
   },
   dialogButtonContainer: {
     padding: '16px 24px',
@@ -359,13 +344,13 @@ export function NextArrow(props) {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '0 15px 15px 0',
-        background: 'var(--text-color2)',
+        background: '#767474',
         zIndex: '10',
         boxShadow:
           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: 'var(--primary-color3)',
+        backgroundColor: '#00B8C4',
         '&:hover': {
-          backgroundColor: 'var(--secondary-color6)',
+          backgroundColor: '#03848C',
         },
       }}
       onClick={onClick}
@@ -386,13 +371,13 @@ export function PrevArrow(props) {
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '15px 0 0 15px',
-        background: 'var(--text-color2)',
+        background: '#767474',
         zIndex: '10',
         boxShadow:
           '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: 'var(--primary-color3)',
+        backgroundColor: '#00B8C4',
         '&:hover': {
-          backgroundColor: 'var(--secondary-color6)',
+          backgroundColor: '#03848C',
         },
       }}
       onClick={onClick}

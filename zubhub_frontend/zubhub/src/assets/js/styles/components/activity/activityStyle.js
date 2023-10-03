@@ -44,10 +44,10 @@ export const style = theme => ({
   },
   activityTagPill: {
     backgroundColor: 'white',
-    color: 'var(--text-color2)',
-    border: '1px solid var(--text-color2)',
+    color: '#747070',
+    border: '1px solid #747070',
     '&:hover': {
-      backgroundColor: 'var(--text-color2)',
+      backgroundColor: '#747070',
       color: 'white',
       border: '1px solid white',
     },
@@ -55,7 +55,7 @@ export const style = theme => ({
   activityTagsShowMore: {
     '&:hover': {
       backgroundColor: 'white',
-      color: 'var(--text-color2)',
+      color: '#747070',
       border: '1px solid white',
     },
   },
@@ -82,7 +82,7 @@ export const style = theme => ({
   },
   projectsCount: {
     color: 'white',
-    backgroundColor: 'var(--secondary-color6)',
+    backgroundColor: '#00949E',
     borderRadius: '15px',
     padding: '5px 10px',
   },
@@ -94,7 +94,7 @@ export const style = theme => ({
   activityTitle: {
     fontSize: '1.1rem',
     fontWeight: '900',
-    color: 'var(--text-color1)',
+    color: '#000000',
     // width: '80%',
     textAlign: '-webkit-auto',
   },

@@ -7,7 +7,7 @@ from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from .utils import MediaStorage, get_upload_path, clean_summernote_html
 from projects.models import Project 
-from django.utils.html import strip_tags
+
 
 class AdminSettings(models.Model):
     PUBLIC = 1
@@ -151,31 +151,3 @@ class Ambassadors(models.Model):
     def save(self, *args, **kwargs):
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
-
-class Theme(models.Model):
-    Theme_Name = models.CharField(max_length=20)
-    Primary_Color1 = models.CharField(max_length=16, help_text="Enter hexcode to replace color red", default="#DC3545")
-    Primary_Color2 = models.CharField(max_length=16, help_text="Enter hexcode to replace color yellow", default="#FDCB00")
-    Primary_Color3 = models.CharField(max_length=16, help_text="Enter hexcode to replace color cyan", default="#00B8C4")
-    Secondary_Color1 = models.CharField(max_length=16, help_text="Enter hexcode to replace color light red", default="#FFCDD2")
-    Secondary_Color2 = models.CharField(max_length=16, help_text="Enter hexcode to replace color dark red", default="#A94442")
-    Secondary_Color3 = models.CharField(max_length=16, help_text="Enter hexcode to replace color light yellow", default="#FFF7D4")
-    Secondary_Color4 = models.CharField(max_length=16, help_text="Enter hexcode to replace color dark yellow", default="#9F861E")
-    Secondary_Color5 = models.CharField(max_length=16, help_text="Enter hexcode to replace color light cyan", default="#E0F6F4")
-    Secondary_Color6 = models.CharField(max_length=16, help_text="Enter hexcode to replace color dark cyan", default="#03848C")
-    Text_Color1 = models.CharField(max_length=16, help_text="Enter hexcode to replace color black", default="#212121")
-    Text_Color2 = models.CharField(max_length=16, help_text="Enter hexcode to replace color dark gray", default="#757474")
-    Text_Color3 = models.CharField(max_length=16, help_text="Enter hexcode to replace color light gray", default="#E4E4E4")
-    status = models.PositiveSmallIntegerField(choices=((0, 'Inactive'), (1, 'Active')), default=0)
-
-    class Meta:
-        verbose_name = "Theme"
-        verbose_name_plural = "Themes"
-
-    def save(self, *args, **kwargs):
-        if self.status == 1:
-            Theme.objects.exclude(pk=self.pk).update(status=0)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.Theme_Name

@@ -26,10 +26,10 @@ const styles = theme => ({
     margin: '0px',
     justifyContent: 'space-evenly',
     '&:hover': {
-      backgroundColor: 'var(--primary-color3)',
+      backgroundColor: '#52B5C2',
       fontColor: '#FFFFFF',
       '& $viewDot': {
-        backgroundColor: 'var(--secondary-color3)',
+        backgroundColor: '#F9D967',
       },
       '& $message': {
         color: '#FFFFFF',
@@ -43,7 +43,7 @@ const styles = theme => ({
     width: '56px !important',
     height: '56px !important',
     borderRadius: '50%',
-    border: '2px solid var(--text-color3)',
+    border: '2px solid #E4E4E4',
     backgroundColor: 'white',
     alignSelf: 'center',
   },
@@ -56,14 +56,14 @@ const styles = theme => ({
   firstImage: {
     width: '46px !important',
     height: '46px !important',
-    border: '2px solid var(--text-color3)',
+    border: '2px solid #E4E4E4',
     backgroundColor: 'white',
     alignSelf: 'flex-end',
   },
   secondImage: {
     width: '48px !important',
     height: '48px !important',
-    border: '2px solid var(--text-color3)',
+    border: '2px solid #E4E4E4',
     backgroundColor: 'white',
     alignSelf: 'flex-start',
     marginLeft: '-30px',
@@ -77,7 +77,7 @@ const styles = theme => ({
   message: {
     fontSize: '16px',
     font: 'Raleway',
-    color: 'var(--text-color1)',
+    color: '#000000',
     marginBottom: '0px',
     marginLeft: '6px',
     textDecoration: 'none',
@@ -90,11 +90,11 @@ const styles = theme => ({
   time: {
     marginTop: '0px',
     fontSize: '14px',
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     marginLeft: '6px',
   },
   viewDot: {
-    backgroundColor: 'var(--primary-color3)',
+    backgroundColor: '#00B8C4',
     borderRadius: '50%',
     width: '14px !important',
     height: '14px !important',

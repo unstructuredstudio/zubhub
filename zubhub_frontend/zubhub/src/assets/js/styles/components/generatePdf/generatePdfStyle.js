@@ -13,13 +13,13 @@ export const pdfStyle = {
   title: {
     fontSize: 30,
     bold: true,
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     alignment: 'center',
     marginBottom: 20,
   },
   secondaryTitle: {
     fontSize: 25,
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     backgroundColor: 'gray',
   },
   motivation: {
@@ -36,7 +36,7 @@ export const pdfStyle = {
     margin: 0,
     marginTop: 10,
     fontSize: 10,
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
   },
   footerCell: {
     margin: 10,
@@ -56,7 +56,7 @@ export const pdfStyle = {
   subTitles: {
     fontSize: 20,
     bold: true,
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     // alignment: 'center',
     marginTop: 20,
     marginBottom: 10,
@@ -71,7 +71,7 @@ export const pdfStyle = {
     fontSize: 8,
   },
   stepTitle: {
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     fontSize: 14,
     bold: true,
     marginBottom: 10,
