@@ -10,10 +10,10 @@ const idPrefix = 'activitystep';
 const API = new ZubhubAPI();
 
 export const class_grades = [
-    { name: 'Grade 1-3', value: '1-3' },
-    { name: 'Grade 4-6', value: '4-6' },
-    { name: 'Grade 7-9', value: '7-9' },
-    { name: 'Grade 10-12', value: '10-12' },
+    { name: 'Grade 1-3', id: '1-3' },
+    { name: 'Grade 4-6', id: '4-6' },
+    { name: 'Grade 7-9', id: '7-9' },
+    { name: 'Grade 10-12', id: '10-12' },
 ];
 
 export const vars = {

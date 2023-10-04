@@ -1035,6 +1035,7 @@ class API {
   createActivity = (token, args) => {
     const url = 'activities/create/';
     const method = 'POST';
+
     const {
       title,
       motivation,
@@ -1052,6 +1053,7 @@ class API {
     } = args;
 
     const body = JSON.stringify(args);
+
     return this.request({ url, method, token, body });
     // .then(res => res.json());
   };

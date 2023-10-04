@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import { s3 as DO, doConfig, Compress, slugify } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
-import API from '../../api';
-
+import ZubHubAPI from '../../api';
+const API = new ZubHubAPI()
 export const vars = {
     image_field_touched: false,
     video_field_touched: false,
@@ -71,6 +71,15 @@ export const getCategories = props => {
     return props.getCategories({ t: props.t });
 };
 
+export const searchCreators = async ({ token, query_string }, callBack) => {
+    try {
+        const creators = await API.searchCreators({ token, page: null, query_string })
+        callBack(creators.results.map(item => ({ name: item.username, id: item.id })))
+    } catch (error) {
+
+    }
+}
+
 
 export const handleMaterialsUsedFieldBlur = props => {
     props.setStatus({ ...props.status, materials_used: '' });
@@ -89,11 +98,10 @@ export const removeMetaData = (images, state, handleSetState) => {
 
 export const searchTags = (value, callBack) => {
     clearTimeout(vars.timer.id);
-    const api = new API()
     if (value !== '') {
         vars.timer.id = setTimeout(async () => {
             try {
-                const res = await api.suggestTags(value)
+                const res = await API.suggestTags(value)
                 callBack(undefined, res);
             } catch (error) {
                 callBack(error);
@@ -187,9 +195,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     let additionalFiles = props.values.images.filter(file => file?.image_url)
     if (additionalFiles.length < props.values.images.length) {
         additionalFiles = [...additionalFiles, ...state.media_upload.uploaded_images_url]?.map(({ image_url, public_id }) => ({ image_url, public_id }))
-        console.log(additionalFiles);
     }
-    console.log(props.values.images, state.media_upload.uploaded_images_url, 'images');
 
     create_or_update({
         ...props.values,
@@ -752,6 +758,7 @@ export const formikSchema = {
         video_link: '',
         tags: '',
         category: [{}],
+        creators: []
     },
     validationSchema: validationSchema,
 }

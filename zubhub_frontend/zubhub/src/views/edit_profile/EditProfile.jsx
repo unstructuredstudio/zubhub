@@ -594,7 +594,7 @@ function EditProfile(props) {
                 dangerButtonStyle
                 customButtonStyle
               >
-                {t('profile.delete.dialog.procceed')}
+                {t('profile.delete.dialog.proceed')}
               </CustomButton>
             </DialogActions>
           </Dialog>

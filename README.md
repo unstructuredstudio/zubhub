@@ -117,6 +117,8 @@ The copied URL will have the format of `https://github.com/<your github username
 
 ## Setup Backend
 
+> **_NOTE_**: For windows users, before running the commands below switch to bash (available through [WSL](https://docs.microsoft.com/en-us/windows/wsl/install)), you can achieve that by typing bash to your command line.
+
 - From the root of the repository, run:
 
 ```sh
@@ -150,8 +152,16 @@ To start:
 
 To stop:
 
+- Stop the running container
+
 ```sh
-       $ make stop or make down
+       $ make stop
+```
+
+- Stop & remove the running container
+
+```sh
+       $ make down
 ```
 
 You can run test by running `make test`.
@@ -164,15 +174,21 @@ Visit http://localhost:8000 on your browser to access the API documentation.
 
 ## Setup Frontend
 
-- Create a file named **.env** in the frontend root folder (same directory with package.json)
-- Copy the content of **.env.example** and paste into the new .env file.
 - On your terminal/command line, navigate to **./zubhub/zubhub_frontend/zubhub** directory
+
+- Create a file named **.env** in the frontend root folder (same directory with package.json), with the following content
+
+```sh
+#.env
+REACT_APP_NODE_ENV=developement
+REACT_APP_BACKEND_DEVELOPMENT_URL=http://127.0.0.1:8000
+```
 
 ### **Using npm**
 
 This is advisable for a better development experience.
 
-- Run `npm install` to install the dependencies.
+- Run `npm install --legacy-peer-deps` to install the dependencies.
 - Run `npm start` to start the frontend.
 
 ### **Using the Docker Container**
