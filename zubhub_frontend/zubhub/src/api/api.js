@@ -1035,10 +1035,6 @@ class API {
   createActivity = (token, args) => {
     const url = 'activities/create/';
     const method = 'POST';
-<<<<<<< HEAD
-=======
-
->>>>>>> c2ef980b97cf0303a505dbf3e5a1467b4b626a49
     const {
       title,
       motivation,
@@ -1055,10 +1051,6 @@ class API {
       video,
     } = args;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c2ef980b97cf0303a505dbf3e5a1467b4b626a49
     const body = JSON.stringify(args);
 
     return this.request({ url, method, token, body });
