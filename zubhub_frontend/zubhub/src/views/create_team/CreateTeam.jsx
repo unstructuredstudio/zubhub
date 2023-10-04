@@ -306,13 +306,13 @@ function CreateTeam(props) {
           )}
 
           <CustomButton
-            onClick={activeStep == 3 ?submitData :next}
+            onClick={activeStep === 3 ? submitData : next}
             loading={state.default_state?.loading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}
           >
-            {activeStep == 3 ? 'Create Team' : 'Next'}
+            {activeStep === 3 ? props.t('profile.createTeam') : 'Next'}
           </CustomButton>
 
           <Modal.WithIcon

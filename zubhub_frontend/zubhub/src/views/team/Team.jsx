@@ -339,15 +339,15 @@ function Team(props) {
                     className={classes.titleStyle}
                   >
                     {t('Projects')}
-                    {/* <CustomButton
+                    <CustomButton
                       className={classes.teamButton}
                       variant="contained"
                       margin="normal"
                       primaryButtonStyle
-                      onClick={() => props.history.push('/create-team')}
+                      onClick={() => props.history.push(`/teams/${props.match.params.groupname}/add`)}
                     >
                       {t('Add Project')}
-                    </CustomButton> */}
+                    </CustomButton>
                     <CustomButton
                       className={clsx(classes.floatRight)}
                       variant="outlined"
