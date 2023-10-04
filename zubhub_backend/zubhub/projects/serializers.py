@@ -129,7 +129,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             "comments",
             "created_on",
             "publish",
-            "activity"
+            "activity",
+            "comments_count"
         ]
 
     read_only_fields = ["created_on", "views_count"]
