@@ -315,6 +315,38 @@ class CreatorGroupWithMembershipsSerializer(serializers.ModelSerializer):
         data['members'] = CreatorGroupMembershipSerializer(instance.memberships.all(), many=True).data
         return data
 
+class UpdateMembershipRoleSerializer(serializers.ModelSerializer):
+    members = CreatorGroupMembershipSerializer(many=True)
+    groupname = serializers.CharField()
+
+    def validate_groupname(self, value):
+        # Check if the group exists in the database
+        group_exists = CreatorGroup.objects.filter(groupname=value).exists()
+        if not group_exists:
+            raise serializers.ValidationError("Group does not exist.")
+        return value
+
+    def update(self, instance, validated_data):
+        members_data = validated_data.pop('members', [])
+        instance.role = validated_data.get('role', instance.role)
+        instance.save()
+
+        for member_data in members_data:
+            member_id = member_data.get('member')
+            member_role = member_data.get('role')
+
+            try:
+                membership = CreatorGroupMembership.objects.get(group=instance.group, member_id=member_id)
+                membership.role = member_role
+                membership.save()
+            except CreatorGroupMembership.DoesNotExist:
+                pass  # Ignore non-existing members
+
+        return instance
+
+    class Meta:
+        model = CreatorGroupMembership
+        fields = ('groupname', 'members')
 
 class CreatorGroupSerializer(serializers.ModelSerializer):
     members = CreatorGroupMembershipSerializer(many=True, read_only=True)

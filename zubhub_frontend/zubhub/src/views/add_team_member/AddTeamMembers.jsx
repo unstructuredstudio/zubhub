@@ -39,7 +39,7 @@ function AddTeamMembers(props) {
     setSelectedMembers(value);
     setMembersInputValue('');
   };
-
+  
   const handleAdminsInputChange = async event => {
     const value = event.target.value;
     setAdminsInputValue('');
@@ -82,7 +82,7 @@ function AddTeamMembers(props) {
   const submitMember = async () => {
     try {
       const uploadMember = await addTeamMemberScript.addMember({ ...props, ...formik });
-      console.log(JSON.stringify(uploadMember));
+      // console.log(JSON.stringify(`heeeeeeeeeeeee  and the ${JSON.stringify(uploadMember)}`));
       if (uploadMember === 'success') {
         // Redirect to the desired URL on success
         const groupname = props.match.params.groupname

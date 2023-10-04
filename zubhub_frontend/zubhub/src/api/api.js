@@ -277,12 +277,20 @@ class API {
    */
   removeTeamMember = ({ groupname, username, token }) => {
     const url = `creators/${groupname}/remove-member/${username}/`;
-    const method = 'DELETE';
+    const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method ,token }).then(res =>  Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()))
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
+  };
+  
+  deleteAccount = ({ token }) => {
+    const url = 'creators/delete/';
+    const method = 'DELETE';
+    return this.request({ url, method, token }).then(res =>
+      Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
+    );
   };
 
   /**
@@ -411,7 +419,18 @@ class API {
       return this.request({ url, method }).then(res => res.json());
     }
   };
-
+  
+  // editTeamMembersRole = ({ groupname, data, token }) => {
+  //   const url = `creators/${groupname}/add-members/`;
+  //   const method = 'POST';
+  //   const content_type = 'application/json';
+  //   const body = JSON.stringify(data);
+  //   if (token) {
+  //     return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+  //   } else {
+  //     return this.request({ url, method }).then(res => res.json());
+  //   }
+  // };
   /**
    * @method editTeam
    * @author Hemant Kumar Singh <hks@iamhks.com>

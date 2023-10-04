@@ -34,12 +34,12 @@ from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
                                   CustomUserRateThrottle)
 # from ..projects.models import Project
 
-from .models import Location, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC, CreatorGroupMembership
+from .models import Location,Creator, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC, CreatorGroupMembership
 from .serializers import (CreatorGroupSerializer, CreatorListSerializer, CreatorMinimalSerializer, CreatorGroupWithMembershipsSerializer,
                           CreatorSerializer, LocationSerializer,
                           VerifyPhoneSerializer, CustomRegisterSerializer,
                           ConfirmGroupInviteSerializer, CreatorGroupMinimalSerializer,
-                          AddGroupMembersSerializer, CreatorGroupMembershipSerializer)
+                          AddGroupMembersSerializer, CreatorGroupMembershipSerializer, UpdateMembershipRoleSerializer)
 from .pagination import CreatorNumberPagination, CreatorGroupNumberPagination
 from .utils import (perform_send_phone_confirmation,
                     perform_send_email_confirmation, process_avatar, process_group_avatar,
@@ -669,14 +669,14 @@ class RemoveGroupMemberAPIView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         groupname = self.kwargs.get("groupname")
         username = self.kwargs.get("username")
-        group = get_object_or_404(CreatorGroup, groupname=groupname)
-        obj = get_object_or_404(self.get_queryset(), username=username)
+        group = get_object_or_404(CreatorGroup, groupname=groupname) #get the group from the creators group where the groupname from the front end matches with that in the backend
+        obj = get_object_or_404(self.get_queryset(), username=username) #get the user from the queryset where the username equals that retrieved from the frontend
 
         creatorgroup = group
 
         # Check if the authenticated user is an admin of the specified group
-        if creatorgroup.groupname == groupname:
-            membership = group.memberships.filter(member=obj).first()
+        if creatorgroup.groupname == groupname: # id the received group matches with that retrieved from the django db
+            membership = group.memberships.filter(member=obj).first() # get the particular membership from the group memebership where the member equals that retrievd from the object
             if membership:
                 membership.delete()
                 return Response({"detail": "User deleted"}, status=status.HTTP_200_OK)
@@ -824,7 +824,42 @@ class CreateAndAddMembersToGroupAPIView(GenericAPIView):
             members = [{'member': username.strip(), 'role': 'member'} for username in csv_list]
         return members
 
+class UpdateMembershipRoleView(APIView):
+    """
+    Edit CreatorGroup details and update member roles.\n
+    Requires authentication and ownership of the group.\n
+    Returns updated CreatorGroup details.\n
+    """
+    serializer_class = UpdateMembershipRoleSerializer
+    permission_classes = [IsGroupAdmin]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
 
+    def post(self, request, groupname, username, role):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            groupname = serializer.validated_data['groupname']
+            members_data = serializer.validated_data['members']
+
+            try:
+                group = CreatorGroup.objects.get(groupname=groupname)
+
+                for member_data in members_data:
+                    member_id = member_data.get('member')
+                    role = member_data.get('role')
+
+                    try:
+                        membership = CreatorGroupMembership.objects.get(group=group, member_id=member_id)
+                        membership.role = role
+                        membership.save()
+                    except CreatorGroupMembership.DoesNotExist:
+                        return Response("Membership not found.", status=status.HTTP_404_NOT_FOUND)
+
+                return Response(status=status.HTTP_200_OK)
+            except CreatorGroup.DoesNotExist:
+                return Response("Group not found.", status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 class EditCreatorGroupAPIView(UpdateAPIView):
     """
     Edit CreatorGroup details and update member roles.\n

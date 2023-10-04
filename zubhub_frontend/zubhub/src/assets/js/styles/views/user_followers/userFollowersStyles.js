@@ -7,6 +7,7 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     // background: 'rgba(255,204,0,1)',
+    width: '60vw',
     // background:
     //   '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     // background:
@@ -44,8 +45,8 @@ const styles = theme => ({
   },
   followersGridStyle: {
     marginBottom: '2em',
-    display:'grid',
-    gridTemplateColumns:'auto auto',
+    display: 'grid',
+    gridTemplateColumns: 'auto auto auto',
   },
   cardStyle: {
     display: 'flex',
@@ -63,15 +64,15 @@ const styles = theme => ({
     backgroundColor: '#ffffff',
   },
   avatarStyle: {
-    width: '100%',
+    width: '50%',
     height: 'auto',
-    paddingLeft:"5rem",
-    paddingRight:'5rem',
+    // paddingLeft:"2rem",
+    // paddingRight:'2rem',
     paddingBottom: '1rem',
     '& img': {
-      width: '6em',
+      width: '5em',
       backgroundColor: 'white',
-      height: '6em',
+      height: '5em',
       borderRadius: '50%',
       boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     },
@@ -127,61 +128,78 @@ const styles = theme => ({
   largeLabel: {
     fontSize: '1.3rem',
   },
-  editIconContainer:{
-   marginLeft:'3rem',
-  display:'flex',
-  justifyContent:'end',
-  alignItems:'end',
-  marginTop:'1rem' ,
-  paddingLeft:'10rem',
+  editIconContainer: {
+    marginLeft: '3rem',
+    display: 'flex',
+    justifyContent: 'end',
+    alignItems: 'end',
+    // marginTop:'0.1rem' ,
+    paddingLeft: '8rem',
+    // backgroundColor:'purple'
   },
-  editIcon:{
-    backgroundColor:'gray',
-    padding:'0.4rem',
-    borderRadius:'0.5rem',
-    color:'white'
+  editIcon: {
+    backgroundColor: 'gray',
+    padding: '0.4rem',
+    borderRadius: '0.5rem',
+    color: 'white',
   },
-  popper:{
+  popper: {
     paddingRight: '0.2rem',
     backgroundColor: 'white',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
   },
-  memberrole:{
+  memberrole: {
     display: 'flex',
-     flexDirection: 'column',
-      paddingBottom: '1rem',
+    flexDirection: 'column',
+    paddingBottom: '1rem',
   },
-  roleItem:{
+  roleItem: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap:'0.5rem',
-    marginLeft:'1rem'
+    gap: '0.5rem',
+    marginLeft: '1rem',
   },
-  checkedrole:{
+  checkedrole: {
     fontFamily: 'sans-serif',
-       marginRight:'5rem',
-        fontSize: '1rem',
-         fontWeight: 'bold'
+    marginRight: '5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
   },
-  uncheckedRole:{
+  uncheckedRole: {
     fontFamily: 'sans-serif',
-     marginLeft:"2.5rem",
-      fontSize: '1rem',
-        fontWeight: 'bold',
+    marginLeft: '2.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
   },
-  removeButton:{
+  updateButton: {
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
+  },
+  removeButton: {
     fontFamily: 'sans-serif',
     fontSize: '1rem',
     fontWeight: 'bold',
     padding: '5px',
     whiteSpace: 'nowrap',
     color: 'red',
-    marginLeft:"2.5rem",
-    
+    marginLeft: '2.5rem',
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
   },
- 
 });
 
 export default styles;
