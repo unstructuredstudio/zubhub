@@ -590,8 +590,18 @@
         "primary": "Delete Account",
         "secondary": "Are you sure you want to delete your account? You will not be able to undo this action later. If you still want to proceed, type your username and password into the fields below and click DELETE.",
         "inputs": {
-          "username": "Your Username",
-          "password": "Your Password"
+          "username": {
+            "label": "Username",
+            "errors": {
+              "required": "Looks like you missed this one"
+            }
+          },
+          "password": {
+            "label": "Current Password",
+            "errors": {
+              "required": "Looks like you missed this one"
+            }
+          }
         },
         "cancel": "Cancel",
         "proceed": "Delete"
@@ -602,7 +612,7 @@
       "toastSuccess": "We are sad to see you go :( Your account has been deleted now!",
       "errors": {
         "incorrectUsername": "The username you submitted is incorrect",
-        "incorrectPassword": "The password you submitted is incorrect",
+        "emptyPassword": "Password is required",
         "unexpected": "An error occured while performing this action. Please try again later"
       }
     },

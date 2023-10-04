@@ -51,6 +51,7 @@ import {
   deleteAccount,
   handleClickShowPassword,
   handleMouseDownPassword,
+  handleClickShowDeleteAccountPassword,
 } from './editProfileScripts';
 
 import CustomButton from '../../components/button/Button';
@@ -83,6 +84,7 @@ function EditProfile(props) {
     dialog_error: null,
     open_delete_account_modal: false,
     show_password: false,
+    show_delete_account_password: false,
   });
 
   React.useEffect(() => {
@@ -91,7 +93,7 @@ function EditProfile(props) {
   }, []);
 
   const classes = useStyles();
-  const { show_password } = state;
+  const { show_password, show_delete_account_password } = state;
 
   const handleSetState = obj => {
     if (obj) {
@@ -101,7 +103,8 @@ function EditProfile(props) {
     }
   };
 
-  const { locations, tool_tip_open, open_delete_account_modal,dialog_error, } = state;
+  const { locations, tool_tip_open, open_delete_account_modal, dialog_error } = state;
+
   const { t } = props;
 
   return (
@@ -564,15 +567,65 @@ function EditProfile(props) {
                   className={classes.customLabelStyle}
                   htmlFor="username"
                 >
-                  {t('profile.delete.dialog.inputs.username')}
+                  {t('profile.delete.dialog.inputs.username.label')}
                 </InputLabel>
                 <OutlinedInput
                   className={classes.customInputStyle}
                   ref={username_check}
                   name="username"
                   type="text"
-                  labelWidth={120}
+                  labelWidth={calculateLabelWidth(t('profile.delete.dialog.inputs.username.label'), document)}
                 />
+                <FormHelperText className={classes.fieldHelperTextStyle} error>
+                  {(props.status && props.status['username']) ||
+                    (props.touched['username'] &&
+                      props.errors['username'] &&
+                      t(`profile.delete.dialog.inputs.username.errors.${props.errors['username']}`))}
+                </FormHelperText>
+              </FormControl>
+              <FormControl
+                className={clsx(classes.margin, classes.textField)}
+                variant="outlined"
+                size="medium"
+                fullWidth
+                margin="normal"
+                error={
+                  (props.status && props.status['password']) ||
+                  (props.touched['password'] && props.errors['password'])
+                }
+              >
+                <InputLabel className={classes.customLabelStyle} htmlFor="password">
+                  {t('profile.delete.dialog.inputs.password.label')}
+                </InputLabel>
+                <OutlinedInput
+                  className={classes.customInputStyle}
+                  id="password"
+                  name="password"
+                  type={show_delete_account_password ? 'text' : 'password'}
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={() =>
+                          handleSetState(handleClickShowDeleteAccountPassword(state))
+                        }
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {show_delete_account_password ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  labelWidth={calculateLabelWidth(t('profile.delete.dialog.inputs.password.label'), document)}
+                />
+                <FormHelperText className={classes.fieldHelperTextStyle} error>
+                  {(props.status && props.status['password']) ||
+                    (props.touched['password'] &&
+                      props.errors['password'] &&
+                      t(`profile.delete.dialog.inputs.password.errors.${props.errors['password']}`))}
+                </FormHelperText>
               </FormControl>
             </DialogContent>
             <DialogActions>
@@ -588,9 +641,7 @@ function EditProfile(props) {
               </CustomButton>
               <CustomButton
                 variant="contained"
-                onClick={e =>
-                  handleSetState(deleteAccount(username_check, props, state))
-                }
+                onClick={e => handleSetState(deleteAccount(username_check, props, toast))}
                 dangerButtonStyle
                 customButtonStyle
               >
@@ -648,8 +699,8 @@ export default connect(
   withFormik({
     mapPropsToValue: () => ({
       username: '',
-      email:'',
-      phone:'',
+      email: '',
+      phone: '',
       password: '',
       user_location: '',
       bio: '',
