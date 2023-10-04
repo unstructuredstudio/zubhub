@@ -588,19 +588,21 @@
       "label": "Delete Account",
       "dialog": {
         "primary": "Delete Account",
-        "secondary": "Are you sure you want to delete your account? You can't undo this action!! If you still want proceed, type your username into the field below and click PROCEED",
+        "secondary": "Are you sure you want to delete your account? You will not be able to undo this action later. If you still want to proceed, type your username and password into the fields below and click DELETE.",
         "inputs": {
-          "username": "Your Username"
+          "username": "Your Username",
+          "password": "Your Password"
         },
         "cancel": "Cancel",
-        "proceed": "Proceed"
+        "proceed": "Delete"
       },
       "ariaLabels": {
         "deleteAccount": "delete account"
       },
-      "toastSuccess": "We are sad to see you go :( Your account have been deleted now!",
+      "toastSuccess": "We are sad to see you go :( Your account has been deleted now!",
       "errors": {
         "incorrectUsername": "The username you submitted is incorrect",
+        "incorrectPassword": "The password you submitted is incorrect",
         "unexpected": "An error occured while performing this action. Please try again later"
       }
     },
