@@ -32,9 +32,9 @@ function MultiStepProgressBar(props) {
             key={index}
             style={{
               backgroundColor: isCompleted(step, props.step)
-                ? 'var(--primary-color3)'
+                ? '#00B8C4'
                 : 'white',
-              color: isCompleted(step, props.step) ? 'white' : 'var(--primary-color3)',
+              color: isCompleted(step, props.step) ? 'white' : '#00B8C4',
               left: `calc(${calcAlignLeft(step - 1, props.stepCount)} - 15px) `,
             }}
           >

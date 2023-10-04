@@ -10,7 +10,6 @@ import { ThemeProvider } from '@material-ui/styles';
 import { theme } from './assets/js/muiTheme';
 
 import App from './App';
-import './theme.js';
 import './assets/css/index.css';
 import configureStore from './store/configureStore';
 import './i18n';
