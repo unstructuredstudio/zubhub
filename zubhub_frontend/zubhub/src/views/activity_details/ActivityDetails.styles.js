@@ -16,6 +16,22 @@ export const activityDefailsStyles = theme => ({
             lineHeight: 1.9,
         },
     },
+    socialButtons: {
+        backgroundColor: colors.primary,
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '16px 0',
+        borderRadius: 8,
+    },
+    moreTextTitle: {
+        marginTop: 50,
+        marginBottom: 30,
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: colors.black,
+    },
     card: {
         borderRadius: 8,
         backgroundColor: colors.white,
