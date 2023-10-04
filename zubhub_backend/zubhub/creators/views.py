@@ -32,7 +32,6 @@ from projects.utils import detect_mentions, get_published_projects_for_user
 from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, GetAnonRateThrottle,
                                   CustomUserRateThrottle)
-# from ..projects.models import Project
 
 from .models import Location,Creator, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC, CreatorGroupMembership
 from .serializers import (CreatorGroupSerializer, CreatorListSerializer, CreatorMinimalSerializer, CreatorGroupWithMembershipsSerializer,

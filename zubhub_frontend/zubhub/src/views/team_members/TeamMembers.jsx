@@ -151,7 +151,6 @@ function TeamMembers(props) {
 
         history.push(`/teams/${groupname}/members`);
       } else {
-        const apiError = response;
         toast.error(
           `An unexpected error occurred. Please check if you have entered all details properly and try again.`,
         );

@@ -82,11 +82,9 @@ function AddTeamMembers(props) {
   const submitMember = async () => {
     try {
       const uploadMember = await addTeamMemberScript.addMember({ ...props, ...formik });
-      // console.log(JSON.stringify(`heeeeeeeeeeeee  and the ${JSON.stringify(uploadMember)}`));
       if (uploadMember === 'success') {
         // Redirect to the desired URL on success
         const groupname = props.match.params.groupname
-        // const teamGroupName = formik.values.groupname; // Get the groupname from props
         history.push(`/teams/${groupname}/members`);
       } else {
         const apiError = uploadMember;
@@ -172,18 +170,6 @@ function AddTeamMembers(props) {
           )}
         />
 
-        {/* <Box className={classes.tagsViewStyle}>
-            {selectedAdmins.map((admin, index) => (
-              <Chip
-                key={index}
-                label={admin.title}
-                onDelete={() => setSelectedAdmins((admins) => admins.filter((a) => a !== admin))}
-                color="secondary"
-                variant="outlined"
-              />
-            ))}
-          </Box> */}
-
         <Grid item xs={12}>
           {' '}
           <br></br>
@@ -229,18 +215,6 @@ function AddTeamMembers(props) {
             />
           )}
         />
-
-        {/* <Box className={classes.tagsViewStyle}>
-            {selectedMembers.map((member, index) => (
-              <Chip
-                key={index}
-                label={member.title}
-                onDelete={() => setSelectedMembers((members) => members.filter((m) => m !== member))}
-                color="secondary"
-                variant="outlined"
-              />
-            ))}
-          </Box> */}
 
         <Box
           style={{
