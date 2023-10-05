@@ -5,7 +5,7 @@ const styles = theme => ({
     paddingBottom: '2em',
     flex: '1 0 auto',
     background:
-      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
   cardStyle: {
     border: 0,

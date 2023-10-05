@@ -6,9 +6,6 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    // background: 'var(--primary-color2)',
-    // background:
-    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     '& .MuiGrid-root.MuiGrid-container': {
       width: '100%',
     },

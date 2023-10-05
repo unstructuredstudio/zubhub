@@ -5,9 +5,9 @@ const styles = theme => ({
     paddingTop: '2em',
     paddingBottom: '2em',
     flex: '1 0 auto',
-    background: 'var(--primary-color2)',
+    background: 'rgba(255,204,0,1)',
     background:
-      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+      'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
   containerStyle: {
     maxWidth: '600px',
@@ -36,7 +36,7 @@ const styles = theme => ({
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
-      color: 'var(--primary-color3)',
+      color: '#00B8C4',
     },
     fontWeight: 'bold',
     fontSize: '1rem',
@@ -50,17 +50,17 @@ const styles = theme => ({
     width: '100%',
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '2px solid var(--primary-color3)',
-      boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '2px solid var(--primary-color3)',
-        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '2px solid var(--primary-color3)',
-        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       [theme.breakpoints.up('1600')]: {
         fontSize: '1.7rem',
@@ -86,9 +86,9 @@ const styles = theme => ({
   descInputStyle: {
     color: 'black',
     borderRadius: 15,
-    boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+    boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     '&:hover': {
-      outline: '2px solid var(--primary-color3)',
+      outline: '2px solid #00B8C4',
     },
     '& .ql-toolbar': {
       borderTopRightRadius: 15,
@@ -99,7 +99,7 @@ const styles = theme => ({
       borderBottomLeftRadius: 15,
       '& .ql-editor': {
         WebkitUserSelect: 'text',
-        color: 'var(--text-color1)',
+        color: '#000000de',
         fontSize: '1rem',
         fontFamily: 'Raleway,Roboto,sans-serif',
         lineHeight: '1.1876em',
@@ -111,7 +111,7 @@ const styles = theme => ({
     },
   },
   descInputFocusStyle: {
-    outline: '2px solid var(--primary-color3) !important',
+    outline: '2px solid #00B8C4 !important',
   },
   descInputErrorStyle: {
     outline: '1px solid #f44336',
@@ -149,7 +149,7 @@ const styles = theme => ({
   },
   videoInputDialogControlSectionStyle: {
     width: '100%',
-    border: '2px solid var(--primary-color3)',
+    border: '2px solid #00B8C4',
     padding: '2px',
     borderRadius: 30,
   },
@@ -190,7 +190,7 @@ const styles = theme => ({
   fieldNumberStyle: {
     height: '20px',
     width: '20px',
-    backgroundColor: 'var(--primary-color3)',
+    backgroundColor: '#00B8C4',
     color: 'white',
     textAlign: 'center',
     borderRadius: '50%',
@@ -202,7 +202,7 @@ const styles = theme => ({
   },
   questionIconStyle: {
     position: 'absolute',
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     right: '0',
     [theme.breakpoints.up('1600')]: {
       top: '20px',
@@ -217,11 +217,11 @@ const styles = theme => ({
     color: 'white',
   },
   uploadProgressStyle: {
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
   },
   customChipStyle: {
-    border: '1px solid var(--primary-color3)',
-    color: 'var(--primary-color3)',
+    border: '1px solid #00B8C4',
+    color: '#00B8C4',
     margin: '0.5em',
   },
   tagsViewStyle: {
@@ -232,8 +232,8 @@ const styles = theme => ({
     border: '1px solid #c1c1c1',
     borderRadius: '20px',
     '&:hover': {
-      border: '2px solid var(--primary-color3)',
-      boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
   },
   tagsInputStyle: {
@@ -263,7 +263,7 @@ const styles = theme => ({
     boxShadow: '0 0px 5px 4px rgba(0, 0, 0, .12)',
   },
   tagSuggestionTextStyle: {
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     fontSize: '1.5em',
   },
   center: {
@@ -283,14 +283,14 @@ const styles = theme => ({
     padding: '1em',
     borderRadius: 6,
     borderWidth: '1px',
-    borderColor: 'var(--primary-color2)',
-    backgroundColor: 'var(--secondary-color1)',
+    borderColor: '#a94442',
+    backgroundColor: '#ffcdd2',
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.5rem',
     },
   },
   error: {
-    color: 'var(--primary-color2)',
+    color: '#a94442',
   },
   fieldHelperTextStyle: {
     [theme.breakpoints.up('1600')]: {

@@ -1,6 +1,6 @@
 export const styles = theme => ({
   container: {
-    backgroundColor: 'var(--primary-color3)',
+    backgroundColor: '#00B8C4',
     minHeight: '45px',
     textAlign: 'center',
     display: 'flex',
@@ -18,7 +18,7 @@ export const styles = theme => ({
     },
   },
   separator: {
-    color: 'var(--secondary-color6)',
+    color: '#00949E',
   },
   textStyle: {
     color: 'white',
@@ -55,7 +55,7 @@ export const styles = theme => ({
     underline: {
       border: 'none',
     },
-    backgroundColor: 'var(--secondary-color6)',
+    backgroundColor: '#00949E',
     '&:before': {
       borderColor: 'none',
     },

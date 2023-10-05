@@ -9,9 +9,9 @@ const styles = theme => ({
     [theme.breakpoints.down('400')]: {
       marginTop:'30px',
     },
-    // background: 'var(--primary-color2)',
+    // background: 'rgba(255,204,0,1)',
     // background:
-    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+    //   'linear-gradient(to bottom, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
   containerStyle: {
     maxWidth: '600px',
@@ -41,7 +41,7 @@ const styles = theme => ({
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {
-      color: 'var(--primary-color3)',
+      color: '#00B8C4',
     },
     fontSize: '1rem',
     [theme.breakpoints.up('1600')]: {
@@ -52,17 +52,17 @@ const styles = theme => ({
   customInputStyle: {
     borderRadius: 15,
     '&.MuiOutlinedInput-notchedOutline': {
-      border: '2px solid var(--primary-color3)',
-      boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+      border: '2px solid #00B8C4',
+      boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '2px solid var(--primary-color3)',
-        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       '&.Mui-focused fieldset': {
-        border: '2px solid var(--primary-color3)',
-        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+        border: '2px solid #00B8C4',
+        boxShadow: `${fade('#00B8C4', 0)} 0 0 0 0.2rem`,
       },
       [theme.breakpoints.up('1600')]: {
         fontSize: '1.7rem',
@@ -77,9 +77,9 @@ const styles = theme => ({
   },
 
   secondaryLink: {
-    color: 'var(--primary-color3)',
+    color: '#00B8C4',
     '&:hover': {
-      color: 'var(--secondary-color6)',
+      color: '#03848C',
     },
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.2rem',
@@ -118,14 +118,14 @@ const styles = theme => ({
     padding: '1em',
     borderRadius: 6,
     borderWidth: '1px',
-    borderColor: 'var(--primary-color2)',
-    backgroundColor: 'var(--secondary-color1)',
+    borderColor: '#a94442',
+    backgroundColor: '#ffcdd2',
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.5rem',
     },
   },
   error: {
-    color: 'var(--primary-color2)',
+    color: '#a94442',
   },
   fieldHelperTextStyle: {
     [theme.breakpoints.up('1600')]: {

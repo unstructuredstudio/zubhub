@@ -9,18 +9,7 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
-
-import {
-  Tooltip,
-  Avatar,
-  Box,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Fab,
-  Typography,
-} from '@material-ui/core';
+import { Tooltip, Avatar, Box, Card, CardActionArea, CardMedia, CardContent, Fab, Typography } from '@material-ui/core';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CommentIcon from '../../assets/js/icons/CommentIcon';
