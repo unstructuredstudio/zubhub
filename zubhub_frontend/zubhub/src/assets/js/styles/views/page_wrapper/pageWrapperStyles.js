@@ -3,7 +3,7 @@ import { colors } from "../../../colors";
 const styles = theme => ({
   childrenContainer: { padding: '0' },
   navBarStyle: {
-    backgroundColor: '#DC3545',
+    backgroundColor: 'var(--primary-color1)',
   },
   input: {
     flex: 1,
@@ -133,7 +133,7 @@ const styles = theme => ({
 
   searchFormSubmitStyle: {
     padding: 0,
-    color: '#FFCE0C',
+    color: 'var(--primary-color2)',
   },
   toggleSearchFormStyle: {
     color: 'white',
@@ -176,7 +176,7 @@ const styles = theme => ({
       paddingTop: 0,
       '& .MuiListItem-root': {
         '&:first-child': {
-          backgroundColor: '#ededed',
+          backgroundColor: 'var(--text-color3)',
           paddingTop: '12px',
           paddingBottom: '8px',
         },
@@ -199,7 +199,7 @@ const styles = theme => ({
     whiteSpace: 'nowrap',
   },
   logOutStyle: {
-    borderTop: '1px solid #C4C4C4',
+    borderTop: '1px solid var(--text-color3)',
   },
   scrollTopButtonStyle: {
     zIndex: 100,
@@ -211,13 +211,13 @@ const styles = theme => ({
     marginLeft: '1.3em',
     paddingLeft: '0.7em',
     color: 'white',
-    backgroundColor: '#d13241',
+    backgroundColor: 'var(--primary-color1)',
     borderRadius: '50px',
     [theme.breakpoints.down('282')]: {
       marginLeft: '0.3em',
     },
     '&:hover': {
-      backgroundColor: '#c7313f',
+      backgroundColor: 'var(--secondary-color2)',
     },
   },
   languageSelectStyle: {
@@ -239,7 +239,7 @@ const styles = theme => ({
     },
   },
   footerStyle: {
-    backgroundColor: '#dc3545',
+    backgroundColor: 'var(--primary-color1)',
     boxSizing: 'border-box',
     width: '100%',
     textAlign: 'left',

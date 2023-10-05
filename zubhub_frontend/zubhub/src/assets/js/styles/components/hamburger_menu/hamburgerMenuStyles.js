@@ -18,8 +18,8 @@ const styles = theme => ({
   },
 
   logOutStyle: {
-    borderTop: '1px solid #C4C4C4',
-    backgroundColor: '#ededed',
+    borderTop: '1px solid var(--text-color3)',
+    backgroundColor: 'var(--text-color3)',
     height: '10%',
     width: '100%',
     display: 'flex',
@@ -32,7 +32,7 @@ const styles = theme => ({
   },
 
   menuItemStyle: {
-    backgroundColor: '#ededed',
+    backgroundColor: 'var(--text-color3)',
     height: '10%',
     width: '100%',
     display: 'flex',
@@ -47,7 +47,7 @@ const styles = theme => ({
     width: '90%',
 
     '&:hover': {
-      backgroundColor: '#00B8C4',
+      backgroundColor: 'var(--primary-color3)',
       '& .MuiTypography-root': {
         color: 'white',
       },
