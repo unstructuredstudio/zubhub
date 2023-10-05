@@ -168,7 +168,7 @@ function Project(props) {
                   variant="caption"
                   component="span"
                 >
-                  <CommentIcon /> {project.comments_count}
+                  <CommentIcon /> {project.comments ? project.comments.length : project.comments_count }
                 </Typography>
               </Box>
               <Typography color="textSecondary" variant="caption" component="span" className={classes.date}>
