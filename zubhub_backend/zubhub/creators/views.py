@@ -39,7 +39,7 @@ from .serializers import (CreatorGroupSerializer, CreatorListSerializer, Creator
                           CreatorSerializer, LocationSerializer,
                           VerifyPhoneSerializer, CustomRegisterSerializer,
                           ConfirmGroupInviteSerializer, CreatorGroupMinimalSerializer,
-                          AddGroupMembersSerializer, CreatorGroupMembershipSerializer)
+                          AddGroupMembersSerializer, CreatorGroupMembershipSerializer, TemplateProfileSerializer)
 from .pagination import CreatorNumberPagination, CreatorGroupNumberPagination
 from .utils import (perform_send_phone_confirmation,
                     perform_send_email_confirmation, process_avatar, process_group_avatar,
@@ -148,6 +148,7 @@ class TeamProfileAPIView(RetrieveAPIView):
     """
 
     # queryset = CreatorGroup.objects.filter(is_active=True)
+    serializer_class = TemplateProfileSerializer
     lookup_field = "groupname"
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]

@@ -370,3 +370,31 @@ class CreatorGroupSerializer(serializers.ModelSerializer):
         CreatorGroupMembership.objects.filter(group=instance, member__in=members_to_remove).delete()
 
         return instance
+
+class TemplateProfileSerializer(serializers.Serializer):
+    groupname = serializers.CharField()
+    description = serializers.CharField()
+    projects = serializers.ListField(child=serializers.CharField())
+    members = serializers.ListField(
+        child=serializers.DictField(child=serializers.CharField())
+    )
+    created_on = serializers.DateTimeField()
+    projects_count = serializers.IntegerField()
+    avatar = serializers.ImageField()
+    followers_count = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        response_data = {
+            "groupname": instance.groupname,
+            "description": instance.description,
+            "projects": instance.projects,
+            "members": [
+                {"member": membership.member.username, "role": membership.role}
+                for membership in instance.memberships.all()
+            ],
+            "created_on": instance.created_on,
+            "projects_count": instance.projects_count,
+            "avatar": instance.avatar,
+            "followers_count": instance.followers_count,
+        }
+        return response_data
