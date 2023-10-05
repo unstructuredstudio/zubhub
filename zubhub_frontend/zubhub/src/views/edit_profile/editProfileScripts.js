@@ -22,6 +22,17 @@ export const handleClickShowPassword = state => {
 };
 
 /**
+ * @function handleClickShowDeleteAccountPassword
+ * @author Berra Karaman <esma.berra.karaman@hotmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const handleClickShowDeleteAccountPassword = state => {
+  const { show_delete_account_password } = state;
+  return { show_delete_account_password: !show_delete_account_password };
+};
+
+/**
  * @function handleMouseDownPassword
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
@@ -78,7 +89,7 @@ export const getProfile = (refs, props) => {
  */
  export const handleToggleDeleteAccountModal = state => {
   const open_delete_account_modal = !state.open_delete_account_modal;
-  return { open_delete_account_modal, more_anchor_el: null };
+  return { open_delete_account_modal, more_anchor_el: null, dialog_error: null };
 };
 
 /**
@@ -87,16 +98,34 @@ export const getProfile = (refs, props) => {
  *
  * @todo - describe function's signature
  */
- export const deleteAccount = (username_el, props) => {
+export const deleteAccount = (username_el, props, toast) => {
+  let password_match = true;
   if (username_el.current.firstChild.value !== props.auth.username) {
-    return { dialogError: props.t('profile.delete.errors.incorrectUsernme') };
+    return { dialog_error: props.t('profile.delete.errors.incorrectUsername') };
+  } else if (!props?.values?.password)  {
+    return { dialog_error: props.t('profile.delete.errors.emptyPassword') };
   } else {
-    return props.deleteAccount({
-      token: props.auth.token,
-      history: props.history,
-      logout: props.logout,
-      t: props.t,
+    props.login({ values: props.values, history: props.history }).catch(error => {
+      try{
+        toast.error(props.t('editProfile.inputs.password.errors.invalid'));
+        password_match = false;
+        return;
+      } catch (err) {
+        toast.error(props.t('err.message'));
+      }
+    }).finally(() => {
+      if (password_match === false) {
+        return;
+      } else {
+        return props.deleteAccount({
+          token: props.auth.token,
+          history: props.history,
+          logout: props.logout,
+          t: props.t,
+        })
+      }
     });
+    
   }
 };
 
