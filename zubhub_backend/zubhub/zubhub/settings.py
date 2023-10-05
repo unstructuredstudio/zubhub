@@ -131,11 +131,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'post_anon': '20/min',
-        'get_anon': '25/min',
-        'post_user': '30/min',
-        'get_user': '40/min',
-        'sustained': '1500/day'
+        'post_anon': '40/min',
+        'get_anon': '60/min',
+        'post_user': '60/min',
+        'get_user': '80/min',
+        'sustained': '10000/day'
     }
 }
 
