@@ -2,15 +2,15 @@ const styles = theme => ({
   buttonStyle: {
     borderRadius: '30px',
     padding: '5px 15px',
-    color: '#757575',
-    backgroundColor: '#E4E4E4',
+    color: 'var(--text-color2)',
+    backgroundColor: 'var(--text-color3)',
     outline: 'none',
     border: 'none',
     cursor: 'pointer',
     fontSize: '15px',
   },
   selectedButtonStyle: {
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     color: 'white',
   },
 });
