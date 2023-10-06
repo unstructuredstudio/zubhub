@@ -57,7 +57,6 @@ import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
 import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
-import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
@@ -197,10 +196,7 @@ function EditProfile(props) {
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            labelWidth={calculateLabelWidth(
-                              t('editProfile.inputs.username.label'),
-                              document,
-                            )}
+                            label={t('editProfile.inputs.username.label')}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -304,10 +300,7 @@ function EditProfile(props) {
                         value={props.values.email ? props.values.email : ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('editProfile.inputs.email.label'),
-                          document,
-                        )}
+                        label={t('editProfile.inputs.email.label')}
                       />
                     </FormControl>
                   </Grid>
@@ -340,10 +333,7 @@ function EditProfile(props) {
                         value={props.values.phone ? props.values.phone : ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('editProfile.inputs.phone.label'),
-                          document,
-                        )}
+                        label={t('editProfile.inputs.phone.label')}
                       />
                     </FormControl>
                   </Grid>
@@ -391,10 +381,7 @@ function EditProfile(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={calculateLabelWidth(
-                          t('editProfile.inputs.password.label'),
-                          document,
-                        )}
+                        label={t('editProfile.inputs.password.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -440,10 +427,7 @@ function EditProfile(props) {
                         value={props.values.bio ? props.values.bio : ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('editProfile.inputs.bio.label'),
-                          document,
-                        )}
+                        label={t('editProfile.inputs.bio.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}

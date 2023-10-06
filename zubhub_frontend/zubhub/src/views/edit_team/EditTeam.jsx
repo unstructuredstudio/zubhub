@@ -59,7 +59,6 @@ import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
 import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
-import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
@@ -230,10 +229,7 @@ function EditTeam(props) {
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={event => setInfo({ ...info, groupname: event.target.value })}
                             onBlur={props.handleBlur}
-                            labelWidth={calculateLabelWidth(
-                              t('Team Name'),
-                              document,
-                            )}
+                            label={t('Team Name')}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -289,10 +285,7 @@ function EditTeam(props) {
                         value={info.description ? info.description : ''}
                         onChange={event => setInfo({ ...info, description: event.target.value })}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('editProfile.inputs.bio.label'),
-                          document,
-                        )}
+                        label={t('editProfile.inputs.bio.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}

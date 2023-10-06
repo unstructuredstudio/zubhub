@@ -29,8 +29,6 @@ import {
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/password_reset/passwordResetStyles';
-import { calculateLabelWidth } from '../../assets/js/utils/scripts';
-import { useForceUpdate } from '../../hooks/useForceUpdate.hook';
 
 const useStyles = makeStyles(styles);
 
@@ -41,7 +39,6 @@ const useStyles = makeStyles(styles);
  * @todo - describe function's signature
  */
 function PasswordReset (props) {
-  useForceUpdate();
   const classes = useStyles();
   const { t } = props;
 
@@ -116,10 +113,7 @@ function PasswordReset (props) {
                         type="text"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('passwordReset.inputs.email.label'),
-                          document,
-                        )}
+                        label={t('passwordReset.inputs.email.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
