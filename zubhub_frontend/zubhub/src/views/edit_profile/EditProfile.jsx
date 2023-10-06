@@ -558,7 +558,7 @@ function EditProfile(props) {
                   ref={username_check}
                   name="username"
                   type="text"
-                  labelWidth={calculateLabelWidth(t('profile.delete.dialog.inputs.username.label'), document)}
+                  label={t('editProfile.inputs.email.label')}
                 />
                 <FormHelperText className={classes.fieldHelperTextStyle} error>
                   {(props.status && props.status['username']) ||
@@ -602,7 +602,7 @@ function EditProfile(props) {
                       </IconButton>
                     </InputAdornment>
                   }
-                  labelWidth={calculateLabelWidth(t('profile.delete.dialog.inputs.password.label'), document)}
+                  label={t('editProfile.inputs.email.label')}
                 />
                 <FormHelperText className={classes.fieldHelperTextStyle} error>
                   {(props.status && props.status['password']) ||
