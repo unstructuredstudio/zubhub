@@ -189,7 +189,7 @@ REACT_APP_BACKEND_DEVELOPMENT_URL=http://127.0.0.1:8000
 This is advisable for a better development experience.
 
 - Run `npm install --legacy-peer-deps` to install the dependencies.
-- Run `npm start` to start the frontend.
+- Run `npm start` to start the frontend of the application.
 
 ### **Using the Docker Container**
 
