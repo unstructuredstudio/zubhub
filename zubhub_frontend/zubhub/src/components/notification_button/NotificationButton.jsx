@@ -24,6 +24,7 @@ const NotificationButton = ({ className, notif }) => {
           onClick={() => setDropdownOpen(!dropdownOpen)}
           ref={buttonRef}
           className={clsx(classes.notification, commonClasses.iconBox)}
+          style={{ cursor: 'pointer' }}
         >
           <Notifications style={{ color: colors.primary, fontSize: 20 }} />
         </div>

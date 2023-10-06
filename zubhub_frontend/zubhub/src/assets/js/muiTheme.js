@@ -5,7 +5,7 @@ export const theme = createTheme({
     fontFamily: ['Raleway', 'Roboto', 'sans-serif'].join(','),
   },
   circleBox: {
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
   },
   components: {
     MuiCheckbox: {
