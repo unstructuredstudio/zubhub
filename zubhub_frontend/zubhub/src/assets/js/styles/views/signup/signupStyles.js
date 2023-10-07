@@ -1,5 +1,4 @@
 import { fade } from '@material-ui/core/styles';
-import { calculateLabelWidth } from '../../../utils/scripts';
 
 const styles = theme => ({
   root: {

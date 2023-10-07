@@ -1,7 +1,7 @@
 import React, { useContext }  from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import CreateActivity from './views/create_activity/create_activity';
+import CreateActivity from './views/create_activity/CreateActivity';
 import { useEffect, useState } from "react";
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
