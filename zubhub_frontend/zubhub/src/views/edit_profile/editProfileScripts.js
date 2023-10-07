@@ -137,11 +137,16 @@ export const deleteAccount = (username_el, props, toast) => {
  */
 export const editProfile = (e, props, toast) => {
   e.preventDefault();
+  props.setFieldTouched('username', true);
+  props.setFieldTouched('email', true);
+  props.setFieldTouched('phone', true);
+  props.setFieldTouched('password', true);
+  props.setFieldTouched('user_location', true);
   let password_match = true;
   if (props.values.user_location.length < 1) {
     props.validateField('user_location');
   } else if (props.values.password.length < 1) {
-    props.validateField('editProfile.inputs.password.errors');
+    props.validateField('password');
   } else {
     props.login({ values: props.values, history: props.history }).catch(error => {
       try{
@@ -217,9 +222,15 @@ export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   user_location: Yup.string().min(1, 'min').required('required'),
   password: Yup.string().required('required'),
-  email: Yup.string().email('invalid'),
-  phone: Yup.string().test('phone_is_invalid', 'invalid', function (value) {
+  email: Yup.string().email('invalid').when('phone', {
+    is: (phone) => !phone || phone.length === 0,
+    then: Yup.string().required('phoneOrEmail')
+  }),
+  phone: Yup.string().when('email', {
+    is: (email) => !email || email.length === 0,
+    then: Yup.string().required('phoneOrEmail')
+  }).test('phone_is_invalid', 'invalid', function (value) {
     return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
   }),
   bio: Yup.string().max(255, 'tooLong'),
-});
+}, ['phone', 'email']);

@@ -298,6 +298,7 @@ export default connect(
 )(
   withFormik({
     mapPropsToValue: () => ({
+      username: '',
       password: '',
     }),
     validationSchema,
