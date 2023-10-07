@@ -11,6 +11,8 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import Confetti from 'react-confetti';
+import rightArrowDialogImage from '../../assets/images/right_arrow_dialog_image.png';
+import leftArrowDialogImage from '../../assets/images/left_arrow_dialog_image.png';
 
 import {
   Avatar,
@@ -37,6 +39,7 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import {
   deleteProject,
+  handleGoToNextOrPreviousImage,
   handleOpenEnlargedImageDialog,
   handleToggleDeleteProjectModal,
   isCloudinaryVideo,
@@ -109,10 +112,21 @@ function ProjectDetails(props) {
     project: {},
     loading: true,
     enlarged_image_url: '',
+    enlarged_image_index: 0,
     open_enlarged_image_dialog: false,
     open_delete_project_modal: false,
     delete_project_dialog_error: null,
   });
+
+  const {
+    project,
+    loading,
+    enlarged_image_url,
+    open_enlarged_image_dialog,
+    open_delete_project_modal,
+    delete_project_dialog_error,
+  } = state;
+  const { t } = props;
 
   React.useEffect(() => {
     Promise.resolve(
@@ -161,6 +175,13 @@ function ProjectDetails(props) {
     }
   }, [state.project.video]);
 
+  React.useEffect(() => {
+    if(enlarged_image_url.length > 0) {
+      let enlarged_image_index = project.images.map(image=>image.image_url).indexOf(enlarged_image_url)
+      handleSetState({ enlarged_image_index })
+    }
+  },[ open_enlarged_image_dialog ])
+
   const toggleDialog = () => {
     setOpen(!open);
     props.history.replace(window.location.pathname);
@@ -174,15 +195,7 @@ function ProjectDetails(props) {
     }
   };
 
-  const {
-    project,
-    loading,
-    enlarged_image_url,
-    open_enlarged_image_dialog,
-    open_delete_project_modal,
-    delete_project_dialog_error,
-  } = state;
-  const { t } = props;
+ 
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
@@ -443,7 +456,11 @@ function ProjectDetails(props) {
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
-          <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '80%', maxWidth: '600px', }} >
+            <img src={leftArrowDialogImage} alt="leftArrow" className={classes.leftAndRightDialogImageButton} onClick={()=>handleSetState(handleGoToNextOrPreviousImage('decrement',  state))} />
+            <img className={classes.enlargedImageStyle} src={project.images[state.enlarged_image_index].image_url} alt={`${project.title}`} />
+            <img src={rightArrowDialogImage} alt="leftArrow" className={classes.leftAndRightDialogImageButton} onClick={()=>handleSetState(handleGoToNextOrPreviousImage('increment', state))} />
+          </div>
         </Dialog>
 
         <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>

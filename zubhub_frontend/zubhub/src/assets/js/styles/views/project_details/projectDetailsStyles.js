@@ -194,7 +194,7 @@ const styles = theme => ({
   },
   enlargedImageStyle: {
     alignSelf: 'center',
-    width: '80%',
+    width: '90%',
     maxWidth: '600px',
     height: 'auto',
   },
@@ -302,6 +302,12 @@ const styles = theme => ({
   dialogButtonContainer: {
     padding: '16px 24px',
   },
+  leftAndRightDialogImageButton: {
+    width: '8%',
+    height: '8%',
+    marginRight: 10,
+    marginLeft: 10
+  }
 });
 
 export const sliderSettings = images_num => ({
