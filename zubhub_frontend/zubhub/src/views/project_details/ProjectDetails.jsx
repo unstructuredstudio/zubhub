@@ -26,6 +26,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import CloseIcon from '@material-ui/icons/Close';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
@@ -49,7 +50,7 @@ import {
 import { CloseOutlined } from '@material-ui/icons';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
-import styles, { sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import styles, { EnlargedImgArrow, sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import { cloudinaryFactory, getPlayerOptions, nFormatter, parseComments } from '../../assets/js/utils/scripts';
 import { Comments, Modal, Pill } from '../../components/index.js';
 import Project from '../../components/project/Project';
@@ -112,6 +113,7 @@ function ProjectDetails(props) {
     open_enlarged_image_dialog: false,
     open_delete_project_modal: false,
     delete_project_dialog_error: null,
+    enlarged_image_id: 0,
   });
 
   React.useEffect(() => {
@@ -181,6 +183,7 @@ function ProjectDetails(props) {
     open_enlarged_image_dialog,
     open_delete_project_modal,
     delete_project_dialog_error,
+    enlarged_image_id,
   } = state;
   const { t } = props;
   if (loading) {
@@ -324,14 +327,14 @@ function ProjectDetails(props) {
                   <Grid item xs={12} sm={12} md={12} align="center">
                     <Box className={classes.sliderBoxStyle}>
                       <Slider {...sliderSettings(project.images.length)}>
-                        {project.images.map(image => (
+                        {project.images.map((image, index) => (
                           <div>
                             <img
                               key={image.public_id}
                               className={classes.carouselImageStyle}
                               src={image.image_url}
                               alt={image.public_id}
-                              onClick={e => handleSetState(handleOpenEnlargedImageDialog(e, state))}
+                              onClick={e => handleSetState(handleOpenEnlargedImageDialog(e, state, index))}
                             />
                           </div>
                         ))}
@@ -428,11 +431,15 @@ function ProjectDetails(props) {
 
         <Dialog
           PaperProps={{
-            style: {
-              backgroundColor: 'transparent',
-              boxShadow: 'none',
-            },
+            className: classes.enlargedImageDialogPaperStyle,
           }}
+          BackdropProps={{
+              // className: classes.enlargedImageDialogBackdropStyle,
+              // styles: { backgroundColor: 'black', opacity: '0.7' }
+            }}
+          fullWidth
+          scroll='body'
+          maxWidth='md'
           className={classes.enlargedImageDialogStyle}
           open={open_enlarged_image_dialog}
           onClose={() =>
@@ -443,7 +450,52 @@ function ProjectDetails(props) {
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
-          <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
+          <IconButton
+            className={classes.cancelEnlargedImageBtn}
+            onClick={() =>
+              setState({
+                ...state,
+                open_enlarged_image_dialog: !open_enlarged_image_dialog,
+              })
+            }
+            aria-label={t('projectDetails.ariaLabels.closeImageDialog')}
+          >
+            <CloseIcon
+              className={classes.enlargedImageDialogCloseIcon}
+            />
+          </IconButton>
+          <Box className={classes.enlargedImageContainer}>
+            {project.images.length <= 1 ? (
+              <img
+                className={classes.enlargedImageStyle}
+                src={enlarged_image_url}
+                alt={`${project.title}`}
+              />
+            ) : (
+                <Slider
+                  initialSlide={enlarged_image_id}
+                  adaptiveHeight
+                  infinite
+                  speed={500}
+                  slidesToShow={1}
+                  slidesToScroll={1}
+                  className={classes.enlargedImageStyle}
+                  nextArrow={<EnlargedImgArrow />}
+                  prevArrow={<EnlargedImgArrow />}
+                >
+                  {project.images.map(image => (
+                    <div>
+                      <img
+                        className={classes.sliderImageStyle}
+                        key={image.public_id}
+                        src={image.image_url}
+                        alt={''}
+                      />
+                    </div>
+                  ))}
+                </Slider>
+            )}
+          </Box>
         </Dialog>
 
         <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>

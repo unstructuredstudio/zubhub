@@ -545,6 +545,7 @@
         "unsave": "unsave"
       },
       "imageDialog": "enlarged image dialog",
+      "closeImageDialog": "close",
       "deleteProject": "delete project dialog",
       "deleteComment": "delete comment dialog"
     },
