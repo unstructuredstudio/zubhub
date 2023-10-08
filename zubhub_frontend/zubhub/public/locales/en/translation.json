@@ -583,7 +583,8 @@
 
   "profile": {
     "edit": "Edit",
-    "editTeam": "Edit Team Info",
+    "teams": "Teams",
+    "allTeams": "All Teams",
     "delete": {
       "label": "Delete Account",
       "dialog": {
@@ -848,7 +849,21 @@
       "page_empty": "This page is empty"
     }
   },
-
+  "editTeam": {
+    "info": "Edit Team Info",
+    "name": "Team Name",
+    "about": "About Team",
+    "requestName": "Enter your Team Name",
+    "delete": {
+      "question": "Delete Team Profile?",
+      "information": "Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.",
+      "confirmation": "I want to delete this team’s profile",
+      "buttons": {
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    }
+  },
   "createTeam": {
     "welcomeMsg": {
       "primary": "Create a Team",
@@ -882,6 +897,10 @@
     "3rdpage":{
       "title":"Select Project you worked on with a Team"
     }
+  },
+  "teamMembers": {
+    "members": "Members",
+    "noMember": "This team has no members"
   },
 
   "createActivity": {
