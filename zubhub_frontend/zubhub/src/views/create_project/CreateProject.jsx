@@ -387,6 +387,7 @@ function CreateProject(props) {
 }
 
 const SelectModeUI = ({ setMode }) => {
+  const [isError, setIsError] = useState(false);
   const classes = makeStyles(createProjectStyle)();
   const commonClasses = makeStyles(styles)();
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -394,6 +395,9 @@ const SelectModeUI = ({ setMode }) => {
   const modes = { personal: 'personal', team: 'team' };
 
   const handleCreate = () => {
+    if (!mode) {
+      return setIsError(true);
+    }
     const params = new URLSearchParams(window.location.search);
     params.set('mode', mode);
     const newUrl = `${window.location.pathname}?${params.toString()}`;
@@ -430,11 +434,11 @@ const SelectModeUI = ({ setMode }) => {
             <Typography>If you worked on the project with other creators </Typography>
           </div>
         </div>
+        {isError && <div className={classes.projectSelectError}>You need to select project type.</div>}
         <CustomButton
           onClick={handleCreate}
           primaryButtonStyle
           style={{ marginTop: 40, alignSelf: 'center' }}
-          disabled={mode.length === 0}
         >
           Create Project
         </CustomButton>
