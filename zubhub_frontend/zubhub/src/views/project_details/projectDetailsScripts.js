@@ -21,9 +21,9 @@ export const handleOpenEnlargedImageDialog = (e, state) => {
 export const handleGoToNextOrPreviousImage = (type, state) => {
   let new_enlarged_image_index = 0
   if(type === 'increment') {
-    new_enlarged_image_index = state.project.images.length === state.enlarged_image_index + 1 ? state.enlarged_image_index : state.enlarged_image_index + 1
+    new_enlarged_image_index = state.project.images.length === state.enlarged_image_index + 1 ? 0 : state.enlarged_image_index + 1
   }else if( type === 'decrement'){
-    new_enlarged_image_index = state.enlarged_image_index === 0 ? state.enlarged_image_index : state.enlarged_image_index - 1;
+    new_enlarged_image_index = state.enlarged_image_index === 0 ? state.project.images.length - 1 : state.enlarged_image_index - 1;
   }
   return { enlarged_image_index: new_enlarged_image_index }
 }

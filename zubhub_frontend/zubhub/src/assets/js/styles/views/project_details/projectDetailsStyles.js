@@ -194,9 +194,8 @@ const styles = theme => ({
   },
   enlargedImageStyle: {
     alignSelf: 'center',
-    width: '90%',
+    width: '80%',
     maxWidth: '600px',
-    height: 'auto',
   },
   descriptionHeadingStyle: {
     marginTop: '1em',
@@ -302,11 +301,52 @@ const styles = theme => ({
   dialogButtonContainer: {
     padding: '16px 24px',
   },
-  leftAndRightDialogImageButton: {
-    width: '8%',
-    height: '8%',
-    marginRight: 10,
-    marginLeft: 10
+  cancelEnlargedImageBtn:{
+    backgroundColor: '#F50057',
+    position: 'absolute',
+    right: '0%',
+    top: '10%',
+    width: '25px',
+    height: '25px',
+    borderRadius: '100%',
+    border: '2px solid white',
+    zIndex: '100',
+  },
+  enlargedImageContainer: {
+    display: 'flex', 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    width: '100%', 
+    height: '100%',
+    maxWidth: '840px',
+    alignSelf: 'center',
+  },
+  mainNextOrPreviousButtonStyle: {
+    display: 'flex',
+    height: '30px',
+    width: '30px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '100%',
+    background: '#767474',
+    zIndex: '10',
+    boxShadow:
+    '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    backgroundColor: '#00B8C4',
+    '&:hover': {
+      backgroundColor: '#03848C',
+    },
+  },
+  nextOrPreviousButtonStyle: {
+    display: 'flex',
+    height: '20px',
+    width: '20px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '100%',
+    backgroundColor: '#C2EFEF',
+    zIndex: '10',
+    color: '#00B8C4',
   }
 });
 

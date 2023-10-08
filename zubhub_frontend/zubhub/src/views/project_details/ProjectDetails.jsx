@@ -11,8 +11,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import Confetti from 'react-confetti';
-import rightArrowDialogImage from '../../assets/images/right_arrow_dialog_image.png';
-import leftArrowDialogImage from '../../assets/images/left_arrow_dialog_image.png';
+import CloseIcon from '@material-ui/icons/Close';
 
 import {
   Avatar,
@@ -29,6 +28,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import ChevronRightIcon from '@material-ui/icons/ChevronRightRounded';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeftRounded'
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
@@ -194,6 +195,16 @@ function ProjectDetails(props) {
       });
     }
   };
+
+  const NextOrPreviousButton = ({ direction, onClick  }) => {
+    return (
+      <div className={classes.mainNextOrPreviousButtonStyle} onClick={onClick}>
+        <div className={classes.nextOrPreviousButtonStyle}>
+          {direction === 'left' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </div>
+      </div>
+    )
+  }
 
  
   if (loading) {
@@ -444,6 +455,11 @@ function ProjectDetails(props) {
             style: {
               backgroundColor: 'transparent',
               boxShadow: 'none',
+              width: '80%',
+              height: '40%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             },
           }}
           className={classes.enlargedImageDialogStyle}
@@ -456,10 +472,24 @@ function ProjectDetails(props) {
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '80%', maxWidth: '600px', }} >
-            <img src={leftArrowDialogImage} alt="leftArrow" className={classes.leftAndRightDialogImageButton} onClick={()=>handleSetState(handleGoToNextOrPreviousImage('decrement',  state))} />
+           
+          <IconButton
+            className={classes.cancelEnlargedImageBtn}
+            onClick={() =>
+              setState({
+                ...state,
+                open_enlarged_image_dialog: !open_enlarged_image_dialog,
+              })
+            }
+            aria-label="close"
+            >
+            <CloseIcon style={{ color: 'white' }} />
+          </IconButton>
+
+          <div className={classes.enlargedImageContainer} >
+            <NextOrPreviousButton direction={'left'} onClick={()=>handleSetState(handleGoToNextOrPreviousImage('decrement', state))} />
             <img className={classes.enlargedImageStyle} src={project.images[state.enlarged_image_index].image_url} alt={`${project.title}`} />
-            <img src={rightArrowDialogImage} alt="leftArrow" className={classes.leftAndRightDialogImageButton} onClick={()=>handleSetState(handleGoToNextOrPreviousImage('increment', state))} />
+            <NextOrPreviousButton direction={'right'} onClick={()=>handleSetState(handleGoToNextOrPreviousImage('increment', state))} />
           </div>
         </Dialog>
 
