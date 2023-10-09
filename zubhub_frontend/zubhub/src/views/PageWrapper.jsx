@@ -302,14 +302,14 @@ function PageWrapper(props) {
               {t('pageWrapper.footer.privacy')}
             </Typography>
 
-            <Link to={`/privacy_policy`} className={common_classes.textDecorationNone}>
-              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
+            <Link to={`/privacy_policy`} >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle} style={{ textDecoration: 'underline' }}>
                 {t('pageWrapper.footer.guidelines')}
               </Typography>
             </Link>
 
-            <Link to={`/terms_of_use`} className={common_classes.textDecorationNone}>
-              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
+            <Link to={`/terms_of_use`} >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle} style={{ textDecoration: 'underline' }}>
                 {t('pageWrapper.footer.termsOfUse')}
               </Typography>
             </Link>
@@ -320,14 +320,14 @@ function PageWrapper(props) {
               {t('pageWrapper.footer.about')}
             </Typography>
 
-            <Link to="/about" className={common_classes.textDecorationNone}>
-              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
+            <Link to="/about" >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle} style={{ textDecoration: 'underline' }}>
                 {t('pageWrapper.footer.zubhub')}
               </Typography>
             </Link>
 
-            <Link to="/challenge" className={common_classes.textDecorationNone}>
-              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
+            <Link to="/challenge" >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle} style={{ textDecoration: 'underline' }}>
                 {t('pageWrapper.footer.challenges')}
               </Typography>
             </Link>
@@ -342,21 +342,20 @@ function PageWrapper(props) {
               target="__blank"
               rel="noreferrer"
               href={hero.tinkering_resource_url ? hero.tinkering_resource_url : 'https://kriti.unstructured.studio/'}
-              className={common_classes.textDecorationNone}
             >
-              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle} style={{ textDecoration: 'underline' }}>
                 {t('pageWrapper.footer.resources')}
               </Typography>
             </a>
 
-            <Link to={`/faqs`} className={clsx(common_classes.textDecorationNone, common_classes.displayNone)}>
-              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
+            <Link to={`/faqs`} className={clsx(common_classes.displayNone)}>
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}style={{ textDecoration: 'underline' }} >
                 {t('pageWrapper.footer.faqs')}
               </Typography>
             </Link>
 
-            <a href="mailto:hello@unstructured.studio" className={common_classes.textDecorationNone}>
-              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle}>
+            <a href="mailto:hello@unstructured.studio" >
+              <Typography variant="subtitle2" color="textPrimary" className={classes.footerLinkStyle} style={{ textDecoration: 'underline' }}>
                 {t('pageWrapper.footer.contactUs')}
               </Typography>
             </a>
