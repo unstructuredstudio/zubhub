@@ -156,18 +156,18 @@ function EditTeam(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('Edit Team Info')}
-                </Typography><br></br>
+                  {t('Edit Team')}
+                </Typography>
                 <Typography
                   className={classes.descStyle}
-                  variant="h6"
-                  color="textPrimary"
+                  variant="body2"
+                  color="textSecondary"
                   component="p"
                 >
-                  {t('Team Name')}
+                  {'Do you want to make some changes to this team? Go ahead!'}
                 </Typography>
                 <Grid container spacing={3}>
-                  
+                  <Grid item xs={12}>
                     <Box
                       component="p"
                       className={
@@ -182,7 +182,7 @@ function EditTeam(props) {
                         </Box>
                       )}
                     </Box>
-                  
+                  </Grid>
                   <Grid item xs={12} sm={12} md={12}>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
@@ -244,16 +244,7 @@ function EditTeam(props) {
                         }
                       </FormHelperText>
                     </FormControl>
-                    </Grid><Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                    className={classes.descStyle}
-                    variant="h6"
-                    color="textPrimary"
-                    component="p"
-                    >
-                    {t('About Team')}
-                  </Typography>
-                </Grid>
+                  </Grid>
                   <Grid item xs={12}>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
@@ -290,7 +281,14 @@ function EditTeam(props) {
                         className={classes.fieldHelperTextStyle}
                         error
                       >
-                      
+                        <Typography
+                          color="textSecondary"
+                          variant="caption"
+                          component="span"
+                          className={classes.fieldHelperTextStyle}
+                        >
+                          {'Tell us about your team!'}
+                        </Typography>
                         {(props.status && props.status['bio']) ||
                           (props.touched['bio'] &&
                             props.errors['bio'] &&
@@ -298,7 +296,9 @@ function EditTeam(props) {
                               `editProfile.inputs.bio.errors.${props.errors['bio']}`,
                             ))}
                       </FormHelperText>
-                    </FormControl></Grid><Grid item xs={12}>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
                     <CustomButton
                       variant="contained"
                       size="large"
