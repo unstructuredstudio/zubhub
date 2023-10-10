@@ -583,7 +583,7 @@
 
   "profile": {
     "edit": "Edit",
-    "editTeam": "Edit Team Info",
+    "editTeam": "Edit Team",
     "delete": {
       "label": "Delete Account",
       "dialog": {
