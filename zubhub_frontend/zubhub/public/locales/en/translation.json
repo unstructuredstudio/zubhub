@@ -701,10 +701,10 @@
           "required": "Seems like you forgot this"
         }
       },
-      "submit": "Edit Profile"
+      "submit": "Save Changes"
     },
     "or": "OR",
-    "backToProfile": "Back To Profile",
+    "backToProfile": "Discard Changes",
     "toastSuccess": "Your profile was updated successfully!!",
     "errors": {
       "unexpected": "Oh no! Seems like we hit a snag :( Maybe try again later?"
