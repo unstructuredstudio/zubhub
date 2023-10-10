@@ -6,12 +6,6 @@ import * as Yup from 'yup';
  *
  * @todo - describe function's signature
  */ export const getTeamProfile = (groupname, refs, props) => {
-  // let username = props.match.params.username;
-
-  // if (!username) {
-  //   username = props.auth.username;
-  // } else if (props.auth.username === username) props.history.replace('/profile');
-  
   return props.getTeamProfile({
     groupname,
     token: props.auth.token

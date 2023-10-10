@@ -1,50 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
+import { withFormik } from 'formik';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { withFormik } from 'formik';
 
 import { makeStyles } from '@material-ui/core/styles';
 
 import {
-  Grid,
   Box,
-  Container,
   Card,
   CardActionArea,
   CardContent,
-  Typography,
-  OutlinedInput,
-  Tooltip,
   ClickAwayListener,
-  InputLabel,
-  FormHelperText,
-  FormControl,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  InputLabel,
+  OutlinedInput,
+  Tooltip,
+  Typography,
 } from '@material-ui/core';
 
 import {
-  validationSchema,
-  getLocations,
-  editProfile,
-  handleTooltipOpen,
-  handleTooltipClose,
-  handleToggleDeleteAccountModal,
   deleteAccount,
+  editProfile,
+  getLocations,
   getTeamProfile,
+  handleToggleDeleteAccountModal,
+  handleTooltipClose,
+  handleTooltipOpen,
+  validationSchema,
 } from './editTeamScripts';
 
+import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
-import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
 
 const useStyles = makeStyles(styles);
 
@@ -69,11 +69,11 @@ function EditTeam(props) {
   const { groupname } = useParams();
   React.useEffect(() => {
     getTeamProfile(groupname, refs, props);
-    handleSetState(getLocations(props)); 
+    handleSetState(getLocations(props));
   }, []);
 
   const classes = useStyles();
-  
+
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -175,7 +175,7 @@ function EditTeam(props) {
                             id="groupname"
                             name="groupname"
                             type="text"
-                            value={props.values.groupname ? props.values.groupname : ''}
+                            value={props.values?.groupname ?? ''}
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
@@ -222,7 +222,7 @@ function EditTeam(props) {
                         multiline
                         rows={6}
                         rowsMax={6}
-                        value={props.values.description ? props.values.description : ''}
+                        value={props.values?.description ?? ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         label={t('editProfile.inputs.bio.label')}
