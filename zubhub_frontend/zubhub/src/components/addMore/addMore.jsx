@@ -1,24 +1,16 @@
-import React from 'react'
-import AddIcon from '@material-ui/icons/Add';
+import React from 'react';
+import AddIcon from '@mui/icons-material/Add';
 import CustomButton from '../../components/button/Button';
 function AddMore(props) {
-  const {label, setNodeList} = props
+  const { label, setNodeList } = props;
   const addNode = () => {
-    setNodeList((prevNodes) => [...prevNodes, ''])
-  }
+    setNodeList(prevNodes => [...prevNodes, '']);
+  };
   return (
-    <CustomButton
-        variant="outlined"
-        size="large"
-        onClick={e => addNode()}
-        secondaryButtonStyle
-        customButtonStyle
-            
-        >
-        <AddIcon />{' '}
-        {label}
-    </CustomButton>  
-  )
+    <CustomButton variant="outlined" size="large" onClick={e => addNode()} secondaryButtonStyle customButtonStyle>
+      <AddIcon /> {label}
+    </CustomButton>
+  );
 }
 
-export default AddMore
+export default AddMore;

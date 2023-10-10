@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { Pagination } from '@material-ui/lab';
-import { Grid, Box, ButtonGroup, Typography, Container } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Pagination } from '@mui/lab';
+import { Grid, Box, ButtonGroup, Typography, Container } from '@mui/material';
 
 import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
 

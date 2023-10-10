@@ -5,16 +5,8 @@ import { connect } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid,
-  Box,
-  Container,
-  Card,
-  CardActionArea,
-  CardContent,
-  Typography,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Grid, Box, Container, Card, CardActionArea, CardContent, Typography } from '@mui/material';
 
 import { getUsernameAndKey, confirmPhone } from './phoneConfirmScripts';
 
@@ -65,25 +57,11 @@ function PhoneConfirm(props) {
                 noValidate="noValidate"
                 onSubmit={e => handleSetState(confirmPhone(e, props, state))}
               >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
+                <Typography gutterBottom variant="h5" component="h2" color="textPrimary" className={classes.titleStyle}>
                   {t('phoneConfirm.welcomeMsg.primary')}
                 </Typography>
-                <Typography
-                  className={classes.descStyle}
-                  variant="body2"
-                  color="textSecondary"
-                  component="p"
-                >
-                  {t('phoneConfirm.welcomeMsg.secondary').replace(
-                    '<>',
-                    username,
-                  )}
+                <Typography className={classes.descStyle} variant="body2" color="textSecondary" component="p">
+                  {t('phoneConfirm.welcomeMsg.secondary').replace('<>', username)}
                 </Typography>
 
                 <Grid container spacing={3}>

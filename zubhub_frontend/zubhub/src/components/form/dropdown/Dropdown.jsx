@@ -1,5 +1,6 @@
-import { Box, Checkbox, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Box, Checkbox, FormControl, TextField, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Autocomplete } from '@mui/lab';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import { colors } from '../../../assets/js/colors';

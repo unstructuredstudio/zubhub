@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import {
   Avatar,
   CircularProgress,
@@ -9,11 +10,10 @@ import {
   Menu,
   MenuItem,
   Typography,
-  makeStyles,
-} from '@material-ui/core';
-import { CloseOutlined, ExpandMore, MoreVert } from '@material-ui/icons';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+} from '@mui/material';
+import { CloseOutlined, ExpandMore, MoreVert } from '@mui/icons-material';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactConfetti from 'react-confetti';

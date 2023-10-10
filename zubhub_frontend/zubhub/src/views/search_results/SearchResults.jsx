@@ -6,27 +6,12 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Button,
-  Typography,
-  Container,
-  Card,
-  Avatar,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Grid, Box, ButtonGroup, Button, Typography, Container, Card, Avatar } from '@mui/material';
 
-import {
-  getQueryParams,
-  fetchPage,
-  updateProjects,
-  toggleFollow,
-  SearchType,
-} from './searchResultsScripts';
+import { getQueryParams, fetchPage, updateProjects, toggleFollow, SearchType } from './searchResultsScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import * as CreatorActions from '../../store/actions/userActions';
@@ -46,40 +31,16 @@ const useCommonStyles = makeStyles(commonStyles);
  *
  * @todo - describe function's signature
  */
-const buildCreatorProfiles = (
-  results,
-  { classes, common_classes },
-  props,
-  state,
-  handleSetState,
-) =>
+const buildCreatorProfiles = (results, { classes, common_classes }, props, state, handleSetState) =>
   results.map(creator => (
-    <Grid
-      item
-      xs={12}
-      sm={6}
-      md={4}
-      lg={3}
-      className={classes.projectGridStyle}
-      align="center"
-      key={creator.id}
-    >
-      <Link
-        className={common_classes.textDecorationNone}
-        to={`/creators/${creator.username}`}
-      >
+    <Grid item xs={12} sm={6} md={4} lg={3} className={classes.projectGridStyle} align="center" key={creator.id}>
+      <Link className={common_classes.textDecorationNone} to={`/creators/${creator.username}`}>
         <Card className={classes.cardStyle}>
-          <Avatar
-            className={classes.avatarStyle}
-            src={creator.avatar}
-            alt={creator.username}
-          />
+          <Avatar className={classes.avatarStyle} src={creator.avatar} alt={creator.username} />
           {creator.id !== props.auth.id ? (
             <CustomButton
               variant="contained"
-              onClick={(e, id = creator.id) =>
-                handleSetState(toggleFollow(e, props, state, id, toast))
-              }
+              onClick={(e, id = creator.id) => handleSetState(toggleFollow(e, props, state, id, toast))}
               primaryButtonStyle
             >
               {creator.followers.includes(props.auth.id)
@@ -87,11 +48,7 @@ const buildCreatorProfiles = (
                 : props.t('searchResults.following.follow')}
             </CustomButton>
           ) : null}
-          <Typography
-            component="h3"
-            color="textPrimary"
-            className={classes.userNameStyle}
-          >
+          <Typography component="h3" color="textPrimary" className={classes.userNameStyle}>
             {creator.username}
           </Typography>
         </Card>
@@ -133,13 +90,7 @@ function SearchResults(props) {
 
   const getResults = (type, results) => {
     if (type === SearchType.CREATORS) {
-      return buildCreatorProfiles(
-        results,
-        { classes, common_classes },
-        props,
-        state,
-        handleSetState,
-      );
+      return buildCreatorProfiles(results, { classes, common_classes }, props, state, handleSetState);
     } else {
       return (
         <Grid container spacing={3}>
@@ -166,13 +117,7 @@ function SearchResults(props) {
     }
   };
 
-  const {
-    count,
-    results,
-    previous: prev_page,
-    next: next_page,
-    loading,
-  } = state;
+  const { count, results, previous: prev_page, next: next_page, loading } = state;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
@@ -183,36 +128,20 @@ function SearchResults(props) {
           <Container className={classes.mainContainerStyle}>
             <Grid container>
               <Grid item xs={12}>
-                <Typography
-                  className={classes.pageHeaderStyle}
-                  variant="h3"
-                  gutterBottom
-                >
-                  {count}{' '}
-                  {count > 1
-                    ? t('searchResults.resultsFound')
-                    : t('searchResults.resultFound')}{' '}
-                  "{getQueryParams(window.location.href).get('q')}"
+                <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
+                  {count} {count > 1 ? t('searchResults.resultsFound') : t('searchResults.resultFound')} "
+                  {getQueryParams(window.location.href).get('q')}"
                 </Typography>
               </Grid>
-              {getResults(
-                getQueryParams(window.location.href).get('type'),
-                results,
-              )}
+              {getResults(getQueryParams(window.location.href).get('type'), results)}
             </Grid>
-            <ButtonGroup
-              aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
-              className={classes.buttonGroupStyle}
-            >
+            <ButtonGroup aria-label={t('searchResults.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
               {prev_page ? (
                 <CustomButton
                   className={classes.floatLeft}
                   size="large"
                   startIcon={<NavigateBeforeIcon />}
-                  onClick={(
-                    _,
-                    page = getQueryParams(prev_page).get('page'),
-                  ) => {
+                  onClick={(_, page = getQueryParams(prev_page).get('page')) => {
                     handleSetState({ loading: true });
                     handleSetState(
                       fetchPage(
@@ -233,10 +162,7 @@ function SearchResults(props) {
                   className={classes.floatRight}
                   size="large"
                   endIcon={<NavigateNextIcon />}
-                  onClick={(
-                    _,
-                    page = getQueryParams(next_page).get('page'),
-                  ) => {
+                  onClick={(_, page = getQueryParams(next_page).get('page')) => {
                     handleSetState({ loading: true });
                     handleSetState(
                       fetchPage(

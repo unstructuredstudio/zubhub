@@ -3,15 +3,11 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { style } from '../../assets/js/styles/components/activity/activityStyle';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import {
-  getActivities,
-  activityToggleSave,
-  setActivity,
-} from '../../store/actions/activityActions';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { getActivities, activityToggleSave, setActivity } from '../../store/actions/activityActions';
 import {
   Card,
   CardActions,
@@ -24,7 +20,7 @@ import {
   ListItemText,
   Grid,
   Fab,
-} from '@material-ui/core';
+} from '@mui/material';
 import commonStyles from '../../assets/js/styles';
 import Creator from '../creator/creator';
 import { toggleSave } from './activityScripts';
@@ -44,11 +40,7 @@ function Activity(props) {
     <div className={classes.activityCardContainer}>
       {activity.creators?.length > 0
         ? activity.creators.map((creator, index) => (
-            <Creator
-              key={index}
-              creator={creator}
-              top={index * topMarginCoefficient - 1 + 'em'}
-            />
+            <Creator key={index} creator={creator} top={index * topMarginCoefficient - 1 + 'em'} />
           ))
         : ''}
       <Link
@@ -67,14 +59,7 @@ function Activity(props) {
             <Box className={classes.activityTagsBox}>
               {activity.tags?.length > 0
                 ? activity.tags.slice(0, 3).map(tag => (
-                    <Typography
-                      className={
-                        common_classes.baseTagStyle +
-                        ' ' +
-                        classes.activityTagPill
-                      }
-                      key={tag.id}
-                    >
+                    <Typography className={common_classes.baseTagStyle + ' ' + classes.activityTagPill} key={tag.id}>
                       {tag.name}
                     </Typography>
                   ))
@@ -86,11 +71,7 @@ function Activity(props) {
                   onMouseOut={() => setTagsShowMore(false)}
                 >
                   <Typography
-                    className={
-                      common_classes.baseTagStyle +
-                      ' ' +
-                      classes.activityTagsShowMore
-                    }
+                    className={common_classes.baseTagStyle + ' ' + classes.activityTagsShowMore}
                     key="activityTagsShowMore"
                   >
                     {['+', activity.tags.length - 3].join('')}
@@ -134,15 +115,7 @@ function Activity(props) {
                 size="small"
                 aria-label="save button"
                 onClick={e =>
-                  toggleSave(
-                    e,
-                    activity.id,
-                    props.auth,
-                    props.history,
-                    handleSetState,
-                    props.activityToggleSave,
-                    t,
-                  )
+                  toggleSave(e, activity.id, props.auth, props.history, handleSetState, props.activityToggleSave, t)
                 }
               >
                 {props.auth && activity.saved_by.includes(props.auth.id) ? (
@@ -151,19 +124,9 @@ function Activity(props) {
                   <BookmarkBorderIcon aria-label="save" />
                 )}
               </Fab>
-              <Grid
-                container
-                className={clsx(
-                  classes.activityCardInfoBox,
-                  common_classes.alignCenter,
-                )}
-              >
+              <Grid container className={clsx(classes.activityCardInfoBox, common_classes.alignCenter)}>
                 <Grid item xs={6} sm={6}>
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    className={classes.activityTitle}
-                  >
+                  <Typography variant="h6" component="h6" className={classes.activityTitle}>
                     {activity.title}
                   </Typography>
                 </Grid>
@@ -173,14 +136,9 @@ function Activity(props) {
                     className={common_classes.textDecorationNone}
                     onClick={e => props.setActivity(activity)}
                   >
-                    <Typography
-                      variant="caption"
-                      className={classes.projectsCount}
-                    >
+                    <Typography variant="caption" className={classes.projectsCount}>
                       {`${t('activities.LinkedProjects')} `}{' '}
-                      <span
-                        className={classes.projectsCountNumber}
-                      >{` ${activity.inspired_projects.length}`}</span>
+                      <span className={classes.projectsCountNumber}>{` ${activity.inspired_projects.length}`}</span>
                     </Typography>
                   </Link>
                 </Grid>

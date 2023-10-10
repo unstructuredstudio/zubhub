@@ -5,16 +5,10 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Typography,
-  Container,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Grid, Box, ButtonGroup, Typography, Container } from '@mui/material';
 
 import { fetchPage, updateProjects } from './teamProjectsScripts';
 
@@ -58,8 +52,8 @@ function TeamProjects(props) {
 
   const { projects: projects, prev_page, next_page, loading } = state;
   const { t } = props;
-  const {groupname} = useParams();
-  const username=groupname;
+  const { groupname } = useParams();
+  const username = groupname;
   if (loading) {
     return <LoadingPage />;
   } else if (projects && projects.length > 0) {
@@ -68,46 +62,28 @@ function TeamProjects(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
+              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
                 {username}'s {t('userProjects.title')}
               </Typography>
             </Grid>
             {projects.map(project => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                className={classes.projectGridStyle}
-                align="center"
-              >
+              <Grid item xs={12} sm={6} md={4} className={classes.projectGridStyle} align="center">
                 <Project
                   project={project}
                   key={project.id}
-                  updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props, toast))
-                  }
+                  updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                   {...props}
                 />
               </Grid>
             ))}
           </Grid>
-          <ButtonGroup
-            aria-label={t('userProjects.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
+          <ButtonGroup aria-label={t('userProjects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prev_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
+                onClick={(e, page = prev_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
                 primaryButtonStyle
               >
                 {t('userProjects.prev')}
@@ -118,9 +94,7 @@ function TeamProjects(props) {
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = next_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
+                onClick={(e, page = next_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
                 primaryButtonStyle
               >
                 {t('userProjects.next')}

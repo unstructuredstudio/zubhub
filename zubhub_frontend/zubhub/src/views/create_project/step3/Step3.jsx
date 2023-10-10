@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown } from '../../../components';
 import { getCategories, searchCreators } from '../script';
 import { TEAM_ENABLED, getUrlQueryObject } from '../../../utils.js';
-import { Checkbox, Grid, Typography, makeStyles } from '@material-ui/core';
+import { Checkbox, Grid, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { colors } from '../../../assets/js/colors';
 import styles from '../../../assets/js/styles';
 import { step3Style } from './step3.styles';
@@ -30,12 +31,12 @@ export default function Step3({ formik, handleBlur, ...props }) {
 
   useEffect(() => {
     getCategories(props).then(cats => setCategories(cats.categories));
+    let params = getUrlQueryObject();
+    if ('mode' in params) setMode(params.mode);
+    if (TEAM_ENABLED) {
       let params = getUrlQueryObject();
       if ('mode' in params) setMode(params.mode);
-      if (TEAM_ENABLED) {
-        let params = getUrlQueryObject();
-        if ('mode' in params) setMode(params.mode);
-      }
+    }
   }, []);
 
   const creatorsData = [

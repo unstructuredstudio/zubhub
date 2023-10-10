@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { makeStyles } from '@mui/styles';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Grid,
   Box,
@@ -23,7 +23,7 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   validationSchema,
@@ -75,25 +75,12 @@ function PasswordResetConfirm(props) {
                 noValidate="noValidate"
                 onSubmit={e => resetPassword(e, props)}
               >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
+                <Typography gutterBottom variant="h5" component="h2" color="textPrimary" className={classes.titleStyle}>
                   {t('passwordResetConfirm.welcomeMsg.primary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box
-                      component="p"
-                      className={
-                        props.status &&
-                        props.status['non_field_errors'] &&
-                        classes.errorBox
-                      }
-                    >
+                    <Box component="p" className={props.status && props.status['non_field_errors'] && classes.errorBox}>
                       {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
                           {props.status['non_field_errors']}
@@ -111,14 +98,10 @@ function PasswordResetConfirm(props) {
                       margin="normal"
                       error={
                         (props.status && props.status['new_password1']) ||
-                        (props.touched['new_password1'] &&
-                          props.errors['new_password1'])
+                        (props.touched['new_password1'] && props.errors['new_password1'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="new_password1"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="new_password1">
                         {t('passwordResetConfirm.inputs.newPassword1.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -132,34 +115,21 @@ function PasswordResetConfirm(props) {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={(_, field = 1) =>
-                                handleSetState(
-                                  handleClickShowPassword(field, state),
-                                )
-                              }
+                              onClick={(_, field = 1) => handleSetState(handleClickShowPassword(field, state))}
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {show_password1 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
+                              {show_password1 ? <Visibility /> : <VisibilityOff />}
                             </IconButton>
                           </InputAdornment>
                         }
                         label={t('passwordResetConfirm.inputs.newPassword1.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['new_password1']) ||
                           (props.touched['new_password1'] &&
                             props.errors['new_password1'] &&
-                            t(
-                              `passwordResetConfirm.inputs.newPassword1.errors.${props.errors['new_password1']}`,
-                            ))}
+                            t(`passwordResetConfirm.inputs.newPassword1.errors.${props.errors['new_password1']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -173,14 +143,10 @@ function PasswordResetConfirm(props) {
                       margin="normal"
                       error={
                         (props.status && props.status['new_password2']) ||
-                        (props.touched['new_password2'] &&
-                          props.errors['new_password2'])
+                        (props.touched['new_password2'] && props.errors['new_password2'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="new_password2"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="new_password2">
                         {t('passwordResetConfirm.inputs.newPassword2.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -194,34 +160,21 @@ function PasswordResetConfirm(props) {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={(_, field = 2) =>
-                                handleSetState(
-                                  handleClickShowPassword(field, state),
-                                )
-                              }
+                              onClick={(_, field = 2) => handleSetState(handleClickShowPassword(field, state))}
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {show_password2 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
+                              {show_password2 ? <Visibility /> : <VisibilityOff />}
                             </IconButton>
                           </InputAdornment>
                         }
                         label={t('passwordResetConfirm.inputs.newPassword2.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['new_password2']) ||
                           (props.touched['new_password2'] &&
                             props.errors['new_password2'] &&
-                            t(
-                              `passwordResetConfirm.inputs.newPassword2.errors.${props.errors['new_password2']}`,
-                            ))}
+                            t(`passwordResetConfirm.inputs.newPassword2.errors.${props.errors['new_password2']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>

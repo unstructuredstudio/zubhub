@@ -1,4 +1,5 @@
-import { FormControl, FormHelperText, TextField, Typography, makeStyles } from '@material-ui/core';
+import { FormControl, FormHelperText, TextField, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import React, { memo, useState } from 'react';
 import styles from '../../../assets/js/styles';
 import { textInputStyles } from './TextInput.styles';

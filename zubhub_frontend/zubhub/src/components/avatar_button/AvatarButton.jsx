@@ -1,13 +1,12 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import React, { useRef, useState } from 'react';
-import commonStyles from '../../assets/js/styles/index';
-import { Avatar, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import HamburgerMenu from '../hamburger_menu/HamburgerMenu';
-import PanelPopper from '../notification_panel/PanelPopper';
+import { useRef, useState } from 'react';
+import { Avatar, Typography, ClickAwayListener } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 import { styles } from './avatarButton.styles';
 import { colors } from '../../assets/js/colors';
+import HamburgerMenu from '../hamburger_menu/HamburgerMenu';
+import PanelPopper from '../notification_panel/PanelPopper';
+import commonStyles from '../../assets/js/styles/index';
 import CustomButton from '../button/Button';
 
 const AvatarButton = props => {

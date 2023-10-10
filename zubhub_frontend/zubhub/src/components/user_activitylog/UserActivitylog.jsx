@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../../assets/js/styles/components/user_activitylog/userActivitylogStyles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { dFormatter } from '../../assets/js/utils/scripts';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -32,7 +32,7 @@ import {
   Divider,
   ListItem,
   ListItemText,
-} from '@material-ui/core';
+} from '@mui/material';
 
 const useStyles = makeStyles(styles);
 

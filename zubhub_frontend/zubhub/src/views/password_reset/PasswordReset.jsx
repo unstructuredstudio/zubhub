@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import {
   Grid,
   Box,
@@ -19,12 +19,9 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from '@material-ui/core';
+} from '@mui/material';
 
-import {
-  sendPasswordResetLink,
-  validationSchema,
-} from './passwordResetScripts';
+import { sendPasswordResetLink, validationSchema } from './passwordResetScripts';
 
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
@@ -38,7 +35,7 @@ const useStyles = makeStyles(styles);
  *
  * @todo - describe function's signature
  */
-function PasswordReset (props) {
+function PasswordReset(props) {
   const classes = useStyles();
   const { t } = props;
 
@@ -54,33 +51,15 @@ function PasswordReset (props) {
                 noValidate="noValidate"
                 onSubmit={e => sendPasswordResetLink(e, props)}
               >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
+                <Typography gutterBottom variant="h5" component="h2" color="textPrimary" className={classes.titleStyle}>
                   {t('passwordReset.welcomeMsg.primary')}
                 </Typography>
-                <Typography
-                  className={classes.descStyle}
-                  variant="body2"
-                  color="textSecondary"
-                  component="p"
-                >
+                <Typography className={classes.descStyle} variant="body2" color="textSecondary" component="p">
                   {t('passwordReset.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box
-                      component="p"
-                      className={
-                        props.status &&
-                        props.status['non_field_errors'] &&
-                        classes.errorBox
-                      }
-                    >
+                    <Box component="p" className={props.status && props.status['non_field_errors'] && classes.errorBox}>
                       {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
                           {props.status['non_field_errors']}
@@ -96,14 +75,10 @@ function PasswordReset (props) {
                       fullWidth
                       margin="normal"
                       error={
-                        (props.status && props.status['email']) ||
-                        (props.touched['email'] && props.errors['email'])
+                        (props.status && props.status['email']) || (props.touched['email'] && props.errors['email'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="email"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="email">
                         {t('passwordReset.inputs.email.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -115,16 +90,11 @@ function PasswordReset (props) {
                         onBlur={props.handleBlur}
                         label={t('passwordReset.inputs.email.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['email']) ||
                           (props.touched['email'] &&
                             props.errors['email'] &&
-                            t(
-                              `passwordReset.inputs.email.errors.${props.errors['email']}`,
-                            ))}
+                            t(`passwordReset.inputs.email.errors.${props.errors['email']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>

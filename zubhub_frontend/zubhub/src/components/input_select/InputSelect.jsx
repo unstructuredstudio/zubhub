@@ -1,4 +1,5 @@
-import { InputBase, Select, withStyles } from '@material-ui/core';
+import { InputBase, Select } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import React from 'react';
 
 const BootstrapInput = withStyles(theme => ({
@@ -35,12 +36,7 @@ const BootstrapInput = withStyles(theme => ({
   },
 }))(InputBase);
 
-const InputSelect = ({
-  searchType,
-  onSearchTypeChange,
-  children,
-  ...selectProps
-}) => {
+const InputSelect = ({ searchType, onSearchTypeChange, children, ...selectProps }) => {
   return (
     <Select
       value={searchType}

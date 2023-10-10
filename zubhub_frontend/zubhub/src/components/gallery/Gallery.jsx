@@ -1,10 +1,10 @@
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
-
-import { CardMedia, Dialog, Grid, IconButton, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { CardMedia, Dialog, Grid, IconButton } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { galleryStyles } from './gallery.styles';
 import _ from 'lodash';
-import { ArrowBackOutlined, ArrowForwardOutlined } from '@material-ui/icons';
+import { ArrowBackOutlined, ArrowForwardOutlined } from '@mui/icons-material';
 import clsx from 'clsx';
 import styles from '../../assets/js/styles';
 import { refactorVideoUrl } from '../input/inputScripts';

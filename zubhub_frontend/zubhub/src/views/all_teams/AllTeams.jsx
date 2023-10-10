@@ -1,21 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Typography,
-  Container,
-  Card,
-  CardContent,
-  Link,
-  Avatar
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Grid, Box, ButtonGroup, Typography, Container, Card, CardContent, Link, Avatar } from '@mui/material';
 
 import { fetchPage, followTeam } from './allteamScripts';
 import * as UserActions from '../../store/actions/userActions';
@@ -65,32 +55,17 @@ function AllTeams(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
+              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
                 {t('All Teams')}
               </Typography>
             </Grid>
             <Grid container spacing={2}>
-                {teams.map(team => (
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    md={6}
-                    className={classes.projectGridStyle}
-                    align="center"
-                  > 
-                    <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>
+              {teams.map(team => (
+                <Grid item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
+                  <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>
                     <Card>
                       <CardContent className={classes.mediaBoxStyle}>
-                        <Avatar
-                          className={classes.creatorAvatarStyle}
-                          src={team.avatar}
-                          alt={team.groupname}
-                        />
+                        <Avatar className={classes.creatorAvatarStyle} src={team.avatar} alt={team.groupname} />
                         <Typography className={classes.titleStyle} variant="h5" component="h2">
                           {team.groupname}
                         </Typography>
@@ -114,22 +89,17 @@ function AllTeams(props) {
                       </CardContent>
                     </Card>
                   </Link>
-                  </Grid>
-                ))}
-              </Grid>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
-          <ButtonGroup
-            aria-label={t('userProjects.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
+          <ButtonGroup aria-label={t('userProjects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
                 size="large"
                 startIcon={<NavigateBeforeIcon />}
-                onClick={(e, page = prev_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
+                onClick={(e, page = prev_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
                 primaryButtonStyle
               >
                 {t('userProjects.prev')}
@@ -140,9 +110,7 @@ function AllTeams(props) {
                 className={classes.floatRight}
                 size="large"
                 endIcon={<NavigateNextIcon />}
-                onClick={(e, page = next_page.split('?')[1]) =>
-                  handleSetState(fetchPage(page, props))
-                }
+                onClick={(e, page = next_page.split('?')[1]) => handleSetState(fetchPage(page, props))}
                 primaryButtonStyle
               >
                 {t('userProjects.next')}

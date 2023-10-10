@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   CircularProgress,
@@ -9,19 +10,18 @@ import {
   Grid,
   Link,
   Typography,
-  makeStyles,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
   CloseOutlined,
   CloudDoneOutlined,
   Person,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { useSelector } from 'react-redux';
-import DoneRounded from '@material-ui/icons/DoneRounded';
-import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
+import DoneRounded from '@mui/icons-material/DoneRounded';
+import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import clsx from 'clsx';
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -52,7 +52,6 @@ import { TEAM_ENABLED } from '../../utils.js';
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Team Details', 'Add Team Members', 'Select Team Project'];
 
-
 function CreateTeam(props) {
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
@@ -73,10 +72,9 @@ function CreateTeam(props) {
   // const [selectedProjects, setSelectedProjects] = useState([]);
   let projs;
 
-  const updateSelectedProjects = (newSelectedProjects) => {
-    projs=newSelectedProjects;
+  const updateSelectedProjects = newSelectedProjects => {
+    projs = newSelectedProjects;
   };
-
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
@@ -168,15 +166,22 @@ function CreateTeam(props) {
   const submitData = async () => {
     try {
       if (!script.vars.upload_in_progress) {
-        const uploadStatus = await script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState, projs);
-  
+        const uploadStatus = await script.initUpload(
+          state,
+          { ...props, ...formik, step: activeStep },
+          handleSetState,
+          projs,
+        );
+
         if (uploadStatus === 'success') {
           // Redirect to the desired URL on success
           const teamGroupName = formik.values.groupname; // Get the groupname from props
           history.push(`/teams/${teamGroupName}`);
         } else {
           const apiError = uploadStatus;
-          toast.error(`An unexpected error occurred. Please check if you have entered all details properly and try again.`);
+          toast.error(
+            `An unexpected error occurred. Please check if you have entered all details properly and try again.`,
+          );
         }
       }
     } catch (error) {
@@ -306,7 +311,7 @@ function CreateTeam(props) {
           )}
 
           <CustomButton
-            onClick={activeStep == 3 ?submitData :next}
+            onClick={activeStep == 3 ? submitData : next}
             loading={state.default_state?.loading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
@@ -441,7 +446,6 @@ const SelectModeUI = ({ setMode }) => {
 
 CreateTeam.propTypes = {
   auth: PropTypes.object.isRequired,
-
 };
 
 const mapStateToProps = state => {
@@ -452,9 +456,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-
-  };
+  return {};
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateTeam);

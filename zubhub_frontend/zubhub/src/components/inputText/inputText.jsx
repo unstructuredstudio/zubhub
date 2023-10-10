@@ -3,55 +3,24 @@ import clsx from 'clsx';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  getValue,
-  getErrors,
-} from '../../views/create_activity/createActivityScripts';
-import {
-  handleInputTextFieldChange,
-  handleInputTextFieldBlur,
-} from './inputTextScripts';
-import {
-  Box,
-  Typography,
-  FormControl,
-  FormHelperText,
-  ClickAwayListener,
-} from '@material-ui/core';
+import { getValue, getErrors } from '../../views/create_activity/createActivityScripts';
+import { handleInputTextFieldChange, handleInputTextFieldBlur } from './inputTextScripts';
+import { Box, Typography, FormControl, FormHelperText, ClickAwayListener } from '@mui/material';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
 
 function InputText(props) {
-  const {
-    classes,
-    common_classes,
-    activity_classes,
-    fieldType,
-    name,
-    helperText,
-    placeholder,
-    formikProps,
-    vars,
-    t,
-  } = props;
+  const { classes, common_classes, activity_classes, fieldType, name, helperText, placeholder, formikProps, vars, t } =
+    props;
   const [inputTextFieldFocused, setInputTextFieldFocused] = useState(false);
   const { route, field, index } = getRouteFieldIndex(name);
-  let fieldErrors = getErrors(
-    route,
-    field,
-    index,
-    formikProps.errors,
-    formikProps.touched,
-  );
+  let fieldErrors = getErrors(route, field, index, formikProps.errors, formikProps.touched);
   return (
     <div>
       <Typography
         color="textSecondary"
         variant="caption"
         component="span"
-        className={clsx(
-          classes.fieldHelperTextStyle,
-          common_classes.marginBottom1em,
-        )}
+        className={clsx(classes.fieldHelperTextStyle, common_classes.marginBottom1em)}
       >
         {helperText ? helperText : ''}
       </Typography>
@@ -65,12 +34,7 @@ function InputText(props) {
         <ClickAwayListener
           onClickAway={() => {
             if (inputTextFieldFocused) {
-              handleInputTextFieldBlur(
-                field,
-                formikProps.formikValues,
-                setInputTextFieldFocused,
-                props.validateSteps,
-              );
+              handleInputTextFieldBlur(field, formikProps.formikValues, setInputTextFieldFocused, props.validateSteps);
             }
           }}
         >
@@ -81,13 +45,7 @@ function InputText(props) {
             modules={vars.quill.modules}
             formats={vars.quill.formats}
             placeholder={placeholder ? placeholder : ''}
-            defaultValue={getValue(
-              route,
-              field,
-              index,
-              fieldType,
-              formikProps.formikValues,
-            )}
+            defaultValue={getValue(route, field, index, fieldType, formikProps.formikValues)}
             onChange={value =>
               handleInputTextFieldChange(
                 name,
@@ -100,13 +58,7 @@ function InputText(props) {
           />
         </ClickAwayListener>
         <FormHelperText error className={classes.fieldHelperTextStyle}>
-          {fieldErrors
-            ? t(
-                `createActivity.inputs.${
-                  route ? route : field
-                }.errors.${fieldErrors}`,
-              )
-            : ''}
+          {fieldErrors ? t(`createActivity.inputs.${route ? route : field}.errors.${fieldErrors}`) : ''}
         </FormHelperText>
       </FormControl>
     </div>

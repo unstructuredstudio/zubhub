@@ -1,13 +1,7 @@
 import React from 'react';
-import MaterialAutcomplete from '@material-ui/lab/Autocomplete';
+import MaterialAutcomplete from '@mui/lab/Autocomplete';
 
-const Autocomplete = ({
-  options,
-  children,
-  defaultValue,
-  renderOption,
-  ...otherProps
-}) => {
+const Autocomplete = ({ options, children, defaultValue, renderOption, ...otherProps }) => {
   return (
     <MaterialAutcomplete
       id="combo-box-demo"

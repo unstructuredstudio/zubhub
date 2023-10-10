@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import styles from '../../assets/js/styles/components/projects_drafts/projectsDraftsGridStyles';
 import commonStyles from '../../assets/js/styles';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CustomButton from '../../components/button/Button';
-import { Typography, Grid, Paper, Tabs, Tab, Box, Divider } from '@material-ui/core';
+import { Typography, Grid, Paper, Tabs, Tab, Box, Divider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';

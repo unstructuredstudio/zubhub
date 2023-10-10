@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import InputText from '../../components/inputText/inputText';
-import CancelIcon from '@material-ui/icons/Cancel';
+import CancelIcon from '@mui/icons-material/Cancel';
 import 'react-toastify/dist/ReactToastify.css';
 import { vars } from '../create_project/createProjectScripts';
-import {
-  getMakingStepsRequiredError,
-  getStepError,
-} from './createActivityScripts';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, FormControl, Box, Typography } from '@material-ui/core';
+import { getMakingStepsRequiredError, getStepError } from './createActivityScripts';
+import { makeStyles } from '@mui/styles';
+import { Grid, FormControl, Box, Typography } from '@mui/material';
 import CustomButton from '../../components/button/Button';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
 import commonStyles from '../../assets/js/styles';
@@ -59,13 +56,7 @@ function CreateActivityStep3(props) {
   return (
     <div className={activity_classes.createActivityStepContainer}>
       <Grid container spacing={3}>
-        <Grid
-          item
-          xs={12}
-          md={12}
-          sm={12}
-          className={common_classes.marginTop1em}
-        >
+        <Grid item xs={12} md={12} sm={12} className={common_classes.marginTop1em}>
           <FormLabel
             label={'creationSteps'}
             classes={classes}
@@ -114,28 +105,18 @@ function CreateActivityStep3(props) {
                           array: true,
                         }}
                         helperText={''}
-                        placeholder={`${t(
-                          'createActivity.inputs.making_steps.placeholder',
-                        )} ${parseInt(key, 10) + 1}`}
+                        placeholder={`${t('createActivity.inputs.making_steps.placeholder')} ${parseInt(key, 10) + 1}`}
                         formikProps={props.formikProps}
                         validateSteps={props.validateSteps}
                         vars={vars}
                         t={props.t}
                       />
-                      <Grid
-                        item
-                        xs={12}
-                        md={3}
-                        sm={6}
-                        className={common_classes.marginTop1em}
-                      >
+                      <Grid item xs={12} md={3} sm={6} className={common_classes.marginTop1em}>
                         <UploadFile
                           key={`makingSteps[${key}].imageKey`}
                           name={`making_steps[${key}].image`}
                           fileType={'image/*'}
-                          uploadButtonLabel={t(
-                            'createActivity.inputs.making_steps.image.label',
-                          )}
+                          uploadButtonLabel={t('createActivity.inputs.making_steps.image.label')}
                           classes={classes}
                           activity_classes={activity_classes}
                           fieldType={{
@@ -190,14 +171,7 @@ function CreateActivityStep3(props) {
                       </Typography> */}
                     </Grid>
                   ))}
-                <Grid
-                  item
-                  spacing={3}
-                  container
-                  direction="row"
-                  alignItems="flex-end"
-                  justifyContent="flex-end"
-                >
+                <Grid item spacing={3} container direction="row" alignItems="flex-end" justifyContent="flex-end">
                   <CustomButton
                     variant="outlined"
                     size="large"
@@ -205,22 +179,14 @@ function CreateActivityStep3(props) {
                     secondaryButtonStyle
                     customButtonStyle
                   >
-                    <AddIcon />{' '}
-                    {t('createActivity.inputs.making_steps.addMore')}
+                    <AddIcon /> {t('createActivity.inputs.making_steps.addMore')}
                   </CustomButton>
                 </Grid>
               </div>
             )}
           />
-          <Typography
-            variant="h10"
-            className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}
-          >
-            {getMakingStepsRequiredError(
-              'making_steps',
-              formikProps.errors,
-              formikProps.touched,
-            )
+          <Typography variant="h10" className={clsx(classes.fieldHelperTextStyle, classes.errorMessage)}>
+            {getMakingStepsRequiredError('making_steps', formikProps.errors, formikProps.touched)
               ? t(
                   `createActivity.inputs.making_steps.errors.${getMakingStepsRequiredError(
                     'making_steps',
@@ -232,13 +198,7 @@ function CreateActivityStep3(props) {
           </Typography>
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          md={12}
-          sm={12}
-          className={common_classes.marginTop1em}
-        >
+        <Grid item xs={12} md={12} sm={12} className={common_classes.marginTop1em}>
           <FormLabel
             label={'InspiringArtist'}
             classes={classes}
@@ -246,16 +206,7 @@ function CreateActivityStep3(props) {
             inputOrder={8}
             fieldLabel={t('createActivity.inputs.inspiring_artist.label')}
           />
-          <Grid
-            item
-            xs={12}
-            md={12}
-            sm={12}
-            className={clsx(
-              common_classes.marginTop1em,
-              common_classes.outlined,
-            )}
-          >
+          <Grid item xs={12} md={12} sm={12} className={clsx(common_classes.marginTop1em, common_classes.outlined)}>
             <Input
               label={'ArtistFullName'}
               key={`inspiringArtist.nameKey`}
@@ -273,29 +224,19 @@ function CreateActivityStep3(props) {
               activity_classes={activity_classes}
               helperText={''}
               fieldType={{ simple: false, nested: true, array: false }}
-              placeholder={t(
-                'createActivity.inputs.inspiring_artist.placeholder',
-              )}
+              placeholder={t('createActivity.inputs.inspiring_artist.placeholder')}
               formikProps={props.formikProps}
               validateSteps={props.validateSteps}
               vars={vars}
               t={props.t}
             />
 
-            <Grid
-              item
-              xs={12}
-              md={3}
-              sm={6}
-              className={common_classes.marginTop1em}
-            >
+            <Grid item xs={12} md={3} sm={6} className={common_classes.marginTop1em}>
               <UploadFile
                 key={`inspiringArtist.imageKey`}
                 name={`inspiring_artist.image`}
                 fileType={'image/*'}
-                uploadButtonLabel={t(
-                  'createActivity.inputs.inspiring_artist.image.label',
-                )}
+                uploadButtonLabel={t('createActivity.inputs.inspiring_artist.image.label')}
                 classes={classes}
                 activity_classes={activity_classes}
                 fieldType={{ simple: false, nested: true, array: false }}
@@ -303,10 +244,7 @@ function CreateActivityStep3(props) {
                 validateSteps={validateSteps}
                 t={t}
                 multiple={false}
-                countFilesText={[
-                  props.t('createActivity.inputs.image'),
-                  props.t('createActivity.inputs.images'),
-                ]}
+                countFilesText={[props.t('createActivity.inputs.image'), props.t('createActivity.inputs.images')]}
               />
             </Grid>
           </Grid>
@@ -316,10 +254,7 @@ function CreateActivityStep3(props) {
           xs={12}
           md={12}
           sm={12}
-          className={clsx(
-            common_classes.marginTop3em,
-            common_classes.marginBottom1em,
-          )}
+          className={clsx(common_classes.marginTop3em, common_classes.marginBottom1em)}
         >
           <FormLabel
             label={'inspiringExamples'}
@@ -394,9 +329,7 @@ function CreateActivityStep3(props) {
                             key={`inspiringExamples[${key}].imageKey`}
                             name={`inspiring_examples[${key}].image`}
                             fileType={'image/*'}
-                            uploadButtonLabel={t(
-                              'createActivity.inputs.inspiring_examples.image.label',
-                            )}
+                            uploadButtonLabel={t('createActivity.inputs.inspiring_examples.image.label')}
                             classes={classes}
                             activity_classes={activity_classes}
                             fieldType={{
@@ -417,14 +350,7 @@ function CreateActivityStep3(props) {
                       </Grid>
                     </Grid>
                   ))}
-                <Grid
-                  item
-                  spacing={3}
-                  container
-                  direction="row"
-                  alignItems="flex-end"
-                  justifyContent="flex-end"
-                >
+                <Grid item spacing={3} container direction="row" alignItems="flex-end" justifyContent="flex-end">
                   <CustomButton
                     variant="outlined"
                     size="large"
@@ -432,8 +358,7 @@ function CreateActivityStep3(props) {
                     secondaryButtonStyle
                     customButtonStyle
                   >
-                    <AddIcon />{' '}
-                    {t('createActivity.inputs.inspiring_examples.addMore')}
+                    <AddIcon /> {t('createActivity.inputs.inspiring_examples.addMore')}
                   </CustomButton>
                 </Grid>
               </div>
