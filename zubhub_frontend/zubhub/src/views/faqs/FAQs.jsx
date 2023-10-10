@@ -4,17 +4,9 @@ import { connect } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {
-  Box,
-  Container,
-  Card,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Container, Card, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 
 import * as UserActions from '../../store/actions/userActions';
 import LoadingPage from '../loading/LoadingPage';
@@ -59,9 +51,7 @@ function FAQs(props) {
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
-            <Typography className={classes.faqsHeadingStyle}>
-              {t('faqs.title')}
-            </Typography>
+            <Typography className={classes.faqsHeadingStyle}>{t('faqs.title')}</Typography>
             {faqs.map(faq => (
               <Accordion>
                 <AccordionSummary
@@ -74,14 +64,10 @@ function FAQs(props) {
                   aria-controls={t('faqs.answer')}
                   id={t('faqs.question')}
                 >
-                  <Typography className={classes.heading}>
-                    {faq.question}
-                  </Typography>
+                  <Typography className={classes.heading}>{faq.question}</Typography>
                 </AccordionSummary>
                 <AccordionDetails aria-label={t('faqs.answer')}>
-                  <Typography
-                    dangerouslySetInnerHTML={{ __html: faq.answer }}
-                  ></Typography>
+                  <Typography dangerouslySetInnerHTML={{ __html: faq.answer }}></Typography>
                 </AccordionDetails>
               </Accordion>
             ))}

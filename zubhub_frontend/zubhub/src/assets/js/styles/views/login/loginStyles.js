@@ -1,5 +1,3 @@
-import { fade } from '@material-ui/core/styles';
-
 const styles = theme => ({
   root: {
     paddingTop: '2em',
@@ -15,7 +13,7 @@ const styles = theme => ({
       maxWidth: '950px',
     },
     [theme.breakpoints.down('400')]: {
-      marginTop:'30px',
+      marginTop: '30px',
     },
   },
   cardStyle: {

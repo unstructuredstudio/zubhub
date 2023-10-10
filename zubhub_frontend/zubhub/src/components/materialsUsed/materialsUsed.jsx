@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import AddMore from '../../components/addMore/addMore';
 import clsx from 'clsx';
-import ImageIcon from '@material-ui/icons/Image';
-import AddIcon from '@material-ui/icons/Add';
+import ImageIcon from '@mui/icons-material/Image';
+import AddIcon from '@mui/icons-material/Add';
 import CustomButton from '../../components/button/Button';
 import Input from '../input/input';
 import {
@@ -23,7 +23,7 @@ import {
   FormControl,
   InputLabel,
   ClickAwayListener,
-} from '@material-ui/core';
+} from '@mui/material';
 import { handleImageFieldChange } from '../../views/create_activity/createActivityScripts';
 import UploadFile from '../../components/upload_file/uploadFile';
 
@@ -46,9 +46,7 @@ function MaterialsUsed(props) {
     validateSteps,
   } = props;
   const [materialsUsedList, setMaterialsUsedList] = useState(
-    formikProps.formikValues.materials_used
-      ? formikProps.formikValues.materials_used
-      : ['', '', ''],
+    formikProps.formikValues.materials_used ? formikProps.formikValues.materials_used : ['', '', ''],
   );
   return (
     <div>
@@ -69,16 +67,7 @@ function MaterialsUsed(props) {
             />
           ))}
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={6}
-          spacing={3}
-          container
-          direction="row"
-          alignItems="flex-end"
-          justifyContent="center"
-        >
+        <Grid item xs={12} md={6} spacing={3} container direction="row" alignItems="flex-end" justifyContent="center">
           <AddMore setNodeList={setMaterialsUsedList} label={addMoreLabel} />
         </Grid>
       </Grid>
@@ -92,11 +81,7 @@ function MaterialsUsed(props) {
           color="textSecondary"
           variant="caption"
           component="span"
-          className={clsx(
-            classes.fieldHelperTextStyle,
-            common_classes.marginBottom1em,
-            common_classes.marginTop1em,
-          )}
+          className={clsx(classes.fieldHelperTextStyle, common_classes.marginBottom1em, common_classes.marginTop1em)}
         >
           {encouragingText}
         </Typography>
@@ -114,10 +99,7 @@ function MaterialsUsed(props) {
               formikProps={formikProps}
               validateSteps={validateSteps}
               t={t}
-              countFilesText={[
-                props.t('createActivity.inputs.image'),
-                props.t('createActivity.inputs.images'),
-              ]}
+              countFilesText={[props.t('createActivity.inputs.image'), props.t('createActivity.inputs.images')]}
             />
           </Grid>
         </Grid>

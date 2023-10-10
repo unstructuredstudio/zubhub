@@ -1,5 +1,6 @@
-import { Box, ClickAwayListener, FormControl, FormHelperText, Typography, makeStyles } from '@material-ui/core';
-import { Add, ClearRounded } from '@material-ui/icons';
+import { Box, ClickAwayListener, FormControl, FormHelperText, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Add, ClearRounded } from '@mui/icons-material';
 import clsx from 'clsx';
 import { useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

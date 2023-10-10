@@ -1,5 +1,3 @@
-import { fade } from '@material-ui/core/styles';
-
 const styles = theme => ({
   root: {
     color: 'black',

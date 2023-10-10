@@ -5,16 +5,10 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Typography,
-  Container,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Grid, Box, ButtonGroup, Typography, Container } from '@mui/material';
 
 import { fetchPage, updateProjects } from './savedProjectsScripts';
 
@@ -64,38 +58,22 @@ function SavedProjects(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h4"
-                gutterBottom
-              >
+              <Typography className={classes.pageHeaderStyle} variant="h4" gutterBottom>
                 {t('savedProjects.title')}
               </Typography>
             </Grid>
             {projects.map(project => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                align="center"
-                className={classes.projectGridStyle}
-              >
+              <Grid item xs={12} sm={6} md={4} align="center" className={classes.projectGridStyle}>
                 <Project
                   project={project}
                   key={project.id}
-                  updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props, toast))
-                  }
+                  updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                   {...props}
                 />
               </Grid>
             ))}
           </Grid>
-          <ButtonGroup
-            aria-label={t('savedProjects.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
+          <ButtonGroup aria-label={t('savedProjects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}

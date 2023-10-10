@@ -12,10 +12,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Activity from '../../components/activity/activity';
 import styles from '../../assets/js/styles/views/activities/activitiesStyles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import ErrorPage from '../error/ErrorPage';
 import DefaultStyles from '../../assets/js/styles';
-import { Grid, Box, Typography } from '@material-ui/core';
+import { Grid, Box, Typography } from '@mui/material';
 import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
 

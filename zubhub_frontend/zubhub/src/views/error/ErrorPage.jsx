@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, Typography, Container } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, Typography, Container } from '@mui/material';
 
 import disconnected from '../../assets/images/disconnected-chains.svg';
 import styles from '../../assets/js/styles/views/error/errorPageStyles';

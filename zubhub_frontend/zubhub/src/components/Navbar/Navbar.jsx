@@ -7,9 +7,9 @@ import { connect, useSelector } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import TranslateIcon from '@material-ui/icons/Translate';
+import { makeStyles } from '@mui/styles';
+import SearchIcon from '@mui/icons-material/Search';
+import TranslateIcon from '@mui/icons-material/Translate';
 
 import {
   AppBar,
@@ -29,7 +29,7 @@ import {
   Toolbar,
   Typography,
   useScrollTrigger,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   closeSearchFormOrIgnore,
@@ -46,7 +46,7 @@ import styles from '../../assets/js/styles/views/page_wrapper/pageWrapperStyles'
 import * as AuthActions from '../../store/actions/authActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 
-import { Menu as MenuIcon, SearchOutlined } from '@material-ui/icons';
+import { Menu as MenuIcon, SearchOutlined } from '@mui/icons-material';
 import API from '../../api';
 import languageMap from '../../assets/js/languageMap.json';
 import Autocomplete from '../../components/autocomplete/Autocomplete';
@@ -113,13 +113,13 @@ function PageWrapper(props) {
         } else if (searchType === SearchType.PROJECTS) {
           completions = await api.autocompleteProjects({ query, token });
           completions = completions
-          .filter(c=>( c.creator.id === props.auth.id && c.publish.type !== 1 ))
-          .map(({ id, title, creator, images }) => ({
-            title,
-            shortInfo: creator.username,
-            image: images.length > 0 ? images[0].image_url : null,
-            link: `/projects/${id}`,
-          }));
+            .filter(c => c.creator.id === props.auth.id && c.publish.type !== 1)
+            .map(({ id, title, creator, images }) => ({
+              title,
+              shortInfo: creator.username,
+              image: images.length > 0 ? images[0].image_url : null,
+              link: `/projects/${id}`,
+            }));
         } else {
           completions = await api.autocompleteCreators({ query, token });
           completions = completions.map(({ username, avatar }) => ({

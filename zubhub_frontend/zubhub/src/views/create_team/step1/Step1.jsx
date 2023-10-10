@@ -1,4 +1,5 @@
-import { Box, FormControl, TextField, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, FormControl, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import styles from '../../../assets/js/styles';
 // import { Editor, TagsInput } from '../../../components';
@@ -43,7 +44,7 @@ export default function Step1({ formik, formValues, setFormValues, handleBlur })
       <Box marginY={6}>
         <FormControl fullWidth>
           <label className={commonClasses.title2}>
-           Team Name <span className={commonClasses.colorRed}>*</span>
+            Team Name <span className={commonClasses.colorRed}>*</span>
           </label>
           <TextField
             variant="outlined"
@@ -57,7 +58,7 @@ export default function Step1({ formik, formValues, setFormValues, handleBlur })
           />
           <br />
           <label className={commonClasses.title2}>
-           About Team <span className={commonClasses.colorRed}>*</span>
+            About Team <span className={commonClasses.colorRed}>*</span>
           </label>
           <TextField
             variant="outlined"
@@ -73,10 +74,6 @@ export default function Step1({ formik, formValues, setFormValues, handleBlur })
           />
         </FormControl>
       </Box>
-
-      
-
-      
     </div>
   );
 }

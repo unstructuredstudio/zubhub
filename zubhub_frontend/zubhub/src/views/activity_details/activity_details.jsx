@@ -6,20 +6,13 @@ import CustomButton from '../../components/button/Button';
 import GeneratePdf from '../../components/generatePdf/generatePdf';
 import styles from '../../assets/js/styles/views/activity_details/activityDetailsStyles';
 import commonStyles from '../../assets/js/styles';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, CardMedia, Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Grid, Box, CardMedia, Typography } from '@mui/material';
 import ActionIconsContainer from '../../components/actionIconsContainer/actionIconsContainer';
 import ReactQuill from 'react-quill';
 import clsx from 'clsx';
-import {
-  activityTogglePublish,
-  getUnPublishedActivities,
-} from '../../store/actions/activityActions';
-import {
-  videoOrUrl,
-  dFormatter,
-  getBase64ImageFromURL,
-} from '../../assets/js/utils/scripts';
+import { activityTogglePublish, getUnPublishedActivities } from '../../store/actions/activityActions';
+import { videoOrUrl, dFormatter, getBase64ImageFromURL } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -33,10 +26,7 @@ function ActivityDetails(props) {
   const { activities, auth } = useSelector(state => state);
   let activity = {};
 
-  if (
-    activities.selectedActivity['id'] &&
-    activities.selectedActivity['id'] === id
-  ) {
+  if (activities.selectedActivity['id'] && activities.selectedActivity['id'] === id) {
     activity = activities.selectedActivity;
   } else {
     let result = activities.all_activities.filter(item => item.id === id);
@@ -65,25 +55,14 @@ function ActivityDetails(props) {
       {activity['title'] ? (
         <Box
           id="activityDetailContainer"
-          className={clsx(
-            classes.activityDetailContainer,
-            common_classes.marginTop1em,
-          )}
+          className={clsx(classes.activityDetailContainer, common_classes.marginTop1em)}
         >
           <Grid className={clsx(classes.activityDetailBlockContainer)}>
             <Grid container>
-              {activity?.creators?.filter(item => item.id === auth.id).length >
-              0 ? (
+              {activity?.creators?.filter(item => item.id === auth.id).length > 0 ? (
                 <Grid item>
-                  <Link
-                    to={`/activities/${id}/edit`}
-                    className={common_classes.textDecorationNone}
-                  >
-                    <CustomButton
-                      className={common_classes.marginLeft1em}
-                      variant="contained"
-                      primaryButtonStyle
-                    >
+                  <Link to={`/activities/${id}/edit`} className={common_classes.textDecorationNone}>
+                    <CustomButton className={common_classes.marginLeft1em} variant="contained" primaryButtonStyle>
                       {t('activityDetails.activity.edit.label')}
                     </CustomButton>
                   </Link>
@@ -100,22 +79,12 @@ function ActivityDetails(props) {
                 ''
               )}
               <Grid item>
-                {auth.tags.filter(tag => tag === 'moderator' || tag === 'staff')
-                  .length > 0 && (
+                {auth.tags.filter(tag => tag === 'moderator' || tag === 'staff').length > 0 && (
                   <CustomButton
                     className={common_classes.marginLeft1em}
                     variant="contained"
                     primaryButtonStyle
-                    onClick={e =>
-                      togglePublish(
-                        e,
-                        activity.id,
-                        auth,
-                        history,
-                        props.activityTogglePublish,
-                        t,
-                      )
-                    }
+                    onClick={e => togglePublish(e, activity.id, auth, history, props.activityTogglePublish, t)}
                   >
                     {activity.publish
                       ? t('activityDetails.activity.unpublish.label')
@@ -131,10 +100,7 @@ function ActivityDetails(props) {
                 common_classes.marginTop1em,
               )}
             >
-              <Typography
-                id="activityTitle"
-                className={clsx(classes.titleStyle)}
-              >
+              <Typography id="activityTitle" className={clsx(classes.titleStyle)}>
                 {activity.title}
               </Typography>
             </Grid>
@@ -147,21 +113,10 @@ function ActivityDetails(props) {
               container
               spacing={2}
             >
-              <Grid
-                item
-                md={6}
-                xs={12}
-                sm={6}
-                lg={6}
-                className={clsx(classes.demoImageContainerStyle)}
-              >
+              <Grid item md={6} xs={12} sm={6} lg={6} className={clsx(classes.demoImageContainerStyle)}>
                 <CardMedia
                   id="activityImage"
-                  className={clsx(
-                    classes.demoImageStyle,
-                    common_classes.marginBottom1em,
-                    common_classes.marginTop1em,
-                  )}
+                  className={clsx(classes.demoImageStyle, common_classes.marginBottom1em, common_classes.marginTop1em)}
                   component={'img'}
                   image={activity.images[0].image.file_url}
                 />
@@ -173,11 +128,7 @@ function ActivityDetails(props) {
                 md={6}
                 sx={12}
                 sm={6}
-                className={clsx(
-                  classes.marginAuto,
-                  common_classes.centerVertically,
-                  common_classes.justifySelfCenter,
-                )}
+                className={clsx(classes.marginAuto, common_classes.centerVertically, common_classes.justifySelfCenter)}
               >
                 <Grid
                   className={clsx(
@@ -188,33 +139,19 @@ function ActivityDetails(props) {
                 >
                   <Typography
                     id="activityTitle"
-                    className={clsx(
-                      classes.titleStyle,
-                      common_classes.removeOnSmallScreen,
-                    )}
+                    className={clsx(classes.titleStyle, common_classes.removeOnSmallScreen)}
                     variant="h3"
                   >
                     {activity.title}
                   </Typography>
-                  <Link
-                    to={`/creators/${activity.creators[0].username}`}
-                    className={common_classes.link}
-                  >
+                  <Link to={`/creators/${activity.creators[0].username}`} className={common_classes.link}>
                     <Typography className={classes.createdOn} variant="h6">
-                      {`${t('activityDetails.made')} ${
-                        activity.creators[0].username
-                      } ${dFormatter(activity.created_on).value} ${t(
-                        `date.${dFormatter(activity.created_on).key}`,
-                      )} ${t('date.ago')}`}
+                      {`${t('activityDetails.made')} ${activity.creators[0].username} ${
+                        dFormatter(activity.created_on).value
+                      } ${t(`date.${dFormatter(activity.created_on).key}`)} ${t('date.ago')}`}
                     </Typography>
                   </Link>
-                  <Grid
-                    container
-                    className={clsx(
-                      common_classes.justifyCenter,
-                      common_classes.marginTop1em,
-                    )}
-                  >
+                  <Grid container className={clsx(common_classes.justifyCenter, common_classes.marginTop1em)}>
                     <Grid item lg={8} xs={12}>
                       <CustomButton
                         variant="contained"
@@ -228,12 +165,7 @@ function ActivityDetails(props) {
                         {t('activityDetails.activity.build')}
                       </CustomButton>
                     </Grid>
-                    <Grid
-                      item
-                      lg={8}
-                      xs={12}
-                      className={common_classes.marginTop1em}
-                    >
+                    <Grid item lg={8} xs={12} className={common_classes.marginTop1em}>
                       <GeneratePdf activity={activity} />
                     </Grid>
                   </Grid>
@@ -241,40 +173,20 @@ function ActivityDetails(props) {
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            className={clsx(
-              classes.activityDetailBlock,
-              common_classes.marginTop3em,
-            )}
-          >
+          <Grid className={clsx(classes.activityDetailBlock, common_classes.marginTop3em)}>
             <Grid className={clsx(common_classes.justifyCenter)}>
               <ReactQuill
                 id="activityMotivation"
-                className={clsx(
-                  classes.quillBodyStyle,
-                  classes.quillTextCenter,
-                )}
+                className={clsx(classes.quillBodyStyle, classes.quillTextCenter)}
                 theme={'bubble'}
                 readOnly={true}
                 value={activity.motivation || ''}
               />
             </Grid>
 
-            <Grid
-              container
-              className={clsx(
-                common_classes.marginTop3em,
-                common_classes.justifyCenter,
-              )}
-            >
+            <Grid container className={clsx(common_classes.marginTop3em, common_classes.justifyCenter)}>
               {activity.video && (
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={12}
-                  className={clsx(classes.videoWrapperStyle)}
-                >
+                <Grid item xs={12} sm={12} md={12} className={clsx(classes.videoWrapperStyle)}>
                   <CardMedia
                     id="activityVideo"
                     sx={{ height: 400 }}
@@ -294,19 +206,12 @@ function ActivityDetails(props) {
                 common_classes.marginBottom3em,
               )}
             >
-              <Typography
-                className={clsx(common_classes.marginTop1em, classes.subTitles)}
-                variant="h3"
-                align="left"
-              >
+              <Typography className={clsx(common_classes.marginTop1em, classes.subTitles)} variant="h3" align="left">
                 {t('activityDetails.subTitles.learning_goals')}
               </Typography>
               <ReactQuill
                 id="activityLearningGoals"
-                className={clsx(
-                  classes.quillBodyStyle,
-                  classes.quillTextCenter,
-                )}
+                className={clsx(classes.quillBodyStyle, classes.quillTextCenter)}
                 theme={'bubble'}
                 readOnly={true}
                 value={activity.learning_goals || ''}
@@ -315,39 +220,27 @@ function ActivityDetails(props) {
             <Grid
               // align="left"
               item
-              className={clsx(
-                common_classes.marginBottom3em,
-                common_classes.justifyCenter,
-              )}
+              className={clsx(common_classes.marginBottom3em, common_classes.justifyCenter)}
             >
-              <Typography
-                className={clsx(common_classes.marginTop1em, classes.subTitles)}
-                variant="h3"
-                align="left"
-              >
+              <Typography className={clsx(common_classes.marginTop1em, classes.subTitles)} variant="h3" align="left">
                 {t('activityDetails.subTitles.materials_required')}
               </Typography>
               <Grid container className={clsx(common_classes.justifyCenter)}>
                 <Grid item xs={12} lg={8} sm={8}>
                   {activity.materials_used &&
-                    activity.materials_used
-                      .split(',')
-                      .map((material, index) => (
-                        <Grid
-                          container
-                          className={clsx(common_classes.alignCenter)}
+                    activity.materials_used.split(',').map((material, index) => (
+                      <Grid container className={clsx(common_classes.alignCenter)}>
+                        {' '}
+                        <Box className={common_classes.listDotsStyle}>{}</Box>
+                        <Typography
+                          key={`materialUsedKey${index}`}
+                          variant="h6"
+                          className={clsx(classes.quillBodyStyle)}
                         >
-                          {' '}
-                          <Box className={common_classes.listDotsStyle}>{}</Box>
-                          <Typography
-                            key={`materialUsedKey${index}`}
-                            variant="h6"
-                            className={clsx(classes.quillBodyStyle)}
-                          >
-                            {`${material}`}
-                          </Typography>
-                        </Grid>
-                      ))}
+                          {`${material}`}
+                        </Typography>
+                      </Grid>
+                    ))}
                 </Grid>
                 {activity.materials_used_image && (
                   <Grid item xs={12} lg={4} sm={4}>
@@ -360,10 +253,7 @@ function ActivityDetails(props) {
                 )}
               </Grid>
               <Box
-                className={clsx(
-                  common_classes.marginTop3em,
-                  common_classes.marginBottom3em,
-                )}
+                className={clsx(common_classes.marginTop3em, common_classes.marginBottom3em)}
                 style={{
                   minHeight: '5px',
                   width: '10%',
@@ -373,28 +263,12 @@ function ActivityDetails(props) {
               ></Box>
             </Grid>
           </Grid>
-          <Grid
-            container
-            className={clsx(
-              classes.inspiringExamplesContainer,
-              common_classes.justifyCenter,
-            )}
-          >
-            <Typography
-              className={clsx(common_classes.marginTop3em, classes.subTitles)}
-              variant="h3"
-            >
+          <Grid container className={clsx(classes.inspiringExamplesContainer, common_classes.justifyCenter)}>
+            <Typography className={clsx(common_classes.marginTop3em, classes.subTitles)} variant="h3">
               {t('activityDetails.subTitles.inspiring_person')}
             </Typography>
-            <Grid
-              container
-              className={clsx(
-                common_classes.justifyCenter,
-                common_classes.marginBottom3em,
-              )}
-            >
-              {activity.inspiring_artist &&
-              activity.inspiring_artist['image'] ? (
+            <Grid container className={clsx(common_classes.justifyCenter, common_classes.marginBottom3em)}>
+              {activity.inspiring_artist && activity.inspiring_artist['image'] ? (
                 <>
                   {activity.inspiring_artist.image && (
                     <Grid item xs={12} lg={6} sm={6}>
@@ -406,19 +280,10 @@ function ActivityDetails(props) {
                     </Grid>
                   )}
                   {activity.inspiring_artist.short_biography && (
-                    <Grid
-                      item
-                      xs={12}
-                      lg={6}
-                      sm={6}
-                      className={clsx(classes.artistBiography)}
-                    >
+                    <Grid item xs={12} lg={6} sm={6} className={clsx(classes.artistBiography)}>
                       <ReactQuill
                         id={`inspiringArtistBiography`}
-                        className={clsx(
-                          classes.quillBodyStyle,
-                          common_classes.justifyCenter,
-                        )}
+                        className={clsx(classes.quillBodyStyle, common_classes.justifyCenter)}
                         theme={'bubble'}
                         readOnly={true}
                         value={activity.inspiring_artist.short_biography || ''}
@@ -433,28 +298,15 @@ function ActivityDetails(props) {
             {activity.inspiring_examples ? (
               <Grid container className={common_classes.justifyCenter}>
                 <Typography
-                  className={clsx(
-                    common_classes.marginTop3em,
-                    classes.subTitles,
-                  )}
+                  className={clsx(common_classes.marginTop3em, classes.subTitles)}
                   variant="h3"
                   align="center"
                 >
                   {t('activityDetails.subTitles.inspiring_examples')}
                 </Typography>
-                <Grid
-                  container
-                  spacing={1}
-                  className={common_classes.justifyCenter}
-                >
+                <Grid container spacing={1} className={common_classes.justifyCenter}>
                   {activity.inspiring_examples.map((example, index) => (
-                    <Grid
-                      item
-                      xs={6}
-                      lg={4}
-                      sm={4}
-                      key={`inspiringExampleImageContainerKey${index}`}
-                    >
+                    <Grid item xs={6} lg={4} sm={4} key={`inspiringExampleImageContainerKey${index}`}>
                       {example.image && (
                         <CardMedia
                           key={`inspiringExampleImageKey${index}`}
@@ -465,23 +317,15 @@ function ActivityDetails(props) {
                       )}
                     </Grid>
                   ))}
-                  {activity.inspiring_examples &&
-                  activity.inspiring_examples.length > 0 &&
-                  imageCredit !== '' ? (
+                  {activity.inspiring_examples && activity.inspiring_examples.length > 0 && imageCredit !== '' ? (
                     <Grid
                       item
                       xs={12}
                       lg={12}
-                      className={clsx(
-                        common_classes.justifyCenter,
-                        common_classes.textCenter,
-                      )}
+                      className={clsx(common_classes.justifyCenter, common_classes.textCenter)}
                     >
                       <Typography
-                        className={clsx(
-                          common_classes.marginTop1em,
-                          classes.imageCreditStyle,
-                        )}
+                        className={clsx(common_classes.marginTop1em, classes.imageCreditStyle)}
                         variant="caption"
                       >
                         {` From left to right : ${imageCredit}.`}
@@ -506,14 +350,7 @@ function ActivityDetails(props) {
           >
             {activity.making_steps && (
               <>
-                <Typography
-                  className={clsx(
-                    common_classes.marginTop1em,
-                    classes.subTitles,
-                  )}
-                  variant="h3"
-                  align="left"
-                >
+                <Typography className={clsx(common_classes.marginTop1em, classes.subTitles)} variant="h3" align="left">
                   {t('activityDetails.subTitles.making_steps')}
                 </Typography>
 
@@ -533,9 +370,7 @@ function ActivityDetails(props) {
                       sm={making_step.image && 8}
                       key={`makingStepImageSubContainerKey${index}`}
                     >
-                      <Box className={common_classes.fieldNumberStyle}>
-                        {making_step.step_order}
-                      </Box>
+                      <Box className={common_classes.fieldNumberStyle}>{making_step.step_order}</Box>
                       {making_step.description && (
                         <ReactQuill
                           id={`makingStep${index}description`}
@@ -564,27 +399,16 @@ function ActivityDetails(props) {
           </Grid>
           <Grid
             container
-            className={clsx(
-              classes.leftCropedContainer,
-              common_classes.justifyCenter,
-              common_classes.alignCenter,
-            )}
+            className={clsx(classes.leftCropedContainer, common_classes.justifyCenter, common_classes.alignCenter)}
           >
-            <Typography
-              className={clsx(classes.subTitles)}
-              variant="h3"
-              align="center"
-            >
+            <Typography className={clsx(classes.subTitles)} variant="h3" align="center">
               {t('activityDetails.subTitles.facilitation_tips')}
             </Typography>
             {activity.facilitation_tips ? (
               <Grid item xs={12} lg={12} sm={12}>
                 <ReactQuill
                   id={`facilitationTips`}
-                  className={clsx(
-                    classes.quillBodyStyle,
-                    classes.quillTextCenter,
-                  )}
+                  className={clsx(classes.quillBodyStyle, classes.quillTextCenter)}
                   theme={'bubble'}
                   readOnly={true}
                   value={activity.facilitation_tips || ''}
@@ -595,39 +419,19 @@ function ActivityDetails(props) {
             )}
           </Grid>
           <Grid>
-            <Typography
-              className={clsx(common_classes.marginTop1em, classes.subTitles)}
-              variant="h3"
-              align="center"
-            >
+            <Typography className={clsx(common_classes.marginTop1em, classes.subTitles)} variant="h3" align="center">
               {t('activityDetails.subTitles.contributors')}
             </Typography>
-            <Grid
-              container
-              className={clsx(
-                classes.activityDetailBlock,
-                common_classes.justifyCenter,
-              )}
-            >
+            <Grid container className={clsx(classes.activityDetailBlock, common_classes.justifyCenter)}>
               {activity.creators.map((creator, index) => (
-                <Grid
-                  item
-                  lg={3}
-                  md={3}
-                  xs={4}
-                  key={`activityDetailsCreatorContainer${index}`}
-                >
+                <Grid item lg={3} md={3} xs={4} key={`activityDetailsCreatorContainer${index}`}>
                   <CardMedia
                     key={`activityDetailsCreatorAvatar${index}`}
                     className={classes.creatorImage}
                     component="img"
                     image={creator.avatar}
                   ></CardMedia>
-                  <Typography
-                    key={`activityDetailsCreatorUserName${index}`}
-                    variant="h6"
-                    align="center"
-                  >
+                  <Typography key={`activityDetailsCreatorUserName${index}`} variant="h6" align="center">
                     {creator.username}
                   </Typography>
                 </Grid>

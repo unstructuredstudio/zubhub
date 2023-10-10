@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   CircularProgress,
@@ -9,9 +10,8 @@ import {
   Grid,
   Link,
   Typography,
-  makeStyles,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
@@ -20,9 +20,9 @@ import {
   CloudDoneOutlined,
   PeopleAltSharp,
   Person,
-} from '@material-ui/icons';
-import DoneRounded from '@material-ui/icons/DoneRounded';
-import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
+} from '@mui/icons-material';
+import DoneRounded from '@mui/icons-material/DoneRounded';
+import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import clsx from 'clsx';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
@@ -251,7 +251,6 @@ function CreateProject(props) {
 
     if (mode.length == 0) return null;
   }
-
 
   return (
     <div className={classes.container}>

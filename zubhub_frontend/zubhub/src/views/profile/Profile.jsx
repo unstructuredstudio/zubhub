@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import API from '../../api';
 import { TEAM_ENABLED } from '../../utils.js';
-import { makeStyles } from '@material-ui/core/styles';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { makeStyles } from '@mui/styles';
+import ShareIcon from '@mui/icons-material/Share';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Tooltip,
   Badge,
@@ -33,7 +33,7 @@ import {
   InputLabel,
   FormControl,
   Divider,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   getUserProfile,
@@ -308,26 +308,21 @@ function Profile(props) {
             </div>
           </Paper>
 
-            {TEAM_ENABLED== true ? (<Paper   className= {classes.profileLowerStyle}>
-            <Typography
-             gutterBottom
-             component="h2"
-             variant="h6"
-             color="textPrimary"
-             className= {classes.titleStyle}
-            >
-            {t('Teams')}
-            <CustomButton
-              className={classes.teamButton}
-              variant="contained"
-              margin="normal"
-              primaryButtonStyle
-              onClick={() => props.history.push('/create-team')}
-            >
-              {t('profile.createteam')}
-            </CustomButton>
-            </Typography>
-            <Grid container spacing={2}>
+          {TEAM_ENABLED == true ? (
+            <Paper className={classes.profileLowerStyle}>
+              <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
+                {t('Teams')}
+                <CustomButton
+                  className={classes.teamButton}
+                  variant="contained"
+                  margin="normal"
+                  primaryButtonStyle
+                  onClick={() => props.history.push('/create-team')}
+                >
+                  {t('profile.createteam')}
+                </CustomButton>
+              </Typography>
+              <Grid container spacing={2}>
                 {teams.map(team => (
                   <Grid item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
                     <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>

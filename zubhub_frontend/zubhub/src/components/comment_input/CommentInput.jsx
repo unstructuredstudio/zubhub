@@ -3,14 +3,8 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  Avatar,
-  Box,
-  Typography,
-  ClickAwayListener,
-  CircularProgress,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Avatar, Box, Typography, ClickAwayListener, CircularProgress } from '@mui/material';
 
 import {
   timer,
@@ -51,31 +45,27 @@ function CommentInput(props) {
     creator_suggestion_open: false,
   });
 
-  const [isTextAreaMounted, setIsTextAreaMounted] = React.useState(false)
+  const [isTextAreaMounted, setIsTextAreaMounted] = React.useState(false);
 
   React.useEffect(() => {
     const comment_text_el = refs.comment_text.current;
-    comment_text_el && setIsTextAreaMounted(true)
+    comment_text_el && setIsTextAreaMounted(true);
 
     return () => {
       try {
-        comment_text_el.removeEventListener('focus', () =>
-          handleCommentTextFocus(refs),
-        );
-      } catch { }
+        comment_text_el.removeEventListener('focus', () => handleCommentTextFocus(refs));
+      } catch {}
 
       try {
-        document.removeEventListener('click', e =>
-          handleDocumentClick(e, refs),
-        );
-      } catch { }
+        document.removeEventListener('click', e => handleDocumentClick(e, refs));
+      } catch {}
     };
   }, []);
 
   React.useEffect(() => {
     try {
       constructCommentBox(refs);
-    } catch { }
+    } catch {}
   }, [props.context.body]);
 
   const handleSetState = obj => {
@@ -91,33 +81,16 @@ function CommentInput(props) {
   const { parent_id, t } = props;
 
   return (
-    <Box
-      className={clsx(
-        'comment-box comment-collapsed',
-        parent_id ? 'sub-comment-box' : null,
-      )}
-      ref={refs.comment_box}
-    >
+    <Box className={clsx('comment-box comment-collapsed', parent_id ? 'sub-comment-box' : null)} ref={refs.comment_box}>
       <Box className="comment-meta">
-        <Link
-          className={clsx(common_classes.textDecorationNone)}
-          to={`/creators/${props.auth.username}`}
-        >
+        <Link className={clsx(common_classes.textDecorationNone)} to={`/creators/${props.auth.username}`}>
           {props.auth.token ? (
-            <Avatar
-              className={classes.commentAvatarStyle}
-              src={props.auth.avatar}
-              alt={props.auth.username}
-            />
+            <Avatar className={classes.commentAvatarStyle} src={props.auth.avatar} alt={props.auth.username} />
           ) : null}
         </Link>
         <Link
           ref={refs.comment_author_name}
-          className={clsx(
-            common_classes.textDecorationNone,
-            'comment-meta__a',
-            'display-none',
-          )}
+          className={clsx(common_classes.textDecorationNone, 'comment-meta__a', 'display-none')}
           to={`/creators/${props.auth.username}`}
         >
           {props.auth.username}
@@ -126,9 +99,7 @@ function CommentInput(props) {
       <form className="comment-form">
         <textarea
           ref={refs.comment_text}
-          className={
-            !parent_id ? 'comment-text' : 'comment-text sub-comment-text'
-          }
+          className={!parent_id ? 'comment-text' : 'comment-text sub-comment-text'}
           name="comment"
           id="comment"
           autoComplete="off"
@@ -139,8 +110,14 @@ function CommentInput(props) {
         ></textarea>
         <CustomButton
           ref={refs.comment_publish_button}
-          onClick={e => isTextAreaMounted && refs.comment_text.current?.value?.length > 0 ? handleAddComment(e, props, refs.comment_text) : null}
-          className={clsx('comment-publish-button', { 'no-button-click': isTextAreaMounted && refs.comment_text.current?.value?.length == 0 })}
+          onClick={e =>
+            isTextAreaMounted && refs.comment_text.current?.value?.length > 0
+              ? handleAddComment(e, props, refs.comment_text)
+              : null
+          }
+          className={clsx('comment-publish-button', {
+            'no-button-click': isTextAreaMounted && refs.comment_text.current?.value?.length == 0,
+          })}
           variant="contained"
           size={parent_id ? 'small' : 'medium'}
           primaryButtonStyle
@@ -173,17 +150,10 @@ function CommentInput(props) {
                     creator_suggestion: [],
                     creator_suggestion_open: false,
                   });
-                  handleInsertCreatorName(
-                    `@${creator.username}`,
-                    refs.comment_text,
-                  );
+                  handleInsertCreatorName(`@${creator.username}`, refs.comment_text);
                 }}
               >
-                <Avatar
-                  className={classes.commentAvatarStyle}
-                  src={creator.avatar}
-                  alt={creator.username}
-                />
+                <Avatar className={classes.commentAvatarStyle} src={creator.avatar} alt={creator.username} />
                 <Typography color="textPrimary">{creator.username}</Typography>
               </Box>
             ))

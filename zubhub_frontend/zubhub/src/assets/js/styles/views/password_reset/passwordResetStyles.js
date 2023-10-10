@@ -1,5 +1,3 @@
-import { fade } from '@material-ui/core/styles';
-
 const styles = theme => ({
   root: {
     paddingTop: '2em',

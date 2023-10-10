@@ -8,11 +8,11 @@ import { connect, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import TranslateIcon from '@material-ui/icons/Translate';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import SearchIcon from '@material-ui/icons/Search';
+import { makeStyles } from '@mui/styles';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import TranslateIcon from '@mui/icons-material/Translate';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import SearchIcon from '@mui/icons-material/Search';
 
 import {
   CssBaseline,
@@ -38,7 +38,7 @@ import {
   InputBase,
   TextField,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   logout,

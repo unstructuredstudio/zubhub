@@ -1,14 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box } from '@mui/material';
 import commonStyles from '../../assets/js/styles';
-import {
-  calcAlignLeft,
-  isCompleted,
-  widthToColorPercent,
-  arrayFromStepCount,
-} from './multiStepProgressBarScripts';
+import { calcAlignLeft, isCompleted, widthToColorPercent, arrayFromStepCount } from './multiStepProgressBarScripts';
 const useStyles = makeStyles(styles);
 
 function MultiStepProgressBar(props) {
@@ -16,7 +11,7 @@ function MultiStepProgressBar(props) {
   // useEffect(() => {
   //   setState({...props})
   // }, [props])
-  
+
   const classes = useStyles();
 
   return (
@@ -31,9 +26,7 @@ function MultiStepProgressBar(props) {
             className={classes.progressNumberStyle}
             key={index}
             style={{
-              backgroundColor: isCompleted(step, props.step)
-                ? 'var(--primary-color3)'
-                : 'white',
+              backgroundColor: isCompleted(step, props.step) ? 'var(--primary-color3)' : 'white',
               color: isCompleted(step, props.step) ? 'white' : 'var(--primary-color3)',
               left: `calc(${calcAlignLeft(step - 1, props.stepCount)} - 15px) `,
             }}
