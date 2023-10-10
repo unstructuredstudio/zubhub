@@ -670,13 +670,14 @@
         "label": "Location",
         "errors": {
           "min": "Your location is too short",
-          "required": "Looks like your missed this one"
+          "required": "Looks like you missed this one"
         }
       },
       "email": {
         "label": "Email",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "Your email seems invalid. Is the email address correct?"
         }
       },
@@ -684,6 +685,7 @@
         "label": "Phone",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "I'm having trouble understanding this number. Make sure it's in this format: '+911234567890'. Upto 15 digits are allowed."
         }
       },

@@ -618,6 +618,7 @@
         "label": "ईमेल",
         "disabledHelperText": "इस फ़ील्ड मेल को संपादित करने के लिए admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "आपको ईमेल या फोन नंबर देना होगा",
           "invalid": "अमान्य ईमेल"
         }
       },
@@ -625,6 +626,7 @@
         "label": "फ़ोन",
         "disabledHelperText": "इस फ़ील्ड मेल को संपादित करने के लिए admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "आपको ईमेल या फोन नंबर देना होगा",
           "invalid": "फ़ोन नंबर प्रारूप में दर्ज किया जाना चाहिए: '+999999999'। 15 अंकों तक की अनुमति।"
         }
       },
