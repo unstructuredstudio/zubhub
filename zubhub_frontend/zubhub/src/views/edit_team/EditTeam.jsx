@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
@@ -8,24 +7,15 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { withFormik } from 'formik';
 
-import { toast } from 'react-toastify';
-
 import { makeStyles } from '@material-ui/core/styles';
-
-import Visibility from '@material-ui/icons/Visibility';
-
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import {
   Grid,
   Box,
-  Divider,
   Container,
   Card,
   CardActionArea,
   CardContent,
-  Select,
-  MenuItem,
   Typography,
   OutlinedInput,
   Tooltip,
@@ -37,8 +27,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  InputAdornment,
-  IconButton,
 } from '@material-ui/core';
 
 import {
@@ -50,8 +38,6 @@ import {
   handleTooltipClose,
   handleToggleDeleteAccountModal,
   deleteAccount,
-  handleClickShowPassword,
-  handleMouseDownPassword,
   getTeamProfile,
 } from './editTeamScripts';
 
@@ -70,51 +56,23 @@ const useStyles = makeStyles(styles);
  */
 function EditTeam(props) {
   const refs = {
-    username_el: React.useRef(null),
-    location_el: React.useRef(null),
-    email_el: React.useRef(null),
-    phone_el: React.useRef(null),
-    bio_el: React.useRef(null),
+    description_el: React.useRef(null),
+    groupname_el: React.useRef(null),
   };
-  const username_check= React.useRef(null);
-  const history = useHistory();
 
   const [state, setState] = React.useState({
     locations: [],
     tool_tip_open: false,
     dialog_error: null,
     open_delete_account_modal: false,
-    show_password: false,
-  });
-  const [info, setInfo] = React.useState({
-    groupname:"",
-    description:""
   });
   const { groupname } = useParams();
-  
   React.useEffect(() => {
-    getProfile(refs, props);
-    const promises= getTeamProfile(groupname, props);
-    
-    handleSetState(getLocations(props));
-    handleSetInfo(promises);
-
-    // Promise.all(promises).then(values => {
-    //   handleSetInfo({ ...values });
-    // });
+    getTeamProfile(groupname, refs, props);
+    handleSetState(getLocations(props)); 
   }, []);
 
   const classes = useStyles();
-  const { show_password } = state;
-
-  const handleSetInfo = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setInfo(state => ({ ...state, ...obj }));
-      });
-    }
-    
-  };
   
   const handleSetState = obj => {
     if (obj) {
@@ -129,13 +87,7 @@ function EditTeam(props) {
   const handleButtonClick = () => {
     handleSetState(handleToggleDeleteAccountModal(groupname,props,state));
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const success = await editProfile(e, groupname, info.groupname, info.description, props);
-    if (success) {
-      history.push(`/teams/${info.groupname}`);
-    }
-  };
+
   return (
   <>
     <Box className={classes.root}>
@@ -147,7 +99,7 @@ function EditTeam(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={handleSubmit}
+                onSubmit={e => editProfile(e, groupname, props)}
               >
                 <Typography
                   gutterBottom
@@ -218,16 +170,14 @@ function EditTeam(props) {
                           disableTouchListener
                         >
                           <OutlinedInput
-                            ref={refs.username_el}
+                            ref={refs.groupname_el}
                             className={clsx(classes.customInputStyle)}
                             id="groupname"
                             name="groupname"
                             type="text"
-                            value={
-                              info.groupname ? info.groupname : ''
-                            }
+                            value={props.values.groupname ? props.values.groupname : ''}
                             onClick={() => handleSetState(handleTooltipOpen())}
-                            onChange={event => setInfo({ ...info, groupname: event.target.value })}
+                            onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             label={t('Team Name')}
                           />
@@ -253,27 +203,27 @@ function EditTeam(props) {
                       fullWidth
                       margin="small"
                       error={
-                        (props.status && props.status['bio']) ||
-                        (props.touched['bio'] && props.errors['bio'])
+                        (props.status && props.status['description']) ||
+                        (props.touched['description'] && props.errors['description'])
                       }
                     >
                       <InputLabel
                         className={classes.customLabelStyle}
-                        htmlFor="bio"
+                        htmlFor="description"
                       >
                         {t('editProfile.inputs.bio.label')}
                       </InputLabel>
                       <OutlinedInput
-                        ref={refs.bio_el}
+                        ref={refs.description_el}
                         className={clsx(classes.customInputStyle)}
-                        id="bio"
-                        name="bio"
+                        id="description"
+                        name="description"
                         type="text"
                         multiline
                         rows={6}
                         rowsMax={6}
-                        value={info.description ? info.description : ''}
-                        onChange={event => setInfo({ ...info, description: event.target.value })}
+                        value={props.values.description ? props.values.description : ''}
+                        onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         label={t('editProfile.inputs.bio.label')}
                       />
@@ -289,9 +239,9 @@ function EditTeam(props) {
                         >
                           {'Tell us about your team!'}
                         </Typography>
-                        {(props.status && props.status['bio']) ||
-                          (props.touched['bio'] &&
-                            props.errors['bio'] &&
+                        {(props.status && props.status['description']) ||
+                          (props.touched['description'] &&
+                            props.errors['description'] &&
                             t(
                               `editProfile.inputs.bio.errors.${props.errors['bio']}`,
                             ))}
@@ -402,7 +352,6 @@ EditTeam.propTypes = {
   editUserProfile: PropTypes.func.isRequired,
   getLocations: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
-  login: PropTypes.func.isRequired,
   getTeamProfile: PropTypes.func.isRequired,
 };
 
@@ -432,12 +381,6 @@ const mapDispatchToProps = dispatch => {
     deleteAccount: args => {
       return dispatch(AuthActions.deleteAccount(args));
     },
-    login: args => {
-      return dispatch(AuthActions.login(args));
-    },
-    logout: args => {
-      return dispatch(AuthActions.logout(args));
-    },
   };
 };
 
@@ -447,12 +390,6 @@ export default connect(
 )(
   withFormik({
     mapPropsToValue: () => ({
-      username: '',
-      email:'',
-      phone:'',
-      password: '',
-      user_location: '',
-      bio: '',
       groupname:'',
       description:''
     }),
