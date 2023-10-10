@@ -1,7 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -27,12 +27,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
 } from '@material-ui/core';
 
 import {
   validationSchema,
   getLocations,
-  getProfile,
   editProfile,
   handleTooltipOpen,
   handleTooltipClose,
@@ -257,39 +257,55 @@ function EditTeam(props) {
                       fullWidth
                       customButtonStyle
                     >
-                      {t('editProfile.inputs.submit')}
+                      {'Save Changes'}
                     </CustomButton>
                   </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                    className={classes.descStyle}
-                    variant="h6"
-                    color="textPrimary"
-                    component="p"
-                    >
-                    {t('Delete Team Profile?')}
-                  </Typography>
-                  <Typography
-                  // gutterBottom
-                  variant="body2"
-                  component="p"
-                  color="textSecondary"
-                  className={classes.descStyle}
-                >
-                    {t('Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.')}
-                  </Typography>
-                </Grid>
-                </Grid>
-              <Grid container spacing={3}>
-              
-              </Grid>
+                  </Grid>
+                  <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <Link to={`/teams/${groupname}`} className={classes.textDecorationNone}>
+                      <CustomButton
+                        variant="outlined"
+                        size="large"
+                        secondaryButtonStyle
+                        customButtonStyle
+                        fullWidth
+                      >
+                        {'Discard Changes'}
+                      </CustomButton>
+                    </Link>
+                  </Grid>
+                  </Grid>
               </form>
-              <br></br><br></br>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                <a href="#!" onClick={handleButtonClick}>
-                  {t('I want to delete this team’s profile')}
-                </a>
+                  <Box className={classes.center}>
+                    <Divider className={classes.divider} />
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      component="p"
+                    >
+                      {t('editProfile.or')}
+                    </Typography>
+                    <Divider className={classes.divider} />
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <CustomButton
+                    variant="outlined"
+                    size="large"
+                    secondaryButtonStyle
+                    dangerButtonStyle
+                    fullWidth
+                    onClick={() =>
+                      handleSetState(handleToggleDeleteAccountModal(state))
+                    }
+                  >
+                    {'Delete Team'}
+                  </CustomButton>
                 </Grid>
               </Grid>
             </CardContent>
@@ -297,7 +313,7 @@ function EditTeam(props) {
         </Card>
       </Container>
     </Box>
-            <Dialog
+          <Dialog
             open={open_delete_account_modal}
             onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
             aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
@@ -334,7 +350,7 @@ function EditTeam(props) {
                 onClick={e =>
                   handleSetState(deleteAccount(groupname, props, state))
                 }
-                primaryButtonStyle
+                dangerButtonStyle
                 customButtonStyle
               >
                 {t('Delete')}
