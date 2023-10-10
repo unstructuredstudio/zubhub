@@ -237,12 +237,11 @@ function EditTeam(props) {
                         className={classes.fieldHelperTextStyle}
                         error
                       >
-                        {(props.status && props.status['username']) ||
-                          (props.touched['username'] &&
-                            props.errors['username'] &&
-                            t(
-                              `editProfile.inputs.username.errors.${props.errors['username']}`,
-                            ))}
+                        {(props.status && props.status['groupname']) ||
+                          (props.touched['groupname'] &&
+                            props.errors['groupname'] &&
+                          'Team name is required' )
+                        }
                       </FormHelperText>
                     </FormControl>
                     </Grid><Grid item xs={12} sm={12} md={12}>

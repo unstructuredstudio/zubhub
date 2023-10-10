@@ -124,13 +124,17 @@ export const getProfile = (refs, props) => {
  */
 export const editProfile = (e, groupname, new_groupname, bio, props) => {
   e.preventDefault();
-  let token=props.auth.token;
-  const data = {
-    groupname: new_groupname,
-    description: bio
-  };
-  return props.editTeam({ groupname, data, token });
-  
+  props.setFieldTouched('groupname', true)
+  if (new_groupname.length < 1) {
+    props.validateField('groupname');
+  } else {
+    let token=props.auth.token;
+    const data = {
+      groupname: new_groupname,
+      description: bio
+    };
+    return props.editTeam({ groupname, data, token });
+  }
 };
 
 /**
@@ -168,4 +172,5 @@ export const validationSchema = Yup.object().shape({
     return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
   }),
   bio: Yup.string().max(255, 'tooLong'),
+  groupname: Yup.string().required('required'),
 });
