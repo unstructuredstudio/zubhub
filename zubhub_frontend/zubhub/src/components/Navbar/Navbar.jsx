@@ -113,7 +113,7 @@ function PageWrapper(props) {
         } else if (searchType === SearchType.PROJECTS) {
           completions = await api.autocompleteProjects({ query, token });
           completions = completions
-          .filter(c=> props.auth.id ? (c.creator.id === props.auth.id && c.publish.type !== 1): c )
+          .filter(c=> props.auth.token ? (c.creator.id === props.auth.id && c.publish.type !== 1): c )
           .map(({ id, title, creator, images }) => ({
             title,
             shortInfo: creator.username,
