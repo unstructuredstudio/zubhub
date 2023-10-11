@@ -1,7 +1,7 @@
 import { Box, ClickAwayListener, FormControl, FormHelperText, Typography, makeStyles } from '@material-ui/core';
 import { Add, ClearRounded } from '@material-ui/icons';
 import clsx from 'clsx';
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 import styles from '../../../assets/js/styles';
 import CustomButton from '../../button/Button';
 import { tagsInputStyles } from './tagsInput.styles';
@@ -16,7 +16,7 @@ export default function TagsInput({
   description,
   error,
   popularTags,
-  selectedTags = [],
+  selectedTags: initialSelectedTags = [],
   placeholder,
   addTag,
   remoteData,
@@ -28,49 +28,90 @@ export default function TagsInput({
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(tagsInputStyles)();
   const [isSearching, setIsSearching] = useState(false);
-  selectedTags = [...(selectedTags ?? [])];
+  const [errorMessage, setErrorMessage] = useState('');
+  const selectedTags = [...(initialSelectedTags ?? [])];
   const ref = useRef(null);
 
-  const handleChange = e => {
-    setIsSearching(true);
-    onChange(e.target.value);
-  };
-
-  const handleClickAway = () => setIsSearching(false);
-  const handleFocus = () => {
-    clearSuggestions();
-  };
-
-  const handleTagAddition = value => {
-    addTag(value);
-    setIsSearching(false);
-  };
-
-  const handleKeyDown = e => {
-    if (e.key === 'Enter') {
-      addTag(e.target.value);
-      setIsSearching(false);
+  const validateTag = useCallback((tag, selectedTags) => {
+    const trimmedTag = tag.trim();
+    if (trimmedTag === '') {
+      return ['Tag cannot be empty.', false];
+    } else if (selectedTags.includes(trimmedTag)) {
+      return [`The tag "${trimmedTag}" is already in the search bar and cannot be added again.`, false];
+    } else {
+      return ['', true];
     }
-  };
+  }, []);
 
-  const onSelectedTagClick = index => removeTag(index);
+  const handleTagAddition = useCallback((value) => {
+    const [errMsg, isValid] = validateTag(value, selectedTags);
+    setErrorMessage(errMsg);
+    if (isValid) {
+      addTag(value);
+      setIsSearching(false);
+      setErrorMessage('');
+    }
+  }, [addTag, selectedTags, validateTag]);
 
-  popularTags = popularTags?.map((tag, index) => (
+  const handleChange = useCallback((e) => {
+    const inputValue = e.target.value.trim();
+    const [errMsg, isValid] = validateTag(inputValue, selectedTags);
+    setIsSearching(isValid);
+    setErrorMessage(errMsg);
+    if (isValid) {
+      onChange(inputValue);
+    }
+  }, [onChange, selectedTags, validateTag]);
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Enter') {
+      const inputValue = ref.current.value.trim();
+      const [errMsg, isValid] = validateTag(inputValue, selectedTags);
+      setErrorMessage(errMsg);
+      if (isValid) {
+        addTag(inputValue);
+        setIsSearching(false);
+        setErrorMessage('');
+        ref.current.value = '';
+      }
+    }
+  }, [addTag, selectedTags, validateTag]);
+
+  const handleClickAway = useCallback(() => {
+    const inputValue = ref.current.value.trim();
+    if (!inputValue || selectedTags.includes(inputValue)) {
+      setIsSearching(false);
+      setErrorMessage('');
+    } else {
+      const isFound = remoteData.some(tag => tag.name === inputValue);
+      if (isFound || !remoteData.length) {
+        addTag(inputValue);
+        setIsSearching(false);
+        setErrorMessage('');
+        ref.current.value = '';
+      } else {
+        setErrorMessage(`The tag "${inputValue}" was not found and cannot be added.`);
+      }
+    }
+  }, [addTag, remoteData, selectedTags]);
+
+  const onSelectedTagClick = useCallback((index) => removeTag(index), [removeTag]);
+
+  const popularTagsRender = useMemo(() => popularTags?.map((tag, index) => (
     <CustomButton
       onClick={() => handleTagAddition(tag)}
       disabled={selectedTags.includes(tag)}
       className={clsx(classes.button, selectedTags.includes(tag) && classes.disabledButton)}
-      style={{ fontWeight: tag == 'General' && '800' }}
-      primaryButtonOutlinedStyle
+      style={{ fontWeight: tag === 'General' ? '800' : 'normal' }}
       key={index}
       startIcon={<Add />}
     >
       {prefix && `${prefix} `}
       {tag}
     </CustomButton>
-  ));
+  )), [popularTags, handleTagAddition, selectedTags, prefix, classes]);
 
-  selectedTags = selectedTags?.map((tag, index) => (
+  const selectedTagsRender = useMemo(() => selectedTags?.map((tag, index) => (
     <CustomButton
       onClick={() => onSelectedTagClick(index)}
       className={classes.button}
@@ -78,16 +119,16 @@ export default function TagsInput({
       key={index}
       endIcon={<ClearRounded />}
     >
-      {prefix && `${prefix}`}
+      {prefix && `${prefix} `}
       {tag}
     </CustomButton>
-  ));
+  )), [selectedTags, onSelectedTagClick, prefix, classes]);
 
-  remoteData = remoteData?.map((tag, index) => (
+  const remoteDataRender = useMemo(() => remoteData?.map((tag, index) => (
     <Box key={index} onClick={() => handleTagAddition(tag.name)} className={classes.suggestion}>
       <Typography>{tag.name}</Typography>
     </Box>
-  ));
+  )), [remoteData, handleTagAddition, classes]);
 
   return (
     <FormControl fullWidth>
@@ -96,10 +137,10 @@ export default function TagsInput({
       </label>
       <Typography style={{ marginBottom: 10 }}>{description}</Typography>
       <Box className={clsx(classes.tagsContainer, error && commonClasses.borderRed)}>
-        {selectedTags}
+        {selectedTagsRender}
         <input
           ref={ref}
-          onFocus={handleFocus}
+          onFocus={clearSuggestions}
           className={clsx(classes.input, commonClasses.inputText)}
           id={name}
           defaultValue={value}
@@ -115,14 +156,15 @@ export default function TagsInput({
         <Box style={{ position: 'relative' }}>
           <Box className={classes.suggestionBox}>
             <ClickAwayListener onClickAway={handleClickAway}>
-              <Box>{remoteData.length > 0 ? remoteData : <p>Item not found: Hit Enter to Save your Input</p>}</Box>
+              <Box>{remoteData.length > 0 ? remoteDataRender : <p>Item not found: Hit Enter to Save your Input</p>}</Box>
             </ClickAwayListener>
           </Box>
         </Box>
       ) : null}
 
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       {error && <FormHelperText className={commonClasses.colorRed}>{error}</FormHelperText>}
-      <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12 }}>{popularTags}</Box>
+      <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12 }}>{popularTagsRender}</Box>
     </FormControl>
   );
 }
