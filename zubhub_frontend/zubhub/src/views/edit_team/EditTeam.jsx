@@ -156,7 +156,7 @@ function EditTeam(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('Edit Team Info')}
+                  {t('editTeam.info')}
                 </Typography><br></br>
                 <Typography
                   className={classes.descStyle}
@@ -164,7 +164,7 @@ function EditTeam(props) {
                   color="textPrimary"
                   component="p"
                 >
-                  {t('Team Name')}
+                  {t('editTeam.name')}
                 </Typography>
                 <Grid container spacing={3}>
                   
@@ -199,13 +199,13 @@ function EditTeam(props) {
                         className={classes.customLabelStyle}
                         htmlFor="groupname"
                       >
-                        {t('Team Name')}
+                        {t('editTeam.name')}
                       </InputLabel>
                       <ClickAwayListener
                         onClickAway={() => handleSetState(handleTooltipClose())}
                       >
                         <Tooltip
-                          title={t('Enter your Team Name')}
+                          title={t('editTeam.requestName')}
                           placement="top-start"
                           arrow
                           onClose={() => handleSetState(handleTooltipClose())}
@@ -229,7 +229,7 @@ function EditTeam(props) {
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={event => setInfo({ ...info, groupname: event.target.value })}
                             onBlur={props.handleBlur}
-                            label={t('Team Name')}
+                            label={t('editTeam.name')}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -252,7 +252,7 @@ function EditTeam(props) {
                     color="textPrimary"
                     component="p"
                     >
-                    {t('About Team')}
+                    {t('editTeam.about')}
                   </Typography>
                 </Grid>
                   <Grid item xs={12}>
@@ -318,7 +318,7 @@ function EditTeam(props) {
                     color="textPrimary"
                     component="p"
                     >
-                    {t('Delete Team Profile?')}
+                    {t('editTeam.delete.question')}
                   </Typography>
                   <Typography
                   // gutterBottom
@@ -327,7 +327,7 @@ function EditTeam(props) {
                   color="textSecondary"
                   className={classes.descStyle}
                 >
-                    {t('Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.')}
+                    {t('editTeam.delete.information')}
                   </Typography>
                 </Grid>
                 </Grid>
@@ -339,7 +339,7 @@ function EditTeam(props) {
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                 <a href="#!" onClick={handleButtonClick}>
-                  {t('I want to delete this team’s profile')}
+                  {t('editTeam.delete.confirmation')}
                 </a>
                 </Grid>
               </Grid>
@@ -354,7 +354,7 @@ function EditTeam(props) {
             aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
           >
             <DialogTitle id="delete-project">
-              {t('Delete Team Profile?')}
+              {t('editTeam.delete.question')}
             </DialogTitle>
             <Box
               component="p"
@@ -367,7 +367,7 @@ function EditTeam(props) {
               )}
             </Box>{' '}
             <DialogContent>
-              <Typography>{t('Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.')}</Typography>
+              <Typography>{t('editTeam.delete.information')}</Typography>
             </DialogContent>
             <DialogActions>
               <CustomButton
@@ -378,7 +378,7 @@ function EditTeam(props) {
                 color="primary"
                 secondaryButtonStyle
               >
-                {t('profile.delete.dialog.cancel')}
+                {t('editTeam.delete.buttons.cancel')}
               </CustomButton>
               <CustomButton
                 variant="contained"
@@ -388,7 +388,7 @@ function EditTeam(props) {
                 primaryButtonStyle
                 customButtonStyle
               >
-                {t('Delete')}
+                {t('editTeam.delete.buttons.delete')}
               </CustomButton>
             </DialogActions>
           </Dialog>
