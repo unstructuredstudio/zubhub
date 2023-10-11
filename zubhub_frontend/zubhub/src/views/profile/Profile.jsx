@@ -327,7 +327,7 @@ function Profile(props) {
              color="textPrimary"
              className= {classes.titleStyle}
             >
-            {t('Teams')}
+            {t('profile.teams')}
             <CustomButton
               className={classes.teamButton}
               variant="contained"

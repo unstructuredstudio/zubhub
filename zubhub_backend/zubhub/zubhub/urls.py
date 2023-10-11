@@ -46,7 +46,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
     from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
                             HeroAPIView, HelpAPIView, ChallengeAPIView, PrivacyAPIView, 
                             FAQAPIView, AmbassadorsAPIView, SigGenAPIView, UploadFileToLocalAPIView,
-                            MarkdownToHtmlAPIView, MediaSchemaAPIView, WebSchemaAPIView)
+                            MarkdownToHtmlAPIView, MediaSchemaAPIView, WebSchemaAPIView, ThemeAPIView)
 
     schema_url_patterns = [
             path('api/rest-auth/login/', LoginView.as_view()),
@@ -67,7 +67,8 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/privacy/', PrivacyAPIView.as_view()),
             path('api/faqs/', FAQAPIView.as_view()),
             path('api/ambassadors/', AmbassadorsAPIView.as_view()),
-            path('api/signature/', SigGenAPIView)
+            path('api/signature/', SigGenAPIView),
+            path('api/theme/', ThemeAPIView.as_view())
             ]
 
     urlpatterns = urlpatterns + [

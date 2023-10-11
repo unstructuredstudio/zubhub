@@ -167,8 +167,12 @@ function TeamMembers(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container spacing={3} justify="center" >
             <Grid item xs={12}>
-              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
-                {groupname}'s {t('Members')}
+              <Typography
+                className={classes.pageHeaderStyle}
+                variant="h3"
+                gutterBottom
+              >
+                {groupname}'s {t('teamMembers.members')}
               </Typography>
             </Grid>
 
@@ -340,7 +344,7 @@ function TeamMembers(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('This team has no members')} />;
+    return <ErrorPage error={t('teamMembers.noMember')} />;
   }
 }
 

@@ -17,9 +17,9 @@ const styles = theme => ({
   },
 
   actionBoxStyle: {
-    backgroundColor: '#00B8C4',
+    backgroundColor: 'var(--primary-color3)',
     '&:hover': {
-      backgroundColor: '#03848C',
+      backgroundColor: 'var(--secondary-color6)',
     },
     borderRadius: '15px',
     position: 'absolute',

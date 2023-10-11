@@ -112,7 +112,9 @@ function PageWrapper(props) {
           }));
         } else if (searchType === SearchType.PROJECTS) {
           completions = await api.autocompleteProjects({ query, token });
-          completions = completions.map(({ id, title, creator, images }) => ({
+          completions = completions
+          .filter(c=>( c.creator.id === props.auth.id && c.publish.type !== 1 ))
+          .map(({ id, title, creator, images }) => ({
             title,
             shortInfo: creator.username,
             image: images.length > 0 ? images[0].image_url : null,
