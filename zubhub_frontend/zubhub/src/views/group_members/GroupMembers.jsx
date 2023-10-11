@@ -124,7 +124,7 @@ function GroupMembers(props) {
                   className={common_classes.floatRight}
                   startIcon={<AddIcon />}
                   primaryButtonStyle
-                  onClick={() => props.history.push(`/creators/${username}/add-members`)}
+                  onClick={() => props.navigate(`/creators/${username}/add-members`)}
                 >
                   {props.t('groupMembers.newMembers')}
                 </CustomButton>
@@ -174,7 +174,7 @@ function GroupMembers(props) {
             className={clsx(common_classes.positionAbsolute, classes.floatingButtonStyle)}
             startIcon={<AddIcon />}
             primaryButtonStyle
-            onClick={() => props.history.push(`/creators/${username}/add-members`)}
+            onClick={() => props.navigate(`/creators/${username}/add-members`)}
           >
             {props.t('groupMembers.newMembers')}
           </CustomButton>

@@ -137,10 +137,11 @@ function CreateProject(props) {
 
   useEffect(() => {
     if (state.success) {
-      if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
+      if (props.location.pathname === '/projects/create')
+        props.navigate(`/projects/${state.id}/edit`, { replace: true });
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}?success=true`);
+        return props.navigate(`/projects/${props.match.params.id}?success=true`);
       }
       setState({ ...state, success: false });
       go('next');

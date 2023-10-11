@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { connect, useSelector } from 'react-redux';
 
@@ -69,7 +69,7 @@ const anchor = 'left';
  */
 function PageWrapper(props) {
   const backToTopEl = React.useRef(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
@@ -349,7 +349,7 @@ function PageWrapper(props) {
                 )}
               </Hidden>
 
-              <AvatarButton history={props.history} />
+              <AvatarButton navigate={props.navigate} />
             </div>
           </Toolbar>
           {open_search_form ? (

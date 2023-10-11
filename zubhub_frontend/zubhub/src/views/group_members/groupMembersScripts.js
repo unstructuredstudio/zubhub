@@ -18,15 +18,13 @@ export const fetchPage = (page, props) => {
 export const toggleFollow = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props
       .toggleFollow({ id, token: props.auth.token, t: props.t })
       .then(res => {
         if (res.profile && res.profile.username) {
-          const members = state.members.map(member =>
-            member.id !== res.profile.id ? member : res.profile,
-          );
+          const members = state.members.map(member => (member.id !== res.profile.id ? member : res.profile));
           return { members };
         } else {
           res = Object.keys(res)
@@ -55,7 +53,7 @@ export const toggleFollow = (e, props, state, id, toast) => {
 export const removeMember = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props
       .removeMember({ id, token: props.auth.token, t: props.t })

@@ -25,7 +25,7 @@ export const getUserProfile = args => {
               username: res.username,
               limit: 4,
               token: args.token,
-              t: args.t
+              t: args.t,
             }),
           );
         }
@@ -53,24 +53,24 @@ export const getUserProfile = args => {
 export const deleteTeam = args => {
   return dispatch => {
     return API.deleteTeam(args)
-    .then(res => {
-      if (res.detail !== 'Group deleted successfully.') {
-        throw new Error(res.detail);
-      } else {
-        toast.success(args.t('profile.delete.toastSuccess'));
-        // args.logout(args);
-        args.history.push('/profile');
-      }
-    })
-    .catch(error => {
-      if (error.message.startsWith('Unexpected')) {
-        return {
-          dialog_error: args.t('profile.delete.errors.unexpected'),
-        };
-      } else {
-        return { dialog_error: error.message };
-      }
-    });
+      .then(res => {
+        if (res.detail !== 'Group deleted successfully.') {
+          throw new Error(res.detail);
+        } else {
+          toast.success(args.t('profile.delete.toastSuccess'));
+          // args.logout(args);
+          args.navigate('/profile');
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          return {
+            dialog_error: args.t('profile.delete.errors.unexpected'),
+          };
+        } else {
+          return { dialog_error: error.message };
+        }
+      });
   };
 };
 
@@ -83,15 +83,14 @@ export const deleteTeam = args => {
 export const getUserTeams = args => {
   return dispatch => {
     let profile;
-    return API.userTeams(args)
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('profile.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
+    return API.userTeams(args).catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
   };
 };
 
@@ -106,7 +105,7 @@ export const getTeamProfile = args => {
     let profile;
     return API.getTeamProfile(args)
       .then(res => {
-        profile=res;
+        profile = res;
         return { ...res, profile, loading: false };
       })
       .catch(error => {
@@ -130,12 +129,12 @@ export const getAllTeams = args => {
   return dispatch => {
     let profile;
     return API.allTeams(args)
-    .then(res => {
-      profile = res;
-      const filteredResults = res.results.filter(result => result.members.length > 0);
+      .then(res => {
+        profile = res;
+        const filteredResults = res.results.filter(result => result.members.length > 0);
 
-      return { ...res, profile, results: filteredResults, loading: false };
-    })
+        return { ...res, profile, results: filteredResults, loading: false };
+      })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           toast.warning(args.t('profile.errors.unexpected'));
@@ -158,7 +157,7 @@ export const editTeam = args => {
     let profile;
     return API.editTeam(args)
       .then(res => {
-        profile=res;
+        profile = res;
         return { ...res, profile, loading: false };
       })
       .catch(error => {
@@ -208,9 +207,7 @@ export const suggestCreators = args => {
     return API.searchCreators(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-          return res.results.length > 0
-            ? { creator_suggestion: res.results }
-            : { creator_suggestion_open: false };
+          return res.results.length > 0 ? { creator_suggestion: res.results } : { creator_suggestion_open: false };
         } else {
           res = Object.keys(res)
             .map(key => res[key])
@@ -297,24 +294,26 @@ export const toggleFollow = args => {
  */
 export const toggleTeamFollow = args => {
   return () => {
-    return API.followTeam(args)
-    // .then(res => {
-      
-    //   } else {
-    //     res = Object.keys(res)
-    //       .map(key => res[key])
-    //       .join('\n');
-    //     throw new Error(res);
-    //   }
-    // })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('profile.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
+    return (
+      API.followTeam(args)
+        // .then(res => {
+
+        //   } else {
+        //     res = Object.keys(res)
+        //       .map(key => res[key])
+        //       .join('\n');
+        //     throw new Error(res);
+        //   }
+        // })
+        .catch(error => {
+          if (error.message.startsWith('Unexpected')) {
+            toast.warning(args.t('profile.errors.unexpected'));
+          } else {
+            toast.warning(error.message);
+          }
+          return { loading: false };
+        })
+    );
   };
 };
 
@@ -361,7 +360,7 @@ export const addMembers = args => {
         throw new Error(JSON.stringify(res));
       } else {
         toast.success(args.t('addGroupMembers.createToastSuccess'));
-        return args.history.push('/profile');
+        return args.navigate('/profile');
       }
     });
   };
@@ -448,13 +447,13 @@ export const getTeamFollowers = args => {
     return API.teamFollowers(args)
       .then(res => {
         if (Array.isArray(res.results)) {
-            const followerIds = res.results.map(follower => follower.id);
-              return {
-                followerIds: followerIds,
-                prev_page: res.previous,
-                next_page: res.next,
-                loading: false,
-              };
+          const followerIds = res.results.map(follower => follower.id);
+          return {
+            followerIds: followerIds,
+            prev_page: res.previous,
+            next_page: res.next,
+            loading: false,
+          };
         } else {
           res = Object.keys(res)
             .map(key => res[key])
@@ -476,21 +475,21 @@ export const getTeamFollowers = args => {
 export const getTeamFollowersPage = args => {
   return () => {
     return API.teamFollowers(args)
-    .then(res => {
-      if (Array.isArray(res.results)) {
-        return {
-          followers: res.results,
-          prev_page: res.previous,
-          next_page: res.next,
-          loading: false,
-        };
-      } else {
-        res = Object.keys(res)
-          .map(key => res[key])
-          .join('\n');
-        throw new Error(res);
-      }
-    })
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          return {
+            followers: res.results,
+            prev_page: res.previous,
+            next_page: res.next,
+            loading: false,
+          };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
       .catch(error => {
         if (error.message.startsWith('Unexpected')) {
           toast.warning(args.t('profile.errors.unexpected'));
@@ -646,7 +645,7 @@ export const sendGroupInviteConfirmation = args => {
       } else {
         toast.success(args.t('emailConfirm.toastSuccess'));
         setTimeout(() => {
-          args.history.push('/');
+          args.navigate('/');
         }, 4000);
       }
     });
@@ -691,7 +690,7 @@ export const getHelp = args => {
  * @author Sucahkra Sharma <suchakra@unstructured.studio>
  *
  */
- export const getChallenge = args => {
+export const getChallenge = args => {
   return () => {
     return API.getChallenge()
       .then(res => {
@@ -790,7 +789,7 @@ export const getFaqs = args => {
  *
  * @todo - describe function's signature
  */
- export const getAmbassadors = args => {
+export const getAmbassadors = args => {
   return () => {
     return API.getAmbassadors(args)
       .then(res => {
@@ -810,7 +809,7 @@ export const getFaqs = args => {
             loading: false,
           };
         } else {
-          console.log('sorry')
+          console.log('sorry');
           toast.warning(args.t('signup.errors.unexpected'));
           return { loading: false };
         }

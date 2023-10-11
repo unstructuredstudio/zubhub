@@ -87,7 +87,7 @@ export const getProfile = (refs, props) => {
  *
  * @todo - describe function's signature
  */
- export const handleToggleDeleteAccountModal = state => {
+export const handleToggleDeleteAccountModal = state => {
   const open_delete_account_modal = !state.open_delete_account_modal;
   return { open_delete_account_modal, more_anchor_el: null, dialog_error: null };
 };
@@ -102,30 +102,32 @@ export const deleteAccount = (username_el, props, toast) => {
   let password_match = true;
   if (username_el.current.firstChild.value !== props.auth.username) {
     return { dialog_error: props.t('profile.delete.errors.incorrectUsername') };
-  } else if (!props?.values?.password)  {
+  } else if (!props?.values?.password) {
     return { dialog_error: props.t('profile.delete.errors.emptyPassword') };
   } else {
-    props.login({ values: props.values, history: props.history }).catch(error => {
-      try{
-        toast.error(props.t('editProfile.inputs.password.errors.invalid'));
-        password_match = false;
-        return;
-      } catch (err) {
-        toast.error(props.t('err.message'));
-      }
-    }).finally(() => {
-      if (password_match === false) {
-        return;
-      } else {
-        return props.deleteAccount({
-          token: props.auth.token,
-          history: props.history,
-          logout: props.logout,
-          t: props.t,
-        })
-      }
-    });
-    
+    props
+      .login({ values: props.values, navigate: props.navigate })
+      .catch(error => {
+        try {
+          toast.error(props.t('editProfile.inputs.password.errors.invalid'));
+          password_match = false;
+          return;
+        } catch (err) {
+          toast.error(props.t('err.message'));
+        }
+      })
+      .finally(() => {
+        if (password_match === false) {
+          return;
+        } else {
+          return props.deleteAccount({
+            token: props.auth.token,
+            navigate: props.navigate,
+            logout: props.logout,
+            t: props.t,
+          });
+        }
+      });
   }
 };
 
@@ -148,47 +150,50 @@ export const editProfile = (e, props, toast) => {
   } else if (props.values.password.length < 1) {
     props.validateField('password');
   } else {
-    props.login({ values: props.values, history: props.history }).catch(error => {
-      try{
-        const messages = JSON.parse(error.message);
-        toast.error(props.t('editProfile.inputs.password.errors.invalid'));
-        password_match = false;
-        return;
-      } catch (err) {
-        toast.error(props.t('err.message'));
-      }
-    }).finally(() => {
-      if (password_match == false) {
-        return;
-      } else {
-        return props
-          .editUserProfile({ ...props.values, token: props.auth.token })
-          .then(_ => {
-            toast.success(props.t('editProfile.toastSuccess'));
-            props.history.push('/profile');
-          })
-          .catch(error => {
-            const messages = JSON.parse(error.message);
-            if (typeof messages === 'object') {
-              const server_errors = {};
-              Object.keys(messages).forEach(key => {
-                if (key === 'non_field_errors') {
-                  server_errors['non_field_errors'] = messages[key][0];
-                } else if (key === 'location') {
-                  server_errors['user_location'] = messages[key][0];
-                } else {
-                  server_errors[key] = messages[key][0];
-                  toast.error(server_errors[key]);
-                }
-              });
-            } else {
-              props.setStatus({
-                non_field_errors: props.t('editProfile.errors.unexpected'),
-              });
-            }
-          });
-      }
-    });
+    props
+      .login({ values: props.values, navigate: props.navigate })
+      .catch(error => {
+        try {
+          const messages = JSON.parse(error.message);
+          toast.error(props.t('editProfile.inputs.password.errors.invalid'));
+          password_match = false;
+          return;
+        } catch (err) {
+          toast.error(props.t('err.message'));
+        }
+      })
+      .finally(() => {
+        if (password_match == false) {
+          return;
+        } else {
+          return props
+            .editUserProfile({ ...props.values, token: props.auth.token })
+            .then(_ => {
+              toast.success(props.t('editProfile.toastSuccess'));
+              props.navigate('/profile');
+            })
+            .catch(error => {
+              const messages = JSON.parse(error.message);
+              if (typeof messages === 'object') {
+                const server_errors = {};
+                Object.keys(messages).forEach(key => {
+                  if (key === 'non_field_errors') {
+                    server_errors['non_field_errors'] = messages[key][0];
+                  } else if (key === 'location') {
+                    server_errors['user_location'] = messages[key][0];
+                  } else {
+                    server_errors[key] = messages[key][0];
+                    toast.error(server_errors[key]);
+                  }
+                });
+              } else {
+                props.setStatus({
+                  non_field_errors: props.t('editProfile.errors.unexpected'),
+                });
+              }
+            });
+        }
+      });
   }
 };
 

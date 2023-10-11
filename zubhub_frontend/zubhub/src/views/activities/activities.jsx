@@ -84,7 +84,7 @@ function Activities(props) {
                     auth={props.auth}
                     activityToggleSave={props.activityToggleSave}
                     t={props.t}
-                    history={props.history}
+                    navigate={props.navigate}
                   />
                 </Grid>
               ))}

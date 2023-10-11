@@ -81,13 +81,13 @@ const buildMaterialsUsedComponent = (classes, state) => {
  *
  * @todo - describe function's signature
  */
-const buildTagsComponent = (classes, tags, history) => {
+const buildTagsComponent = (classes, tags, navigate) => {
   return tags.map((tag, index) => (
     <CustomButton
       key={index}
       primaryButtonOutlinedStyle
       style={{ borderRadius: 4 }}
-      onClick={() => history.push(`/search?q=${tag.name}`)}
+      onClick={() => navigate(`/search?q=${tag.name}`)}
     >
       {tag.name}
     </CustomButton>
@@ -367,7 +367,7 @@ function PreviewProject({ onClose, ...props }) {
                             key={cat}
                             primaryButtonOutlinedStyle
                             style={{ borderRadius: 4 }}
-                            onClick={() => props.history.push(`/search?q=${cat}`)}
+                            onClick={() => props.navigate(`/search?q=${cat}`)}
                           >
                             {cat}
                           </CustomButton>
@@ -385,7 +385,7 @@ function PreviewProject({ onClose, ...props }) {
                       </Typography>
 
                       <div className={classes.tagsBoxStyle}>
-                        {buildTagsComponent(classes, project.tags, props.history)}
+                        {buildTagsComponent(classes, project.tags, props.navigate)}
                       </div>
                     </Grid>
                   ) : null}

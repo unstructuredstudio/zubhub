@@ -146,7 +146,7 @@ function Projects(props) {
   } else if (projects && projects.length >= 0) {
     return (
       <>
-        {props.auth.username ? props.history.push('/projects') : ''}
+        {props.auth.username ? props.navigate('/projects') : ''}
         {projects.length > 0 ? (
           <Box className={classes.root}>
             {hero && hero.id ? (
@@ -168,7 +168,7 @@ function Projects(props) {
                       className={classes.heroButtonStyle}
                       size="small"
                       primaryButtonStyle
-                      onClick={() => props.history.push('/login')}
+                      onClick={() => props.navigate('/login')}
                     >
                       {t('projects.shareProject')}
                     </CustomButton>
@@ -200,7 +200,7 @@ function Projects(props) {
                 className={classes.heroButtonStyle}
                 size="small"
                 primaryButtonStyle
-                onClick={() => props.history.push('/login')}
+                onClick={() => props.navigate('/login')}
               >
                 {t('projects.login')}
               </CustomButton>
@@ -218,7 +218,7 @@ function Projects(props) {
                     className={classes.heroButtonStyle}
                     size="small"
                     primaryButtonStyle
-                    onClick={() => props.history.push('/projects/create')}
+                    onClick={() => props.navigate('/projects/create')}
                   >
                     {t('projects.createProject')}
                   </CustomButton>
@@ -273,7 +273,7 @@ function Projects(props) {
                 className={classes.heroButtonStyle}
                 size="small"
                 primaryButtonStyle
-                onClick={() => props.history.push('/ambassadors')}
+                onClick={() => props.navigate('/ambassadors')}
               >
                 {t('projects.zubhubAmbassadors')}
               </CustomButton>
@@ -305,7 +305,7 @@ function Projects(props) {
                 className={classes.heroButtonStyle}
                 size="small"
                 primaryButtonStyle
-                onClick={() => props.history.push('/signup')}
+                onClick={() => props.navigate('/signup')}
               >
                 {t('projects.teams.button')}
               </CustomButton>
@@ -471,7 +471,7 @@ function Projects(props) {
                 className={classes.heroButtonStyle}
                 size="small"
                 primaryButtonStyle
-                onClick={() => props.history.push('/signup')}
+                onClick={() => props.navigate('/signup')}
               >
                 {t('projects.global.button')}
               </CustomButton>
@@ -481,7 +481,7 @@ function Projects(props) {
                 variant="outlined"
                 size="small"
                 secondaryButtonStyle
-                onClick={() => props.history.push('/login')}
+                onClick={() => props.navigate('/login')}
               >
                 {t('projects.global.button2')}
               </CustomButton>

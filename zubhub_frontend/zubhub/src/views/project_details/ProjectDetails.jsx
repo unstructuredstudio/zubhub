@@ -78,14 +78,14 @@ const buildMaterialsUsedComponent = (classes, state) => {
  *
  * @todo - describe function's signature
  */
-const buildTagsComponent = (classes, tags, history) => {
+const buildTagsComponent = (classes, tags, navigate) => {
   return tags.map((tag, index) => (
     <Pill key={index} text={`#${tag.name}`} />
     // <CustomButton
     //   key={index}
     //   primaryButtonOutlinedStyle
     //   style={{ borderRadius: 4 }}
-    //   onClick={() => history.push(`/search?q=${tag.name}`)}
+    //   onClick={() => navigate(`/search?q=${tag.name}`)}
     // >
     //   #{tag.name}
     // </CustomButton>
@@ -165,7 +165,7 @@ function ProjectDetails(props) {
 
   const toggleDialog = () => {
     setOpen(!open);
-    props.history.replace(window.location.pathname);
+    props.navigate(window.location.pathname, { replace: true });
   };
 
   const handleSetState = obj => {
@@ -375,7 +375,7 @@ function ProjectDetails(props) {
                         //   key={cat}
                         //   primaryButtonOutlinedStyle
                         //   style={{ borderRadius: 4 }}
-                        //   onClick={() => props.history.push(`/search?q=${cat}`)}
+                        //   onClick={() => props.navigate(`/search?q=${cat}`)}
                         // >
                         //   {cat}
                         // </CustomButton>
@@ -393,7 +393,7 @@ function ProjectDetails(props) {
                     </Typography>
 
                     <div className={classes.tagsBoxStyle}>
-                      {buildTagsComponent(classes, project.tags, props.history)}
+                      {buildTagsComponent(classes, project.tags, props.navigate)}
                     </div>
                   </Grid>
                 ) : null}

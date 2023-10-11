@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Grid, Box, CardMedia, Typography } from '@mui/material';
 import styles from '../../assets/js/styles/components/actionIconsContainer/actionIconsContainerStyles';
 import { makeStyles } from '@mui/styles';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(styles);
 function ActionIconsContainer(props) {
   const classes = useStyles();
   const { activity, t, auth, url } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, handleSetState] = useState({ loading: false });
 
   return (
@@ -31,7 +31,7 @@ function ActionIconsContainer(props) {
           className={classes.actionBoxButtonStyle}
           size="small"
           aria-label={t('projectDetails.ariaLabels.saveButton.label')}
-          onClick={e => toggleSave(e, activity.id, auth, history, handleSetState, activityToggleSave, t)}
+          onClick={e => toggleSave(e, activity.id, auth, navigate, handleSetState, activityToggleSave, t)}
         >
           <Box className={classes.iconsBoxStyle}>
             {activity.saved_by.includes(auth.id) ? (

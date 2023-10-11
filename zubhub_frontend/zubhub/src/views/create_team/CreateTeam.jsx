@@ -23,7 +23,7 @@ import { useSelector } from 'react-redux';
 import DoneRounded from '@mui/icons-material/DoneRounded';
 import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import clsx from 'clsx';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState, lazy } from 'react';
@@ -125,10 +125,11 @@ function CreateTeam(props) {
 
   useEffect(() => {
     if (state.success) {
-      if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
+      if (props.location.pathname === '/projects/create')
+        props.navigate(`/projects/${state.id}/edit`, { replace: true });
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}?success=true`);
+        return props.navigate(`/projects/${props.match.params.id}?success=true`);
       }
       go('next');
     }
@@ -161,7 +162,7 @@ function CreateTeam(props) {
     togglePublishOrAddTags();
     toggleAddTagsDialog();
   };
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const submitData = async () => {
     try {
@@ -176,7 +177,7 @@ function CreateTeam(props) {
         if (uploadStatus === 'success') {
           // Redirect to the desired URL on success
           const teamGroupName = formik.values.groupname; // Get the groupname from props
-          history.push(`/teams/${teamGroupName}`);
+          navigate(`/teams/${teamGroupName}`);
         } else {
           const apiError = uploadStatus;
           toast.error(

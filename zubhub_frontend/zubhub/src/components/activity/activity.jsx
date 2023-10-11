@@ -115,7 +115,7 @@ function Activity(props) {
                 size="small"
                 aria-label="save button"
                 onClick={e =>
-                  toggleSave(e, activity.id, props.auth, props.history, handleSetState, props.activityToggleSave, t)
+                  toggleSave(e, activity.id, props.auth, props.navigate, handleSetState, props.activityToggleSave, t)
                 }
               >
                 {props.auth && activity.saved_by.includes(props.auth.id) ? (

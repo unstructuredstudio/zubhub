@@ -18,7 +18,7 @@ const AvatarButton = props => {
   const auth = useSelector(state => state.auth);
   const goToProfile = () => {
     if (window.location.pathname !== '/profile') {
-      props.history.push('/profile');
+      props.navigate('/profile');
     }
   };
 

@@ -14,6 +14,7 @@ import './theme.js';
 import './assets/css/index.css';
 import configureStore from './store/configureStore';
 import './i18n';
+import { BrowserRouter } from 'react-router-dom';
 
 let { store, persistor } = configureStore();
 
@@ -23,7 +24,9 @@ ReactDOM.render(
       <React.StrictMode>
         <ThemeProvider theme={theme}>
           <Suspense fallback={null}>
-            <App />
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
           </Suspense>
         </ThemeProvider>
       </React.StrictMode>

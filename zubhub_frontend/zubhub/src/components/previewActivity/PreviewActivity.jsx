@@ -51,7 +51,7 @@ function PreviewActivity({ onClose, ...props }) {
 
   const toggleDialog = () => {
     setOpen(!open);
-    props.history.replace(window.location.pathname);
+    props.navigate(window.location.pathname, { replace: true });
   };
 
   if (isLoading) {

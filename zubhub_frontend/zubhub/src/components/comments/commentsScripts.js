@@ -1,10 +1,6 @@
 import { nanoid } from 'nanoid';
 
-import {
-  tempAddComment,
-  tempDeleteComment,
-  parseComments,
-} from '../../assets/js/utils/scripts';
+import { tempAddComment, tempDeleteComment, parseComments } from '../../assets/js/utils/scripts';
 
 /**
  * @function addComment
@@ -12,15 +8,9 @@ import {
  *
  * @todo - describe function's signature
  */
-export const addComment = (
-  props,
-  comment_text_el,
-  parent_id,
-  context,
-  handleSetState,
-) => {
+export const addComment = (props, comment_text_el, parent_id, context, handleSetState) => {
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     const comment_text = comment_text_el.current.value;
     comment_text_el.current.value = '';
@@ -38,9 +28,7 @@ export const addComment = (
     };
 
     parseComments([comment]);
-    parent_id
-      ? tempAddComment(comment, context.body.comments, parent_id)
-      : context.body.comments.unshift(comment);
+    parent_id ? tempAddComment(comment, context.body.comments, parent_id) : context.body.comments.unshift(comment);
 
     handleSetState({ [context.name]: context.body });
 
@@ -68,16 +56,13 @@ export const addComment = (
  * @todo - describe function's signature
  */
 export const unpublishComment = (props, context, id) => {
-  if (
-    props.auth.token &&
-    (props.auth.tags.includes('moderator') || props.auth.tags.includes('staff'))
-  ) {
+  if (props.auth.token && (props.auth.tags.includes('moderator') || props.auth.tags.includes('staff'))) {
     return props
       .unpublishComment({
         token: props.auth.token,
         id: id,
         t: props.t,
-        history: props.history,
+        navigate: props.navigate,
       })
       .then(updated_comment => {
         if (updated_comment) {
@@ -108,23 +93,14 @@ export const handleToggleDeleteCommentModal = (state, id) => {
  *
  * @todo - describe function's signature
  */
-export const deleteComment = (
-  props,
-  context,
-  id,
-  handleSetState,
-  handleCommentsSetState,
-) => {
-  if (
-    props.auth.token &&
-    (props.auth.tags.includes('moderator') || props.auth.tags.includes('staff'))
-  ) {
+export const deleteComment = (props, context, id, handleSetState, handleCommentsSetState) => {
+  if (props.auth.token && (props.auth.tags.includes('moderator') || props.auth.tags.includes('staff'))) {
     props
       .deleteComment({
         token: props.auth.token,
         id: id,
         t: props.t,
-        history: props.history,
+        navigate: props.navigate,
       })
       .then(() => {
         tempDeleteComment(context.body.comments, id);
@@ -135,9 +111,7 @@ export const deleteComment = (
         });
         handleSetState({ [context.name]: context.body });
       })
-      .catch(error =>
-        handleCommentsSetState({ delete_comment_dialog_error: error.message }),
-      );
+      .catch(error => handleCommentsSetState({ delete_comment_dialog_error: error.message }));
   } else {
     handleCommentsSetState({
       delete_comment_dialog_error: null,

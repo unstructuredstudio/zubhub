@@ -23,7 +23,7 @@ const useProjectStyles = makeStyles(projectStyles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivity(props) {
-  const { t, history } = props;
+  const { t, navigate } = props;
   const { id } = props.match.params;
   const classes = useStyles();
   const project_classes = useProjectStyles();
@@ -86,7 +86,7 @@ function CreateActivity(props) {
         deserialize(activityToUpdate, props.setFieldValue);
         setDeserializingForEdit(false);
       } else {
-        history.push('/activities');
+        navigate('/activities');
       }
     }
   }, []);
@@ -184,7 +184,7 @@ function CreateActivity(props) {
                             newActivityObject,
                             props,
                             setNewActivityObject,
-                            history,
+                            navigate,
                             formikProps,
                             setReadyForSubmit,
                           );

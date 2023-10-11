@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { withTranslation } from 'react-i18next';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import { Routes, Route, Redirect, useLocation, useParams, useNavigate } from 'react-router-dom';
 import CreateActivity from './views/create_activity/CreateActivity';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -67,6 +67,25 @@ const LazyImport = props => {
 
 const ThemeContext = React.createContext();
 
+const Wrapper = props => {
+  const { component: Component } = props;
+  console.log(props, 'PROPSSSS');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = useParams();
+  const routeProps = {
+    location,
+    params,
+    navigate,
+  };
+
+  return (
+    <PageWrapper {...routeProps} {...props}>
+      <LazyImport LazyComponent={Component} {...routeProps} {...props} />
+    </PageWrapper>
+  );
+};
+
 function App(props) {
   const theme = useContext(ThemeContext);
 
@@ -86,430 +105,59 @@ function App(props) {
 
   return (
     <ThemeContext.Provider value={theme}>
-      <Router>
-        <ScrollToTop />
-        <Switch>
-          <Route
-            exact={true}
-            path="/"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Home} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Wrapper component={Home} {...props} />} />
+        <Route path="/projects" element={<Wrapper component={Projects} {...props} />} />
 
-          <Route
-            exact={true}
-            path="/projects"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
+        {/* <Route path="/projects/:id/preview" element={<Wrapper component={PreviewProject} /> */}
 
-          {/* <Route
-          exact={true}
-          path="/projects/:id/preview"
-          render={routeProps => (
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={PreviewProject} {...routeProps} {...props} />
-            </PageWrapper>
-          )}
-        /> */}
-
-          <ProtectedRoute path="/settings" component={Settings} {...props} />
-
-          <Route
-            path="/activities/create"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities/:id/linkedProjects"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={LinkedProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/search"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={SearchResults} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/signup"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Signup} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/login"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Login} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/password-reset"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={PasswordReset} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/password-reset-confirm"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={PasswordResetConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/email-confirm"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={EmailConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/phone-confirm"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={PhoneConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/group-invite-confirm"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={GroupInviteConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/creators/:username/projects"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/teams/:groupname/projects"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TeamProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/creators/:username/drafts"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserDrafts} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/creators/:username/followers"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserFollowers} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/teams/:groupname/followers"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TeamFollowers} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/teams/:groupname/members"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TeamMembers} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/creators/:username/following"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserFollowing} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/teams/all"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={AllTeams} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <ProtectedRoute path="/team" component={Teams} {...props} />
-
-          <Route
-            path="/creators/:username/members"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={GroupMembers} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/creators/:username/add-members"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={AddGroupMembers} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/creators/:username"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/account-status"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={AccounStatus} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/teams/:groupname"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Team} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <ProtectedRoute path="/profile" component={Profile} {...props} />
-
-          <Route
-            path="/edit-profile"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={EditProfile} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/:groupname/edit-team"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={EditTeam} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/projects/staff-picks/:id"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={StaffPickDetails} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/projects/create"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/projects/saved"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={SavedProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-          <Route
-            path="/projects/:id/edit"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-          <Route
-            path="/projects/:activity_id/create"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          {/* <ProtectedRoute path="/profile" component={ProjectDetails} {...props} /> */}
-          <Route
-            path="/projects/:id"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={ProjectDetails} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/ambassadors"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Ambassadors} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/privacy_policy"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Guidelines} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/terms_of_use"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TermsOfUse} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/about"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={About} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/challenge"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/faqs"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={FAQs} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities/:id/edit"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities/:id"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={ActivityDetails} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Activities} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/create-team"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateTeam} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-          <Route
-            path="/session-expired"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={SessionExpiredModal} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-          <Route
-            path="*"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={NotFound} {...routeProps} />
-              </PageWrapper>
-            )}
-          />
-        </Switch>
-      </Router>
+        <Route path="/settings" element={<Wrapper component={Settings} {...props} />} />
+        <Route path="/activities/create" element={<Wrapper component={CreateActivity} {...props} />} />
+        <Route path="/activities/:id/linkedProjects" element={<Wrapper component={LinkedProjects} {...props} />} />
+        <Route path="/search" element={<Wrapper component={SearchResults} {...props} />} />
+        <Route path="/signup" element={<Wrapper component={Signup} {...props} />} />
+        <Route path="/login" element={<Wrapper component={Login} {...props} />} />
+        <Route path="/password-reset" element={<Wrapper component={PasswordReset} {...props} />} />
+        <Route path="/password-reset-confirm" element={<Wrapper component={PasswordResetConfirm} {...props} />} />
+        <Route path="/email-confirm" element={<Wrapper component={EmailConfirm} {...props} />} />
+        <Route path="/phone-confirm" element={<Wrapper component={PhoneConfirm} {...props} />} />
+        <Route path="/group-invite-confirm" element={<Wrapper component={GroupInviteConfirm} {...props} />} />
+        <Route path="/creators/:username/projects" element={<Wrapper component={UserProjects} {...props} />} />
+        <Route path="/teams/:groupname/projects" element={<Wrapper component={TeamProjects} {...props} />} />
+        <Route path="/creators/:username/drafts" element={<Wrapper component={UserDrafts} {...props} />} />
+        <Route path="/creators/:username/followers" element={<Wrapper component={UserFollowers} {...props} />} />
+        <Route path="/teams/:groupname/followers" element={<Wrapper component={TeamFollowers} {...props} />} />
+        <Route path="/teams/:groupname/members" element={<Wrapper component={TeamMembers} {...props} />} />
+        <Route path="/creators/:username/following" element={<Wrapper component={UserFollowing} {...props} />} />
+        <Route path="/teams/all" element={<Wrapper component={AllTeams} {...props} />} />
+        <Route path="/team" element={<Wrapper component={Teams} {...props} />} />
+        <Route path="/creators/:username/members" element={<Wrapper component={GroupMembers} {...props} />} />
+        <Route path="/creators/:username/add-members" element={<Wrapper component={AddGroupMembers} {...props} />} />
+        <Route path="/creators/:username" element={<Wrapper component={Profile} {...props} />} />
+        <Route path="/account-status" element={<Wrapper component={AccounStatus} {...props} />} />
+        <Route path="/teams/:groupname" element={<Wrapper component={Team} {...props} />} />
+        <Route path="/profile" element={<Wrapper component={Profile} {...props} />} />
+        <Route path="/edit-profile" element={<Wrapper component={EditProfile} {...props} />} />
+        <Route path="/:groupname/edit-team" element={<Wrapper component={EditTeam} {...props} />} />
+        <Route path="/projects/staff-picks/:id" element={<Wrapper component={StaffPickDetails} {...props} />} />
+        <Route path="/projects/create" element={<Wrapper component={CreateProject} {...props} />} />
+        <Route path="/projects/saved" element={<Wrapper component={SavedProjects} {...props} />} />
+        <Route path="/projects/:id/edit" element={<Wrapper component={CreateProject} {...props} />} />
+        <Route path="/projects/:activity_id/create" element={<Wrapper component={CreateProject} {...props} />} />
+        <Route path="/projects/:id" element={<Wrapper component={ProjectDetails} {...props} />} />
+        <Route path="/ambassadors" element={<Wrapper component={Ambassadors} {...props} />} />
+        <Route path="/privacy_policy" element={<Wrapper component={Guidelines} {...props} />} />
+        <Route path="/terms_of_use" element={<Wrapper component={TermsOfUse} {...props} />} />
+        <Route path="/about" element={<Wrapper component={About} {...props} />} />
+        <Route path="/challenge" element={<Wrapper component={Challenge} {...props} />} />
+        <Route path="/faqs" element={<Wrapper component={FAQs} {...props} />} />
+        <Route path="/activities/:id/edit" element={<Wrapper component={CreateActivity} {...props} />} />
+        <Route path="/activities/:id" element={<Wrapper component={ActivityDetails} {...props} />} />
+        <Route path="/activities" element={<Wrapper component={Activities} {...props} />} />
+        <Route path="/create-team" element={<Wrapper component={CreateTeam} {...props} />} />
+        <Route path="*" element={<Wrapper component={NotFound} {...props} />} />
+      </Routes>
     </ThemeContext.Provider>
   );
 }
