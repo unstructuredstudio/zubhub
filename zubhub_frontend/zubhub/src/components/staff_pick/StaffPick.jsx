@@ -42,7 +42,7 @@ function StaffPick(props) {
               margin="normal"
               secondaryButtonStyle
               onClick={() =>
-                props.history.push(`/projects/staff-picks/${staff_pick.id}`)
+                props.navigate(`/projects/staff-picks/${staff_pick.id}`)
               }
             >
               {rest.t('staffPicks.viewAll')}

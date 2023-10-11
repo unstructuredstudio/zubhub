@@ -30,26 +30,24 @@ export const handleMouseDownPassword = e => {
 export const login = (e, props) => {
   e.preventDefault();
   props.setFieldTouched('username', true);
-  return props
-    .login({ values: props.values, history: props.history })
-    .catch(error => {
-      const messages = JSON.parse(error.message);
-      if (typeof messages === 'object') {
-        const server_errors = {};
-        Object.keys(messages).forEach(key => {
-          if (key === 'non_field_errors') {
-            server_errors['non_field_errors'] = messages[key][0];
-          } else {
-            server_errors[key] = messages[key][0];
-          }
-        });
-        props.setStatus({ ...server_errors });
-      } else {
-        props.setStatus({
-          non_field_errors: props.t('login.errors.unexpected'),
-        });
-      }
-    });
+  return props.login({ values: props.values, navigate: props.navigate }).catch(error => {
+    const messages = JSON.parse(error.message);
+    if (typeof messages === 'object') {
+      const server_errors = {};
+      Object.keys(messages).forEach(key => {
+        if (key === 'non_field_errors') {
+          server_errors['non_field_errors'] = messages[key][0];
+        } else {
+          server_errors[key] = messages[key][0];
+        }
+      });
+      props.setStatus({ ...server_errors });
+    } else {
+      props.setStatus({
+        non_field_errors: props.t('login.errors.unexpected'),
+      });
+    }
+  });
 };
 
 /**

@@ -74,7 +74,7 @@ function AccountStatus(props) {
               variant="contained"
               margin="normal"
               primaryButtonStyle
-              onClick={() => props.history.push('/')}
+              onClick={() => props.navigate('/')}
             >
               {t('accountStatus.backToHome')}
             </CustomButton>

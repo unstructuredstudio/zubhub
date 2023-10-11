@@ -73,17 +73,17 @@ export default function ActivityDetailsV2(props) {
   const handleDelete = () => {
     setIsLoading({ ...isLoading, delete: true });
     API.deleteActivity({ token: auth.token, id: activity.id })
-      .then(() => props.history.push(`/activities`))
+      .then(() => props.navigate(`/activities`))
       .finally(() => setIsLoading({ ...isLoading, delete: false }));
   };
 
   const handleEdit = () => {
-    props.history.push(`${props.location.pathname}/edit`);
+    props.navigate(`${props.location.pathname}/edit`);
   };
 
   const toggleDialog = () => {
     setOpen(!open);
-    props.history.replace(window.location.pathname);
+    props.navigate(window.location.pathname, { replace: true });
   };
 
   const handleDownload = useReactToPrint({

@@ -184,7 +184,7 @@ function Profile(props) {
                         variant="contained"
                         margin="normal"
                         primaryButtonStyle
-                        onClick={() => props.history.push('/edit-profile')}
+                        onClick={() => props.navigate('/edit-profile')}
                       >
                         {t('profile.edit')}
                       </CustomButton>
@@ -317,7 +317,7 @@ function Profile(props) {
                   variant="contained"
                   margin="normal"
                   primaryButtonStyle
-                  onClick={() => props.history.push('/create-team')}
+                  onClick={() => props.navigate('/create-team')}
                 >
                   {t('profile.createteam')}
                 </CustomButton>
@@ -380,7 +380,7 @@ function Profile(props) {
                     variant="outlined"
                     margin="normal"
                     secondaryButtonStyle
-                    onClick={() => props.history.push(`/creators/${profile.username}/projects`)}
+                    onClick={() => props.navigate(`/creators/${profile.username}/projects`)}
                   >
                     {t('profile.projects.viewAll')}
                   </CustomButton>

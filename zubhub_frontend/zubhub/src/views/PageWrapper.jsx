@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -87,7 +87,7 @@ function PageWrapper(props) {
   const backToTopEl = useRef(null);
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
   const [isVisible, setIsVisible] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();

@@ -122,7 +122,7 @@ export default function CreateActivity(props) {
       success => {
         if (success) {
           if (activeStep == 1) go('next');
-          if (activeStep == 2) props.history.push(`/activities/${props.match.params.id}?success=true`);
+          if (activeStep == 2) props.navigate(`/activities/${props.match.params.id}?success=true`);
           setIsLoading(false);
         }
       },

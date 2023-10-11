@@ -97,7 +97,7 @@ function Projects(props) {
                       className={classes.heroButtonStyle}
                       size="small"
                       primaryButtonStyle
-                      onClick={() => props.history.push('/projects/create')}
+                      onClick={() => props.navigate('/projects/create')}
                     >
                       {t('projects.shareProject')}
                     </CustomButton>
@@ -115,7 +115,7 @@ function Projects(props) {
                       className={classes.heroButtonStyle}
                       size="small"
                       customWarningButtonStyle
-                      onClick={() => props.history.push('/ambassadors')}
+                      onClick={() => props.navigate('/ambassadors')}
                     >
                       {t('projects.zubhubAmbassadors')}
                     </CustomButton>
@@ -251,7 +251,7 @@ function Projects(props) {
                     className={classes.heroButtonStyle}
                     size="small"
                     primaryButtonStyle
-                    onClick={() => props.history.push('/projects/create')}
+                    onClick={() => props.navigate('/projects/create')}
                   >
                     {t('projects.createProject')}
                   </CustomButton>

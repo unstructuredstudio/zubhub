@@ -57,7 +57,7 @@ export const handleMouseDownPassword = e => {
  *
  * @todo - describe function's signature
  */
- export const handleToggleDeleteAccountModal = state => {
+export const handleToggleDeleteAccountModal = state => {
   const open_delete_account_modal = !state.open_delete_account_modal;
   return { open_delete_account_modal, more_anchor_el: null };
 };
@@ -68,17 +68,15 @@ export const handleMouseDownPassword = e => {
  *
  * @todo - describe function's signature
  */
- export const deleteAccount = (groupname, props, state) => {
-    return props.deleteTeam({
-      token: props.auth.token,
-      history: props.history,
-      logout: props.logout,
-      t: props.t,
-      groupname: groupname,
-    });
-  }
-
-
+export const deleteAccount = (groupname, props, state) => {
+  return props.deleteTeam({
+    token: props.auth.token,
+    navigate: props.navigate,
+    logout: props.logout,
+    t: props.t,
+    groupname: groupname,
+  });
+};
 
 /**
  * @function editProfile
@@ -99,7 +97,7 @@ export const editProfile = (e, groupname, props) => {
     return props
       .editTeam({ groupname, data, token: props.auth.token })
       .then(_ => {
-        props.history.push(`/teams/${props.values.groupname}`)
+        props.navigate(`/teams/${props.values.groupname}`)
       })
   }
 };

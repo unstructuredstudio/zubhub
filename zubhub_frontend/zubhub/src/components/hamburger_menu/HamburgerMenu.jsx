@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -22,7 +22,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
   const common_classes = useCommonStyles();
   const [hamburgerMenuOpen, setHamburgerMenuOpen] = useState(false);
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = useSelector(state => state.auth);
 
@@ -102,7 +102,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
             <MenuItem
               className={clsx(classes.paddingItem)}
               onClick={() => {
-                history.push('/activities', { flag: 'educator' });
+                navigate('/activities', {state: { flag: 'educator' }});
                 setHamburgerMenuOpen(false);
               }}
             >
@@ -118,7 +118,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
           <MenuItem
             className={clsx(classes.paddingItem)}
             onClick={() => {
-              history.push('/activities', { flag: 'staff' });
+              navigate('/activities', {state: { flag: 'staff' }});
               setHamburgerMenuOpen(false);
             }}
           >
@@ -193,7 +193,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
       </Link>
       <MenuItem
         className={clsx(classes.logOutStyle, common_classes.textDecorationNone)}
-        onClick={() => dispatch(AuthActions.logout({ token: auth.token, history, t }))}
+        onClick={() => dispatch(AuthActions.logout({ token: auth.token, navigate, t }))}
       >
         <Typography className={clsx(common_classes.colorRed, classes.paddingItem)} variant="subtitle2" component="span">
           {t('pageWrapper.navbar.logout')}

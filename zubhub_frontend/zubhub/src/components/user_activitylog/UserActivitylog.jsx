@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from '../../assets/js/styles/components/user_activitylog/userActivitylogStyles';
 import { makeStyles } from '@mui/styles';
 import { dFormatter } from '../../assets/js/utils/scripts';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { MdBookmarks } from 'react-icons/md';
 import { FaComments } from 'react-icons/fa';

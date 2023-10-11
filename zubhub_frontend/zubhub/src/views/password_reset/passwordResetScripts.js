@@ -8,12 +8,12 @@ import * as Yup from 'yup';
  */
 export const sendPasswordResetLink = (e, props) => {
   e.preventDefault();
-  props.setStatus({ non_field_errors: '' })
+  props.setStatus({ non_field_errors: '' });
   return props
     .sendPasswordResetLink({
       email: props.values.email,
       t: props.t,
-      history: props.history,
+      navigate: props.navigate,
     })
     .catch(error => {
       const messages = JSON.parse(error.message);

@@ -2,6 +2,9 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 import { withFormik } from 'formik';
 import { connect } from 'react-redux';
@@ -61,6 +64,7 @@ function EditTeam(props) {
     description_el: React.useRef(null),
     groupname_el: React.useRef(null),
   };
+  const navigate = useNavigate();
 
   const [state, setState] = React.useState({
     locations: [],
@@ -90,7 +94,13 @@ function EditTeam(props) {
   const handleButtonClick = () => {
     handleSetState(handleToggleDeleteAccountModal(state));
   };
-
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const success = await editProfile(e, groupname, info.groupname, info.description, props);
+    if (success) {
+      navigate(`/teams/${info.groupname}`);
+    }
+  };
   return (
   <>
     <Box className={classes.root}>
