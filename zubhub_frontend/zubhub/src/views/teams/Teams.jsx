@@ -89,7 +89,7 @@ function TeamProjects(props) {
                 variant="h3"
                 gutterBottom
               >
-                {t('All Teams')}
+                {t('profile.allTeams')}
               </Typography>
             </Grid>
             <Grid container spacing={2}>
@@ -154,7 +154,7 @@ function TeamProjects(props) {
                 variant="h3"
                 gutterBottom
               >
-                {props.auth.username}'s {t('Teams')}
+                {props.auth.username}'s {t('profile.teams')}
               </Typography>
             </Grid>
             <Grid container spacing={2}>

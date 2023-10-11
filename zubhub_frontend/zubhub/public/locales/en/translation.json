@@ -583,7 +583,8 @@
 
   "profile": {
     "edit": "Edit",
-    "editTeam": "Edit Team Info",
+    "teams": "Teams",
+    "allTeams": "All Teams",
     "delete": {
       "label": "Delete Account",
       "dialog": {
@@ -670,13 +671,14 @@
         "label": "Location",
         "errors": {
           "min": "Your location is too short",
-          "required": "Looks like your missed this one"
+          "required": "Looks like you missed this one"
         }
       },
       "email": {
         "label": "Email",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "Your email seems invalid. Is the email address correct?"
         }
       },
@@ -684,6 +686,7 @@
         "label": "Phone",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "I'm having trouble understanding this number. Make sure it's in this format: '+911234567890'. Upto 15 digits are allowed."
         }
       },
@@ -701,10 +704,10 @@
           "required": "Seems like you forgot this"
         }
       },
-      "submit": "Edit Profile"
+      "submit": "Save Changes"
     },
     "or": "OR",
-    "backToProfile": "Back To Profile",
+    "backToProfile": "Discard Changes",
     "toastSuccess": "Your profile was updated successfully!!",
     "errors": {
       "unexpected": "Oh no! Seems like we hit a snag :( Maybe try again later?"
@@ -848,7 +851,21 @@
       "page_empty": "This page is empty"
     }
   },
-
+  "editTeam": {
+    "info": "Edit Team Info",
+    "name": "Team Name",
+    "about": "About Team",
+    "requestName": "Enter your Team Name",
+    "delete": {
+      "question": "Delete Team Profile?",
+      "information": "Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.",
+      "confirmation": "I want to delete this team’s profile",
+      "buttons": {
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    }
+  },
   "createTeam": {
     "welcomeMsg": {
       "primary": "Create a Team",
@@ -882,6 +899,10 @@
     "3rdpage":{
       "title":"Select Project you worked on with a Team"
     }
+  },
+  "teamMembers": {
+    "members": "Members",
+    "noMember": "This team has no members"
   },
 
   "createActivity": {
