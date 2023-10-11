@@ -6,7 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 export default function Step2({ formik }) {
-  const useStyles = makeStyles(styles);
+  const useStyles = makeStyles(styles); 
   const classes = useStyles();
   const commonClasses = makeStyles(styles)();
   const api = new API();

@@ -26,13 +26,7 @@ class API {
    * @param {string} content_type - content type to be used for the request
    * @returns {Promise<>}
    */
-  request = ({
-    url = '/',
-    method = 'GET',
-    token,
-    body,
-    content_type = 'application/json',
-  }) => {
+  request = ({ url = '/', method = 'GET', token, body, content_type = 'application/json' }) => {
     if (method === 'GET' && !token) {
       return fetch(this.domain + url, {
         method,
@@ -52,14 +46,14 @@ class API {
         withCredentials: 'true',
         headers: content_type
           ? new Headers({
-            Authorization: `Token ${token}`,
-            'Content-Type': content_type,
-            'Accept-Language': `${i18next.language},en;q=0.5`,
-          })
+              Authorization: `Token ${token}`,
+              'Content-Type': content_type,
+              'Accept-Language': `${i18next.language},en;q=0.5`,
+            })
           : new Headers({
-            Authorization: `Token ${token}`,
-            'Accept-Language': `${i18next.language},en;q=0.5`,
-          }),
+              Authorization: `Token ${token}`,
+              'Accept-Language': `${i18next.language},en;q=0.5`,
+            }),
         body,
       });
     } else if (token) {
@@ -135,17 +129,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  signup = ({
-    username,
-    email,
-    phone,
-    dateOfBirth,
-    user_location,
-    password1,
-    password2,
-    bio,
-    subscribe,
-  }) => {
+  signup = ({ username, email, phone, dateOfBirth, user_location, password1, password2, bio, subscribe }) => {
     const url = 'creators/register/';
     const method = 'POST';
     const body = JSON.stringify({
@@ -291,9 +275,11 @@ class API {
    */
   removeTeamMember = ({ groupname, username, token }) => {
     const url = `creators/${groupname}/remove-member/${username}/`;
-    const method = 'DELETE';
+    const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res =>
+        Promise.resolve(res.status === 204 ? { detail: 'ok' } : res.json()),
+      );
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -309,7 +295,7 @@ class API {
     const url = `creators/${groupname}/toggle-follow/${username}/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -325,7 +311,7 @@ class API {
     const url = `creators/${groupname}/members/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -337,7 +323,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  teamMembersId = ( id ) => {
+  teamMembersId = id => {
     const url = `creators/id/${id}/`;
     const method = 'GET';
     return this.request({ url, method }).then(res => res.json());
@@ -353,7 +339,7 @@ class API {
     const url = `creators/${groupname}/delete-group/`;
     const method = 'DELETE';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -369,7 +355,7 @@ class API {
     const url = `creators/${groupname}/group-followers/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -385,7 +371,7 @@ class API {
     const url = `creators/groups/${username}/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -401,7 +387,7 @@ class API {
     const url = `creators/teams/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -413,13 +399,14 @@ class API {
    *
    * @todo - describe method's signature
    */
+  // issue-734
   addTeamMembers = ({ groupname, data, token }) => {
     const url = `creators/${groupname}/add-members/`;
     const method = 'POST';
-    const content_type = false;
-    const body = data;
+    const content_type = 'application/json';
+    const body = JSON.stringify(data);
     if (token) {
-      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+      return this.request({ url, method, token, body, content_type }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -436,7 +423,7 @@ class API {
     const method = 'POST';
     const content_type = 'application/json';
     const body = JSON.stringify(data);
-  
+
     if (token) {
       return this.request({ url, method, token, body, content_type }).then(res => res.json());
     } else {
@@ -456,7 +443,7 @@ class API {
     const content_type = 'application/json';
     const body = JSON.stringify(data);
     if (token) {
-      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+      return this.request({ url, method, token, body, content_type }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -471,7 +458,7 @@ class API {
    */
   getUserProjects = ({ username, page, limit, token, project_to_omit }) => {
     let url = `creators/${username}/projects`;
-    let queryParams = sanitizeObject({ page, limit, project_to_omit })
+    let queryParams = sanitizeObject({ page, limit, project_to_omit });
     const searchParams = new URLSearchParams(queryParams);
     url = `${url}?${searchParams}`;
     return this.request({ url, token }).then(res => res.json());
@@ -571,9 +558,7 @@ class API {
    * @todo - describe method's signature
    */
   getFollowers = ({ page, username }) => {
-    const url = page
-      ? `creators/${username}/followers/?${page}`
-      : `creators/${username}/followers/`;
+    const url = page ? `creators/${username}/followers/?${page}` : `creators/${username}/followers/`;
 
     return this.request({ url }).then(res => res.json());
   };
@@ -585,9 +570,7 @@ class API {
    * @todo - describe method's signature
    */
   getFollowing = ({ page, username }) => {
-    const url = page
-      ? `creators/${username}/following/?${page}`
-      : `creators/${username}/following/`;
+    const url = page ? `creators/${username}/following/?${page}` : `creators/${username}/following/`;
 
     return this.request({ url }).then(res => res.json());
   };
@@ -611,8 +594,7 @@ class API {
    * @todo - describe method's signature
    */
   editUserProfile = props => {
-    const { token, username, email, phone, dateOfBirth, bio, user_location } =
-      props;
+    const { token, username, email, phone, dateOfBirth, bio, user_location } = props;
 
     const url = 'creators/edit-creator/';
     const method = 'PUT';
@@ -660,9 +642,7 @@ class API {
    * @todo - describe method's signature
    */
   getMembers = ({ page, username }) => {
-    const url = page
-      ? `creators/${username}/members/?${page}`
-      : `creators/${username}/members/`;
+    const url = page ? `creators/${username}/members/?${page}` : `creators/${username}/members/`;
 
     return this.request({ url }).then(res => res.json());
   };
@@ -678,9 +658,7 @@ class API {
     const method = 'POST';
     const content_type = false;
     const body = data;
-    return this.request({ url, method, token, body, content_type }).then(res =>
-      res.json(),
-    );
+    return this.request({ url, method, token, body, content_type }).then(res => res.json());
   };
 
   /**
@@ -728,18 +706,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  createProject = ({
-    token,
-    title,
-    description,
-    video,
-    images,
-    materials_used,
-    category,
-    tags,
-    publish,
-    activity,
-  }) => {
+  createProject = ({ token, title, description, video, images, materials_used, category, tags, publish, activity }) => {
     const url = 'projects/create/';
     const method = 'POST';
     const body = JSON.stringify({
@@ -762,18 +729,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  updateProject = ({
-    token,
-    id,
-    title,
-    description,
-    video,
-    images,
-    materials_used,
-    category,
-    tags,
-    publish,
-  }) => {
+  updateProject = ({ token, id, title, description, video, images, materials_used, category, tags, publish }) => {
     const url = `projects/${id}/update/`;
     const method = 'PATCH';
 
@@ -827,9 +783,7 @@ class API {
     const method = 'PATCH';
     const body = JSON.stringify({});
     return this.request({ url, method, token, body }).then(res =>
-      Promise.resolve(
-        res.status === 200 ? res.json() : { details: 'unknown error' },
-      ),
+      Promise.resolve(res.status === 200 ? res.json() : { details: 'unknown error' }),
     );
   };
 
@@ -859,11 +813,11 @@ class API {
   };
 
   /**
-  * @method getActivity
-  * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
-  *
-  * @todo - describe method's signature
-  */
+   * @method getActivity
+   * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
+   *
+   * @todo - describe method's signature
+   */
   getActivity = ({ token, id }) => {
     const url = `activities/${id}`;
     return this.request({ token, url }).then(res => res.json());
@@ -909,9 +863,7 @@ class API {
    * @todo - describe method's signature
    */
   getStaffPick = ({ token, page, id }) => {
-    const url = page
-      ? `projects/staff-picks/${id}/?page=${page}`
-      : `projects/staff-picks/${id}`;
+    const url = page ? `projects/staff-picks/${id}/?page=${page}` : `projects/staff-picks/${id}`;
 
     return this.request({ token, url }).then(res => res.json());
   };
@@ -1021,10 +973,10 @@ class API {
   };
 
   /**
- * @method getChallenge
- * @author Suchakra Sharma <suchakra@unstructured.studio>
- *
- */
+   * @method getChallenge
+   * @author Suchakra Sharma <suchakra@unstructured.studio>
+   *
+   */
   getChallenge = () => {
     const url = `challenge/`;
 
@@ -1062,9 +1014,7 @@ class API {
    * @todo - describe method's signature
    */
   getAmbassadors = ({ token, page }) => {
-    const url = page
-      ? `ambassadors/?page=${page}`
-      : `ambassadors`;
+    const url = page ? `ambassadors/?page=${page}` : `ambassadors`;
 
     return this.request({ token, url }).then(res => res.json());
   };
@@ -1099,6 +1049,22 @@ class API {
   createActivity = (token, args) => {
     const url = 'activities/create/';
     const method = 'POST';
+    const {
+      title,
+      motivation,
+      learning_goals,
+      materials_used,
+      materials_used_image,
+      facilitation_tips,
+      images,
+      class_grade,
+      introduction,
+      making_steps,
+      inspiring_examples,
+      inspiring_artist,
+      video,
+    } = args;
+
     const body = JSON.stringify(args);
 
     return this.request({ url, method, token, body });
@@ -1133,9 +1099,8 @@ class API {
     return this.request({ url, method, token });
   };
 
-  getActivities = (params) => {
-
-    let queryParams = sanitizeObject(params)
+  getActivities = params => {
+    let queryParams = sanitizeObject(params);
     const searchParams = new URLSearchParams(queryParams);
     let url = `activities`;
     url = `${url}?${searchParams}`;

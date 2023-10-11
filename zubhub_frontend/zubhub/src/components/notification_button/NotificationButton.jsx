@@ -18,7 +18,7 @@ const NotificationButton = ({ className, notif }) => {
   const buttonRef = useRef();
 
   return (
-    <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
+    <ClickAwayListener onClickAway={() => setDropdownOpen(false)} >
       <div>
         <div
           onClick={() => setDropdownOpen(!dropdownOpen)}

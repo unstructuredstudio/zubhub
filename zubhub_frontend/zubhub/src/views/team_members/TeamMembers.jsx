@@ -1,22 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
-
+import { MdOutlineModeEdit } from 'react-icons/md';
+import { GiCheckMark } from 'react-icons/gi';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Container,
-  Box,
-  Card,
-  ButtonGroup,
-  Typography,
-  Avatar,
-} from '@material-ui/core';
+import { Grid, Container, Box, Card, ButtonGroup, Typography, Avatar, Button } from '@material-ui/core';
 
 import { fetchPage, toggleFollow } from './teamMembersScripts';
 
@@ -25,61 +17,20 @@ import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import styles from '../../assets/js/styles/views/user_followers/userFollowersStyles';
+import { ClickAwayListener } from '@material-ui/core';
+import {  Popover } from '@material-ui/core';
+import style from '../../assets/js/styles/views/profile/profileStyles';
+import { useHistory } from 'react-router-dom';
+import * as  addTeamMemberScript from '../add_team_member/addTeamMemberScript'
 
 const useStyles = makeStyles(styles);
-
+const Styles = makeStyles(style);
 /**
  * @function buildFollowers Component
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
-const buildFollowers = (followers, classes, props, state, handleSetState) =>
-  followers.map(follower => (
-    <Grid
-      item
-      xs={12}
-      sm={6}
-      md={4}
-      lg={3}
-      className={classes.followersGridStyle}
-      align="center"
-      key={follower.id}
-    >
-      <Link
-        className={classes.textDecorationNone}
-        to={`/creators/${follower.username}`}
-      >
-        <Card className={classes.cardStyle}>
-          <Avatar
-            className={classes.avatarStyle}
-            src={follower.avatar}
-            alt={follower.username}
-          />
-          {follower.id !== props.auth.id ? (
-            <CustomButton
-              variant="contained"
-              onClick={(e, id = follower.id) =>
-                handleSetState(toggleFollow(e, props, state, id, toast))
-              }
-              primaryButtonStyle
-            >
-              {follower.followers.includes(props.auth.id)
-                ? props.t('userFollowers.follower.unfollow')
-                : props.t('userFollowers.follower.follow')}
-            </CustomButton>
-          ) : null}
-          <Typography
-            component="h3"
-            color="textPrimary"
-            className={classes.userNameStyle}
-          >
-            {follower.username}
-          </Typography>
-        </Card>
-      </Link>
-    </Grid>
-  ));
 
 /**
  * @function UserFollowers View
@@ -89,18 +40,44 @@ const buildFollowers = (followers, classes, props, state, handleSetState) =>
  */
 function TeamMembers(props) {
   const classes = useStyles();
-  const { groupname } = useParams();
+  const classe = Styles();
+ const token = props.auth.token
+  const groupname  = props.match.params.groupname;
+
+  const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
     followers: [],
     prev_page: null,
     next_page: null,
     loading: true,
+    editted:false,
+    deleted:false,
+    teamMembersIdAndRole: [],
   });
 
+  const [updatedRole, setUpdatedRole] = React.useState(false)
+  const [anchorEl, setAnchorEl] = React.useState({});
+
+  const handleClick = (event, memberId) => {
+    setAnchorEl(prevAnchorEl => ({
+      ...prevAnchorEl,
+      [memberId]: event.currentTarget,
+    }));
+  };
+
+  const handleClose = memberId => {
+    setAnchorEl(prevAnchorEl => ({
+      ...prevAnchorEl,
+      [memberId]: null,
+    }));
+  };
+
+ 
+ 
   React.useEffect(() => {
-    let obj=fetchPage(groupname, props);
+    let obj = fetchPage(groupname, props);
     handleSetState(obj);
-  }, []);
+  }, [groupname, props, state.deleted, state.editted]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -110,16 +87,80 @@ function TeamMembers(props) {
     }
   };
 
-  const { followers, prev_page, next_page, loading } = state;
+  let addNewMemberActionObject = {
+    title: 'Invite new team Members',
+    details: `you can invite new team members by adding the people you worked on a project with`,
+    buttonText: ' Add team members',
+  };
+  const { followers, teamMembersIdAndRole, prev_page, next_page, loading } = state;
+
+  const updatedfollowers = [addNewMemberActionObject, ...teamMembersIdAndRole];
   const username = props.match.params.username;
   const { t } = props;
+
+ 
+
+  const history = useHistory();
+
+  const updateRole = async (username, role) => { 
+    const member = {
+      member:username,
+      role:role
+    }
+    try {
+      const uploadMember = await addTeamMemberScript.updatedMemberRole({...props},member);
+
+      if (uploadMember.includes('User Updated')) {
+        // Redirect to the desired URL on success
+        const groupname = props.match.params.groupname
+        setUpdatedRole(true)
+        setState(state => ({ ...state, editted:true}))
+        toast.success(
+          `user updated successfully`
+        )
+        history.push(`/teams/${groupname}/members`);
+      } else {
+        toast.error(
+          `An unexpected error occurred. Please check if you have entered all details properly and try again.`,
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+ 
+  const deleteMember = async (groupname,username,token) => {
+    try {
+      const response = await addTeamMemberScript.removeMember(groupname,username,token,{...props,...teamMembersIdAndRole})
+      console.log();
+      console.log(JSON.stringify(response));
+      if (response === 'success') {
+        // Redirect to the desired URL on success
+        const groupname = props.match.params.groupname
+        setState(state => ({ ...state, deleted:true}))
+        toast.success(
+          `user deleted successfully`
+        )
+
+        history.push(`/teams/${groupname}/members`);
+      } else {
+        toast.error(
+          `An unexpected error occurred. Please check if you have entered all details properly and try again.`,
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   if (loading) {
     return <LoadingPage />;
   } else if (followers && followers.length > 0) {
     return (
-      <Box className={classes.root}>
+      <Box className={classes.root} >
         <Container className={classes.mainContainerStyle}>
-          <Grid container spacing={3} justify="center">
+          <Grid container spacing={3} justify="center" >
             <Grid item xs={12}>
               <Typography
                 className={classes.pageHeaderStyle}
@@ -129,12 +170,124 @@ function TeamMembers(props) {
                 {groupname}'s {t('teamMembers.members')}
               </Typography>
             </Grid>
-            {buildFollowers(followers, classes, props, state, handleSetState)}
+
+            {updatedfollowers.map((follower, index) => (
+              <Grid item className={classes.followersGridStyle} align="start" key={follower.id}>
+                {index === 0 ?
+                (
+                  <Card
+                  className={classes.addteamCard}
+                  >
+                  <Box
+                    style={{ paddingTop: '1rem', display:'block', placeItems: 'center', paddingLeft: '0.5rem', paddingRight: '0.5rem', }}
+                    >
+                      <div style={{display:'flex', flexDirection:'cols', justifyContent:'center', alignItems:"center"}}>
+
+                    <Typography component="h3" color="textPrimary"
+                    className={classes.addTeamHeaderText}
+                    >
+                      {`Invite new team`}<br/>
+                     <span style={{marginLeft:'2rem'}}> {`Members`}</span>
+                    </Typography>
+                      </div>
+                    <Typography component="h3" color="textPrimary" style={{ textAlign: 'center', width: '18rem', fontSize: '15px' }}>
+                      {`you can invite new team members by adding the people you worked on a project with`}
+                    </Typography>
+                  </Box>
+                  <Link 
+                // className={classe.textDecorationNone}
+              to={`/add/${groupname}`}
+              >
+                  <Box
+                   className={classes.addTeamButtonContainer}
+                    >
+                    
+                    <CustomButton variant="contained" primaryButtonStyle>
+                      {` Add team members`}
+                    </CustomButton>
+                
+                  </Box>
+                </Link>
+                </Card>
+                ) : (
+                  <Card className={classes.cardStyle}>
+                      <ClickAwayListener onClickAway={() => setOpen(!open)}>
+                    <div
+                      style={{
+                        margin: '1rem',
+                      }}
+                      key={index}
+                    >
+                      {/* <Button variant="contained" onClick={event => handleClick(event, index)}> */}
+                      <div className={classes.editIconContainer} onClick={event => handleClick(event, index)}>
+                  <MdOutlineModeEdit size={30} className={classes.editIcon} />
+                  </div> 
+                      <Popover
+                        open={Boolean(anchorEl[index])}
+                        anchorEl={anchorEl[index]}
+                        onClose={() => handleClose(index)}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'left',
+                        }}
+                      >
+                       <div className={classes.memberrole}>
+                          {follower.role === 'admin' ? (
+                            <div className={classes.roleItem}>
+                              <GiCheckMark size={15} />
+                              <h1 className={classes.checkedrole}>Admin</h1>
+                            </div>
+                          ) : (
+                            <h1 className={classes.uncheckedRole}  onClick={()=>updateRole(follower.additionalInfo.username,'admin')}>Admin</h1>
+                          )}
+                          {follower.role === 'member' ? (
+                            <div className={classes.roleItem}>
+                              <GiCheckMark size={15} />
+                              <h1 className={classes.checkedrole}>Member</h1>
+                            </div>
+                          ) : (
+                            <h1 className={classes.uncheckedRole} onClick={()=>updateRole(follower.additionalInfo.username,'member')}>Member</h1>
+                          )}
+                          <hr style={{ paddingLeft: '6rem', paddingRight: '3rem', height: '1px' }} />
+                          {
+                            follower.role !== 'admin' ? (
+                              <span className={classes.removeButton}  onClick={() => deleteMember(groupname, follower.additionalInfo.username, token)}>Remove</span>
+                            ) : (
+                              <span className={classes.removeButton}onClick={() => deleteMember(groupname, follower.additionalInfo.username, token)}>Leave Team</span>
+                            )
+                          }
+                        </div>
+                      </Popover>
+                    </div>
+                    </ClickAwayListener>
+                  
+                    <Avatar
+                      className={classes.avatarStyle}
+                      src={follower.additionalInfo.avatar}
+                      alt={follower.additionalInfo.username}
+                    />
+                    {follower.additionalInfo.id !== props.auth.id ? (
+                      <CustomButton
+                        variant="contained"
+                        onClick={(e, id = follower.additionalInfo.id) =>
+                          handleSetState(toggleFollow(e, props, state, id, toast))
+                        }
+                        primaryButtonStyle
+                      >
+                        {follower.additionalInfo.followers.includes(props.auth.id)
+                          ? props.t('userFollowers.follower.unfollow')
+                          : props.t('userFollowers.follower.follow')}
+                      </CustomButton>
+                    ) : null}
+                    <Typography component="h3" color="textPrimary" className={classes.userNameStyle}>
+                      {follower.additionalInfo.username.slice(0,9)}
+                    </Typography>
+                  </Card>
+                )}
+              </Grid>
+            ))}
           </Grid>
-          <ButtonGroup
-            aria-label={t('userFollowers.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
+          <ButtonGroup aria-label={t('userFollowers.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}

@@ -19,7 +19,8 @@ const styles = theme => ({
     textTransform: 'capitalize'
   },
   inputTextPlaceholder: {
-    color: '#B3B3B3',
+    // color: '#B3B3B3',
+    color:'purple',
     fontSize: '15px !important',
     fontFamily: 'Raleway, sans-serif !important',
   },
@@ -39,6 +40,12 @@ const styles = theme => ({
       fontFamily: 'Raleway, sans-serif !important'
     },
 
+  },
+  customTextField:{
+    '& .MuiOutlinedInput-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      border: 'none',
+      padding:'100px'
+    }
   },
   title1: {
     fontWeight: 'bold',

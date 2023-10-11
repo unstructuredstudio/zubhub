@@ -18,6 +18,10 @@ const Login = React.lazy(() => import('./views/login/Login'));
 const PasswordReset = React.lazy(() =>
   import('./views/password_reset/PasswordReset'),
 );
+
+const AddTeamMembers = React.lazy(() =>
+import('./views/add_team_member/AddTeamMembers')
+)
 const PasswordResetConfirm = React.lazy(() =>
   import('./views/password_reset_confirm/PasswordResetConfirm'),
 );
@@ -66,6 +70,9 @@ const Teams = React.lazy(() =>
 const GroupMembers = React.lazy(() =>
   import('./views/group_members/GroupMembers'),
 );
+const Step2 = React.lazy(()=>{
+  import('./views/create_team/step2/Step2')
+})
 const AddGroupMembers = React.lazy(() =>
   import('./views/add_group_members/AddGroupMembers'),
 );
@@ -705,6 +712,18 @@ function App(props) {
             <PageWrapper {...routeProps} {...props}>
               <LazyImport
                 LazyComponent={CreateTeam}
+                {...routeProps}
+                {...props}
+              />
+            </PageWrapper>
+          )}
+        />
+        <Route
+          path="/add/:groupname"
+          render={routeProps => (
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport
+                LazyComponent={AddTeamMembers}
                 {...routeProps}
                 {...props}
               />

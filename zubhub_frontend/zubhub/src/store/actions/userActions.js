@@ -15,7 +15,8 @@ export const getUserProfile = args => {
   return dispatch => {
     let profile;
     return API.getUserProfile(args)
-      .then(res => {
+      .then(res => { 
+        console.log(`logggginh the users profile ${JSON.stringify(res)}`);
         if (!res.username) {
           throw new Error(args.t('profile.errors.profileFetchError'));
         } else {
@@ -95,6 +96,26 @@ export const getUserTeams = args => {
   };
 };
 
+export const addMembersToTeam = args => {
+  return dispatch =>{
+    return API.addTeamMembers(args)
+    .then(res => {
+      if(res.detail !=="User added"){
+        toast.success(args.t('user.added.toastSuccess'))
+        args.history.push(`/creator/${res.groupname}/members`)
+        return { ...res}
+      }else{
+        throw new Error(res.detail)
+      }
+    }).catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('profile.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+    })
+  }
+}
 /**
  * @function getTeamProfile
  * @author Hemant <hks@iamhks.com>
@@ -126,12 +147,16 @@ export const getTeamProfile = args => {
  *
  * @todo - describe function's signature
  */
+
+// This is a thunk that gets its value from the allTeam api from the django backend
 export const getAllTeams = args => {
   return dispatch => {
     let profile;
+  
     return API.allTeams(args)
     .then(res => {
       profile = res;
+      console.log(`getting the actual value of the args that is apssed to all the the redux actions ${JSON.stringify(args)}`);
       const filteredResults = res.results.filter(result => result.members.length > 0);
 
       return { ...res, profile, results: filteredResults, loading: false };
@@ -537,21 +562,24 @@ export const getTeamFollowersPage = args => {
 export const getTeamMembers = args => {
   return async () => {
     try {
-      const teamMembersResponse = await API.teamMembers(args);
-
+      const teamMembersResponse = await API.teamMembers(args); //uses the creators/${groupname}/members/ to get the group members for that group name
+        // console.log(`data from the getTeamMembers API ${JSON.stringify(teamMembersResponse.members)}`); //get all the members of a group
       if (Array.isArray(teamMembersResponse.members)) {
-        const memberInfoPromises = teamMembersResponse.members.map(member => API.teamMembersId(member.member));
+        const memberInfoPromises = teamMembersResponse.members.map(member => API.teamMembersId(member.member));//extracts the array of all the members from the creatorsgroup instance and for each memeber in the array id get the full details about the member/creator using the Api creators/id/${memberId}
 
-        const memberInfoResponses = await Promise.all(memberInfoPromises);
+        const memberInfoResponses = await Promise.all(memberInfoPromises);//retuns or resolve just the array of details of each memeber that is gotten from the membersInfoResponse
+        // console.log(`data from the getTeamMembers that is sent to the TeamMember page  ${JSON.stringify(memberInfoResponses)}`);
 
-        // const combinedData = teamMembersResponse.members.map((member, index) => ({
-        //   ...member,
-        //   additionalInfo: memberInfoResponses[index], // Add additional information here
-        // }));
-
+        const combinedData = teamMembersResponse.members.map((member, index) => ({
+          ...member,
+          additionalInfo: memberInfoResponses[index], // Add additional information here
+        }));
+        // console.log(`combined data ${JSON.stringify(combinedData)}`);
+        // console.log(`memberInfo ${JSON.stringify(memberInfoResponses)}`);
         return {
           followers: memberInfoResponses,
           loading: false,
+          teamMembersIdAndRole:combinedData
         };
       } else {
         throw new Error('Invalid response');

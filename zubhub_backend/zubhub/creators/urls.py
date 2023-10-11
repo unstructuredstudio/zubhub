@@ -54,5 +54,7 @@ urlpatterns = [
          name="toggle_follow_group"),
     path('<str:groupname>/remove-member/<str:username>/',
          RemoveGroupMemberAPIView.as_view(),
-         name="remove_member")
+         name="remove_member"),
+     path('<str:groupname>/<str:username>/<str:role>',
+     UpdateMembershipRoleView.as_view(),name="edit_member")
 ]

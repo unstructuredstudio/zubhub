@@ -6,6 +6,22 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    background: 'rgba(255,204,0,1)',
+    width: '60vw',
+    [theme.breakpoints.down('sm')]: {
+      justifyContent:'center',
+      alignItems:'center',
+      width:'100vw',
+      margin:'auto',
+ 
+   },
+   [theme.breakpoints.down('xs')]: {
+     justifyContent:'center',
+     alignItems:'center',
+     width:'100vw',
+     margin:'auto',
+    //  backgroundColor:'purple'
+   },
     // background: 'var(--primary-color2)',
     // background:
     //   '-moz-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
@@ -44,13 +60,17 @@ const styles = theme => ({
   },
   followersGridStyle: {
     marginBottom: '2em',
+    display: 'grid',
+    gridTemplateColumns: 'auto auto',
+   
   },
   cardStyle: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    height: '94%',
-    maxWidth: 345,
+    // height: '94%',
+    // width: 500,
+    // padding:'1rem',
     paddingTop: 0,
     paddingBottom: '0 !important',
     marginTop: '1em',
@@ -60,14 +80,15 @@ const styles = theme => ({
     backgroundColor: '#ffffff',
   },
   avatarStyle: {
-    width: '100%',
+    width: '80%',
     height: 'auto',
-    paddingTop: '1.5em',
-    paddingBottom: '1.5em',
+    paddingLeft:"2rem",
+    paddingRight:'2rem',
+    paddingBottom: '1rem',
     '& img': {
       width: '6em',
-      backgroundColor: 'white',
       height: '6em',
+      backgroundColor: 'white',
       borderRadius: '50%',
       boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     },
@@ -123,6 +144,107 @@ const styles = theme => ({
   largeLabel: {
     fontSize: '1.3rem',
   },
+  editIconContainer: {
+    marginLeft: '3rem',
+    display: 'flex',
+    justifyContent: 'end',
+    alignItems: 'end',
+    // marginTop:'0.1rem' ,
+    paddingLeft: '8rem',
+    paddingRight:'1rem',
+    // backgroundColor:'purple'
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: '11rem',
+ 
+   },
+  },
+  addteamCard:{
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2rem',
+    placeItems: 'center',
+    paddingTop: '1rem',
+    borderRadius:'15px',
+    marginTop:'1rem',
+  },
+  editIcon: {
+    backgroundColor: 'gray',
+    padding: '0.4rem',
+    borderRadius: '0.5rem',
+    color: 'white',
+  },
+  popper: {
+    paddingRight: '0.2rem',
+    backgroundColor: 'white',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+  },
+  memberrole: {
+    display: 'flex',
+    flexDirection: 'column',
+    paddingBottom: '1rem',
+  },
+  roleItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '0.5rem',
+    marginLeft: '1rem',
+  },
+  checkedrole: {
+    fontFamily: 'sans-serif',
+    marginRight: '5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
+  },
+  uncheckedRole: {
+    fontFamily: 'sans-serif',
+    marginLeft: '2.5rem',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
+  },
+  updateButton: {
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
+  },
+  removeButton: {
+    fontFamily: 'sans-serif',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    padding: '5px',
+    whiteSpace: 'nowrap',
+    color: 'red',
+    marginLeft: '2.5rem',
+    '&:hover, &:focus': {
+      outline: 'none',
+      cursor: 'pointer',
+    },
+  },
+  addTeamButtonContainer :{
+    display: 'block',
+    placeItems: 'center',
+    paddingLeft: '1rem',
+    paddingRight: '2px',
+    paddingBottom: '1.5rem',
+  },
+  addTeamHeaderText:{
+    fontSize:'1.5rem',
+    fontWeight:'bold',
+    fontFamily:'sans-serif',
+    marginBottom:'1rem',
+    marginLeft: '0.5rem',
+    marginRight: '0.5rem',
+  }
 });
 
 export default styles;

@@ -2,7 +2,7 @@ import { fade } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
-    flex: '1 0 auto',
+    // flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
     gap: 30
@@ -34,6 +34,11 @@ const styles = theme => ({
       padding: '1em 1em 0 1em',
       margin: '1em',
     },
+  },
+  mainContainerStyle:{
+
+    width:'100%',
+    backgroundColor:'purple'
   },
   teamButton: {
     float: 'right',
@@ -185,13 +190,12 @@ const styles = theme => ({
   aboutMeBox: {
     flexGrow: 1,
     padding: '1em',
-    // margin: '1em 0 0 1em',
-    borderRadius: '4px 0 0 4px',
+    borderRadius: '4px 0px 0px 4px', //fix issue of space between about me and badges
     [theme.breakpoints.down('900')]: {
       margin: '1em',
       borderRadius: '4px',
     },
-    borderRadius: '8px',
+    // borderRadius: '8px',
   },
   badgeBox: {
     backgroundColor: 'var(--secondary-color3)',
@@ -218,12 +222,16 @@ const styles = theme => ({
     padding: '0 0.5em',
     margin: '0.3em',
   },
-  cardStyle: {
+  cardStyle: { 
+    position:'absolute',
+    bottom:'0px',
+    zIndex:'10',
     border: 0,
     borderRadius: 15,
     boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .12)',
     color: 'white',
     padding: '0 30px',
+    backgroundColor:'teal'
   },
   customLabelStyle: {
     '&.MuiFormLabel-root.Mui-focused': {

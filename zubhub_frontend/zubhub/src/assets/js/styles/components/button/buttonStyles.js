@@ -2,12 +2,25 @@ import { colors } from "../../../colors";
 
 const styles = theme => ({
   primaryButtonStyle: {
+<<<<<<< HEAD
+    backgroundColor: '#00B8C4',
+=======
     backgroundColor: 'var(--primary-color3)',
+>>>>>>> d166c9a8632299abe2e49b2067dd2f57ff6953f4
     borderRadius: 30,
     color: 'white',
     '&:hover': {
       backgroundColor: 'var(--secondary-color6)',
     },
+  },
+  primaryButtonStyleNoRadius: {
+    backgroundColor: '#00B8C4',
+    color: 'white',
+    borderRadius: 5,
+    '&:hover': {
+      backgroundColor: '#03848C',
+    },
+    whiteSpace:'nowrap'
   },
   primaryButtonOutlinedStyle: {
     backgroundColor: 'transparent',
