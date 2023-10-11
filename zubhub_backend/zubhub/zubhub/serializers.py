@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Hero, FAQ, Help, Challenge, Privacy, Ambassadors
+from .models import Hero, FAQ, Help, Challenge, Privacy, Ambassadors, Theme
 from projects.pagination import ProjectNumberPagination
 from projects.utils import get_published_projects_for_user
 from projects.serializers import ProjectSerializer
@@ -99,3 +99,9 @@ class AmbassadorsSerializer(serializers.ModelSerializer):
             next_page = None
 
         return {"results": serializer.data, "prev": prev_page, "next": next_page, "count": count}
+    
+class ThemeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Theme
+        fields = '__all__'

@@ -583,24 +583,37 @@
 
   "profile": {
     "edit": "Edit",
-    "editTeam": "Edit Team Info",
+    "teams": "Teams",
+    "allTeams": "All Teams",
     "delete": {
       "label": "Delete Account",
       "dialog": {
         "primary": "Delete Account",
-        "secondary": "Are you sure you want to delete your account? You can't undo this action!! If you still want proceed, type your username into the field below and click PROCEED",
+        "secondary": "Are you sure you want to delete your account? You will not be able to undo this action later. If you still want to proceed, type your username and password into the fields below and click DELETE.",
         "inputs": {
-          "username": "Your Username"
+          "username": {
+            "label": "Username",
+            "errors": {
+              "required": "Looks like you missed this one"
+            }
+          },
+          "password": {
+            "label": "Current Password",
+            "errors": {
+              "required": "Looks like you missed this one"
+            }
+          }
         },
         "cancel": "Cancel",
-        "proceed": "Proceed"
+        "proceed": "Delete"
       },
       "ariaLabels": {
         "deleteAccount": "delete account"
       },
-      "toastSuccess": "We are sad to see you go :( Your account have been deleted now!",
+      "toastSuccess": "We are sad to see you go :( Your account has been deleted now!",
       "errors": {
         "incorrectUsername": "The username you submitted is incorrect",
+        "emptyPassword": "Password is required",
         "unexpected": "An error occured while performing this action. Please try again later"
       }
     },
@@ -658,13 +671,14 @@
         "label": "Location",
         "errors": {
           "min": "Your location is too short",
-          "required": "Looks like your missed this one"
+          "required": "Looks like you missed this one"
         }
       },
       "email": {
         "label": "Email",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "Your email seems invalid. Is the email address correct?"
         }
       },
@@ -672,6 +686,7 @@
         "label": "Phone",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "I'm having trouble understanding this number. Make sure it's in this format: '+911234567890'. Upto 15 digits are allowed."
         }
       },
@@ -689,10 +704,10 @@
           "required": "Seems like you forgot this"
         }
       },
-      "submit": "Edit Profile"
+      "submit": "Save Changes"
     },
     "or": "OR",
-    "backToProfile": "Back To Profile",
+    "backToProfile": "Discard Changes",
     "toastSuccess": "Your profile was updated successfully!!",
     "errors": {
       "unexpected": "Oh no! Seems like we hit a snag :( Maybe try again later?"
@@ -836,7 +851,21 @@
       "page_empty": "This page is empty"
     }
   },
-
+  "editTeam": {
+    "info": "Edit Team Info",
+    "name": "Team Name",
+    "about": "About Team",
+    "requestName": "Enter your Team Name",
+    "delete": {
+      "question": "Delete Team Profile?",
+      "information": "Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.",
+      "confirmation": "I want to delete this team’s profile",
+      "buttons": {
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    }
+  },
   "createTeam": {
     "welcomeMsg": {
       "primary": "Create a Team",
@@ -870,6 +899,10 @@
     "3rdpage":{
       "title":"Select Project you worked on with a Team"
     }
+  },
+  "teamMembers": {
+    "members": "Members",
+    "noMember": "This team has no members"
   },
 
   "createActivity": {

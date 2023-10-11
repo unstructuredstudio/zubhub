@@ -10,6 +10,12 @@ import {
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
 import API from '../../api';
+import styled from 'styled-components';
+
+const ImageUploadButton = styled.button`
+  border-color: 1px solid rgba(0, 0, 0, 0.23);
+  color: var(--primary-color3);
+`;
 
 /**
  * @constant vars
@@ -1161,10 +1167,7 @@ export const checkMediaFilesErrorState = (refs, props) => {
         'border-color:#F54336; color:#F54336',
       );
     } else {
-      refs.image_upload_button_el.current.setAttribute(
-        'style',
-        'border-color: 1px solid rgba(0, 0, 0, 0.23); color:#00B8C4',
-      );
+      refs.image_upload_button_el.current.classList.add(ImageUploadButton);
     }
 
     if (props.touched['video'] && props.errors['video']) {
@@ -1173,10 +1176,7 @@ export const checkMediaFilesErrorState = (refs, props) => {
         'border-color:#F54336; color:#F54336',
       );
     } else {
-      refs.video_upload_button_el.current.setAttribute(
-        'style',
-        'border-color: 1px solid rgba(0, 0, 0, 0.23); color:#00B8C4',
-      );
+      refs.video_upload_button_el.current.classList.add(ImageUploadButton);
     }
 
     if (props.touched['project_images']) {

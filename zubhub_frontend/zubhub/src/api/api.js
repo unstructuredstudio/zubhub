@@ -98,6 +98,20 @@ class API {
   };
 
   /**
+   * @method theme - get the latest theme from the backend
+   * @author Hemant Kumar Singh <hks@iamhks.com>
+   *
+   * @todo - describe method's signature
+   */
+  theme = () => {
+    const url = 'theme/';
+    const method = 'GET';
+    // const body = JSON.stringify({ username, password });
+
+    return this.request({ url, method }).then(res => res.json());
+  };
+
+  /**
    * @method logout - logout a user with the user's token
    * @author Raymond Ndibe <ndiberaymond1@gmail.com>
    *

@@ -49,7 +49,6 @@ import {
   setLabelWidthOfStaticFields,
 } from './signupScripts';
 
-import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import styles from '../../assets/js/styles/views/signup/signupStyles';
@@ -210,10 +209,7 @@ function Signup(props) {
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            labelWidth={calculateLabelWidth(
-                              t('signup.inputs.username.label'),
-                              document,
-                            )}
+                            label={t('signup.inputs.username.label')}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -264,10 +260,7 @@ function Signup(props) {
                         onChange={e => handleLocationChange(e, props)}
                         onBlur={props.handleBlur}
                         // label="Location"
-                        labelWidth={calculateLabelWidth(
-                          t('signup.inputs.location.label'),
-                          document,
-                        )}
+                        label={t('signup.inputs.location.label')}
                       >
                         <MenuItem value="">
                           <em>None</em>
@@ -406,10 +399,7 @@ function Signup(props) {
                         type="text"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('signup.inputs.email.label'),
-                          document,
-                        )}
+                        label={t('signup.inputs.email.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -474,10 +464,7 @@ function Signup(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={calculateLabelWidth(
-                          t('signup.inputs.password1.label'),
-                          document,
-                        )}
+                        label={t('signup.inputs.password1.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -542,10 +529,7 @@ function Signup(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={calculateLabelWidth(
-                          t('signup.inputs.password2.label'),
-                          document,
-                        )}
+                        label={t('signup.inputs.password2.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -589,10 +573,7 @@ function Signup(props) {
                         rowsMax={6}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        labelWidth={calculateLabelWidth(
-                          t('signup.inputs.bio.label'),
-                          document,
-                        )}
+                        label={t('signup.inputs.bio.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}

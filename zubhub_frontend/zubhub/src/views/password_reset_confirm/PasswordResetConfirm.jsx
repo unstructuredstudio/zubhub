@@ -35,7 +35,6 @@ import {
 import * as AuthActions from '../../store/actions/authActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/password_reset_confirm/passwordResetConfirmStyles';
-import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 const useStyles = makeStyles(styles);
 
@@ -149,10 +148,7 @@ function PasswordResetConfirm(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={calculateLabelWidth(
-                          t('passwordResetConfirm.inputs.newPassword1.label'),
-                          document,
-                        )}
+                        label={t('passwordResetConfirm.inputs.newPassword1.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -214,10 +210,7 @@ function PasswordResetConfirm(props) {
                             </IconButton>
                           </InputAdornment>
                         }
-                        labelWidth={calculateLabelWidth(
-                          t('passwordResetConfirm.inputs.newPassword2.label'),
-                          document,
-                        )}
+                        label={t('passwordResetConfirm.inputs.newPassword2.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}

@@ -1,5 +1,6 @@
+from enum import Enum
 from django.contrib import admin
-from .models import AdminSettings, Hero, Privacy, FAQ, Help, Challenge, Ambassadors
+from .models import AdminSettings, Hero, Privacy, FAQ, Help, Challenge, Ambassadors, Theme
 
 ## these models are imported to be unregsitered
 from django_summernote.models import Attachment
@@ -44,6 +45,24 @@ class ChallengeAdmin(SummernoteModelAdmin):
 
     class Media:
         js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
+        
+
+class StatusEnum(Enum):
+    INACTIVE = 0
+    ACTIVE = 1
+
+class ThemeAdmin(admin.ModelAdmin):
+    list_display = ['Theme_Name', 'status']
+    actions = ['make_selected_active']
+
+    def make_selected_active(self, request, queryset):
+        queryset.update(status=StatusEnum.INACTIVE.value)
+        selected_themes = queryset.first()
+        selected_themes.status = StatusEnum.ACTIVE.value
+        selected_themes.save()
+
+    make_selected_active.short_description = "Select and make active"
+
 
 class FAQAdmin(SummernoteModelAdmin):
     summernote_fields = ('answer',)
@@ -68,6 +87,7 @@ admin.site.register(Help, HelpAdmin)
 admin.site.register(Challenge, ChallengeAdmin)
 admin.site.register(FAQ, FAQAdmin)
 admin.site.register(Ambassadors, AmbassadorsAdmin)
+admin.site.register(Theme, ThemeAdmin)
 
 ## Unregister some default and third-party models
 admin.site.unregister(Attachment)
