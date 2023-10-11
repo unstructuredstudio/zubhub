@@ -25,20 +25,23 @@ const styles = theme => ({
     // '& .MuiGrid-root.MuiGrid-container': {
     //   width: '100%',
     [theme.breakpoints.down('sm')]: {
-      padding: '0 24px'
+      padding: '0 24px',
+      width: '100%',
     },
   },
   heroSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
-    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
     display: 'flex',
     paddingTop: '2.3em',
     paddingBottom: '2.85em',
     justifyContent: 'center',
     width: '100vw',
-    marginBottom: '2em'
+    marginBottom: '2em',
+    height:'100vh',
+    [theme.breakpoints.down('sm')]: {
+      width: '100',
+      height:'fit-content',
+    },
   },
   imageLeft: {
     flexDirection: 'row',
@@ -46,6 +49,7 @@ const styles = theme => ({
       flexDirection: 'column',
     },
   },
+
   centerCarousel: {
     display: 'flex',
     justifyContent: 'center',
@@ -85,8 +89,8 @@ const styles = theme => ({
   },
   heroContainerStyle: {
     width: '100%',
-    maxWidth: '1190px',
-    padding: '1.15em 1.15em',
+    // maxWidth: '1190px',
+    padding: '7rem 4rem',
     display: 'flex',
     [theme.breakpoints.down('1000')]: {
       flexDirection: 'column-reverse',
@@ -101,14 +105,18 @@ const styles = theme => ({
     color: 'white',
   },
   heroMessageSecondaryStyle: {
-    fontSize: '2.2rem',
+    fontSize: '4.5rem',
+    fontWeight: '700'
+  },
+  heroMessageSpanStyle:{
+    color: 'var(--primary-color3)',
   },
   MessageSecondaryStyle: {
     fontSize: '1.5rem',
   },
   heroMessagePrimaryStyle: {
     fontSize: '2.2rem',
-    fontWeight: 1000,
+    fontWeight: 500,
   },
   MessagePrimaryStyle: {
     fontSize: '2.5rem',
@@ -117,11 +125,12 @@ const styles = theme => ({
 
   heroButtonStyle: {
     textTransform: 'none',
-    padding: '0 1em',
-    fontSize: '1.2rem',
+    padding: '1.04em 2.08em',
+    fontSize: '1.4em',
     fontWeight: 700,
     marginRight: '1em',
-    marginTop: '1.2em',
+    marginTop: '3rem',
+    borderRadius: '1.8rem'
   },
   heroBtnStyle: {
     textTransform: 'none',
