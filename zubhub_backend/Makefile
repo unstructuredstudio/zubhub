@@ -112,7 +112,7 @@ add-theme:
 	@echo "== Add a theme to the database =="
 	@echo "==="
 	docker-compose -f docker-compose.yml exec web bash -c "echo 'echo \"from zubhub.models import Theme; \
-	Theme.objects.create(Theme_Name=\\\"Theme Zubhub\\\", status=\\\"1\\\") if not Theme.objects.filter(Theme_Name=\\\"Theme Zubhub\\\").exists() else None\" | python /zubhub_backend/zubhub/manage.py shell' > /theme.sh"
+	Theme.objects.create(Theme_Name=\\\"Default\\\", status=\\\"1\\\") if not Theme.objects.filter(Theme_Name=\\\"Default\\\").exists() else None\" | python /zubhub_backend/zubhub/manage.py shell' > /theme.sh"
 	docker-compose -f docker-compose.yml exec web bash /theme.sh
 	docker-compose -f docker-compose.yml exec web bash -c "rm /theme.sh"
 .PHONY: add-theme
