@@ -3,12 +3,20 @@ import { colors } from "../../../colors";
 const styles = theme => ({
   primaryButtonStyle: {
     backgroundColor: '#00B8C4',
-
     borderRadius: 30,
     color: 'white',
     '&:hover': {
       backgroundColor: '#03848C',
     },
+  },
+  primaryButtonStyleNoRadius: {
+    backgroundColor: '#00B8C4',
+    color: 'white',
+    borderRadius: 5,
+    '&:hover': {
+      backgroundColor: '#03848C',
+    },
+    whiteSpace:'nowrap'
   },
   primaryButtonOutlinedStyle: {
     backgroundColor: 'transparent',

@@ -1,17 +1,33 @@
 import API from '../../api/api';
 
-export const addMember = async props => {
+export const addMember = async (props, selectedAdmins, selectedMembers) => {
   if (!props.auth.token) return props.history.push('/login');
-  console.log(`value of the props ${JSON.stringify(props.match.params.groupname)}`);
+  console.log(`value of the props ${JSON.stringify(selectedMembers)}`);
 
-  const groupMembers = [
-    ...props.values.admins.map(admin => ({ member: admin.title, role: 'admin' })),
-    ...props.values.members.map(member => ({ member: member.title, role: 'member' })),
-  ];
+let groupMembers = []
+  if(selectedAdmins.length > 0){
+    groupMembers = [
+      ...selectedAdmins.map(admin => ({ member: admin.title, role: 'admin' }))
+    ]
+  }
+ else if(selectedMembers.length > 0){
+    groupMembers = [
+      ...selectedMembers.map(member => ({ member:member.title, role: 'member' }))
+    ]
+  }
+
+  else if(selectedAdmins.length > 0 && selectedMembers.length > 0){
+     groupMembers = [
+      ...selectedAdmins.map(admin => ({ member: admin.title, role: 'admin' })),
+      ...selectedMembers.map(member => ({ member: member.title, role: 'member' })),
+    ];
+  }
 
   const data = {
     group_members: groupMembers,
   };
+
+  console.log(`ggggggggggggggg ${JSON.stringify(groupMembers)} and data ${JSON.stringify(data)}`);
 
   const api = new API();
   const token = props.auth.token;

@@ -21,6 +21,7 @@ const CustomButton = React.forwardRef((props, ref) => {
   const {
     children,
     primaryButtonStyle,
+    primaryButtonStyleNoRadius,
     primaryButtonStyle2,
     primaryButtonOutlinedStyle,
     primaryButtonStyle3,
@@ -39,6 +40,7 @@ const CustomButton = React.forwardRef((props, ref) => {
   } = props;
   const btnClasses = classNames({
     [classes.primaryButtonStyle]: primaryButtonStyle,
+    [classes.primaryButtonStyleNoRadius]:primaryButtonStyleNoRadius,
     [classes.primaryButtonStyle2]: primaryButtonStyle2,
     [classes.primaryButtonStyle3]: primaryButtonStyle3,
     [classes.secondaryButtonStyle]: secondaryButtonStyle,
@@ -69,6 +71,7 @@ const CustomButton = React.forwardRef((props, ref) => {
 Button.propTypes = {
   size: PropTypes.oneOf(['small', 'large', 'medium']),
   primaryButtonStyle: PropTypes.bool,
+  primaryButtonStyleNoRadius:PropTypes.bool,
   secondaryButtonStyle: PropTypes.bool,
   dangerButtonStyle: PropTypes.bool,
   darkDangerButtonStyle: PropTypes.bool,

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import { MdOutlineModeEdit } from 'react-icons/md';
@@ -19,10 +18,7 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import styles from '../../assets/js/styles/views/user_followers/userFollowersStyles';
 import { ClickAwayListener } from '@material-ui/core';
-import { Popper, Popover } from '@material-ui/core';
-import * as script from '../create_team/script';
-import Step2 from '../create_team/step2/Step2';
-import { useFormik } from 'formik';
+import {  Popover } from '@material-ui/core';
 import style from '../../assets/js/styles/views/profile/profileStyles';
 import { useHistory } from 'react-router-dom';
 import * as  addTeamMemberScript from '../add_team_member/addTeamMemberScript'
@@ -124,7 +120,6 @@ function TeamMembers(props) {
         )
         history.push(`/teams/${groupname}/members`);
       } else {
-        const apiError = uploadMember;
         toast.error(
           `An unexpected error occurred. Please check if you have entered all details properly and try again.`,
         );
@@ -176,34 +171,22 @@ function TeamMembers(props) {
               <Grid item className={classes.followersGridStyle} align="start" key={follower.id}>
                 {index === 0 ?
                 (
-                  // <AddTeamMemberCard classes={classes} groupname={groupname} props={props}/>
                   <Card
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '2rem',
-                    placeItems: 'center',
-                    paddingTop: '1rem',
-                    borderRadius:'15px',
-                    marginTop:'1rem',
-                  }}
-                  className={classes.cardStyle}
+                  className={classes.addteamCard}
                   >
                   <Box
                     style={{ paddingTop: '1rem', display:'block', placeItems: 'center', paddingLeft: '0.5rem', paddingRight: '0.5rem', }}
                     >
+                      <div style={{display:'flex', flexDirection:'cols', justifyContent:'center', alignItems:"center"}}>
+
                     <Typography component="h3" color="textPrimary"
-                     style={{
-                      fontSize:'1.5rem',
-                      fontWeight:'bold',
-                      fontFamily:'sans-serif',
-                      marginBottom:'1rem'
-                    }}
-                    
+                    className={classes.addTeamHeaderText}
                     >
-                      {`Invite new team Members`}
+                      {`Invite new team`}<br/>
+                     <span style={{marginLeft:'2rem'}}> {`Members`}</span>
                     </Typography>
-                    <Typography component="h3" color="textPrimary" style={{ textAlign: 'center', width: '18rem', fontSize: '1rem' }}>
+                      </div>
+                    <Typography component="h3" color="textPrimary" style={{ textAlign: 'center', width: '18rem', fontSize: '15px' }}>
                       {`you can invite new team members by adding the people you worked on a project with`}
                     </Typography>
                   </Box>
@@ -212,13 +195,7 @@ function TeamMembers(props) {
               to={`/add/${groupname}`}
               >
                   <Box
-                    style={{
-                      display: 'block',
-                      placeItems: 'center',
-                      paddingLeft: '1rem',
-                      paddingRight: '2px',
-                      paddingBottom: '1.5rem',
-                    }}
+                   className={classes.addTeamButtonContainer}
                     >
                     
                     <CustomButton variant="contained" primaryButtonStyle>
@@ -257,7 +234,7 @@ function TeamMembers(props) {
                               <h1 className={classes.checkedrole}>Admin</h1>
                             </div>
                           ) : (
-                            <h1 className={classes.uncheckedRole}   onClick={()=>updateRole(follower.additionalInfo.username,'admin')}>Admin</h1>
+                            <h1 className={classes.uncheckedRole}  onClick={()=>updateRole(follower.additionalInfo.username,'admin')}>Admin</h1>
                           )}
                           {follower.role === 'member' ? (
                             <div className={classes.roleItem}>

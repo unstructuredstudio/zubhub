@@ -6,8 +6,22 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    // background: 'rgba(255,204,0,1)',
+    background: 'rgba(255,204,0,1)',
     width: '60vw',
+    [theme.breakpoints.down('sm')]: {
+      justifyContent:'center',
+      alignItems:'center',
+      width:'100vw',
+      margin:'auto',
+ 
+   },
+   [theme.breakpoints.down('xs')]: {
+     justifyContent:'center',
+     alignItems:'center',
+     width:'100vw',
+     margin:'auto',
+    //  backgroundColor:'purple'
+   },
     // background:
     //   '-moz-linear-gradient(top, rgba(255,204,0,1) 0%, rgba(255,229,133,1) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     // background:
@@ -46,7 +60,8 @@ const styles = theme => ({
   followersGridStyle: {
     marginBottom: '2em',
     display: 'grid',
-    gridTemplateColumns: 'auto auto auto',
+    gridTemplateColumns: 'auto auto',
+   
   },
   cardStyle: {
     display: 'flex',
@@ -64,15 +79,15 @@ const styles = theme => ({
     backgroundColor: '#ffffff',
   },
   avatarStyle: {
-    width: '50%',
+    width: '80%',
     height: 'auto',
-    // paddingLeft:"2rem",
-    // paddingRight:'2rem',
+    paddingLeft:"2rem",
+    paddingRight:'2rem',
     paddingBottom: '1rem',
     '& img': {
-      width: '5em',
+      width: '6em',
+      height: '6em',
       backgroundColor: 'white',
-      height: '5em',
       borderRadius: '50%',
       boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     },
@@ -135,7 +150,21 @@ const styles = theme => ({
     alignItems: 'end',
     // marginTop:'0.1rem' ,
     paddingLeft: '8rem',
+    paddingRight:'1rem',
     // backgroundColor:'purple'
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: '11rem',
+ 
+   },
+  },
+  addteamCard:{
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2rem',
+    placeItems: 'center',
+    paddingTop: '1rem',
+    borderRadius:'15px',
+    marginTop:'1rem',
   },
   editIcon: {
     backgroundColor: 'gray',
@@ -200,6 +229,21 @@ const styles = theme => ({
       cursor: 'pointer',
     },
   },
+  addTeamButtonContainer :{
+    display: 'block',
+    placeItems: 'center',
+    paddingLeft: '1rem',
+    paddingRight: '2px',
+    paddingBottom: '1.5rem',
+  },
+  addTeamHeaderText:{
+    fontSize:'1.5rem',
+    fontWeight:'bold',
+    fontFamily:'sans-serif',
+    marginBottom:'1rem',
+    marginLeft: '0.5rem',
+    marginRight: '0.5rem',
+  }
 });
 
 export default styles;
