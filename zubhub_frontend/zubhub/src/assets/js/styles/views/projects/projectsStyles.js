@@ -103,10 +103,11 @@ const styles = theme => ({
   heroMessageContainerStyle: {
     flexGrow: 1,
     color: 'white',
+    maxWidth: '37rem',
   },
   heroMessageSecondaryStyle: {
     fontSize: '4.5rem',
-    fontWeight: '700'
+    fontWeight: '700',
   },
   heroMessageSpanStyle:{
     color: 'var(--primary-color3)',

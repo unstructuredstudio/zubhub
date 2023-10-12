@@ -121,7 +121,7 @@ function Projects(props) {
                      </Typography>
                      <br />
                      <Typography className={classes.heroMessagePrimaryStyle}>
-                       {hero.title}
+                       {hero.description}
                      </Typography>
                      <br />
                      <CustomButton
