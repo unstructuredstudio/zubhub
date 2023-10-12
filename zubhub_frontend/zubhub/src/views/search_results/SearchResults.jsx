@@ -253,7 +253,6 @@ function SearchResults(props) {
           </Container>
         ) : (
           <ErrorPage
-            style={{ width: '100vw' }}
             error={t('searchResults.errors.noResult')}
           />
         )}
