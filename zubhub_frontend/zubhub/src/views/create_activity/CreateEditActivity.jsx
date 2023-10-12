@@ -12,7 +12,7 @@ import {
   makeStyles,
   useMediaQuery,
 } from '@material-ui/core';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { CustomButton, Modal, PreviewActivity, TagsInput } from '../../components';
 import StepWizard from 'react-step-wizard';
 import {
@@ -23,6 +23,7 @@ import {
   DoneRounded,
   KeyboardBackspaceRounded,
 } from '@material-ui/icons';
+import SaveRoundedIcon from '@material-ui/icons/SaveRounded';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { createActivityStyles } from './CreateActivity.styles';
 import clsx from 'clsx';
@@ -42,7 +43,9 @@ const steps = ['Activity Basics', 'Activity Details'];
 
 let firstRender = true;
 
-export default function CreateActivity(props) {
+function CreateEditActivity(props) {
+  console.log(props, 'PRORORORORPRP');
+  const editting = props?.editting;
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
@@ -59,8 +62,8 @@ export default function CreateActivity(props) {
   const [preview, setPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const isActive = index => index + 1 === activeStep;
-  const isCompleted = index => completedSteps.includes(index + 1);
+  const isActive = useCallback(index => index + 1 === activeStep, [activeStep]);
+  const isCompleted = useCallback(index => completedSteps.includes(index + 1), [completedSteps]);
 
   const handleSetState = obj => {
     if (obj) {
@@ -102,11 +105,16 @@ export default function CreateActivity(props) {
   const formikStep2 = useFormik(script.step2Schema);
 
   const previous = () => go('prev');
-  const next = async () => {
-    let error = await checkErrors();
 
-    console.log(error);
-    if (Object.keys(error || {}).length > 0) return;
+  const submit = async publish => {
+    const errors = await checkErrors().then(errors => errors);
+
+    if (Object.keys(errors).length > 0) {
+      Object.keys(errors).map(err => {
+        return toast.error(err);
+      });
+      return;
+    }
 
     setIsLoading(true);
 
@@ -118,11 +126,11 @@ export default function CreateActivity(props) {
         state,
         handleSetState: handleSetState,
         step: activeStep,
+        publish: publish,
       },
       success => {
         if (success) {
-          if (activeStep == 1) go('next');
-          if (activeStep == 2) props.history.push(`/activities/${props.match.params.id}?success=true`);
+          props.history.push(`/activities/${props.match.params.id}?success=true`);
           setIsLoading(false);
         }
       },
@@ -130,17 +138,15 @@ export default function CreateActivity(props) {
   };
 
   const checkErrors = () => {
-    if (activeStep === 1) {
-      return formikStep1.setTouched({ title: true }, true);
-    }
-
-    if (activeStep === 2) {
-      return formikStep2.setTouched({ introduction: true }, true);
-    }
+    return formikStep2.setTouched({ introduction: true }, true);
   };
 
-  const go = direction => {
+  const go = async direction => {
     if (direction === 'next') {
+      const errors = await formikStep1.setTouched({ title: true }, true).then(errors => errors);
+
+      if (Object.keys(errors).length > 0) return;
+
       if (activeStep !== 3) {
         wizardRef.current.nextStep();
         let completedStepsTemp = [...new Set([...completedSteps, activeStep])];
@@ -158,23 +164,37 @@ export default function CreateActivity(props) {
     }
   };
 
-  const renderSteps = steps.map((label, index) => (
-    <Box
-      key={index}
-      className={clsx(classes.stepperLine, (isActive(index) || isCompleted(index)) && classes.activeStep)}
-    >
-      <Box className={clsx(classes.stepBall, (isActive(index) || isCompleted(index)) && classes.activeStep)}>
-        {isCompleted(index) && !isActive(index) ? (
-          <DoneRounded style={{ fontSize: 14 }} />
-        ) : (
-          <Typography style={{ fontWeight: '600' }}>{index + 1}</Typography>
-        )}
-      </Box>
-      <Typography className={clsx(classes.stepLabel, (isActive(index) || isCompleted(index)) && classes.activeLabel)}>
-        {label}
-      </Typography>
-    </Box>
-  ));
+  const renderSteps = useMemo(
+    () =>
+      steps.map((label, index) => (
+        <Box
+          key={index}
+          className={clsx(classes.stepperLine, (isActive(index) || isCompleted(index)) && classes.activeStep)}
+        >
+          <Box className={clsx(classes.stepBall, (isActive(index) || isCompleted(index)) && classes.activeStep)}>
+            {isCompleted(index) && !isActive(index) ? (
+              <DoneRounded style={{ fontSize: 14 }} />
+            ) : (
+              <Typography style={{ fontWeight: '600' }}>{index + 1}</Typography>
+            )}
+          </Box>
+          <Typography
+            className={clsx(classes.stepLabel, (isActive(index) || isCompleted(index)) && classes.activeLabel)}
+          >
+            {label}
+          </Typography>
+        </Box>
+      )),
+    [
+      classes.activeLabel,
+      classes.activeStep,
+      classes.stepBall,
+      classes.stepLabel,
+      classes.stepperLine,
+      isActive,
+      isCompleted,
+    ],
+  );
 
   return (
     <div className={classes.container}>
@@ -203,7 +223,9 @@ export default function CreateActivity(props) {
       <Box className={classes.formContainer}>
         <Grid item md={12} lg={12}>
           <Box sx={{ textAlign: isSmallScreen ? 'left' : 'center' }}>
-            <Typography className={clsx(commonClasses.title1)}>Create Activity</Typography>
+            <Typography className={clsx(commonClasses.title1)}>
+              {editting ? 'Edit Activity' : 'Create Activity'}
+            </Typography>
             <Typography>Tell us about your informative activity !</Typography>
           </Box>
 
@@ -229,18 +251,30 @@ export default function CreateActivity(props) {
               Previous
             </CustomButton>
           )}
-
+          {activeStep === 2 && (
+            <CustomButton
+              loading={isLoading}
+              style={{ marginLeft: 'auto' }}
+              primaryButtonStyle
+              endIcon={<SaveRoundedIcon className={classes.nextButton} />}
+              onClick={() => submit(false)}
+            >
+              Save to draft
+            </CustomButton>
+          )}
           <CustomButton
-            onClick={next}
+            onClick={activeStep === 2 ? submit : () => go('next')}
             loading={isLoading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}
           >
-            {activeStep == 2 ? 'Publish' : 'Next'}
+            {activeStep === 2 ? (editting ? 'Update' : 'Publish') : 'Next'}
           </CustomButton>
         </Box>
       </Box>
     </div>
   );
 }
+
+export default CreateEditActivity;

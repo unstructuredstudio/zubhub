@@ -19,8 +19,8 @@ import { Grid, Box, Typography } from '@material-ui/core';
 import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
 
-function Activities(props) {
-  const location = useLocation();
+function MyActivities(props) {
+  console.log(props, 'PROPSSSSS');
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const { activities } = useSelector(state => state);
@@ -28,37 +28,20 @@ function Activities(props) {
 
   const commonClasses = makeStyles(DefaultStyles)();
 
-  const flagMap = useMemo(
-    () => ({
-      staff: () =>
-        props.getUnPublishedActivities({
-          t: props.t,
-          token: props.auth.token,
-        }),
-      educator: () =>
-        props.getMyActivities({
-          t: props.t,
-          token: props.auth.token,
-        }),
-    }),
-    [props],
-  );
+  useEffect(() => {
+    setActivityList(activities.all_activities);
+  }, [activities]);
 
   useEffect(() => {
     async function fetcher() {
       setLoading(true);
-      if (location.state?.flag && flagMap[location.state.flag]) {
-        await flagMap[location.state.flag]();
-      } else {
-        await props.getActivities(props.t);
-        await props.getMyActivities(props.auth);
-      }
+      await props.getMyActivities(props.auth);
       setActivityList(activities.all_activities);
       setLoading(false);
     }
 
     fetcher();
-  }, [location]);
+  }, []);
 
   if (loading) {
     return <LoadingPage />;
@@ -127,4 +110,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Activities);
+export default connect(mapStateToProps, mapDispatchToProps)(MyActivities);

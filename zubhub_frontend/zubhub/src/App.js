@@ -1,20 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import CreateActivity from './views/create_activity/CreateActivity';
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { updateTheme } from './theme';
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
 import ProtectedRoute from './components/protected_route/ProtectedRoute';
+import CreateActivity from './views/create_activity/create_activity';
 import ZubhubAPI from '../src/api/api';
-import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
 
 const SearchResults = React.lazy(() => import('./views/search_results/SearchResults'));
 
 const Signup = React.lazy(() => import('./views/signup/Signup'));
 const Login = React.lazy(() => import('./views/login/Login'));
+
+const CreateEditActivity = React.lazy(() => import('./views/create_activity/CreateEditActivity'));
 const PasswordReset = React.lazy(() => import('./views/password_reset/PasswordReset'));
 const PasswordResetConfirm = React.lazy(() => import('./views/password_reset_confirm/PasswordResetConfirm'));
 const EmailConfirm = React.lazy(() => import('./views/email_confirm/EmailConfirm'));
@@ -43,6 +44,7 @@ const CreateProject = React.lazy(() => import('./views/create_project/CreateProj
 const ProjectDetails = React.lazy(() => import('./views/project_details/ProjectDetails'));
 const StaffPickDetails = React.lazy(() => import('./views/staff_pick_details/StaffPickDetails'));
 const Activities = React.lazy(() => import('./views/activities/activities'));
+const MyActivities = React.lazy(() => import('./views/my_activities/MyActivities'));
 const ActivityDetails = React.lazy(() => import('./views/activity_details/ActivityDetailsV2'));
 const CreateTeam = React.lazy(() => import('./views/create_team/CreateTeam'));
 const LinkedProjects = React.lazy(() => import('./views/linked_projects/LinkedProjects'));
@@ -118,14 +120,31 @@ function App(props) {
             </PageWrapper>
           )}
         /> */}
-
           <ProtectedRoute path="/settings" component={Settings} {...props} />
 
           <Route
             path="/activities/create"
             render={routeProps => (
               <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
+                <LazyImport LazyComponent={CreateEditActivity} {...routeProps} {...props} />
+              </PageWrapper>
+            )}
+          />
+
+          <Route
+            path="/activities/:id/linkedProjects"
+            render={routeProps => (
+              <PageWrapper {...routeProps} {...props}>
+                <LazyImport LazyComponent={LinkedProjects} {...routeProps} {...props} />
+              </PageWrapper>
+            )}
+          />
+
+          <Route
+            path="/search"
+            render={routeProps => (
+              <PageWrapper {...routeProps} {...props}>
+                <LazyImport LazyComponent={SearchResults} {...routeProps} {...props} />
               </PageWrapper>
             )}
           />
@@ -462,6 +481,22 @@ function App(props) {
             render={routeProps => (
               <PageWrapper {...routeProps} {...props}>
                 <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
+              </PageWrapper>
+            )}
+          />
+          <Route
+            path="/activities/my-activities"
+            render={routeProps => (
+              <PageWrapper {...routeProps} {...props}>
+                <LazyImport LazyComponent={MyActivities} {...routeProps} {...props} />
+              </PageWrapper>
+            )}
+          />
+          <Route
+            path="/activities/:id/edit"
+            render={routeProps => (
+              <PageWrapper {...routeProps} {...props}>
+                <LazyImport LazyComponent={CreateEditActivity} {...routeProps} {...{ ...props, editting: true }} />
               </PageWrapper>
             )}
           />

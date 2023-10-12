@@ -41,6 +41,7 @@ export default function ActivityDetailsV2(props) {
   const classes = makeStyles(activityDefailsStyles)();
   const commonClasses = makeStyles(styles)();
 
+  // console.log(activity, 'ACTIVITY');
   const { t } = useTranslation();
   const auth = useSelector(state => state.auth);
   let ref = useRef(null);
