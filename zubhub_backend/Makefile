@@ -117,7 +117,19 @@ add-theme:
 	docker-compose -f docker-compose.yml exec web bash -c "rm /theme.sh"
 .PHONY: add-theme
 
-init: .env start migrate admin-user add-theme ## Initialize docker-compose containers
+seed-heroes:
+	@echo "==="
+	@echo "== Seed heroes to the database =="
+	@echo "==="
+	docker-compose -f docker-compose.yml exec web bash -c "echo 'echo \"from zubhub.models import Hero; \
+	Hero.objects.create(title=\\\"Share your creations with others.\\\", description=\\\"Get inspired by our collection of ideas. Tinker with materials and tools around you.\\\", image_url=\\\"https://zubhub.sfo2.digitaloceanspaces.com/hero_images/hero-kidsjpg-4aac9c\\\", activity_url=\\\"https://zubhub.unstructured.studio/challenge\\\") if not Hero.objects.filter(title=\\\"Share your creations with others.\\\").exists() else print(\\\"Hero already exists\\\")\" | python /zubhub_backend/zubhub/manage.py shell' > /hero.sh"
+	
+	docker-compose -f docker-compose.yml exec web bash /hero.sh
+	docker-compose -f docker-compose.yml exec web bash -c "rm /hero.sh"
+.PHONY: seed-heroes
+
+
+init: .env start migrate admin-user add-theme seed-heroes## Initialize docker-compose containers
 .PHONY: init
 
 search-index:
