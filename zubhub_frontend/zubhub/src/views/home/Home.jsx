@@ -116,16 +116,12 @@ function Projects(props) {
                    )}
                    <Box className={classes.heroMessageContainerStyle}>
                      <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
+                     <Typography className={classes.heroMessagePrimaryStyle}>
                        {t('projects.1')}
                      </Typography>
                      <br />
                      <Typography className={classes.heroMessageSecondaryStyle}>
-                       {t('projects.2')}
-                     </Typography>
-                     <br />
-                     <Typography className={classes.heroMessagePrimaryStyle}>
-                       {hero.title}
+                       {hero.description}
                      </Typography>
                      <br />
                      <CustomButton

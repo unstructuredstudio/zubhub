@@ -38,7 +38,12 @@ const styles = theme => ({
     paddingBottom: '2.85em',
     justifyContent: 'center',
     width: '100vw',
-    marginBottom: '2em'
+    marginBottom: '2em',
+    height:'100vh',
+    [theme.breakpoints.down('sm')]: {
+      width: '100',
+      height:'fit-content',
+    },
   },
   imageLeft: {
     flexDirection: 'row',
@@ -85,8 +90,8 @@ const styles = theme => ({
   },
   heroContainerStyle: {
     width: '100%',
-    maxWidth: '1190px',
-    padding: '1.15em 1.15em',
+    // maxWidth: '1190px',
+    padding: '7rem 4rem',
     display: 'flex',
     [theme.breakpoints.down('1000')]: {
       flexDirection: 'column-reverse',
@@ -122,6 +127,11 @@ const styles = theme => ({
     fontWeight: 700,
     marginRight: '1em',
     marginTop: '1.2em',
+    width: '15.41rem',
+  height: '3.95rem',
+  padding: '1.04rem 2.08rem 1.04rem 2.08rem',
+  borderRadius: '1.87rem',
+  gap: '1.04rem',
   },
   heroBtnStyle: {
     textTransform: 'none',
