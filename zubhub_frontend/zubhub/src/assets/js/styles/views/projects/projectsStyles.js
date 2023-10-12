@@ -29,7 +29,7 @@ const styles = theme => ({
       width: '100%',
     },
   },
-  heroSectionStyle: {
+  heroMainSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
     display: 'flex',
     paddingTop: '2.3em',
@@ -42,6 +42,18 @@ const styles = theme => ({
       width: '100',
       height:'fit-content',
     },
+  },
+    heroSectionStyle: {
+      backgroundColor: 'var(--primary-color1)',
+      boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      display: 'flex',
+      paddingTop: '2.3em',
+      paddingBottom: '2.85em',
+      justifyContent: 'center',
+      width: '100vw',
+      marginBottom: '2em'
   },
   imageLeft: {
     flexDirection: 'row',
@@ -87,11 +99,24 @@ const styles = theme => ({
     justifyContent: 'center',
     width: '100%',
   },
+  heroMainContainerStyle: {
+    width: '100%',
+
+    padding: '7rem 4rem',
+    display: 'flex',
+    [theme.breakpoints.down('1000')]: {
+      flexDirection: 'column-reverse',
+    },
+  },
   heroContainerStyle: {
     width: '100%',
+        // maxWidth: '1190px',
+        // maxWidth: '1190px',
+    padding: '1.15em 1.15em',
     // maxWidth: '1190px',
     padding: '7rem 4rem',
     display: 'flex',
+    justifyContent: 'space-between',
     [theme.breakpoints.down('1000')]: {
       flexDirection: 'column-reverse',
     },
@@ -106,6 +131,10 @@ const styles = theme => ({
     maxWidth: '37rem',
   },
   heroMessageSecondaryStyle: {
+    fontSize: '2.2rem',
+    // fontWeight: '700',
+  },
+  heroMainMessageSecondaryStyle: {
     fontSize: '4.5rem',
     fontWeight: '700',
   },
@@ -115,9 +144,13 @@ const styles = theme => ({
   MessageSecondaryStyle: {
     fontSize: '1.5rem',
   },
-  heroMessagePrimaryStyle: {
+  heroMainMessagePrimaryStyle: {
     fontSize: '2.2rem',
     fontWeight: 500,
+  },
+  heroMessagePrimaryStyle: {
+    fontSize: '2.2rem',
+    fontWeight: 1000,
   },
   MessagePrimaryStyle: {
     fontSize: '2.5rem',
@@ -260,7 +293,7 @@ const styles = theme => ({
 
   mainContainerStyle: {
     // marginTop: '3em',
-    maxWidth: '1190px',
+    // maxWidth: '1190px',
     width: '100%',
   },
   projectGridStyle: {

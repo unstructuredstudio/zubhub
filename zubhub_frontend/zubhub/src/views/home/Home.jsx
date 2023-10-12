@@ -103,8 +103,8 @@ function Projects(props) {
           (
             <Box className={classes.root}>
               {hero && hero.id ? (
-                 <Box className={classes.heroSectionStyle}>
-                 <Box className={classes.heroContainerStyle}>
+                 <Box className={classes.heroMainSectionStyle}>
+                 <Box className={classes.heroMainContainerStyle}>
                    {state.isMobileView && hero && hero.id && (
                      <Box className={classes.heroImageContainerStyle}>
                        <img
@@ -116,10 +116,10 @@ function Projects(props) {
                    )}
                    <Box className={classes.heroMessageContainerStyle}>
                      <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
+                     <Typography className={classes.heroMainMessageSecondaryStyle}>
                        {t('projects.1')}
                      </Typography>
-                     <Typography className={classes.heroMessageSecondaryStyle}>
+                     <Typography className={classes.heroMainMessageSecondaryStyle}>
                        {t('projects.2')}<span className={classes.heroMessageSpanStyle}> {t('projects.3')}</span>
                      </Typography>
                      <br />
