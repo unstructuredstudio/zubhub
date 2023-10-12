@@ -37,7 +37,13 @@ import Project from '../../components/project/Project';
 import styles from '../../assets/js/styles/views/search_results/searchResultsStyles';
 import commonStyles from '../../assets/js/styles';
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles({
+  ...styles,
+  projectGridStyle: {
+    ...styles.projectGridStyle,
+    margin: '8px',
+  },
+});
 const useCommonStyles = makeStyles(commonStyles);
 
 /**
