@@ -255,8 +255,9 @@
   },
 
   "projects": {
-    "1":"Explore, Create,",
-    "2":"Share!",
+    "1":"Explore",
+    "2": "Create,",
+    "3":"Share!",
     "shareProject": "Share your work!",
     "exploreIdeas": "Explore Ideas",
     "zubhubAmbassadors": "Become an Ambassador",

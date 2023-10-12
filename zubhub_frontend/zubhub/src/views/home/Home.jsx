@@ -117,7 +117,10 @@ function Projects(props) {
                    <Box className={classes.heroMessageContainerStyle}>
                      <br />
                      <Typography className={classes.heroMessageSecondaryStyle}>
-                       {t('projects.1')} <span className={classes.heroMessageSpanStyle}> {t('projects.2')}</span>
+                       {t('projects.1')}
+                     </Typography>
+                     <Typography className={classes.heroMessageSecondaryStyle}>
+                       {t('projects.2')}<span className={classes.heroMessageSpanStyle}> {t('projects.3')}</span>
                      </Typography>
                      <br />
                      <Typography className={classes.heroMessagePrimaryStyle}>
