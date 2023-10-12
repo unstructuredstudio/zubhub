@@ -108,7 +108,7 @@ function EditTeam(props) {
                   color="textPrimary"
                   className={classes.titleStyle}
                 >
-                  {t('Edit Team')}
+                  {t('editTeam.label')}
                 </Typography>
                 <Typography
                   className={classes.descStyle}
@@ -116,7 +116,7 @@ function EditTeam(props) {
                   color="textSecondary"
                   component="p"
                 >
-                  {'Do you want to make some changes to this team? Go ahead!'}
+                  {t('editTeam.secondaryText')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
@@ -151,13 +151,13 @@ function EditTeam(props) {
                         className={classes.customLabelStyle}
                         htmlFor="groupname"
                       >
-                        {t('editTeam.name')}
+                        {t('editTeam.inputs.name.label')}
                       </InputLabel>
                       <ClickAwayListener
                         onClickAway={() => handleSetState(handleTooltipClose())}
                       >
                         <Tooltip
-                          title={t('editTeam.requestName')}
+                          title={t('editTeam.inputs.name.request')}
                           placement="top-start"
                           arrow
                           onClose={() => handleSetState(handleTooltipClose())}
@@ -179,7 +179,7 @@ function EditTeam(props) {
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            label={t('editTeam.name')}
+                            label={t('editTeam.inputs.name.label')}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -190,7 +190,7 @@ function EditTeam(props) {
                         {(props.status && props.status['groupname']) ||
                           (props.touched['groupname'] &&
                             props.errors['groupname'] &&
-                          'Team name is required' )
+                          t('editTeam.inputs.name.errors.required'))
                         }
                       </FormHelperText>
                     </FormControl>
@@ -211,7 +211,7 @@ function EditTeam(props) {
                         className={classes.customLabelStyle}
                         htmlFor="description"
                       >
-                        {t('editProfile.inputs.bio.label')}
+                        {t('editTeam.inputs.bio.label')}
                       </InputLabel>
                       <OutlinedInput
                         ref={refs.description_el}
@@ -225,7 +225,7 @@ function EditTeam(props) {
                         value={props.values?.description ?? ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        label={t('editProfile.inputs.bio.label')}
+                        label={t('editTeam.inputs.bio.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
@@ -237,13 +237,13 @@ function EditTeam(props) {
                           component="span"
                           className={classes.fieldHelperTextStyle}
                         >
-                          {'Tell us about your team!'}
+                          {t('editTeam.inputs.bio.description')}
                         </Typography>
                         {(props.status && props.status['description']) ||
                           (props.touched['description'] &&
                             props.errors['description'] &&
                             t(
-                              `editProfile.inputs.bio.errors.${props.errors['bio']}`,
+                              `editTeam.inputs.bio.errors.${props.errors['bio']}`,
                             ))}
                       </FormHelperText>
                     </FormControl>
@@ -257,7 +257,7 @@ function EditTeam(props) {
                       fullWidth
                       customButtonStyle
                     >
-                      {'Save Changes'}
+                      {t('editTeam.actions.submit')}
                     </CustomButton>
                   </Grid>
                   </Grid>
@@ -271,7 +271,7 @@ function EditTeam(props) {
                         customButtonStyle
                         fullWidth
                       >
-                        {'Discard Changes'}
+                        {t('editTeam.actions.cancel')}
                       </CustomButton>
                     </Link>
                   </Grid>
@@ -286,7 +286,7 @@ function EditTeam(props) {
                       color="textSecondary"
                       component="p"
                     >
-                      {t('editProfile.or')}
+                      {t('editTeam.or')}
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
@@ -304,7 +304,7 @@ function EditTeam(props) {
                       handleSetState(handleToggleDeleteAccountModal(state))
                     }
                   >
-                    {'Delete Team'}
+                    {t('editTeam.delete.label')}
                   </CustomButton>
                 </Grid>
               </Grid>
@@ -316,7 +316,7 @@ function EditTeam(props) {
           <Dialog
             open={open_delete_account_modal}
             onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
-            aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
+            aria-labelledby={t('editTeam.delete.ariaLabels.deleteTeam')}
           >
             <DialogTitle id="delete-project">
               {t('editTeam.delete.question')}
@@ -353,7 +353,7 @@ function EditTeam(props) {
                 dangerButtonStyle
                 customButtonStyle
               >
-                {t('editTeam.delete.buttons.delete')}
+                {t('editTeam.delete.buttons.confirm')}
               </CustomButton>
             </DialogActions>
           </Dialog>
