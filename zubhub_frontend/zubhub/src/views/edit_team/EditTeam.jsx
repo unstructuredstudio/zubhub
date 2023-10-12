@@ -151,13 +151,13 @@ function EditTeam(props) {
                         className={classes.customLabelStyle}
                         htmlFor="groupname"
                       >
-                        {t('Team Name')}
+                        {t('editTeam.name')}
                       </InputLabel>
                       <ClickAwayListener
                         onClickAway={() => handleSetState(handleTooltipClose())}
                       >
                         <Tooltip
-                          title={t('Enter your Team Name')}
+                          title={t('editTeam.requestName')}
                           placement="top-start"
                           arrow
                           onClose={() => handleSetState(handleTooltipClose())}
@@ -179,7 +179,7 @@ function EditTeam(props) {
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            label={t('Team Name')}
+                            label={t('editTeam.name')}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -319,7 +319,7 @@ function EditTeam(props) {
             aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
           >
             <DialogTitle id="delete-project">
-              {t('Delete Team Profile?')}
+              {t('editTeam.delete.question')}
             </DialogTitle>
             <Box
               component="p"
@@ -332,7 +332,7 @@ function EditTeam(props) {
               )}
             </Box>{' '}
             <DialogContent>
-              <Typography>{t('Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.')}</Typography>
+              <Typography>{t('editTeam.delete.information')}</Typography>
             </DialogContent>
             <DialogActions>
               <CustomButton
@@ -343,7 +343,7 @@ function EditTeam(props) {
                 color="primary"
                 secondaryButtonStyle
               >
-                {t('profile.delete.dialog.cancel')}
+                {t('editTeam.delete.buttons.cancel')}
               </CustomButton>
               <CustomButton
                 variant="contained"
@@ -353,7 +353,7 @@ function EditTeam(props) {
                 dangerButtonStyle
                 customButtonStyle
               >
-                {t('Delete')}
+                {t('editTeam.delete.buttons.delete')}
               </CustomButton>
             </DialogActions>
           </Dialog>

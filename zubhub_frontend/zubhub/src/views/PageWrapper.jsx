@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -84,7 +84,9 @@ const useCommonStyles = makeStyles(commonStyles);
  * @todo - describe function's signature
  */
 function PageWrapper(props) {
-  const backToTopEl = React.useRef(null);
+  const backToTopEl = useRef(null);
+  const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
+  const [isVisible, setIsVisible] = useState(false);
   const history = useHistory();
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -102,6 +104,19 @@ function PageWrapper(props) {
 
   const [options, setOptions] = useState([]);
   const [query, setQuery] = useState(props.location.search ? getQueryParams(window.location.href).get('q') : '');
+
+  const handleScroll = useCallback(() => {
+    const currentScrollPos = window.pageYOffset;
+    setIsVisible(prevScrollPos < currentScrollPos);
+    setPrevScrollPos(currentScrollPos);
+  }, [prevScrollPos]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
 
   const throttledFetchOptions = useMemo(
     () =>
@@ -363,17 +378,19 @@ function PageWrapper(props) {
           </Box>
         </section>
 
-        <Zoom in={useScrollTrigger}>
-          <div
-            onClick={e => handleScrollTopClick(e, backToTopEl)}
-            role="presentation"
-            className={classes.scrollTopButtonStyle}
-          >
-            <Fab color="secondary" size="small" aria-label="scroll back to top">
-              <KeyboardArrowUpIcon />
-            </Fab>
-          </div>
-        </Zoom>
+        {isVisible && (
+          <Zoom in={useScrollTrigger}>
+            <div
+              onClick={e => handleScrollTopClick(e, backToTopEl)}
+              role="presentation"
+              className={classes.scrollTopButtonStyle}
+            >
+              <Fab color="secondary" size="small" aria-label="scroll back to top">
+                <KeyboardArrowUpIcon />
+              </Fab>
+            </div>
+          </Zoom>
+        )}
       </footer>
     </>
   );

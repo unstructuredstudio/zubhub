@@ -29,6 +29,7 @@ export const handleMouseDownPassword = e => {
  */
 export const login = (e, props) => {
   e.preventDefault();
+  props.setFieldTouched('username', true);
   return props
     .login({ values: props.values, history: props.history })
     .catch(error => {

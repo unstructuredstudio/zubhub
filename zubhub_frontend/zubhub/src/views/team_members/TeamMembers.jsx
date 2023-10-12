@@ -126,7 +126,7 @@ function TeamMembers(props) {
                 variant="h3"
                 gutterBottom
               >
-                {groupname}'s {t('Members')}
+                {groupname}'s {t('teamMembers.members')}
               </Typography>
             </Grid>
             {buildFollowers(followers, classes, props, state, handleSetState)}
@@ -168,7 +168,7 @@ function TeamMembers(props) {
       </Box>
     );
   } else {
-    return <ErrorPage error={t('This team has no members')} />;
+    return <ErrorPage error={t('teamMembers.noMember')} />;
   }
 }
 
