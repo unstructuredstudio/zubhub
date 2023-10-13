@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
   Grid,
   Link,
   Typography,
@@ -446,10 +445,6 @@ const SelectModeUI = ({ setMode, t }) => {
         >
           {t('createProject.selectMode.submit')}
         </CustomButton>
-        <Box className={classes.dividerContainer}>
-          <Divider className={classes.divider} />
-          <Divider className={classes.divider} />
-        </Box>
       </Box>
     </div>
   );

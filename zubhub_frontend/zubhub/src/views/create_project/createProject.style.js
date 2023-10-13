@@ -222,13 +222,4 @@ export const createProjectStyle = theme => ({
         display: 'flex',
         marginTop: 40
     },
-    dividerContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-    divider: {
-        width: '100%',
-        maxWidth: '250px'
-    }
-
 })
