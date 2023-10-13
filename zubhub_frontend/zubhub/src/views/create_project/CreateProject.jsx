@@ -11,6 +11,9 @@ import {
   Typography,
   makeStyles,
   useMediaQuery,
+  FormControlLabel,
+  Radio,
+  SvgIcon,
 } from '@material-ui/core';
 import {
   ArrowBackIosRounded,
@@ -18,6 +21,7 @@ import {
   CloseOutlined,
   CloudDoneOutlined,
   Person,
+  People,
 } from '@material-ui/icons';
 import DoneRounded from '@material-ui/icons/DoneRounded';
 import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
@@ -395,12 +399,34 @@ const SelectModeUI = ({ setMode }) => {
   const [mode, setModeItem] = useState('');
   const modes = { personal: 'personal', team: 'team' };
 
+  function TickIcon(props) {
+    return (
+      <SvgIcon {...props}>
+        <circle cx="12" cy="12" r="10" stroke={props.checked ? "#00B8C4" : "#ccc"} strokeWidth="2" fill={props.checked ? "#00B8C4" : "none"} />
+        {props.checked && (
+          <path
+            d="M8,12 L10,15 L16,9"
+            stroke="#fff"
+            strokeWidth="2"
+            fill="none"
+          />
+        )}
+      </SvgIcon>
+    );
+  }
+  
+  
+
   const handleCreate = () => {
     const params = new URLSearchParams(window.location.search);
     params.set('mode', mode);
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState(null, null, newUrl);
     setMode(mode);
+  };
+
+  const handleChange = (event) => {
+    setModeItem(event.target.value);
   };
 
   return (
@@ -415,33 +441,69 @@ const SelectModeUI = ({ setMode }) => {
         </Box>
         <div className={clsx(classes.modeItemContainer)}>
           <div
-            onClick={() => setModeItem(modes.personal)}
-            className={clsx(classes.modeItem, mode == modes.personal ? classes.modeItemSelected : null)}
+            className={clsx(classes.modeItem, mode === 'personal' ? classes.modeItemSelected : null)}
+            onClick={() => setModeItem('personal')}
+            style={{ width: '100%', height: '100%', padding: 20 }}
           >
-            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Personal Project</Typography>
-            <Typography>If you worked on the project alone </Typography>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Radio
+                  checked={mode === 'personal'}
+                  onChange={handleChange}
+                  value="personal"
+                  name="project-type"
+                  color="primary"
+                  icon={<TickIcon />}
+                  checkedIcon={<TickIcon checked />}
+                />
+              </div>
+              <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 60 }} />
+                <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Personal Project</Typography>
+                <Typography style={{ color: '#7E7E7E', textAlign: 'center' }}>
+                  Select this if you worked on this project alone 
+                </Typography>
+              </div>
+            </div>
           </div>
-
           <div
-            onClick={() => setModeItem(modes.team)}
-            className={clsx(classes.modeItem, mode == modes.team && classes.modeItemSelected)}
+            className={clsx(classes.modeItem, mode === 'team' && classes.modeItemSelected)}
+            onClick={() => setModeItem('team')}
+            style={{ width: '100%', height: '100%', padding: 20 }}
           >
-            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Team Project</Typography>
-            <Typography>If you worked on the project with other creators </Typography>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Radio
+                  checked={mode === 'team'}
+                  onChange={handleChange}
+                  value="team"
+                  name="project-type"
+                  color="primary"
+                  icon={<TickIcon />}
+                  checkedIcon={<TickIcon checked />}
+                />
+              </div>
+              <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                <People style={{ color: colors.primary, marginBottom: 5, fontSize: 60 }} />
+                <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Team Project</Typography>
+                <Typography style={{ color: '#7E7E7E', textAlign: 'center' }}>
+                  Select this if you worked on this project with other creator 
+                </Typography>
+              </div>
+            </div>
           </div>
         </div>
         <CustomButton
           onClick={handleCreate}
           primaryButtonStyle
-          style={{ marginTop: 40, alignSelf: 'center' }}
-          disabled={mode.length === 0}
+          style={{ marginTop: 40, alignSelf: 'center', backgroundColor: mode ? 'rgba(0, 184, 196, 1)': 'rgba(0, 184, 196, 0.2)' , cursor: mode ? 'pointer' : 'not-allowed', color: !mode ?  'rgba(123, 168, 171, 1)' : 'rgba(255, 255, 255, 1)'}}
+          disabled={!mode}
         >
-          Create Project
+          CREATE PROJECT
         </CustomButton>
       </Box>
     </div>
+
   );
 };
 
