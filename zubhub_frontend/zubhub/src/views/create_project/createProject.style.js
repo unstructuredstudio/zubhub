@@ -107,8 +107,8 @@ export const createProjectStyle = theme => ({
         padding: 4,
         alignSelf: 'center',
         '&:disabled': {
-            backgroundColor: '#00B8C433',
-            color: '#7BA8AB',
+            backgroundColor: colors["blue-light"],
+            color: colors["blue-dark"],
         }
     },
     dialogTitle1: {
