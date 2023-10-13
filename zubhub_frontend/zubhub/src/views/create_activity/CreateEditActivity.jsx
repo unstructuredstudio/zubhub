@@ -44,7 +44,6 @@ const steps = ['Activity Basics', 'Activity Details'];
 let firstRender = true;
 
 function CreateEditActivity(props) {
-  console.log(props, 'PRORORORORPRP');
   const editting = props?.editting;
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -118,23 +117,15 @@ function CreateEditActivity(props) {
 
     setIsLoading(true);
 
-    script.submitForm(
-      {
-        step1Values: formikStep1.values,
-        step2Values: formikStep2.values,
-        props: { ...props, auth },
-        state,
-        handleSetState: handleSetState,
-        step: activeStep,
-        publish: publish,
-      },
-      success => {
-        if (success) {
-          props.history.push(`/activities/${props.match.params.id}?success=true`);
-          setIsLoading(false);
-        }
-      },
-    );
+    script.submitForm({
+      step1Values: formikStep1.values,
+      step2Values: formikStep2.values,
+      props: { ...props, auth },
+      state,
+      handleSetState: handleSetState,
+      step: activeStep,
+      publish: publish,
+    });
   };
 
   const checkErrors = () => {
@@ -253,7 +244,7 @@ function CreateEditActivity(props) {
           )}
           {activeStep === 2 && (
             <CustomButton
-              loading={isLoading}
+              disabled={isLoading}
               style={{ marginLeft: 'auto' }}
               primaryButtonStyle
               endIcon={<SaveRoundedIcon className={classes.nextButton} />}
@@ -263,7 +254,7 @@ function CreateEditActivity(props) {
             </CustomButton>
           )}
           <CustomButton
-            onClick={activeStep === 2 ? submit : () => go('next')}
+            onClick={activeStep === 2 ? () => submit(true) : () => go('next')}
             loading={isLoading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle

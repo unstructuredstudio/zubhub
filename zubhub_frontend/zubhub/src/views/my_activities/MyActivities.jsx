@@ -20,7 +20,6 @@ import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
 
 function MyActivities(props) {
-  console.log(props, 'PROPSSSSS');
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const { activities } = useSelector(state => state);
@@ -52,7 +51,7 @@ function MyActivities(props) {
       return (
         <div className={commonClasses.smallScreenPadding}>
           <Typography style={{ marginBottom: 50 }} className={commonClasses.title1}>
-            Activities
+            My Activities
           </Typography>
           <Grid container spacing={3}>
             {activityList &&

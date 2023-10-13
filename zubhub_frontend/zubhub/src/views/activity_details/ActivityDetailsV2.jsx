@@ -41,7 +41,6 @@ export default function ActivityDetailsV2(props) {
   const classes = makeStyles(activityDefailsStyles)();
   const commonClasses = makeStyles(styles)();
 
-  // console.log(activity, 'ACTIVITY');
   const { t } = useTranslation();
   const auth = useSelector(state => state.auth);
   let ref = useRef(null);
@@ -54,6 +53,8 @@ export default function ActivityDetailsV2(props) {
   const [isDownloading, setIsDownloading] = useState(undefined);
 
   const creator = activity.creators?.[0];
+
+  console.log(activity, 'ACR');
 
   useEffect(() => {
     API.getActivity({ token: auth?.token, id: props.match.params.id }).then(data => {
@@ -261,22 +262,18 @@ export default function ActivityDetailsV2(props) {
         </Typography>
 
         <Grid container spacing={4} justifyContent="center">
-          {moreActivities.map((activity, index) => (
-            <Grid
-              key={index}
-              item
-              {...(auth.token ? authenticatedUserActivitiesGrid : unauthenticatedUserActivitiesGrid)}
-              align="center"
-            >
-              <Activity
-                activity={activity}
-                key={activity.id}
-                t={t}
-                // updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
-                {...props}
-              />
-            </Grid>
-          ))}
+          {moreActivities
+            .filter(({ id }) => id !== props.match.params.id)
+            .map((activity, index) => (
+              <Grid
+                key={index}
+                item
+                {...(auth.token ? authenticatedUserActivitiesGrid : unauthenticatedUserActivitiesGrid)}
+                align="center"
+              >
+                <Activity activity={activity} key={activity.id} t={t} {...props} />
+              </Grid>
+            ))}
         </Grid>
 
         {/* <Comments context={{ name: 'activity', body: { ...activity, comments: [] } }} {...{ ...props, auth }} /> */}

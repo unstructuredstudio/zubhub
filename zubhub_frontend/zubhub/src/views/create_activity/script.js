@@ -556,10 +556,8 @@ export class UploadMedia {
   };
 }
 
-export const submitForm = async (
-  { step1Values, step2Values, props, state, handleSetState, step, publish = true },
-  callback,
-) => {
+export const submitForm = async ({ step1Values, step2Values, props, state, handleSetState, step, publish }) => {
+  console.log(publish, 'PUBLISH');
   let fileUploadResponse;
   const uploadedImages = { images: [], materials_used_image: [], making_steps: {} };
   const imagesToUpload = { images: [], materials_used_image: [], making_steps: {} };
@@ -603,7 +601,7 @@ export const submitForm = async (
   const formData = {
     ...formDataStep1,
     step2Values,
-    publish: publish,
+    publish,
   };
 
   if (step === 2) {
@@ -655,23 +653,32 @@ export const submitForm = async (
   const activityId = props.match.params?.id;
   let createOrUpdateResponse;
 
-  if (props.match.params.id) {
+  if (activityId) {
     // API call to the update activity
-    createOrUpdateResponse = await API.updateActivity(props.auth.token, activityId, formData);
+    try {
+      createOrUpdateResponse = await API.updateActivity(props.auth.token, activityId, formData);
+    } catch (err) {
+      toast.error(`Error updating ${err.message}`);
+    }
   } else {
     // API call to the create activity
-    createOrUpdateResponse = await API.createActivity(props.auth?.token, formData);
+    try {
+      createOrUpdateResponse = await API.createActivity(props.auth?.token, formData);
+    } catch (err) {
+      toast.error(`Error creating activity ${err.message}`);
+    }
   }
 
-  const data = await createOrUpdateResponse.json();
+  if (createOrUpdateResponse.status === 201) {
+    const data = await createOrUpdateResponse.json();
+    toast.success(`Successfully created ${data.title}`);
+    props.history.replace(`/activities/${data.id}`);
+  }
 
-  if (data) {
-    if (!activityId) {
-      props.history.replace(`/activities/${data.id}/edit`);
-    }
-    callback(true);
-  } else {
-    callback(false);
+  if (createOrUpdateResponse.status === 200) {
+    const data = await createOrUpdateResponse.json();
+    toast.success(`Updated successfully ${data.title}`);
+    props.history.replace(`/activities/${data.id}`);
   }
 };
 
