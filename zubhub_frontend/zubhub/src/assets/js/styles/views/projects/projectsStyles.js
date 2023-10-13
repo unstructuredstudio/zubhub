@@ -25,14 +25,12 @@ const styles = theme => ({
     // '& .MuiGrid-root.MuiGrid-container': {
     //   width: '100%',
     [theme.breakpoints.down('sm')]: {
-      padding: '0 24px'
+      padding: '0 24px',
+      width: '100%',
     },
   },
-  heroSectionStyle: {
+  heroMainSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
-    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
     display: 'flex',
     paddingTop: '2.3em',
     paddingBottom: '2.85em',
@@ -44,6 +42,18 @@ const styles = theme => ({
       width: '100',
       height:'fit-content',
     },
+  },
+    heroSectionStyle: {
+      backgroundColor: 'var(--primary-color1)',
+      boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      display: 'flex',
+      paddingTop: '2.3em',
+      paddingBottom: '2.85em',
+      justifyContent: 'center',
+      width: '100vw',
+      marginBottom: '2em'
   },
   imageLeft: {
     flexDirection: 'row',
@@ -88,11 +98,24 @@ const styles = theme => ({
     justifyContent: 'center',
     width: '100%',
   },
-  heroContainerStyle: {
+  heroMainContainerStyle: {
     width: '100%',
-    // maxWidth: '1190px',
     padding: '7rem 4rem',
     display: 'flex',
+    [theme.breakpoints.down('1000')]: {
+      padding: '2rem 1rem',
+      flexDirection: 'column-reverse',
+      width: '100',
+      height:'fit-content',
+    },
+  },
+  heroContainerStyle: {
+    width: '100%',
+    maxWidth: '1190px',
+    padding: '1.15em 1.15em',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     [theme.breakpoints.down('1000')]: {
       flexDirection: 'column-reverse',
     },
@@ -104,6 +127,7 @@ const styles = theme => ({
   heroMessageContainerStyle: {
     flexGrow: 1,
     color: 'white',
+    maxWidth: '37.813rem',
   },
   heroMessageSecondaryStyle: {
     fontSize: '2.2rem',
@@ -113,25 +137,43 @@ const styles = theme => ({
   },
   heroMessagePrimaryStyle: {
     fontSize: '2.2rem',
-    fontWeight: 1000,
+    fontWeight: '1000',
   },
   MessagePrimaryStyle: {
     fontSize: '2.5rem',
     fontWeight: 1000,
   },
-
+  heroMainMessageSecondaryStyle: {
+    fontSize: '4.5rem',
+    fontWeight: '700',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '2.5rem'
+    },
+  },
+  heroMainMessagePrimaryStyle: {
+    fontSize: '2.2rem',
+    fontWeight: 500,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.2rem'
+    },
+  },
   heroButtonStyle: {
     textTransform: 'none',
     padding: '0 1em',
-    fontSize: '1.2rem',
+    fontSize: '1.456rem',
     fontWeight: 700,
     marginRight: '1em',
     marginTop: '1.2em',
-    width: '15.41rem',
-  height: '3.95rem',
-  padding: '1.04rem 2.08rem 1.04rem 2.08rem',
-  borderRadius: '1.87rem',
-  gap: '1.04rem',
+    width: 'fit-content',
+    height: '3.95rem',
+    padding: '1.04rem 2.08rem 1.04rem 2.08rem',
+    borderRadius: '1.87rem',
+    gap: '1.04rem',
+  [theme.breakpoints.down('sm')]: {
+    height:'fit-content',
+    padding: '0.1em 0.7em',
+    width: 'fit-content'
+  },
   },
   heroBtnStyle: {
     textTransform: 'none',
@@ -143,6 +185,7 @@ const styles = theme => ({
   },
   heroImageContainerStyle: {
     display: 'flex',
+    justifyContent: 'space-between',
     [theme.breakpoints.down('1000')]: {
     },
     [theme.breakpoints.down('500')]: {
@@ -170,10 +213,14 @@ const styles = theme => ({
     },
   },
   heroImageStyle: {
-    marginLeft: '2em',
+    marginLeft: '4em',
     marginRight: '2em',
     height: '100%',
     width: '100%',
+    [theme.breakpoints.down('1480')]: {
+      marginLeft: '0',
+      marginRight: '0',
+    },
     [theme.breakpoints.down('500')]: {
       marginLeft: '0',
       marginRight: '0',

@@ -82,7 +82,6 @@ function Projects(props) {
       });
     }
   };
-console.log("test commit");
   const { loading, isMobileView } = state;
   const {
     results: projects,
@@ -103,8 +102,8 @@ console.log("test commit");
           (
             <Box className={classes.root}>
               {hero && hero.id ? (
-                 <Box className={classes.heroSectionStyle}>
-                 <Box className={classes.heroContainerStyle}>
+                 <Box className={classes.heroMainSectionStyle}>
+                 <Box className={classes.heroMainContainerStyle}>
                    {state.isMobileView && hero && hero.id && (
                      <Box className={classes.heroImageContainerStyle}>
                        <img
@@ -116,11 +115,14 @@ console.log("test commit");
                    )}
                    <Box className={classes.heroMessageContainerStyle}>
                      <br />
-                     <Typography className={classes.heroMessagePrimaryStyle}>
+                     <Typography className={classes.heroMainMessageSecondaryStyle}>
                        {t('projects.1')}
                      </Typography>
+                     <Typography className={classes.heroMainMessageSecondaryStyle}>
+                       {t('projects.2')}
+                     </Typography>
                      <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
+                     <Typography className={classes.heroMainMessagePrimaryStyle}>
                        {hero.description}
                      </Typography>
                      <br />
