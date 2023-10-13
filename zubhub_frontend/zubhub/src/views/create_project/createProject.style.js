@@ -41,30 +41,75 @@ export const createProjectStyle = theme => ({
             textDecoration: 'underline',
         },
     },
+    selectModeTextContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '750px',
+        textAlign: 'center',
+    },
     modeItemContainer: {
         display: 'flex',
+        justifyContent: 'space-between',
         gap: 20,
-        marginTop: 40,
+        paddingRight: 40,
+        paddingLeft: 40, 
+        marginTop: 60,
         [theme.breakpoints.down('md')]: {
-            flexDirection: 'column'
+            flexDirection: 'column',
+            alignItems: 'center'
         },
     },
     modeItemSelected: {
         border: `solid 1.5px ${colors.primary} !important`
     },
     modeItem: {
+        width: '260px',
+        height: '220px',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: colors.white,
         borderRadius: 8,
-        padding: '16px 24px',
+        padding: '18px 24px',
         border: `solid 1.5px transparent`,
-        width: '50%',
+        boxShadow: '2px 4px 5px 0px #00B8C41A',
         '&:hover': {
             border: `solid 1.5px ${colors.primary}`,
             cursor: 'pointer'
         },
         [theme.breakpoints.down('md')]: {
-            width: '100%'
+            width: '100%',
+            maxWidth: '500px',
         },
+    },
+    modeItemDescription: {
+        textAlign: 'center',
+        fontSize: '12px',
+        fontWeight: '300'
+    },
+    modeItemIcon: {
+        color: colors.primary,
+        marginBottom: 2,
+        fontSize: 40,
+    },
+    modeSubmitButton: {
+        width: '150px',
+        height: '40px',
+        fontFamily: 'Raleway, Roboto, sans-serif',
+        fontSize: '16px',
+        fontWeight: 600,
+        lineHeight: '20px',
+        letterSpacing: 0,
+        marginTop: 60,
+        marginBottom: 60,
+        padding: 4,
+        alignSelf: 'center',
+        '&:disabled': {
+            backgroundColor: '#00B8C433',
+            color: '#7BA8AB',
+        }
     },
     dialogTitle1: {
         fontSize: '18px !important',
@@ -78,6 +123,29 @@ export const createProjectStyle = theme => ({
         // lineHeight: '26px !important',
         marginBottom: 5,
         marginTop: 10
+    },
+    checkBoxContainer: {
+        position: 'absolute',
+        right: '12px',
+        top: '14px',
+        width: '30px',
+        height: '30px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    checkBoxDefault: {
+        width: '100%',
+        height: '100%',
+        boxSizing: 'border-box',
+        borderRadius: '50%',
+        border: `solid 2px ${colors.primary}`,
+        color: colors.white,
+    },
+    checkBoxSelected: {
+        borderRadius: '50%',
+        fontSize: '36px',
+        color: colors.primary,
     },
     formContainer: {
         borderRadius: 10,
@@ -154,6 +222,13 @@ export const createProjectStyle = theme => ({
         display: 'flex',
         marginTop: 40
     },
-
+    dividerContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    divider: {
+        width: '100%',
+        maxWidth: '250px'
+    }
 
 })

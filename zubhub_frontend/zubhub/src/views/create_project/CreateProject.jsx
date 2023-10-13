@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   Grid,
   Link,
   Typography,
@@ -15,8 +16,10 @@ import {
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
+  CheckCircle,
   CloseOutlined,
   CloudDoneOutlined,
+  PeopleAltSharp,
   Person,
 } from '@material-ui/icons';
 import DoneRounded from '@material-ui/icons/DoneRounded';
@@ -404,7 +407,7 @@ const SelectModeUI = ({ setMode }) => {
   return (
     <div className={classes.container}>
       <Box className={clsx(classes.selectMode)}>
-        <Box sx={{ textAlign: isSmallScreen ? 'left' : 'center' }}>
+        <Box className={classes.selectModeTextContainer}>
           <Typography className={clsx(commonClasses.title1)}>Create Project</Typography>
           <Typography>
             Select what kind of project it is, if you worked on the project alone select Personal project, if you worked
@@ -416,28 +419,38 @@ const SelectModeUI = ({ setMode }) => {
             onClick={() => setModeItem(modes.personal)}
             className={clsx(classes.modeItem, mode == modes.personal ? classes.modeItemSelected : null)}
           >
-            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
+            <div className={classes.checkBoxContainer}>
+              <CheckCircle className={clsx(mode === modes.personal ? classes.checkBoxSelected : classes.checkBoxDefault)} />
+            </div>
+            <Person className={classes.modeItemIcon} />
             <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Personal Project</Typography>
-            <Typography>If you worked on the project alone </Typography>
+            <Typography className={classes.modeItemDescription}>Select this if you worked on this project alone </Typography>
           </div>
 
           <div
             onClick={() => setModeItem(modes.team)}
             className={clsx(classes.modeItem, mode == modes.team && classes.modeItemSelected)}
           >
-            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
+            <div className={classes.checkBoxContainer}>
+              <CheckCircle className={clsx(mode === modes.team ? classes.checkBoxSelected : classes.checkBoxDefault)} />
+            </div>
+            <PeopleAltSharp className={classes.modeItemIcon} />
             <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Team Project</Typography>
-            <Typography>If you worked on the project with other creators </Typography>
+            <Typography className={classes.modeItemDescription}>Select this if you worked on this project with other creators </Typography>
           </div>
         </div>
         <CustomButton
+          className={classes.modeSubmitButton}
           onClick={handleCreate}
           primaryButtonStyle
-          style={{ marginTop: 40, alignSelf: 'center' }}
           disabled={mode.length === 0}
         >
           Create Project
         </CustomButton>
+        <Box className={classes.dividerContainer}>
+          <Divider className={classes.divider} />
+          <Divider className={classes.divider} />
+        </Box>
       </Box>
     </div>
   );
