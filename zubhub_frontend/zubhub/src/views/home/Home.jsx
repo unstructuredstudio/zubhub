@@ -82,7 +82,7 @@ function Projects(props) {
       });
     }
   };
-
+console.log("test commit");
   const { loading, isMobileView } = state;
   const {
     results: projects,
