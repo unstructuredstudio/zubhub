@@ -260,7 +260,7 @@ function CreateProject(props) {
       </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
-        <Link href="/projects" color="inherit" className={classes.backLink}>
+        <Link href="/projects/create" color="inherit">
           <KeyboardBackspaceRoundedIcon/>
         </Link>
         {props.match.params.id && (
