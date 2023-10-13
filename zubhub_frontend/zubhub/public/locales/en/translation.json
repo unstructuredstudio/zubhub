@@ -117,7 +117,7 @@
           "min": "Your password seems too short",
           "upper-caps": "Your password must contain at least 1 uppercase character",
           "lower-caps": "Your password must contain at least 1 lowercase character",
-          "digit": "Your password must contain at least digit",
+          "digit": "Your password must contain at least 1 digit",
           "special": "Your password must contain at least 1 special character",
           "required": "Provide a strong password here!"
         }
