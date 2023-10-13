@@ -248,7 +248,9 @@ function CreateTeam(props) {
       </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
-        <KeyboardBackspaceRoundedIcon />
+      <Link href="/create-team" color="inherit" >
+        <KeyboardBackspaceRoundedIcon/>
+      </Link>
         {props.match.params.id && (
           <>
             <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
