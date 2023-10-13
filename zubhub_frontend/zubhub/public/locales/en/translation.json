@@ -345,6 +345,18 @@
       "primary": "Create Project",
       "secondary": "Tell us about your project!"
     },
+    "selectMode": {
+      "description": "Select what kind of project it is, if you worked on the project alone select Personal project, if you worked on your project with other creators select Team project.",
+      "personalMode": {
+        "title": "Personal Project",
+        "description": "Select this if you worked on this project alone"
+      },
+      "teamMode": {
+        "title": "Team Project",
+        "description": "Select this if you worked on this project with other creators"
+      },
+      "submit": "Create Project"
+    },
     "inputs": {
       "title": {
         "label": "Name your project",
