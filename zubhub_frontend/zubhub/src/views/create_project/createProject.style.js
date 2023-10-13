@@ -79,11 +79,6 @@ export const createProjectStyle = theme => ({
         marginBottom: 5,
         marginTop: 10
     },
-    projectSelectError: {
-        marginTop: '16px',
-        color: colors.red,
-        fontSize: '18px'
-    },
     formContainer: {
         borderRadius: 10,
         backgroundColor: colors.white,
