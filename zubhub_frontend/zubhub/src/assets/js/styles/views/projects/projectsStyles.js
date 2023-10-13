@@ -172,7 +172,8 @@ const styles = theme => ({
   [theme.breakpoints.down('sm')]: {
     height:'fit-content',
     padding: '0.1em 0.7em',
-    width: 'fit-content'
+    width: 'fit-content',
+    fontSize: "1.2rem"
   },
   },
   heroBtnStyle: {
