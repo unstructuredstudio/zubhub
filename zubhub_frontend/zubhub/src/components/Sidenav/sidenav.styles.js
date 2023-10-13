@@ -3,10 +3,10 @@ import { colors } from "../../assets/js/colors";
 export const sidenavStyle = theme => ({
     container: {
         backgroundColor: 'white',
-        minHeight: '65vh',
+        minHeight: '80vh',
         display: 'flex',
         borderRadius: 8,
-        position: 'fixed',
+
         [theme.breakpoints.down('sm')]: {
             height: '100%',
         },
