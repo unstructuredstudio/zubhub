@@ -9,6 +9,7 @@ import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import LockIcon from '@material-ui/icons/Lock';
 import PublicIcon from '@material-ui/icons/Public';
+import BorderColorOutlinedIcon from '@material-ui/icons/BorderColorOutlined';
 
 import {
   Tooltip,
@@ -51,7 +52,7 @@ function Project(props) {
         <CardMedia className={classes.mediaBoxStyle} title={project.title}>
           <Tooltip title={getPublishTypeLabel(project.publish.type)} placement="right-start" arrow>
             <Box className={classes.publishStyle}>
-              {project.publish.type === publish_type.Draft ? t('project.publish.draft') : ''}
+              {project.publish.type === publish_type.Draft ? <BorderColorOutlinedIcon/> : ''}
               {project.publish.type === publish_type.Preview ? t('project.publish.preview') : ''}
               {project.publish.type === publish_type['Authenticated Creators'] ? <LockIcon /> : ''}
               {project.publish.type === publish_type.Public ? <PublicIcon /> : ''}

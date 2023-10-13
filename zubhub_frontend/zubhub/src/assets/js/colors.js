@@ -9,7 +9,7 @@ export const colors = {
     light: '#C4C4C4',
     white: '#fff',
     green: '#22C55E',
-    red: '#f44336'
+    red: '#f44336',
 }
 
 export const borders = {
