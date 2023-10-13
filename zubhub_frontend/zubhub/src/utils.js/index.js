@@ -66,3 +66,5 @@ export const getUrlQueryObject = () => {
 }
 
 export const TEAM_ENABLED = false
+
+export const PROJECTS_PAGE_SIZE = 18;

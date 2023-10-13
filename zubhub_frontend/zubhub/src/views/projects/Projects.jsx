@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { Pagination } from '@material-ui/lab';
 import { Grid, Box, ButtonGroup, Typography, Container } from '@material-ui/core';
 
 import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
@@ -25,6 +26,7 @@ import new_stuff from '../../assets/images/new_stuff.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
+import {PROJECTS_PAGE_SIZE} from "../../../src/utils.js"
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -41,6 +43,7 @@ function Projects(props) {
 
   const [state, setState] = React.useState({
     loading: true,
+    currentPage: 1
   });
 
   React.useEffect(() => {
@@ -57,10 +60,11 @@ function Projects(props) {
   };
 
   const { loading } = state;
-  const { results: projects, previous: prev_page, next: next_page } = props.projects.all_projects;
+  const { count: totalProjects, results: projects, previous: prev_page, next: next_page } = props.projects.all_projects;
   const { hero } = props.projects;
   const staff_picks = props.projects.staff_picks;
   const { t } = props;
+  const noOfPage = Math.ceil(totalProjects / PROJECTS_PAGE_SIZE) ;
 
   if (loading) {
     return <LoadingPage />;
@@ -164,13 +168,13 @@ function Projects(props) {
                   </Grid>
                 ))}
               </Grid>
-              <div aria-label={t('projects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
+              <div aria-label={t('projects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyleThree}>
                 {prev_page ? (
                   <CustomButton
                     className={clsx(classes.floatLeft, classes.buttonGroupStyleAlternative)}
                     size="large"
                     startIcon={<NavigateBeforeIcon />}
-                    onClick={(e, page = prev_page.split('?')[1]) => {
+                    onClick={(e, page = prev_page.substring('=', "&")) => {
                       handleSetState({ loading: true });
                       handleSetState(fetchPage(page, props));
                     }}
@@ -178,13 +182,26 @@ function Projects(props) {
                   >
                     {t('projects.prev')}
                   </CustomButton>
-                ) : null}
+                ) : <CustomButton className={clsx(classes.visibilityNone)}></CustomButton>}
+                    <Pagination
+                    count={noOfPage}
+                    hidePrevButton = {true}
+                    hideNextButton = {true}
+                    page={state.currentPage}
+                    className={clsx(classes.paginationRoot)}
+                    onChange={(e, page) => {
+                      handleSetState({ loading: true, currentPage: page })
+                      handleSetState(fetchPage(page, props))
+                    }}
+                    shape="rounded" 
+                    size='small'/>
+
                 {next_page ? (
                   <CustomButton
                     className={clsx(classes.floatRight, classes.buttonGroupStyleAlternative)}
                     size="large"
                     endIcon={<NavigateNextIcon />}
-                    onClick={(e, page = next_page.split('?')[1]) => {
+                    onClick={(e, page = next_page.split('=')[1]) => {
                       handleSetState({ loading: true });
                       handleSetState(fetchPage(page, props));
                     }}
@@ -192,7 +209,7 @@ function Projects(props) {
                   >
                     {t('projects.next')}
                   </CustomButton>
-                ) : null}
+                ) : <CustomButton className={clsx(classes.visibilityNone)}></CustomButton>}
               </div>
             </Box>
           </Box>

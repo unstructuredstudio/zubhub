@@ -271,11 +271,30 @@ const styles = theme => ({
     maxWidth: '2000px',
     width: '100%',
   },
+  buttonGroupStyleThree: {
+    paddingLeft: '2em',
+    paddingRight: '2em',
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '2em',
+  },
+  paginationRoot: {
+    '& .MuiPaginationItem-root': {
+      '&:hover': {
+        backgroundColor: 'var(--primary-color3)',
+        color: 'white',
+      },
+    },
+  },
   buttonGroupStyleAlternative: {
     padding: '7px 21px',
   },
   floatRight: {
     float: 'right',
+
+  },
+  visibilityNone:{
+    visibility: 'hidden'
   },
   floatLeft: {
     float: 'left',

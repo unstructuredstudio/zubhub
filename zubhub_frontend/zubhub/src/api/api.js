@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { sanitizeObject } from '../utils.js';
+import { PROJECTS_PAGE_SIZE, sanitizeObject } from '../utils.js';
 /**
  * API class containing all the calls to the backend api endpoints
  */
@@ -854,7 +854,7 @@ class API {
    * @todo - describe method's signature
    */
   getProjects = ({ token, page }) => {
-    const url = page ? `projects/?${page}` : `projects/`;
+    const url = page ? `projects/?page=${page}&page_size=${PROJECTS_PAGE_SIZE}` : `projects/?page_size=${PROJECTS_PAGE_SIZE}`;
     return this.request({ token, url }).then(res => res.json());
   };
 
