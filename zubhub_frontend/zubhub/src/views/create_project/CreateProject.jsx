@@ -258,7 +258,9 @@ function CreateProject(props) {
       </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
-        <KeyboardBackspaceRoundedIcon />
+        <Link href="/projects" color="inherit" className={classes.backLink}>
+          <KeyboardBackspaceRoundedIcon/>
+        </Link>
         {props.match.params.id && (
           <>
             <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
