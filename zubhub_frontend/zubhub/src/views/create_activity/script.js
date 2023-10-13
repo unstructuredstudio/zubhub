@@ -557,7 +557,6 @@ export class UploadMedia {
 }
 
 export const submitForm = async ({ step1Values, step2Values, props, state, handleSetState, step, publish }) => {
-  console.log(publish, 'PUBLISH');
   let fileUploadResponse;
   const uploadedImages = { images: [], materials_used_image: [], making_steps: {} };
   const imagesToUpload = { images: [], materials_used_image: [], making_steps: {} };

@@ -31,7 +31,6 @@ const useStyles = makeStyles(style);
 function Activity(props) {
   const { activity, t } = { ...props };
 
-  console.log(props, 'rjtjtjtttttt');
   const [tagsShowMore, setTagsShowMore] = useState(false);
   const classes = useStyles();
   const common_classes = useCommonStyles();

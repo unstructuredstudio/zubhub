@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import {
   getActivities,
   getMyActivities,

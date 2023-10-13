@@ -23,16 +23,12 @@ export const setActivity = activity => {
 };
 
 export const getMyActivities = ({ t, token }) => {
-  console.log('getMyActivities', token);
   return async dispatch => {
     return ActivityAPI.getMyActivities(token)
       .then(res => {
-        console.log('result', res);
-
         if (res.status >= 200 && res.status < 300) {
           let response = res.json();
           response.then(all => {
-            console.log('all', all);
             dispatch({
               type: at.SET_ACTIVITIES,
               payload: {
@@ -55,16 +51,12 @@ export const getMyActivities = ({ t, token }) => {
 };
 
 export const getUnPublishedActivities = ({ t, token }) => {
-  console.log('getUnPublishedActivities', token);
   return async dispatch => {
     return ActivityAPI.getUnPublishedActivities(token)
       .then(res => {
-        console.log('result', res);
-
         if (res.status >= 200 && res.status < 300) {
           let response = res.json();
           response.then(all => {
-            console.log('all', all);
             dispatch({
               type: at.SET_ACTIVITIES,
               payload: {
