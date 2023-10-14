@@ -433,10 +433,7 @@ function ProjectDetails(props) {
           PaperProps={{
             className: classes.enlargedImageDialogPaperStyle,
           }}
-          BackdropProps={{
-              // className: classes.enlargedImageDialogBackdropStyle,
-              // styles: { backgroundColor: 'black', opacity: '0.7' }
-            }}
+          BackdropProps
           fullWidth
           scroll='body'
           maxWidth='md'
@@ -450,21 +447,16 @@ function ProjectDetails(props) {
           }
           aria-labelledby={t('projectDetails.ariaLabels.imageDialog')}
         >
-          <IconButton
-            className={classes.cancelEnlargedImageBtn}
-            onClick={() =>
-              setState({
-                ...state,
-                open_enlarged_image_dialog: !open_enlarged_image_dialog,
-              })
-            }
-            aria-label={t('projectDetails.ariaLabels.closeImageDialog')}
-          >
-            <CloseIcon
-              className={classes.enlargedImageDialogCloseIcon}
-            />
-          </IconButton>
           <Box className={classes.enlargedImageContainer}>
+            <IconButton
+              className={classes.cancelEnlargedImageBtn}
+              onClick={() => setState(state => ({...state, open_enlarged_image_dialog: !open_enlarged_image_dialog,}))}
+              aria-label={t('projectDetails.ariaLabels.closeImageDialog')}
+            >
+              <CloseIcon
+                className={classes.enlargedImageDialogCloseIcon}
+              />
+            </IconButton>
             {project.images.length <= 1 ? (
               <img
                 className={classes.enlargedImageStyle}
@@ -484,14 +476,12 @@ function ProjectDetails(props) {
                   prevArrow={<EnlargedImgArrow />}
                 >
                   {project.images.map(image => (
-                    <div>
-                      <img
-                        className={classes.sliderImageStyle}
-                        key={image.public_id}
-                        src={image.image_url}
-                        alt={''}
-                      />
-                    </div>
+                    <img
+                      className={classes.sliderImageStyle}
+                      key={image.public_id}
+                      src={image.image_url}
+                      alt={''}
+                    />
                   ))}
                 </Slider>
             )}

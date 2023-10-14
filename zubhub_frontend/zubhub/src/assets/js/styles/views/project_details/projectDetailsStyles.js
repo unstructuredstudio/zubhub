@@ -190,15 +190,12 @@ const styles = theme => ({
     height: '200px',
   },
   enlargedImageDialogStyle: {
-    padding:'4px',
+    padding: '4px',
   },
   enlargedImageDialogPaperStyle: {
     backgroundColor: 'transparent',
     boxShadow: 'none',
-  },
-  enlargedImageDialogBackdropStyle: {
-    opacity: '0.7',
-    backgroundColor: 'black',
+    width: '100%',
   },
   enlargedImageDialogCloseIcon: {
     color: colors.white,
@@ -206,25 +203,36 @@ const styles = theme => ({
   sliderImageStyle: {
     alignItems: 'center',
     width: '100%',
+    height: 'auto',
   },
   enlargedImageContainer: {
-    display: 'flex',
-    justifyContent:'center',
-    width: '100%',
-    marginTop: '12px',  
+    position: 'relative',
+    margin: 'auto',
+    width: 'fit-content',
+    padding: 12,
   },
   enlargedImageStyle: {
     alignSelf: 'center',
-    padding:'2px',
-    width: '85%',
-    maxWidth: '840px',    
-    height: 'auto',
+    maxWidth: '840px',  
+    padding: 0,
+    [theme.breakpoints.up('980')]: {
+      width: '840px',
+    },
+    [theme.breakpoints.down('980')]: {
+      width: '600px',
+    },
+    [theme.breakpoints.down('770')]: {
+      width: '450px',
+    },
+    [theme.breakpoints.down('550')]: {
+      width: '250px',
+    },
   },
   cancelEnlargedImageBtn: {
     backgroundColor: colors.secondary,
     position: 'absolute',
-    right: '60px',
-    top: '0%',
+    right: 0,
+    top: 0,
     width: '34px',
     height: '34px',
     borderRadius: '100%',
@@ -381,78 +389,78 @@ export const sliderSettings = images_num => ({
 });
 
 export function NextArrow(props) {
-  const { className, style, onClick } = props;
+  const { className, onClick } = props;
+  const nextArrowStyle = {
+    display: 'flex',
+    height: '200px',
+    width: '30px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '0 15px 15px 0',
+    background: 'var(--text-color2)',
+    zIndex: '10',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    backgroundColor: 'var(--primary-color3)',
+    '&:hover': {
+      backgroundColor: 'var(--secondary-color6)',
+    },
+  }
   return (
     <div
       className={className}
-      style={{
-        ...style,
-        display: 'flex',
-        height: '200px',
-        width: '30px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '0 15px 15px 0',
-        background: 'var(--text-color2)',
-        zIndex: '10',
-        boxShadow:
-          '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: 'var(--primary-color3)',
-        '&:hover': {
-          backgroundColor: 'var(--secondary-color6)',
-        },
-      }}
+      style={nextArrowStyle}
       onClick={onClick}
     />
   );
 }
 
 export function PrevArrow(props) {
-  const { className, style, onClick } = props;
+  const { className, onClick } = props;
+  const prevArrowStyle = {
+    display: 'flex',
+    height: '200px',
+    width: '30px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '15px 0 0 15px',
+    background: 'var(--text-color2)',
+    zIndex: '10',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    backgroundColor: 'var(--primary-color3)',
+    '&:hover': {
+      backgroundColor: 'var(--secondary-color6)',
+    },
+  }
   return (
     <div
       className={className}
-      style={{
-        ...style,
-        display: 'flex',
-        height: '200px',
-        width: '30px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '15px 0 0 15px',
-        background: 'var(--text-color2)',
-        zIndex: '10',
-        boxShadow:
-          '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: 'var(--primary-color3)',
-        '&:hover': {
-          backgroundColor: 'var(--secondary-color6)',
-        },
-      }}
+      style={prevArrowStyle}
       onClick={onClick}
     />
   );
 }
 
 export function EnlargedImgArrow (props) {
-  const { className, style, onClick } = props;
+  const { className, onClick } = props;
+  const enlargedImageArrowStyle = {
+    display: 'flex',
+    height: '40px',
+    width: '40px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '100%',
+    background: '#767474',
+    zIndex: '10',
+    margin: '4px',
+    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    backgroundColor: '#00B8C4', '&:hover': { backgroundColor: '#03848C' },
+  }
   return (
     <div
       className={className}
-      style={{
-        ...style,
-        display: 'flex',
-        height: '40px',
-        width: '40px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '100%',
-        background: '#767474',
-        zIndex: '10',
-        margin: '4px',
-        boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-        backgroundColor: '#00B8C4', '&:hover': { backgroundColor: '#03848C' },
-      }}
+      style={enlargedImageArrowStyle}
       onClick={onClick}
     />
   )
