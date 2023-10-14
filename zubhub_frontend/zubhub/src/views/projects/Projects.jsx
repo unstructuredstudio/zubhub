@@ -9,9 +9,16 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { Grid, Box, ButtonGroup, Typography, Container } from '@material-ui/core';
+import { Grid, Box, ButtonGroup, Typography, Container, Chip } from '@material-ui/core';
 
-import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
+import {
+  fetchCategories,
+  fetchPage,
+  fetchCategorisedProject,
+  fetchStaffPicks,
+  updateProjects,
+  updateStaffPicks,
+} from './projectsScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -41,11 +48,16 @@ function Projects(props) {
 
   const [state, setState] = React.useState({
     loading: true,
+    currentCategoryId: null,
+    currentCategoryName: '',
+    showProjects: true,
+    clicked: false,
   });
 
   React.useEffect(() => {
     fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
+    fetchCategories(props);
   }, []);
 
   const handleSetState = obj => {
@@ -62,12 +74,13 @@ function Projects(props) {
   const staff_picks = props.projects.staff_picks;
   const { t } = props;
 
+  const category = props.projects.categories;
   if (loading) {
     return <LoadingPage />;
   } else if (projects && projects.length >= 0) {
     return (
       <>
-        {projects.length > 0 ? (
+        {projects.length > 0 || state.currentCategoryId ? (
           <Box className={classes.root}>
             {!props.auth?.token && hero && hero.id ? (
               <Box className={classes.heroSectionStyle}>
@@ -134,6 +147,27 @@ function Projects(props) {
               <Grid spacing={3} container>
                 {staff_picks && staff_picks.length > 0 ? (
                   <Grid item xs={12}>
+                    <Grid className={classes.chipContainerStyle}>
+                      {category.map(currentCategory => (
+                        <Chip
+                          key={currentCategory.id}
+                          label={currentCategory.name}
+                          className={`${classes.chipStyle} ${state.clicked ? classes.clickedChipStyle : ''}`}
+                          variant="outlined"
+                          clickable
+                          color=""
+                          onClick={(e, category_id = currentCategory.id, category_name = currentCategory.name) => {
+                            handleSetState({
+                              loading: true,
+                              currentCategoryId: category_id,
+                              currentCategoryName: category_name,
+                              clickable: true,
+                            });
+                            handleSetState(fetchCategorisedProject(1, category_id, props));
+                          }}
+                        />
+                      ))}
+                    </Grid>
                     <Typography
                       gutterBottom
                       component="h2"
@@ -141,28 +175,34 @@ function Projects(props) {
                       color="textPrimary"
                       className={classes.titleStyle}
                     >
-                      {t('projects.allProjects')}
+                      {t('projects.allProjects')} : {state.currentCategoryName} 
                     </Typography>
                   </Grid>
                 ) : null}
-                {projects.map((project, index) => (
-                  <Grid
-                    key={project.id}
-                    xs={12}
-                    sm={6}
-                    lg={4}
-                    item
-                    align="center"
-                    // className={classes.projectGridStyle}
-                  >
-                    <Project
-                      project={project}
+                {state.currentCategoryId !== null && projects.length === 0 ? (
+                  <Typography className={classes.titleStyle} align="center">
+                    No Projects in this category.
+                  </Typography>
+                ) : (
+                  projects.map((project, index) => (
+                    <Grid
                       key={project.id}
-                      updateProjects={res => handleSetState(updateProjects(res, props, toast))}
-                      {...props}
-                    />
-                  </Grid>
-                ))}
+                      xs={12}
+                      sm={6}
+                      lg={4}
+                      item
+                      align="center"
+                      // className={classes.projectGridStyle}
+                    >
+                      <Project
+                        project={project}
+                        key={project.id}
+                        updateProjects={res => handleSetState(updateProjects(res, props, toast))}
+                        {...props}
+                      />
+                    </Grid>
+                  ))
+                )}
               </Grid>
               <div aria-label={t('projects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
                 {prev_page ? (
@@ -268,6 +308,12 @@ const mapDispatchToProps = dispatch => {
     },
     setStaffPicks: args => {
       return dispatch(ProjectActions.setStaffPicks(args));
+    },
+    getCategories: args => {
+      return dispatch(ProjectActions.getCategories(args));
+    },
+    getCategorisedProject: args => {
+      return dispatch(ProjectActions.getCategorisedProject(args));
     },
   };
 };
