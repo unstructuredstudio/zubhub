@@ -159,7 +159,6 @@ const styles = theme => ({
   },
   heroButtonStyle: {
     textTransform: 'none',
-    padding: '0 1em',
     fontSize: '1.456rem',
     fontWeight: 700,
     marginRight: '1em',
@@ -172,6 +171,7 @@ const styles = theme => ({
   [theme.breakpoints.down('sm')]: {
     height:'fit-content',
     padding: '0.1em 0.7em',
+    marginBottom: '3rem',
     width: 'fit-content',
     fontSize: "1.2rem"
   },
