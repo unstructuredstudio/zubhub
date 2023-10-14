@@ -1,5 +1,7 @@
 import { colors } from "../../../colors";
 import zIndex from "@material-ui/core/styles/zIndex";
+import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 
 const styles = theme => ({
   root: {
@@ -344,7 +346,54 @@ const styles = theme => ({
   dialogButtonContainer: {
     padding: '16px 24px',
   },
+  prevArrowStyle: {
+    display: 'flex',
+    height: '200px',
+    width: '30px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '15px 0 0 15px',
+    background: 'var(--text-color2)',
+    zIndex: '10',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    backgroundColor: 'var(--primary-color3)',
+    '&:hover': {
+      backgroundColor: 'var(--secondary-color6)',
+    },
+  },
+  nextArrowStyle: {
+    display: 'flex',
+    height: '200px',
+    width: '30px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '0 15px 15px 0',
+    background: 'var(--text-color2)',
+    zIndex: '10',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    backgroundColor: 'var(--primary-color3)',
+    '&:hover': {
+      backgroundColor: 'var(--secondary-color6)',
+    },
+  },
+  enlargedImageArrowStyle: {
+    display: 'flex',
+    height: '40px',
+    width: '40px',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '100%',
+    background: '#767474',
+    zIndex: '10',
+    margin: '4px',
+    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    backgroundColor: '#00B8C4', '&:hover': { backgroundColor: '#03848C' },
+  }
 });
+
+const useStyles = makeStyles(styles);
 
 export const sliderSettings = images_num => ({
   className: 'center slider detail-page-slider',
@@ -390,26 +439,10 @@ export const sliderSettings = images_num => ({
 
 export function NextArrow(props) {
   const { className, onClick } = props;
-  const nextArrowStyle = {
-    display: 'flex',
-    height: '200px',
-    width: '30px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '0 15px 15px 0',
-    background: 'var(--text-color2)',
-    zIndex: '10',
-    boxShadow:
-      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-    backgroundColor: 'var(--primary-color3)',
-    '&:hover': {
-      backgroundColor: 'var(--secondary-color6)',
-    },
-  }
+  const classes = useStyles();
   return (
     <div
-      className={className}
-      style={nextArrowStyle}
+      className={clsx(className, classes.nextArrowStyle)}
       onClick={onClick}
     />
   );
@@ -417,26 +450,10 @@ export function NextArrow(props) {
 
 export function PrevArrow(props) {
   const { className, onClick } = props;
-  const prevArrowStyle = {
-    display: 'flex',
-    height: '200px',
-    width: '30px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '15px 0 0 15px',
-    background: 'var(--text-color2)',
-    zIndex: '10',
-    boxShadow:
-      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-    backgroundColor: 'var(--primary-color3)',
-    '&:hover': {
-      backgroundColor: 'var(--secondary-color6)',
-    },
-  }
+  const classes = useStyles();
   return (
     <div
-      className={className}
-      style={prevArrowStyle}
+      className={clsx(className, classes.prevArrowStyle)}
       onClick={onClick}
     />
   );
@@ -444,23 +461,10 @@ export function PrevArrow(props) {
 
 export function EnlargedImgArrow (props) {
   const { className, onClick } = props;
-  const enlargedImageArrowStyle = {
-    display: 'flex',
-    height: '40px',
-    width: '40px',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '100%',
-    background: '#767474',
-    zIndex: '10',
-    margin: '4px',
-    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-    backgroundColor: '#00B8C4', '&:hover': { backgroundColor: '#03848C' },
-  }
+  const classes = useStyles();
   return (
     <div
-      className={className}
-      style={enlargedImageArrowStyle}
+      className={clsx(className, classes.enlargedImageArrowStyle)}
       onClick={onClick}
     />
   )
