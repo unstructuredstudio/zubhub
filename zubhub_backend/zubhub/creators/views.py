@@ -39,7 +39,7 @@ from .serializers import (CreatorGroupSerializer, CreatorListSerializer, Creator
                           CreatorSerializer, LocationSerializer,
                           VerifyPhoneSerializer, CustomRegisterSerializer,
                           ConfirmGroupInviteSerializer, CreatorGroupMinimalSerializer,
-                          AddGroupMembersSerializer, CreatorGroupMembershipSerializer, TemplateProfileSerializer)
+                          AddGroupMembersSerializer, CreatorGroupMembershipSerializer, TeamProfileSerializer)
 from .pagination import CreatorNumberPagination, CreatorGroupNumberPagination
 from .utils import (perform_send_phone_confirmation,
                     perform_send_email_confirmation, process_avatar, process_group_avatar,
