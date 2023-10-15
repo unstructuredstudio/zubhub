@@ -371,7 +371,7 @@ class CreatorGroupSerializer(serializers.ModelSerializer):
 
         return instance
 
-class TemplateProfileSerializer(serializers.Serializer):
+class TeamProfileSerializer(serializers.Serializer):
     groupname = serializers.CharField()
     description = serializers.CharField()
     projects = serializers.ListField(child=serializers.CharField())
