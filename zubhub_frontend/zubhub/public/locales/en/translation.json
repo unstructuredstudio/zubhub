@@ -642,7 +642,10 @@
       "placeholder1": "Tell us more about you by clicking on the edit button at the top of the page 😀!",
       "placeholder2": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
-    "activityLog": "Activity Log",
+    "activityLog": {
+      "activity": "Activity Log",
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+    },
     "team": "Team",
     "createteam": "Create Team",
     "badge": {

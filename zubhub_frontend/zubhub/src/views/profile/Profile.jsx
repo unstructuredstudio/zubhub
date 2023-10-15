@@ -94,7 +94,6 @@ function Profile(props) {
     drafts: [],
     badge_tags: [],
   });
-  
   React.useEffect(() => {
   try{
     let activitylogObj= new API()
@@ -299,17 +298,18 @@ function Profile(props) {
 
           <Paper className={classes.profileLowerStyle}>
             <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
-              {t('profile.activityLog')}
+              {t('profile.activityLog.activity')}
             </Typography>
                   <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
 
                     {
+                      userActivity.length ? 
                       userActivity.map(activity => (
                         <UserActivitylog 
                         activity={activity}
                         key={activity.id}
                         />
-                        ))
+                        )) : (<Box>{t('profile.activityLog.addActivityLog')}</Box>)
                       }
                   </div>
             </Paper>
