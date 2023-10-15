@@ -28,6 +28,8 @@ from .serializers import (ProjectSerializer, ProjectListSerializer,
                           CommentSerializer, CategorySerializer, TagSerializer,
                           StaffPickSerializer)
 from .pagination import ProjectNumberPagination 
+from .filter import ProjectCategoryFilter
+
 
 class ProjectCreateAPIView(CreateAPIView):
     """
@@ -160,6 +162,7 @@ class ProjectListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
     pagination_class = ProjectNumberPagination
+    filter_backends = [ProjectCategoryFilter]
 
     def get_queryset(self):
         all = Project.objects.prefetch_related('publish__visible_to').all()

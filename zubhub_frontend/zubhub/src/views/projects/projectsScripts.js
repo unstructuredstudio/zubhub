@@ -8,6 +8,27 @@
 };
 
 /**
+ * @function fetchCategorisedProject
+ * @author Aqsa Aqeel <aqsaaqeelwork@gmail.com>
+ *
+ * @todo - describe function's signature
+ */ export const fetchCategorisedProject = (page, category_id, props) => {
+  console.log(props);
+  return props.getCategorisedProject({page, category_id, t: props.t, token: props.auth.token });
+};
+
+/**
+ * @function fetchCategories
+ * @author Aqsa Aqeel <aqsaaqeelwork@gmail.com>
+ *
+ * @todo - describe function's signature
+ */ export const fetchCategories = (props) => {
+  // console.log(props);
+  return props.getCategories();
+};
+
+
+/**
  * @function fetchStaffPicks
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *

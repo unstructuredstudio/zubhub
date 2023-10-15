@@ -271,6 +271,28 @@ const styles = theme => ({
     maxWidth: '2000px',
     width: '100%',
   },
+  chipContainerStyle:{
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center', 
+  },
+  chipStyle:{
+    border: 'solid 1px black',
+    margin:'0.8rem 1rem',
+    padding: '1rem 1.5rem',
+    radius: '25px',
+    '&.MuiChip-root:hover, &.MuiChip-root:focus': {
+      backgroundColor: 'var(--primary-color3)',
+      color: 'white',
+      border: 'none',
+    },
+    '&.MuiChip-root:active':{
+      color: 'white'
+    }
+  },
+  clickedChipStyle:{
+    backgroundColor: 'var(--primary-color3)'
+  },
   buttonGroupStyleAlternative: {
     padding: '7px 21px',
   },

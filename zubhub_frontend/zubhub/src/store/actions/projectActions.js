@@ -24,7 +24,6 @@ export const setProjects = projects => {
  * @todo - describe function's signature
  */
 export const createProject = props => {
-
   return () => {
     return API.createProject(props).then(res => {
       if (!res.id) {
@@ -70,7 +69,7 @@ export const updateProject = props => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        return res
+        return res;
         // toast.success(props.t('createProject.updateToastSuccess'));
       }
     });
@@ -209,17 +208,55 @@ export const getProjects = args => {
 };
 
 /**
+ * @function getCategorisedProjects
+ * @author Aqsa Aqeel <aqsaaqeelwork@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const getCategorisedProject = args => {
+  return dispatch => {
+    return API.getCategorisedProject(args)
+      .then(res => {
+        if (Array.isArray(res.results)) {
+          dispatch({
+            type: 'CATEGORIZED_PROJECT',
+            payload: { all_projects: res },
+          });
+          return { loading: false };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projects.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
+/**
  * @function getCategories
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
 export const getCategories = args => {
-  return () => {
+  return dispatch => {
     return API.getCategories()
       .then(res => {
         if (Array.isArray(res) && res.length > 0 && res[0].name) {
-          return { categories: res, loading: false };
+          dispatch({
+            type: 'GET_CATEGORIES',
+            payload: { categories: res },
+          });
+          return { loading: false };
         } else {
           res = Object.keys(res)
             .map(key => res[key])

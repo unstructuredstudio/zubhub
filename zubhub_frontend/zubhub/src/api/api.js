@@ -858,6 +858,17 @@ class API {
     return this.request({ token, url }).then(res => res.json());
   };
 
+    /**
+   * @method getCategorisedProject
+   * @author Aqsa Aqeel <aqsaaqeelwork@gmail.com>
+   *
+   * @todo - describe method's signature
+   */
+    getCategorisedProject = ({ token, page, category_id }) => {
+      const url = category_id ? `projects/?category_id=${category_id}&page=${page}` : `projects/`;
+      return this.request({ token, url }).then(res => res.json());
+    };
+
   /**
   * @method getActivity
   * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
