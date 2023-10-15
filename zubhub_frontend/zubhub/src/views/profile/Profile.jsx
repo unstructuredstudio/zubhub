@@ -94,7 +94,6 @@ function Profile(props) {
     drafts: [],
     badge_tags: [],
   });
-  
   React.useEffect(() => {
   try{
     let activitylogObj= new API()
@@ -304,12 +303,13 @@ function Profile(props) {
                   <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
 
                     {
+                      userActivity.length ? 
                       userActivity.map(activity => (
                         <UserActivitylog 
                         activity={activity}
                         key={activity.id}
                         />
-                        ))
+                        )) : (<Box>Seems like there isn't any activity on your account yet! Get involved to see activity logs!</Box>)
                       }
                   </div>
             </Paper>
