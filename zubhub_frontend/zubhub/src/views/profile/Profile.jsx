@@ -298,7 +298,7 @@ function Profile(props) {
 
           <Paper className={classes.profileLowerStyle}>
             <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
-              {t('profile.activityLog')}
+              {t('profile.activityLog.activity')}
             </Typography>
                   <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
 
@@ -309,7 +309,7 @@ function Profile(props) {
                         activity={activity}
                         key={activity.id}
                         />
-                        )) : (<Box>Seems like there isn't any activity on your account yet! Get involved to see activity logs!</Box>)
+                        )) : (<Box>{t('profile.activityLog.addActivityLog')}</Box>)
                       }
                   </div>
             </Paper>
