@@ -148,7 +148,7 @@ class TeamProfileAPIView(RetrieveAPIView):
     """
 
     # queryset = CreatorGroup.objects.filter(is_active=True)
-    serializer_class = TemplateProfileSerializer
+    serializer_class = TeamProfileSerializer
     lookup_field = "groupname"
     permission_classes = [AllowAny]
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
