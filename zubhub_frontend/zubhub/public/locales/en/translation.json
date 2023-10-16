@@ -309,7 +309,8 @@
       "body2":"Create projects, create activities, share ideas, and connect with the global community.",
       "button": "Get Started, It's Free!",
       "button2": "Log In"
-    }
+    },
+    "projectsFromRecent": "Projects from our recent creative learning workshops"
   },
 
   "project": {
@@ -1150,5 +1151,20 @@
       "linkedProjects": "Linked Projects",
       "drafts": "drafts"
     }
+  },
+  "categories": {
+    "Featured": "Featured",
+     "Animations": "Animations",
+     "Art": "Art",
+     "Coding": "Coding",
+     "Electronics": "Electronics",
+     "Games": "Games",
+     "Mechanical": "Mechanical",
+     "Music": "Music",
+     "Robotics": "Robotics",
+     "Science": "Science",
+     "Stories": "Stories",
+     "Structures": "Structures",
+     "Toys": "Toys"
   }
 }

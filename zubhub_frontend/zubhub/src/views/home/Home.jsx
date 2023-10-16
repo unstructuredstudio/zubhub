@@ -16,8 +16,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { Grid, Box, ButtonGroup, Typography, Container } from '@material-ui/core';
+import ProjectListFilter from '../../components/project_list_filter/ProjectListFilter';
 
-import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
+import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks, fetchCategories } from './projectsScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
@@ -54,11 +55,13 @@ function Projects(props) {
   const [state, setState] = React.useState({
     loading: true,
     isMobileView: false,
+    activeCategoryId: 11
   });
 
   React.useEffect(() => {
     fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
+    handleSetState(fetchCategories(null, props));
 
     const checkMobileView = () => {
       setState((prevState) => ({
@@ -89,9 +92,16 @@ function Projects(props) {
     previous: prev_page,
     next: next_page,
   } = props.projects.all_projects;
-  const { hero } = props.projects;
+  const { hero, categories } = props.projects;
   const staff_picks = props.projects.staff_picks;
   const { t } = props;
+
+  console.log("categories: " + JSON.stringify(projects));
+
+  const setActiveCategoryId = (categoryId) => {
+    console.log(categoryId);
+    handleSetState({ activeCategoryId: categoryId });
+  }
 
   if (loading) {
     return <LoadingPage />;
@@ -101,80 +111,69 @@ function Projects(props) {
       {props.auth.username ? (props.history.push('/projects')) : ''}
         {projects.length > 0 ?
           (
-            <Box className={classes.root}>
-              {hero && hero.id ? (
-                 <Box className={classes.heroSectionStyle}>
-                 <Box className={classes.heroContainerStyle}>
-                   {state.isMobileView && hero && hero.id && (
-                     <Box className={classes.heroImageContainerStyle}>
-                       <img
-                         className={classes.heroImageStyle}
-                         src={hero.image_url}
-                         alt=""
-                       />
-                     </Box>
-                   )}
-                   <Box className={classes.heroMessageContainerStyle}>
-                     <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
-                       {t('projects.1')}
-                     </Typography>
-                     <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
-                       {t('projects.2')}
-                     </Typography>
-                     <br />
-                     <Typography className={classes.heroMessagePrimaryStyle}>
-                       {hero.title}
-                     </Typography>
-                     <br />
-                     <CustomButton
-                       className={classes.heroButtonStyle}
-                       size="small"
-                       primaryButtonStyle
-                       onClick={() => props.history.push('/login')}
-                     >
-                       {t('projects.shareProject')}
-                     </CustomButton>
-                   </Box>
-                   {!state.isMobileView && hero && hero.id && (
-                     <Box className={classes.heroImageContainerStyle}> 
-                       <img
-                         className={classes.heroImageStyle}
-                         src={hero.image_url}
-                         alt=""
-                       />
-                     </Box>
-                   )}
-                 </Box>
-               </Box>
-              ) : null}
-            
-          <Box className={classes.mainContainerStyle}>
-            {staff_picks &&
-              staff_picks.map(staff_pick => (
-                <StaffPick
-                  key={staff_pick.id}
-                  staff_pick={staff_pick}
-                  updateProjects={res =>
+            <>
+                <Box className={classes.root}>
+                  {hero && hero.id ? (
+                    <Box className={classes.heroSectionStyle}>
+                    <Box className={classes.heroContainerStyle}>
+                      {state.isMobileView && hero && hero.id && (
+                        <Box className={classes.heroImageContainerStyle}>
+                          <img
+                            className={classes.heroImageStyle}
+                            src={hero.image_url}
+                            alt=""
+                          />
+                        </Box>
+                      )}
+                      <Box className={classes.heroMessageContainerStyle}>
+                        <br />
+                        <Typography className={classes.heroMessageSecondaryStyle}>
+                          {t('projects.1')}
+                        </Typography>
+                        <br />
+                        <Typography className={classes.heroMessageSecondaryStyle}>
+                          {t('projects.2')}
+                        </Typography>
+                        <br />
+                        <Typography className={classes.heroMessagePrimaryStyle}>
+                          {hero.title}
+                        </Typography>
+                        <br />
+                        <CustomButton
+                          className={classes.heroButtonStyle}
+                          size="small"
+                          primaryButtonStyle
+                          onClick={() => props.history.push('/login')}
+                        >
+                          {t('projects.shareProject')}
+                        </CustomButton>
+                      </Box>
+                      {!state.isMobileView && hero && hero.id && (
+                        <Box className={classes.heroImageContainerStyle}> 
+                          <img
+                            className={classes.heroImageStyle}
+                            src={hero.image_url}
+                            alt=""
+                          />
+                        </Box>
+                      )}
+                    </Box>
+                  </Box>
+                  ) : null}
+                </Box>
+                <ProjectListFilter
+                  props={props} 
+                  categories={categories} 
+                  projects={projects}
+                  updateProjects={res => handleSetState(updateProjects(res, props, toast))}
+                  staff_picks={staff_picks}
+                  updateStaffPickedProjects={(res, staffPickId ) =>
                     handleSetState(
-                      updateStaffPicks(res, staff_pick.id, props, toast),
+                      updateStaffPicks(res, staffPickId, props, toast),
                     )
-                  }
-                  {...props}
+                  }  
                 />
-              ))}
-              <CustomButton
-                  className={classes.heroBtnStyle}
-                  size="small"
-                  primaryButtonStyle
-                  onClick={() => props.history.push('/login')}
-                >
-                  {t('projects.login')}
-              </CustomButton>
-
-          </Box>
-            </Box>
+            </>
           ) : (
             <Box className={classes.root}>
               <Container className={classes.welcomeContainerStyle}>
@@ -218,7 +217,6 @@ function Projects(props) {
               </Container>
             </Box>
           )}
-          
           <Box className={classes.SectionStyle}>
                   <Box className={classes.heroContainerStyle}>
                   {state.isMobileView ? '' :(
@@ -269,8 +267,7 @@ function Projects(props) {
                         />
                     </Box>):''}
                   </Box>
-                </Box>
-
+                </Box>   
           <Box className={classes.SectionStyle}>
             <Box className={classes.heroContainerStyle}>
               <Box className={classes.MessageContainerStyle}>
@@ -487,6 +484,7 @@ Projects.propTypes = {
   setProjects: PropTypes.func.isRequired,
   toggleLike: PropTypes.func.isRequired,
   toggleSave: PropTypes.func.isRequired,
+  getCategories: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -515,6 +513,9 @@ const mapDispatchToProps = dispatch => {
     },
     setStaffPicks: args => {
       return dispatch(ProjectActions.setStaffPicks(args));
+    },
+    getCategories: page => {
+      return dispatch(ProjectActions.getCategories(page));
     },
   };
 };
