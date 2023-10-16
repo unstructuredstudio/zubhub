@@ -127,7 +127,7 @@ const styles = theme => ({
   heroMessageContainerStyle: {
     flexGrow: 1,
     color: 'white',
-    maxWidth: '37.813rem',
+    maxWidth: '37.8rem',
   },
   heroMessageSecondaryStyle: {
     fontSize: '2.2rem',
@@ -159,15 +159,14 @@ const styles = theme => ({
   },
   heroButtonStyle: {
     textTransform: 'none',
-    fontSize: '1.456rem',
+    fontSize: '1.4rem',
     fontWeight: 700,
     marginRight: '1em',
     marginTop: '1.2em',
     width: 'fit-content',
     height: '3.95rem',
-    padding: '1.04rem 2.08rem 1.04rem 2.08rem',
-    borderRadius: '1.87rem',
-    gap: '1.04rem',
+    padding: '1rem 2rem',
+    borderRadius: '1.8rem',
   [theme.breakpoints.down('sm')]: {
     height:'fit-content',
     padding: '0.1em 0.7em',

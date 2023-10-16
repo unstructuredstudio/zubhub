@@ -26,6 +26,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
   const [mode, setMode] = useState('');
   const [creatorValue, setCreatorValue] = useState({});
   const [checked, setChecked] = useState(false);
+  const [disableCategorySelection, setDisableCategorySelection] = useState(false);
 
   useEffect(() => {
     getCategories(props).then(cats => setCategories(cats.categories));
@@ -63,29 +64,54 @@ export default function Step3({ formik, handleBlur, ...props }) {
         What category does your project belong to? <span className={commonClasses.colorRed}>*</span>
       </label>
       <Typography style={{ marginBottom: 10 }}>
-        Select any of the categories that best describe your project. Select none if you are unsure about your category.
+        Select any of the categories that best describe your project.
       </Typography>
 
       <Grid container spacing={3} className={classes.pillContainer}>
         {categories.map(cat => {
           let selected =
             formik.values.category.filter(selectedCategory => selectedCategory.name === cat.name).length > 0;
-          const color = selected ? colors.primary : isLimit ? '#D9DEE2' : colors.light;
+          const color = selected ? colors.primary : (isLimit || disableCategorySelection) ? '#D9DEE2' : colors.light;
           return (
             <Grid item xs={6} md={4} key={cat.name}>
               <div
-                onClick={() => (isLimit && !selected ? null : handleChange(cat, selected))}
+                onClick={() =>
+                  (isLimit && !selected) || disableCategorySelection ? null : handleChange(cat, selected)
+                }
                 className={classes.pill}
                 style={{ border: `solid 1px ${color}` }}
               >
                 <Checkbox className={commonClasses.checkbox} checked={selected} style={{ color, borderWidth: 1 }} />
-                <Typography className={commonClasses.inputText} style={{ ...(isLimit && !selected && { color }) }}>
+                <Typography
+                  className={commonClasses.inputText}
+                  style={{ ...((isLimit && !selected) || disableCategorySelection && { color }) }}
+                >
                   {cat.name}
                 </Typography>
               </div>
             </Grid>
           );
         })}
+        <Grid item xs={6} md={4}>
+          <div  className={classes.pill} 
+              style={{ border: `solid 1px ${disableCategorySelection || isLimit ? '#D9DEE2' : colors.light}` }}
+          >
+            <Checkbox
+              id="disableCategorySelection"
+              className={commonClasses.checkbox}
+              checked={disableCategorySelection}
+              style={{ color: disableCategorySelection ? '#D9DEE2' : colors.light, borderWidth: 1 }}
+              onChange={() => setDisableCategorySelection(!disableCategorySelection)}
+            />
+            <Typography
+              className={commonClasses.inputText}
+              style={{ color: (disableCategorySelection || isLimit) ? '#D9DEE2' : colors.light}}
+
+            >
+              None
+            </Typography>
+          </div>
+        </Grid>
       </Grid>
 
       {mode === 'team' && (
