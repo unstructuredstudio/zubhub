@@ -9,7 +9,9 @@ export const colors = {
     light: '#C4C4C4',
     white: '#fff',
     green: '#22C55E',
-    red: '#f44336'
+    red: '#f44336',
+    'blue-light': '#00B8C433',
+    'blue-dark': '#7BA8AB'
 }
 
 export const borders = {
