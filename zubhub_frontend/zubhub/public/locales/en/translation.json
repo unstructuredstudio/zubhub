@@ -854,7 +854,6 @@
   },
   "editTeam": {
     "label": "Edit Team",
-    "secondaryText": "Do you want to make some changes to this team? Go ahead!",
     "inputs": {
       "name": {
         "label": "Team Name",
@@ -864,19 +863,18 @@
         }
       },
       "bio": {
-        "label": "Bio",
+        "label": "About Team",
         "description": "Tell us about your team!"
       }
     },
     "actions": {
-      "submit": "Save Changes",
-      "cancel": "Discard Changes"
+      "submit": "Save Changes"
     },
-    "or": "OR",
     "delete": {
       "label": "Delete Team",
       "question": "Delete Team Profile?",
-      "information": "Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.",
+      "information1": "Deleting your team will remove all members and admins from this team. Deleting a team is permanent and data associated with the team cannot be recovered.",
+      "information2": "Deleting your team will also delete any job or talent search associated with this team.",
       "confirmation": "I want to delete this team’s profile",
       "buttons": {
         "confirm": "Delete",

@@ -29,7 +29,7 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-
+import { ArrowBack, ErrorOutline } from '@material-ui/icons'
 import {
   deleteAccount,
   editProfile,
@@ -41,7 +41,7 @@ import {
   validationSchema,
 } from './editTeamScripts';
 
-import styles from '../../assets/js/styles/views/edit_profile/editProfileStyles';
+import styles from '../../assets/js/styles/views/edit_team/editTeamStyles.js';
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
@@ -85,7 +85,7 @@ function EditTeam(props) {
   const { locations, tool_tip_open, open_delete_account_modal,dialog_error } = state;
   const { t } = props;
   const handleButtonClick = () => {
-    handleSetState(handleToggleDeleteAccountModal(groupname,props,state));
+    handleSetState(handleToggleDeleteAccountModal(state));
   };
 
   return (
@@ -110,15 +110,7 @@ function EditTeam(props) {
                 >
                   {t('editTeam.label')}
                 </Typography>
-                <Typography
-                  className={classes.descStyle}
-                  variant="body2"
-                  color="textSecondary"
-                  component="p"
-                >
-                  {t('editTeam.secondaryText')}
-                </Typography>
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Box
                       component="p"
@@ -136,23 +128,25 @@ function EditTeam(props) {
                     </Box>
                   </Grid>
                   <Grid item xs={12} sm={12} md={12}>
+                    <Typography
+                      className={classes.descStyle}
+                      variant="h6"
+                      color="textPrimary"
+                      component="p"
+                    >
+                      {t('editTeam.inputs.name.label')}
+                    </Typography>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
                       variant="outlined"
                       size="small"
                       fullWidth
-                      margin="normal"
+                      margin="dense"
                       error={
                         (props.status && props.status['groupname']) ||
                         (props.touched['groupname'] && props.errors['groupname'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="groupname"
-                      >
-                        {t('editTeam.inputs.name.label')}
-                      </InputLabel>
                       <ClickAwayListener
                         onClickAway={() => handleSetState(handleTooltipClose())}
                       >
@@ -179,7 +173,6 @@ function EditTeam(props) {
                             onClick={() => handleSetState(handleTooltipOpen())}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
-                            label={t('editTeam.inputs.name.label')}
                           />
                         </Tooltip>
                       </ClickAwayListener>
@@ -195,24 +188,26 @@ function EditTeam(props) {
                       </FormHelperText>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Typography
+                      className={classes.descStyle}
+                      variant="h6"
+                      color="textPrimary"
+                      component="p"
+                    >
+                      {t('editTeam.inputs.bio.label')}
+                    </Typography>
                     <FormControl
                       className={clsx(classes.margin, classes.textField)}
                       variant="outlined"
                       size="small"
                       fullWidth
-                      margin="small"
+                      margin="dense"
                       error={
                         (props.status && props.status['description']) ||
                         (props.touched['description'] && props.errors['description'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="description"
-                      >
-                        {t('editTeam.inputs.bio.label')}
-                      </InputLabel>
                       <OutlinedInput
                         ref={refs.description_el}
                         className={clsx(classes.customInputStyle)}
@@ -222,23 +217,15 @@ function EditTeam(props) {
                         multiline
                         rows={6}
                         rowsMax={6}
+                        placeholder={t('editTeam.bio.description')}
                         value={props.values?.description ?? ''}
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
-                        label={t('editTeam.inputs.bio.label')}
                       />
                       <FormHelperText
                         className={classes.fieldHelperTextStyle}
                         error
                       >
-                        <Typography
-                          color="textSecondary"
-                          variant="caption"
-                          component="span"
-                          className={classes.fieldHelperTextStyle}
-                        >
-                          {t('editTeam.inputs.bio.description')}
-                        </Typography>
                         {(props.status && props.status['description']) ||
                           (props.touched['description'] &&
                             props.errors['description'] &&
@@ -250,6 +237,7 @@ function EditTeam(props) {
                   </Grid>
                   <Grid item xs={12}>
                     <CustomButton
+                      className={classes.customButtonStyle}
                       variant="contained"
                       size="large"
                       primaryButtonStyle
@@ -260,52 +248,54 @@ function EditTeam(props) {
                       {t('editTeam.actions.submit')}
                     </CustomButton>
                   </Grid>
-                  </Grid>
-                  <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <Link to={`/teams/${groupname}`} className={classes.textDecorationNone}>
-                      <CustomButton
-                        variant="outlined"
-                        size="large"
-                        secondaryButtonStyle
-                        customButtonStyle
-                        fullWidth
-                      >
-                        {t('editTeam.actions.cancel')}
-                      </CustomButton>
-                    </Link>
-                  </Grid>
-                  </Grid>
+                </Grid>
               </form>
-              <Grid container spacing={3}>
+              <Grid container spacing={2} className={classes.marginTop}>
                 <Grid item xs={12}>
-                  <Box className={classes.center}>
-                    <Divider className={classes.divider} />
+                  <Typography
+                    className={classes.descStyle}
+                    variant="h6"
+                    color="textPrimary"
+                    component="p"
+                  >
+                    {t('editTeam.delete.question')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography
+                    className={classes.bodyStyle}
+                    variant="body2"
+                    component="p"
+                    color="textPrimary"
+                  >
+                    {t('editTeam.delete.information1')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="body2"
+                    component="p"
+                    color="textPrimary"
+                    className={classes.bodyStyle}
+                  >
+                    {t('editTeam.delete.information2')}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Link 
+                    href="#!"
+                    onClick={handleButtonClick}
+                    className={classes.textDecorationNone}
+                  >
                     <Typography
                       variant="body2"
-                      color="textSecondary"
                       component="p"
+                      color="textPrimary"
+                      className={clsx(classes.bodyStyle, classes.linkStyle)}
                     >
-                      {t('editTeam.or')}
+                    {t('editTeam.delete.confirmation')}
                     </Typography>
-                    <Divider className={classes.divider} />
-                  </Box>
-                </Grid>
-              </Grid>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <CustomButton
-                    variant="outlined"
-                    size="large"
-                    secondaryButtonStyle
-                    dangerButtonStyle
-                    fullWidth
-                    onClick={() =>
-                      handleSetState(handleToggleDeleteAccountModal(state))
-                    }
-                  >
-                    {t('editTeam.delete.label')}
-                  </CustomButton>
+                  </Link>
                 </Grid>
               </Grid>
             </CardContent>
@@ -313,36 +303,46 @@ function EditTeam(props) {
         </Card>
       </Container>
     </Box>
+      <Grid container spacing={3}>
           <Dialog
+            maxWidth="sm"
             open={open_delete_account_modal}
             onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
             aria-labelledby={t('editTeam.delete.ariaLabels.deleteTeam')}
+            PaperProps={{className: classes.dialogStyle}}
           >
+            <div className={classes.dialogIconContainer}>
+              <ErrorOutline className={classes.dialogIcon} />
+            </div>
             <DialogTitle id="delete-project">
-              {t('editTeam.delete.question')}
+              <Typography
+                variant="h5"
+                component="h2"
+                className={classes.dialogTitleStyle}
+              >
+                {t('editTeam.delete.question')}              
+              </Typography>
             </DialogTitle>
-            <Box
-              component="p"
-              className={dialog_error !== null && classes.errorBox}
-            >
-              {dialog_error !== null && (
-                <Box component="span" className={classes.error}>
-                  {dialog_error}
-                </Box>
-              )}
-            </Box>{' '}
             <DialogContent>
-              <Typography>{t('editTeam.delete.information')}</Typography>
+              <Typography
+                className={classes.dialogDescStyle}
+                variant="body2"
+                component="p"
+                color="textPrimary"
+              >
+                {t('editTeam.delete.information1')}
+              </Typography>
             </DialogContent>
-            <DialogActions>
+            <DialogActions className={classes.dialogActionsStyle}>
               <CustomButton
                 variant="outlined"
                 onClick={() =>
                   handleSetState(handleToggleDeleteAccountModal(state))
                 }
-                color="primary"
+                className={classes.iconButton}
                 secondaryButtonStyle
               >
+              <ArrowBack className={classes.buttonIcon} />
                 {t('editTeam.delete.buttons.cancel')}
               </CustomButton>
               <CustomButton
@@ -350,13 +350,13 @@ function EditTeam(props) {
                 onClick={e =>
                   handleSetState(deleteAccount(groupname, props, state))
                 }
-                dangerButtonStyle
-                customButtonStyle
+                primaryButtonStyle
               >
                 {t('editTeam.delete.buttons.confirm')}
               </CustomButton>
             </DialogActions>
           </Dialog>
+      </Grid>
     </>
   );
 }
