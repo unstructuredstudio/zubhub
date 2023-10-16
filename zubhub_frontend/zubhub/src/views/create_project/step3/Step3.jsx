@@ -63,7 +63,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
         What category does your project belong to? <span className={commonClasses.colorRed}>*</span>
       </label>
       <Typography style={{ marginBottom: 10 }}>
-        Select any of the categories that best describe your project. Select none if you are unsure about your category.
+        Select any of the categories that best describe your project.
       </Typography>
 
       <Grid container spacing={3} className={classes.pillContainer}>
