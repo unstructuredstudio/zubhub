@@ -40,7 +40,7 @@ function ProjectListFilter({ categories, projects, updateProjects, updateStaffPi
                 }} 
                 className={classes.category}
             >
-                Featured
+                {t('categories.Featured')}
             </div>
             {
                 categories.map(category=>{
