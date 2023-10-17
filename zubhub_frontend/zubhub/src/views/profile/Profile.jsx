@@ -208,7 +208,7 @@ function Profile(props) {
                     {sortTags(profile.tags).map(tag => (
                       <Typography
                         key={tag}
-                        className={clsx(common_classes.baseTagStyle, {
+                        className={clsx(classes.baseTagStyle, {
                           [common_classes.extendedTagStyle]: !isBaseTag(tag),
                         })}
                         component="h2"
