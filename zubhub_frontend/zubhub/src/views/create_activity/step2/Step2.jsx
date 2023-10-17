@@ -29,7 +29,7 @@ export default function Step2({ formik, id }) {
       <TextInput
         {...props}
         label={
-          <span className={clsx(classes.stepTitle, classes.formItem)}>
+          <span className={classes.stepTitle}>
             {props.label}
           </span>
         }
@@ -42,7 +42,7 @@ export default function Step2({ formik, id }) {
       <Editor
         {...props}
         label={
-          <span className={clsx(classes.stepTitle, classes.formItem)}>
+          <span className={classes.stepTitle}>
             {props.label}
           </span>
         }
@@ -130,7 +130,7 @@ export default function Step2({ formik, id }) {
       </Box>
 
       {steps.map((step, index) => (
-        <div key={step.id}>
+        <Box key={step.id} className={classes.formItem}>
           <div className={commonClasses.alignCenter}>
             <Typography style={{ whiteSpace: 'nowrap' }} className={commonClasses.title2}>
               Step {index + 1}:{' '}
@@ -143,7 +143,6 @@ export default function Step2({ formik, id }) {
               label="Step title"
               placeholder="Enter step title"
               required
-              className={classes.stepTitle}
             />
             {steps.length > 1 && (
               <>
@@ -172,7 +171,7 @@ export default function Step2({ formik, id }) {
               handleChange={data => onStepChange(data, 'images', index)}
             />
           </Box>
-        </div>
+        </Box>
       ))}
 
       <CustomButton onClick={addStep} style={{ alignSelf: 'center' }} primaryButtonOutlinedStyle endIcon={<Add />}>
