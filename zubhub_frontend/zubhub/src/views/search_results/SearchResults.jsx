@@ -141,27 +141,28 @@ function SearchResults(props) {
         handleSetState,
       );
     } else {
-      return results.map(project => (
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          lg={4}
-          align="center"
-          className={classes.projectGridStyle}
-        >
-          <Project
-            // className={classes.projectSpacerStyle}
-            style={{ margin: '2em' }}
-            project={project}
-            key={project.id}
-            updateProjects={res =>
-              handleSetState(updateProjects(res, state, props, toast))
-            }
-            {...props}
-          />
+      return (
+        <Grid container spacing={3}>
+          {results.map(project => (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              align="center"
+            >
+              <Project
+                project={project}
+                key={project.id}
+                updateProjects={res =>
+                  handleSetState(updateProjects(res, state, props, toast))
+                }
+                {...props}
+              />
+            </Grid>
+          ))}
         </Grid>
-      ));
+      )
     }
   };
 

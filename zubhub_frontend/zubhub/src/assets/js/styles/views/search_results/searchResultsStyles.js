@@ -22,12 +22,6 @@ const styles = theme => ({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  projectGridStyle: {
-    margin: '1em',
-  },
-  projectSpacerStyle: {
-    margin: '2em',
-  },
   cardStyle: {
     display: 'flex',
     flexDirection: 'column',
