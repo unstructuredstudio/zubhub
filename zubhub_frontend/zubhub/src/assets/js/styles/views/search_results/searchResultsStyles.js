@@ -23,7 +23,10 @@ const styles = theme => ({
     textAlign: 'center',
   },
   projectGridStyle: {
-    marginBottom: '2em',
+    margin: '1em',
+  },
+  projectSpacerStyle: {
+    margin: '2em',
   },
   cardStyle: {
     display: 'flex',

@@ -37,13 +37,7 @@ import Project from '../../components/project/Project';
 import styles from '../../assets/js/styles/views/search_results/searchResultsStyles';
 import commonStyles from '../../assets/js/styles';
 
-const useStyles = makeStyles({
-  ...styles,
-  projectGridStyle: {
-    ...styles.projectGridStyle,
-    margin: '8px',
-  },
-});
+const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
 /**
@@ -152,11 +146,13 @@ function SearchResults(props) {
           item
           xs={12}
           sm={6}
-          md={4}
-          className={classes.projectGridStyle}
+          lg={4}
           align="center"
+          className={classes.projectGridStyle}
         >
           <Project
+            // className={classes.projectSpacerStyle}
+            style={{ margin: '2em' }}
             project={project}
             key={project.id}
             updateProjects={res =>
