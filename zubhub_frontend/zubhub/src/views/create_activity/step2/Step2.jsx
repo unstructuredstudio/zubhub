@@ -24,6 +24,32 @@ export default function Step2({ formik, id }) {
     setSteps([...steps, { ...DEFAULT_STEP, id: uuid }]);
   };
 
+  function EnhancedTextInput(props) {
+    return (
+      <TextInput
+        {...props}
+        label={
+          <span className={clsx(classes.stepTitle, classes.formItem)}>
+            {props.label}
+          </span>
+        }
+      />
+    );
+  }
+
+  function EnchancedEditor(props) {
+    return (
+      <Editor
+        {...props}
+        label={
+          <span className={clsx(classes.stepTitle, classes.formItem)}>
+            {props.label}
+          </span>
+        }
+      />
+    );
+  }
+
   const onStepChange = (data, type, stepIndex) => {
     console.log(data, type, stepIndex);
     let stepsTemp = [...steps];
@@ -105,19 +131,19 @@ export default function Step2({ formik, id }) {
 
       {steps.map((step, index) => (
         <div key={step.id}>
-          <div className={clsx(commonClasses.alignCenter)}>
+          <div className={commonClasses.alignCenter}>
             <Typography style={{ whiteSpace: 'nowrap' }} className={commonClasses.title2}>
               Step {index + 1}:{' '}
             </Typography>
-            <TextInput
-                defaultValue={step.title}
-                onChange={_.debounce(d => onStepChange(d.target.value, 'title', index), 500)}
-                onBlur={formik.handleBlur}
-                name={step.title}
-                label="Step title"
-                placeholder="Enter step title"
-                required
-                className={clsx(classes.formItem, classes.stepTitle)}
+            <EnhancedTextInput
+              defaultValue={step.title}
+              onChange={_.debounce(d => onStepChange(d.target.value, 'title', index), 500)}
+              onBlur={formik.handleBlur}
+              name={step.title}
+              label="Step title"
+              placeholder="Enter step title"
+              required
+              className={classes.stepTitle}
             />
             {steps.length > 1 && (
               <>
@@ -130,7 +156,7 @@ export default function Step2({ formik, id }) {
             )}
           </div>
           <Box className={classes.formItem}>
-            <Editor
+            <EnchancedEditor
               enableToolbar={true}
               onChange={data => onStepChange(data.target.value, 'description', index)}
               value={step.description}
