@@ -4,6 +4,7 @@ import { Box, Button, Divider, IconButton, Menu, MenuItem, Typography, makeStyle
 import { step2Styles } from './Step2.styles';
 import styles from '../../../assets/js/styles';
 import { Add, MoreHoriz } from '@material-ui/icons';
+import TextInput from '../../../components/form/textInput/TextInput';
 import clsx from 'clsx';
 import { uniqueId } from 'lodash';
 import _ from 'lodash';
@@ -104,19 +105,20 @@ export default function Step2({ formik, id }) {
 
       {steps.map((step, index) => (
         <div key={step.id}>
-          <div className={clsx(commonClasses.justifySpaceBetween, commonClasses.alignCenter)}>
-            <div className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
-              <Typography style={{ whiteSpace: 'nowrap' }} className={commonClasses.title2}>
-                Step {index + 1}:{' '}
-              </Typography>
-              <input
-                style={{ border: 'none', outline: 'none', paddingLeft: 10, minWidth: '100%' }}
-                className={commonClasses.title2}
+          <div className={clsx(commonClasses.alignCenter)}>
+            <Typography style={{ whiteSpace: 'nowrap' }} className={commonClasses.title2}>
+              Step {index + 1}:{' '}
+            </Typography>
+            <TextInput
                 defaultValue={step.title}
-                placeholder="Enter step title"
                 onChange={_.debounce(d => onStepChange(d.target.value, 'title', index), 500)}
-              />
-            </div>
+                onBlur={formik.handleBlur}
+                name={step.title}
+                label="Step title"
+                placeholder="Enter step title"
+                required
+                className={clsx(classes.formItem, classes.stepTitle)}
+            />
             {steps.length > 1 && (
               <>
                 <AnchorElemt
@@ -132,7 +134,9 @@ export default function Step2({ formik, id }) {
               enableToolbar={true}
               onChange={data => onStepChange(data.target.value, 'description', index)}
               value={step.description}
-              placeholder="Type Description..."
+              label="Describe step"
+              placeholder="Enter step description"
+              required
             />
             <LabeledLine label="ATTACH" />
 
