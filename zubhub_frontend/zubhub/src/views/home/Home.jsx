@@ -15,7 +15,7 @@ import global from '../../assets/images/global.JPG';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { Grid, Box, ButtonGroup, Typography, Container } from '@material-ui/core';
+import { Grid, Box, ButtonGroup, Typography, Container, IconButton } from '@material-ui/core';
 
 import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
 
@@ -41,6 +41,59 @@ const useCommonStyles = makeStyles(commonStyles);
  *
  * @todo - describe function's signature
  */
+
+function CustomPrevArrow({ onClickHandler }) {
+  return (
+    <IconButton
+      style={{
+        borderRadius: '50%',
+        backgroundColor: 'rgba(197, 197, 197, 0.20)',
+        position: 'absolute',
+        left: 0,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 1000,
+        width: '40px',
+        height: '40px',
+      }}
+      onClick={onClickHandler}
+    >
+      <NavigateBeforeIcon 
+        style={{
+          color: 'white',
+          fontSize: '40px',
+        }}
+      />
+    </IconButton>
+  );
+}
+
+function CustomNextArrow({ onClickHandler }) {
+  return (
+    <IconButton
+      style={{
+        borderRadius: '50%',
+        backgroundColor: 'rgba(197, 197, 197, 0.20)',
+        position: 'absolute',
+        right: 0,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 1000,
+        width: '40px',
+        height: '40px',
+      }}
+      onClick={onClickHandler}
+    >
+      <NavigateNextIcon 
+        style={{
+          color: 'white',
+          fontSize: '40px',
+        }}
+      />
+    </IconButton>
+  );
+}
+
 function Projects(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
@@ -327,7 +380,37 @@ function Projects(props) {
       }}
     >
             <div className={classes.carouselContainer}>
-              <Carousel showThumbs={false} infiniteLoop={true} showStatus={false} onChange={handleSlideChange}>
+              <Carousel showThumbs={false} infiniteLoop={true} showStatus={false} onChange={handleSlideChange} swipeable={false} autoPlay={true}
+              renderArrowPrev={(onClickHandler, hasPrev, label) =>
+                hasPrev && <CustomPrevArrow onClickHandler={onClickHandler} />
+              }
+              renderArrowNext={(onClickHandler, hasNext, label) =>
+                hasNext && <CustomNextArrow onClickHandler={onClickHandler} />
+              }
+              renderIndicator={(onClickHandler, isSelected, index, label) => {
+                return (
+                  <li
+                    style={{
+                      width: isSelected ? '16px' : '8px',
+                      height: '8px',
+                      background: isSelected ? 'rgba(254, 254, 254, 1)' : 'rgba(254, 254, 254, 0.53)',
+                      borderRadius: isSelected ? '30%' : '50%',
+                      margin: '0 4px',
+                      display: 'inline-block',
+                      cursor: 'pointer',
+                    }}
+                    onClick={onClickHandler}
+                    onKeyDown={onClickHandler}
+                    value={index}
+                    key={index}
+                    role="button"
+                    tabIndex={0}
+                    title={`${label} ${index + 1}`}
+                    aria-label={`${label} ${index + 1}`}
+                  />
+                );
+              }}
+            >
                 <div className={classes.carouselSlide}>
                   <Box className={classes.heroContainerStyle}>
                     <Box className={classes.heroMessageContainerStyle} style={{ textAlign: 'left' }}>
