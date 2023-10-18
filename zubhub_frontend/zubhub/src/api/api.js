@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { PROJECTS_PAGE_SIZE, sanitizeObject } from '../utils.js';
+import { sanitizeObject } from '../utils.js';
 /**
  * API class containing all the calls to the backend api endpoints
  */
