@@ -199,7 +199,7 @@ function Projects(props) {
                 ) : (
                   <CustomButton className={clsx(classes.visibilityNone)}></CustomButton>
                 )}
-                <Pagination
+                {totalProjects > 18 ? <Pagination
                   count={noOfPage}
                   hidePrevButton={true}
                   hideNextButton={true}
@@ -212,7 +212,7 @@ function Projects(props) {
                   shape="rounded"
                   size="small"
                   style={{ display: 'flex' }}
-                />
+                /> : ""}
 
                 {next_page ? (
                   <CustomButton
