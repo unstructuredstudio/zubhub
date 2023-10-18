@@ -195,8 +195,7 @@ function SearchResults(props) {
           </Grid>
           {getResults(
             getQueryParams(window.location.href).get('type'),
-            results
-            // props.auth.token ? results : results[0]?.projects?.results,
+            props.auth.token ? results : results[0]?.projects?.results,
           )}
           <Grid className={modalClasses.gridBlur}></Grid>
         </Grid>
@@ -236,7 +235,6 @@ function SearchResults(props) {
               {getResults(
                 getQueryParams(window.location.href).get('type'),
                 results
-                // props.auth.token ? results : results[0]?.projects?.results,
               )}
             </Grid>
             <ButtonGroup
