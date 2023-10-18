@@ -510,6 +510,7 @@
     "project": {
       "creator": {
         "follow": "Follow",
+        "following": "Following",
         "unfollow": "Unfollow"
       },
       "hashtags":"Project Hashtags",

@@ -10,8 +10,11 @@ export const colors = {
     white: '#fff',
     green: '#22C55E',
     red: '#f44336',
+    'red-dark': '#cb3b30',
     'blue-light': '#00B8C433',
-    'blue-dark': '#7BA8AB'
+    'blue-dark': '#7BA8AB',
+    'green-light': '#04A96D',
+    'green-dark': '#0B8858'
 }
 
 export const borders = {
