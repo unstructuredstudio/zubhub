@@ -34,10 +34,12 @@ import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
-import styles from '../../assets/js/styles/views/search_results/searchResultsStyles';
+import {styles, resultModal} from '../../assets/js/styles/views/search_results/searchResultsStyles';
 import commonStyles from '../../assets/js/styles';
+import Login from '../login/Login';
 
 const useStyles = makeStyles(styles);
+const useModalStyles = makeStyles(resultModal)
 const useCommonStyles = makeStyles(commonStyles);
 
 /**
@@ -106,7 +108,9 @@ const buildCreatorProfiles = (
  * @todo - describe function's signature
  */
 function SearchResults(props) {
+  console.log(props, "PROPS")
   const classes = useStyles();
+  const modalClasses = useModalStyles()
   const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
@@ -173,7 +177,41 @@ function SearchResults(props) {
     next: next_page,
     loading,
   } = state;
-  const { t } = props;
+  const { t, auth } = props;
+
+  if (!auth.token) {
+    return (
+      <Container className={modalClasses.root}>
+        <Grid className={modalClasses.projectContainer}>
+          <Grid item xs={12}>
+            <Typography
+              className={classes.pageHeaderStyle}
+              variant="h3"
+              gutterBottom
+              style={{ height: '40px'}}
+            >
+              {`${t('searchResults.resultsFound')} "${getQueryParams(window.location.href).get('q')}"`}
+            </Typography>
+          </Grid>
+          {getResults(
+            getQueryParams(window.location.href).get('type'),
+            results
+            // props.auth.token ? results : results[0]?.projects?.results,
+          )}
+          <Grid className={modalClasses.gridBlur}></Grid>
+        </Grid>
+        <Grid className={modalClasses.loginModal}>
+          <Login {...props}
+           primaryTitle='Log in or Sign up to search for projects'
+           secondaryTitle='' 
+           styleOverrides={{ containerStyles: {boxShadow: 'none'}, titleStyles: { textAlign: 'center'}}}
+           withoutShadow 
+          />
+        </Grid>
+      </Container>
+    )
+  }
+
   if (loading) {
     return <LoadingPage />;
   } else {
@@ -197,7 +235,8 @@ function SearchResults(props) {
               </Grid>
               {getResults(
                 getQueryParams(window.location.href).get('type'),
-                results,
+                results
+                // props.auth.token ? results : results[0]?.projects?.results,
               )}
             </Grid>
             <ButtonGroup
@@ -256,6 +295,7 @@ function SearchResults(props) {
           </Container>
         ) : (
           <ErrorPage
+            style={{ maxWidth: '100vw' }}
             error={t('searchResults.errors.noResult')}
           />
         )}
@@ -264,8 +304,10 @@ function SearchResults(props) {
   }
 }
 
+
 SearchResults.propTypes = {
   auth: PropTypes.object.isRequired,
+  getStaffPicks: PropTypes.object.isRequired,
   searchProjects: PropTypes.func.isRequired,
   searchCreators: PropTypes.func.isRequired,
   searchTags: PropTypes.func.isRequired,
@@ -282,6 +324,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    getStaffPicks: args => {
+      return dispatch(ProjectActions.getStaffPicks(args))
+    },
     searchProjects: args => {
       return dispatch(ProjectActions.searchProjects(args));
     },

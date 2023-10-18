@@ -63,10 +63,12 @@ function Login(props) {
   const { show_password } = state;
   const { t } = props;
 
+  const styleOverridesPresent = Object.keys(props?.styleOverrides).length > 0
+
   return (
     <Box className={classes.root}>
-      <Container className={classes.containerStyle}>
-        <Card className={classes.cardStyle}>
+      <Container className={classes.containerStyle} >
+        <Card className={classes.cardStyle} style={ styleOverridesPresent ? {...props.styleOverrides.containerStyles } : {}}>
           <CardActionArea>
             <CardContent>
               <form
@@ -81,8 +83,9 @@ function Login(props) {
                   component="h2"
                   color="textPrimary"
                   className={classes.titleStyle}
+                  style={{...props.styleOverrides.titleStyles}}
                 >
-                  {t('login.welcomeMsg.primary')}
+                  {props.primaryTitle ?? t('login.welcomeMsg.primary')}
                 </Typography>
                 <Typography
                   className={classes.descStyle}
@@ -90,7 +93,7 @@ function Login(props) {
                   color="textSecondary"
                   component="p"
                 >
-                  {t('login.welcomeMsg.secondary')}
+                  {props.secondaryTitle ?? t('login.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
