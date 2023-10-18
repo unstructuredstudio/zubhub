@@ -37,7 +37,7 @@ const styles = theme => ({
     paddingTop: '2.3em',
     paddingBottom: '2.85em',
     justifyContent: 'center',
-    width: '100%',
+    width: '100vw',
     marginBottom: '2em'
   },
   imageLeft: {
