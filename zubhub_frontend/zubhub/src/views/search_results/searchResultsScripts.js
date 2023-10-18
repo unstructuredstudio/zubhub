@@ -31,13 +31,18 @@ export const getQueryParams = url => {
  */
 export const fetchPage = (page, props, query_string, type) => {
   if (type === SearchType.PROJECTS) {
-    return props.searchProjects({
-      page,
-      query_string,
-      t: props.t,
-      token: props.auth.token,
-      tab: 'projects',
-    });
+    // if (props.auth.token) {
+      return props.searchProjects({
+        page,
+        query_string,
+        t: props.t,
+        token: props.auth.token,
+        tab: 'projects',
+      });
+    // } else {
+    //   return props.getStaffPicks({ token: props.token })
+    // }
+   
   } else if (type === SearchType.CREATORS) {
     return props.searchCreators({
       page,
