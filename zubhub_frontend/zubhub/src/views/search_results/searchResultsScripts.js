@@ -31,7 +31,7 @@ export const getQueryParams = url => {
  */
 export const fetchPage = (page, props, query_string, type) => {
   if (type === SearchType.PROJECTS) {
-    // if (props.auth.token) {
+    if (props.auth.token) {
       return props.searchProjects({
         page,
         query_string,
@@ -39,9 +39,9 @@ export const fetchPage = (page, props, query_string, type) => {
         token: props.auth.token,
         tab: 'projects',
       });
-    // } else {
-    //   return props.getStaffPicks({ token: props.token })
-    // }
+    } else {
+      return props.getStaffPicks({ token: props.token })
+    }
    
   } else if (type === SearchType.CREATORS) {
     return props.searchCreators({
