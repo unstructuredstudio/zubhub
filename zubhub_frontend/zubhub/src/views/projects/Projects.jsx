@@ -199,20 +199,24 @@ function Projects(props) {
                 ) : (
                   <CustomButton className={clsx(classes.visibilityNone)}></CustomButton>
                 )}
-                {totalProjects > 18 ? <Pagination
-                  count={noOfPage}
-                  hidePrevButton={true}
-                  hideNextButton={true}
-                  page={state.currentPage}
-                  className={clsx(classes.paginationRoot)}
-                  onChange={(e, page) => {
-                    handleSetState({ loading: true, currentPage: +page });
-                    handleSetState(fetchPage(page, props));
-                  }}
-                  shape="rounded"
-                  size="small"
-                  style={{ display: 'flex' }}
-                /> : ""}
+                {totalProjects > 18 ? (
+                  <Pagination
+                    count={noOfPage}
+                    hidePrevButton={true}
+                    hideNextButton={true}
+                    page={state.currentPage}
+                    className={clsx(classes.paginationRoot)}
+                    onChange={(e, page) => {
+                      handleSetState({ loading: true, currentPage: +page });
+                      handleSetState(fetchPage(page, props));
+                    }}
+                    shape="rounded"
+                    size="small"
+                    style={{ display: 'flex' }}
+                  />
+                ) : (
+                  ''
+                )}
 
                 {next_page ? (
                   <CustomButton
