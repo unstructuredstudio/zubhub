@@ -31,7 +31,7 @@ import new_stuff from '../../assets/images/new_stuff.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
-
+import heroMainImage from '../../assets/images/heroMainImage.svg'
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -139,8 +139,8 @@ function Projects(props) {
                      <Box className={classes.heroImageContainerStyle}> 
                        <img
                          className={classes.heroImageStyle}
-                         src={hero.image_url}
-                         alt=""
+                         src={heroMainImage}
+                         alt="Six animated children happily walking"
                        />
                      </Box>
                    )}
