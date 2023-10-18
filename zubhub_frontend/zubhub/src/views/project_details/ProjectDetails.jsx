@@ -92,6 +92,12 @@ const buildTagsComponent = (classes, tags, history) => {
   ));
 };
 
+const followStatus = {
+  following: 'following',
+  notFollowing: 'notFollowing',
+  unfollowing: 'unfollowing',
+}
+
 /**
  * @function ProjectDetails View
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -108,7 +114,7 @@ function ProjectDetails(props) {
 
   const [state, setState] = React.useState({
     project: {},
-    followingState: 'notFollowing',
+    followingState: followStatus.notFollowing,
     loading: true,
     enlarged_image_url: '',
     open_enlarged_image_dialog: false,
@@ -182,11 +188,6 @@ function ProjectDetails(props) {
     }
   };
  
-  const followStatus = {
-    following: 'following',
-    notFollowing: 'notFollowing',
-    unfollowing: 'unfollowing',
-  }
   const handleFollow = (e) => {
     if (followingState === followStatus.notFollowing) {
       handleSetState(toggleFollow(e, props, project.creator.id, state))
@@ -212,17 +213,17 @@ function ProjectDetails(props) {
   const { t } = props;
 
   const followButtonConstants = {
-    notFollowing: {
+    [followStatus.notFollowing]: {
       text: t('projectDetails.project.creator.follow'),
       icon: <AddOutlined className={classes.followButtonIcon} />,
       className: classes.notFollowingButton
     },
-    following: {
+    [followStatus.following]: {
       text: t('projectDetails.project.creator.following'),
       icon: <CheckOutlined className={classes.followButtonIcon} />,
       className: classes.followingButton
     },
-    unfollowing: {
+    [followStatus.unfollowing]: {
       text: t('projectDetails.project.creator.unfollow'),
       icon: <CloseOutlined className={classes.followButtonIcon} />,
       className: classes.unfollowingButton
