@@ -37,7 +37,7 @@ export default function Step1({ formik, ...props }) {
       <SelectFromPills
         name="category"
         label="What category does your activity belong too? "
-        helperText="Select three categories that best describe your project. Select none if you are unsure about your category."
+        helperText="Select three categories that best describe your project."
         data={categories}
         onChange={_.debounce(data => formik.setFieldValue('category', data), 200)}
         selectedItems={formik.values.category}
