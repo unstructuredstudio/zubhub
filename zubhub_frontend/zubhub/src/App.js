@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
+import ProtectedRoute from './components/protected_route/ProtectedRoute';
 import ZubhubAPI from '../src/api/api';
 import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
@@ -61,23 +62,6 @@ const LazyImport = props => {
     <React.Suspense fallback={<LoadingPage />}>
       <LazyComponent {...restOfProps} />
     </React.Suspense>
-  );
-};
-
-const ProtectedRoute = ({ component: LazyComponent, ...props }) => {
-  return (
-    <Route
-      {...props}
-      render={routeProps =>
-        props.auth?.token ? (
-          <PageWrapper {...props} {...routeProps}>
-            <LazyImport LazyComponent={LazyComponent} {...routeProps} {...props} />
-          </PageWrapper>
-        ) : (
-          <Redirect to="/login" />
-        )
-      }
-    />
   );
 };
 
