@@ -106,7 +106,7 @@ function CreateEditActivity(props) {
   const previous = () => go('prev');
 
   const submit = async () => {
-    const errors = await checkErrors().then(errors => errors);
+    const errors = await checkErrors()
 
     if (Object.keys(errors).length > 0) {
       Object.keys(errors).map(err => {
@@ -129,13 +129,14 @@ function CreateEditActivity(props) {
   };
 
   const checkErrors = () => {
-    return formikStep2.setTouched({ introduction: true }, true);
+    return formikStep2.setTouched({ introduction: true, materials_used: true }, true);
   };
 
   const go = async direction => {
     if (direction === 'next') {
-      const errors = await formikStep1.setTouched({ title: true }, true).then(errors => errors);
+      const errors = await formikStep1.setTouched({ title: true, class_grade: true, category: true}, true)
 
+      console.log(errors)
       if (Object.keys(errors).length > 0) return;
 
       if (activeStep !== 3) {

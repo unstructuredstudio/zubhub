@@ -6,7 +6,6 @@ import { updateTheme } from './theme';
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
 import ProtectedRoute from './components/protected_route/ProtectedRoute';
-import CreateActivity from './views/create_activity/create_activity';
 import ZubhubAPI from '../src/api/api';
 import ScrollToTop from './ScrollToTop';
 
@@ -476,14 +475,6 @@ function App(props) {
             )}
           />
 
-          <Route
-            path="/activities/:id/edit"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
           <Route
             path="/activities/my-activities"
             render={routeProps => (

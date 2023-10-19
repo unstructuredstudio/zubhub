@@ -433,12 +433,10 @@ export const getActivity = (props, state) => {
 
 export const step1Validation = Yup.object().shape({
   title: Yup.string().max(100, 'max').required('required'),
-  class_grade: Yup.object().shape({ name: Yup.string() }).nullable(),
-  category: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string().required('Name is required'),
-    }),
-  ),
+  class_grade: Yup.object().shape({ name: Yup.string() }).required('Select a grade'),
+  category: Yup.array().of(Yup.object().shape({
+    name: Yup.string().required()
+  })).required('A category is required')
 });
 
 export const step1Schema = {
@@ -451,9 +449,12 @@ export const step1Schema = {
 };
 
 export const step2Validation = Yup.object().shape({
-  introduction: Yup.string().max(1000, 'max').required('required'),
-  materials_used: Yup.string(),
-  images: Yup.array(),
+  introduction: Yup.string().max(1000, 'max').required('Add an introduction'),
+  materials_used: Yup.string().matches(/<ol><li>(?:\s*<br>\s*|[a-zA-Z0-9]+)\s*<\/li><\/ol>/, {
+    message: 'Materials used are required',
+    excludeEmptyString: true,
+  }),
+  images: Yup.array().required('Add the activity image'),
   making_steps: Yup.array().of(
     Yup.object().shape({
       title: Yup.string(),
@@ -462,14 +463,14 @@ export const step2Validation = Yup.object().shape({
       images: Yup.array(),
       materials_used_image: Yup.array(),
     }),
-  ),
+  ).required('Atleast one step is required'),
 });
 
 export const step2Schema = {
   initialValues: {
     introduction: undefined,
     images: [],
-    materials_used: '<ol> <li></li></ol>',
+    materials_used: '<ol><li></li></ol>',
     making_steps: [],
     materials_used_image: [],
   },
@@ -599,7 +600,7 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
   // Add
   const formData = {
     ...formDataStep1,
-    step2Values,
+    ...step2Values,
     publish,
   };
 
@@ -676,7 +677,7 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
 
   if (createOrUpdateResponse.status === 200) {
     const data = await createOrUpdateResponse.json();
-    toast.success(`Updated successfully ${data.title}`);
+    toast.success(`Successfully updated ${data.title}`);
     props.history.replace(`/activities/${data.id}`);
   }
 };
