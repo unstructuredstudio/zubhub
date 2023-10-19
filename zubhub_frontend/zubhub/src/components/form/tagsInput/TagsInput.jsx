@@ -1,7 +1,8 @@
 import { Box, ClickAwayListener, FormControl, FormHelperText, Typography, makeStyles } from '@material-ui/core';
 import { Add, ClearRounded } from '@material-ui/icons';
 import clsx from 'clsx';
-import { useRef, useState, useMemo, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../../../assets/js/styles';
 import CustomButton from '../../button/Button';
 import { tagsInputStyles } from './tagsInput.styles';
@@ -25,6 +26,7 @@ export default function TagsInput({
   handleBlur,
   prefix,
 }) {
+  const { t } = useTranslation();
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(tagsInputStyles)();
   const [isSearching, setIsSearching] = useState(false);
@@ -35,13 +37,13 @@ export default function TagsInput({
   const validateTag = useCallback((tag, selectedTags) => {
     const trimmedTag = tag.trim();
     if (trimmedTag === '') {
-      return ['Tag cannot be empty.', false];
+      return [t('pageWrapper.errors.tagCannotBeEmpty'), false];
     } else if (selectedTags.includes(trimmedTag)) {
-      return [`The tag "${trimmedTag}" is already in the search bar and cannot be added again.`, false];
+      return [t('pageWrapper.errors.tagAlreadyInSearch', { tagName: trimmedTag }), false];
     } else {
       return ['', true];
     }
-  }, []);
+  }, [t]);
 
   const handleTagAddition = useCallback((value) => {
     const [errMsg, isValid] = validateTag(value, selectedTags);
@@ -90,45 +92,12 @@ export default function TagsInput({
         setErrorMessage('');
         ref.current.value = '';
       } else {
-        setErrorMessage(`The tag "${inputValue}" was not found and cannot be added.`);
+        setErrorMessage(t('pageWrapper.errors.tagNotFound', { tagName: inputValue }));
       }
     }
-  }, [addTag, remoteData, selectedTags]);
-
+  }, [t, addTag, remoteData, selectedTags]);
+  
   const onSelectedTagClick = useCallback((index) => removeTag(index), [removeTag]);
-
-  const popularTagsRender = useMemo(() => popularTags?.map((tag, index) => (
-    <CustomButton
-      onClick={() => handleTagAddition(tag)}
-      disabled={selectedTags.includes(tag)}
-      className={clsx(classes.button, selectedTags.includes(tag) && classes.disabledButton)}
-      style={{ fontWeight: tag === 'General' ? '800' : 'normal' }}
-      key={index}
-      startIcon={<Add />}
-    >
-      {prefix && `${prefix} `}
-      {tag}
-    </CustomButton>
-  )), [popularTags, handleTagAddition, selectedTags, prefix, classes]);
-
-  const selectedTagsRender = useMemo(() => selectedTags?.map((tag, index) => (
-    <CustomButton
-      onClick={() => onSelectedTagClick(index)}
-      className={classes.button}
-      primaryButtonStyle
-      key={index}
-      endIcon={<ClearRounded />}
-    >
-      {prefix && `${prefix} `}
-      {tag}
-    </CustomButton>
-  )), [selectedTags, onSelectedTagClick, prefix, classes]);
-
-  const remoteDataRender = useMemo(() => remoteData?.map((tag, index) => (
-    <Box key={index} onClick={() => handleTagAddition(tag.name)} className={classes.suggestion}>
-      <Typography>{tag.name}</Typography>
-    </Box>
-  )), [remoteData, handleTagAddition, classes]);
 
   return (
     <FormControl fullWidth>
@@ -137,7 +106,18 @@ export default function TagsInput({
       </label>
       <Typography style={{ marginBottom: 10 }}>{description}</Typography>
       <Box className={clsx(classes.tagsContainer, error && commonClasses.borderRed)}>
-        {selectedTagsRender}
+        {selectedTags?.map((tag, index) => (
+          <CustomButton
+            onClick={() => onSelectedTagClick(index)}
+            className={classes.button}
+            primaryButtonStyle
+            key={index}
+            endIcon={<ClearRounded />}
+          >
+            {prefix && `${prefix} `}
+            {tag}
+          </CustomButton>
+        ))}
         <input
           ref={ref}
           onFocus={clearSuggestions}
@@ -156,15 +136,35 @@ export default function TagsInput({
         <Box style={{ position: 'relative' }}>
           <Box className={classes.suggestionBox}>
             <ClickAwayListener onClickAway={handleClickAway}>
-              <Box>{remoteData.length > 0 ? remoteDataRender : <p>Item not found: Hit Enter to Save your Input</p>}</Box>
+              <Box>
+                {remoteData.length > 0
+                  ? remoteData.map((tag, index) => (
+                      <Box key={index} onClick={() => handleTagAddition(tag.name)} className={classes.suggestion}>
+                        <Typography>{tag.name}</Typography>
+                      </Box>
+                    ))
+                  : <p>Item not found: Hit Enter to Save your Input</p>}
+              </Box>
             </ClickAwayListener>
           </Box>
         </Box>
       ) : null}
 
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {error && <FormHelperText className={commonClasses.colorRed}>{error}</FormHelperText>}
-      <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12 }}>{popularTagsRender}</Box>
+      <FormHelperText className={commonClasses.colorRed}>{errorMessage || error}</FormHelperText>
+      <Box className={classes.tagsContainer}>
+        {popularTags?.map((tag, index) => (
+          <CustomButton
+            onClick={() => handleTagAddition(tag)}
+            disabled={selectedTags.includes(tag)}
+            className={clsx(classes.button, selectedTags.includes(tag) && classes.disabledButton, tag === 'General' && classes.generalTag)}
+            key={index}
+            startIcon={<Add />}
+          >
+            {prefix && `${prefix} `}
+            {tag}
+          </CustomButton>
+        ))}
+      </Box>
     </FormControl>
   );
 }
