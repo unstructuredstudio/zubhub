@@ -1074,7 +1074,6 @@ class API {
 
     const body = JSON.stringify(args);
     return this.request({ url, method, token, body });
-    //.then(res => res.json());
   };
 
   deleteActivity = ({ token, id }) => {

@@ -13,27 +13,22 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { CustomButton, Modal, PreviewActivity, TagsInput } from '../../components';
+import { CustomButton, PreviewActivity } from '../../components';
 import StepWizard from 'react-step-wizard';
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
-  CloseOutlined,
   CloudDoneOutlined,
   DoneRounded,
   KeyboardBackspaceRounded,
 } from '@material-ui/icons';
-import SaveRoundedIcon from '@material-ui/icons/SaveRounded';
-import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { createActivityStyles } from './CreateActivity.styles';
 import clsx from 'clsx';
-import { colors } from '../../assets/js/colors';
 import styles from '../../assets/js/styles';
 import { useDomElementHeight } from '../../hooks/useDomElementHeight.hook';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as script from './script';
-import CreateActivityStep1 from './create_activity_step1';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import { useSelector } from 'react-redux';
@@ -44,6 +39,12 @@ const steps = ['Activity Basics', 'Activity Details'];
 let firstRender = true;
 
 function CreateEditActivity(props) {
+  useEffect(() => {
+    if (!props.auth.tags.includes('staff')) {
+      props.history.push('/activities');
+    }
+  }, [props.auth.tags]);
+
   const editting = props?.editting;
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
@@ -106,7 +107,7 @@ function CreateEditActivity(props) {
   const previous = () => go('prev');
 
   const submit = async () => {
-    const errors = await checkErrors()
+    const errors = await checkErrors();
 
     if (Object.keys(errors).length > 0) {
       Object.keys(errors).map(err => {
@@ -134,7 +135,7 @@ function CreateEditActivity(props) {
 
   const go = async direction => {
     if (direction === 'next') {
-      const errors = await formikStep1.setTouched({ title: true, class_grade: true, category: true}, true)
+      const errors = await formikStep1.setTouched({ title: true, class_grade: true, category: true }, true);
 
       if (Object.keys(errors).length > 0) return;
 
@@ -243,7 +244,7 @@ function CreateEditActivity(props) {
             </CustomButton>
           )}
           <CustomButton
-            onClick={activeStep === 2 ? submit: () => go('next')}
+            onClick={activeStep === 2 ? submit : () => go('next')}
             loading={isLoading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
