@@ -110,7 +110,7 @@ function CreateEditActivity(props) {
 
     if (Object.keys(errors).length > 0) {
       Object.keys(errors).map(err => {
-        return toast.error(err);
+        return toast.warn(err);
       });
       return;
     }
@@ -136,7 +136,6 @@ function CreateEditActivity(props) {
     if (direction === 'next') {
       const errors = await formikStep1.setTouched({ title: true, class_grade: true, category: true}, true)
 
-      console.log(errors)
       if (Object.keys(errors).length > 0) return;
 
       if (activeStep !== 3) {

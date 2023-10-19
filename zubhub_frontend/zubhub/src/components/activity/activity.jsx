@@ -133,7 +133,7 @@ function Activity(props) {
                 </Grid>
                 <Grid item>
                   <Link
-                    to={`/activities/${activity.id}/linkedProjects`}
+                    to={`/activities/${activity.id}/linked-projects`}
                     className={common_classes.textDecorationNone}
                     onClick={e => props.setActivity(activity)}
                   >

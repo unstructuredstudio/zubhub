@@ -122,37 +122,10 @@ function App(props) {
           <ProtectedRoute path="/settings" component={Settings} {...props} />
 
           <Route
-            path="/activities/create"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateEditActivity} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities/:id/linkedProjects"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={LinkedProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
             path="/search"
             render={routeProps => (
               <PageWrapper {...routeProps} {...props}>
                 <LazyImport LazyComponent={SearchResults} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities/:id/linkedProjects"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={LinkedProjects} {...routeProps} {...props} />
               </PageWrapper>
             )}
           />
@@ -475,40 +448,12 @@ function App(props) {
             )}
           />
 
-          <Route
-            path="/activities/my-activities"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={MyActivities} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-          <Route
-            path="/activities/:id/edit"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateEditActivity} {...routeProps} {...{ ...props, editting: true }} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities/:id"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={ActivityDetails} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
-
-          <Route
-            path="/activities"
-            render={routeProps => (
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Activities} {...routeProps} {...props} />
-              </PageWrapper>
-            )}
-          />
+          <ProtectedRoute path="/activities/create" component={CreateEditActivity} {...props} />
+          <ProtectedRoute path="/activities/my-activities" component={MyActivities} {...props} />
+          <ProtectedRoute path="/activities/:id/linked-projects" component={LinkedProjects} {...props} />
+          <ProtectedRoute path="/activities/:id/edit" component={CreateEditActivity} {...props} />
+          <ProtectedRoute path="/activities/:id" component={ActivityDetails} {...props} />
+          <ProtectedRoute path="/activities" component={Activities} {...props} />
 
           <Route
             path="/create-team"
