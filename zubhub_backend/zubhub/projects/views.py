@@ -37,7 +37,7 @@ class ProjectCreateAPIView(CreateAPIView):
     Request body format:\n
         {\n
             "title": "string",\n
-            "description": "string",\n
+            "description": "string",\n 
             "images": [\n
                 {\n
                 "image_url": "string",\n
@@ -72,7 +72,6 @@ class ProjectCreateAPIView(CreateAPIView):
                 Notification.Type.FOLLOWING_PROJECT,
                 f'/creators/{self.request.user.username}'
             )
-        
         
 
 class ProjectUpdateAPIView(UpdateAPIView):

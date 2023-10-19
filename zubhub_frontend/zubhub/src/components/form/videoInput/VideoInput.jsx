@@ -12,7 +12,7 @@ import { videoInputStyles } from './videoInput.styles';
 function VideoInput({ name, label, required, value = [], handleChange, linkValue = '' }) {
   const commomClasses = makeStyles(styles)();
   const classes = makeStyles(videoInputStyles)();
-  const input = useRef(null);
+  const input = useRef(null); 
   const videoRef = useRef(null);
   const clickCount = 0;
 
