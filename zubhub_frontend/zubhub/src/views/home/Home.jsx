@@ -139,7 +139,7 @@ function Projects(props) {
                      <Box className={classes.heroImageContainerStyle}> 
                        <img
                          className={classes.heroImageStyle}
-                         src={heroMainImage}
+                         src={hero.image_url ? hero.image_url : heroMainImage}
                          alt="Six animated children happily walking"
                        />
                      </Box>
