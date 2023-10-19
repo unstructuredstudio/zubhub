@@ -3,7 +3,6 @@ import { connect, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
   getActivities,
-  getMyActivities,
   activityToggleSave,
   setActivity,
   getUnPublishedActivities,
@@ -51,7 +50,6 @@ function Activities(props) {
         await flagMap[location.state.flag]();
       } else {
         await props.getActivities(props.t);
-        await props.getMyActivities(props.auth);
       }
       setActivityList(activities.all_activities);
       setLoading(false);
@@ -111,9 +109,6 @@ const mapDispatchToProps = dispatch => {
   return {
     getActivities: args => {
       return dispatch(getActivities(args));
-    },
-    getMyActivities: args => {
-      return dispatch(getMyActivities(args));
     },
     getUnPublishedActivities: args => {
       return dispatch(getUnPublishedActivities(args));

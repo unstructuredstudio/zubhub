@@ -105,7 +105,7 @@ function CreateEditActivity(props) {
 
   const previous = () => go('prev');
 
-  const submit = async publish => {
+  const submit = async () => {
     const errors = await checkErrors().then(errors => errors);
 
     if (Object.keys(errors).length > 0) {
@@ -124,7 +124,7 @@ function CreateEditActivity(props) {
       state,
       handleSetState: handleSetState,
       step: activeStep,
-      publish: publish,
+      publish: true,
     });
   };
 
@@ -242,19 +242,8 @@ function CreateEditActivity(props) {
               Previous
             </CustomButton>
           )}
-          {activeStep === 2 && (
-            <CustomButton
-              disabled={isLoading}
-              style={{ marginLeft: 'auto' }}
-              primaryButtonStyle
-              endIcon={<SaveRoundedIcon className={classes.nextButton} />}
-              onClick={() => submit(false)}
-            >
-              Save to draft
-            </CustomButton>
-          )}
           <CustomButton
-            onClick={activeStep === 2 ? () => submit(true) : () => go('next')}
+            onClick={activeStep === 2 ? submit: () => go('next')}
             loading={isLoading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
