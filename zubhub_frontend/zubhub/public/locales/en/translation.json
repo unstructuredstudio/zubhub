@@ -345,6 +345,18 @@
       "primary": "Create Project",
       "secondary": "Tell us about your project!"
     },
+    "selectMode": {
+      "description": "Select what kind of project it is, if you worked on the project alone select Personal project, if you worked on your project with other creators select Team project.",
+      "personalMode": {
+        "title": "Personal Project",
+        "description": "Select this if you worked on this project alone"
+      },
+      "teamMode": {
+        "title": "Team Project",
+        "description": "Select this if you worked on this project with other creators"
+      },
+      "submit": "Create Project"
+    },
     "inputs": {
       "title": {
         "label": "Name your project",
@@ -545,6 +557,7 @@
         "unsave": "unsave"
       },
       "imageDialog": "enlarged image dialog",
+      "closeImageDialog": "close",
       "deleteProject": "delete project dialog",
       "deleteComment": "delete comment dialog"
     },
@@ -629,7 +642,10 @@
       "placeholder1": "Tell us more about you by clicking on the edit button at the top of the page 😀!",
       "placeholder2": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
-    "activityLog": "Activity Log",
+    "activityLog": {
+      "activity": "Activity Log",
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+    },
     "team": "Team",
     "createteam": "Create Team",
     "badge": {

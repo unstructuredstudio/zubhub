@@ -6,10 +6,10 @@ import { toast } from 'react-toastify';
  *
  * @todo - describe function's signature
  */
-export const handleOpenEnlargedImageDialog = (e, state) => {
+export const handleOpenEnlargedImageDialog = (e, state, imgIndex) => {
   const image_url = e.currentTarget.getAttribute('src');
   const open_enlarged_image_dialog = !state.open_enlarged_image_dialog;
-  return { enlarged_image_url: image_url, open_enlarged_image_dialog };
+  return { enlarged_image_url: image_url, open_enlarged_image_dialog, enlarged_image_id: imgIndex };
 };
 
 /**
