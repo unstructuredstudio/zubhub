@@ -394,7 +394,7 @@ function App(props) {
           />
 
           {/* <ProtectedRoute path="/profile" component={ProjectDetails} {...props} /> */}
-          <ProtectedRoute
+          <Route
             path="/projects/:id"
             render={routeProps => (
               <PageWrapper {...routeProps} {...props}>
