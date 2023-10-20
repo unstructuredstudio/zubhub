@@ -4,6 +4,7 @@ import { Box, Button, Divider, IconButton, Menu, MenuItem, Typography, makeStyle
 import { step2Styles } from './Step2.styles';
 import styles from '../../../assets/js/styles';
 import { Add, MoreHoriz } from '@material-ui/icons';
+import TextInput from '../../../components/form/textInput/TextInput';
 import clsx from 'clsx';
 import { uniqueId } from 'lodash';
 import _ from 'lodash';
@@ -22,6 +23,32 @@ export default function Step2({ formik, id }) {
     const uuid = uniqueId(idPrefix);
     setSteps([...steps, { ...DEFAULT_STEP, id: uuid }]);
   };
+
+  function EnhancedTextInput(props) {
+    return (
+      <TextInput
+        {...props}
+        label={
+          <span className={classes.stepTitle}>
+            {props.label}
+          </span>
+        }
+      />
+    );
+  }
+
+  function EnchancedEditor(props) {
+    return (
+      <Editor
+        {...props}
+        label={
+          <span className={classes.stepTitle}>
+            {props.label}
+          </span>
+        }
+      />
+    );
+  }
 
   const onStepChange = (data, type, stepIndex) => {
     console.log(data, type, stepIndex);
@@ -103,20 +130,20 @@ export default function Step2({ formik, id }) {
       </Box>
 
       {steps.map((step, index) => (
-        <div key={step.id}>
-          <div className={clsx(commonClasses.justifySpaceBetween, commonClasses.alignCenter)}>
-            <div className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
-              <Typography style={{ whiteSpace: 'nowrap' }} className={commonClasses.title2}>
-                Step {index + 1}:{' '}
-              </Typography>
-              <input
-                style={{ border: 'none', outline: 'none', paddingLeft: 10, minWidth: '100%' }}
-                className={commonClasses.title2}
-                defaultValue={step.title}
-                placeholder="Enter step title"
-                onChange={_.debounce(d => onStepChange(d.target.value, 'title', index), 500)}
-              />
-            </div>
+        <Box key={step.id} className={classes.formItem}>
+          <div className={commonClasses.alignCenter}>
+            <Typography style={{ whiteSpace: 'nowrap' }} className={commonClasses.title2}>
+              Step {index + 1}:{' '}
+            </Typography>
+            <EnhancedTextInput
+              defaultValue={step.title}
+              onChange={_.debounce(d => onStepChange(d.target.value, 'title', index), 500)}
+              onBlur={formik.handleBlur}
+              name={step.title}
+              label="Step title"
+              placeholder="Enter step title"
+              required
+            />
             {steps.length > 1 && (
               <>
                 <AnchorElemt
@@ -128,11 +155,13 @@ export default function Step2({ formik, id }) {
             )}
           </div>
           <Box className={classes.formItem}>
-            <Editor
+            <EnchancedEditor
               enableToolbar={true}
               onChange={data => onStepChange(data.target.value, 'description', index)}
               value={step.description}
-              placeholder="Type Description..."
+              label="Describe step"
+              placeholder="Enter step description"
+              required
             />
             <LabeledLine label="ATTACH" />
 
@@ -142,7 +171,7 @@ export default function Step2({ formik, id }) {
               handleChange={data => onStepChange(data, 'images', index)}
             />
           </Box>
-        </div>
+        </Box>
       ))}
 
       <CustomButton onClick={addStep} style={{ alignSelf: 'center' }} primaryButtonOutlinedStyle endIcon={<Add />}>

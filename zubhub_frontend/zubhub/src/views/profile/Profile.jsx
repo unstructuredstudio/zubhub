@@ -46,7 +46,7 @@ import {
   handleToggleDeleteAccountModal,
   deleteAccount,
   getUserTeams,
-  followTeam
+  followTeam,
 } from './profileScripts';
 
 import CustomButton from '../../components/button/Button';
@@ -82,8 +82,8 @@ function Profile(props) {
   const [page, setPage] = useState(1);
   const [userActivity, setUserActivity] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [nextPage, setNextPage] = useState(false)
-  const [teams, setTeams] = useState([])
+  const [nextPage, setNextPage] = useState(false);
+  const [teams, setTeams] = useState([]);
   const [state, setState] = React.useState({
     results: [],
     loading: true,
@@ -94,30 +94,31 @@ function Profile(props) {
     drafts: [],
     badge_tags: [],
   });
-  React.useEffect(() => {
-  try{
-    let activitylogObj= new API()
-    const promises = [getUserProfile(props), getUserTeams(props), activitylogObj.getUserActivity(username, page)];
-    if (username === props.auth.username) {
-      promises.push(
-        ProjectActions.getUserDrafts({
-          username,
-          token: props.auth.token,
-          t: props.t,
-          limit: 4,
-        }),
-      );
-    }
 
-    Promise.all(promises).then(values => {
-      const obj = values[0];
-      const team = values[1].results;
-      // setTeams(team);
-      // setTeams(teams   => ([...teams, ...team]));
-      handleSetTeams(team); 
-      const activity = values[2] || {};
-      const drafts = values[3] || {};
-      const badges = obj.profile.badges;
+  React.useEffect(() => {
+    try {
+      let activitylogObj = new API();
+      const promises = [getUserProfile(props), getUserTeams(props), activitylogObj.getUserActivity(username, page)];
+      if (username === props.auth.username) {
+        promises.push(
+          ProjectActions.getUserDrafts({
+            username,
+            token: props.auth.token,
+            t: props.t,
+            limit: 4,
+          }),
+        );
+      }
+
+      Promise.all(promises).then(values => {
+        const obj = values[0];
+        const team = values[1].results;
+        // setTeams(team);
+        // setTeams(teams   => ([...teams, ...team]));
+        handleSetTeams(team);
+        const activity = values[2] || {};
+        const drafts = values[3] || {};
+        const badges = obj.profile.badges;
 
         if (obj.profile) {
           parseComments(obj.profile.comments);
@@ -141,7 +142,7 @@ function Profile(props) {
   };
 
   const handleSetTeams = newTeams => {
-    setTeams(teams => [...teams, ...newTeams]);
+    newTeams && setTeams(teams => [...teams, ...newTeams]);
   };
 
   const {
@@ -300,19 +301,12 @@ function Profile(props) {
             <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
               {t('profile.activityLog.activity')}
             </Typography>
-                  <div onScroll= {handleScroll} style= {{maxHeight: '300px', overflow: 'auto'}}>
-
-                    {
-                      userActivity.length ? 
-                      userActivity.map(activity => (
-                        <UserActivitylog 
-                        activity={activity}
-                        key={activity.id}
-                        />
-                        )) : (<Box>{t('profile.activityLog.addActivityLog')}</Box>)
-                      }
-                  </div>
-            </Paper>
+            <div onScroll={handleScroll} style={{ maxHeight: '300px', overflow: 'auto' }}>
+              {userActivity.map(activity => (
+                <UserActivitylog activity={activity} key={activity.id} />
+              ))}
+            </div>
+          </Paper>
 
             {TEAM_ENABLED== true ? (<Paper   className= {classes.profileLowerStyle}>
             <Typography
@@ -322,7 +316,7 @@ function Profile(props) {
              color="textPrimary"
              className= {classes.titleStyle}
             >
-            {t('profile.teams')}
+            {t('Teams')}
             <CustomButton
               className={classes.teamButton}
               variant="contained"
@@ -335,55 +329,43 @@ function Profile(props) {
             </Typography>
             <Grid container spacing={2}>
                 {teams.map(team => (
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    md={6}
-                    className={classes.projectGridStyle}
-                    align="center"
-                  > 
-                  
-                  <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>
-                    <Card>
-                      <CardContent className={classes.mediaBoxStyle}>
-                        <Avatar
-                          className={classes.creatorAvatarStyle}
-                          src={team.avatar}
-                          alt={team.groupname}
-                        />
-                        <Typography className={classes.titleStyle} variant="h5" component="h2">
-                          {team.groupname}
-                        </Typography>
-                        <Typography
-                          className={classes.descriptionStyle}
-                          variant="subtitle2"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          {team.description}
-                        </Typography>
-                        <CustomButton
-                          className={classes.followButton}
-                          variant="outlined"
-                          margin="normal"
-                          secondaryButtonStyle
-                          onClick={() => followTeam(team.groupname, props.auth.username, props)}
-                          style={{
-                            fontSize: '12px', // Adjust the font size as needed
-                            padding: '6px 12px', // Adjust the padding to change the button size
-                          }}
-                        >
-                          {team.members.includes(props.auth.id) ? t('profile.unfollow') : t('profile.follow')}
-                        </CustomButton>
-                      </CardContent>
-                    </Card>
-                  </Link>
-
+                  <Grid item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
+                    <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>
+                      <Card>
+                        <CardContent className={classes.mediaBoxStyle}>
+                          <Avatar className={classes.creatorAvatarStyle} src={team.avatar} alt={team.groupname} />
+                          <Typography className={classes.titleStyle} variant="h5" component="h2">
+                            {team.groupname}
+                          </Typography>
+                          <Typography
+                            className={classes.descriptionStyle}
+                            variant="subtitle2"
+                            color="textSecondary"
+                            component="p"
+                          >
+                            {team.description}
+                          </Typography>
+                          <CustomButton
+                            className={classes.followButton}
+                            variant="outlined"
+                            margin="normal"
+                            secondaryButtonStyle
+                            onClick={() => followTeam(team.groupname, props.auth.username, props)}
+                            style={{
+                              fontSize: '12px', // Adjust the font size as needed
+                              padding: '6px 12px', // Adjust the padding to change the button size
+                            }}
+                          >
+                            {team.members.includes(props.auth.id) ? t('profile.unfollow') : t('profile.follow')}
+                          </CustomButton>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   </Grid>
                 ))}
               </Grid>
-            </Paper>):null}
+            </Paper>
+          ) : null}
 
           {profile.projects_count > 0 || drafts.length > 0 ? (
             username === props.auth.username ? (
