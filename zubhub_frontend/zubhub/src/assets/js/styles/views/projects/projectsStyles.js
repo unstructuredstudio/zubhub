@@ -35,7 +35,7 @@ const styles = theme => ({
     paddingTop: '2.3em',
     paddingBottom: '2.8em',
     justifyContent: 'center',
-    width: '100%',
+    width: '100vw',
     marginBottom: '2em',
     height:'100vh',
     [theme.breakpoints.down('sm')]: {
