@@ -38,7 +38,7 @@
     "react": "^17.0.0",
     "react-confetti": "^6.1.0",
     "react-dom": "^17.0.0",
-    "react-i18next": "^11.8.5",
+    "react-i18next": "^13.3.1",
     "react-icons": "^4.4.0",
     "react-quill": "^2.0.0",
     "react-redux": "^8.1.3",
