@@ -113,6 +113,8 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     padding: 20,
+    marginTop: 24,
+    height: '3em',
   },
   dialogIconContainer: {
     display: 'flex',
@@ -134,6 +136,7 @@ const styles = theme => ({
   },
   iconButton: {
     borderColor: colors.primary, 
+    padding: '6px 24px',
   },
   buttonIcon: {
     color: colors.primary,

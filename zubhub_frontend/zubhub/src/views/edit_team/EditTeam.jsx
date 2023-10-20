@@ -350,6 +350,7 @@ function EditTeam(props) {
                 onClick={e =>
                   handleSetState(deleteAccount(groupname, props, state))
                 }
+                className={classes.iconButton}
                 primaryButtonStyle
               >
                 {t('editTeam.delete.buttons.confirm')}
