@@ -3,6 +3,7 @@ const default_state = {
   staff_picks: [],
   hero: {},
   zubhub: {},
+  categories: []
 };
 
 const projects = (state = default_state, action) => {

@@ -340,6 +340,7 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "views_count",
             "likes",
             "saved_by",
+            "category",
             "comments_count",
             "created_on",
             "publish",

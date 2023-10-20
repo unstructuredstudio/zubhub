@@ -215,10 +215,14 @@ export const getProjects = args => {
  * @todo - describe function's signature
  */
 export const getCategories = args => {
-  return () => {
+  return dispatch => {
     return API.getCategories()
       .then(res => {
         if (Array.isArray(res) && res.length > 0 && res[0].name) {
+          dispatch({
+            type: 'SET_PROJECTS',
+            payload: { categories: res },
+          });
           return { categories: res, loading: false };
         } else {
           res = Object.keys(res)

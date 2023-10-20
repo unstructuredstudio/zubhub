@@ -18,6 +18,15 @@ export const fetchStaffPicks = props => {
 };
 
 /**
+ * @function fetchCategories
+ * @author Oben Tabiayuk <obentabiayuk1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */ export const fetchCategories = (page, props) => {
+  return props.getCategories({ page, t: props.t, token: props.auth.token });
+};
+
+/**
  * @function updateProjects
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
