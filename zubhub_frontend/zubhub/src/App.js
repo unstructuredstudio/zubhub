@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { withTranslation } from 'react-i18next';
-import { Routes, Route, Redirect, useLocation, useParams, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useParams, useNavigate } from 'react-router-dom';
 import CreateActivity from './views/create_activity/CreateActivity';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
-import ProtectedRoute from './components/protected_route/ProtectedRoute';
+import ProtectedRoutes from './components/protected_routes/ProtectedRoutes';
 import ZubhubAPI from '../src/api/api';
 import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
@@ -87,7 +87,7 @@ const Wrapper = props => {
 };
 
 function App(props) {
-  console.log(props, "APPPP")
+  console.log(props, 'APPPP');
   const theme = useContext(ThemeContext);
 
   useEffect(() => {
@@ -108,12 +108,15 @@ function App(props) {
     <ThemeContext.Provider value={theme}>
       <ScrollToTop />
       <Routes>
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/profile" element={<Wrapper component={Profile} {...props} />} />
+          <Route path="/settings" element={<Wrapper component={Settings} {...props} />} />
+        </Route>
         <Route path="/" element={<Wrapper component={Home} {...props} />} />
         <Route path="/projects" element={<Wrapper component={Projects} {...props} />} />
 
         {/* <Route path="/projects/:id/preview" element={<Wrapper component={PreviewProject} /> */}
 
-        <Route path="/settings" element={<Wrapper component={Settings} {...props} />} />
         <Route path="/activities/create" element={<Wrapper component={CreateActivity} {...props} />} />
         <Route path="/activities/:id/linkedProjects" element={<Wrapper component={LinkedProjects} {...props} />} />
         <Route path="/search" element={<Wrapper component={SearchResults} {...props} />} />
@@ -138,7 +141,6 @@ function App(props) {
         <Route path="/creators/:username" element={<Wrapper component={Profile} {...props} />} />
         <Route path="/account-status" element={<Wrapper component={AccounStatus} {...props} />} />
         <Route path="/teams/:groupname" element={<Wrapper component={Team} {...props} />} />
-        <Route path="/profile" element={<Wrapper component={Profile} {...props} />} />
         <Route path="/edit-profile" element={<Wrapper component={EditProfile} {...props} />} />
         <Route path="/:groupname/edit-team" element={<Wrapper component={EditTeam} {...props} />} />
         <Route path="/projects/staff-picks/:id" element={<Wrapper component={StaffPickDetails} {...props} />} />
