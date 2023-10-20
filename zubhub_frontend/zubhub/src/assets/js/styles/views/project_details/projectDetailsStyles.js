@@ -1,6 +1,5 @@
 import { colors } from "../../../colors";
-import zIndex from "@material-ui/core/styles/zIndex";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 
 const styles = theme => ({

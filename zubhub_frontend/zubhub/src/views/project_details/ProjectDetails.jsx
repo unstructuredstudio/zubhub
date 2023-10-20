@@ -27,7 +27,7 @@ import { makeStyles } from '@mui/styles';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
