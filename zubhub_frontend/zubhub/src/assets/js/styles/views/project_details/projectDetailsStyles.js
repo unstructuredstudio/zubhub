@@ -259,7 +259,7 @@ const styles = theme => ({
   tagsBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: 20
+    gap: '20px'
   },
   tagsStyle: {
     backgroundColor: 'var(--text-color3)',

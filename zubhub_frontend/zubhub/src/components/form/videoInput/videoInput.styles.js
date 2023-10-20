@@ -10,7 +10,7 @@ export const videoInputStyles = theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        gap: 10,
+        gap: '10px',
         cursor: 'pointer',
         textAlign: 'center'
     },

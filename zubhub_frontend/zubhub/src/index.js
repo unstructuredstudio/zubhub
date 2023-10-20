@@ -15,6 +15,7 @@ import './assets/css/index.css';
 import configureStore from './store/configureStore';
 import './i18n';
 import { BrowserRouter } from 'react-router-dom';
+import { StyledEngineProvider } from '@mui/material/styles' 
 
 let { store, persistor } = configureStore();
 
@@ -23,11 +24,13 @@ ReactDOM.render(
     <PersistGate loading={null} persistor={persistor}>
       <React.StrictMode>
         <ThemeProvider theme={theme}>
+          <StyledEngineProvider injectFirst>
           <Suspense fallback={null}>
             <BrowserRouter>
               <App />
             </BrowserRouter>
           </Suspense>
+          </StyledEngineProvider>
         </ThemeProvider>
       </React.StrictMode>
     </PersistGate>

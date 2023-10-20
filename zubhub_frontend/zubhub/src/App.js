@@ -87,6 +87,7 @@ const Wrapper = props => {
 };
 
 function App(props) {
+  console.log(props, "APPPP")
   const theme = useContext(ThemeContext);
 
   useEffect(() => {

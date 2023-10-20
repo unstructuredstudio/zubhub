@@ -84,6 +84,7 @@ const useCommonStyles = makeStyles(commonStyles);
  * @todo - describe function's signature
  */
 function PageWrapper(props) {
+  console.log(props, 'PAGE WRAAPPER')
   const backToTopEl = useRef(null);
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
   const [isVisible, setIsVisible] = useState(false);
