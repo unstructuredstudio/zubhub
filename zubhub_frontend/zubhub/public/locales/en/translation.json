@@ -258,9 +258,9 @@
   },
 
   "projects": {
-    "1":"Get inspired by our collection of ideas.",
-    "2":"Tinker with materials and tools around you.",
-    "shareProject": "Share your work!",
+    "1":"Explore, ",
+    "2": "Create, Share!",
+    "shareProject": "Share your work",
     "exploreIdeas": "Explore Ideas",
     "zubhubAmbassadors": "Become an Ambassador",
     "newStuff": "New Stuff",

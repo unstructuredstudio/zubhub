@@ -25,20 +25,35 @@ const styles = theme => ({
     // '& .MuiGrid-root.MuiGrid-container': {
     //   width: '100%',
     [theme.breakpoints.down('sm')]: {
-      padding: '0 24px'
+      padding: '0 24px',
+      width: '100%',
     },
   },
-  heroSectionStyle: {
+  heroMainSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
-    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
     display: 'flex',
     paddingTop: '2.3em',
-    paddingBottom: '2.85em',
+    paddingBottom: '2.8em',
     justifyContent: 'center',
     width: '100vw',
-    marginBottom: '2em'
+    marginBottom: '2em',
+    height:'100vh',
+    [theme.breakpoints.down('sm')]: {
+      width: '100',
+      height:'fit-content',
+    },
+  },
+    heroSectionStyle: {
+      backgroundColor: 'var(--primary-color1)',
+      boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+      display: 'flex',
+      paddingTop: '2.3em',
+      paddingBottom: '2.85em',
+      justifyContent: 'center',
+      width: '100vw',
+      marginBottom: '2em'
   },
   imageLeft: {
     flexDirection: 'row',
@@ -79,15 +94,28 @@ const styles = theme => ({
     MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
     display: 'flex',
     paddingTop: '2.3em',
-    paddingBottom: '2.85em',
+    paddingBottom: '2.8em',
     justifyContent: 'center',
     width: '100%',
+  },
+  heroMainContainerStyle: {
+    width: '100%',
+    padding: '7rem 4rem',
+    display: 'flex',
+    [theme.breakpoints.down('1000')]: {
+      padding: '2rem 1rem',
+      flexDirection: 'column-reverse',
+      width: '100',
+      height:'fit-content',
+    },
   },
   heroContainerStyle: {
     width: '100%',
     maxWidth: '1190px',
-    padding: '1.15em 1.15em',
+    padding: '1.2em 1.2em',
     display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     [theme.breakpoints.down('1000')]: {
       flexDirection: 'column-reverse',
     },
@@ -99,6 +127,7 @@ const styles = theme => ({
   heroMessageContainerStyle: {
     flexGrow: 1,
     color: 'white',
+    maxWidth: '37.8rem',
   },
   heroMessageSecondaryStyle: {
     fontSize: '2.2rem',
@@ -108,20 +137,44 @@ const styles = theme => ({
   },
   heroMessagePrimaryStyle: {
     fontSize: '2.2rem',
-    fontWeight: 1000,
+    fontWeight: '1000',
   },
   MessagePrimaryStyle: {
     fontSize: '2.5rem',
     fontWeight: 1000,
   },
-
+  heroMainMessageSecondaryStyle: {
+    fontSize: '4.5rem',
+    fontWeight: '700',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '2.5rem'
+    },
+  },
+  heroMainMessagePrimaryStyle: {
+    fontSize: '2.2rem',
+    fontWeight: 500,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.2rem'
+    },
+  },
   heroButtonStyle: {
     textTransform: 'none',
-    padding: '0 1em',
-    fontSize: '1.2rem',
+    fontSize: '1.5rem',
     fontWeight: 700,
     marginRight: '1em',
     marginTop: '1.2em',
+    width: 'fit-content',
+    height: '4rem',
+    padding: '1rem 2rem',
+    borderRadius: '2rem',
+    gap: '1rem',
+  [theme.breakpoints.down('sm')]: {
+    height:'fit-content',
+    padding: '0.1em 0.7em',
+    marginBottom: '3rem',
+    width: 'fit-content',
+    fontSize: "1.2rem"
+  },
   },
   heroBtnStyle: {
     textTransform: 'none',
@@ -133,6 +186,7 @@ const styles = theme => ({
   },
   heroImageContainerStyle: {
     display: 'flex',
+    justifyContent: 'space-between',
     [theme.breakpoints.down('1000')]: {
     },
     [theme.breakpoints.down('500')]: {
@@ -160,10 +214,14 @@ const styles = theme => ({
     },
   },
   heroImageStyle: {
-    marginLeft: '2em',
+    marginLeft: '4em',
     marginRight: '2em',
     height: '100%',
     width: '100%',
+    [theme.breakpoints.down('1480')]: {
+      marginLeft: '0',
+      marginRight: '0',
+    },
     [theme.breakpoints.down('500')]: {
       marginLeft: '0',
       marginRight: '0',
@@ -260,8 +318,8 @@ const styles = theme => ({
     fontWeight: 'bold',
     fontSize: '1.5rem',
     marginTop: '2em',
-    marginLeft: '0.67em',
-    marginRight: '0.67em',
+    marginLeft: '0.7em',
+    marginRight: '0.7em',
   },
   buttonGroupStyle: {
     paddingLeft: '2em',
