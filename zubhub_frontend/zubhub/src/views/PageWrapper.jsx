@@ -54,6 +54,7 @@ import {
 import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
+import SessionExpiredCard from '../components/sessionExpired/sessionExpired';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
 import * as ProjectActions from '../store/actions/projectActions';
@@ -256,7 +257,7 @@ function PageWrapper(props) {
             '/password-reset-confirm'
           ].includes(props.match?.path) && (
             <div style={{ minHeight: '80vh' }}>
-              <NotFoundPage />
+              <SessionExpiredCard />
             </div>
           )}
       </Container>

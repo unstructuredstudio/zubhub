@@ -1,5 +1,6 @@
 import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
+import SessionExpiredCard from '../../components/sessionExpired/sessionExpired';
 
 const API = new ZubhubAPI();
 
@@ -80,7 +81,8 @@ export const logout = args => {
  */
 export const getAuthUser = props => {
   return dispatch => {
-    return API.getAuthUser(props.auth.token)
+    const fakeToken = "invalidToken123"
+    return API.getAuthUser(fakeToken)
       .then(res => {
         if (!res.id) {
           dispatch(
@@ -109,9 +111,12 @@ export const getAuthUser = props => {
 
         return res;
       })
-      .catch(error => toast.warning(error.message));
+      .catch(error => {
+        dispatch(() => { <SessionExpiredCard /> })
+      });
   };
 };
+
 
 export const AccountStatus = args => {
   return () => {
