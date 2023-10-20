@@ -3,8 +3,7 @@ import styles from '../../assets/js/styles/components/notification/NotificationS
 import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 import API from '../../api/api';
-import { ListItem, ListItemAvatar, ListItemText, Avatar } from '@mui/material';
-import { AvatarGroup } from '@mui/lab';
+import { ListItem, ListItemAvatar, ListItemText, Avatar, AvatarGroup } from '@mui/material';
 import { dFormatter } from '../../assets/js/utils/scripts';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';

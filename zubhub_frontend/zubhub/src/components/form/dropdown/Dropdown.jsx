@@ -1,6 +1,5 @@
-import { Box, Checkbox, FormControl, TextField, Typography } from '@mui/material';
+import { Box, Checkbox, FormControl, TextField, Typography, Autocomplete } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Autocomplete } from '@mui/lab';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import { colors } from '../../../assets/js/colors';
@@ -68,8 +67,8 @@ export default function Dropdown({
   );
 
   const getOptionSelected = option => {
-    if (typeof maxSelection === 'number' && value?.length == maxSelection) {
-      return value.findIndex(item => item.id === option.id) == -1;
+    if (typeof maxSelection === 'number' && value?.length === maxSelection) {
+      return value.findIndex(item => item.id === option.id) === -1;
     }
   };
 
@@ -95,7 +94,7 @@ export default function Dropdown({
         getOptionLabel={option => option?.name || ''}
         renderOption={labelView}
         renderInput={inputView}
-        getOptionSelected={(option, value) => option.id === value.id} // Customize the equality test
+        isOptionEqualToValue={(option, value) => option.id === value.id} // Customize the equality test
         {...(maxSelection && { getOptionDisabled: getOptionSelected })}
       />
     </FormControl>

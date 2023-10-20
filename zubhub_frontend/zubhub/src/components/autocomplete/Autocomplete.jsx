@@ -1,5 +1,5 @@
 import React from 'react';
-import MaterialAutcomplete from '@mui/lab/Autocomplete';
+import MaterialAutcomplete from '@mui/material/Autocomplete';
 
 const Autocomplete = ({ options, children, defaultValue, renderOption, ...otherProps }) => {
   return (
