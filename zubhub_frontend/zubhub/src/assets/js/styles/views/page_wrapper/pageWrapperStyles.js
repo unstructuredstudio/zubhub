@@ -161,7 +161,7 @@ const styles = theme => ({
   navActionStyle: {
     display: 'flex',
     alignItems: 'center',
-    gap: 20
+    gap: '20px'
   },
   avatarStyle: {
     cursor: 'pointer',

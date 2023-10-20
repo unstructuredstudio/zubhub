@@ -3,7 +3,7 @@ const styles = theme => ({
     flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: 30,
+    gap: '30px',
   },
   profileHeaderStyle: {
     paddingTop: '1.5em',

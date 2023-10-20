@@ -15,7 +15,7 @@ export const navbarStyle = theme => ({
     },
     container: {
         display: 'flex',
-        gap: 20,
+        gap: '20px',
         alignItems: 'center'
     },
     logo: {

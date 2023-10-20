@@ -11,7 +11,7 @@ export const tagsInputStyles = theme => ({
         padding: '8px 14px',
         minHeight: 50,
         borderRadius: 4,
-        gap: 12
+        gap: '12px'
     },
     button: {
         borderRadius: 4,

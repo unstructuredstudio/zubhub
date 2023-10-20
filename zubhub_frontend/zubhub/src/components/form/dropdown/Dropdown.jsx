@@ -40,7 +40,7 @@ export default function Dropdown({
     const color = rest[0].selected ? colors.primary : colors.light;
     const checked = rest[0].selected;
     return (
-      <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: 15, alignItems: 'center' }} {...props}>
+      <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: '15px', alignItems: 'center' }} {...props}>
         {multiple && withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
         {!multiple ? (
           <div className={clsx(classes.radio, checked && classes.activeRadio)}>

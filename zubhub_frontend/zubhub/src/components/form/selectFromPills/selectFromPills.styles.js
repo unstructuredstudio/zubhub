@@ -11,7 +11,7 @@ export const selectFromPillsStyles = theme => ({
         display: 'flex',
         alignItems: 'center',
         padding: '8px 10px 8px 8px',
-        gap: 6,
+        gap: '6px',
         '&:hover': {
             cursor: 'pointer'
         },
