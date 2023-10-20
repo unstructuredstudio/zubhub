@@ -398,19 +398,22 @@ const styles = theme => ({
     padding: '8px 30px',
   },
   followingButton: {
-    background: colors["green-light"],
+    background: '#8E8E8E',
     '&:hover': {
-      background: colors["green-dark"],
+      background: '#616161',
     }
   },
   unfollowingButton: {
-    background: colors.red,
+    background: '#DC3545',
     '&:hover': {
-      background: colors["red-dark"] 
+      background: '#A52A3D', 
     }
   },
   notFollowingButton: {
-    background: colors.primary,
+    background: '#00B8C4',
+    '&:hover': {
+      background: '#0097A0',
+    }
   }
 });
 
