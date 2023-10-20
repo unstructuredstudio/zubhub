@@ -81,8 +81,7 @@ export const logout = args => {
  */
 export const getAuthUser = props => {
   return dispatch => {
-    const fakeToken = "invalidToken123"
-    return API.getAuthUser(fakeToken)
+    return API.getAuthUser(props.auth.token)
       .then(res => {
         if (!res.id) {
           dispatch(
