@@ -43,7 +43,7 @@ const SessionExpiredCard = () => {
                                 primaryButtonStyle
                                 customButtonStyle
                             >
-                                Login
+                                OK
                             </CustomButton>
                         </Link>
                     </div>
