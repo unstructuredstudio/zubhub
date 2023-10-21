@@ -27,10 +27,11 @@ export const links = ({ draftCount, myProjectCount, auth, t }) => [
         requireAuth: true,
     },
     {
-        label: `${t('pageWrapper.sidebar.myProjects')}(${myProjectCount})`,
+        label: `${t('pageWrapper.sidebar.myProjects')}`,
         link: `/creators/${auth?.username}/projects`,
         icon: Publish,
         requireAuth: true,
+        customButton: true,
     },
     { label: t('pageWrapper.sidebar.bookmarks'), link: '/projects/saved', icon: Bookmark, requireAuth: true },
     ...(TEAM_ENABLED ? [{ label: t('pageWrapper.sidebar.teams'), link: '/teams/all', icon: RiTeamFill }] : []),
