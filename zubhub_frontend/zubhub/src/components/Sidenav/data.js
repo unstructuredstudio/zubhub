@@ -21,10 +21,11 @@ export const links = ({ draftCount, myProjectCount, auth, t }) => [
         ? [{ label: t('pageWrapper.sidebar.createActivity'), link: '/activities/create', icon: PostAddOutlined }]
         : []),
     {
-        label: `${t('pageWrapper.sidebar.myDrafts')}(${draftCount})`,
+        label: `${t('pageWrapper.sidebar.myDrafts')}`,
         link: `/creators/${auth?.username}/drafts`,
         icon: GiNotebook,
         requireAuth: true,
+        customButton: true,
     },
     {
         label: `${t('pageWrapper.sidebar.myProjects')}`,
