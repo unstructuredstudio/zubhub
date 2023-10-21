@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, Link } from 'react-router-dom'; // Make sure to import Link along with useHistory
+import { useHistory, Link } from 'react-router-dom';
 import { sessionExpiredStyle } from './sessionExpired.Style';
 import Modal from '../modals/Modal';
 import CustomButton from '../button/Button';
