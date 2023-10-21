@@ -25,7 +25,7 @@ const styles = theme => ({
     // '& .MuiGrid-root.MuiGrid-container': {
     //   width: '100%',
     [theme.breakpoints.down('sm')]: {
-      padding: '0 24px',
+      // padding: '0 24px',
       width: '100%',
     },
   },
@@ -39,7 +39,7 @@ const styles = theme => ({
     marginBottom: '2em',
     height:'100vh',
     [theme.breakpoints.down('sm')]: {
-      width: '100',
+      width: '100%',
       height:'fit-content',
     },
   },
@@ -310,6 +310,7 @@ const styles = theme => ({
     // marginTop: '3em',
     maxWidth: '1190px',
     width: '100%',
+    padding: '0 2rem',
   },
   projectGridStyle: {
     marginBottom: '2em',
