@@ -165,12 +165,12 @@ export const uploadProject = async (state, props, handleSetState) => {
     ? props.values['tags'].map(tag => (typeof tag === 'string' ? { name: tag } : tag))
     : [];
 
-  const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
+  const create_or_update = props.params.id ? props.updateProject : props.createProject;
   create_or_update({
     ...props.values,
     tags,
     materials_used,
-    id: props.match.params.id,
+    id: props.params.id,
     token: props.auth.token,
     activity: props.location.state?.activity_id,
     images: state.media_upload.uploaded_images_url || '',
@@ -377,7 +377,7 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
 
 export const getActivity = (props, state) => {
   return API.getActivity({
-    id: props.match.params.id,
+    id: props.params.id,
     token: props.auth.token,
   }).then(obj => {
     if (obj) {
@@ -649,10 +649,10 @@ export const submitForm = async ({ step1Values, step2Values, props, state, handl
     }
   }
 
-  const activityId = props.match.params?.id;
+  const activityId = props.params?.id;
   let createOrUpdateResponse;
 
-  if (props.match.params.id) {
+  if (props.params.id) {
     // API call to the update activity
     createOrUpdateResponse = await API.updateActivity(props.auth.token, activityId, formData);
   } else {

@@ -687,13 +687,13 @@ export const uploadProject = async (state, props, handleSetState) => {
 
   const tags = props.values['tags'] ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false)) : [];
 
-  const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
+  const create_or_update = props.params.id ? props.updateProject : props.createProject;
 
   create_or_update({
     ...props.values,
     materials_used,
     tags,
-    id: props.match.params.id,
+    id: props.params.id,
     token: props.auth.token,
     activity: props.location.state?.activity_id,
     images: state.media_upload.uploaded_images_url,
@@ -936,7 +936,7 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
 export const getProject = (refs, props, state) => {
   return props
     .getProject({
-      id: props.match.params.id,
+      id: props.params.id,
       token: props.auth.token,
     })
     .then(obj => {

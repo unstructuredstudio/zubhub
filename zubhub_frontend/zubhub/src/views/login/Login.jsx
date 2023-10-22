@@ -41,6 +41,7 @@ const useStyles = makeStyles(styles);
  * @todo - describe function's signature
  */
 function Login(props) {
+  console.log(props, 'alalalal');
   const classes = useStyles();
 
   const [state, setState] = React.useState({

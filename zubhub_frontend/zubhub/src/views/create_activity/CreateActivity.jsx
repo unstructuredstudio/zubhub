@@ -72,7 +72,7 @@ export default function CreateActivity(props) {
 
   useEffect(() => {
     if (firstRender) {
-      if (props.match.params.id) {
+      if (props.params.id) {
         setIsLoading(true);
         script
           .getActivity({ ...props, auth, formikStep1, formikStep2 }, state)
@@ -122,7 +122,7 @@ export default function CreateActivity(props) {
       success => {
         if (success) {
           if (activeStep == 1) go('next');
-          if (activeStep == 2) props.navigate(`/activities/${props.match.params.id}?success=true`);
+          if (activeStep == 2) props.navigate(`/activities/${props.params.id}?success=true`);
           setIsLoading(false);
         }
       },

@@ -57,7 +57,7 @@ const buildMembers = (members, style, props, state, handleSetState) =>
                 : props.t('userFollowers.follower.follow')}
             </CustomButton>
           ) : null}
-          {props.auth.members_count !== null && props.match.params.username === props.auth.username ? (
+          {props.auth.members_count !== null && props.params.username === props.auth.username ? (
             <CustomButton
               variant="outlined"
               onClick={(e, id = member.id) => handleSetState(removeMember(e, props, state, id, toast))}
@@ -104,7 +104,7 @@ function GroupMembers(props) {
   };
 
   const { members, prev_page, next_page, loading } = state;
-  const username = props.match.params.username;
+  const username = props.params.username;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;

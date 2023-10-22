@@ -7,7 +7,7 @@ import { getUserDrafts } from '../../store/actions/projectActions';
  *
  * @todo - describe function's signature
  */ export const getUserProfile = props => {
-  let username = props.match.params.username;
+  let username = props.params.username;
 
   if (!username) {
     username = props.auth.username;
@@ -30,7 +30,7 @@ export const followTeam = (groupname, username, props) => {
  *
  * @todo - describe function's signature
  */ export const getUserTeams = props => {
-  let username = props.match.params.username;
+  let username = props.params.username;
 
   if (!username) {
     username = props.auth.username;

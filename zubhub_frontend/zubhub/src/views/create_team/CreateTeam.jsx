@@ -94,20 +94,20 @@ function CreateTeam(props) {
 
   const getToastMessage = () => {
     let message = '';
-    if (activeStep === 1 && props.match.path === '/projects/create') {
+    if (activeStep === 1 && props.location.pathname === '/projects/create') {
       message = 'createProject.addedToDraft';
     }
-    if ([1, 2].includes(activeStep) && props.match.params.id) {
+    if ([1, 2].includes(activeStep) && props.params.id) {
       message = 'createProject.savedStep';
     }
-    if (activeStep === 3 && props.match.params.id) {
+    if (activeStep === 3 && props.params.id) {
       message = 'createProject.createToastSuccess';
     }
     return message;
   };
 
   useEffect(() => {
-    if (props.match.params.id) {
+    if (props.params.id) {
       // Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
       //   handleSetState({ ...result[0], ...result[1] }),
       // );
@@ -129,7 +129,7 @@ function CreateTeam(props) {
         props.navigate(`/projects/${state.id}/edit`, { replace: true });
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.navigate(`/projects/${props.match.params.id}?success=true`);
+        return props.navigate(`/projects/${props.params.id}?success=true`);
       }
       go('next');
     }
@@ -254,10 +254,10 @@ function CreateTeam(props) {
       </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
-      <Link href="/create-team" color="inherit" >
-        <KeyboardBackspaceRoundedIcon/>
-      </Link>
-        {props.match.params.id && (
+        <Link href="/create-team" color="inherit">
+          <KeyboardBackspaceRoundedIcon />
+        </Link>
+        {props.params.id && (
           <>
             <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
               Preview

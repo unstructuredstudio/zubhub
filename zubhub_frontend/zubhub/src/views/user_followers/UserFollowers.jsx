@@ -80,7 +80,7 @@ function UserFollowers(props) {
   };
 
   const { followers, prev_page, next_page, loading } = state;
-  const username = props.match.params.username;
+  const username = props.params.username;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;

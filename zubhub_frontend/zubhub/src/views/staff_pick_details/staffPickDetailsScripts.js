@@ -7,7 +7,7 @@
 export const fetchPage = (page, props) => {
   return props.getStaffPick({
     page,
-    id: props.match.params.id,
+    id: props.params.id,
     t: props.t,
     token: props.auth.token,
   });
@@ -25,9 +25,7 @@ export const updateProjects = (res, { staff_pick }, props, toast) => {
       if (res.project && res.project.title) {
         const projects = {
           ...staff_pick.projects,
-          results: staff_pick.projects.results.map(project =>
-            project.id === res.project.id ? res.project : project,
-          ),
+          results: staff_pick.projects.results.map(project => (project.id === res.project.id ? res.project : project)),
         };
 
         return { staff_pick: { ...staff_pick, projects } };

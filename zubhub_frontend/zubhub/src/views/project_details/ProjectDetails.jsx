@@ -50,7 +50,10 @@ import {
 import { CloseOutlined } from '@mui/icons-material';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
-import styles, { EnlargedImgArrow, sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import styles, {
+  EnlargedImgArrow,
+  sliderSettings,
+} from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import { cloudinaryFactory, getPlayerOptions, nFormatter, parseComments } from '../../assets/js/utils/scripts';
 import { Comments, Modal, Pill } from '../../components/index.js';
 import Project from '../../components/project/Project';
@@ -119,7 +122,7 @@ function ProjectDetails(props) {
   React.useEffect(() => {
     Promise.resolve(
       props.getProject({
-        id: props.match.params.id,
+        id: props.params.id,
         token: props.auth.token,
         t: props.t,
       }),
@@ -435,8 +438,8 @@ function ProjectDetails(props) {
           }}
           BackdropProps
           fullWidth
-          scroll='body'
-          maxWidth='md'
+          scroll="body"
+          maxWidth="md"
           className={classes.enlargedImageDialogStyle}
           open={open_enlarged_image_dialog}
           onClose={() =>
@@ -450,40 +453,29 @@ function ProjectDetails(props) {
           <Box className={classes.enlargedImageContainer}>
             <IconButton
               className={classes.cancelEnlargedImageBtn}
-              onClick={() => setState(state => ({...state, open_enlarged_image_dialog: !open_enlarged_image_dialog,}))}
+              onClick={() => setState(state => ({ ...state, open_enlarged_image_dialog: !open_enlarged_image_dialog }))}
               aria-label={t('projectDetails.ariaLabels.closeImageDialog')}
             >
-              <CloseIcon
-                className={classes.enlargedImageDialogCloseIcon}
-              />
+              <CloseIcon className={classes.enlargedImageDialogCloseIcon} />
             </IconButton>
             {project.images.length <= 1 ? (
-              <img
-                className={classes.enlargedImageStyle}
-                src={enlarged_image_url}
-                alt={`${project.title}`}
-              />
+              <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
             ) : (
-                <Slider
-                  initialSlide={enlarged_image_id}
-                  adaptiveHeight
-                  infinite
-                  speed={500}
-                  slidesToShow={1}
-                  slidesToScroll={1}
-                  className={classes.enlargedImageStyle}
-                  nextArrow={<EnlargedImgArrow />}
-                  prevArrow={<EnlargedImgArrow />}
-                >
-                  {project.images.map(image => (
-                    <img
-                      className={classes.sliderImageStyle}
-                      key={image.public_id}
-                      src={image.image_url}
-                      alt={''}
-                    />
-                  ))}
-                </Slider>
+              <Slider
+                initialSlide={enlarged_image_id}
+                adaptiveHeight
+                infinite
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                className={classes.enlargedImageStyle}
+                nextArrow={<EnlargedImgArrow />}
+                prevArrow={<EnlargedImgArrow />}
+              >
+                {project.images.map(image => (
+                  <img className={classes.sliderImageStyle} key={image.public_id} src={image.image_url} alt={''} />
+                ))}
+              </Slider>
             )}
           </Box>
         </Dialog>

@@ -120,7 +120,7 @@ function PreviewProject({ onClose, ...props }) {
   React.useEffect(() => {
     Promise.resolve(
       props.getProject({
-        id: props.match.params.id,
+        id: props.params.id,
         token: props.auth.token,
         t: props.t,
       }),

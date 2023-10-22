@@ -42,7 +42,7 @@ function PreviewActivity({ onClose, ...props }) {
 
   useEffect(() => {
     setIsLoading(true);
-    API.getActivity({ token: auth?.token, id: props.match.params.id })
+    API.getActivity({ token: auth?.token, id: props.params.id })
       .then(data => {
         setActivity(data);
       })
