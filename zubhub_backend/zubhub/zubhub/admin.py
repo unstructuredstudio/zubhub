@@ -28,24 +28,13 @@ class PrivacyAdmin(SummernoteModelAdmin):
     summernote_fields = ('privacy_policy', 'terms_of_use',)
     readonly_fields = ["edited_on"]
 
-    class Media:
-        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
-
-
 class HelpAdmin(SummernoteModelAdmin):
     summernote_fields = ('about',)
     readonly_fields = ["edited_on"]
 
-    class Media:
-        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
-
 class ChallengeAdmin(SummernoteModelAdmin):
     summernote_fields = ('challenge',)
     readonly_fields = ["edited_on"]
-
-    class Media:
-        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
-        
 
 class StatusEnum(Enum):
     INACTIVE = 0
@@ -63,23 +52,14 @@ class ThemeAdmin(admin.ModelAdmin):
 
     make_selected_active.short_description = "Select and make active"
 
-
 class FAQAdmin(SummernoteModelAdmin):
     summernote_fields = ('answer',)
-
-    class Media:
-        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
-
 
 class AmbassadorsAdmin(SummernoteModelAdmin):
     summernote_fields = ('ambassadors',)
     readonly_fields = ["edited_on"]
     search_fields = ["projects"]
     
-    class Media:
-        js = ('https://code.jquery.com/jquery-3.1.1.js', 'js/main.js',)
-
-
 admin.site.register(AdminSettings, AdminSettingsAdmin)
 admin.site.register(Hero, HeroAdmin)
 admin.site.register(Privacy, PrivacyAdmin)

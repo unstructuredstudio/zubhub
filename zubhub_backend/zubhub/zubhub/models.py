@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
-from .utils import MediaStorage, get_upload_path, clean_summernote_html
+from .utils import MediaStorage, get_upload_path, clean_summernote_html, replace_summernote_images_with_media_storage_equiv
 from projects.models import Project 
 from django.utils.html import strip_tags
 
@@ -81,8 +81,12 @@ class Privacy(models.Model):
         return self.edited_on.strftime("ZubHub's Guildlines, Policies and Terms of use as edited on %I:%M %p, %d %b %Y %Z")
 
     def save(self, *args, **kwargs):
-        self.privacy_policy = clean_summernote_html(self.privacy_policy)
-        self.terms_of_use = clean_summernote_html(self.terms_of_use)
+        self.privacy_policy = clean_summernote_html(
+            replace_summernote_images_with_media_storage_equiv(self.privacy_policy)
+        )
+        self.terms_of_use = clean_summernote_html(
+            replace_summernote_images_with_media_storage_equiv(self.terms_of_use)
+        )
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
 
@@ -99,7 +103,9 @@ class Help(models.Model):
         return self.edited_on.strftime("About Zubhub as edited on %I:%M %p, %d %b %Y %Z")
 
     def save(self, *args, **kwargs):
-        self.about = clean_summernote_html(self.about)
+        self.about = clean_summernote_html(
+            replace_summernote_images_with_media_storage_equiv(self.about)
+        )
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
 
@@ -115,7 +121,9 @@ class Challenge(models.Model):
         return self.edited_on.strftime("Challenges as edited on %I:%M %p, %d %b %Y %Z")
 
     def save(self, *args, **kwargs):
-        self.challenge = clean_summernote_html(self.challenge)
+        self.challenge = clean_summernote_html(
+            replace_summernote_images_with_media_storage_equiv(self.challenge)
+        )
         self.edited_on = timezone.now()
         super().save(*args, **kwargs)
 
@@ -131,8 +139,12 @@ class FAQ(models.Model):
         return self.question
 
     def save(self, *args, **kwargs):
-        self.question = clean_summernote_html(self.question)
-        self.answer = clean_summernote_html(self.answer)
+        self.question = clean_summernote_html(
+            replace_summernote_images_with_media_storage_equiv(self.question)
+        )
+        self.answer = clean_summernote_html(
+            replace_summernote_images_with_media_storage_equiv(self.answer)
+        )
         super().save(*args, **kwargs)
 
 
