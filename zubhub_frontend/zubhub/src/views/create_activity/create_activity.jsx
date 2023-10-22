@@ -24,7 +24,7 @@ const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivity(props) {
   const { t, navigate } = props;
-  const { id } = props.match.params;
+  const { id } = props.params;
   const classes = useStyles();
   const project_classes = useProjectStyles();
   const common_classes = useCommonStyles();

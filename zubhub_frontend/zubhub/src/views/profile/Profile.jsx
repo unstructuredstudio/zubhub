@@ -78,7 +78,7 @@ function Profile(props) {
   const username_el = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const username = props.match.params.username || props.auth.username;
+  const username = props.params.username || props.auth.username;
   const [page, setPage] = useState(1);
   const [userActivity, setUserActivity] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);

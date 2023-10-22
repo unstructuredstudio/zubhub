@@ -5,26 +5,26 @@
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props) => {
-  const username = props.match.params.username;
+  const username = props.params.username;
   return props.getTeamProfile({
     page,
     t: props.t,
-    token: props.auth.token
+    token: props.auth.token,
   });
 };
 
 export const fetchTeam = (page, props) => {
-  const username = props.match.params.username;
+  const username = props.params.username;
   return props.getUserTeams({
     page,
     t: props.t,
-    token: props.auth.token
+    token: props.auth.token,
   });
 };
 
-export const followTeam = (groupname, username,props) => {
-  let token=props.auth.token;
-  props.toggleTeamFollow({groupname, username, token})
+export const followTeam = (groupname, username, props) => {
+  let token = props.auth.token;
+  props.toggleTeamFollow({ groupname, username, token });
 };
 
 /**
@@ -37,9 +37,7 @@ export const updateProjects = (res, { results: projects }, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
+        projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         return { results: projects };
       } else {
         res = Object.keys(res)

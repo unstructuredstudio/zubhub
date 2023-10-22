@@ -55,7 +55,7 @@ export default function ActivityDetailsV2(props) {
   const creator = activity.creators?.[0];
 
   useEffect(() => {
-    API.getActivity({ token: auth?.token, id: props.match.params.id }).then(data => {
+    API.getActivity({ token: auth?.token, id: props.params.id }).then(data => {
       setActivity(data);
     });
 

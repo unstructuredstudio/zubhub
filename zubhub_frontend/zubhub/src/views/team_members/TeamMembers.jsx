@@ -81,7 +81,7 @@ function TeamMembers(props) {
   };
 
   const { followers, prev_page, next_page, loading } = state;
-  const username = props.match.params.username;
+  const username = props.params.username;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
@@ -91,11 +91,7 @@ function TeamMembers(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container spacing={3} justify="center">
             <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
+              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
                 {groupname}'s {t('teamMembers.members')}
               </Typography>
             </Grid>

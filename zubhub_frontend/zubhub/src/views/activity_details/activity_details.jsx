@@ -22,7 +22,7 @@ function ActivityDetails(props) {
   const navigate = useNavigate();
   const common_classes = useCommonStyles();
   const { t } = props;
-  const { id } = props.match.params;
+  const { id } = props.params;
   const { activities, auth } = useSelector(state => state);
   let activity = {};
 

@@ -181,7 +181,7 @@ export const uploadProject = async (state, props, handleSetState) => {
   const tags = props.values['tags']
     ? props.values['tags'].map(tag => (typeof tag === 'string' ? { name: tag } : tag))
     : [];
-  const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
+  const create_or_update = props.params.id ? props.updateProject : props.createProject;
   let additionalFiles = props.values.images.filter(file => file?.image_url);
   if (additionalFiles.length < props.values.images.length) {
     additionalFiles = [...additionalFiles, ...state.media_upload.uploaded_images_url]?.map(
@@ -193,7 +193,7 @@ export const uploadProject = async (state, props, handleSetState) => {
     ...props.values,
     tags,
     materials_used,
-    id: props.match.params.id,
+    id: props.params.id,
     token: props.auth.token,
     activity: props.location.state?.activity_id,
     images: additionalFiles || '',
@@ -410,7 +410,7 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
 export const getProject = (props, state) => {
   return props
     .getProject({
-      id: props.match.params.id,
+      id: props.params.id,
       token: props.auth.token,
     })
     .then(obj => {

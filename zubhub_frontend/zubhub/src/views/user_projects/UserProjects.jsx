@@ -54,7 +54,7 @@ function UserProjects(props) {
 
   const { results: projects, prev_page, next_page, loading } = state;
   const { t } = props;
-  const username = props.match.params.username;
+  const username = props.params.username;
   if (loading) {
     return <LoadingPage />;
   } else if (projects && projects.length > 0) {

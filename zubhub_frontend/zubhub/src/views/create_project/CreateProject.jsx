@@ -87,13 +87,13 @@ function CreateProject(props) {
 
   const getToastMessage = () => {
     let message = '';
-    if (activeStep === 1 && props.match.path === '/projects/create') {
+    if (activeStep === 1 && props.location.pathname === '/projects/create') {
       message = 'createProject.addedToDraft';
     }
-    if ([1, 2].includes(activeStep) && props.match.params.id) {
+    if ([1, 2].includes(activeStep) && props.params.id) {
       message = 'createProject.savedStep';
     }
-    if (activeStep === 3 && props.match.params.id) {
+    if (activeStep === 3 && props.params.id) {
       message = 'createProject.createToastSuccess';
     }
     return message;
@@ -119,7 +119,7 @@ function CreateProject(props) {
   };
 
   useEffect(() => {
-    if (props.match.params.id) {
+    if (props.params.id) {
       Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
         handleSetState({ ...result[0], ...result[1] }),
       );
@@ -141,7 +141,7 @@ function CreateProject(props) {
         props.navigate(`/projects/${state.id}/edit`, { replace: true });
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.navigate(`/projects/${props.match.params.id}?success=true`);
+        return props.navigate(`/projects/${props.params.id}?success=true`);
       }
       setState({ ...state, success: false });
       go('next');
@@ -261,9 +261,9 @@ function CreateProject(props) {
       {/* Banner */}
       <Box className={classes.banner}>
         <Link href="/projects/create" color="inherit">
-          <KeyboardBackspaceRoundedIcon/>
+          <KeyboardBackspaceRoundedIcon />
         </Link>
-        {props.match.params.id && (
+        {props.params.id && (
           <>
             <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
               Preview
@@ -410,9 +410,7 @@ const SelectModeUI = ({ setMode, t }) => {
       <Box className={clsx(classes.selectMode)}>
         <Box className={classes.selectModeTextContainer}>
           <Typography className={clsx(commonClasses.title1)}>{t('createProject.welcomeMsg.primary')}</Typography>
-          <Typography>
-            {t('createProject.selectMode.description')}
-          </Typography>
+          <Typography>{t('createProject.selectMode.description')}</Typography>
         </Box>
         <div className={clsx(classes.modeItemContainer)}>
           <div
@@ -420,11 +418,17 @@ const SelectModeUI = ({ setMode, t }) => {
             className={clsx(classes.modeItem, mode == modes.personal ? classes.modeItemSelected : null)}
           >
             <div className={classes.checkBoxContainer}>
-              <CheckCircle className={clsx(mode === modes.personal ? classes.checkBoxSelected : classes.checkBoxDefault)} />
+              <CheckCircle
+                className={clsx(mode === modes.personal ? classes.checkBoxSelected : classes.checkBoxDefault)}
+              />
             </div>
             <Person className={classes.modeItemIcon} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>{t('createProject.selectMode.personalMode.title')}</Typography>
-            <Typography className={classes.modeItemDescription}>{t('createProject.selectMode.personalMode.description')}</Typography>
+            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>
+              {t('createProject.selectMode.personalMode.title')}
+            </Typography>
+            <Typography className={classes.modeItemDescription}>
+              {t('createProject.selectMode.personalMode.description')}
+            </Typography>
           </div>
 
           <div
@@ -435,8 +439,12 @@ const SelectModeUI = ({ setMode, t }) => {
               <CheckCircle className={clsx(mode === modes.team ? classes.checkBoxSelected : classes.checkBoxDefault)} />
             </div>
             <PeopleAltSharp className={classes.modeItemIcon} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>{t('createProject.selectMode.teamMode.title')}</Typography>
-            <Typography className={classes.modeItemDescription}>{t('createProject.selectMode.teamMode.description')}</Typography>
+            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>
+              {t('createProject.selectMode.teamMode.title')}
+            </Typography>
+            <Typography className={classes.modeItemDescription}>
+              {t('createProject.selectMode.teamMode.description')}
+            </Typography>
           </div>
         </div>
         <CustomButton
