@@ -109,7 +109,7 @@ function App(props) {
     <ThemeContext.Provider value={theme}>
       <ScrollToTop />
       <Routes>
-        <Route element={<ProtectedRoutes />}>
+        <Route element={<ProtectedRoutes {...props} />}>
           <Route path="/profile" element={<Wrapper component={Profile} {...props} />} />
           <Route path="/settings" element={<Wrapper component={Settings} {...props} />} />
         </Route>
