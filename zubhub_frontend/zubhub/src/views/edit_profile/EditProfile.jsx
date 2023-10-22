@@ -304,7 +304,18 @@ function EditProfile(props) {
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         label={t('editProfile.inputs.email.label')}
-                      />
+                        />
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
+                        {(props.status && props.status['email']) ||
+                          (props.touched['email'] &&
+                            props.errors['email'] &&
+                            t(
+                              `editProfile.inputs.email.errors.${props.errors['email']}`,
+                            ))}
+                      </FormHelperText>
                     </FormControl>
                   </Grid>
 
@@ -338,6 +349,17 @@ function EditProfile(props) {
                         onBlur={props.handleBlur}
                         label={t('editProfile.inputs.phone.label')}
                       />
+                      <FormHelperText
+                        className={classes.fieldHelperTextStyle}
+                        error
+                      >
+                        {(props.status && props.status['phone']) ||
+                          (props.touched['phone'] &&
+                            props.errors['phone'] &&
+                            t(
+                              `editProfile.inputs.phone.errors.${props.errors['phone']}`,
+                            ))}
+                      </FormHelperText>
                     </FormControl>
                   </Grid>
 

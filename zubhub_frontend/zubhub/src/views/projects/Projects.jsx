@@ -173,6 +173,7 @@ function Projects(props) {
                     onClick={(e, page = prev_page.split('?')[1]) => {
                       handleSetState({ loading: true });
                       handleSetState(fetchPage(page, props));
+                      window.scrollTo(0, 0);
                     }}
                     primaryButtonStyle
                   >
@@ -187,6 +188,7 @@ function Projects(props) {
                     onClick={(e, page = next_page.split('?')[1]) => {
                       handleSetState({ loading: true });
                       handleSetState(fetchPage(page, props));
+                      window.scrollTo(0, 0);
                     }}
                     primaryButtonStyle
                   >

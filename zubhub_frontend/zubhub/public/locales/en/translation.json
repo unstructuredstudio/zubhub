@@ -66,7 +66,10 @@
     },
     "errors": {
       "unexpected": "Uh oh! Seems like we could not get your profile. Maybe try again?",
-      "logoutFailed": "Hmm..seems like an occured while signing you out. Please try again"
+      "logoutFailed": "Hmm..seems like an occured while signing you out. Please try again",
+      "tagCannotBeEmpty": "Tag cannot be empty.",
+      "tagAlreadyInSearch": "The tag \"{{tagName}}\" is already in the search bar and cannot be added again.",
+      "tagNotFound": "The tag \"{{tagName}}\" was not found and cannot be added."
     }
   },
 
@@ -255,9 +258,9 @@
   },
 
   "projects": {
-    "1":"Get inspired by our collection of ideas.",
-    "2":"Tinker with materials and tools around you.",
-    "shareProject": "Share your work!",
+    "1":"Explore, ",
+    "2": "Create, Share!",
+    "shareProject": "Share your work",
     "exploreIdeas": "Explore Ideas",
     "zubhubAmbassadors": "Become an Ambassador",
     "newStuff": "New Stuff",
@@ -344,6 +347,18 @@
     "welcomeMsg": {
       "primary": "Create Project",
       "secondary": "Tell us about your project!"
+    },
+    "selectMode": {
+      "description": "Select what kind of project it is, if you worked on the project alone select Personal project, if you worked on your project with other creators select Team project.",
+      "personalMode": {
+        "title": "Personal Project",
+        "description": "Select this if you worked on this project alone"
+      },
+      "teamMode": {
+        "title": "Team Project",
+        "description": "Select this if you worked on this project with other creators"
+      },
+      "submit": "Create Project"
     },
     "inputs": {
       "title": {
@@ -545,6 +560,7 @@
         "unsave": "unsave"
       },
       "imageDialog": "enlarged image dialog",
+      "closeImageDialog": "close",
       "deleteProject": "delete project dialog",
       "deleteComment": "delete comment dialog"
     },
@@ -583,7 +599,8 @@
 
   "profile": {
     "edit": "Edit",
-    "editTeam": "Edit Team Info",
+    "teams": "Teams",
+    "allTeams": "All Teams",
     "delete": {
       "label": "Delete Account",
       "dialog": {
@@ -628,7 +645,10 @@
       "placeholder1": "Tell us more about you by clicking on the edit button at the top of the page 😀!",
       "placeholder2": "Tell us more about your group by clicking on the edit button at the top of the page 😀!"
     },
-    "activityLog": "Activity Log",
+    "activityLog": {
+      "activity": "Activity Log",
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+    },
     "team": "Team",
     "createteam": "Create Team",
     "badge": {
@@ -670,13 +690,14 @@
         "label": "Location",
         "errors": {
           "min": "Your location is too short",
-          "required": "Looks like your missed this one"
+          "required": "Looks like you missed this one"
         }
       },
       "email": {
         "label": "Email",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "Your email seems invalid. Is the email address correct?"
         }
       },
@@ -684,6 +705,7 @@
         "label": "Phone",
         "disabledHelperText": "To edit this field, send a mail to admin@unstructured.studio",
         "errors": {
+          "phoneOrEmail": "You must enter either your email or phone number",
           "invalid": "I'm having trouble understanding this number. Make sure it's in this format: '+911234567890'. Upto 15 digits are allowed."
         }
       },
@@ -701,10 +723,10 @@
           "required": "Seems like you forgot this"
         }
       },
-      "submit": "Edit Profile"
+      "submit": "Save Changes"
     },
     "or": "OR",
-    "backToProfile": "Back To Profile",
+    "backToProfile": "Discard Changes",
     "toastSuccess": "Your profile was updated successfully!!",
     "errors": {
       "unexpected": "Oh no! Seems like we hit a snag :( Maybe try again later?"
@@ -848,7 +870,21 @@
       "page_empty": "This page is empty"
     }
   },
-
+  "editTeam": {
+    "info": "Edit Team Info",
+    "name": "Team Name",
+    "about": "About Team",
+    "requestName": "Enter your Team Name",
+    "delete": {
+      "question": "Delete Team Profile?",
+      "information": "Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.",
+      "confirmation": "I want to delete this team’s profile",
+      "buttons": {
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    }
+  },
   "createTeam": {
     "welcomeMsg": {
       "primary": "Create a Team",
@@ -882,6 +918,10 @@
     "3rdpage":{
       "title":"Select Project you worked on with a Team"
     }
+  },
+  "teamMembers": {
+    "members": "Members",
+    "noMember": "This team has no members"
   },
 
   "createActivity": {

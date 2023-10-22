@@ -107,7 +107,17 @@ admin-user:
 	docker-compose -f docker-compose.yml exec web bash -c "rm /dummy.sh"
 .PHONY: admin-user
 
-init: .env start migrate admin-user  ## Initialize docker-compose containers
+add-theme:
+	@echo "==="
+	@echo "== Add a theme to the database =="
+	@echo "==="
+	docker-compose -f docker-compose.yml exec web bash -c "echo 'echo \"from zubhub.models import Theme; \
+	Theme.objects.create(Theme_Name=\\\"Default\\\", status=\\\"1\\\") if not Theme.objects.filter(Theme_Name=\\\"Default\\\").exists() else None\" | python /zubhub_backend/zubhub/manage.py shell' > /theme.sh"
+	docker-compose -f docker-compose.yml exec web bash /theme.sh
+	docker-compose -f docker-compose.yml exec web bash -c "rm /theme.sh"
+.PHONY: add-theme
+
+init: .env start migrate admin-user add-theme ## Initialize docker-compose containers
 .PHONY: init
 
 search-index:
