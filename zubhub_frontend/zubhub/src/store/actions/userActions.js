@@ -155,7 +155,7 @@ export const getAllTeams = args => {
  */
 export const editTeam = args => {
   return dispatch => {
-    let profile;
+    let profile; 
     return API.editTeam(args)
       .then(res => {
         profile=res;

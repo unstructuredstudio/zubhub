@@ -92,11 +92,11 @@ function Team(props) {
     drafts: [],
     badge_tags: [],
   });
-  const [followers,setFollowers]=React.useState([]);
+  const [followers, setFollowers]=React.useState([]);
   
   React.useEffect(() => {
   try{
-    let activitylogObj= new API()
+    let activitylogObj = new API()
     const promises = [getTeamProfile(groupname, props), fetchPage(groupname, props)];
     if (username === props.auth.username) {
       promises.push(
@@ -177,7 +177,7 @@ function Team(props) {
                     primaryButtonStyle
                     onClick={() => props.history.push('/'+groupname+'/edit-team')}
                   >
-                    {t('profile.editTeam')}
+                    {t('profile.editTeam')} 
                   </CustomButton>
                 </>
               ) : (

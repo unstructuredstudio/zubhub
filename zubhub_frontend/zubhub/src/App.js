@@ -23,7 +23,7 @@ const PasswordResetConfirm = React.lazy(() =>
 );
 const EmailConfirm = React.lazy(() =>
   import('./views/email_confirm/EmailConfirm'),
-);
+); 
 const PhoneConfirm = React.lazy(() =>
   import('./views/phone_confirm/PhoneConfirm'),
 );
