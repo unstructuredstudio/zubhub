@@ -96,7 +96,7 @@ export const styles = theme => ({
 
 export const resultModal = (theme) => ({
   root: {
-    maxWidth: '1152px',
+    maxWidth: '72rem',
     backgroundColor: colors.white,
     display: 'flex',
     flexDirection: 'column',
@@ -141,6 +141,7 @@ export const resultModal = (theme) => ({
     }
   },
   containerStylesOverrides: { boxShadow: 'none' }, 
-  titleStylesOverrides: { textAlign: 'center'}
+  titleStylesOverrides: { textAlign: 'center'},
+  errorPage: { width: '80dvw'}
 })
 
