@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import { connect } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -160,7 +160,7 @@ function Team(props) {
                         variant="contained"
                         margin="normal"
                         primaryButtonStyle
-                        onClick={() => props.history.push('/' + groupname + '/edit-team')}
+                        onClick={() => props.navigate('/' + groupname + '/edit-team')}
                       >
                         {t('editTeam.info')}
                       </CustomButton>
@@ -271,7 +271,7 @@ function Team(props) {
                       variant="contained"
                       margin="normal"
                       primaryButtonStyle
-                      onClick={() => props.history.push('/create-team')}
+                      onClick={() => props.navigate('/create-team')}
                     >
                       {t('Add Project')}
                     </CustomButton> */}
@@ -280,7 +280,7 @@ function Team(props) {
                     variant="outlined"
                     margin="normal"
                     secondaryButtonStyle
-                    onClick={() => props.history.push(`/teams/${groupname}/projects`)}
+                    onClick={() => props.navigate(`/teams/${groupname}/projects`)}
                   >
                     {t('profile.projects.viewAll')}
                   </CustomButton>
