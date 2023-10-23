@@ -31,7 +31,7 @@ export const getQueryParams = url => {
  */
 export const fetchPage = (page, props, query_string, type) => {
   if (type === SearchType.PROJECTS) {
-    if (props.auth.token) {
+    if (props.auth?.token) {
       return props.searchProjects({
         page,
         query_string,

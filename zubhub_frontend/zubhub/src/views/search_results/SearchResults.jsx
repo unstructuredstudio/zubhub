@@ -147,7 +147,7 @@ function SearchResults(props) {
     } else {
       return (
         <Grid container spacing={3}>
-          {results.map(project => (
+          {results?.map(project => (
             <Grid
               item
               xs={12}
@@ -203,8 +203,7 @@ function SearchResults(props) {
           <Login {...props}
            primaryTitle='Log in or Sign up to search for projects'
            secondaryTitle='' 
-           styleOverrides={{ containerStyles: {boxShadow: 'none'}, titleStyles: { textAlign: 'center'}}}
-           withoutShadow 
+           styleOverrides={{containerStyles: modalClasses.containerStylesOverrides, titleStyles: modalClasses.titleStylesOverrides}}
           />
         </Grid>
       </Container>

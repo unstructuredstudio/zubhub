@@ -61,14 +61,12 @@ function Login(props) {
   };
 
   const { show_password } = state;
-  const { t } = props;
-
-  const styleOverridesPresent = Object.keys(props?.styleOverrides).length > 0
+  const { t } = props
 
   return (
     <Box className={classes.root}>
       <Container className={classes.containerStyle} >
-        <Card className={classes.cardStyle} style={ styleOverridesPresent ? {...props.styleOverrides.containerStyles } : {}}>
+        <Card className={clsx([classes.cardStyle, props.styleOverrides?.containerStyles])}>
           <CardActionArea>
             <CardContent>
               <form
@@ -82,8 +80,7 @@ function Login(props) {
                   variant="h5"
                   component="h2"
                   color="textPrimary"
-                  className={classes.titleStyle}
-                  style={{...props.styleOverrides.titleStyles}}
+                  className={clsx([classes.titleStyle, props.styleOverrides?.titleStyles])}
                 >
                   {props.primaryTitle ?? t('login.welcomeMsg.primary')}
                 </Typography>
