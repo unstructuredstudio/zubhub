@@ -108,7 +108,6 @@ const buildCreatorProfiles = (
  * @todo - describe function's signature
  */
 function SearchResults(props) {
-  console.log(props, "PROPS")
   const classes = useStyles();
   const modalClasses = useModalStyles()
   const common_classes = useCommonStyles();
@@ -201,7 +200,7 @@ function SearchResults(props) {
         </Grid>
         <Grid className={modalClasses.loginModal}>
           <Login {...props}
-           primaryTitle='Log in or Sign up to search for projects'
+           primaryTitle={t('searchResults.loginModal.title')}
            secondaryTitle='' 
            styleOverrides={{containerStyles: modalClasses.containerStylesOverrides, titleStyles: modalClasses.titleStylesOverrides}}
           />
