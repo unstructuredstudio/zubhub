@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { withTranslation } from 'react-i18next';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import CreateActivity from './views/create_activity/create_activity';
+import CreateActivity from './views/create_activity/CreateActivity';
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import LoadingPage from './views/loading/LoadingPage';
@@ -394,7 +394,7 @@ function App(props) {
           />
 
           {/* <ProtectedRoute path="/profile" component={ProjectDetails} {...props} /> */}
-          <ProtectedRoute
+          <Route
             path="/projects/:id"
             render={routeProps => (
               <PageWrapper {...routeProps} {...props}>

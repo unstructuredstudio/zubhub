@@ -37,7 +37,15 @@ export const login = args => {
           payload: { token: res.key },
         });
       })
-      .then(() => args.history.push('/'));
+      .then(() => {
+        const initialUrl = sessionStorage.getItem('initialUrl');
+        if (initialUrl) {
+          sessionStorage.removeItem('initialUrl')
+          window.location.href = initialUrl;
+        } else {
+          args.history.push('/');
+        }
+      });
   };
 };
 
