@@ -226,7 +226,7 @@ function PageWrapper(props) {
 
   const { anchor_el, loading, open_search_form } = state;
 
-  const renderer = useMemo(() => {
+  const renderer = (() => {
     if (!props.auth.token && props.match.path === '/search') {
       return props.children
     } 
@@ -234,7 +234,7 @@ function PageWrapper(props) {
     if (props.auth.token) {
       return (<DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout>)
     }
-  }, [loading, props.auth.token, props.children, props.match.path])
+  })()
 
   const { t } = props;
   const { zubhub, hero } = props.projects;
