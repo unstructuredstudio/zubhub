@@ -139,6 +139,8 @@ export const resultModal = (theme) => ({
     [theme.breakpoints.down('400')]: {
       marginTop: '65%'
     }
-  }
+  },
+  containerStylesOverrides: { boxShadow: 'none' }, 
+  titleStylesOverrides: { textAlign: 'center'}
 })
 
