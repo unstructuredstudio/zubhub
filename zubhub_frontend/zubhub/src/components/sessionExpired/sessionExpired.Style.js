@@ -43,6 +43,7 @@ export const sessionExpiredStyle = theme => ({
         width: '100vw',
         height: '100vh',
         backgroundColor: 'rgba(255, 233, 154, 0.5)',
+        backdropFilter: 'blur(25px)',
     },
     textDecorationNone: {
         width: '100%',

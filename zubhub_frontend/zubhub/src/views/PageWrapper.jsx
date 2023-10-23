@@ -253,7 +253,8 @@ function PageWrapper(props) {
             '/challenge',
             '/password-reset',
             '/email-confirm',
-            '/password-reset-confirm'
+            '/password-reset-confirm',
+            '/session-expired'
           ].includes(props.match?.path) && (
             <div style={{ minHeight: '80vh' }}>
               <NotFoundPage />
@@ -274,7 +275,8 @@ function PageWrapper(props) {
           '/about',
           '/challenge',
           '/email-confirm',
-          '/password-reset-confirm'
+          '/password-reset-confirm',
+          '/session-expired'
         ].includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>

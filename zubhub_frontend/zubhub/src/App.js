@@ -10,10 +10,9 @@ import ProtectedRoute from './components/protected_route/ProtectedRoute';
 import ZubhubAPI from '../src/api/api';
 import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
-import sessionExpiredModal from './components/sessionExpired/sessionExpired';
+import SessionExpiredModal from './components/sessionExpired/sessionExpired';
 
 const SearchResults = React.lazy(() => import('./views/search_results/SearchResults'));
-
 const Signup = React.lazy(() => import('./views/signup/Signup'));
 const Login = React.lazy(() => import('./views/login/Login'));
 const PasswordReset = React.lazy(() => import('./views/password_reset/PasswordReset'));
@@ -493,7 +492,14 @@ function App(props) {
               </PageWrapper>
             )}
           />
-
+          <Route
+            path="/session-expired"
+            render={routeProps => (
+              <PageWrapper {...routeProps} {...props}>
+                <LazyImport LazyComponent={SessionExpiredModal} {...routeProps} {...props} />
+              </PageWrapper>
+            )}
+          />
           <Route
             path="*"
             render={routeProps => (
