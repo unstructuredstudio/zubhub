@@ -42,5 +42,15 @@ export const tagsInputStyles = theme => ({
         padding: '5px 10px',
         borderRadius: 4,
         cursor: 'pointer'
-    }
+    },
+    tagsContainer: {
+        display: 'flex', 
+        flexWrap: 'wrap', 
+        gap: 12, 
+        marginTop: 12
+    },
+    generalTag: {
+        fontWeight: '800',
+    },
+    
 })

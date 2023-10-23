@@ -102,7 +102,7 @@ function Step1({ formik, handleBlur }) {
           clearSuggestions={clearSuggestions}
           removeTag={removeTag}
           handleBlur={formik.handleBlur}
-          placeholder="Start typing to materials used"
+          placeholder="Start typing your materials used"
         />
       </Box>
     </div>

@@ -124,6 +124,9 @@ class API {
    * @todo - describe method's signature
    */
   logout = token => {
+    const initialUrl = window.location.href
+    sessionStorage.setItem('initialUrl', initialUrl)
+
     const url = 'rest-auth/logout/';
     const method = 'POST';
     return this.request({ url, method, token }).then(res => res.json());

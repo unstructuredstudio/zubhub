@@ -12,8 +12,8 @@ import TagsInput from "./form/tagsInput/TagsInput";
 import VideoInput from "./form/videoInput/VideoInput";
 import Gallery from "./gallery/Gallery";
 import Modal from "./modals/Modal";
-import PreviewActivity from "./previewProject/PreviewActivity";
-import PreviewProject from "./previewProject/PreviewActivity";
+import PreviewActivity from "./previewActivity/PreviewActivity";
+import PreviewProject from "./previewProject/PreviewProject";
 import Pill from "./pill/Pill";
 
 export {
