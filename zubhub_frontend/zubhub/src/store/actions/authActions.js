@@ -81,8 +81,7 @@ export const logout = args => {
  */
 export const getAuthUser = props => {
   return dispatch => {
-    return API.getAuthUser('props.auth.token')
-      // return API.getAuthUser(props.auth.token)
+      return API.getAuthUser(props.auth.token)
       .then(res => {
         if (!res.id) {
           dispatch(
