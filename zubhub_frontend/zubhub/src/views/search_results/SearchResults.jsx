@@ -135,6 +135,10 @@ function SearchResults(props) {
   };
 
   const getResults = (type, results) => {
+    if (!results) {
+      return <ErrorPage error={t('searchResults.errors.noResult')} styleOverrides={{ width: modalClasses.errorPage }}/>
+    }
+
     if (type === SearchType.CREATORS) {
       return buildCreatorProfiles(
         results,
@@ -291,7 +295,6 @@ function SearchResults(props) {
           </Container>
         ) : (
           <ErrorPage
-            style={{ maxWidth: '100vw' }}
             error={t('searchResults.errors.noResult')}
           />
         )}

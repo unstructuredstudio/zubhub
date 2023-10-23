@@ -19,7 +19,7 @@ const styles = theme => ({
     // filter:
     //   "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
     '& .MuiGrid-root.MuiGrid-container': {
-      width: '100%',
+      width: '100dvw',
     },
   },
   mainContainerStyle: {
