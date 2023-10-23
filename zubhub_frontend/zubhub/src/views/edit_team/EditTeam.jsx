@@ -42,12 +42,14 @@ import {
 } from './editTeamScripts';
 
 import styles from '../../assets/js/styles/views/edit_team/editTeamStyles.js';
+import { modalStyles } from '../../components/modals/modal.styles';
 import CustomButton from '../../components/button/Button';
+import { Modal } from '../../components'
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
 
 const useStyles = makeStyles(styles);
-
+const useModalStyles = makeStyles(modalStyles)
 /**
  * @function EditProfile View
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -73,6 +75,7 @@ function EditTeam(props) {
   }, []);
 
   const classes = useStyles();
+  const modal_classes = useModalStyles();
 
   const handleSetState = obj => {
     if (obj) {
@@ -303,61 +306,53 @@ function EditTeam(props) {
         </Card>
       </Container>
     </Box>
-      <Grid container spacing={3}>
-          <Dialog
-            maxWidth="sm"
-            open={open_delete_account_modal}
-            onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
-            aria-labelledby={t('editTeam.delete.ariaLabels.deleteTeam')}
-            PaperProps={{className: classes.dialogStyle}}
+      <Modal.WithIcon
+        icon={<ErrorOutline className={modal_classes.dialogIcon} />}
+        open={open_delete_account_modal}
+        onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
+      >
+        <DialogTitle>
+          <Typography
+            variant="h5"
+            component="h2"
+            className={modal_classes.coloredTitle}
           >
-            <div className={classes.dialogIconContainer}>
-              <ErrorOutline className={classes.dialogIcon} />
-            </div>
-            <DialogTitle id="delete-project">
-              <Typography
-                variant="h5"
-                component="h2"
-                className={classes.dialogTitleStyle}
-              >
-                {t('editTeam.delete.question')}              
-              </Typography>
-            </DialogTitle>
-            <DialogContent>
-              <Typography
-                className={classes.dialogDescStyle}
-                variant="body2"
-                component="p"
-                color="textPrimary"
-              >
-                {t('editTeam.delete.information1')}
-              </Typography>
-            </DialogContent>
-            <DialogActions className={classes.dialogActionsStyle}>
-              <CustomButton
-                variant="outlined"
-                onClick={() =>
-                  handleSetState(handleToggleDeleteAccountModal(state))
-                }
-                className={classes.iconButton}
-                secondaryButtonStyle
-              >
-              <ArrowBack className={classes.buttonIcon} />
-                {t('editTeam.delete.buttons.cancel')}
-              </CustomButton>
-              <CustomButton
-                variant="contained"
-                onClick={e =>
-                  handleSetState(deleteAccount(groupname, props, state))
-                }
-                className={classes.iconButton}
-                primaryButtonStyle
-              >
-                {t('editTeam.delete.buttons.confirm')}
-              </CustomButton>
-            </DialogActions>
-          </Dialog>
-      </Grid>
+            {t('editTeam.delete.question')}              
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography
+            variant="body2"
+            component="p"
+            color="textPrimary"
+          >
+            {t('editTeam.delete.information1')}
+          </Typography>
+        </DialogContent>
+        <DialogActions className={modal_classes.dialogActionsStyle}>
+          <CustomButton
+            variant="outlined"
+            onClick={() =>
+              handleSetState(handleToggleDeleteAccountModal(state))
+            }
+            secondaryButtonStyle
+            className={modal_classes.iconButton}
+          >
+            <ArrowBack className={modal_classes.buttonIcon} />
+            {t('editTeam.delete.buttons.cancel')}
+          </CustomButton>
+          <CustomButton
+            variant="contained"
+            onClick={e =>
+              handleSetState(deleteAccount(groupname, props, state))
+            }
+            primaryButtonStyle
+            className={modal_classes.iconButton}
+          >
+            {t('editTeam.delete.buttons.confirm')}
+          </CustomButton>
+        </DialogActions>
+      </Modal.WithIcon>
     </>
   );
 }

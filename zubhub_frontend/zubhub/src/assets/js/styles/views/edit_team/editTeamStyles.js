@@ -95,53 +95,6 @@ const styles = theme => ({
   marginTop: {
     marginTop: 22,
   },
-  dialogStyle: {
-    borderRadius: 8,
-    padding: '20px 8px',
-    paddingTop: '40px',
-    position: 'relative',
-    overflow: 'inherit',
-  },
-  dialogTitleStyle: {
-    color: colors["tertiary-dark"],
-    fontWeight: 600,
-  },
-  dialogDescStyle: {
-    fontSize: '16px',
-  },
-  dialogActionsStyle: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: 20,
-    marginTop: 24,
-    height: '3em',
-  },
-  dialogIconContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    top: 0,
-    alignSelf: 'center',
-    width: '70px',
-    height: '70px',
-    transform: 'translateY(-50%)',
-    borderRadius: '50%',
-    background: colors.white,
-    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .12)',
-  },
-  dialogIcon: {
-    color: colors["tertiary-dark"],
-    fontSize: 36,
-  },
-  iconButton: {
-    borderColor: colors.primary, 
-    padding: '6px 24px',
-  },
-  buttonIcon: {
-    color: colors.primary,
-    fontSize: 18,
-  }
 });
 
 export default styles;
