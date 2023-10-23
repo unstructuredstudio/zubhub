@@ -92,7 +92,7 @@ export default function Sidenav() {
                               customButtonStyle
                               className={classes.customNumberTag}
                             >
-                              {label === 'My Drafts' ? draftCount : myProjectCount}
+                              {label === 'My Drafts' ? (draftCount > 0 ? draftCount : '') : (myProjectCount > 0 ? myProjectCount : '')}
                             </CustomButton>
                           </span>
                         }
