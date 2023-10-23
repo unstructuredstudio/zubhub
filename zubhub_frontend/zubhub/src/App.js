@@ -57,9 +57,7 @@ const API = new ZubhubAPI();
 const Settings = React.lazy(() => import('./views/settings/Settings'));
 
 const LazyImport = props => {
-  console.log(props, 'LZY INPPORRR');
   const { component: LazyComponent, ...restOfProps } = props;
-  console.log(restOfProps, 'LAZY REST OF PROPS');
   return (
     <React.Suspense fallback={<LoadingPage />}>
       <LazyComponent {...restOfProps} />
@@ -70,7 +68,6 @@ const LazyImport = props => {
 const ThemeContext = React.createContext();
 
 const Wrapper = props => {
-  console.log(props, 'PROPSSSS');
   const location = useLocation();
   const navigate = useNavigate();
   const params = useParams();
