@@ -10,6 +10,7 @@ import ProtectedRoute from './components/protected_route/ProtectedRoute';
 import ZubhubAPI from '../src/api/api';
 import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
+import sessionExpiredModal from './components/sessionExpired/sessionExpired';
 
 const SearchResults = React.lazy(() => import('./views/search_results/SearchResults'));
 

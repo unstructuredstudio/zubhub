@@ -10,7 +10,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(sessionExpiredStyle);
 
-const SessionExpiredCard = () => {
+const sessionExpiredModal = () => {
     const classes = useStyles();
     const [modalOpen, setModalOpen] = useState(true);
     const history = useHistory();
@@ -53,4 +53,4 @@ const SessionExpiredCard = () => {
     );
 };
 
-export default SessionExpiredCard;
+export default sessionExpiredModal;

@@ -1,6 +1,6 @@
 import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
-import SessionExpiredCard from '../../components/sessionExpired/sessionExpired';
+import sessionExpiredModal from '../../components/sessionExpired/sessionExpired';
 
 const API = new ZubhubAPI();
 
@@ -111,7 +111,7 @@ export const getAuthUser = props => {
         return res;
       })
       .catch(error => {
-        dispatch(() => { <SessionExpiredCard /> })
+        dispatch(() => { <sessionExpiredModal /> })
       });
   };
 };
