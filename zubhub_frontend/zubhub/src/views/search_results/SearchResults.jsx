@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -13,7 +12,6 @@ import {
   Grid,
   Box,
   ButtonGroup,
-  Button,
   Typography,
   Container,
   Card,
@@ -191,7 +189,6 @@ function SearchResults(props) {
               className={classes.pageHeaderStyle}
               variant="h3"
               gutterBottom
-              style={{ height: '40px'}}
             >
               {`${t('searchResults.resultsFound')} "${getQueryParams(window.location.href).get('q')}"`}
             </Typography>
