@@ -25,6 +25,7 @@ import new_stuff from '../../assets/images/new_stuff.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
+import NoProjects from '../../assets/images/no-projects.svg'
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -153,7 +154,7 @@ function Projects(props) {
                     lg={4}
                     item
                     align="center"
-                    // className={classes.projectGridStyle}
+                  // className={classes.projectGridStyle}
                   >
                     <Project
                       project={project}
@@ -232,7 +233,13 @@ function Projects(props) {
       </>
     );
   } else {
-    return <ErrorPage error={t('projects.errors.unexpected')} />;
+    return <ErrorPage
+      error={t('projects.errors.unexpected')}
+      imgSrc={NoProjects}
+      routeTitle='Create Project'
+      routeLink='/create-project'
+      errorTitle='No projects yet'
+    />
   }
 }
 
