@@ -451,7 +451,7 @@ function App(props) {
           <ProtectedRoute path="/activities/create" component={CreateEditActivity} {...props} />
           <ProtectedRoute path="/activities/my-activities" component={MyActivities} {...props} />
           <ProtectedRoute path="/activities/:id/linked-projects" component={LinkedProjects} {...props} />
-          <ProtectedRoute path="/activities/:id/edit" component={CreateEditActivity} {...props} />
+          <ProtectedRoute path="/activities/:id/edit" component={CreateEditActivity} {...props} editting />
           <ProtectedRoute path="/activities/:id" component={ActivityDetails} {...props} />
           <ProtectedRoute path="/activities" component={Activities} {...props} />
 

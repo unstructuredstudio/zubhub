@@ -84,7 +84,7 @@ export default function ActivityDetailsV2(props) {
 
   const handleUpublishAndPublish = async () => {
     const validData = Object.fromEntries(Object.entries(activity).filter(([key, value]) => value !== null));
-    const newData = { ...validData, publish: false };
+    const newData = { ...validData, publish: !activity.publish };
     const response = await API.updateActivity(auth.token, props.match.params.id, newData);
 
     if (response.status === 200) {
