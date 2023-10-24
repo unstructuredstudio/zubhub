@@ -40,10 +40,10 @@ let firstRender = true;
 
 function CreateEditActivity(props) {
   useEffect(() => {
-    if (!props.auth.tags.includes('staff')) {
+    if (!['staff', 'creator'].some(tag => props.auth.tags.includes(tag))) {
       props.history.push('/activities');
     }
-  }, [props.auth.tags]);
+  }, [props.auth.tags, props.history]);
 
   const editting = props?.editting;
   const { height } = useDomElementHeight('navbar-root');
