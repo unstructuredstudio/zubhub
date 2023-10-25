@@ -31,7 +31,7 @@ import new_stuff from '../../assets/images/new_stuff.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
-
+import heroMainImage from '../../assets/images/heroMainImage.svg'
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -135,7 +135,6 @@ function Projects(props) {
       });
     }
   };
-
   const { loading, isMobileView } = state;
   const {
     results: projects,
@@ -156,8 +155,8 @@ function Projects(props) {
           (
             <Box className={classes.root}>
               {hero && hero.id ? (
-                 <Box className={classes.heroSectionStyle}>
-                 <Box className={classes.heroContainerStyle}>
+                 <Box className={classes.heroMainSectionStyle}>
+                 <Box className={classes.heroMainContainerStyle}>
                    {state.isMobileView && hero && hero.id && (
                      <Box className={classes.heroImageContainerStyle}>
                        <img
@@ -169,16 +168,15 @@ function Projects(props) {
                    )}
                    <Box className={classes.heroMessageContainerStyle}>
                      <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
+                     <Typography className={classes.heroMainMessageSecondaryStyle}>
                        {t('projects.1')}
                      </Typography>
-                     <br />
-                     <Typography className={classes.heroMessageSecondaryStyle}>
+                     <Typography className={classes.heroMainMessageSecondaryStyle}>
                        {t('projects.2')}
                      </Typography>
                      <br />
-                     <Typography className={classes.heroMessagePrimaryStyle}>
-                       {hero.title}
+                     <Typography className={classes.heroMainMessagePrimaryStyle}>
+                       {hero.description}
                      </Typography>
                      <br />
                      <CustomButton
@@ -194,8 +192,8 @@ function Projects(props) {
                      <Box className={classes.heroImageContainerStyle}> 
                        <img
                          className={classes.heroImageStyle}
-                         src={hero.image_url}
-                         alt=""
+                         src={hero.image_url ? hero.image_url : heroMainImage}
+                         alt="Six animated children happily walking"
                        />
                      </Box>
                    )}

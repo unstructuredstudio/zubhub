@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux';
 import { images } from '../../assets/images';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
-import { getUrlQueryObject } from '../../utils.js';
+import { getUrlQueryObject } from '../../utils.js/index.js';
 import activityDefailsStyles from './previewActivity.styles';
 
 const API = new ZubHubAPI();
