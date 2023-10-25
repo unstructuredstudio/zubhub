@@ -1,6 +1,5 @@
 import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
-import sessionExpiredModal from '../../components/sessionExpired/sessionExpired';
 
 const API = new ZubhubAPI();
 
@@ -99,7 +98,7 @@ export const getAuthUser = props => {
               t: props.t,
             }),
           ).then(() => {
-            props.history.push('/session-expired');
+            props.history.push('/account-status');
           });
           throw new Error(props.t('pageWrapper.errors.unexpected'));
         } else {

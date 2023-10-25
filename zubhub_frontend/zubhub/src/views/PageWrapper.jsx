@@ -118,6 +118,23 @@ function PageWrapper(props) {
     };
   }, [handleScroll]);
 
+  const unprotectedRoutes = [
+    '/',
+    '/signup',
+    '/login',
+    '/password-reset',
+    '/projects/:id',
+    '/ambassadors',
+    '/creators/:username',
+    '/privacy_policy',
+    '/terms_of_use',
+    '/about',
+    '/challenge',
+    '/email-confirm',
+    '/password-reset-confirm',
+    '/session-expired'
+  ];
+
   const throttledFetchOptions = useMemo(
     () =>
       throttle(async (query, searchType) => {
@@ -169,7 +186,9 @@ function PageWrapper(props) {
     handleSetState({ loading: true });
     fetchHero(props)
       .then(() => {
-        if (props.auth.token) {
+        if (!props.auth.token && !unprotectedRoutes.includes(props.match?.path)) {
+          props.history.push('/session-expired');
+        } else {
           return props.getAuthUser(props);
         }
       })
@@ -177,6 +196,7 @@ function PageWrapper(props) {
         handleSetState({ loading: false });
       });
   }, [props.auth.token]);
+
 
   useEffect(() => {
     handleSetState(handleProfileMenuClose());
@@ -240,44 +260,14 @@ function PageWrapper(props) {
       <Container className={classes.childrenContainer} maxWidth="lg">
         {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
         {!props.auth?.token &&
-          ![
-            '/',
-            '/signup',
-            '/login',
-            '/projects/:id',
-            '/ambassadors',
-            '/creators/:username',
-            '/privacy_policy',
-            '/terms_of_use',
-            '/about',
-            '/challenge',
-            '/password-reset',
-            '/email-confirm',
-            '/password-reset-confirm',
-            '/session-expired'
-          ].includes(props.match?.path) && (
+          !unprotectedRoutes.includes(props.match?.path) && (
             <div style={{ minHeight: '80vh' }}>
               <NotFoundPage />
             </div>
           )}
       </Container>
       {!props.auth?.token &&
-        [
-          '/',
-          '/signup',
-          '/login',
-          '/password-reset',
-          '/projects/:id',
-          '/ambassadors',
-          '/creators/:username',
-          '/privacy_policy',
-          '/terms_of_use',
-          '/about',
-          '/challenge',
-          '/email-confirm',
-          '/password-reset-confirm',
-          '/session-expired'
-        ].includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+        unprotectedRoutes.includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
