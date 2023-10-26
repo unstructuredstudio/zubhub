@@ -15,24 +15,10 @@ const SearchResults = React.lazy(() => import('./views/search_results/SearchResu
 
 const Signup = React.lazy(() => import('./views/signup/Signup'));
 const Login = React.lazy(() => import('./views/login/Login'));
-
-const PasswordReset = React.lazy(() =>
-  import('./views/password_reset/PasswordReset'),
-);
-const PasswordResetConfirm = React.lazy(() =>
-  import('./views/password_reset_confirm/PasswordResetConfirm'),
-);
-const EmailConfirm = React.lazy(() =>
-  import('./views/email_confirm/EmailConfirm'),
-); 
-const PhoneConfirm = React.lazy(() =>
-  import('./views/phone_confirm/PhoneConfirm'),
-);
 const PasswordReset = React.lazy(() => import('./views/password_reset/PasswordReset'));
 const PasswordResetConfirm = React.lazy(() => import('./views/password_reset_confirm/PasswordResetConfirm'));
 const EmailConfirm = React.lazy(() => import('./views/email_confirm/EmailConfirm'));
 const PhoneConfirm = React.lazy(() => import('./views/phone_confirm/PhoneConfirm'));
-
 const Profile = React.lazy(() => import('./views/profile/Profile'));
 const Team = React.lazy(() => import('./views/team/Team'));
 const EditTeam = React.lazy(() => import('./views/edit_team/EditTeam'));
