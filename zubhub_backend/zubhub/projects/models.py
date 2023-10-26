@@ -162,7 +162,7 @@ class Image(models.Model):
                                 null=True,
                                 related_name="images",
                                 blank=True)
-    image_url = models.URLField(max_length=1000)   
+    image_url = models.URLField(max_length=1000)
     public_id = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
