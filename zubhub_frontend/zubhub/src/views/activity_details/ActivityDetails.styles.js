@@ -1,10 +1,10 @@
-import { colors } from "../../assets/js/colors"
+import { colors } from '../../assets/js/colors';
 
 export const activityDefailsStyles = theme => ({
     container: {
-        borderRadius: 8,
-        backgroundColor: colors.white,
-        padding: 24
+      borderRadius: 8,
+      backgroundColor: colors.white,
+      padding: 24,
     },
     descriptionBodyStyle: {
         marginBottom: '0.7em',
@@ -33,9 +33,9 @@ export const activityDefailsStyles = theme => ({
         color: colors.black,
     },
     card: {
-        borderRadius: 8,
-        backgroundColor: colors.white,
-        padding: 24
+      borderRadius: 8,
+      backgroundColor: colors.white,
+      padding: 24,
     },
     creatorProfileStyle: {
         width: '100%',
@@ -64,13 +64,13 @@ export const activityDefailsStyles = theme => ({
         },
     },
     closed: {
-        height: 0,
-        transition: '0.4s',
-        overflow: 'hidden'
+      height: 0,
+      transition: '0.4s',
+      overflow: 'hidden',
     },
     expandableMargin: {
-        // marginBottom: 10,
-        marginTop: 30
+      // marginBottom: 10,
+      marginTop: 30,
     },
     expanded: {
         transition: '0.4s',
@@ -79,5 +79,98 @@ export const activityDefailsStyles = theme => ({
         flexDirection: 'column',
         gap: 32,
         marginTop: 20,
-    }
-})
+  },
+  pdfStyle: {
+    paddingTop: '2rem',
+  },
+  pdfLogoStyle: {
+    width: '4.5rem',
+    height: '1rem',
+    borderRadius: '0',
+  },
+  pdfMainLogo:{
+    padding: '0',
+  },
+  justifyPdf: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    height: '2rem',
+    padding: '0',
+  },
+  pdfTitle: {
+    width: '23rem',
+
+    fontFamily: 'Raleway',
+    fontSize: '1.5rem',
+    fontWeight: 800,
+  },
+  pdfSubtitle: {
+    fontFamily: 'Raleway',
+    fontSize: '1rem',
+    fontWeight: '600',
+    height: '1.5rem',
+    marginBottom: '1rem'
+  },
+
+  creatorProfilePdfStyle: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0',
+    justifyContent: 'flex-end',
+    gap: '0.5rem',
+    fontSize: '0.5rem'
+  },
+  verticalSpace:{
+    marginBottom: '2rem',
+  },
+  textStyle:{
+    fontSize: '0.7rem'
+  },
+  divFooter: {
+    '@media screen' :{
+      display: 'none',
+    },
+    '@media print': {
+      position: 'fixed',
+      bottom: 0,
+    },
+  },
+  imageStyle:{
+    width: '1rem',
+    display: 'flex',
+    columnGap: '1rem',
+  },
+  imageIndividualStyle:{
+    width: '8rem',
+    height: '8rem',
+    borderRadius: '0.3rem'
+  },
+  footerStyle:{
+    backgroundColor: 'var(--primary-color1)',
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 'auto',
+
+    // justifyContent: 'space-between',
+    // alignItems: 'center'
+  },
+  flexStyle:{
+    display: 'flex',
+    flexDirection: 'column',
+    color: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '12rem'
+  },
+  linkStyle:{
+    color: 'white',
+  },
+  pdfFooterLogoStyle: {
+    width: '8.25rem',
+    height: '1.9375rem', 
+  },
+  customTypographyStyle:{
+    margin: '0',
+  }
+});
