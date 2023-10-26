@@ -53,7 +53,7 @@ import {
   handleClickShowPassword,
   handleMouseDownPassword,
   getTeamProfile,
-} from './editTeamScripts'; 
+} from './editTeamScripts';
 
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
