@@ -92,7 +92,7 @@ function Team(props) {
     drafts: [],
     badge_tags: [],
   });
-  const [followers, setFollowers]=React.useState([]);
+  const [followers,setFollowers]=React.useState([]);
   
   React.useEffect(() => {
   try{
