@@ -31,7 +31,7 @@ def task_lock(key):
 
 
 def update_images(project, images_data):
-    Image = apps.get_model('projects.Image')  
+    Image = apps.get_model('projects.Image')
     images = project.images.all()
 
     images_to_save = []
