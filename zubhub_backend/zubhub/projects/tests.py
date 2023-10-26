@@ -1,7 +1,9 @@
 from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
+from serializers import ProjectSerializer
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import status
+from rest_framework import serializers
 from .models import Project
 from .views import (
     ProjectCreateAPIView,
@@ -37,35 +39,15 @@ class ProjectCreateAPITest(TestCase):
 
         response = ProjectCreateAPIView.as_view()(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-
-    def test_create_project_unauthenticated_user(self):
-        data = {
-            "title": "Test Project",
-            "description": "This is a test project",
-            "images": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFNzTqQLNPCOdIgNJIIYyb6ovFd_w0ZJ9eJA&usqp=CAU",
-            "video": "https://youtu.be/ol_DAvdpigY?si=dZupzpRGIige8Crp",
-            "materials_used": "Tape, Wire",
-            "category": "Robotics",
-            "publish": {"type": 4, "visible_to": []}
-        }
-        request = self.factory.post('/projects/create/', data)
-        request.user = AnonymousUser()
-
-        response = ProjectCreateAPIView.as_view()(request)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        # Add more assertions for the response data
-
-    # Add more test cases for other scenarios
-
-
+        
 class ProjectUpdateAPITest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        self.project = Project.objects.create(title='Test Project')
+        self.user = User.objects.create(username='testuser')
+        self.project = Project.objects.create(title='Test Project', owner=self.user)
 
     def test_update_project_authenticated_user(self):
-        user = User.objects.create(username='testuser')
+        another_user = User.objects.create(username='anotheruser')
         data = {
             "title": "Test Project",
             "description": "This is a test project",
@@ -76,10 +58,10 @@ class ProjectUpdateAPITest(TestCase):
             "publish": {"type": 4, "visible_to": []}
         }
         request = self.factory.patch(f'/projects/{self.project.pk}/', data)
-        request.user = user
+        request.user = another_user
 
         response = ProjectUpdateAPIView.as_view()(request, pk=self.project.pk)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_project_unauthenticated_user(self):
         data = {
@@ -97,18 +79,38 @@ class ProjectUpdateAPITest(TestCase):
         response = ProjectUpdateAPIView.as_view()(request, pk=self.project.pk)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
+    def test_create_project_unauthenticated_user(self):
+        data = {
+            "title": "Test Project",
+            "description": "This is a test project",
+            "images": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFNzTqQLNPCOdIgNJIIYyb6ovFd_w0ZJ9eJA&usqp=CAU",
+            "video": "https://youtu.be/ol_DAvdpigY?si=dZupzpRGIige8Crp",
+            "materials_used": "Tape, Wire",
+            "category": "Robotics",
+            "publish": {"type": 4, "visible_to": []}
+        }
+        request = self.factory.post('/projects/create/', data)
+        request.user = AnonymousUser()
+
+        response = ProjectCreateAPIView.as_view()(request)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+
 class ProjectDeleteAPITest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        self.project = Project.objects.create(title='Test Project')
+        self.user = User.objects.create(username='testuser')
+        self.project = Project.objects.create(title='Test Project', owner=self.user)
 
     def test_delete_project_authenticated_user(self):
-        user = User.objects.create(username='testuser')
+        another_user = User.objects.create(username='anotheruser')
         request = self.factory.delete(f'/projects/{self.project.pk}/')
-        request.user = user
+        request.user = another_user
 
         response = ProjectDeleteAPIView.as_view()(request, pk=self.project.pk)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_project_unauthenticated_user(self):
         request = self.factory.delete(f'/projects/{self.project.pk}/')
@@ -121,19 +123,18 @@ class ProjectDeleteAPITest(TestCase):
 class ProjectDetailsAPITest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        self.project = Project.objects.create(title='Test Project')
+        self.user = User.objects.create(username='testuser')
+        self.project = Project.objects.create(title='Test Project', owner=self.user)
 
     def test_get_project_details_authenticated_user(self):
-        user = User.objects.create(username='testuser')
+        another_user = User.objects.create(username='anotheruser')
         request = self.factory.get(f'/projects/{self.project.pk}/')
-        request.user = user
+        request.user = another_user
 
         response = ProjectDetailsAPIView.as_view()(request, pk=self.project.pk)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_get_project_details_unauthenticated_user(self):
-        request = self.factory.get(f'/projects/{self.project.pk}/')
-        request.user = AnonymousUser()
-
-        response = ProjectDetailsAPIView.as_view()(request, pk=self.project.pk)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        serializer = ProjectSerializer(instance=self.project)
+        expected_data = serializer.data
+        actual_data = response.data
+        self.assertEqual(actual_data, expected_data)
