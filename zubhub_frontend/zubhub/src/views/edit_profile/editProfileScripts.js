@@ -138,22 +138,7 @@ export const deleteAccount = (username_el, props, toast) => {
  *
  * @todo - describe function's signature
  */
-export const editProfile = (values, props, toast) => {
-  console.log(props, 'EDIR DUNCF')
-  // e.preventDefault();
-  // props.setFieldTouched('username', true);
-  // props.setFieldTouched('email', true);
-  // props.setFieldTouched('phone', true);
-  // props.setFieldTouched('password', true);
-  // props.setFieldTouched('newPassword', true);
-  // props.setFieldTouched('confirmNewPassword', true);
-  // props.setFieldTouched('user_location', true);
-
-  // const errors = props.validateForm()
-
-
-  // if (Object.keys(errors).length > 0 ) return
-  
+export const editProfile = (values, props, toast) => {  
   let password_match = true;
 
   if (values.password) {
