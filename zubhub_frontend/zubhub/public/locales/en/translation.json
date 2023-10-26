@@ -724,6 +724,11 @@
           "required": "Seems like you forgot this"
         }
       },
+      "changePassword": {
+        "newPassword": "Change Password",
+        "confirmNewPassword": "Retype new password",
+        "error": "<1/> {{errorMessage}}"
+      },
       "submit": "Save Changes"
     },
     "or": "OR",

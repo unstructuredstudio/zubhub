@@ -113,6 +113,11 @@ const styles = theme => ({
     color: 'var(--primary-color2)',
   },
   fieldHelperTextStyle: {
+    '&.MuiFormHelperText-root.Mui-error': {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '4px'
+    },
     [theme.breakpoints.up('1600')]: {
       fontSize: '1.2rem',
     },

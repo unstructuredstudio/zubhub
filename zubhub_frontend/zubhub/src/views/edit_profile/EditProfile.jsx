@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -14,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Visibility from '@material-ui/icons/Visibility';
 
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import ErrorIcon from '@material-ui/icons/Error';
 
 import {
   Grid,
@@ -41,6 +43,7 @@ import {
 } from '@material-ui/core';
 
 import {
+  customValidation,
   validationSchema,
   getLocations,
   getProfile,
@@ -82,7 +85,9 @@ function EditProfile(props) {
     tool_tip_open: false,
     dialog_error: null,
     open_delete_account_modal: false,
-    show_password: false,
+    show_current_password: false,
+    show_new_password: false,
+    show_confirm_new_password: false,
     show_delete_account_password: false,
   });
 
@@ -92,7 +97,7 @@ function EditProfile(props) {
   }, []);
 
   const classes = useStyles();
-  const { show_password, show_delete_account_password } = state;
+  const { show_current_password, show_new_password,  show_confirm_new_password, show_delete_account_password } = state;
 
   const handleSetState = obj => {
     if (obj) {
@@ -117,7 +122,7 @@ function EditProfile(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={e => editProfile(e, props, toast)}
+                onSubmit={props.handleSubmit}
               >
                 <Typography
                   gutterBottom
@@ -363,63 +368,186 @@ function EditProfile(props) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['password']) ||
-                        (props.touched['password'] && props.errors['password'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password"
-                      >
-                        {t('editProfile.inputs.password.label')}
-                      </InputLabel>
-                      <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="password"
-                        name="password"
-                        type={show_password ? 'text' : 'password'}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={() =>
-                                handleSetState(handleClickShowPassword(state))
-                              }
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {show_password ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
+                  <Grid container style={{ display: 'block'}}>            
+                    <Grid item>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                        error={
+                          (props.status && props.status['password']) ||
+                          (props.touched['password'] && props.errors['password'])
                         }
-                        label={t('editProfile.inputs.password.label')}
-                      />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
                       >
-                        {(props.status && props.status['password']) ||
-                          (props.touched['password'] &&
-                            props.errors['password'] &&
-                            t(
-                              `editProfile.inputs.password.errors.${props.errors['password']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
+                        <InputLabel
+                          className={classes.customLabelStyle}
+                          htmlFor="password"
+                        >
+                          {t('editProfile.inputs.password.label')}
+                        </InputLabel>
+                        <OutlinedInput
+                          className={classes.customInputStyle}
+                          id="password"
+                          name="password"
+                          type={show_current_password ? 'text' : 'password'}
+                          onChange={props.handleChange}
+                          onBlur={props.handleBlur}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() =>
+                                  handleSetState(handleClickShowPassword(state, 'show_current_password'))
+                                }
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {show_current_password ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                          label={t('editProfile.inputs.password.label')}
+                        />
+                        <FormHelperText
+                          className={classes.fieldHelperTextStyle}
+                          error
+                        >
+                          {(props.status && props.status['password']) ||
+                            (props.errors['password'] &&
+                              <Trans t={t} i18nextKey="editProfile.inputs.changePassword.error">
+                                <ErrorIcon fontSize="small" /> {{errorMessage: props.errors['password']}}
+                              </Trans>
+                            )}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                        error={
+                          (props.status && props.status['new-password']) ||
+                          (props.errors['new-password'])
+                        }
+                      >
+                        <InputLabel
+                          className={classes.customLabelStyle}
+                          htmlFor="newPassword"
+                        >
+                          {t('editProfile.inputs.changePassword.newPassword')}
+                        </InputLabel>
+                        <OutlinedInput
+                          className={classes.customInputStyle}
+                          id="new-password"
+                          name="newPassword"
+                          type={show_new_password ? 'text' : 'password'}
+                          onChange={props.handleChange}
+                          onBlur={props.handleBlur}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() =>
+                                  handleSetState(handleClickShowPassword(state, 'show_new_password'))
+                                }
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {show_new_password ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                          label={t('editProfile.inputs.changePassword.newPassword')}
+                        />
+                        <FormHelperText
+                          className={classes.fieldHelperTextStyle}
+                          error
+                        >
+                          {(props.status && props.status['new-password']) ||
+                            (props.errors['newPassword'] &&
+                              <Trans t={t} i18nextKey="editProfile.inputs.changePassword.error">
+                                <ErrorIcon fontSize="small" /> {{errorMessage: props.errors['newPassword']}}
+                              </Trans>
+                              )}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="normal"
+                        error={
+                          (props.status && props.status['confirmNewPassword']) ||
+                          (props.touched['confirmNewPassword'] && props.errors['confirmNewPassword'])
+                        }
+                      >
+                        <InputLabel
+                          className={classes.customLabelStyle}
+                          htmlFor="new-password"
+                        >
+                          {t('editProfile.inputs.changePassword.confirmNewPassword')}
+                        </InputLabel>
+                        <OutlinedInput
+                          className={classes.customInputStyle}
+                          id="confirmNewPassword"
+                          name="confirmNewPassword"
+                          type={show_confirm_new_password ? 'text' : 'password'}
+                          onChange={props.handleChange}
+                          onBlur={props.handleBlur}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() =>
+                                  handleSetState(handleClickShowPassword(state, 'show_confirm_new_password'))
+                                }
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                              >
+                                { show_confirm_new_password ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                          label={t('editProfile.inputs.changePassword.confirmNewPassword')}
+                        />
+                        <FormHelperText
+                          className={classes.fieldHelperTextStyle}
+                          error
+                        >
+                          {(props.status && props.status['confirmNewPassword']) ||
+                            (props.touched['confirmNewPassword'] &&
+                              props.errors['confirmNewPassword'] &&
+                              (
+                                <Trans t={t} i18nextKey="editProfile.inputs.changePassword.error">
+                                  <ErrorIcon fontSize="small" /> {{errorMessage: props.errors['confirmNewPassword']}}
+                                </Trans>
+                              )
+                              )}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
                   </Grid>
 
                   <Grid item xs={12}>
@@ -708,9 +836,15 @@ export default connect(
       email: '',
       phone: '',
       password: '',
+      newPassword: '',
+      confirmNewPassword: '',
       user_location: '',
       bio: '',
     }),
     validationSchema,
+    handleSubmit: (values, { props }) => {
+      return editProfile(values, props, toast)
+    },
+    validate: customValidation
   })(EditProfile),
 );
