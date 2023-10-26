@@ -148,7 +148,7 @@ export default function ActivityDetailsV2(props) {
               </Typography>
             </div>
           </div>
-          {props.auth.tags.includes('staff') && (
+          {['staff', 'educator'].some(tag => props.auth.tags.includes(tag)) && (
             <AnchorElemt
               isLoading={isLoading.delete}
               onDelete={handleDelete}
