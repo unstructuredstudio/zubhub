@@ -177,7 +177,7 @@ function Team(props) {
                     primaryButtonStyle
                     onClick={() => props.history.push('/'+groupname+'/edit-team')}
                   >
-                    {t('editTeam.label')}
+                    {t('editTeam.info')}
                   </CustomButton>
                 </>
               ) : (
