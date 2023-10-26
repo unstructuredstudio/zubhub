@@ -40,7 +40,7 @@ let firstRender = true;
 
 function CreateEditActivity(props) {
   useEffect(() => {
-    if (!['staff', 'creator'].some(tag => props.auth.tags.includes(tag))) {
+    if (!['staff', 'educator'].some(tag => props.auth.tags.includes(tag))) {
       props.history.push('/activities');
     }
   }, [props.auth.tags, props.history]);
