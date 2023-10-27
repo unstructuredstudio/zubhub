@@ -329,11 +329,62 @@ const styles = theme => ({
     maxWidth: '2000px',
     width: '100%',
   },
+  buttonGroupStyleThree: {
+    paddingLeft: '2em',
+    paddingRight: '2em',
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '2em',
+    [theme.breakpoints.down('500')]: {
+      padding: '0',
+      display: 'flex',
+    },
+  },
+  paginationComp:{
+    width: '5rem',
+    height: '2rem',
+    display: 'flex',
+    flexWrap: 'nowrap',
+    '& .MuiPaginationItem-root': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '0.5rem'
+    },
+    '& .MuiPaginationItem-ul':{
+      display: 'flex',
+    },
+  },
+  paginationRoot: {
+    '& .MuiPaginationItem-root': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 'auto',
+      '&:hover': {
+        backgroundColor: 'var(--primary-color3)',
+        color: 'white',
+        display: 'flex',
+      },
+    },
+    '& .MuiPaginationItem-ul':{
+      display: 'flex',
+    }
+  },
   buttonGroupStyleAlternative: {
     padding: '7px 21px',
+    [theme.breakpoints.down('600')]: {
+      padding: '3px 3px 3px 6px',
+      fontSize: '15px',
+      paddingTop: '0'
+    },
   },
   floatRight: {
     float: 'right',
+
+  },
+  visibilityNone:{
+    visibility: 'hidden'
   },
   floatLeft: {
     float: 'left',
