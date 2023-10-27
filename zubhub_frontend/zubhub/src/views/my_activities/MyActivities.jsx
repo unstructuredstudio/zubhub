@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import {
   getActivities,
+  getMyActivities,
   activityToggleSave,
   setActivity,
   getUnPublishedActivities,
@@ -18,8 +18,7 @@ import { Grid, Box, Typography } from '@material-ui/core';
 import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
 
-function Activities(props) {
-  const location = useLocation();
+function MyActivities(props) {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const { activities } = useSelector(state => state);
@@ -27,36 +26,20 @@ function Activities(props) {
 
   const commonClasses = makeStyles(DefaultStyles)();
 
-  const flagMap = useMemo(
-    () => ({
-      staff: () =>
-        props.getUnPublishedActivities({
-          t: props.t,
-          token: props.auth.token,
-        }),
-      educator: () =>
-        props.getMyActivities({
-          t: props.t,
-          token: props.auth.token,
-        }),
-    }),
-    [props],
-  );
+  useEffect(() => {
+    setActivityList(activities.all_activities);
+  }, [activities]);
 
   useEffect(() => {
     async function fetcher() {
       setLoading(true);
-      if (location.state?.flag && flagMap[location.state.flag]) {
-        await flagMap[location.state.flag]();
-      } else {
-        await props.getActivities(props.t);
-      }
+      await props.getMyActivities(props.auth);
       setActivityList(activities.all_activities);
       setLoading(false);
     }
 
     fetcher();
-  }, [location]);
+  }, []);
 
   if (loading) {
     return <LoadingPage />;
@@ -67,7 +50,7 @@ function Activities(props) {
       return (
         <div className={commonClasses.smallScreenPadding}>
           <Typography style={{ marginBottom: 50 }} className={commonClasses.title1}>
-            Activities
+            My Activities
           </Typography>
           <Grid container spacing={3}>
             {activityList &&
@@ -110,6 +93,9 @@ const mapDispatchToProps = dispatch => {
     getActivities: args => {
       return dispatch(getActivities(args));
     },
+    getMyActivities: args => {
+      return dispatch(getMyActivities(args));
+    },
     getUnPublishedActivities: args => {
       return dispatch(getUnPublishedActivities(args));
     },
@@ -122,4 +108,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Activities);
+export default connect(mapStateToProps, mapDispatchToProps)(MyActivities);
