@@ -1,6 +1,4 @@
-import { colors } from "../../../colors";
-
-export const styles = theme => ({
+const styles = theme => ({
   root: {
     paddingBottom: '2em',
     flex: '1 0 auto',
@@ -21,9 +19,8 @@ export const styles = theme => ({
 
   pageHeaderStyle: {
     marginTop: '1em',
-    fontWeight: '800',
+    fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: '36px'
   },
   cardStyle: {
     display: 'flex',
@@ -94,54 +91,4 @@ export const styles = theme => ({
   },
 });
 
-export const resultModal = (theme) => ({
-  root: {
-    maxWidth: '72rem',
-    backgroundColor: colors.white,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: '50px',
-    borderRadius: '8px 8px 0 0',
-    height: '1013px',
-  
-    '& .MuiGrid-root.MuiGrid-container': {
-      width: '100%',
-      backgroundColor: colors.white,
-    },
-  },
-  projectContainer: {
-    width: '100%', 
-    backgroundColor: colors.white, 
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column'
-  },
-  gridBlur: {
-    background: `linear-gradient(to top, ${colors.white} 0%, ${colors.white} 25%, rgba(255,255,255,1) 30%, rgba(255,255,255,0) 100%)`,
-    position: 'absolute', 
-    height: '588px', 
-    width: '100%', 
-    top: 0, 
-    zIndex: 1
-  },
-  loginModal: {
-    zIndex: 2,
-    position: 'absolute',
-    marginTop: '25%',
-    [theme.breakpoints.down('756')]: {
-      marginTop: '35%'
-    },
-    [theme.breakpoints.down('556')]: {
-      marginTop: '45%'
-    },
-    [theme.breakpoints.down('400')]: {
-      marginTop: '65%'
-    }
-  },
-  containerStylesOverrides: { boxShadow: 'none' }, 
-  titleStylesOverrides: { textAlign: 'center'},
-  errorPage: { width: '80dvw'}
-})
-
+export default styles;

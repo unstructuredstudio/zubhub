@@ -225,17 +225,6 @@ function PageWrapper(props) {
   };
 
   const { anchor_el, loading, open_search_form } = state;
-
-  const renderer = (() => {
-    if (!props.auth.token && props.match.path === '/search') {
-      return props.children
-    } 
-
-    if (props.auth.token) {
-      return (<DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout>)
-    }
-  })()
-
   const { t } = props;
   const { zubhub, hero } = props.projects;
 
@@ -249,7 +238,7 @@ function PageWrapper(props) {
       <Navbar {...props} />
 
       <Container className={classes.childrenContainer} maxWidth="lg">
-        {renderer}
+        {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
         {!props.auth?.token &&
           ![
             '/',
@@ -264,8 +253,7 @@ function PageWrapper(props) {
             '/challenge',
             '/password-reset',
             '/email-confirm',
-            '/password-reset-confirm',
-            '/search'
+            '/password-reset-confirm'
           ].includes(props.match?.path) && (
             <div style={{ minHeight: '80vh' }}>
               <NotFoundPage />

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx'
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Typography, Container } from '@material-ui/core';
@@ -20,7 +19,7 @@ function ErrorPage(props) {
   const classes = useStyles();
   const propStyle = props.style;
   return (
-    <Box className={clsx([classes.root, props.styleOverrides.width])} style={propStyle ? propStyle : null}>
+    <Box className={classes.root} style={propStyle ? propStyle : null}>
       <Container className={classes.mainContainerStyle}>
         <img className={classes.disconnectedStyle} src={disconnected} alt={props.error} />
         <Box className={classes.errorBoxStyle}>

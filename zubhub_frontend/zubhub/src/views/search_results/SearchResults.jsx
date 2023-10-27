@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -12,6 +13,7 @@ import {
   Grid,
   Box,
   ButtonGroup,
+  Button,
   Typography,
   Container,
   Card,
@@ -32,12 +34,10 @@ import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
-import {styles, resultModal} from '../../assets/js/styles/views/search_results/searchResultsStyles';
+import styles from '../../assets/js/styles/views/search_results/searchResultsStyles';
 import commonStyles from '../../assets/js/styles';
-import Login from '../login/Login';
 
 const useStyles = makeStyles(styles);
-const useModalStyles = makeStyles(resultModal)
 const useCommonStyles = makeStyles(commonStyles);
 
 /**
@@ -107,7 +107,6 @@ const buildCreatorProfiles = (
  */
 function SearchResults(props) {
   const classes = useStyles();
-  const modalClasses = useModalStyles()
   const common_classes = useCommonStyles();
 
   const [state, setState] = React.useState({
@@ -133,10 +132,6 @@ function SearchResults(props) {
   };
 
   const getResults = (type, results) => {
-    if (!results) {
-      return <ErrorPage error={t('searchResults.errors.noResult')} styleOverrides={{ width: modalClasses.errorPage }}/>
-    }
-
     if (type === SearchType.CREATORS) {
       return buildCreatorProfiles(
         results,
@@ -148,7 +143,7 @@ function SearchResults(props) {
     } else {
       return (
         <Grid container spacing={3}>
-          {results?.map(project => (
+          {results.map(project => (
             <Grid
               item
               xs={12}
@@ -178,38 +173,7 @@ function SearchResults(props) {
     next: next_page,
     loading,
   } = state;
-  const { t, auth } = props;
-
-  if (!auth.token) {
-    return (
-      <Container className={modalClasses.root}>
-        <Grid className={modalClasses.projectContainer}>
-          <Grid item xs={12}>
-            <Typography
-              className={classes.pageHeaderStyle}
-              variant="h3"
-              gutterBottom
-            >
-              {`${t('searchResults.resultsFound')} "${getQueryParams(window.location.href).get('q')}"`}
-            </Typography>
-          </Grid>
-          {getResults(
-            getQueryParams(window.location.href).get('type'),
-            props.auth.token ? results : results[0]?.projects?.results,
-          )}
-          <Grid className={modalClasses.gridBlur}></Grid>
-        </Grid>
-        <Grid className={modalClasses.loginModal}>
-          <Login {...props}
-           primaryTitle={t('searchResults.loginModal.title')}
-           secondaryTitle='' 
-           styleOverrides={{containerStyles: modalClasses.containerStylesOverrides, titleStyles: modalClasses.titleStylesOverrides}}
-          />
-        </Grid>
-      </Container>
-    )
-  }
-
+  const { t } = props;
   if (loading) {
     return <LoadingPage />;
   } else {
@@ -233,7 +197,7 @@ function SearchResults(props) {
               </Grid>
               {getResults(
                 getQueryParams(window.location.href).get('type'),
-                results
+                results,
               )}
             </Grid>
             <ButtonGroup
@@ -300,10 +264,8 @@ function SearchResults(props) {
   }
 }
 
-
 SearchResults.propTypes = {
   auth: PropTypes.object.isRequired,
-  getStaffPicks: PropTypes.object.isRequired,
   searchProjects: PropTypes.func.isRequired,
   searchCreators: PropTypes.func.isRequired,
   searchTags: PropTypes.func.isRequired,
@@ -320,9 +282,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getStaffPicks: args => {
-      return dispatch(ProjectActions.getStaffPicks(args))
-    },
     searchProjects: args => {
       return dispatch(ProjectActions.searchProjects(args));
     },
