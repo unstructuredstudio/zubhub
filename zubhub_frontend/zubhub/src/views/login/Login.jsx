@@ -61,12 +61,12 @@ function Login(props) {
   };
 
   const { show_password } = state;
-  const { t } = props;
+  const { t } = props
 
   return (
     <Box className={classes.root}>
-      <Container className={classes.containerStyle}>
-        <Card className={classes.cardStyle}>
+      <Container className={classes.containerStyle} >
+        <Card className={clsx([classes.cardStyle, props.styleOverrides?.containerStyles])}>
           <CardActionArea>
             <CardContent>
               <form
@@ -80,9 +80,9 @@ function Login(props) {
                   variant="h5"
                   component="h2"
                   color="textPrimary"
-                  className={classes.titleStyle}
+                  className={clsx([classes.titleStyle, props.styleOverrides?.titleStyles])}
                 >
-                  {t('login.welcomeMsg.primary')}
+                  {props.primaryTitle ?? t('login.welcomeMsg.primary')}
                 </Typography>
                 <Typography
                   className={classes.descStyle}
@@ -90,7 +90,7 @@ function Login(props) {
                   color="textSecondary"
                   component="p"
                 >
-                  {t('login.welcomeMsg.secondary')}
+                  {props.secondaryTitle ?? t('login.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
