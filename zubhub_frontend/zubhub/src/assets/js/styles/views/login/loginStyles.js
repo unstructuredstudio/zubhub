@@ -19,7 +19,7 @@ const styles = theme => ({
     },
   },
   cardStyle: {
-    border: 'none',
+    border: 0,
     borderRadius: 15,
     boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .12)',
     color: 'white',
