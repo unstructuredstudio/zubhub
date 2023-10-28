@@ -304,7 +304,7 @@
         "review": "“ZubHub contributes immensely to people from not so well socio-econimic backgrounds, I would high recommend it.”",
         "name": "Yaya Mamoudou",
         "designation": "ZubHub Ambassador"}
-    
+
     },
     "global":{
       "title":"Join a growing community of thousands of creators!",
@@ -599,6 +599,7 @@
 
   "profile": {
     "edit": "Edit",
+    "editTeam": "Edit Team",
     "teams": "Teams",
     "allTeams": "All Teams",
     "delete": {
@@ -871,17 +872,35 @@
     }
   },
   "editTeam": {
-    "info": "Edit Team Info",
-    "name": "Team Name",
-    "about": "About Team",
-    "requestName": "Enter your Team Name",
+    "label": "Edit Team",
+    "inputs": {
+      "name": {
+        "label": "Team Name",
+        "request": "Please enter team name",
+        "errors": {
+          "required": "Team name is required"
+        }
+      },
+      "bio": {
+        "label": "About Team",
+        "description": "Tell us about your team!"
+      }
+    },
+    "actions": {
+      "submit": "Save Changes"
+    },
     "delete": {
+      "label": "Delete Team",
       "question": "Delete Team Profile?",
-      "information": "Deleting your Team will remove all members and admins from this Team. Deleting a Team is Permanent and data associated with the Team cannot be recovered.",
+      "information1": "Deleting your team will remove all members and admins from this team. Deleting a team is permanent and data associated with the team cannot be recovered.",
+      "information2": "Deleting your team will also delete any job or talent search associated with this team.",
       "confirmation": "I want to delete this team’s profile",
       "buttons": {
         "confirm": "Delete",
         "cancel": "Cancel"
+      },
+      "ariaLabels": {
+        "deleteTeam": "delete team"
       }
     }
   },
@@ -1044,7 +1063,7 @@
       "image": "Image added",
       "images": "Images added",
       "videoFile": "Video file added",
-      "videoURL": "Video URL added"  
+      "videoURL": "Video URL added"
     },
     "buttons": {
       "Next": "Next",
@@ -1088,7 +1107,7 @@
       "category": "Category",
       "tags": "Tags",
       "none": "None",
-      
+
       "build": "Let's Make This Project",
       "pdf": "Download Pdf",
       "create": {
