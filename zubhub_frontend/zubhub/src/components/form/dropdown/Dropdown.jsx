@@ -79,7 +79,7 @@ export default function Dropdown({
       </label>
 
       {helperText && (
-        <Typography className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
+        <Typography color={error ? 'error' : ''} className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
           {helperText}
         </Typography>
       )}

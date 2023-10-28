@@ -17,7 +17,7 @@ export const links = ({ draftCount, myProjectCount, auth, t }) => [
     { label: t('pageWrapper.sidebar.projects'), link: '/', icon: Dashboard },
     { label: t('pageWrapper.sidebar.profile'), link: '/profile', icon: Person, reactIcon: true, requireAuth: true },
     { label: t('pageWrapper.sidebar.createProject'), link: '/projects/create', icon: EmojiObjects },
-    ...(auth?.tags.includes('staff')
+    ...(['staff', 'educator'].some(tag => auth?.tags.includes(tag))
         ? [{ label: t('pageWrapper.sidebar.createActivity'), link: '/activities/create', icon: PostAddOutlined }]
         : []),
     {
