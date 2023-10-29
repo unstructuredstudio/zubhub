@@ -62,21 +62,12 @@ function CreateTeam(props) {
   const commonClasses = makeStyles(styles)();
   const [draftStatus, setDraftStatus] = useState(DRAFT_STATUSES.idle);
   const [activeStep, setActiveStep] = useState(1);
-  const [state, setState] = useState({ ...JSON.parse(JSON.stringify(script.vars.default_state)) });
   const [publishOrAddTags, setPublishOrAddTags] = useState(false);
   const [addTagsDialog, setAddTagsDialog] = useState(false);
   const [value, setValue] = useState('');
   const [remoteTags, setRemoteTags] = useState([]);
-  const [popularTags, setPopularTags] = useState(script.testTags);
-  const [mode, setMode] = useState('');
+
   const [preview, setPreview] = useState(false);
-  // const [selectedProjects, setSelectedProjects] = useState([]);
-  let projs;
-
-  const updateSelectedProjects = (newSelectedProjects) => {
-    projs=newSelectedProjects;
-  };
-
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
@@ -86,65 +77,15 @@ function CreateTeam(props) {
   const toggleAddTagsDialog = () => setAddTagsDialog(!addTagsDialog);
   const clearSuggestions = () => setRemoteTags([]);
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
-
-  const getToastMessage = () => {
-    let message = '';
-    if (activeStep === 1 && props.match.path === '/projects/create') {
-      message = 'createProject.addedToDraft';
-    }
-    if ([1, 2].includes(activeStep) && props.match.params.id) {
-      message = 'createProject.savedStep';
-    }
-    if (activeStep === 3 && props.match.params.id) {
-      message = 'createProject.createToastSuccess';
-    }
-    return message;
-  };
-
-  useEffect(() => {
-    if (props.match.params.id) {
-      // Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
-      //   handleSetState({ ...result[0], ...result[1] }),
-      // );
-    } else {
-      // handleSetState(script.getCategories(props));
-    }
-    const params = new URLSearchParams(window.location.search);
-    const queryParams = Object.fromEntries(params.entries());
-    if ('mode' in queryParams) setMode(queryParams.mode);
-  }, []);
+  const handleSubmit = async (values) => {
+    return await script.submitData(values, props)
+  }
 
   const handleBlur = name => {
     formik.setTouched({ [name]: true }, true);
   };
 
-  useEffect(() => {
-    if (state.success) {
-      if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
-      toast.success(props.t(getToastMessage()));
-      if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}?success=true`);
-      }
-      go('next');
-    }
-  }, [state.success]);
-
   const togglePreview = () => setPreview(!preview);
-
-  useEffect(() => {
-    if (state.default_state?.loading) {
-      setDraftStatus(DRAFT_STATUSES.saving);
-    } else {
-      setDraftStatus(DRAFT_STATUSES.saved);
-    }
-  }, [state.default_state?.loading]);
 
   const draftContainerText = () => {
     if (draftStatus === DRAFT_STATUSES.idle) return 'Draft';
@@ -152,50 +93,33 @@ function CreateTeam(props) {
     if (draftStatus === DRAFT_STATUSES.saved) return !isSmallScreen ? 'Saved to draft' : '';
   };
 
-  const formik = useFormik(script.formikSchema);
+  const formik = useFormik({...script.formikSchema, onSubmit: handleSubmit});
 
   const previous = () => go('prev');
+
   const next = async () => {
-    go('next');
+    const isError = await checkErrors()
+
+    if (!isError) go('next');
   };
 
   const handleAddTags = () => {
     togglePublishOrAddTags();
     toggleAddTagsDialog();
   };
-  const history = useHistory();
 
-  const submitData = async () => {
-    try {
-      if (!script.vars.upload_in_progress) {
-        const uploadStatus = await script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState, projs);
-  
-        if (uploadStatus === 'success') {
-          // Redirect to the desired URL on success
-          const teamGroupName = formik.values.groupname; // Get the groupname from props
-          history.push(`/teams/${teamGroupName}`);
-        } else {
-          const apiError = uploadStatus;
-          toast.error(`An unexpected error occurred. Please check if you have entered all details properly and try again.`);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const checkErrors = () => {
+  const checkErrors = async () => {
     if (activeStep === 1) {
-      return formik.setTouched({ title: true, bio: true }, true);
+      const errors = await formik.setTouched({ groupname: true, description: true }, true);
+      return (errors.groupname || errors.description) ? true : false
     }
 
     if (activeStep === 2) {
-      return formik.setTouched({ admins: true, members: true }, true);
+      const errors = await formik.setTouched({ admins: true, members: true }, true);
+      return (errors.admins || errors.members) ? true : false
     }
 
-    if (activeStep === 3) {
-      return formik.setTouched({ selectedProjects: true }, true);
-    }
+    return null
   };
 
   const go = direction => {
@@ -232,14 +156,6 @@ function CreateTeam(props) {
       </Typography>
     </Box>
   ));
-
-  if (TEAM_ENABLED) {
-    if (!['team', 'personal'].includes(mode)) {
-      return <SelectModeUI setMode={mode => setMode(mode)} />;
-    }
-
-    if (mode.length == 0) return null;
-  }
 
   return (
     <div className={classes.container}>
@@ -287,7 +203,6 @@ function CreateTeam(props) {
                 formik={formik}
                 handleBlur={handleBlur}
                 auth={props.auth}
-                updateSelectedProjects={updateSelectedProjects}
               />
             </StepWizard>
           </Box>
@@ -306,138 +221,19 @@ function CreateTeam(props) {
           )}
 
           <CustomButton
-            onClick={activeStep === 3 ? submitData : next}
-            loading={state.default_state?.loading}
+            onClick={activeStep === 3 ? formik.handleSubmit : next}
+            // loading={state.default_state?.loading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}
           >
             {activeStep === 3 ? props.t('profile.createTeam') : 'Next'}
           </CustomButton>
-
-          <Modal.WithIcon
-            icon={<AiOutlineExclamationCircle color={colors['tertiary-dark']} fontSize={25} />}
-            open={publishOrAddTags}
-            onClose={togglePublishOrAddTags}
-          >
-            <DialogTitle>
-              <Typography className={clsx(commonClasses.title2, classes.dialogTitle1)}>
-                Would you like to tag your project?
-              </Typography>
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Add relevant hashtags to your project for more visibility on ZubHub. If your project is generic in
-                nature, use General tag.
-              </DialogContentText>
-              <DialogActions className={commonClasses.justifySpaceBetween}>
-                <CustomButton primaryButtonOutlinedStyle onClick={handleAddTags}>
-                  Add tags
-                </CustomButton>
-                <CustomButton primaryButtonStyle onClick={submitData}>
-                  Publish without tags
-                </CustomButton>
-              </DialogActions>
-            </DialogContent>
-          </Modal.WithIcon>
-
-          <Modal open={addTagsDialog} onClose={toggleAddTagsDialog}>
-            <DialogActions className={commonClasses.justifySpaceBetween}>
-              <CustomButton onClick={toggleAddTagsDialog} style={{ padding: 15 }} startIcon={<CloseOutlined />}>
-                Close
-              </CustomButton>
-              <CustomButton onClick={submitData} style={{ margin: '0 15px' }} primaryButtonStyle>
-                Publish
-              </CustomButton>
-            </DialogActions>
-
-            <DialogTitle>
-              <Typography align="center" className={commonClasses.title2}>
-                What hashtag best describes your project?
-              </Typography>
-              <Typography align="center">
-                For example, if you made flower from cardboard, you can write: cardboard, flowers, colours or leave it
-                blank if you’re unsure.
-              </Typography>
-            </DialogTitle>
-
-            <DialogContent style={{ paddingBottom: 30 }}>
-              {/* <TagsInput
-                name="tags"
-                selectedTags={formik.values.tags}
-                popularTags={popularTags}
-                onChange={handleChangeTag}
-                addTag={addTag}
-                value={value}
-                remoteData={remoteTags}
-                clearSuggestions={clearSuggestions}
-                removeTag={removeTag}
-                placeholder="Start typing to search"
-              /> */}
-            </DialogContent>
-          </Modal>
         </Box>
       </Box>
     </div>
   );
 }
-
-const SelectModeUI = ({ setMode }) => {
-  const classes = makeStyles(createProjectStyle)();
-  const commonClasses = makeStyles(styles)();
-  const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const [mode, setModeItem] = useState('');
-  const modes = { personal: 'personal', team: 'team' };
-
-  const handleCreate = () => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('mode', mode);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState(null, null, newUrl);
-    setMode(mode);
-  };
-
-  return (
-    <div className={classes.container}>
-      <Box className={clsx(classes.selectMode)}>
-        <Box sx={{ textAlign: isSmallScreen ? 'left' : 'center' }}>
-          <Typography className={clsx(commonClasses.title1)}>Create Project</Typography>
-          <Typography>
-            Select what kind of project it is, if you worked on the project alone select Personal project, if you worked
-            on your project with other creators select Team project.
-          </Typography>
-        </Box>
-        <div className={clsx(classes.modeItemContainer)}>
-          <div
-            onClick={() => setModeItem(modes.personal)}
-            className={clsx(classes.modeItem, mode == modes.personal ? classes.modeItemSelected : null)}
-          >
-            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Personal Project</Typography>
-            <Typography>If you worked on the project alone </Typography>
-          </div>
-
-          <div
-            onClick={() => setModeItem(modes.team)}
-            className={clsx(classes.modeItem, mode == modes.team && classes.modeItemSelected)}
-          >
-            <Person style={{ color: colors.primary, marginBottom: 5, fontSize: 30 }} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>Team Project</Typography>
-            <Typography>If you worked on the project with other creators </Typography>
-          </div>
-        </div>
-        <CustomButton
-          onClick={handleCreate}
-          primaryButtonStyle
-          style={{ marginTop: 40, alignSelf: 'center' }}
-          disabled={mode.length === 0}
-        >
-          Create Project
-        </CustomButton>
-      </Box>
-    </div>
-  );
-};
 
 CreateTeam.propTypes = {
   auth: PropTypes.object.isRequired,

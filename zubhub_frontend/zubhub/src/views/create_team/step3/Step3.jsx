@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import ZubhubAPI from '../../../api/api';
 const API = new ZubhubAPI();
 
-export default function Step3({ updateSelectedProjects, formik, handleBlur, ...props }) {
+export default function Step3({ formik, handleBlur, ...props }) {
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(step3Style)();
   const api = new ZubhubAPI();
@@ -39,7 +39,7 @@ export default function Step3({ updateSelectedProjects, formik, handleBlur, ...p
       projectsTemp.push(project);
     }
     setSelectedProjects(projectsTemp);
-    updateSelectedProjects(projectsTemp);
+    formik.setFieldValue("projects", projectsTemp);
   };
 
   useEffect(() => {
