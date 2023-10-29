@@ -1,4 +1,5 @@
 import { Box, FormControl, IconButton, Typography, makeStyles } from '@material-ui/core';
+import { resizeImageFile } from 'react-image-file-resizer';
 import { ArrowBackOutlined, ArrowForwardOutlined, ClearRounded, CloudUploadOutlined } from '@material-ui/icons';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
@@ -13,7 +14,7 @@ const defaultMessage = 'JPG and PNG Images can be added (Maximum of 5 photos 2MB
 export default function ImageInput({
   name,
   label,
-  required,
+  required, 
   value,
   handleChange,
   message = defaultMessage,
@@ -63,14 +64,31 @@ export default function ImageInput({
     }
   };
 
-  const handleFileChange = files => {
+  const handleFileChange = async (files) => {
     if (files?.length + value?.length > max) {
       alert(`You can only select up to ${max} files.`);
       return;
     }
-
-    const images = Array.from([...files, ...value]);
-
+  
+//Compressing media
+    const compressedImages = [];
+    const compressOptions = {
+      maxWidth: 800,
+      maxHeight: 600, 
+      quality: 70,
+    };
+  
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const compressedImage = await new Promise((resolve) => {
+        resizeImageFile(file, compressOptions.maxWidth, compressOptions.maxHeight, 'JPEG', compressOptions.quality, 0, (compressedFile) => {
+          resolve(compressedFile);
+        });
+      });
+      compressedImages.push(compressedImage);
+    }
+  
+    const images = [...compressedImages, ...value];
     handleChange(images);
   };
 
