@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { Grid, makeStyles, Backdrop } from '@material-ui/core';
-import styles from '../../assets/js/styles';
+import styles from '../../assets/js/styles'
+import { customStyles } from './styles';
 import Project from '../../components/project/Project';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PropTypes from 'prop-types';
@@ -20,7 +21,7 @@ function AddTeamProject(props) {
 
   console.log(props);
   const commonClasses = makeStyles(styles)();
-  const classes = makeStyles(styles)();
+  const classes = makeStyles(customStyles)();
   const { username, token } = props.auth;
   const groupname = props.match.params.groupname;
   const [teamProfile, setTeamProfile] = useState({});
@@ -107,12 +108,12 @@ function AddTeamProject(props) {
                 style={{ position: 'relative', marginLeft: '16px', marginRight: '16px', cursor: 'pointer' }}
               >
                 <Project project={project} {...props} nonLinkable />
-                {selectedProjects?.includes(project.id) && (
                   <Backdrop
                     open={true}
                     style={{
                       position: 'absolute',
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      backgroundColor: selectedProjects?.includes(project.id) ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+                      backdropFilter: selectedProjects?.includes(project.id) ? 'blur(5px)' : 'none',
                       borderRadius: '15px',
                       cursor: 'pointer',
                       zIndex: 1,
@@ -120,24 +121,28 @@ function AddTeamProject(props) {
                       left: 0,
                     }}
                   >
-                    <span
-                      style={{
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <CheckCircleIcon style={{ color: 'white', marginRight: '5px' }} />
-                      Project Added
-                    </span>
+                    {
+                      selectedProjects?.includes(project.id) && (
+                        <span
+                        style={{
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <CheckCircleIcon style={{ color: 'white', marginRight: '5px' }} />
+                        Project Added
+                      </span>
+                      )
+                    }
                   </Backdrop>
-                )}
+                {/* )} */}
               </div>
             </Grid>
           ))}
       </Grid>
       <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '4rem' }}>
-        <CustomButton secondaryButtonStyle>Cancel</CustomButton>
+        <CustomButton primaryButtonOutlinedStyle>Cancel</CustomButton>
         <CustomButton primaryButtonStyle onClick={handleSave}>
           Save
         </CustomButton>

@@ -344,7 +344,7 @@ function Team(props) {
                       variant="contained"
                       margin="normal"
                       primaryButtonStyle
-                      onClick={() => props.history.push(`/teams/${props.match.params.groupname}/add`)}
+                      onClick={() => props.history.push(`/teams/${props.match.params.groupname}/projects/update`)}
                     >
                       {t('Add Project')}
                     </CustomButton>

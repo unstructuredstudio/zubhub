@@ -45,7 +45,7 @@ const StaffPickDetails = React.lazy(() => import('./views/staff_pick_details/Sta
 const Activities = React.lazy(() => import('./views/activities/activities'));
 const ActivityDetails = React.lazy(() => import('./views/activity_details/ActivityDetailsV2'));
 const CreateTeam = React.lazy(() => import('./views/create_team/CreateTeam'));
-const AddTeamProject = React.lazy(() => import('./views/add_remove_team_project/AddTeamProject'))
+const AddRemoveTeamProject = React.lazy(() => import('./views/add_remove_team_project/AddRemoveTeamProject'))
 const LinkedProjects = React.lazy(() => import('./views/linked_projects/LinkedProjects'));
 const Ambassadors = React.lazy(() => import('./views/ambassadors/Ambassadors'));
 const Guidelines = React.lazy(() => import('./views/guidelines/Guidelines'));
@@ -217,6 +217,15 @@ function App(props) {
             render={routeProps => (
               <PageWrapper {...routeProps} {...props}>
                 <LazyImport LazyComponent={UserProjects} {...routeProps} {...props} />
+              </PageWrapper>
+            )}
+          />
+
+          <Route
+            path="/teams/:groupname/projects/update"
+            render={routeProps => (
+              <PageWrapper {...routeProps} {...props}>
+                <LazyImport LazyComponent={AddRemoveTeamProject} {...routeProps} {...props} />
               </PageWrapper>
             )}
           />
