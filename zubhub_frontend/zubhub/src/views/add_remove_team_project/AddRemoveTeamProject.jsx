@@ -26,53 +26,47 @@ function AddTeamProject(props) {
   const groupname = props.match.params.groupname;
   const [teamProfile, setTeamProfile] = useState({});
   const [projects, setProjects] = useState([]);
-  const [selectedProjects, setSelectedProjects] = useState(teamProfile?.projects ?? []);
+  const [initialSelected, setInitialSelected] = useState([])
+  const [selectedProjects, setSelectedProjects] = useState([]);
 
-  const handleProjectClick = useMemo(
-    () => projectId => {
-      const isAdded = selectedProjects.includes(projectId);
+  const handleProjectClick = useCallback(
+    (project) => {
+      const isAdded = selectedProjects.some((p) => p.id === project.id);
       if (isAdded) {
-        setSelectedProjects(prevSelectedProjects => prevSelectedProjects.filter(p => p.id === projectId));
+        setSelectedProjects(prevSelectedProjects => prevSelectedProjects.filter(p => p.id !== project.id));
       } else {
-        setSelectedProjects(prevSelectedProjects => [...prevSelectedProjects, projectId]);
+        setSelectedProjects(prevSelectedProjects => [...prevSelectedProjects, project]);
       }
     },
     [selectedProjects],
   );
 
   const handleSave = useCallback(async () => {
-    // const payload = {
-    //   groupname: groupname,
-    //   data: {
-    //     add_projects: selectedProjects,
-    //     remove_projects: projects.filter(p => !selectedProjects.includes(p.id)),
-    //   },
-    //   token: props.auth.token,
-    // };
+    const unselectedProjects = initialSelected?.filter(project => !selectedProjects.some(p => p.id === project.id));
+    const newlySelected = selectedProjects?.filter(project => !initialSelected.some(p => p.id === project.id));
 
-    const payload = {
+    const args = {
       token: token,
+      payload: {
       groupname: groupname,
       description: teamProfile?.description,
-      // description: "Your Group Description", // Replace with the actual description
-      add_projects: selectedProjects.map(project => ({ id: project })),
-      remove_projects: projects
-        .filter(project => !selectedProjects.some(selectedProject => selectedProject.id === project))
-        .map(project => ({ id: project })),
+      add_projects: newlySelected.length > 0 ? newlySelected : null,
+      remove_projects: unselectedProjects.length > 0 ? unselectedProjects : null,
+      }
     };
 
     try {
-      const response = await API.addTeamProjects(payload);
-      toast.success('Successfully added new projects');
+      const response = await API.updateTeamProjects(args);
+      toast.success('Updated successfully');
 
       if (response.status === 200) {
         props.history.push(`/teams/${username}`);
       }
     } catch (error) {
       toast.warning(error.message);
-      console.error('Error saving projects', error);
+      console.error('Error updating projects', error);
     }
-  }, [projects, props.auth.token, props.match.params.groupname, selectedProjects]);
+  }, []);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -80,9 +74,10 @@ function AddTeamProject(props) {
         const teamResponse = await API.getTeamProfile({ groupname, ...props });
         const userResponse = await API.getUserProjects({ username, ...props });
         setTeamProfile(teamResponse);
-        setProjects(userResponse.results);
         console.log(teamResponse, 'response');
-        setSelectedProjects(teamResponse?.projects?.map(p => p.id));
+        setInitialSelected(teamResponse?.projects)
+        setSelectedProjects(teamResponse?.projects)
+        setProjects([...userResponse.results, ...selectedProjects]);
       } catch (error) {
         toast.warning(`Error fetching projects ${error.message}`);
         console.error('Error fetching projects:', error);
@@ -94,6 +89,11 @@ function AddTeamProject(props) {
 
   console.log(selectedProjects, 'Selected');
   console.log(projects, 'Available');
+
+  const checkStatus = (projectId) => {
+    return selectedProjects?.some((project) => project.id === projectId);
+  }
+
   return (
     <>
       <label htmlFor="" className={commonClasses.title2} style={{ alignItems: 'center' }}>
@@ -101,10 +101,10 @@ function AddTeamProject(props) {
       </label>
       <Grid container spacing={3} style={{ marginTop: '20px' }}>
         {Array.isArray(projects) &&
-          projects.map(project => (
+          projects.map((project, index) => (
             <Grid item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center" key={project.id}>
               <div
-                onClick={() => handleProjectClick(project.id)}
+                onClick={() => handleProjectClick(project)}
                 style={{ position: 'relative', marginLeft: '16px', marginRight: '16px', cursor: 'pointer' }}
               >
                 <Project project={project} {...props} nonLinkable />
@@ -112,8 +112,8 @@ function AddTeamProject(props) {
                     open={true}
                     style={{
                       position: 'absolute',
-                      backgroundColor: selectedProjects?.includes(project.id) ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
-                      backdropFilter: selectedProjects?.includes(project.id) ? 'blur(5px)' : 'none',
+                      backgroundColor: checkStatus(project.id) ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+                      backdropFilter: checkStatus(project.id) ? 'blur(5px)' : 'none',
                       borderRadius: '15px',
                       cursor: 'pointer',
                       zIndex: 1,
@@ -122,7 +122,7 @@ function AddTeamProject(props) {
                     }}
                   >
                     {
-                      selectedProjects?.includes(project.id) && (
+                      checkStatus(project.id) && (
                         <span
                         style={{
                           color: 'white',

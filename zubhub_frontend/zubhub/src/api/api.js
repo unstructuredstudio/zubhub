@@ -434,14 +434,13 @@ class API {
    *
    * @todo - describe method's signature
    */
-  addTeamProjects = payload => {
-    console.log(payload.token, 'TOKEN');
+  updateTeamProjects = ({token, payload}) => {
     const url = `creators/${payload.groupname}/edit-group/`;
     const method = 'POST';
     const content_type = 'application/json';
     const body = JSON.stringify(payload);
-    if (payload.token) {
-      return this.request({ url, method, token: payload.token, body, content_type }).then(res => res.json());
+    if (token) {
+      return this.request({ url, method, token: token, body, content_type }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
