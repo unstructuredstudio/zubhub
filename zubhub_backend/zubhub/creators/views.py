@@ -840,8 +840,8 @@ class EditCreatorGroupAPIView(UpdateAPIView):
         description = request.data.get('description')
 
         # Validate the data
-        if not groupname or not description:
-            raise ValidationError("Both 'groupname' and 'description' fields are required.")
+        if not groupname:
+            raise ValidationError("'groupname' is required.")
 
         # Update the fields and save the changes
         if groupname is not None:

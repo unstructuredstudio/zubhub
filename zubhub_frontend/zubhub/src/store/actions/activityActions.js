@@ -23,16 +23,12 @@ export const setActivity = activity => {
 };
 
 export const getMyActivities = ({ t, token }) => {
-  console.log('getMyActivities', token);
   return async dispatch => {
     return ActivityAPI.getMyActivities(token)
       .then(res => {
-        console.log('result', res);
-
         if (res.status >= 200 && res.status < 300) {
           let response = res.json();
           response.then(all => {
-            console.log('all', all);
             dispatch({
               type: at.SET_ACTIVITIES,
               payload: {
@@ -42,9 +38,7 @@ export const getMyActivities = ({ t, token }) => {
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(
-              t('activityDetails.activity.delete.dialog.forbidden'),
-            );
+            toast.warning(t('activityDetails.activity.delete.dialog.forbidden'));
           } else {
             toast.warning(t('activities.errors.dialog.serverError'));
           }
@@ -57,16 +51,12 @@ export const getMyActivities = ({ t, token }) => {
 };
 
 export const getUnPublishedActivities = ({ t, token }) => {
-  console.log('getUnPublishedActivities', token);
   return async dispatch => {
     return ActivityAPI.getUnPublishedActivities(token)
       .then(res => {
-        console.log('result', res);
-
         if (res.status >= 200 && res.status < 300) {
           let response = res.json();
           response.then(all => {
-            console.log('all', all);
             dispatch({
               type: at.SET_ACTIVITIES,
               payload: {
@@ -76,9 +66,7 @@ export const getUnPublishedActivities = ({ t, token }) => {
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(
-              t('activityDetails.activity.delete.dialog.forbidden'),
-            );
+            toast.warning(t('activityDetails.activity.delete.dialog.forbidden'));
           } else {
             toast.warning(t('activities.errors.dialog.serverError'));
           }
@@ -106,9 +94,7 @@ export const getActivities = t => {
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(
-              t('activityDetails.activity.delete.dialog.forbidden'),
-            );
+            toast.warning(t('activityDetails.activity.delete.dialog.forbidden'));
           } else {
             toast.warning(t('activities.errors.dialog.serverError'));
           }
