@@ -162,7 +162,7 @@ function Projects(props) {
                        <img
                          className={classes.heroImageStyle}
                          src={hero.image_url ? hero.image_url : heroMainImage}
-                         alt="Six animated children happily walking"
+                         alt={t('projects.heroAlt')}
                        />
                      </Box>
                    )}
@@ -193,7 +193,7 @@ function Projects(props) {
                        <img
                          className={classes.heroImageStyle}
                          src={hero.image_url ? hero.image_url : heroMainImage}
-                         alt="Six animated children happily walking"
+                         alt={t('projects.heroAlt')}
                        />
                      </Box>
                    )}
