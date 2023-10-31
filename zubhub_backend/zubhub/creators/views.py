@@ -134,7 +134,7 @@ class UserProfileIDAPIView(RetrieveAPIView):
             return CreatorMinimalSerializer
         else:
             return CreatorSerializer
-        
+         
 
 class TeamProfileAPIView(RetrieveAPIView):
     """

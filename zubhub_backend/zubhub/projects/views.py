@@ -72,8 +72,8 @@ class ProjectCreateAPIView(CreateAPIView):
                 Notification.Type.FOLLOWING_PROJECT,
                 f'/creators/{self.request.user.username}'
             )
-        
-        
+
+
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """
