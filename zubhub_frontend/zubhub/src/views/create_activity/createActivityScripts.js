@@ -82,7 +82,9 @@ const allEmptyObjects = arr => {
 
 const imageValidationSchema = Yup.mixed()
   .test('not_an_image', 'onlyImages', value => isImage(value))
-  .test('image_size_too_large', 'imageSizeTooLarge', value => imageSizeTooLarge(value));
+  .test('image_size_too_large', 'imageSizeTooLarge', value =>
+    imageSizeTooLarge(value),
+  );
 
 export const validationSchema = Yup.object().shape({
   title: Yup.string().max(50, 'max').required('required'),
@@ -129,7 +131,9 @@ export const validationSchema = Yup.object().shape({
   activity_images: Yup.mixed()
     .test('not_an_image', 'onlyImages', value => isImage(value))
     .test('too_many_images', 'tooManyImages', value => tooManyImages(value))
-    .test('image_size_too_large', 'imageSizeTooLarge', value => imageSizeTooLarge(value))
+    .test('image_size_too_large', 'imageSizeTooLarge', value =>
+      imageSizeTooLarge(value),
+    )
     .test({
       message: 'required1',
       test: arr => {
@@ -216,7 +220,11 @@ export const validationSchema = Yup.object().shape({
 export const getErrors = (route, field, index, errors, touched) => {
   return route
     ? index < 0
-      ? errors[route] && errors[route][field] && touched[route] && touched[route][field] && errors[route][field]
+      ? errors[route] &&
+        errors[route][field] &&
+        touched[route] &&
+        touched[route][field] &&
+        errors[route][field]
       : errors[route] &&
         errors[route][index] &&
         errors[route][index][field] &&
@@ -228,11 +236,20 @@ export const getErrors = (route, field, index, errors, touched) => {
     ? errors[field] && touched[field] && errors[field]
     : errors[field] && touched[field] && typeof errors[field] === 'string'
     ? errors[field]
-    : errors[field] && errors[field][index] && touched[field] && touched[field][index] && errors[field][index];
+    : errors[field] &&
+      errors[field][index] &&
+      touched[field] &&
+      touched[field][index] &&
+      errors[field][index];
 };
 
 export const getMakingStepsRequiredError = (route, errors, touched) => {
-  return errors[route] && touched[route] && typeof errors[route] === 'string' && errors[route];
+  return (
+    errors[route] &&
+    touched[route] &&
+    typeof errors[route] === 'string' &&
+    errors[route]
+  );
 
   // if (route && errors[route] && errors[route][index] && touched[route]) {
   //   return errors[route][index];
@@ -241,7 +258,11 @@ export const getMakingStepsRequiredError = (route, errors, touched) => {
 
 export const getStepError = (route, index, errors, touched) => {
   return (
-    errors[route] && touched[route] && typeof errors[route] !== 'string' && errors[route][index] && errors[route][index]
+    errors[route] &&
+    touched[route] &&
+    typeof errors[route] !== 'string' &&
+    errors[route][index] &&
+    errors[route][index]
   );
 };
 
@@ -251,13 +272,22 @@ export const getValue = (route, field, index, fieldType, values) => {
       ? values[field] && values[field][index]
       : values[field]
     : fieldType.array
-    ? values[route] && values[route][index] && values[route][index][field] && values[route][index][field]
+    ? values[route] &&
+      values[route][index] &&
+      values[route][index][field] &&
+      values[route][index][field]
     : values[route] && values[route][field];
 };
 
 ///////////////////////////////// deserialize activity object to be displayed for update in form fields //////////////////////
 
-const activityFieldMap = ['facilitation_tips', 'learning_goals', 'materials_used', 'motivation', 'title'];
+const activityFieldMap = [
+  'facilitation_tips',
+  'learning_goals',
+  'materials_used',
+  'motivation',
+  'title',
+];
 
 const objectsArray = ['making_steps', 'inspiring_examples'];
 
@@ -342,10 +372,18 @@ const isEmptyObject = obj => {
   return isEmpty;
 };
 
-export const initUpload = async (e, state, props, handleSetState, history, formikProps, setReadyForSubmit) => {
+export const initUpload = async (
+  e,
+  state,
+  props,
+  handleSetState,
+  history,
+  formikProps,
+  setReadyForSubmit,
+) => {
   e.preventDefault();
   handleSetState(state => {
-    return { ...state, submitting: true };
+    return { ...state, ['submitting']: true };
   });
   if (!props.auth.token) {
     props.history.push('/login');
@@ -356,7 +394,7 @@ export const initUpload = async (e, state, props, handleSetState, history, formi
       handleSetState,
       formikProps.formikValues,
       props.getSignature,
-      props.t,
+      props.t
     );
 
     let values = { ...formikProps.formikValues };
@@ -401,8 +439,10 @@ export const initUpload = async (e, state, props, handleSetState, history, formi
         }
       });
     } catch (error) {
-      console.error('error ', error);
-      toast.warning(`${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`);
+      console.log('error ', error);
+      toast.warning(
+        `${props.t(`activities.errors.dialog.${error.message}`)} ${error.file}`,
+      );
       // if (error.error.response.status >= 500) {
       //   toast.warning(
       //     `${props.t(`activities.errors.dialog.mediaServerError`)}`,
@@ -437,7 +477,9 @@ export const initUpload = async (e, state, props, handleSetState, history, formi
             fieldValues.push(value);
           }
         });
-        fieldValues.length === 0 ? delete values[field] : (values[field] = fieldValues);
+        fieldValues.length === 0
+          ? delete values[field]
+          : (values[field] = fieldValues);
       }
     });
 
@@ -505,11 +547,15 @@ export const initUpload = async (e, state, props, handleSetState, history, formi
           response.then(res => {
             props.setActivity(res);
           });
-          toast.success(props.t('activityDetails.activity.edit.dialog.success'));
+          toast.success(
+            props.t('activityDetails.activity.edit.dialog.success'),
+          );
           return props.history.push(`/activities/${values['id']}`);
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(props.t('activityDetails.activity.delete.dialog.forbidden'));
+            toast.warning(
+              props.t('activityDetails.activity.delete.dialog.forbidden'),
+            );
           } else {
             toast.warning(props.t('activities.errors.dialog.serverError'));
           }
@@ -526,12 +572,16 @@ export const initUpload = async (e, state, props, handleSetState, history, formi
           const response = res.json();
           response.then(res => {
             props.setActivity(res);
-            toast.success(props.t('activityDetails.activity.create.dialog.success'));
+            toast.success(
+              props.t('activityDetails.activity.create.dialog.success'),
+            );
             return props.history.push(`/activities/${res.id}`);
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(props.t('activityDetails.activity.create.dialog.forbidden'));
+            toast.warning(
+              props.t('activityDetails.activity.create.dialog.forbidden'),
+            );
           } else {
             // if (res.status === 404 || res.status === 400) {
             //   res.json().then(res => {

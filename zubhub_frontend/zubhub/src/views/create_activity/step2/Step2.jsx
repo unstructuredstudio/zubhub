@@ -13,6 +13,8 @@ const idPrefix = 'activitystep';
 const DEFAULT_STEP = { description: '', images: [], title: '', id: uniqueId(idPrefix) };
 
 export default function Step2({ formik, id }) {
+  // const formik = useFormik(step2Schema);
+
   const classes = makeStyles(step2Styles)();
   const commonClasses = makeStyles(styles)();
   const [steps, setSteps] = useState([{ ...DEFAULT_STEP }]);

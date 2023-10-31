@@ -5,8 +5,8 @@ app_name = "activities"
 
 urlpatterns = [
     path('',  PublishedActivitiesAPIView.as_view(), name='index'),
-    path('un-published', UnPublishedActivitiesAPIView.as_view(), name='unPublished'),
-    path('my-activities', UserActivitiesAPIView.as_view(), name='myActivities'),
+    path('unPublished', UnPublishedActivitiesAPIView.as_view(), name='unPublished'),
+    path('myActivities', UserActivitiesAPIView.as_view(), name='myActivities'),
     path('create/', ActivityCreateAPIView.as_view(), name='create'),
     path('<uuid:pk>/update/', ActivityUpdateAPIView.as_view(), name='update'),
     path('<uuid:pk>/delete/', ActivityDeleteAPIView.as_view(), name='delete'),

@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
   getActivities,
+  getMyActivities,
   activityToggleSave,
   setActivity,
   getUnPublishedActivities,
@@ -23,39 +24,35 @@ function Activities(props) {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const { activities } = useSelector(state => state);
-  const [activityList, setActivityList] = useState(props?.activities ?? []);
+  let [activityList, setActivityList] = useState([]);
 
   const commonClasses = makeStyles(DefaultStyles)();
 
-  const flagMap = useMemo(
-    () => ({
-      staff: () =>
-        props.getUnPublishedActivities({
-          t: props.t,
-          token: props.auth.token,
-        }),
-      educator: () =>
-        props.getMyActivities({
-          t: props.t,
-          token: props.auth.token,
-        }),
-    }),
-    [props],
-  );
-
   useEffect(() => {
-    async function fetcher() {
-      setLoading(true);
-      if (location.state?.flag && flagMap[location.state.flag]) {
-        await flagMap[location.state.flag]();
-      } else {
-        await props.getActivities(props.t);
-      }
-      setActivityList(activities.all_activities);
-      setLoading(false);
-    }
+    setActivityList(activities.all_activities);
+  }, [activities]);
 
-    fetcher();
+  const flagMap = {
+    staff: () =>
+      props.getUnPublishedActivities({
+        t: props.t,
+        token: props.auth.token,
+      }),
+    educator: () =>
+      props.getMyActivities({
+        t: props.t,
+        token: props.auth.token,
+      }),
+  };
+  useEffect(async () => {
+    setLoading(true);
+    if (location.state?.flag && flagMap[location.state.flag]) {
+      await flagMap[location.state.flag]();
+    } else {
+      await props.getActivities(props.t);
+    }
+    setActivityList(activities.all_activities);
+    setLoading(false);
   }, [location]);
 
   if (loading) {
@@ -109,6 +106,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getActivities: args => {
       return dispatch(getActivities(args));
+    },
+    getMyActivities: args => {
+      return dispatch(getMyActivities(args));
     },
     getUnPublishedActivities: args => {
       return dispatch(getUnPublishedActivities(args));
