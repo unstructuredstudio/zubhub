@@ -44,7 +44,7 @@ export default function SelectFromPills({
   return (
     <FormControl error={error}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Typography color={error ? 'error' : ''} className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
+      <Typography className={commonClasses.textSmall} style={{ marginBottom: 10 }}>
         {helperText}
       </Typography>
 

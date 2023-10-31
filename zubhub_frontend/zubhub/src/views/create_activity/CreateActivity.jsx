@@ -12,23 +12,27 @@ import {
   makeStyles,
   useMediaQuery,
 } from '@material-ui/core';
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { CustomButton, PreviewActivity } from '../../components';
+import React, { useEffect, useRef, useState } from 'react';
+import { CustomButton, Modal, PreviewActivity, TagsInput } from '../../components';
 import StepWizard from 'react-step-wizard';
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
+  CloseOutlined,
   CloudDoneOutlined,
   DoneRounded,
   KeyboardBackspaceRounded,
 } from '@material-ui/icons';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { createActivityStyles } from './CreateActivity.styles';
 import clsx from 'clsx';
+import { colors } from '../../assets/js/colors';
 import styles from '../../assets/js/styles';
 import { useDomElementHeight } from '../../hooks/useDomElementHeight.hook';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as script from './script';
+import CreateActivityStep1 from './create_activity_step1';
 import Step1 from './step1/Step1';
 import Step2 from './step2/Step2';
 import { useSelector } from 'react-redux';
@@ -38,14 +42,7 @@ const steps = ['Activity Basics', 'Activity Details'];
 
 let firstRender = true;
 
-function CreateEditActivity(props) {
-  useEffect(() => {
-    if (!['staff', 'educator'].some(tag => props.auth.tags.includes(tag))) {
-      props.history.push('/activities');
-    }
-  }, [props.auth.tags, props.history]);
-
-  const editting = props?.editting;
+export default function CreateActivity(props) {
   const { height } = useDomElementHeight('navbar-root');
   const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
@@ -62,8 +59,8 @@ function CreateEditActivity(props) {
   const [preview, setPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const isActive = useCallback(index => index + 1 === activeStep, [activeStep]);
-  const isCompleted = useCallback(index => completedSteps.includes(index + 1), [completedSteps]);
+  const isActive = index => index + 1 === activeStep;
+  const isCompleted = index => completedSteps.includes(index + 1);
 
   const handleSetState = obj => {
     if (obj) {
@@ -105,40 +102,45 @@ function CreateEditActivity(props) {
   const formikStep2 = useFormik(script.step2Schema);
 
   const previous = () => go('prev');
+  const next = async () => {
+    let error = await checkErrors();
 
-  const submit = async () => {
-    const errors = await checkErrors();
-
-    if (Object.keys(errors).length > 0) {
-      Object.keys(errors).map(err => {
-        return toast.warn(err);
-      });
-      return;
-    }
+    console.log(error);
+    if (Object.keys(error || {}).length > 0) return;
 
     setIsLoading(true);
 
-    script.submitForm({
-      step1Values: formikStep1.values,
-      step2Values: formikStep2.values,
-      props: { ...props, auth },
-      state,
-      handleSetState: handleSetState,
-      step: activeStep,
-      publish: true,
-    });
+    script.submitForm(
+      {
+        step1Values: formikStep1.values,
+        step2Values: formikStep2.values,
+        props: { ...props, auth },
+        state,
+        handleSetState: handleSetState,
+        step: activeStep,
+      },
+      success => {
+        if (success) {
+          if (activeStep == 1) go('next');
+          if (activeStep == 2) props.history.push(`/activities/${props.match.params.id}?success=true`);
+          setIsLoading(false);
+        }
+      },
+    );
   };
 
   const checkErrors = () => {
-    return formikStep2.setTouched({ introduction: true, materials_used: true }, true);
+    if (activeStep === 1) {
+      return formikStep1.setTouched({ title: true }, true);
+    }
+
+    if (activeStep === 2) {
+      return formikStep2.setTouched({ introduction: true }, true);
+    }
   };
 
-  const go = async direction => {
+  const go = direction => {
     if (direction === 'next') {
-      const errors = await formikStep1.setTouched({ title: true, class_grade: true, category: true }, true);
-
-      if (Object.keys(errors).length > 0) return;
-
       if (activeStep !== 3) {
         wizardRef.current.nextStep();
         let completedStepsTemp = [...new Set([...completedSteps, activeStep])];
@@ -156,37 +158,23 @@ function CreateEditActivity(props) {
     }
   };
 
-  const renderSteps = useMemo(
-    () =>
-      steps.map((label, index) => (
-        <Box
-          key={index}
-          className={clsx(classes.stepperLine, (isActive(index) || isCompleted(index)) && classes.activeStep)}
-        >
-          <Box className={clsx(classes.stepBall, (isActive(index) || isCompleted(index)) && classes.activeStep)}>
-            {isCompleted(index) && !isActive(index) ? (
-              <DoneRounded style={{ fontSize: 14 }} />
-            ) : (
-              <Typography style={{ fontWeight: '600' }}>{index + 1}</Typography>
-            )}
-          </Box>
-          <Typography
-            className={clsx(classes.stepLabel, (isActive(index) || isCompleted(index)) && classes.activeLabel)}
-          >
-            {label}
-          </Typography>
-        </Box>
-      )),
-    [
-      classes.activeLabel,
-      classes.activeStep,
-      classes.stepBall,
-      classes.stepLabel,
-      classes.stepperLine,
-      isActive,
-      isCompleted,
-    ],
-  );
+  const renderSteps = steps.map((label, index) => (
+    <Box
+      key={index}
+      className={clsx(classes.stepperLine, (isActive(index) || isCompleted(index)) && classes.activeStep)}
+    >
+      <Box className={clsx(classes.stepBall, (isActive(index) || isCompleted(index)) && classes.activeStep)}>
+        {isCompleted(index) && !isActive(index) ? (
+          <DoneRounded style={{ fontSize: 14 }} />
+        ) : (
+          <Typography style={{ fontWeight: '600' }}>{index + 1}</Typography>
+        )}
+      </Box>
+      <Typography className={clsx(classes.stepLabel, (isActive(index) || isCompleted(index)) && classes.activeLabel)}>
+        {label}
+      </Typography>
+    </Box>
+  ));
 
   return (
     <div className={classes.container}>
@@ -215,9 +203,7 @@ function CreateEditActivity(props) {
       <Box className={classes.formContainer}>
         <Grid item md={12} lg={12}>
           <Box sx={{ textAlign: isSmallScreen ? 'left' : 'center' }}>
-            <Typography className={clsx(commonClasses.title1)}>
-              {editting ? 'Edit Activity' : 'Create Activity'}
-            </Typography>
+            <Typography className={clsx(commonClasses.title1)}>Create Activity</Typography>
             <Typography>Tell us about your informative activity !</Typography>
           </Box>
 
@@ -243,19 +229,18 @@ function CreateEditActivity(props) {
               Previous
             </CustomButton>
           )}
+
           <CustomButton
-            onClick={activeStep === 2 ? submit : () => go('next')}
+            onClick={next}
             loading={isLoading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
             endIcon={<ArrowForwardIosRounded className={classes.nextButton} />}
           >
-            {activeStep === 2 ? (editting ? 'Update' : 'Publish') : 'Next'}
+            {activeStep == 2 ? 'Publish' : 'Next'}
           </CustomButton>
         </Box>
       </Box>
     </div>
   );
 }
-
-export default CreateEditActivity;
