@@ -29,6 +29,12 @@ function AddTeamProject(props) {
   const [initialSelected, setInitialSelected] = useState([])
   const [selectedProjects, setSelectedProjects] = useState([]);
 
+  useEffect(() => {
+    if (teamProfile?.members?.some(m => m.role !== 'admin')) {
+      return props.history.push(`/teams/${teamProfile.groupname}`)
+    }
+  }, [teamProfile.groupname, teamProfile?.members])
+
   const handleProjectClick = useCallback(
     (project) => {
       const isAdded = selectedProjects.some((p) => p.id === project.id);
