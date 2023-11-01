@@ -13,10 +13,9 @@ import {
   Container,
   Card,
   CardContent,
-  Link,
   Avatar
 } from '@material-ui/core';
-
+import { Link } from "react-router-dom"
 import { fetchPage, followTeam } from './allteamScripts';
 import * as UserActions from '../../store/actions/userActions';
 import CustomButton from '../../components/button/Button';
