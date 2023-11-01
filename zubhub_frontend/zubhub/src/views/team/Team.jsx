@@ -144,6 +144,9 @@ function Team(props) {
   const more_menu_open = Boolean(more_anchor_el);
   const { t } = props;
 
+  const isUserPartOfTeam = profile?.members?.some(({ member }) => member === username);
+  const isUserTeamAdmin = isUserPartOfTeam ? profile?.members?.find(({ member }) => member === username)?.role === 'admin' : false;
+
   const handleScroll = (e) => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
     if (bottom && nextPage) { 
@@ -339,15 +342,19 @@ function Team(props) {
                     className={classes.titleStyle}
                   >
                     {t('Projects')}
-                    <CustomButton
-                      className={classes.teamButton}
-                      variant="contained"
-                      margin="normal"
-                      primaryButtonStyle
-                      onClick={() => props.history.push(`/teams/${props.match.params.groupname}/projects/update`)}
-                    >
-                      {t('Add Project')}
-                    </CustomButton>
+                    {
+                      isUserTeamAdmin && (
+                        <CustomButton
+                        className={classes.teamButton}
+                        variant="contained"
+                        margin="normal"
+                        primaryButtonStyle
+                        onClick={() => props.history.push(`/teams/${props.match.params.groupname}/projects/update`)}
+                      >
+                        {t('Add Project')}
+                      </CustomButton>
+                      )
+                    }
                     <CustomButton
                       className={clsx(classes.floatRight)}
                       variant="outlined"
