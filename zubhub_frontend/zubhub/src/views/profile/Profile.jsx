@@ -324,7 +324,7 @@ function Profile(props) {
               primaryButtonStyle
               onClick={() => props.history.push('/create-team')}
             >
-              {t('profile.createteam')}
+              {t('profile.createTeam')}
             </CustomButton>
             </Typography>
             <Grid container spacing={2}>

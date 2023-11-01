@@ -28,12 +28,14 @@ function AddTeamProject(props) {
   const [projects, setProjects] = useState([]);
   const [initialSelected, setInitialSelected] = useState([])
   const [selectedProjects, setSelectedProjects] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true)
+  
   useEffect(() => {
-    if (teamProfile?.members?.some(m => m.role !== 'admin')) {
-      return props.history.push(`/teams/${teamProfile.groupname}`)
+    const currentUserRole = teamProfile?.members?.find(m => m.member === username)?.role;
+    if (!isLoading && currentUserRole !== 'admin') {
+      props.history.push(`/teams/${teamProfile.groupname}`);
     }
-  }, [teamProfile.groupname, teamProfile?.members])
+  }, [teamProfile.groupname, teamProfile?.members, username, props.history, isLoading]);
 
   const handleProjectClick = useCallback(
     (project) => {
@@ -80,6 +82,7 @@ function AddTeamProject(props) {
         const teamResponse = await API.getTeamProfile({ groupname, ...props });
         const userResponse = await API.getUserProjects({ username, ...props });
         setTeamProfile(teamResponse);
+        setIsLoading(false)
         console.log(teamResponse, 'response');
         setInitialSelected(teamResponse?.projects)
         setSelectedProjects(teamResponse?.projects)
