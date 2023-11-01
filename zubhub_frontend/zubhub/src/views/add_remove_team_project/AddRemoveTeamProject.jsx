@@ -22,8 +22,8 @@ function AddTeamProject(props) {
   console.log(props);
   const commonClasses = makeStyles(styles)();
   const classes = makeStyles(customStyles)();
-  const { username, token } = props.auth;
   const groupname = props.match.params.groupname;
+  const { username, token } = props.auth;
   const [teamProfile, setTeamProfile] = useState({});
   const [projects, setProjects] = useState([]);
   const [initialSelected, setInitialSelected] = useState([])
@@ -83,7 +83,6 @@ function AddTeamProject(props) {
         const userResponse = await API.getUserProjects({ username, ...props });
         setTeamProfile(teamResponse);
         setIsLoading(false)
-        console.log(teamResponse, 'response');
         setInitialSelected(teamResponse?.projects)
         setSelectedProjects(teamResponse?.projects)
         setProjects([...userResponse.results, ...selectedProjects]);
@@ -95,9 +94,6 @@ function AddTeamProject(props) {
 
     fetchProjects();
   }, [username]);
-
-  console.log(selectedProjects, 'Selected');
-  console.log(projects, 'Available');
 
   const checkStatus = (projectId) => {
     return selectedProjects?.some((project) => project.id === projectId);

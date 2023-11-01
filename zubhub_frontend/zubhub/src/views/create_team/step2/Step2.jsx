@@ -36,8 +36,8 @@ export default function Step2({ formik }) {
 
     // Perform API call to get admin suggestions based on the input value
     try {
-      const completions = await api.autocompleteCreators({ query: value });
-      const suggestions = completions.filter(({ id }) => !selectedAdminsIds.includes(id)).map(({ username, avatar, id }) => ({
+      const completions = await api.autocompleteCreators({ query: String(value).trim() });
+      const suggestions = completions.map(({ username, avatar, id }) => ({
         title: username,
         image: avatar,
         link: `/creators/${username}`,
@@ -57,7 +57,7 @@ export default function Step2({ formik }) {
     // Perform API call to get member suggestions based on the input value
     try {
       const completions = await api.autocompleteCreators({ query: value });
-      const suggestions = completions.filter(({ id }) => !memberSuggestionsIds.includes(id)).map(({ username, avatar, id }) => ({
+      const suggestions = completions.map(({ username, avatar, id }) => ({
         title: username,
         image: avatar,
         link: `/creators/${username}`,
