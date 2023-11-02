@@ -11,7 +11,7 @@ import {
   Typography,
   makeStyles,
 } from '@material-ui/core';
-import { CloseOutlined, MoreVert } from '@material-ui/icons';
+import { CloseOutlined, ExpandMore, MoreVert } from '@material-ui/icons';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import clsx from 'clsx';
@@ -32,7 +32,6 @@ import { getUrlQueryObject } from '../../utils.js';
 import { activityDefailsStyles } from './ActivityDetails.styles';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
-import { toast } from 'react-toastify';
 
 const API = new ZubHubAPI();
 const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
@@ -80,18 +79,6 @@ export default function ActivityDetailsV2(props) {
 
   const handleEdit = () => {
     props.history.push(`${props.location.pathname}/edit`);
-  };
-
-  const handleUpublishAndPublish = async () => {
-    const validData = Object.fromEntries(Object.entries(activity).filter(([key, value]) => value !== null));
-    const newData = { ...validData, publish: !activity.publish };
-    const response = await API.updateActivity(auth.token, props.match.params.id, newData);
-
-    if (response.status === 200) {
-      const data = await response.json();
-      toast.success(data.publish ? `Successfully published ${data.title}` : `You've unpublished ${data.title}`);
-      props.history.push(`/activities`);
-    }
   };
 
   const toggleDialog = () => {
@@ -148,15 +135,7 @@ export default function ActivityDetailsV2(props) {
               </Typography>
             </div>
           </div>
-          {['staff', 'educator'].some(tag => props.auth.tags.includes(tag)) && (
-            <AnchorElemt
-              isLoading={isLoading.delete}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              onUpdate={handleUpublishAndPublish}
-              activity={activity}
-            />
-          )}
+          <AnchorElemt isLoading={isLoading.delete} onDelete={handleDelete} onEdit={handleEdit} />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32, gap: 10 }}>
@@ -281,18 +260,22 @@ export default function ActivityDetailsV2(props) {
         </Typography>
 
         <Grid container spacing={4} justifyContent="center">
-          {moreActivities
-            .filter(({ id }) => id !== props.match.params.id)
-            .map((activity, index) => (
-              <Grid
-                key={index}
-                item
-                {...(auth.token ? authenticatedUserActivitiesGrid : unauthenticatedUserActivitiesGrid)}
-                align="center"
-              >
-                <Activity activity={activity} key={activity.id} t={t} {...props} />
-              </Grid>
-            ))}
+          {moreActivities.map((activity, index) => (
+            <Grid
+              key={index}
+              item
+              {...(auth.token ? authenticatedUserActivitiesGrid : unauthenticatedUserActivitiesGrid)}
+              align="center"
+            >
+              <Activity
+                activity={activity}
+                key={activity.id}
+                t={t}
+                // updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                {...props}
+              />
+            </Grid>
+          ))}
         </Grid>
 
         {/* <Comments context={{ name: 'activity', body: { ...activity, comments: [] } }} {...{ ...props, auth }} /> */}
@@ -323,7 +306,7 @@ export default function ActivityDetailsV2(props) {
   );
 }
 
-const AnchorElemt = ({ activity, onEdit, onUpdate, onDelete, isLoading = false }) => {
+const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
@@ -333,11 +316,6 @@ const AnchorElemt = ({ activity, onEdit, onUpdate, onDelete, isLoading = false }
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleUpdate = () => {
-    onUpdate();
-    handleClose();
   };
 
   const handledelete = () => {
@@ -371,8 +349,6 @@ const AnchorElemt = ({ activity, onEdit, onUpdate, onDelete, isLoading = false }
         }}
       >
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <Divider />
-        <MenuItem onClick={handleUpdate}>{activity.publish ? 'Unpublish' : 'Publish'}</MenuItem>
         <Divider />
         <MenuItem onClick={handledelete}>Delete</MenuItem>
       </Menu>

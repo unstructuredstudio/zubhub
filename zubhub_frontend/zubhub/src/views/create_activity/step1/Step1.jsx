@@ -41,7 +41,6 @@ export default function Step1({ formik, ...props }) {
         data={categories}
         onChange={_.debounce(data => formik.setFieldValue('category', data), 200)}
         selectedItems={formik.values.category}
-        error={Boolean(formik.errors.category)}
         // error={formik.touched.category && formik.errors.category}
         // onBlur={formik.handleBlur}
         limit={3}
@@ -53,7 +52,6 @@ export default function Step1({ formik, ...props }) {
         placeholder="Select Class grade"
         name="class_grade"
         handleChange={value => formik.setFieldValue('class_grade', value)}
-        error={Boolean(formik.errors.class_grade)}
         // onBlur={data => {
         //   formik.setTouched({ class_grade: true });
         //   formik.handleBlur(data);
