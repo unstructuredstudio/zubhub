@@ -40,8 +40,7 @@ const AvatarButton = props => {
           onClick={onClickSignUp}
           className={commonClasses.iconBox}
           alt={auth?.username?.toUpperCase()}
-          src="/static/images/avatar/1.jpg"
-          style={{ cursor: 'pointer' }}
+          src={auth?.avatar}
         />
         <PanelPopper open={dropdownOpen} anchorEl={buttonRef} signUpStyles={signupStyles}>
           <div className={classes.container}>
