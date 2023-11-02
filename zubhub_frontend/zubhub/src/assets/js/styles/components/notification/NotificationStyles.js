@@ -12,16 +12,12 @@ const styles = theme => ({
   notificationStyle: {
     display: 'flex',
     borderRadius: '5px',
-    width: '340px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
+    width: '100%',
     height: '80px',
     cursor: 'pointer',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     padding: '0px',
-    paddingLeft: '1.5%',
     paddingRight: '5%',
     margin: '0px',
     justifyContent: 'space-evenly',
@@ -98,11 +94,19 @@ const styles = theme => ({
     borderRadius: '50%',
     width: '14px !important',
     height: '14px !important',
+    [theme.breakpoints.up('sm')]: {
+      width: '12px !important',
+      height: '12px !important',  
+    },
   },
   unviewed: {
     backgroundColor: 'transparent',
     width: '14px !important',
     height: '14px !important',
+    [theme.breakpoints.up('sm')]: {
+      width: '12px !important',
+      height: '12px !important',  
+    },
   },
 });
 
