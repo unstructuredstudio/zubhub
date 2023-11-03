@@ -38,14 +38,20 @@ export default function Sidenav() {
     const request2 = api.getUserProjects({ username: auth?.username, token: auth?.token });
 
     Promise.all([request1, request2])
-      .then(data => {
-        setDraftCount(data[0].count);
-        setMyProjectCount(data[1].count);
+      .then(([draftData, projectData]) => {
+        setDraftCount(draftData.count);
+        setMyProjectCount(projectData.count);
       })
       .catch(error => {
         console.error(error);
       });
   }, [auth?.username, auth?.token]);
+
+  // for translation
+  useEffect(() => {
+    setDraftCount(draftCount);
+    setMyProjectCount(myProjectCount);
+  }, [t]);
 
   const handleLogout = async () => {
     setIsLogginOut(true);
@@ -87,13 +93,15 @@ export default function Sidenav() {
                         primary={
                           <span>
                             {label}
-                            <CustomButton
-                              variant="outlined"
-                              customButtonStyle
-                              className={classes.customNumberTag}
-                            >
-                              {label === 'My Drafts' ? (draftCount > 0 ? draftCount : '') : (myProjectCount > 0 ? myProjectCount : '')}
-                            </CustomButton>
+                            {((label === t('pageWrapper.sidebar.myDrafts') && draftCount > 0) || (label === t('pageWrapper.sidebar.myProjects') && myProjectCount > 0)) && (
+                              <CustomButton
+                                variant="outlined"
+                                customButtonStyle
+                                className={classes.customNumberTag}
+                              >
+                                {label === t('pageWrapper.sidebar.myDrafts') ? draftCount : myProjectCount}
+                              </CustomButton>
+                            )}
                           </span>
                         }
                       />
