@@ -59,5 +59,25 @@ export const sidenavStyle = theme => ({
     link: {
         textDecoration: 'none', padding: '0 30px',
     },
-    listContainer: { display: 'flex', flex: 1, flexDirection: 'column', paddingTop: 30 }
+    listContainer: { display: 'flex', flex: 1, flexDirection: 'column', paddingTop: 30 },
+    customNumberTag: {
+        backgroundColor: colors.primary,
+        color: 'white',
+        borderRadius: 40,
+        padding: '0 5px',
+        fontSize: 12,
+        marginLeft: 30,
+        alignSelf: 'right',
+        border: 'none',
+        height: 20,
+        minWidth: 30,
+        '& span': {
+            color: 'white',
+            fontSize: 12,
+            fontWeight: '300',
+        },
+        '&:hover': {
+            backgroundColor: colors.primary,
+        },
+    },
 })
