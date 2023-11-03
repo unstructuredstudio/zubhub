@@ -62,7 +62,7 @@ export const sidenavStyle = theme => ({
     listContainer: { display: 'flex', flex: 1, flexDirection: 'column', paddingTop: 30 },
     customNumberTag: {
         backgroundColor: colors.primary,
-        color: 'white !important',
+        color: 'white',
         borderRadius: 40,
         padding: '0 5px',
         fontSize: 12,
