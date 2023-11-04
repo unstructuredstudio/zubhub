@@ -32,7 +32,7 @@ const styles = theme => ({
   heroMainSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
     display: 'flex',
-    padding: '0 calc((100vw - 1350px) / 2) 2em',
+    padding: '0 calc((100vw - 1350px) / 2)',
     paddingTop: '2em',
     paddingBottom: '2em',
     justifyContent: 'center',
