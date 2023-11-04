@@ -32,7 +32,7 @@ const styles = theme => ({
   heroMainSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
     display: 'flex',
-    padding: '0 16.5em',
+    padding: '0 calc((100vw - 1350px) / 2) 2em',
     paddingTop: '2em',
     paddingBottom: '2em',
     justifyContent: 'center',
@@ -40,14 +40,9 @@ const styles = theme => ({
     // maxWidth: '1230px',
     marginBottom: '2em',
     height:'100vh',
-    [theme.breakpoints.down('1620')]: {
-      padding: '0 9rem'
-    },
-    [theme.breakpoints.down('1599')]: {
-      padding: '0 5rem'
-    },
-    [theme.breakpoints.down('1254')]: {
-      padding: '0'
+    [theme.breakpoints.down('1000')]: {
+      width: '100%',
+      padding: '0 1em'
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
