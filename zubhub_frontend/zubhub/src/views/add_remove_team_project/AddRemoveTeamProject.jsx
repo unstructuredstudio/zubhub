@@ -58,12 +58,10 @@ function AddTeamProject(props) {
       token: token,
       payload: {
         groupname: groupname,
-        description: teamProfile?.description,
-        add_projects: newlySelected.length > 0 ? newlySelected : null,
-        remove_projects: unselectedProjects.length > 0 ? unselectedProjects : null,
+        ...(newlySelected.length > 0 ? { add_projects: newlySelected } : {}),
+        ...(unselectedProjects.length > 0 ? { remove_projects: unselectedProjects } : {}),
       },
     };
-
     try {
       const response = await API.updateTeamProjects(args);
       toast.success('Updated successfully');
@@ -75,7 +73,7 @@ function AddTeamProject(props) {
       toast.warning(error.message);
       console.error('Error updating projects', error);
     }
-  }, []);
+  }, [groupname, initialSelected, selectedProjects, token, username]);
 
   useEffect(() => {
     async function fetchProjects() {
