@@ -17,4 +17,7 @@ export const styles = theme => ({
       height: '86%',
     },
   },
+  avatarIconStyle:{
+    backgroundColor: 'white'
+  }
 });
