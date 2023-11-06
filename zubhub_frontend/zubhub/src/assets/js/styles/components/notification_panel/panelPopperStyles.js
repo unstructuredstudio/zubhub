@@ -17,24 +17,16 @@ const styles = theme => ({
     [theme.breakpoints.down('600')]: {
       marginTop: 10,
     },
-    [theme.breakpoints.up('600')]: {
-      marginRight: '15%',
-    },
   },
 
   container: {
     backgroundColor: 'white',
     minWidth: 200,
-    maxWidth:400,
+    maxWidth:340,
     zIndex: 20,
     padding: '20px 15px',
     borderRadius: '20px',
     boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
-    [theme.breakpoints.up('600')]: {
-      marginRight: '15%',
-      minWidth: 100,
-    },
-
   },
   signUpcontainer: {
     backgroundColor: 'white',
@@ -49,7 +41,7 @@ const styles = theme => ({
       marginLeft: '25%',
     },
     [theme.breakpoints.up('600')]: {
-      marginRight: '15%',
+      width: '238px'
     },
 
   },

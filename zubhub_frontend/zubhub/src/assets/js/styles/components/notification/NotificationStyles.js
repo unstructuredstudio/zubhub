@@ -1,13 +1,8 @@
 const styles = theme => ({
   notificationLink: {
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: '365px',
-    },
     textDecoration: 'none',
     color: 'inherit',
+    marginRight: '8px',
   },
   notificationStyle: {
     display: 'flex',
