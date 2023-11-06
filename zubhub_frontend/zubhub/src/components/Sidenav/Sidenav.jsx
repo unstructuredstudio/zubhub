@@ -18,6 +18,7 @@ import { images } from '../../assets/images';
 import { logout } from '../../store/actions/authActions';
 import { bottomLinks, links } from './data';
 import { sidenavStyle } from './sidenav.styles';
+import CustomButton from '../button/Button';
 
 export default function Sidenav() {
   const classes = makeStyles(sidenavStyle)();
@@ -35,12 +36,22 @@ export default function Sidenav() {
     const api = new API();
     const request1 = api.getUserDrafts({ username: auth?.username, token: auth?.token });
     const request2 = api.getUserProjects({ username: auth?.username, token: auth?.token });
-    let res = Promise.all([request1, request2]);
-    res.then(data => {
-      setDraftCount(data[0].count);
-      setMyProjectCount(data[1].count);
-    });
-  }, []);
+
+    Promise.all([request1, request2])
+      .then(([draftData, projectData]) => {
+        setDraftCount(draftData.count);
+        setMyProjectCount(projectData.count);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, [auth?.username, auth?.token]);
+
+  // for translation
+  useEffect(() => {
+    setDraftCount(draftCount);
+    setMyProjectCount(myProjectCount);
+  }, [t]);
 
   const handleLogout = async () => {
     setIsLogginOut(true);
@@ -64,23 +75,61 @@ export default function Sidenav() {
         )}
 
         {links({ draftCount, myProjectCount, auth, t }).map(
-          ({ label, link, icon: Icon, red, requireAuth, target }, index) =>
-            displayLink(requireAuth) && (
-              <Link
-                key={index + label}
-                className={clsx(classes.label, classes.link, pathname == link && classes.active, red && classes.red)}
-                href={link}
-                target={target || '_self'}
-              >
-                <ListItem key={label}>
-                  <ListItemIcon>
-                    <Icon size={22} />
-                  </ListItemIcon>
-                  <ListItemText primary={label} />
-                </ListItem>
-              </Link>
-            ),
+          ({ label, link, icon: Icon, red, requireAuth, target, customButton }, index) => {
+            if (displayLink(requireAuth)) {
+              if (customButton) {
+                return (
+                  <Link
+                    key={index + label}
+                    className={clsx(classes.label, classes.link, pathname === link && classes.active, red && classes.red)}
+                    href={link}
+                    target={target || '_self'}
+                  >
+                    <ListItem key={label}>
+                      <ListItemIcon>
+                        <Icon size={22} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={
+                          <span>
+                            {label}
+                            {((label === t('pageWrapper.sidebar.myDrafts') && draftCount > 0) || (label === t('pageWrapper.sidebar.myProjects') && myProjectCount > 0)) && (
+                              <CustomButton
+                                variant="outlined"
+                                customButtonStyle
+                                className={classes.customNumberTag}
+                              >
+                                {label === t('pageWrapper.sidebar.myDrafts') ? draftCount : myProjectCount}
+                              </CustomButton>
+                            )}
+                          </span>
+                        }
+                      />
+                    </ListItem>
+                  </Link>
+
+                );
+              } else {
+                return (
+                  <Link
+                    key={index + label}
+                    className={clsx(classes.label, classes.link, pathname == link && classes.active, red && classes.red)}
+                    href={link}
+                    target={target || '_self'}
+                  >
+                    <ListItem key={label}>
+                      <ListItemIcon>
+                        <Icon size={22} />
+                      </ListItemIcon>
+                      <ListItemText primary={label} />
+                    </ListItem>
+                  </Link>
+                );
+              }
+            }
+          }
         )}
+
 
         {bottomLinks({ t }).map(
           ({ label, link, icon: Icon, red, action, requireAuth }, index) =>
