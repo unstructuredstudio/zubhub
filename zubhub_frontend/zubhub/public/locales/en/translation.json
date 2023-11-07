@@ -1173,5 +1173,22 @@
       "linkedProjects": "Linked Projects",
       "drafts": "drafts"
     }
+  },
+  "notificationPanel": {
+    "title": "Notifications",
+    "viewButtonLabel": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "notificationType": {
+      "new": "New",
+      "earlier": "Earlier"
+    },
+    "noNotificationText": "You have no notifications in this category.",
+    "notLoggedIn": {
+      "title": "Sign In to see notifications from your favourite creators!",
+      "text": "Get inspired by thousands of creators around the world.",
+      "buttonLabel": "Get Started"
+    }
   }
 }
