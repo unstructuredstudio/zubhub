@@ -95,7 +95,7 @@ const styles = theme => ({
     },
     '&::-webkit-scrollbar-track': {
       borderRadius: '8px',
-      backgroundColor: '#dbecff'
+      backgroundColor: colors['blue-pale']
     },
   },
   panelHeaderTextStyle: {
