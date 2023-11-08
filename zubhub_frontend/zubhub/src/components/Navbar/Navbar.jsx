@@ -336,7 +336,7 @@ function PageWrapper(props) {
             <div className={classes.navActionStyle}>
               <SearchOutlined onClick={toggleSearchBar} className={classes.addOn894} />
 
-              <NotificationButton />
+              <NotificationButton {...props}/>
               <Hidden smDown>
                 {props.auth.username && (
                   <Box>
