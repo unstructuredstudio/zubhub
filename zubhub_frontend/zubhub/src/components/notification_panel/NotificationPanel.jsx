@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from '../../assets/js/styles/components/notification_panel/notificationPanelStyles';
 import { makeStyles } from '@material-ui/core/styles';
 import NotificationPanelButton from './NotificationPanelButton';
@@ -42,6 +43,7 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
   const [topLoading, setTopLoading] = useState(false);
   const [outOfNotifications, setOutOfNotifications] = useState(false);
   const notificationsWrapperRef = useRef();
+  const { t } = useTranslation();
 
   const newNotifications = useMemo(
     () => Object.values(notifications).sort(notificationSort).filter(isNewNotification),
@@ -154,17 +156,17 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
 
     return (
       <div className={classes.notificationsWrapper} onScroll={handleScroll} ref={notificationsWrapperRef}>
-        {hasNewNotifications && <h2 className={classes.panelSubheadingTextStyle}>New</h2>}
+        {hasNewNotifications && <h2 className={classes.panelSubheadingTextStyle}>{t('notificationPanel.notificationType.new')}</h2>}
         {topLoading && getLoadingSpinner()}
         {newNotifications.map(notification => (
           <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
         ))}
-        {hasEarlierNotifications && <h2 className={classes.panelSubheadingTextStyle}>Earlier</h2>}
+        {hasEarlierNotifications && <h2 className={classes.panelSubheadingTextStyle}>{t('notificationPanel.notificationType.earlier')}</h2>}
         {earlierNotifications.map(notification => (
           <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
         ))}
         {!topLoading && !loading && !hasNewNotifications && !hasEarlierNotifications && (
-          <p>You have no notifications in this category.</p>
+          <p>{t('notificationPanel.noNotificationText')}</p>
         )}
         {loading && getLoadingSpinner()}
       </div>
@@ -176,7 +178,7 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
       {unreadNotifications.map(notification => (
         <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
       ))}
-      {!loading && unreadNotifications.length === 0 && <p>You have no notifications in this category.</p>}
+      {!loading && unreadNotifications.length === 0 && <p>{t('notificationPanel.noNotificationText')}</p>}
       {loading && getLoadingSpinner()}
     </div>
   );
@@ -192,19 +194,19 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
         {token && (
           <>
             <div className={classes.panelHeaderStyle}>
-              <h1 className={classes.panelHeaderTextStyle}>Notifications</h1>
+              <h1 className={classes.panelHeaderTextStyle}>{t('notificationPanel.title')}</h1>
               <div className={classes.panelHeaderButtons}>
                 <NotificationPanelButton
                   selected={notificationViewType === NOTIFICATION_VIEW_TYPE.ALL}
                   onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.ALL)}
                 >
-                  All
+                  {t('notificationPanel.viewButtonLabel.all')}
                 </NotificationPanelButton>
                 <NotificationPanelButton
                   selected={notificationViewType === NOTIFICATION_VIEW_TYPE.UNREAD}
                   onClick={handleNotificationTabChange(NOTIFICATION_VIEW_TYPE.UNREAD)}
                 >
-                  Unread
+                  {t('notificationPanel.viewButtonLabel.unread')}
                 </NotificationPanelButton>
               </div>
             </div>
@@ -217,10 +219,10 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
           <>
             <div className={classes.logedOutPanel}>
               <Notifications style={{ color: colors.primary, fontSize: 35 }} />
-              <h3>Sign In to see notifications from your favourite creators!</h3>
-              <Typography>Get inspired by thousands of creators around the world. </Typography>
+              <h3>{t('notificationPanel.notLoggedIn.title')}</h3>
+              <Typography>{t('notificationPanel.notLoggedIn.text')}</Typography>
               <CustomButton style={{ alignSelf: 'normal', marginTop: 14 }} href="/login" primaryButtonStyle>
-                Get Started
+                {t('notificationPanel.notLoggedIn.buttonLabel')}
               </CustomButton>
             </div>
           </>

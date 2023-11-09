@@ -262,6 +262,7 @@
     "2": "Create, Share!",
     "shareProject": "Share your work",
     "exploreIdeas": "Explore Ideas",
+    "heroAlt": "Six animated children happily walking",
     "zubhubAmbassadors": "Become an Ambassador",
     "newStuff": "New Stuff",
     "login":"Login to view more",
@@ -1171,6 +1172,23 @@
       "account-status": "Account-status",
       "linkedProjects": "Linked Projects",
       "drafts": "drafts"
+    }
+  },
+  "notificationPanel": {
+    "title": "Notifications",
+    "viewButtonLabel": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "notificationType": {
+      "new": "New",
+      "earlier": "Earlier"
+    },
+    "noNotificationText": "You have no notifications in this category.",
+    "notLoggedIn": {
+      "title": "Sign In to see notifications from your favourite creators!",
+      "text": "Get inspired by thousands of creators around the world.",
+      "buttonLabel": "Get Started"
     }
   }
 }

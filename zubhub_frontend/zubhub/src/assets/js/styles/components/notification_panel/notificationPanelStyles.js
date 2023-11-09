@@ -8,8 +8,7 @@ const styles = theme => ({
     backgroundColor: 'white',
     minWidth: 200,
     zIndex: 20,
-    padding: '20px 15px',
-    borderRadius: '20px',
+    paddingTop: '20px',
     [theme.breakpoints.down('400')]: {
       marginTop: 12,
     },
@@ -22,6 +21,7 @@ const styles = theme => ({
   fullscreenPopperStyle: {
     width: '100vw',
     height: '100vh',
+    paddingRight: '20px',
     //  height: 'auto',
     borderRadius: '0px',
   },
@@ -32,6 +32,7 @@ const styles = theme => ({
     gap: '10px',
     color: 'var(--primary-color3)',
     padding: '2.5px 0px',
+    marginBottom: '10px'
   },
   logedOutPanel: {
     display: 'flex',
@@ -53,7 +54,7 @@ const styles = theme => ({
       marginLeft: '10%',
     },
     [theme.breakpoints.up('400')]: {
-      marginLeft: '20%',
+      marginLeft: '10%',
     },
 
     //  backgroundColor:'red'
@@ -82,6 +83,20 @@ const styles = theme => ({
       height: '86%',
     },
     overscrollBehavior: 'contain',
+    '&::-webkit-scrollbar': {
+      width: '8px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      borderRadius: '8px',
+      backgroundColor: colors.primary
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      backgroundColor: 'var(--secondary-color6)'
+    },
+    '&::-webkit-scrollbar-track': {
+      borderRadius: '8px',
+      backgroundColor: colors['blue-pale']
+    },
   },
   panelHeaderTextStyle: {
     margin: '0px',
@@ -91,7 +106,7 @@ const styles = theme => ({
   panelSubheadingTextStyle: {
     fontWeight: '600',
     color: 'var(--primary-color3)',
-    padding: '5px 0px',
+    padding: '10px 0px',
     position: 'sticky',
     top: '0px',
     backgroundColor: 'white',
