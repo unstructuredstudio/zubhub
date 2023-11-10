@@ -112,6 +112,12 @@ function PageWrapper(props) {
   }, [prevScrollPos]);
 
   useEffect(() => {
+    if (!props.auth.token) {
+      props.history.push('/session-expired')
+    }
+  }, [props.auth.token])
+
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -181,22 +187,6 @@ function PageWrapper(props) {
   useEffect(() => {
     throttledFetchOptions.cancel();
   }, []);
-
-  useEffect(() => {
-    handleSetState({ loading: true });
-    fetchHero(props)
-      .then(() => {
-        if (!props.auth.token && !unprotectedRoutes.includes(props.match?.path)) {
-          props.history.push('/session-expired');
-        } else {
-          return props.getAuthUser(props);
-        }
-      })
-      .finally(() => {
-        handleSetState({ loading: false });
-      });
-  }, [props.auth.token]);
-
 
   useEffect(() => {
     handleSetState(handleProfileMenuClose());
