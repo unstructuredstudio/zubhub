@@ -1,24 +1,34 @@
 export const sessionExpiredStyle = theme => ({
     card: {
-        width: 500,
         borderRadius: 12,
-        position: 'absolute',
+        position: 'fixed',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         boxShadow: theme.shadows[5],
         overflow: 'hidden',
+        width: '90%',
+        zIndex: 1300,
+        [theme.breakpoints.up('sm')]: {
+            width: 500,
+        },
     },
     cardHeader: {
         backgroundColor: '#f44336',
         color: theme.palette.common.white,
-        padding: theme.spacing(1, 2),
+        padding: theme.spacing(1),
+        [theme.breakpoints.up('sm')]: {
+            padding: theme.spacing(1, 2),
+        },
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
     cardContent: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
+        [theme.breakpoints.up('sm')]: {
+            padding: theme.spacing(2),
+        },
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -66,7 +76,10 @@ export const sessionExpiredStyle = theme => ({
         color: 'var(--primary-color1)',
     },
     titleStyle: {
-        fontSize: '1.5rem',
+        fontSize: '1.2rem',
+        [theme.breakpoints.up('sm')]: {
+            fontSize: '1.5rem',
+        },
         fontWeight: 600,
     },
 });
