@@ -45,6 +45,7 @@ function Project(props) {
   const common_classes = useCommonStyles();
 
   const { project, t } = props;
+
   return (
     <Link to={`/projects/${project.id}`} className={classes.textDecorationNone}>
       <Card className={classes.root}>
@@ -114,11 +115,11 @@ function Project(props) {
               <Box className={classes.creatorBoxStyle}>
                 <Avatar
                   className={classes.creatorAvatarStyle}
-                  src={project.group?project.group.avatar:project.creator.avatar}
-                  alt={project.group? project.group.groupname: project.creator.username}
+                  src={project.group ? project.group.avatar : project.creator.avatar}
+                  alt={project.group ? project.group.groupname : project.creator.username}
                 />
                 <Tooltip
-                  title={project.group? project.group.groupname: project.creator.username}
+                  title={project.group ? project.group.groupname : project.creator.username}
                   placement="bottom"
                   arrow
                   className={classes.creatorUsernameStyle}
@@ -179,7 +180,7 @@ function Project(props) {
                   variant="caption"
                   component="span"
                 >
-                  <CommentIcon /> {project.comments ? project.comments.length : project.comments_count }
+                  <CommentIcon /> {project.comments ? project.comments.length : project.comments_count}
                 </Typography>
               </Box>
               <Typography color="textSecondary" variant="caption" component="span" className={classes.date}>

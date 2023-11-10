@@ -652,7 +652,7 @@
       "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
     },
     "team": "Team",
-    "createteam": "Create Team",
+    "createTeam": "Create Team",
     "badge": {
       "badges": "Badges",
       "addBadges": "Seems like you have not created any project yet, add projects to your profile to get badges 😉!"

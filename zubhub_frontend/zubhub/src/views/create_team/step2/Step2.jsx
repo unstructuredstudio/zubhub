@@ -13,9 +13,11 @@ export default function Step2({ formik }) {
   const [adminsInputValue, setAdminsInputValue] = useState('');
   const [membersInputValue, setMembersInputValue] = useState('');
   const [selectedAdmins, setSelectedAdmins] = useState([]);
-  const [selectedMembers, setSelectedMembers] = useState([]);
+  const selectedAdminsIds = selectedAdmins.map(({ id }) => id)
+  // const [selectedMembers, setSelectedMembers] = useState([]);
   const [adminSuggestions, setAdminSuggestions] = useState([]);
   const [memberSuggestions, setMemberSuggestions] = useState([]);
+  const memberSuggestionsIds = memberSuggestions.map(({ id }) => id)
 
   const handleAdminSelect = (event, value) => {
     setSelectedAdmins(value);
@@ -23,7 +25,7 @@ export default function Step2({ formik }) {
   };
 
   const handleMemberSelect = (event, value) => {
-    setSelectedMembers(value);
+    // setSelectedMembers(value);
     setMembersInputValue('');
   };
 
@@ -34,11 +36,12 @@ export default function Step2({ formik }) {
 
     // Perform API call to get admin suggestions based on the input value
     try {
-      const completions = await api.autocompleteCreators({ query: value });
-      const suggestions = completions.map(({ username, avatar }) => ({
+      const completions = await api.autocompleteCreators({ query: String(value).trim() });
+      const suggestions = completions.map(({ username, avatar, id }) => ({
         title: username,
         image: avatar,
         link: `/creators/${username}`,
+        id,
       }));
       setAdminSuggestions(suggestions);
     } catch (error) {
@@ -54,10 +57,11 @@ export default function Step2({ formik }) {
     // Perform API call to get member suggestions based on the input value
     try {
       const completions = await api.autocompleteCreators({ query: value });
-      const suggestions = completions.map(({ username, avatar }) => ({
+      const suggestions = completions.map(({ username, avatar, id }) => ({
         title: username,
         image: avatar,
         link: `/creators/${username}`,
+        id
       }));
       setMemberSuggestions(suggestions);
     } catch (error) {
@@ -125,8 +129,8 @@ export default function Step2({ formik }) {
               value={adminsInputValue}
               onChange={handleAdminsInputChange}
               onBlur={() => setAdminSuggestions([])}
-              error={formik.touched.title && formik.errors.title ? true : false}
-              helperText={formik.touched.title && formik.errors.title}
+              error={formik.errors.admins}
+              helperText={formik.errors.admins}
             />
           )}
         />
@@ -167,7 +171,7 @@ export default function Step2({ formik }) {
           multiple // Allow multiple selections
           options={memberSuggestions}
           getOptionLabel={(option) => option.title}
-          value={selectedMembers}
+          value={formik.values.members}
           onChange={(event, value) => {
             handleMemberSelect(event, value);
             formik.setFieldValue('members', value);
@@ -184,8 +188,8 @@ export default function Step2({ formik }) {
               variant="outlined"
               name="members"
               placeholder="Enter team members' usernames"
-              error={formik.touched.title && formik.errors.title ? true : false}
-              helperText={formik.touched.title && formik.errors.title}
+              error={formik.errors.members}
+              helperText={formik.errors.members}
             />
           )}
         />

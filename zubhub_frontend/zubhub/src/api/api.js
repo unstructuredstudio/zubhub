@@ -429,6 +429,24 @@ class API {
   };
 
   /**
+   * @method addTeamProjects
+   * @author  Gift <giftnamulika@gmail.com>
+   *
+   * @todo - describe method's signature
+   */
+  updateTeamProjects = ({token, payload}) => {
+    const url = `creators/${payload.groupname}/edit-group/`;
+    const method = 'POST';
+    const content_type = 'application/json';
+    const body = JSON.stringify(payload);
+    if (token) {
+      return this.request({ url, method, token: token, body, content_type }).then(res => res.json());
+    } else {
+      return this.request({ url, method }).then(res => res.json());
+    }
+  };
+
+  /**
    * @method editTeam
    * @author Hemant Kumar Singh <hks@iamhks.com>
    *
