@@ -17,6 +17,10 @@ export default function Step2({ formik }) {
   const [adminSuggestions, setAdminSuggestions] = useState([]);
   const [memberSuggestions, setMemberSuggestions] = useState([]);
 
+  const { values: { members, admins} } = formik
+
+  const allMembers = [...(admins ? admins : []), ...(members ? members : [])]
+
   const handleAdminSelect = (event, value) => {
     setSelectedAdmins(value);
     setAdminsInputValue('');
@@ -35,12 +39,17 @@ export default function Step2({ formik }) {
     // Perform API call to get admin suggestions based on the input value
     try {
       const completions = await api.autocompleteCreators({ query: value });
-      const suggestions = completions.map(({ username, avatar }) => ({
+      const suggestions = completions.map(({ username, avatar, id }) => ({
         title: username,
         image: avatar,
         link: `/creators/${username}`,
+        id
       }));
-      setAdminSuggestions(suggestions);
+      
+      const filteredSuggestions = suggestions.filter(({ id }) => 
+        !allMembers.some(member => member.id === id)
+      );
+      setAdminSuggestions(filteredSuggestions);
     } catch (error) {
       console.error('Error fetching admin suggestions:', error);
       setAdminSuggestions([]);
@@ -54,12 +63,17 @@ export default function Step2({ formik }) {
     // Perform API call to get member suggestions based on the input value
     try {
       const completions = await api.autocompleteCreators({ query: value });
-      const suggestions = completions.map(({ username, avatar }) => ({
+      const suggestions = completions.map(({ username, avatar, id }) => ({
         title: username,
         image: avatar,
         link: `/creators/${username}`,
+        id
       }));
-      setMemberSuggestions(suggestions);
+
+      const filteredSuggestions = suggestions.filter(({ id }) => 
+        !allMembers.some(member => member.id === id)
+      );
+      setMemberSuggestions(filteredSuggestions);
     } catch (error) {
       console.error('Error fetching member suggestions:', error);
       setMemberSuggestions([]);
