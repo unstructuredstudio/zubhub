@@ -25,21 +25,27 @@ const styles = theme => ({
     // '& .MuiGrid-root.MuiGrid-container': {
     //   width: '100%',
     [theme.breakpoints.down('sm')]: {
-      padding: '0 24px',
+      // padding: '0 24px',
       width: '100%',
     },
   },
   heroMainSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
     display: 'flex',
-    paddingTop: '2.3em',
-    paddingBottom: '2.8em',
+    padding: '0 calc((100vw - 1350px) / 2)',
+    paddingTop: '2em',
+    paddingBottom: '2em',
     justifyContent: 'center',
-    width: '100vw',
+    // width: '100%',
+    // maxWidth: '1230px',
     marginBottom: '2em',
     height:'100vh',
+    [theme.breakpoints.down('1000')]: {
+      width: '100%',
+      padding: '0 1em'
+    },
     [theme.breakpoints.down('sm')]: {
-      width: '100',
+      width: '100%',
       height:'fit-content',
     },
   },
@@ -146,6 +152,9 @@ const styles = theme => ({
   heroMainMessageSecondaryStyle: {
     fontSize: '4.5rem',
     fontWeight: '700',
+    [theme.breakpoints.down('1480')]: {
+      fontSize: '3.5rem'
+    },
     [theme.breakpoints.down('sm')]: {
       fontSize: '2.5rem'
     },
@@ -153,6 +162,9 @@ const styles = theme => ({
   heroMainMessagePrimaryStyle: {
     fontSize: '2.2rem',
     fontWeight: 500,
+    [theme.breakpoints.down('1480')]: {
+      fontSize: '1.7rem'
+    },
     [theme.breakpoints.down('sm')]: {
       fontSize: '1.2rem'
     },
@@ -310,6 +322,7 @@ const styles = theme => ({
     // marginTop: '3em',
     maxWidth: '1190px',
     width: '100%',
+    padding: '0 2rem',
   },
   projectGridStyle: {
     marginBottom: '2em',
@@ -329,11 +342,62 @@ const styles = theme => ({
     maxWidth: '2000px',
     width: '100%',
   },
+  buttonGroupStyleThree: {
+    paddingLeft: '2em',
+    paddingRight: '2em',
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '2em',
+    [theme.breakpoints.down('500')]: {
+      padding: '0',
+      display: 'flex',
+    },
+  },
+  paginationComp:{
+    width: '5rem',
+    height: '2rem',
+    display: 'flex',
+    flexWrap: 'nowrap',
+    '& .MuiPaginationItem-root': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '0.5rem'
+    },
+    '& .MuiPaginationItem-ul':{
+      display: 'flex',
+    },
+  },
+  paginationRoot: {
+    '& .MuiPaginationItem-root': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 'auto',
+      '&:hover': {
+        backgroundColor: 'var(--primary-color3)',
+        color: 'white',
+        display: 'flex',
+      },
+    },
+    '& .MuiPaginationItem-ul':{
+      display: 'flex',
+    }
+  },
   buttonGroupStyleAlternative: {
     padding: '7px 21px',
+    [theme.breakpoints.down('600')]: {
+      padding: '3px 3px 3px 6px',
+      fontSize: '15px',
+      paddingTop: '0'
+    },
   },
   floatRight: {
     float: 'right',
+
+  },
+  visibilityNone:{
+    visibility: 'hidden'
   },
   floatLeft: {
     float: 'left',

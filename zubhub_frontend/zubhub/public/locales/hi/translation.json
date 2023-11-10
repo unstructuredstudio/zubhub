@@ -248,6 +248,7 @@
     "2":"बनाएं, शेयर करें!",
     "shareProject": "एक परियोजना साझा करें",
     "exploreIdeas": "विचारों का अन्वेषण करें",
+    "heroAlt": "छह एनिमेटेड बच्चे खुशी से चल रहे हैं",
     "zubhubAmbassadors": "हमारे राजदूत बनें",
     "newStuff": "नयी चीज़",
     "allProjects": "सभी परियोजनाएं",
@@ -1073,6 +1074,23 @@
       "account-status": "खाते की स्थिति",
       "linkedProjects": "लिंक्ड प्रोजेक्ट्स",
       "drafts": "ड्राफ्ट"
+    }
+  },
+  "notificationPanel": {
+    "title": "सूचनाएं",
+    "viewButtonLabel": {
+      "all": "सभी",
+      "unread": "अपठित ग"
+    },
+    "notificationType": {
+      "new": "नया",
+      "earlier": "पहले"
+    },
+    "noNotificationText": "इस श्रेणी में आपके पास कोई सूचना नहीं है.",
+    "notLoggedIn": {
+      "title": "अपने पसंदीदा रचनाकारों की सूचनाएं देखने के लिए साइन इन करें!",
+      "text": "दुनिया भर के हजारों रचनाकारों से प्रेरणा लें।",
+      "buttonLabel": "शुरू हो जाओ"
     }
   }
 }

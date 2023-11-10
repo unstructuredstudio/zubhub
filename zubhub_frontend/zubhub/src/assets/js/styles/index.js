@@ -7,9 +7,8 @@ const styles = theme => ({
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
     cursor: 'pointer',
-    backgroundColor: 'white',
   },
   flexColumn: {
     flexDirection: 'column'

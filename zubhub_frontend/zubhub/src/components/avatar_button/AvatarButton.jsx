@@ -14,7 +14,7 @@ const AvatarButton = props => {
   const commonClasses = makeStyles(commonStyles)();
   const classes = makeStyles(styles)();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [signupStyles, setsignupStyles] = useState(false)
+  const [signupStyles, setsignupStyles] = useState(false);
   const buttonRef = useRef();
   const auth = useSelector(state => state.auth);
   const goToProfile = () => {
@@ -23,25 +23,25 @@ const AvatarButton = props => {
     }
   };
 
-  const onClickSignUp = () =>{
-    (!auth.token ? setDropdownOpen(!dropdownOpen) : goToProfile())
-    setsignupStyles(true)
-  } 
+  const onClickSignUp = () => {
+    !auth.token ? setDropdownOpen(!dropdownOpen) : goToProfile();
+    setsignupStyles(true);
+  };
 
-  const oncloseSignUp = () =>{
-    setDropdownOpen(false)
-    setsignupStyles(false)
-  }
+  const oncloseSignUp = () => {
+    setDropdownOpen(false);
+    setsignupStyles(false);
+  };
   return (
     <ClickAwayListener onClickAway={oncloseSignUp}>
       <div>
-        <Avatar
-          ref={buttonRef}
-          onClick={onClickSignUp}
-          className={commonClasses.iconBox}
-          alt={auth?.username?.toUpperCase()}
-          src={auth?.avatar}
-        />
+          <Avatar
+            ref={buttonRef}
+            onClick={onClickSignUp}
+            className={`${commonClasses.iconBox} ${auth.token && classes.avatarIconStyle}`}
+            alt={auth?.username?.toUpperCase()}
+            src={!auth.token ? "/static/images/avatar/1.jpg" : auth?.avatar}
+          />
         <PanelPopper open={dropdownOpen} anchorEl={buttonRef} signUpStyles={signupStyles}>
           <div className={classes.container}>
             <Avatar style={{ fontSize: 35, color: colors.primary, backgroundColor: colors.white }} />
