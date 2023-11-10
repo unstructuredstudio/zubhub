@@ -11,7 +11,7 @@ export const sessionExpiredStyle = theme => ({
     },
     cardHeader: {
         backgroundColor: '#f44336',
-        color: '#fff',
+        color: theme.palette.common.white,
         padding: theme.spacing(1, 2),
         display: 'flex',
         justifyContent: 'space-between',
@@ -25,7 +25,7 @@ export const sessionExpiredStyle = theme => ({
     },
     closeButton: {
         cursor: 'pointer',
-        color: '#fff',
+        color: theme.palette.common.white,
     },
     iconWrapper: {
         marginBottom: theme.spacing(2),
@@ -42,23 +42,31 @@ export const sessionExpiredStyle = theme => ({
         justifyContent: 'center',
         width: '100vw',
         height: '100vh',
-        backgroundColor: 'rgba(255, 233, 154, 0.5)',
-        backdropFilter: 'blur(25px)',
+        backgroundColor: theme.palette.background.paper,
+        backdropFilter: 'blur(5px)',
     },
     textDecorationNone: {
         width: '100%',
         marginTop: theme.spacing(2),
     },
     customButtonStyle: {
-        backgroundColor: '#4CAF50',
-        color: '#fff',
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
         '&:hover': {
-            backgroundColor: '#388E3C',
+            backgroundColor: theme.palette.primary.main,
         },
     },
     buttonContainer: {
         display: 'flex',
         justifyContent: 'center',
         marginTop: theme.spacing(2),
+    },
+    errorIcon: {
+        fontSize: 60,
+        color: 'var(--primary-color1)',
+    },
+    titleStyle: {
+        fontSize: '1.5rem',
+        fontWeight: 600,
     },
 });

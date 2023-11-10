@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography } from '@material-ui/core';
+import clsx from 'clsx';
+import { Card, CardContent, Typography, ErrorOutline } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, Link } from 'react-router-dom';
 import { sessionExpiredStyle } from './sessionExpired.Style';
 import Modal from '../modals/Modal';
 import CustomButton from '../button/Button';
-import ExpiredSessionIcon from '../../assets/images/session_expired.svg';
 import CloseIcon from '@material-ui/icons/Close';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 const useStyles = makeStyles(sessionExpiredStyle);
 
@@ -21,7 +22,7 @@ const SessionExpiredModal = () => {
     };
 
     return (
-        <Modal open={modalOpen} className={classes.modal}>
+        <Modal open={modalOpen}>
             <Card className={classes.card}>
                 <div className={classes.cardHeader}>
                     <Typography variant="h6">Session Expired</Typography>
@@ -31,10 +32,21 @@ const SessionExpiredModal = () => {
                 </div>
                 <CardContent className={classes.cardContent}>
                     <div className={classes.iconWrapper}>
-                        <img src={ExpiredSessionIcon} alt="expired session icon" className={classes.icon} />
+                        <ErrorOutlineIcon className={clsx(classes.icon, classes.errorIcon)} />
                     </div>
-                    <Typography variant="body1" className={classes.centerText}>Your session has expired</Typography>
-                    <Typography variant="body2" className={classes.centerText}>You will be redirected to the login page</Typography>
+                    <Typography
+                        variant="body1"
+                        color="textPrimary"
+                        className={clsx(classes.centerText, classes.titleStyle)}
+                    >
+                        Your session has expired
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        className={classes.centerText}
+                    >
+                        You will be redirected to the login page
+                    </Typography>
                     <div className={classes.buttonContainer}>
                         <Link to="/login" className={classes.textDecorationNone}>
                             <CustomButton
