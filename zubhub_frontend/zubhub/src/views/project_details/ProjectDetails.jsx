@@ -111,6 +111,7 @@ function ProjectDetails(props) {
   const [moreProjects, setMoreProjects] = useState([]);
   const { id } = useParams();
   const [open, setOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const [state, setState] = React.useState({
     project: {},
@@ -220,6 +221,7 @@ function ProjectDetails(props) {
     },
     [followStatus.following]: {
       text: t('projectDetails.project.creator.following'),
+      textOnHover: `${t('projectDetails.project.creator.unfollow')}?`,
       icon: <CheckOutlined className={classes.followButtonIcon} />,
       className: classes.followingButton
     },
@@ -281,10 +283,15 @@ function ProjectDetails(props) {
                       className={clsx(common_classes.marginLeft1em, classes.followButton, followButtonConstants[followingState].className)}
                       variant="contained"
                       onClick={e => handleFollow(e)}
+                      onMouseEnter={() => setIsHovering(true)}
+                      onMouseLeave={() => setIsHovering(false)}
                       primaryButtonStyle
                     >
                       {followButtonConstants[followingState].icon}
-                      {followButtonConstants[followingState].text}
+                      {isHovering && followButtonConstants[followingState].textOnHover
+                        ? followButtonConstants[followingState].textOnHover 
+                        : followButtonConstants[followingState].text
+                      }
                     </CustomButton>
                   )}
                 </Grid>
