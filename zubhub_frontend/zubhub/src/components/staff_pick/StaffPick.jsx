@@ -35,7 +35,7 @@ function StaffPick(props) {
             // component="h2"
             // variant="h6"
             // color="textPrimary"
-            className={classes.titleStyle}
+            className={classes.MessagePrimaryStyle}
           >
             {staff_pick.title}
             {/* <CustomButton

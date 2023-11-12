@@ -124,6 +124,9 @@ class API {
    * @todo - describe method's signature
    */
   logout = token => {
+    const initialUrl = window.location.href
+    sessionStorage.setItem('initialUrl', initialUrl)
+
     const url = 'rest-auth/logout/';
     const method = 'POST';
     return this.request({ url, method, token }).then(res => res.json());
@@ -854,7 +857,7 @@ class API {
    * @todo - describe method's signature
    */
   getProjects = ({ token, page }) => {
-    const url = page ? `projects/?${page}` : `projects/`;
+    const url = page ? `projects/?page=${page}` : `projects/`;
     return this.request({ token, url }).then(res => res.json());
   };
 

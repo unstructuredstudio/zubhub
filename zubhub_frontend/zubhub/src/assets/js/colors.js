@@ -11,7 +11,8 @@ export const colors = {
     green: '#22C55E',
     red: '#f44336',
     'blue-light': '#00B8C433',
-    'blue-dark': '#7BA8AB'
+    'blue-dark': '#7BA8AB',
+    'blue-pale': '#DBECFF'
 }
 
 export const borders = {
