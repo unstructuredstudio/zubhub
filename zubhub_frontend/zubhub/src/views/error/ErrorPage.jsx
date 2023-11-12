@@ -20,7 +20,7 @@ function ErrorPage(props) {
   const classes = useStyles();
   const propStyle = props.style;
   return (
-    <Box className={clsx([classes.root, props.styleOverrides.width])} style={propStyle ? propStyle : null}>
+    <Box className={clsx([classes.root, props.styleOverrides?.width])} style={propStyle ? propStyle : null}>
       <Container className={classes.mainContainerStyle}>
         <img className={classes.disconnectedStyle} src={disconnected} alt={props.error} />
         <Box className={classes.errorBoxStyle}>

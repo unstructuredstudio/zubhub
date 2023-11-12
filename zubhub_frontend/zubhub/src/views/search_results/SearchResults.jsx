@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -132,12 +132,16 @@ function SearchResults(props) {
     }
   };
 
-  const getResults = (type, results) => {
-    if (!results) {
+
+  const { t, auth } = props;
+
+  const getResults = useCallback((type, results) => {
+    if (!loading && !results?.length) {
       return <ErrorPage error={t('searchResults.errors.noResult')} styleOverrides={{ width: modalClasses.errorPage }}/>
     }
-
+    
     if (type === SearchType.CREATORS) {
+      results.slice(0, 4)
       return buildCreatorProfiles(
         results,
         { classes, common_classes },
@@ -146,9 +150,14 @@ function SearchResults(props) {
         handleSetState,
       );
     } else {
+      // Sort the results array
+      results.sort((a, b) => {
+        return a.title.localeCompare(b.title);
+      });
+      const limitedResults = results.slice(0, 3);
       return (
         <Grid container spacing={3}>
-          {results?.map(project => (
+          {limitedResults?.map(project => (
             <Grid
               item
               xs={12}
@@ -169,7 +178,7 @@ function SearchResults(props) {
         </Grid>
       )
     }
-  };
+  }, [classes, common_classes, modalClasses.errorPage, props, state, t])
 
   const {
     count,
@@ -178,7 +187,6 @@ function SearchResults(props) {
     next: next_page,
     loading,
   } = state;
-  const { t, auth } = props;
 
   if (!auth.token) {
     return (
@@ -195,13 +203,15 @@ function SearchResults(props) {
           </Grid>
           {getResults(
             getQueryParams(window.location.href).get('type'),
-            props.auth.token ? results : results[0]?.projects?.results,
+            results
           )}
           <Grid className={modalClasses.gridBlur}></Grid>
         </Grid>
         <Grid className={modalClasses.loginModal}>
           <Login {...props}
-           primaryTitle={t('searchResults.loginModal.title')}
+           primaryTitle={t('searchResults.loginModal.title', {
+            type: getQueryParams(window.location.href).get('type')
+           })}
            secondaryTitle='' 
            styleOverrides={{containerStyles: modalClasses.containerStylesOverrides, titleStyles: modalClasses.titleStylesOverrides}}
           />
