@@ -213,6 +213,15 @@ function ProjectDetails(props) {
   } = state;
   const { t } = props;
 
+  // React.useEffect(() => {
+  //   if (isHovering) {
+  //     handleSetState({ followingState: followStatus.unfollowing})
+  //   } else {
+  //     const currentState = project.creator?.followers.includes(props.auth.id) ? followStatus.following : followStatus.notFollowing
+  //     handleSetState({ followingState: currentState})
+  //   }
+  // }, [isHovering])
+
   const followButtonConstants = {
     [followStatus.notFollowing]: {
       text: t('projectDetails.project.creator.follow'),
@@ -221,7 +230,6 @@ function ProjectDetails(props) {
     },
     [followStatus.following]: {
       text: t('projectDetails.project.creator.following'),
-      textOnHover: `${t('projectDetails.project.creator.unfollow')}?`,
       icon: <CheckOutlined className={classes.followButtonIcon} />,
       className: classes.followingButton
     },
@@ -280,18 +288,15 @@ function ProjectDetails(props) {
                     </Grid>
                   ) : (
                     <CustomButton
-                      className={clsx(common_classes.marginLeft1em, classes.followButton, followButtonConstants[followingState].className)}
+                      className={clsx(common_classes.marginLeft1em, classes.followButton, isHovering ? classes.unfollowingButton : followButtonConstants[followingState].className)}
                       variant="contained"
                       onClick={e => handleFollow(e)}
-                      onMouseEnter={() => setIsHovering(true)}
+                      onMouseEnter={() => { followingState === followStatus.following && setIsHovering(true) }}
                       onMouseLeave={() => setIsHovering(false)}
                       primaryButtonStyle
                     >
-                      {followButtonConstants[followingState].icon}
-                      {isHovering && followButtonConstants[followingState].textOnHover
-                        ? followButtonConstants[followingState].textOnHover 
-                        : followButtonConstants[followingState].text
-                      }
+                      {isHovering ? followButtonConstants.unfollowing.icon : followButtonConstants[followingState].icon}
+                      {isHovering ? followButtonConstants.unfollowing.text : followButtonConstants[followingState].text}
                     </CustomButton>
                   )}
                 </Grid>
