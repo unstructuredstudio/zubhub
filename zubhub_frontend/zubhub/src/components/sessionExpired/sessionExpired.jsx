@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { Card, CardContent, Typography, ErrorOutline } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,12 +21,13 @@ const SessionExpiredModal = () => {
         setModalOpen(false);
         history.push('/login');
     };
+    const { t } = useTranslation();
 
     return (
         <Modal open={modalOpen}>
             <Card className={classes.card}>
                 <div className={classes.cardHeader}>
-                    <Typography variant="h6">Session Expired</Typography>
+                    <Typography variant="h6">{t(`sessionExpired.heading`)}</Typography>
                     <Typography variant="button" className={classes.closeButton} onClick={handleClose}>
                         <CloseIcon />
                     </Typography>
@@ -39,13 +41,13 @@ const SessionExpiredModal = () => {
                         color="textPrimary"
                         className={clsx(classes.centerText, classes.titleStyle)}
                     >
-                        Your session has expired
+                        {t(`sessionExpired.title`)}
                     </Typography>
                     <Typography
                         variant="body2"
                         className={classes.centerText}
                     >
-                        You will be redirected to the login page
+                        {t(`sessionExpired.text`)}
                     </Typography>
                     <div className={classes.buttonContainer}>
                         <Link to="/login" className={classes.textDecorationNone}>
@@ -55,7 +57,7 @@ const SessionExpiredModal = () => {
                                 primaryButtonStyle
                                 customButtonStyle
                             >
-                                OK
+                                {t(`sessionExpired.buttonLabel`)}
                             </CustomButton>
                         </Link>
                     </div>
