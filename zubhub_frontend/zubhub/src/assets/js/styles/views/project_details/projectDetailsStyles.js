@@ -398,21 +398,21 @@ const styles = theme => ({
     padding: '8px 30px',
   },
   followingButton: {
-    background: '#8E8E8E',
+    background: colors["gray-light"],
     '&:hover': {
-      background: '#616161',
+      background: colors["gray-dark"],
     }
   },
   unfollowingButton: {
-    background: '#DC3545',
+    background: colors.secondary,
     '&:hover': {
-      background: '#A52A3D', 
+      background: colors["red-dark"], 
     }
   },
   notFollowingButton: {
-    background: '#00B8C4',
+    background: colors.turquoise,
     '&:hover': {
-      background: '#0097A0',
+      background: colors["turquoise-dark"],
     }
   }
 });

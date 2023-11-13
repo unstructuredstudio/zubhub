@@ -12,7 +12,12 @@ export const colors = {
     red: '#f44336',
     'blue-light': '#00B8C433',
     'blue-dark': '#7BA8AB',
-    'blue-pale': '#DBECFF'
+    'blue-pale': '#DBECFF',
+    'gray-light': '#8E8E8E',
+    'gray-dark': '#616161',
+    'red-dark': '#A52A3D',
+    turquoise: '#00B8C4',
+    'turquoise-dark': '#0097A0'
 }
 
 export const borders = {
