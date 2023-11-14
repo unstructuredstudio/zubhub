@@ -1132,6 +1132,14 @@
         "label": "save button",
         "save": "save",
         "unsave": "unsave"
+      },
+      "pdfDetails":{
+        "introduction": "Introduction",
+        "category": "Category",
+        "classHeading": "Class Grade",
+        "materials": "Materials Used",
+        "shareActivity": "SHARE THIS ACTIVITY",
+        "qrHeading": "Scan code to view activity"
       }
   },
   "breadCrumb":{

@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import ReactQuill from 'react-quill';
 import QRCode from 'qrcode.react';
 import { images } from '../../assets/images';
@@ -12,6 +13,7 @@ import SocialButtons from '../../components/social_share_buttons/socialShareButt
 export const MakeActivity = ({ activity, creator }) => {
   const classes = makeStyles(activityDefailsStyles)();
   const commonClasses = makeStyles(styles)();
+  const { t } = useTranslation();
   return (
     <>
       <Container style={{ backgroundColor: 'white', border: 'solid 1.5rem white'}} className={classes.pdfStyle}>
@@ -27,7 +29,7 @@ export const MakeActivity = ({ activity, creator }) => {
           </Container>
         </Container>
         <Box className={classes.verticalSpace}></Box>
-        <Typography className={`${classes.pdfSubtitle}`}>Introduction</Typography>
+        <Typography className={`${classes.pdfSubtitle}`}>{t('activityDetails.pdfDetails.introduction')}</Typography>
         <Typography className={classes.textStyle}>
           {activity.introduction ? <div dangerouslySetInnerHTML={{ __html: activity.introduction }} /> : ''}
         </Typography>
@@ -45,7 +47,7 @@ export const MakeActivity = ({ activity, creator }) => {
         )}
         <Box className={classes.verticalSpace}></Box>
 
-        <Typography className={`${classes.pdfSubtitle}`}>Category</Typography>
+        <Typography className={`${classes.pdfSubtitle}`}>{t('activityDetails.pdfDetails.category')}</Typography>
         <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
           {activity.category?.map((cat, index) => (
             <Pill key={index} text={cat} />
@@ -53,13 +55,13 @@ export const MakeActivity = ({ activity, creator }) => {
         </div>
         <Box className={classes.verticalSpace}></Box>
 
-        <Typography className={`${classes.pdfSubtitle}`}>Class Grade</Typography>
+        <Typography className={`${classes.pdfSubtitle}`}>{t('activityDetails.pdfDetails.classHeading')}</Typography>
         <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
           <Pill text={activity.class_grade} />
         </div>
         <Box className={classes.verticalSpace}></Box>
 
-        <Typography className={`${classes.pdfSubtitle}`}>Materials Used</Typography>
+        <Typography className={`${classes.pdfSubtitle}`}>{t('activityDetails.pdfDetails.materials')}</Typography>
         <Typography
           className={`${classes.textStyle} ${classes.customTypographyStyle}`}
           theme={'bubble'}
@@ -106,7 +108,7 @@ export const MakeActivity = ({ activity, creator }) => {
               style={{ margin: 'auto', width: '12rem' }}
               className={`${classes.pdfSubtitle}`}
             >
-              SHARE THIS ACTIVITY
+              {t('activityDetails.pdfDetails.introduction')}
             </Typography>
             <SocialButtons link facebook whatsapp className={classes.linkStyle} />
           </Container>
@@ -117,7 +119,7 @@ export const MakeActivity = ({ activity, creator }) => {
           </Container>
 
           <Typography style={{ color: 'white' }} className={`${classes.pdfSubtitle} ${classes.customTypographyStyle}`}>
-            Scan code to view activity
+          {t('activityDetails.pdfDetails.qrHeading')}
           </Typography>
         </Container>
       </Container>
