@@ -298,6 +298,7 @@ function PageWrapper(props) {
             >
               <TranslateIcon />
               <Select
+                variant='standard'
                 className={classes.languageSelectStyle}
                 value={props.i18n.language}
                 onChange={e => handleChangeLanguage({ e, props })}

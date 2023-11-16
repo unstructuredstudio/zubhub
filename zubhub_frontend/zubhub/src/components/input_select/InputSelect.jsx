@@ -27,10 +27,10 @@ const BootstrapInput = withStyles(theme => ({
       borderRadius: 0,
       borderTopLeftRadius: 250,
       borderBottomLeftRadius: 250,
-      backgroundColor: 'white',
-      color: 'var(--primary-color3)',
+      color: 'white',
+      backgroundColor: 'var(--primary-color3)',
       '& ~ svg': {
-        color: 'var(--primary-color3)',
+        color: 'white',
       },
     },
   },
