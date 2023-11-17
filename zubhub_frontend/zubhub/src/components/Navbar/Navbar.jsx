@@ -62,12 +62,12 @@ const useCommonStyles = makeStyles(commonStyles);
 const anchor = 'left';
 
 /**
- * @function PageWrapper View
+ * @function NavBar View
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
-function PageWrapper(props) {
+function NavBar(props) {
   const backToTopEl = React.useRef(null);
   const navigate = useNavigate();
   const classes = useStyles();
@@ -424,7 +424,7 @@ function PageWrapper(props) {
   );
 }
 
-PageWrapper.propTypes = {
+NavBar.propTypes = {
   auth: PropTypes.object.isRequired,
   setAuthUser: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
@@ -455,4 +455,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PageWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
