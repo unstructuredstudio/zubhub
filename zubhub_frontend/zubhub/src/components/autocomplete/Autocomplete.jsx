@@ -9,7 +9,7 @@ const Autocomplete = ({ options, children, defaultValue, renderOption, ...otherP
       freeSolo
       getOptionLabel={option => option.title || ''}
       defaultValue={defaultValue}
-      style={{ width: 300 }}
+      sx={{ width: 300 }}
       renderInput={children}
       renderOption={renderOption}
       {...otherProps}

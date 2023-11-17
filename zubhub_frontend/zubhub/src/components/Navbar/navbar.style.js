@@ -1,6 +1,5 @@
 import { colors } from "../../assets/js/colors";
-import clsx from 'clsx';
-import commonClasses from '../../assets/js/styles/index'
+
 export const navbarStyle = theme => ({
     root: {
         backgroundColor: colors.primary,
