@@ -299,8 +299,8 @@ function NavBar(props) {
                       options={options}
                       defaultValue={{ title: query }}
                       value={{ title: query }}
-                      renderOption={(option, { inputValue }) => (
-                        <Option option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
+                      renderOption={(props, option, { inputValue }) => (
+                        <Option {...props} option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
                       )}
                     >
                       {params => (
@@ -378,8 +378,8 @@ function NavBar(props) {
                     options={options}
                     defaultValue={{ title: query }}
                     value={{ title: query }}
-                    renderOption={(option, { inputValue }) => (
-                      <Option option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
+                    renderOption={(props, option, { inputValue }) => (
+                      <Option {...props} option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
                     )}
                   >
                     {params => (

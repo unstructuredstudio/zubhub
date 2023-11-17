@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(styles);
 
-const Option = ({ option, inputValue, onOptionClick }) => {
+const Option = ({ option, inputValue, onOptionClick, ...props }) => {
   const classes = useStyles();
 
   const matches = match(option.title, inputValue, { insideWords: true });
@@ -21,17 +21,19 @@ const Option = ({ option, inputValue, onOptionClick }) => {
   const OptionWrap = option.link ? 'a' : 'div';
 
   return (
-    <OptionWrap onClick={e => onOptionClick(e, option)} className={classes.option} href={option.link}>
-      <div className={classes.infoWrapper}>
-        <span className={classes.optionTitleWrapper}>{title}</span>
-        {option.shortInfo && <span className={classes.shortInfo}>{option.shortInfo}</span>}
-      </div>
-      {option.image && (
-        <div className={classes.optionImageWrapper}>
-          <img src={option.image} alt={option.title} className={classes.optionImage} />
+    <li {...props}>
+      <OptionWrap onClick={e => onOptionClick(e, option)} className={classes.option} href={option.link}>
+        <div className={classes.infoWrapper}>
+          <span className={classes.optionTitleWrapper}>{title}</span>
+          {option.shortInfo && <span className={classes.shortInfo}>{option.shortInfo}</span>}
         </div>
-      )}
-    </OptionWrap>
+        {option.image && (
+          <div className={classes.optionImageWrapper}>
+            <img src={option.image} alt={option.title} className={classes.optionImage} />
+          </div>
+        )}
+      </OptionWrap>
+    </li>
   );
 };
 
