@@ -13,6 +13,10 @@ const styles = theme => ({
   projectGridStyle: {
     marginBottom: '2em',
   },
+  MessagePrimaryStyle: {
+    fontSize: '2.5rem',
+    fontWeight: 1000,
+  },
 });
 
 export default styles;

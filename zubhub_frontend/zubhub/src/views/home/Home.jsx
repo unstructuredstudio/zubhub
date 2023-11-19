@@ -31,7 +31,7 @@ import new_stuff from '../../assets/images/new_stuff.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
-import heroMainImage from '../../assets/images/heroMainImage.svg'
+import heroMainImage from '../../assets/images/heroMainImage.svg';
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -161,8 +161,8 @@ function Projects(props) {
                      <Box className={classes.heroImageContainerStyle}>
                        <img
                          className={classes.heroImageStyle}
-                         src={hero.image_url}
-                         alt=""
+                         src={hero.image_url ? hero.image_url : heroMainImage}
+                         alt={t('projects.heroAlt')}
                        />
                      </Box>
                    )}
@@ -193,7 +193,7 @@ function Projects(props) {
                        <img
                          className={classes.heroImageStyle}
                          src={hero.image_url ? hero.image_url : heroMainImage}
-                         alt="Six animated children happily walking"
+                         alt={t('projects.heroAlt')}
                        />
                      </Box>
                    )}
@@ -216,7 +216,7 @@ function Projects(props) {
                 />
               ))}
               <CustomButton
-                  className={classes.heroBtnStyle}
+                  className={classes.heroButtonStyle}
                   size="small"
                   primaryButtonStyle
                   onClick={() => props.history.push('/login')}

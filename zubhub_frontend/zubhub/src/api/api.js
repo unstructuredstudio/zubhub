@@ -857,7 +857,7 @@ class API {
    * @todo - describe method's signature
    */
   getProjects = ({ token, page }) => {
-    const url = page ? `projects/?${page}` : `projects/`;
+    const url = page ? `projects/?page=${page}` : `projects/`;
     return this.request({ token, url }).then(res => res.json());
   };
 
