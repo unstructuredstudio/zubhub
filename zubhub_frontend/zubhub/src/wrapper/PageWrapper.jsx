@@ -51,10 +51,10 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
-import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
+import { getQueryParams, SearchType } from '../views/search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
-import LoadingPage from './loading/LoadingPage';
+import LoadingPage from '../views/loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
 import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
@@ -66,13 +66,13 @@ import languageMap from '../assets/js/languageMap.json';
 import InputSelect from '../components/input_select/InputSelect';
 import Autocomplete from '../components/autocomplete/Autocomplete';
 import API from '../api';
-import { throttle } from '../utils.js';
+import { throttle } from '../utils.js/index.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
 import BreadCrumb from '../components/breadCrumb/breadCrumb';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 import Navbar from '../components/Navbar/Navbar';
-import NotFoundPage from './not_found/NotFound';
+import NotFoundPage from '../views/not_found/NotFound';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
