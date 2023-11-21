@@ -1,4 +1,5 @@
 media_store/
+media/
 # migrations/
 __pycache__/
 *.pyc

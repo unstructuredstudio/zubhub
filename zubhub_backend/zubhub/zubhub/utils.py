@@ -3,6 +3,8 @@ from hashlib import sha256
 from lxml.html.clean import Cleaner
 import uuid
 from math import floor
+from pathlib import Path
+import re
 from django.utils.text import slugify
 from django.core.files.storage import Storage
 from django.core.files.base import ContentFile
@@ -54,6 +56,29 @@ def delete_file_from_media_server(file_url):
 def clean_summernote_html(string):
     cleaner = Cleaner()
     return cleaner.clean_html(string)
+
+
+def replace_summernote_images_with_media_storage_equiv(text):
+    """ 
+    Extract all summernote image paths in the html text,
+    upload them to media storage server,
+    and replace them with the response url from the media storage server
+    """
+    regex = r'<img[^<>]+src=["\']/api/media/([^"\'<>]+\.(?:gif|png|jpe?g))["\']'
+    temp_image_paths = re.findall(regex, text, re.I) # e.g. ["django-summernote/2023-09-03/image.jpg", "django-summernote/2023-09-03/image2.jpg"]
+    for temp_image_path in temp_image_paths:
+        path = Path(settings.MEDIA_ROOT, temp_image_path)
+        with path.open(mode="rb") as file:
+            key = get_upload_path(
+                type('', (object,), {'MEDIA_PATH': 'zubhub'}),
+                slugify(path.name)
+            )
+            image_url = upload_file_to_media_server(file=file, key=key).json()["url"]
+            full_temp_image_url = settings.MEDIA_URL + str(temp_image_path)
+            text = image_url.join(text.split(full_temp_image_url))
+        path.unlink()
+    return text
+
 
 
 
