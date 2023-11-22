@@ -114,15 +114,10 @@ const styles = theme => ({
     },
   },
   iframeStyle: {
-    overflow: 'hidden',
     position: 'absolute',
-    top: '50%',
-    left: '50%',
     width: '100%',
     height: '100%',
-    transform: 'translate(-50%, -50%)',
-    objectFit: 'contain',
-    zIndex: 1,
+    objectFit: 'cover',
   },
   actionBoxStyle: {
     backgroundColor: 'var(--primary-color3)',
