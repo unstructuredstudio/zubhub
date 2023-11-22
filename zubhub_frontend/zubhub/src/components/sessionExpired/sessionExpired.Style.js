@@ -14,7 +14,7 @@ export const sessionExpiredStyle = theme => ({
         },
     },
     cardHeader: {
-        backgroundColor: '#f44336',
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
         padding: theme.spacing(1),
         [theme.breakpoints.up('sm')]: {
