@@ -35,10 +35,11 @@ export default function Dropdown({
     value = valueTemp;
   }
 
-  const labelView = (props, ...rest) => {
-    const color = rest[0].selected ? colors.primary : colors.light;
-    const checked = rest[0].selected;
+  const labelView = (props, option, { selected }) => {
+    const color = selected ? colors.primary : colors.light;
+    const checked = selected;
     return (
+      <li {...props}>
       <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: '15px', alignItems: 'center' }} {...props}>
         {multiple && withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
         {!multiple ? (
@@ -46,8 +47,9 @@ export default function Dropdown({
             <div></div>
           </div>
         ) : null}
-        <Typography style={{ fontWeight: '500' }}>{props.name}</Typography>
+        <Typography style={{ fontWeight: '500' }}>{option.name}</Typography>
       </Box>
+      </li>
     );
   };
 
