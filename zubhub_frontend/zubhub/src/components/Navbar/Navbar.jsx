@@ -107,7 +107,7 @@ function NavBar(props) {
         let completions = [];
         if (searchType === SearchType.TAGS) {
           completions = await api.autocompleteTags({ query, token });
-          completions = completions.map(({ name }) => ({
+          completions = completions?.map(({ name }) => ({
             title: name,
           }));
         } else if (searchType === SearchType.PROJECTS) {
@@ -138,11 +138,11 @@ function NavBar(props) {
       query || (props.location.search && getQueryParams(window.location.href).get('q')),
       searchType,
     );
-  }, [query, searchType]);
+  }, [props.location.search, query, searchType, throttledFetchOptions]);
 
   useEffect(() => {
     throttledFetchOptions.cancel();
-  }, []);
+  }, [throttledFetchOptions]);
 
   useEffect(() => {
     handleSetState({ loading: true });
