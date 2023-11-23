@@ -266,6 +266,12 @@ function EditProfile(props) {
                           onBlur={props.handleBlur}
                           label={t('editProfile.inputs.email.label')}
                         />
+                        <FormHelperText className={classes.fieldHelperTextStyle} error>
+                          {(props.status && props.status['email']) ||
+                            (props.touched['email'] &&
+                              props.errors['email'] &&
+                              t(`editProfile.inputs.email.errors.${props.errors['email']}`))}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -294,6 +300,12 @@ function EditProfile(props) {
                           onBlur={props.handleBlur}
                           label={t('editProfile.inputs.phone.label')}
                         />
+                        <FormHelperText className={classes.fieldHelperTextStyle} error>
+                          {(props.status && props.status['phone']) ||
+                            (props.touched['phone'] &&
+                              props.errors['phone'] &&
+                              t(`editProfile.inputs.phone.errors.${props.errors['phone']}`))}
+                        </FormHelperText>
                       </FormControl>
                     </Grid>
 
@@ -399,7 +411,7 @@ function EditProfile(props) {
                       </CustomButton>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={3}>
+                  <Grid container spacing={3} marginBlock={0.5}>
                     <Grid item xs={12}>
                       <Link to="/profile" className={classes.textDecorationNone}>
                         <CustomButton variant="outlined" size="large" secondaryButtonStyle customButtonStyle fullWidth>
@@ -409,7 +421,7 @@ function EditProfile(props) {
                     </Grid>
                   </Grid>
                 </form>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} marginBlock={1}>
                   <Grid item xs={12}>
                     <Box className={classes.center}>
                       <Divider className={classes.divider} />
@@ -419,277 +431,8 @@ function EditProfile(props) {
                       <Divider className={classes.divider} />
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['username']) ||
-                        (props.touched['username'] && props.errors['username'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="username"
-                      >
-                        {t('editProfile.inputs.username.label')}
-                      </InputLabel>
-                      <ClickAwayListener
-                        onClickAway={() => handleSetState(handleTooltipClose())}
-                      >
-                        <Tooltip
-                          title={t('editProfile.tooltips.noRealName')}
-                          placement="top-start"
-                          arrow
-                          onClose={() => handleSetState(handleTooltipClose())}
-                          PopperProps={{
-                            disablePortal: true,
-                          }}
-                          open={tool_tip_open}
-                          disableFocusListener
-                          disableHoverListener
-                          disableTouchListener
-                        >
-                          <OutlinedInput
-                            ref={refs.username_el}
-                            className={clsx(classes.customInputStyle)}
-                            id="username"
-                            name="username"
-                            type="text"
-                            value={
-                              props.values.username ? props.values.username : ''
-                            }
-                            onClick={() => handleSetState(handleTooltipOpen())}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                            label={t('editProfile.inputs.username.label')}
-                          />
-                        </Tooltip>
-                      </ClickAwayListener>
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
-                        {(props.status && props.status['username']) ||
-                          (props.touched['username'] &&
-                            props.errors['username'] &&
-                            t(
-                              `editProfile.inputs.username.errors.${props.errors['username']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      ref={refs.location_el}
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['user_location']) ||
-                        (props.touched['user_location'] &&
-                          props.errors['user_location'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        id="user_location"
-                      >
-                        {t('editProfile.inputs.location.label')}
-                      </InputLabel>
-                      <Select
-                        labelId="user_location"
-                        id="user_location"
-                        name="user_location"
-                        className={clsx(classes.customInputStyle)}
-                        value={
-                          props.values.user_location
-                            ? props.values.user_location
-                            : ''
-                        }
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        label="Location"
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        {Array.isArray(locations) &&
-                          locations.map(location => (
-                            <MenuItem key={location.name} value={location.name}>
-                              {location.name}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
-                        {(props.status && props.status['user_location']) ||
-                          (props.touched['user_location'] &&
-                            props.errors['user_location'] &&
-                            t(
-                              `editProfile.inputs.location.errors.${props.errors['user_location']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['email']) ||
-                        (props.touched['email'] && props.errors['email'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="email"
-                      >
-                        {t('editProfile.inputs.email.label')}
-                      </InputLabel>
-                      <OutlinedInput
-                        ref={refs.email_el}
-                        
-                        className={clsx(classes.customInputStyle)}
-                        id="email"
-                        name="email"
-                        type="text"
-                        value={props.values.email ? props.values.email : ''}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        label={t('editProfile.inputs.email.label')}
-                        />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
-                        {(props.status && props.status['email']) ||
-                          (props.touched['email'] &&
-                            props.errors['email'] &&
-                            t(
-                              `editProfile.inputs.email.errors.${props.errors['email']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['phone']) ||
-                        (props.touched['phone'] && props.errors['phone'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="phone"
-                      >
-                        {t('editProfile.inputs.phone.label')}
-                      </InputLabel>
-                      <OutlinedInput
-                        ref={refs.phone_el}
-                        
-                        className={clsx(classes.customInputStyle)}
-                        id="phone"
-                        name="phone"
-                        type="phone"
-                        value={props.values.phone ? props.values.phone : ''}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        label={t('editProfile.inputs.phone.label')}
-                      />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
-                        {(props.status && props.status['phone']) ||
-                          (props.touched['phone'] &&
-                            props.errors['phone'] &&
-                            t(
-                              `editProfile.inputs.phone.errors.${props.errors['phone']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={6}>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="normal"
-                      error={
-                        (props.status && props.status['password']) ||
-                        (props.touched['password'] && props.errors['password'])
-                      }
-                    >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password"
-                      >
-                        {t('editProfile.inputs.password.label')}
-                      </InputLabel>
-                      <OutlinedInput
-                        className={classes.customInputStyle}
-                        id="password"
-                        name="password"
-                        type={show_password ? 'text' : 'password'}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={() =>
-                                handleSetState(handleClickShowPassword(state))
-                              }
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                            >
-                              {show_password ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        label={t('editProfile.inputs.password.label')}
-                      />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
-                        {(props.status && props.status['password']) ||
-                          (props.touched['password'] &&
-                            props.errors['password'] &&
-                            t(
-                              `editProfile.inputs.password.errors.${props.errors['password']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-
                 </Grid>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} marginBlock={1}>
                   <Grid item xs={12}>
                     <CustomButton
                       variant="outlined"

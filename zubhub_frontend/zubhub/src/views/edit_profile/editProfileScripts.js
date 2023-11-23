@@ -224,18 +224,17 @@ export const handleTooltipClose = () => {
  * @todo - describe object's function
  */
 export const validationSchema = Yup.object().shape({
-  username: Yup.string().required('required'),
-  user_location: Yup.string().min(1, 'min').required('required'),
-  password: Yup.string().required('required'),
-  email: Yup.string().email('invalid').when('phone', {
-    is: (phone) => !phone || phone.length === 0,
-    then: Yup.string().required('phoneOrEmail')
-  }),
-  phone: Yup.string().when('email', {
-    is: (email) => !email || email.length === 0,
-    then: Yup.string().required('phoneOrEmail')
-  }).test('phone_is_invalid', 'invalid', function (value) {
+  username: Yup.string().required('Username is required'),
+  user_location: Yup.string().required('Location is required'),
+  password: Yup.string().required('Password is required'),
+  email: Yup.string().email('Invalid email'),
+  phone: Yup.string()
+  .when('email', {
+    is: email => !email || email.length === 0,
+    then: () => Yup.string().required('Provide an email or phone'),
+  })
+  .test('phone_is_invalid', 'invalid', function (value) {
     return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
   }),
-  bio: Yup.string().max(255, 'tooLong'),
-}, ['phone', 'email']);
+  bio: Yup.string().max(255, 'Bio must be at most 255 characters'),
+});
