@@ -40,15 +40,15 @@ export default function Dropdown({
     const checked = selected;
     return (
       <li {...props}>
-      <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: '15px', alignItems: 'center' }} {...props}>
-        {multiple && withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
-        {!multiple ? (
-          <div className={clsx(classes.radio, checked && classes.activeRadio)}>
-            <div></div>
-          </div>
-        ) : null}
-        <Typography style={{ fontWeight: '500' }}>{option.name}</Typography>
-      </Box>
+        <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: '15px', alignItems: 'center' }} {...props}>
+          {multiple && withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
+          {!multiple ? (
+            <div className={clsx(classes.radio, checked && classes.activeRadio)}>
+              <div></div>
+            </div>
+          ) : null}
+          <Typography style={{ fontWeight: '500' }}>{option.name}</Typography>
+        </Box>
       </li>
     );
   };
