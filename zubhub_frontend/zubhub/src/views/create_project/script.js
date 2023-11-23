@@ -634,7 +634,7 @@ export const validationSchema = Yup.object().shape({
   //       : true;
   //   }),
   materials_used: Yup.array(Yup.string()).required(),
-  category: Yup.string(),
+  category: Yup.array(),
   // tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
   //     if (tags) {
   //         tags = JSON.parse(tags);

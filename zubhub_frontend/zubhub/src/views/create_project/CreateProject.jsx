@@ -29,7 +29,6 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState, lazy } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import StepWizard from 'react-step-wizard';
 import { toast } from 'react-toastify';
 import { colors } from '../../assets/js/colors';
@@ -169,7 +168,6 @@ function CreateProject(props) {
   const previous = () => go('prev');
   const next = async () => {
     let error = await checkErrors();
-    console.log('Validation errors', error);
     if (Object.keys(error).length > 0) return;
 
     if (activeStep === 3) {
@@ -195,7 +193,6 @@ function CreateProject(props) {
   };
 
   const checkErrors = async () => {
-    console.log(formik.errors);
     if (activeStep === 1) {
       return formik.setTouched({ title: true, materials_used: true, description: true, category: false }, true);
     }
@@ -392,7 +389,6 @@ function CreateProject(props) {
 const SelectModeUI = ({ setMode, t }) => {
   const classes = makeStyles(createProjectStyle)();
   const commonClasses = makeStyles(styles)();
-  const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const [mode, setModeItem] = useState('');
   const modes = { personal: 'personal', team: 'team' };
 
