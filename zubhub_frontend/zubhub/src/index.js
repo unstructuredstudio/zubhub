@@ -25,11 +25,11 @@ ReactDOM.render(
       <React.StrictMode>
         <ThemeProvider theme={theme}>
           <StyledEngineProvider injectFirst>
-          <Suspense fallback={null}>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </Suspense>
+            <Suspense fallback={null}>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </Suspense>
           </StyledEngineProvider>
         </ThemeProvider>
       </React.StrictMode>
