@@ -249,15 +249,13 @@ function PageWrapper(props) {
 
       <Container className={classes.childrenContainer} maxWidth="lg">
         {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
-        {!props.auth?.token &&
-          !unprotectedRoutes.includes(props.match?.path) && (
+        {!props.auth?.token && !props.global && (
             <div style={{ minHeight: '80vh' }}>
               <NotFoundPage />
             </div>
           )}
       </Container>
-      {!props.auth?.token &&
-        unprotectedRoutes.includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+      {!props.auth?.token && props.global && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
