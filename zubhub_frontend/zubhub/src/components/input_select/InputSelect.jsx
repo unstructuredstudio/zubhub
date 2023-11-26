@@ -9,7 +9,7 @@ const BootstrapInput = withStyles(theme => ({
     borderBottomLeftRadius: 250,
     position: 'relative',
     fontSize: 16,
-    padding: '10px 26px 10px 18px',
+    padding: '9px 26px 8px 18px',
     backgroundColor: 'var(--primary-color3)',
     color: 'white',
     transition: 'background-color 250ms ease',
