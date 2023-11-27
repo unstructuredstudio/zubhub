@@ -1,6 +1,6 @@
 #! /bin/bash
 
-. ./onetime-setup.sh
+. /home/zubhub/single_vm_deployment/onetime-setup.sh
 
 [ ! -d "/home/zubhub" ] && { echo >&2 "/home/zubhub dir not available.  Aborting."; exit 1; }
 [ ! -d "/home/zubhub_backend" ] && { echo >&2 "/home/zubhub_backend dir not available.  Aborting."; exit 1; }
@@ -15,7 +15,7 @@ cp /home/zubhub_backend/.env /home/zubhub/zubhub_backend/.env
 echo "done copying backend .env file"
 
 echo "copying docker-compose file"
-cp /home/zubhub/docker-compose.unscalable.prod.yml /home/docker-compose.unscalable.prod.yml
+cp /home/zubhub/single_vm_deployment/docker-compose.unscalable.prod.yml /home/docker-compose.unscalable.prod.yml
 echo "done copying docker-compose file"
 
 echo "removing old frontend folder"
@@ -55,26 +55,16 @@ rm -rf /home/zubhub_backend/compose/deploy_backend.sh
 rm -rf /home/zubhub_backend/compose/deploy_backend.md
 echo "done removing uneccessary frontend files and folders"
 
-
-
-
 echo "stopping and rebuilding the containers"
 cd /home/
 docker-compose -f docker-compose.unscalable.prod.yml --env-file ./zubhub_backend/.env down
 sleep 10s
 docker-compose -f docker-compose.unscalable.prod.yml --env-file ./zubhub_backend/.env up -d --build
 sleep 180s
-docker-compose -f docker-compose.unscalable.prod.yml exec web bash  -c "echo 'echo \"from django.contrib.auth \
-import get_user_model;User = get_user_model();superusers = User.objects.filter(is_superuser=True);\
-user = User.objects.create_superuser(\\\"dummy\\\", \\\"dummy@mail.com\\\", \\\"dummy_password\\\") \
-if superusers.count() == 0 else superusers.none(); \
-hasattr(user, \\\"is_staff\\\") and setattr(user, \\\"is_staff\\\", True); \
-user and user.save(); \
-print(\\\"new super user created successfully\\\") if hasattr(user, \\\"is_staff\\\") \
-else print(\\\"superuser already exists\\\");\" | python /zubhub_backend/zubhub/manage.py shell' > /dummy.sh"
-
-docker-compose -f docker-compose.unscalable.prod.yml exec web bash /dummy.sh
-docker-compose -f docker-compose.unscalable.prod.yml exec web bash -c "rm /dummy.sh"
+# create dummy user
+docker exec web bash  -c "python /zubhub_backend/zubhub/manage.py create_dummy_admin_user"
+# create default theme
+docker exec web bash -c "python /zubhub_backend/zubhub/manage.py create_default_theme"
 echo "Updated fullstack"
 # EOT
 

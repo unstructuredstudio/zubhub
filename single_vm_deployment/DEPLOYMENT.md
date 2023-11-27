@@ -33,7 +33,7 @@ In our case, our repository URL is https://github.com/unstructuredstudio/zubhub
 
 ```commandline
 cd /home/zubhub
-sudo bash ./deploy_unscalable_fullstack.sh
+sudo bash ./single_vm_deployment/deploy_unscalable_fullstack.sh
 ```
 
 **Note** You need to be in the path /home/zubhub.
