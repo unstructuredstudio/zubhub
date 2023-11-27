@@ -1,0 +1,99 @@
+version: "3.3"
+
+services:
+  frontend:
+    container_name: frontend
+    image: unstructuredstudio/zubhub-test_frontend:latest
+    restart: on-failure
+    ports:
+      - "80"
+
+  web:
+    container_name: web
+    image: unstructuredstudio/zubhub-test_web:latest
+    env_file:
+      - ./zubhub_backend/.env
+    restart: on-failure
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - rabbitmq
+
+  media:
+    container_name: media
+    image: unstructuredstudio/zubhub-test_media:latest
+    env_file:
+      - ./zubhub_backend/.env
+    restart: on-failure
+    volumes:
+      - media_data:/home/media/media_store
+    ports:
+      - 8001:8001
+    depends_on:
+      - web
+
+  db:
+    container_name: db
+    image: postgres:11
+    env_file:
+      - ./zubhub_backend/.env
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432
+
+  rabbitmq:
+    container_name: rabbitmq
+    env_file:
+      - ./zubhub_backend/.env
+    image: rabbitmq:3-management
+    restart: on-failure
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  celery_worker:
+    container_name: celery_worker
+    image: unstructuredstudio/zubhub-test_celery:latest
+    env_file:
+      - ./zubhub_backend/.env
+    command: /celery/start-celeryworker
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+      - db
+
+  reverse-proxy:
+    env_file:
+      - ./zubhub_backend/.env
+    image: valian/docker-nginx-auto-ssl:1.0.0
+    ports:
+      - 80:80
+      - 443:443
+    restart: on-failure
+    volumes:
+      - ssl_data:/etc/resty-auto-ssl
+      - ./zubhub_backend/nginx/prod/server-proxy.conf:/usr/local/openresty/nginx/conf/server-proxy.conf
+    environment:
+      ALLOWED_DOMAINS: "(api.|www.api.|media.|)${DEFAULT_FRONTEND_DOMAIN}"
+      SITES:
+        "${DEFAULT_FRONTEND_DOMAIN}=frontend;www.${DEFAULT_FRONTEND_DOMAIN}=frontend;\
+        api.${DEFAULT_FRONTEND_DOMAIN}=web:8000;www.api.${DEFAULT_FRONTEND_DOMAIN}=web:8000;\
+        media.${DEFAULT_FRONTEND_DOMAIN}=media:8001"
+      FORCE_HTTPS: "true"
+    depends_on:
+      - web
+      - rabbitmq
+      - frontend
+      - media
+      - celery_worker
+      - db
+
+volumes:
+  postgres_data:
+  media_data:
+  ssl_data:

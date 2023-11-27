@@ -24,7 +24,7 @@ jobs:
           droplets_count=`wc -l < droplets.txt`
           echo "TARGET_DROPLETS_COUNT=$(($droplets_count))" >> $GITHUB_ENV
           doctl compute droplet create zubhub-services-$(($droplets_count-1)) --image \
-            ${{ secrets.SOURCE_SNAPSHOT_ID }} --tag-name zubhub-services --size s-1vcpu-1gb \
+            ${{ secrets.ZUBHUB_TEST_SNAPSHOT_NAME }} --tag-name zubhub-services --size s-1vcpu-1gb \
             --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
           sleep 30s
           echo "NEW_DROPLET_IP=$(doctl compute droplet get zubhub-services-$(($droplets_count-1)) \

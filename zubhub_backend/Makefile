@@ -91,31 +91,12 @@ test: ## Run `manage.py test`
 .PHONY: test
 
 admin-user:
-	@echo "===="
-	@echo "== DANGER: don't forget to delete this user after you have created a proper superuser!!! =="
-	@echo "===="
-	docker-compose -f docker-compose.yml exec web bash  -c "echo 'echo \"from django.contrib.auth \
-	import get_user_model;User = get_user_model();superusers = User.objects.filter(is_superuser=True);\
-	user = User.objects.create_superuser(\\\"dummy\\\", \\\"dummy@mail.com\\\", \\\"dummy_password\\\") \
-	if superusers.count() == 0 else superusers.none(); \
-	hasattr(user, \\\"is_staff\\\") and setattr(user, \\\"is_staff\\\", True); \
-	user and user.save(); \
-	print(\\\"new super user created successfully\\\") if hasattr(user, \\\"is_staff\\\") \
-	else print(\\\"superuser already exists\\\");\" | python /zubhub_backend/zubhub/manage.py shell' > /dummy.sh"
-
-	docker-compose -f docker-compose.yml exec web bash /dummy.sh
-	docker-compose -f docker-compose.yml exec web bash -c "rm /dummy.sh"
+	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py create_dummy_admin_user"
 .PHONY: admin-user
 
-add-theme:
-	@echo "==="
-	@echo "== Add a theme to the database =="
-	@echo "==="
-	docker-compose -f docker-compose.yml exec web bash -c "echo 'echo \"from zubhub.models import Theme; \
-	Theme.objects.create(Theme_Name=\\\"Default\\\", status=\\\"1\\\") if not Theme.objects.filter(Theme_Name=\\\"Default\\\").exists() else None\" | python /zubhub_backend/zubhub/manage.py shell' > /theme.sh"
-	docker-compose -f docker-compose.yml exec web bash /theme.sh
-	docker-compose -f docker-compose.yml exec web bash -c "rm /theme.sh"
-.PHONY: add-theme
+default-theme:
+	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py create_default_theme"
+.PHONY: default-theme
 
 init: .env start migrate admin-user add-theme ## Initialize docker-compose containers
 .PHONY: init

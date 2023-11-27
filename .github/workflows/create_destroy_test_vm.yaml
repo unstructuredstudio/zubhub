@@ -1,0 +1,269 @@
+name: Create/Destroy Test VM
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled, unlabeled, closed]
+
+jobs:
+  create_test_vm:
+    if: |
+      (
+        (
+          github.event.action == 'opened' ||
+          github.event.action == 'reopened' ||
+          github.event.action == 'synchronize'
+        ) && contains(github.event.pull_request.labels.*.name, 'create-test-vm')
+      ) ||
+      (
+        github.event.action == 'labeled' &&
+        github.event.label.name == 'create-test-vm'
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout files
+        uses: actions/checkout@v2
+
+##################################################################################
+# The following steps are for creating a new DO droplet, creating DNS records for it
+# and copying the project files to it.
+##################################################################################
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+
+      - name: Create new droplet and DNS records
+        run: |
+
+          NEW_DROPLET_NAME=zubhub-test-${{ github.event.pull_request.number }}
+          FRONTEND_DOMAIN=${NEW_DROPLET_NAME}
+          API_DOMAIN=api.${FRONTEND_DOMAIN}
+          MEDIA_DOMAIN=media.${FRONTEND_DOMAIN}
+          echo "NEW_DROPLET_NAME=$NEW_DROPLET_NAME" >> $GITHUB_ENV
+          echo "FRONTEND_DOMAIN=$FRONTEND_DOMAIN" >> $GITHUB_ENV
+          echo "API_DOMAIN=$API_DOMAIN" >> $GITHUB_ENV
+          echo "MEDIA_DOMAIN=$MEDIA_DOMAIN" >> $GITHUB_ENV
+          # check if droplet already exists and exit script if it does
+          NEW_DROPLET_IP=$(doctl compute droplet get $NEW_DROPLET_NAME \
+            --format PublicIPv4 --no-header 2>/dev/null || true)
+          if [ -n "$NEW_DROPLET_IP" ] ; then
+            echo "Droplet already exists. Save droplet IP to env variable and exit..."
+            echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          # create new droplet
+          doctl compute droplet create $NEW_DROPLET_NAME --image \
+            ${{ secrets.ZUBHUB_TEST_SNAPSHOT_ID }} --tag-name zubhub-test --size s-1vcpu-1gb \
+            --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
+          sleep 30s
+          NEW_DROPLET_IP=$(doctl compute droplet get $NEW_DROPLET_NAME \
+            --format PublicIPv4 --no-header)
+          echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $GITHUB_ENV
+
+          # we only need records for frontend, media server and api server
+          doctl compute domain records create unstructured.studio --record-type A --record-name \
+            $FRONTEND_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 60
+          doctl compute domain records create unstructured.studio --record-type A --record-name \
+            $API_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 60
+          doctl compute domain records create unstructured.studio --record-type A --record-name \
+            $MEDIA_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 60
+
+      - name: Copy file via scp
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{env.NEW_DROPLET_IP}}
+          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
+          source: "."
+          target: "/home/zubhub"
+#################################################################################
+
+#################################################################################
+# The following steps are for building docker images and pushing them to dockerhub
+##################################################################################
+      - name: create a .env file in the zubhub_frontend/zubhub/ directory
+        run: |
+
+          # create env file for frontend.
+          # This vm is only for testing so we don't need to worry about secrets being exposed
+          # (provided we don't put sensitive info in the env file)
+          cat << EOF > ./zubhub_frontend/zubhub/.env
+          GENERATE_SOURCEMAP=false
+          DISABLE_ESLINT_PLUGIN=true
+          REACT_APP_NODE_ENV=development
+          REACT_APP_BACKEND_DEVELOPMENT_URL=https://${{env.API_DOMAIN}}.unstructured.studio
+          REACT_APP_BACKEND_PRODUCTION_URL=https://${{env.API_DOMAIN}}.unstructured.studio
+          REACT_APP_DOSPACE_ACCESS_KEY_ID=
+          REACT_APP_DOSPACE_ACCESS_SECRET_KEY=
+          REACT_APP_VIDEO_UPLOAD_URL=
+          REACT_APP_VIDEO_FOLDER_NAME=videos
+          REACT_APP_DEV_VIDEO_FOLDER_NAME=dev_videos
+          REACT_APP_VIDEO_UPLOAD_PRESET_NAME=video_upload_preset
+          REACT_APP_DEV_VIDEO_UPLOAD_PRESET_NAME=dev_video_upload_preset
+          EOF
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push frontend
+        id: docker_build_frontend
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_frontend/zubhub/
+          file: ./zubhub_frontend/zubhub/Dockerfile.prod
+          push: true
+          tags: unstructuredstudio/zubhub-test_frontend:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Build and push django api
+        id: docker_build_web
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/compose/web/prod/Dockerfile
+          push: true
+          tags: unstructuredstudio/zubhub-test_web:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Build and push celery worker
+        id: docker_build_celery
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/compose/celery/Dockerfile
+          push: true
+          tags: unstructuredstudio/zubhub-test_celery:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Build and push media service
+        id: docker_build_media
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/compose/media/prod/Dockerfile
+          push: true
+          tags: unstructuredstudio/zubhub-test_media:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+#################################################################################
+
+#################################################################################
+# The following steps are for deploying the project on the test droplet
+##################################################################################
+      - name: Executing remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{env.NEW_DROPLET_IP}}
+          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
+          script: |
+
+            # create env file for backend
+            cat << EOF > /home/zubhub_backend/.env
+            ENVIRONMENT=production
+            DEFAULT_FRONTEND_DOMAIN=${{env.FRONTEND_DOMAIN}}.unstructured.studio
+            DEFAULT_BACKEND_DOMAIN=${{env.API_DOMAIN}}.unstructured.studio
+            DEFAULT_DISPLAY_NAME=ZubHub
+            DEFAULT_FRONTEND_PROTOCOL=https
+            DEFAULT_BACKEND_PROTOCOL=https
+            SECRET_KEY=random string
+            DEBUG=1
+            STORE_MEDIA_LOCALLY=1
+            MEDIA_SECRET=random string
+            DEFAULT_MEDIA_SERVER_PROTOCOL=https
+            DEFAULT_MEDIA_SERVER_DOMAIN=${{env.MEDIA_DOMAIN}}.unstructured.studio
+            POSTGRES_NAME=postgres
+            POSTGRES_USER=postgres
+            POSTGRES_PASSWORD=postgres
+            POSTGRES_HOST=db
+            GF_ADMIN_USER=admin
+            GF_ADMIN_PASSWORD=admin
+            RABBITMQ_DEFAULT_USER=admin
+            RABBITMQ_DEFAULT_PASS=admin
+            CELERY_BROKER=amqp://admin:admin@rabbitmq:5672/
+            CELERY_BACKEND=django-db
+            CELERY_FLOWER_USER=admin
+            CELERY_FLOWER_PASSWORD=admin
+            PROXY_COUNT=0
+            DETECT_MISCONFIG=0
+            SUPERUSER_PASSWORD=dummy_password
+            EOF
+
+            # deploy project
+            cd /home/zubhub
+            # Use sed to prepend "NODE_ENV=development" to the frontend build command.
+            # This is neccessary to avoid long build times on the test droplet.
+            sed -i '/"build":/ s/node /NODE_ENV=development node /' \
+            /home/zubhub/zubhub_frontend/zubhub/package.json
+            sudo bash /home/zubhub/test_vm_deployment/deploy_test_fullstack.sh
+######################################################################################
+
+  destroy_test_vm:
+    if: |
+      github.event.action == 'closed' || (
+        github.event.action == 'unlabeled' && github.event.label.name == 'create-test-vm'
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+
+      - name: Get pr number
+        run: |
+          # for events like unlabelled, github.event.pull_request.number is available
+          if [ -n ${{ github.event.pull_request.number }} ] ; then
+            echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          # github.event.pull_request.number is not available in closed event
+          sudo apt-get install jq -y
+          PR_NUMBER=$(curl --silent --show-error -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls | \
+            jq -r '.[0].number')
+          echo "PR_NUMBER=$($PR_NUMBER)" >> $GITHUB_ENV
+
+      - name: domain records
+        run: |
+
+          # Get the domain records
+          records=$(doctl compute domain records list $DOMAIN --format Data --no-header)
+          # Loop through the records and check if they point to the droplet IP
+          for record in $records; do
+            echo "$record"
+            # if [ "$record" == "$DROPLET_IP" ]; then
+            #   echo "Record found with IP $DROPLET_IP"
+            # fi
+          done
+      # - name: Delete test droplet
+      #   run: |
+      #     NEW_DROPLET_NAME=zubhub-test-${{env.PR_NUMBER}}
+      #     echo "NEW_DROPLET_NAME=$NEW_DROPLET_NAME" >> $GITHUB_ENV
+      #     doctl compute droplet  delete $NEW_DROPLET_NAME --force
+
+      # - name: delete DNS records
+      #   run: |
+      #     FRONTEND_DOMAIN=${NEW_DROPLET_NAME}.unstructured.studio
+      #     API_DOMAIN=api.${FRONTEND_DOMAIN}
+      #     MEDIA_DOMAIN=media.${FRONTEND_DOMAIN}
+      #     doctl compute domain records delete unstructured.studio --record-name \
+      #       $FRONTEND_DOMAIN -f
+      #     doctl compute domain records delete unstructured.studio --record-name \
+      #       $API_DOMAIN -f
+      #     doctl compute domain records delete unstructured.studio --record-name \
+      #       $MEDIA_DOMAIN -f
