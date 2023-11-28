@@ -122,7 +122,7 @@ function NavBar(props) {
             }));
         } else {
           completions = await api.autocompleteCreators({ query, token });
-          completions = completions.map(({ username, avatar }) => ({
+          completions = completions?.map(({ username, avatar }) => ({
             title: username,
             image: avatar,
             link: `/creators/${username}`,
@@ -130,7 +130,7 @@ function NavBar(props) {
         }
         setOptions(completions);
       }, 2),
-    [],
+    [props.auth.id, token],
   );
 
   useEffect(() => {
