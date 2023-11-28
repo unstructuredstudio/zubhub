@@ -117,7 +117,7 @@ function EditProfile(props) {
                   className="auth-form"
                   name="signup"
                   noValidate="noValidate"
-                  onSubmit={e => editProfile(e, props, toast)}
+                  onSubmit={props.handleSubmit}
                 >
                   <Typography
                     gutterBottom
@@ -608,5 +608,8 @@ export default connect(
       bio: '',
     }),
     validationSchema,
+    handleSubmit: (values, formikBag) => {
+      editProfile(values, formikBag, toast)
+    }
   })(EditProfile),
 );

@@ -137,64 +137,50 @@ export const deleteAccount = (username_el, props, toast) => {
  *
  * @todo - describe function's signature
  */
-export const editProfile = (e, props, toast) => {
-  e.preventDefault();
-  props.setFieldTouched('username', true);
-  props.setFieldTouched('email', true);
-  props.setFieldTouched('phone', true);
-  props.setFieldTouched('password', true);
-  props.setFieldTouched('user_location', true);
+export const editProfile = (values, formikBag, toast) => {
+  const { props, formik } = formikBag;
+
   let password_match = true;
-  if (props.values.user_location.length < 1) {
-    props.validateField('user_location');
-  } else if (props.values.password.length < 1) {
-    props.validateField('password');
-  } else {
-    props
-      .login({ values: props.values, navigate: props.navigate })
-      .catch(error => {
-        try {
-          const messages = JSON.parse(error.message);
-          toast.error(props.t('editProfile.inputs.password.errors.invalid'));
-          password_match = false;
-          return;
-        } catch (err) {
-          toast.error(props.t('err.message'));
-        }
-      })
-      .finally(() => {
-        if (password_match == false) {
-          return;
-        } else {
-          return props
-            .editUserProfile({ ...props.values, token: props.auth.token })
-            .then(_ => {
-              toast.success(props.t('editProfile.toastSuccess'));
-              props.navigate('/profile');
-            })
-            .catch(error => {
-              const messages = JSON.parse(error.message);
-              if (typeof messages === 'object') {
-                const server_errors = {};
-                Object.keys(messages).forEach(key => {
-                  if (key === 'non_field_errors') {
-                    server_errors['non_field_errors'] = messages[key][0];
-                  } else if (key === 'location') {
-                    server_errors['user_location'] = messages[key][0];
-                  } else {
-                    server_errors[key] = messages[key][0];
-                    toast.error(server_errors[key]);
-                  }
-                });
-              } else {
-                props.setStatus({
-                  non_field_errors: props.t('editProfile.errors.unexpected'),
-                });
-              }
-            });
-        }
-      });
-  }
+
+  props
+    .login({ values, navigate: props.navigate })
+    .catch(error => {
+      password_match = false;
+      toast.error(props.t('err.message'));
+    })
+    .finally(() => {
+      if (password_match === false) {
+        return;
+      } else {
+        return props
+          .editUserProfile({ ...values, token: values.auth.token })
+          .then(() => {
+            toast.success(props.t('editProfile.toastSuccess'));
+            props.navigate('/profile');
+          })
+          .catch(error => {
+            const messages = JSON.parse(error.message);
+            if (typeof messages === 'object') {
+              const server_errors = {};
+              Object.keys(messages).forEach(key => {
+                if (key === 'non_field_errors') {
+                  server_errors['non_field_errors'] = messages[key][0];
+                } else if (key === 'location') {
+                  server_errors['user_location'] = messages[key][0];
+                } else {
+                  server_errors[key] = messages[key][0];
+                  toast.error(server_errors[key]);
+                }
+              });
+            } else {
+              formik.setStatus({
+                non_field_errors: props.t('editProfile.errors.unexpected'),
+              });
+            }
+          });
+      }
+    });
+
 };
 
 /**
