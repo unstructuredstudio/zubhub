@@ -118,7 +118,7 @@ function Profile(props) {
         handleSetTeams(team);
         const activity = values[2] || {};
         const drafts = values[3] || {};
-        const badges = obj.profile.badges;
+        const badges = obj.profile?.badges;
 
         if (obj.profile) {
           parseComments(obj.profile.comments);
