@@ -36,6 +36,9 @@ const styles = theme => ({
     },
   },
   searchFormStyle: {
+    '& .MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root': {
+      paddingRight: '15px'
+    },
     display: 'inline-block',
     position: 'relative',
     marginLeft: '2em',
@@ -77,6 +80,9 @@ const styles = theme => ({
     },
   },
   smallSearchFormStyle: {
+    '& .MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root': {
+      paddingRight: '15px'
+    },
     height: '4em',
     display: 'flex',
     flexFlow: 'row nowrap',
