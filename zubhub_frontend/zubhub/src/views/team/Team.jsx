@@ -229,8 +229,8 @@ function Team(props) {
               {profile.description
                 ? profile.description
                 : !profile.members_count
-                ? t('profile.about.placeholder1')
-                : t('profile.about.placeholder2')}
+                  ? t('profile.about.placeholder1')
+                  : t('profile.about.placeholder2')}
             </Paper>
 
             {/* <Paper className={classes.badgeBox}>

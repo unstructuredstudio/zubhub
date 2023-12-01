@@ -18,9 +18,11 @@ export default function Step2({ formik }) {
   const [adminSuggestions, setAdminSuggestions] = useState([]);
   const [memberSuggestions, setMemberSuggestions] = useState([]);
 
-  const { values: { members, admins} } = formik
+  const {
+    values: { members, admins },
+  } = formik;
 
-  const allMembers = [...(admins ? admins : []), ...(members ? members : [])]
+  const allMembers = [...(admins ? admins : []), ...(members ? members : [])];
 
   const handleAdminSelect = (event, value) => {
     setSelectedAdmins(value);
@@ -43,12 +45,10 @@ export default function Step2({ formik }) {
         title: username,
         image: avatar,
         link: `/creators/${username}`,
-        id
+        id,
       }));
-      
-      const filteredSuggestions = suggestions.filter(({ id }) => 
-        !allMembers.some(member => member.id === id)
-      );
+
+      const filteredSuggestions = suggestions.filter(({ id }) => !allMembers.some(member => member.id === id));
       setAdminSuggestions(filteredSuggestions);
     } catch (error) {
       console.error('Error fetching admin suggestions:', error);
@@ -67,12 +67,10 @@ export default function Step2({ formik }) {
         title: username,
         image: avatar,
         link: `/creators/${username}`,
-        id
+        id,
       }));
 
-      const filteredSuggestions = suggestions.filter(({ id }) => 
-        !allMembers.some(member => member.id === id)
-      );
+      const filteredSuggestions = suggestions.filter(({ id }) => !allMembers.some(member => member.id === id));
       setMemberSuggestions(filteredSuggestions);
     } catch (error) {
       console.error('Error fetching member suggestions:', error);

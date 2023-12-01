@@ -250,10 +250,10 @@ function PageWrapper(props) {
       <Container className={classes.childrenContainer} maxWidth="lg">
         {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
         {!props.auth?.token && !props.global && (
-            <div style={{ minHeight: '80vh' }}>
-              <NotFoundPage />
-            </div>
-          )}
+          <div style={{ minHeight: '80vh' }}>
+            <NotFoundPage />
+          </div>
+        )}
       </Container>
       {!props.auth?.token && props.global && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
@@ -277,7 +277,7 @@ function PageWrapper(props) {
             >
               <TranslateIcon />
               <Select
-                variant='standard'
+                variant="standard"
                 className={classes.languageSelectStyle}
                 value={props.i18n.language}
                 onChange={e => handleChangeLanguage({ e, props })}

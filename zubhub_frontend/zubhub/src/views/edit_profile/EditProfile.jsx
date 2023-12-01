@@ -113,12 +113,7 @@ function EditProfile(props) {
           <Card className={classes.cardStyle}>
             <CardActionArea>
               <CardContent>
-                <form
-                  className="auth-form"
-                  name="signup"
-                  noValidate="noValidate"
-                  onSubmit={props.handleSubmit}
-                >
+                <form className="auth-form" name="signup" noValidate="noValidate" onSubmit={props.handleSubmit}>
                   <Typography
                     gutterBottom
                     variant="h5"
@@ -609,7 +604,7 @@ export default connect(
     }),
     validationSchema,
     handleSubmit: (values, formikBag) => {
-      editProfile(values, formikBag, toast)
-    }
+      editProfile(values, formikBag, toast);
+    },
   })(EditProfile),
 );

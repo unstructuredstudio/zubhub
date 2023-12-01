@@ -154,7 +154,11 @@ function Projects(props) {
                 <Box className={classes.heroMainContainerStyle}>
                   {state.isMobileView && hero && hero.id && (
                     <Box className={classes.heroImageContainerStyle}>
-                      <img className={classes.heroImageStyle} src={hero.image_url ? hero.image_url : heroMainImage} alt={t('projects.heroAlt')} />
+                      <img
+                        className={classes.heroImageStyle}
+                        src={hero.image_url ? hero.image_url : heroMainImage}
+                        alt={t('projects.heroAlt')}
+                      />
                     </Box>
                   )}
                   <Box className={classes.heroMessageContainerStyle}>

@@ -95,25 +95,17 @@ function SearchResults(props) {
       return (
         <Grid container spacing={3}>
           {results.map(project => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              align="center"
-            >
+            <Grid item xs={12} sm={6} md={4} align="center">
               <Project
                 project={project}
                 key={project.id}
-                updateProjects={res =>
-                  handleSetState(updateProjects(res, state, props, toast))
-                }
+                updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                 {...props}
               />
             </Grid>
           ))}
         </Grid>
-      )
+      );
     }
   };
 
@@ -181,9 +173,7 @@ function SearchResults(props) {
             </ButtonGroup>
           </Container>
         ) : (
-          <ErrorPage
-            error={t('searchResults.errors.noResult')}
-          />
+          <ErrorPage error={t('searchResults.errors.noResult')} />
         )}
       </Box>
     );

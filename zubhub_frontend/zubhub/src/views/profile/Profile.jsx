@@ -269,8 +269,8 @@ function Profile(props) {
               {profile.bio
                 ? profile.bio
                 : !profile.members_count
-                ? t('profile.about.placeholder1')
-                : t('profile.about.placeholder2')}
+                  ? t('profile.about.placeholder1')
+                  : t('profile.about.placeholder2')}
             </Paper>
 
             <Paper className={classes.badgeBox}>

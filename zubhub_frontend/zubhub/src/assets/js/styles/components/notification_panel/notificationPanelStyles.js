@@ -32,7 +32,7 @@ const styles = theme => ({
     gap: '10px',
     color: 'var(--primary-color3)',
     padding: '2.5px 0px',
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   logedOutPanel: {
     display: 'flex',
@@ -41,7 +41,7 @@ const styles = theme => ({
     color: colors.black,
     textAlign: 'center',
     alignItems: 'center',
-    marginRight:'10%',
+    marginRight: '10%',
     [theme.breakpoints.down('600')]: {
       maxWidth: 250,
       borderRadius: 10,
@@ -88,14 +88,14 @@ const styles = theme => ({
     },
     '&::-webkit-scrollbar-thumb': {
       borderRadius: '8px',
-      backgroundColor: colors.primary
+      backgroundColor: colors.primary,
     },
     '&::-webkit-scrollbar-thumb:hover': {
-      backgroundColor: 'var(--secondary-color6)'
+      backgroundColor: 'var(--secondary-color6)',
     },
     '&::-webkit-scrollbar-track': {
       borderRadius: '8px',
-      backgroundColor: colors['blue-pale']
+      backgroundColor: colors['blue-pale'],
     },
   },
   panelHeaderTextStyle: {

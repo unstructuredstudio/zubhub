@@ -23,7 +23,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { ArrowBack, ErrorOutline } from '@mui/icons-material'
+import { ArrowBack, ErrorOutline } from '@mui/icons-material';
 import {
   deleteAccount,
   editProfile,
@@ -38,12 +38,12 @@ import {
 import styles from '../../assets/js/styles/views/edit_team/editTeamStyles.js';
 import { modalStyles } from '../../components/modals/modal.styles';
 import CustomButton from '../../components/button/Button';
-import { Modal } from '../../components'
+import { Modal } from '../../components';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
 
 const useStyles = makeStyles(styles);
-const useModalStyles = makeStyles(modalStyles)
+const useModalStyles = makeStyles(modalStyles);
 /**
  * @function EditProfile View
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -62,7 +62,7 @@ function EditTeam(props) {
     dialog_error: null,
     open_delete_account_modal: false,
   });
-  
+
   const { groupname } = useParams();
 
   useEffect(() => {
@@ -88,249 +88,195 @@ function EditTeam(props) {
   };
 
   return (
-  <>
-    <Box className={classes.root}>
-      <Container className={classes.containerStyle}>
-        <Card className={classes.cardStyle}>
-          <CardActionArea>
-            <CardContent>
-              <form
-                className="auth-form"
-                name="signup"
-                noValidate="noValidate"
-                onSubmit={e => editProfile(e, groupname, props)}
-              >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  color="textPrimary"
-                  className={classes.titleStyle}
+    <>
+      <Box className={classes.root}>
+        <Container className={classes.containerStyle}>
+          <Card className={classes.cardStyle}>
+            <CardActionArea>
+              <CardContent>
+                <form
+                  className="auth-form"
+                  name="signup"
+                  noValidate="noValidate"
+                  onSubmit={e => editProfile(e, groupname, props)}
                 >
-                  {t('editTeam.label')}
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Box
-                      component="p"
-                      className={
-                        props.status &&
-                        props.status['non_field_errors'] &&
-                        classes.errorBox
-                      }
-                    >
-                      {props.status && props.status['non_field_errors'] && (
-                        <Box component="span" className={classes.error}>
-                          {props.status['non_field_errors']}
-                        </Box>
-                      )}
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                      className={classes.descStyle}
-                      variant="h6"
-                      color="textPrimary"
-                      component="p"
-                    >
-                      {t('editTeam.inputs.name.label')}
-                    </Typography>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="dense"
-                      error={
-                        (props.status && props.status['groupname']) ||
-                        (props.touched['groupname'] && props.errors['groupname'])
-                      }
-                    >
-                      <ClickAwayListener
-                        onClickAway={() => handleSetState(handleTooltipClose())}
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    color="textPrimary"
+                    className={classes.titleStyle}
+                  >
+                    {t('editTeam.label')}
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Box
+                        component="p"
+                        className={props.status && props.status['non_field_errors'] && classes.errorBox}
                       >
-                        <Tooltip
-                          title={t('editTeam.inputs.name.request')}
-                          placement="top-start"
-                          arrow
-                          onClose={() => handleSetState(handleTooltipClose())}
-                          PopperProps={{
-                            disablePortal: true,
-                          }}
-                          open={tool_tip_open}
-                          disableFocusListener
-                          disableHoverListener
-                          disableTouchListener
-                        >
-                          <OutlinedInput
-                            ref={refs.groupname_el}
-                            className={clsx(classes.customInputStyle)}
-                            id="groupname"
-                            name="groupname"
-                            type="text"
-                            value={props.values?.groupname ?? ''}
-                            onClick={() => handleSetState(handleTooltipOpen())}
-                            onChange={props.handleChange}
-                            onBlur={props.handleBlur}
-                          />
-                        </Tooltip>
-                      </ClickAwayListener>
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
-                        {(props.status && props.status['groupname']) ||
-                          (props.touched['groupname'] &&
-                            props.errors['groupname'] &&
-                          t('editTeam.inputs.name.errors.required'))
+                        {props.status && props.status['non_field_errors'] && (
+                          <Box component="span" className={classes.error}>
+                            {props.status['non_field_errors']}
+                          </Box>
+                        )}
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                      <Typography className={classes.descStyle} variant="h6" color="textPrimary" component="p">
+                        {t('editTeam.inputs.name.label')}
+                      </Typography>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="dense"
+                        error={
+                          (props.status && props.status['groupname']) ||
+                          (props.touched['groupname'] && props.errors['groupname'])
                         }
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <Typography
-                      className={classes.descStyle}
-                      variant="h6"
-                      color="textPrimary"
-                      component="p"
-                    >
-                      {t('editTeam.inputs.bio.label')}
-                    </Typography>
-                    <FormControl
-                      className={clsx(classes.margin, classes.textField)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      margin="dense"
-                      error={
-                        (props.status && props.status['description']) ||
-                        (props.touched['description'] && props.errors['description'])
-                      }
-                    >
-                      <OutlinedInput
-                        ref={refs.description_el}
-                        className={clsx(classes.customInputStyle)}
-                        id="description"
-                        name="description"
-                        type="text"
-                        multiline
-                        rows={6}
-                        rowsMax={6}
-                        placeholder={t('editTeam.bio.description')}
-                        value={props.values?.description ?? ''}
-                        onChange={props.handleChange}
-                        onBlur={props.handleBlur}
-                      />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
                       >
-                        {(props.status && props.status['description']) ||
-                          (props.touched['description'] &&
-                            props.errors['description'] &&
-                            t(
-                              `editTeam.inputs.bio.errors.${props.errors['bio']}`,
-                            ))}
-                      </FormHelperText>
-                    </FormControl>
+                        <ClickAwayListener onClickAway={() => handleSetState(handleTooltipClose())}>
+                          <Tooltip
+                            title={t('editTeam.inputs.name.request')}
+                            placement="top-start"
+                            arrow
+                            onClose={() => handleSetState(handleTooltipClose())}
+                            PopperProps={{
+                              disablePortal: true,
+                            }}
+                            open={tool_tip_open}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                          >
+                            <OutlinedInput
+                              ref={refs.groupname_el}
+                              className={clsx(classes.customInputStyle)}
+                              id="groupname"
+                              name="groupname"
+                              type="text"
+                              value={props.values?.groupname ?? ''}
+                              onClick={() => handleSetState(handleTooltipOpen())}
+                              onChange={props.handleChange}
+                              onBlur={props.handleBlur}
+                            />
+                          </Tooltip>
+                        </ClickAwayListener>
+                        <FormHelperText className={classes.fieldHelperTextStyle} error>
+                          {(props.status && props.status['groupname']) ||
+                            (props.touched['groupname'] &&
+                              props.errors['groupname'] &&
+                              t('editTeam.inputs.name.errors.required'))}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                      <Typography className={classes.descStyle} variant="h6" color="textPrimary" component="p">
+                        {t('editTeam.inputs.bio.label')}
+                      </Typography>
+                      <FormControl
+                        className={clsx(classes.margin, classes.textField)}
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        margin="dense"
+                        error={
+                          (props.status && props.status['description']) ||
+                          (props.touched['description'] && props.errors['description'])
+                        }
+                      >
+                        <OutlinedInput
+                          ref={refs.description_el}
+                          className={clsx(classes.customInputStyle)}
+                          id="description"
+                          name="description"
+                          type="text"
+                          multiline
+                          rows={6}
+                          rowsMax={6}
+                          placeholder={t('editTeam.bio.description')}
+                          value={props.values?.description ?? ''}
+                          onChange={props.handleChange}
+                          onBlur={props.handleBlur}
+                        />
+                        <FormHelperText className={classes.fieldHelperTextStyle} error>
+                          {(props.status && props.status['description']) ||
+                            (props.touched['description'] &&
+                              props.errors['description'] &&
+                              t(`editTeam.inputs.bio.errors.${props.errors['bio']}`))}
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <CustomButton
+                        className={classes.customButtonStyle}
+                        variant="contained"
+                        size="large"
+                        primaryButtonStyle
+                        type="submit"
+                        fullWidth
+                        customButtonStyle
+                      >
+                        {t('editTeam.actions.submit')}
+                      </CustomButton>
+                    </Grid>
+                  </Grid>
+                </form>
+                <Grid container spacing={2} className={classes.marginTop}>
+                  <Grid item xs={12}>
+                    <Typography className={classes.descStyle} variant="h6" color="textPrimary" component="p">
+                      {t('editTeam.delete.question')}
+                    </Typography>
                   </Grid>
                   <Grid item xs={12}>
-                    <CustomButton
-                      className={classes.customButtonStyle}
-                      variant="contained"
-                      size="large"
-                      primaryButtonStyle
-                      type="submit"
-                      fullWidth
-                      customButtonStyle
-                    >
-                      {t('editTeam.actions.submit')}
-                    </CustomButton>
+                    <Typography className={classes.bodyStyle} variant="body2" component="p" color="textPrimary">
+                      {t('editTeam.delete.information1')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2" component="p" color="textPrimary" className={classes.bodyStyle}>
+                      {t('editTeam.delete.information2')}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Link href="#!" onClick={handleButtonClick} className={classes.textDecorationNone}>
+                      <Typography
+                        variant="body2"
+                        component="p"
+                        color="textPrimary"
+                        className={clsx(classes.bodyStyle, classes.linkStyle)}
+                      >
+                        {t('editTeam.delete.confirmation')}
+                      </Typography>
+                    </Link>
                   </Grid>
                 </Grid>
-              </form>
-              <Grid container spacing={2} className={classes.marginTop}>
-                <Grid item xs={12}>
-                  <Typography
-                    className={classes.descStyle}
-                    variant="h6"
-                    color="textPrimary"
-                    component="p"
-                  >
-                    {t('editTeam.delete.question')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography
-                    className={classes.bodyStyle}
-                    variant="body2"
-                    component="p"
-                    color="textPrimary"
-                  >
-                    {t('editTeam.delete.information1')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography
-                    variant="body2"
-                    component="p"
-                    color="textPrimary"
-                    className={classes.bodyStyle}
-                  >
-                    {t('editTeam.delete.information2')}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Link 
-                    href="#!"
-                    onClick={handleButtonClick}
-                    className={classes.textDecorationNone}
-                  >
-                    <Typography
-                      variant="body2"
-                      component="p"
-                      color="textPrimary"
-                      className={clsx(classes.bodyStyle, classes.linkStyle)}
-                    >
-                    {t('editTeam.delete.confirmation')}
-                    </Typography>
-                  </Link>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Container>
-    </Box>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Container>
+      </Box>
       <Modal.WithIcon
         icon={<ErrorOutline className={modal_classes.dialogIcon} />}
         open={open_delete_account_modal}
         onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
       >
         <DialogTitle>
-          <Typography
-            variant="h5"
-            component="h2"
-            className={modal_classes.coloredTitle}
-          >
-            {t('editTeam.delete.question')}              
+          <Typography variant="h5" component="h2" className={modal_classes.coloredTitle}>
+            {t('editTeam.delete.question')}
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <Typography
-            variant="body2"
-            component="p"
-            color="textPrimary"
-          >
+          <Typography variant="body2" component="p" color="textPrimary">
             {t('editTeam.delete.information1')}
           </Typography>
         </DialogContent>
         <DialogActions className={modal_classes.dialogActionsStyle}>
           <CustomButton
             variant="outlined"
-            onClick={() =>
-              handleSetState(handleToggleDeleteAccountModal(state))
-            }
+            onClick={() => handleSetState(handleToggleDeleteAccountModal(state))}
             secondaryButtonStyle
             className={modal_classes.iconButton}
           >
@@ -339,9 +285,7 @@ function EditTeam(props) {
           </CustomButton>
           <CustomButton
             variant="contained"
-            onClick={e =>
-              handleSetState(deleteAccount(groupname, props, state))
-            }
+            onClick={e => handleSetState(deleteAccount(groupname, props, state))}
             primaryButtonStyle
             className={modal_classes.iconButton}
           >
@@ -398,8 +342,8 @@ export default connect(
 )(
   withFormik({
     mapPropsToValue: () => ({
-      groupname:'',
-      description:''
+      groupname: '',
+      description: '',
     }),
     validationSchema,
   })(EditTeam),

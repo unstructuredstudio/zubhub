@@ -1,3 +1,1 @@
-export const step1Style = theme => ({
-
-})
+export const step1Style = theme => ({});
