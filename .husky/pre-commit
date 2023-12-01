@@ -4,4 +4,4 @@
 set -e   # die on error
 
 cd zubhub_frontend/zubhub
-npm run lint-frontend
+npm run prettier && npm run lint-frontend
