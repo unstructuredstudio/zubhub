@@ -241,9 +241,7 @@ export const parseComments = comments => {
       for (let mention of mentions) {
         each_comment.text = each_comment.text.replace(
           mention,
-          `<a href="/creators/${
-            mention.split('@')[1]
-          }" class="mention">${mention}</a>`,
+          `<a href="/creators/${mention.split('@')[1]}" class="mention">${mention}</a>`,
         );
       }
     }
@@ -293,13 +291,7 @@ export const tempDeleteComment = (comments, comment_id) => {
  */
 export const calculateLabelWidth = (text, document) => {
   if (text?.length) {
-    let label = document.evaluate(
-      `//label[text()='${text}']`,
-      document,
-      null,
-      0,
-      null,
-    );
+    let label = document.evaluate(`//label[text()='${text}']`, document, null, 0, null);
     label = label?.iterateNext();
 
     let label_width = label?.offsetWidth;
@@ -324,9 +316,7 @@ export const isBaseTag = tag => {
 export const getRouteFieldIndex = str => {
   let arr = str.split('.');
   let { route, index } = getRouteAndIndex(arr[0]);
-  return arr.length > 1
-    ? { route: route, field: arr[1], index: index }
-    : { field: route, index: index };
+  return arr.length > 1 ? { route: route, field: arr[1], index: index } : { field: route, index: index };
 };
 
 export const getRouteAndIndex = str => {
@@ -386,9 +376,7 @@ export const getBase64ImageFromURL = (url, field, index) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
       var dataURL = canvas.toDataURL('image/jpeg');
-      index >= 0
-        ? resolve({ [`${field}${index}image`]: dataURL })
-        : resolve({ [field]: dataURL });
+      index >= 0 ? resolve({ [`${field}${index}image`]: dataURL }) : resolve({ [field]: dataURL });
     };
     img.onerror = error => {
       reject(error);

@@ -75,7 +75,12 @@ export default function Sidenav() {
                 return (
                   <Link
                     key={index + label}
-                    className={clsx(classes.label, classes.link, pathname === link && classes.active, red && classes.red)}
+                    className={clsx(
+                      classes.label,
+                      classes.link,
+                      pathname === link && classes.active,
+                      red && classes.red,
+                    )}
                     href={link}
                     target={target || '_self'}
                   >
@@ -87,12 +92,9 @@ export default function Sidenav() {
                         primary={
                           <span>
                             {label}
-                            {((label === t('pageWrapper.sidebar.myDrafts') && draftCount > 0) || (label === t('pageWrapper.sidebar.myProjects') && myProjectCount > 0)) && (
-                              <CustomButton
-                                variant="outlined"
-                                customButtonStyle
-                                className={classes.customNumberTag}
-                              >
+                            {((label === t('pageWrapper.sidebar.myDrafts') && draftCount > 0) ||
+                              (label === t('pageWrapper.sidebar.myProjects') && myProjectCount > 0)) && (
+                              <CustomButton variant="outlined" customButtonStyle className={classes.customNumberTag}>
                                 {label === t('pageWrapper.sidebar.myDrafts') ? draftCount : myProjectCount}
                               </CustomButton>
                             )}
@@ -101,13 +103,17 @@ export default function Sidenav() {
                       />
                     </ListItem>
                   </Link>
-
                 );
               } else {
                 return (
                   <Link
                     key={index + label}
-                    className={clsx(classes.label, classes.link, pathname == link && classes.active, red && classes.red)}
+                    className={clsx(
+                      classes.label,
+                      classes.link,
+                      pathname == link && classes.active,
+                      red && classes.red,
+                    )}
                     href={link}
                     target={target || '_self'}
                   >
@@ -121,9 +127,8 @@ export default function Sidenav() {
                 );
               }
             }
-          }
+          },
         )}
-
 
         {bottomLinks({ t }).map(
           ({ label, link, icon: Icon, red, action, requireAuth }, index) =>

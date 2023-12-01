@@ -34,13 +34,13 @@ const AvatarButton = props => {
   return (
     <ClickAwayListener onClickAway={oncloseSignUp}>
       <div>
-          <Avatar
-            ref={buttonRef}
-            onClick={onClickSignUp}
-            className={`${commonClasses.iconBox} ${auth.token && classes.avatarIconStyle}`}
-            alt={auth?.username?.toUpperCase()}
-            src={!auth.token ? "/static/images/avatar/1.jpg" : auth?.avatar}
-          />
+        <Avatar
+          ref={buttonRef}
+          onClick={onClickSignUp}
+          className={`${commonClasses.iconBox} ${auth.token && classes.avatarIconStyle}`}
+          alt={auth?.username?.toUpperCase()}
+          src={!auth.token ? '/static/images/avatar/1.jpg' : auth?.avatar}
+        />
         <PanelPopper open={dropdownOpen} anchorEl={buttonRef} signUpStyles={signupStyles}>
           <div className={classes.container}>
             <Avatar style={{ fontSize: 35, color: colors.primary, backgroundColor: colors.white }} />

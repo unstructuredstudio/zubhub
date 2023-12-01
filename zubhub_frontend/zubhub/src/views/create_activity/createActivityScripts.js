@@ -225,10 +225,10 @@ export const getErrors = (route, field, index, errors, touched) => {
         touched[route][index][field] &&
         errors[route][index][field]
     : index < 0
-    ? errors[field] && touched[field] && errors[field]
-    : errors[field] && touched[field] && typeof errors[field] === 'string'
-    ? errors[field]
-    : errors[field] && errors[field][index] && touched[field] && touched[field][index] && errors[field][index];
+      ? errors[field] && touched[field] && errors[field]
+      : errors[field] && touched[field] && typeof errors[field] === 'string'
+        ? errors[field]
+        : errors[field] && errors[field][index] && touched[field] && touched[field][index] && errors[field][index];
 };
 
 export const getMakingStepsRequiredError = (route, errors, touched) => {
@@ -251,8 +251,8 @@ export const getValue = (route, field, index, fieldType, values) => {
       ? values[field] && values[field][index]
       : values[field]
     : fieldType.array
-    ? values[route] && values[route][index] && values[route][index][field] && values[route][index][field]
-    : values[route] && values[route][field];
+      ? values[route] && values[route][index] && values[route][index][field] && values[route][index][field]
+      : values[route] && values[route][field];
 };
 
 ///////////////////////////////// deserialize activity object to be displayed for update in form fields //////////////////////

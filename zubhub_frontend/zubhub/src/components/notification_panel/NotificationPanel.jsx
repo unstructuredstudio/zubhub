@@ -156,12 +156,16 @@ const NotificationPanel = ({ open, anchorEl, onClose }) => {
 
     return (
       <div className={classes.notificationsWrapper} onScroll={handleScroll} ref={notificationsWrapperRef}>
-        {hasNewNotifications && <h2 className={classes.panelSubheadingTextStyle}>{t('notificationPanel.notificationType.new')}</h2>}
+        {hasNewNotifications && (
+          <h2 className={classes.panelSubheadingTextStyle}>{t('notificationPanel.notificationType.new')}</h2>
+        )}
         {topLoading && getLoadingSpinner()}
         {newNotifications.map(notification => (
           <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
         ))}
-        {hasEarlierNotifications && <h2 className={classes.panelSubheadingTextStyle}>{t('notificationPanel.notificationType.earlier')}</h2>}
+        {hasEarlierNotifications && (
+          <h2 className={classes.panelSubheadingTextStyle}>{t('notificationPanel.notificationType.earlier')}</h2>
+        )}
         {earlierNotifications.map(notification => (
           <Notification notification={notification} onNotificationClick={() => onNotificationClick(notification)} />
         ))}

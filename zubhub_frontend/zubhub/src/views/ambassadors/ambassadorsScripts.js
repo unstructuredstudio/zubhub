@@ -24,9 +24,7 @@ export const updateProjects = (res, { ambassadors }, props, toast) => {
       if (res.project && res.project.title) {
         const projects = {
           ...ambassadors.projects,
-          results: ambassadors.projects.results.map(project =>
-            project.id === res.project.id ? res.project : project,
-          ),
+          results: ambassadors.projects.results.map(project => (project.id === res.project.id ? res.project : project)),
         };
 
         return { ambassadors: { ...ambassadors, projects } };

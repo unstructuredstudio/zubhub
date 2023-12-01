@@ -31,12 +31,7 @@ export const handleInputBlur = (e, name, formikProps, validateSteps) => {
   //validateSteps();
 };
 
-export const handleInputChange = (
-  name,
-  value,
-  setFieldValue,
-  setFieldTouched,
-) => {
+export const handleInputChange = (name, value, setFieldValue, setFieldTouched) => {
   if (name !== 'video') {
     if (value && value !== '') {
       setFieldValue(name, value, true);

@@ -1,107 +1,105 @@
-import { colors } from "../../assets/js/colors";
+import { colors } from '../../assets/js/colors';
 
 export const navbarStyle = theme => ({
-    root: {
-        backgroundColor: colors.primary,
-        '&.MuiPaper-elevation4': {
-            boxShadow: 'unset'
-        },
-        zIndex: 2
+  root: {
+    backgroundColor: colors.primary,
+    '&.MuiPaper-elevation4': {
+      boxShadow: 'unset',
     },
-    box: {
-        backgroundColor: colors.secondary,
-        padding: '15px 0px',
+    zIndex: 2,
+  },
+  box: {
+    backgroundColor: colors.secondary,
+    padding: '15px 0px',
+  },
+  container: {
+    display: 'flex',
+    gap: '20px',
+    alignItems: 'center',
+  },
+  logo: {
+    height: 30,
+    '&:hover': {
+      cursor: 'pointer',
     },
-    container: {
-        display: 'flex',
-        gap: '20px',
-        alignItems: 'center'
+    [theme.breakpoints.down('sm')]: {
+      height: 18,
     },
-    logo: {
-        height: 30,
-        '&:hover': {
-            cursor: 'pointer'
-        },
-        [theme.breakpoints.down('sm')]: {
-            height: 18
-        },
-        [theme.breakpoints.up('md')]: {
-            marginRight: 'auto',
-        },
+    [theme.breakpoints.up('md')]: {
+      marginRight: 'auto',
     },
-    input: {
-        borderRadius: 50,
-        border: `solid 1.5px ${colors.white}`,
-        minWidth: 300,
-        width: '40%',
-        // height: 35,
-        padding: '0px 30px',
-        // outline: `solid 1px ${colors.light}`,
-        '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'yellow !important'
-        },
-        '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'tranparent'
-        },
-        '& .MuiOutlinedInput-input': {
-            padding: '10px 14px',
-            color: colors.white,
-            fontSize: 16,
-            fontWeight: '600'
-        }
+  },
+  input: {
+    borderRadius: 50,
+    border: `solid 1.5px ${colors.white}`,
+    minWidth: 300,
+    width: '40%',
+    // height: 35,
+    padding: '0px 30px',
+    // outline: `solid 1px ${colors.light}`,
+    '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'yellow !important',
     },
-    languageContainerStyle: {
-        paddingLeft: '0.7em',
-        color: 'white',
-        width: 'auto',
-        backgroundColor: '#d13241',
-        borderRadius: '50px',
-        [theme.breakpoints.down('282')]: {
-            marginLeft: '0.3em',
-        },
-        [theme.breakpoints.down('md')]: {
-            marginRight: 'auto',
-        },
-        [theme.breakpoints.up('md')]: {
-            marginRight: 0,
-        },
-        '&:hover': {
-            backgroundColor: '#c7313f',
-        },
-    }
-    ,
-    languageSelectStyle: {
-        '&:hover': {
-            backgroundColor: '#c7313f',
-        },
-        display: 'inline-block',
-        maxWidth: '5em',
-        color: 'white',
-        '&.MuiInput-underline:before': {
-            display: 'none !important',
-        },
-        '&.MuiInput-underline:after': {
-            display: 'none !important',
-        },
-        '& .MuiSelect-icon': {
-            color: 'white',
-        },
-        '& .MuiSelect-root': {
-            boxSizing: 'border-box',
-            backgroundColor: 'rgba(0,0,0,0)',
-        },
+    '&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'tranparent',
     },
-    notification: {
-        backgroundColor: colors["primary-01"],
+    '& .MuiOutlinedInput-input': {
+      padding: '10px 14px',
+      color: colors.white,
+      fontSize: 16,
+      fontWeight: '600',
     },
-    username: {
-        color: `${colors.white} !important`,
-        marginBottom: `${0} !important`,
-        textTransform: 'capitalize'
+  },
+  languageContainerStyle: {
+    paddingLeft: '0.7em',
+    color: 'white',
+    width: 'auto',
+    backgroundColor: '#d13241',
+    borderRadius: '50px',
+    [theme.breakpoints.down('282')]: {
+      marginLeft: '0.3em',
     },
-    menuDropdown: {
-        // width: 'max-content !important',
-        padding: '10px 20px'
-    }
-
-}) 
+    [theme.breakpoints.down('md')]: {
+      marginRight: 'auto',
+    },
+    [theme.breakpoints.up('md')]: {
+      marginRight: 0,
+    },
+    '&:hover': {
+      backgroundColor: '#c7313f',
+    },
+  },
+  languageSelectStyle: {
+    '&:hover': {
+      backgroundColor: '#c7313f',
+    },
+    display: 'inline-block',
+    maxWidth: '5em',
+    color: 'white',
+    '&.MuiInput-underline:before': {
+      display: 'none !important',
+    },
+    '&.MuiInput-underline:after': {
+      display: 'none !important',
+    },
+    '& .MuiSelect-icon': {
+      color: 'white',
+    },
+    '& .MuiSelect-root': {
+      boxSizing: 'border-box',
+      backgroundColor: 'rgba(0,0,0,0)',
+    },
+  },
+  notification: {
+    backgroundColor: colors['primary-01'],
+  },
+  username: {
+    color: `${colors.white} !important`,
+    marginBottom: `${0} !important`,
+    textTransform: 'capitalize',
+  },
+  menuDropdown: {
+    // width: 'max-content !important',
+    padding: '10px 20px',
+  },
+});
