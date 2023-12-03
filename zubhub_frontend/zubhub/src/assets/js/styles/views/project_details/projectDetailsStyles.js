@@ -106,29 +106,18 @@ const styles = theme => ({
   videoWrapperStyle: {
     backgroundColor: 'black',
     marginBottom: '1em',
-    height: '100%',
+    maxWidth: '880px',
+    maxHeight: '509px',
     paddingBottom: '56.25%',
-    [theme.breakpoints.down('1080')]: {
-      height: 0,
-    },
     [theme.breakpoints.down('959')]: {
       paddingBottom: '56.25%',
     },
   },
   iframeStyle: {
-    borderRadius: 6,
-    overflow: 'hidden',
     position: 'absolute',
-    borderStyle: 'none',
-    top: 0,
-    left: 0,
     width: '100%',
     height: '100%',
-    [theme.breakpoints.down('959')]: {
-      width: '100%',
-      height: '100%',
-    },
-    zIndex: 1,
+    objectFit: 'cover',
   },
   actionBoxStyle: {
     backgroundColor: 'var(--primary-color3)',
