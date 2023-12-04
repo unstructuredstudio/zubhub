@@ -65,7 +65,7 @@
     "build": "node --max-old-space-size=1024 `which react-scripts` build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --config ./.prettierrc.yaml --write \"src/**/*.{js,jsx}\"",
+    "prettier": "prettier --config ./.prettierrc.yaml --write \"src/**/*.{js,jsx}\" \"*.json\" \"public/**/*.{js,html,json}\"",
     "prepare": "cd ../.. && husky install zubhub_frontend/zubhub/.husky",
     "lint-frontend": "lint-staged"
   },
