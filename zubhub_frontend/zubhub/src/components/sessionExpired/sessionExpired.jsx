@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { Card, CardContent, Typography, ErrorOutline } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, Link } from 'react-router-dom';
+import { Card, CardContent, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Link, useNavigate } from 'react-router-dom';
 import { sessionExpiredStyle } from './sessionExpired.Style';
 import Modal from '../modals/Modal';
 import CustomButton from '../button/Button';
-import CloseIcon from '@material-ui/icons/Close';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const useStyles = makeStyles(sessionExpiredStyle);
 
 const SessionExpiredModal = () => {
     const classes = useStyles();
     const [modalOpen, setModalOpen] = useState(true);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleClose = () => {
         setModalOpen(false);
-        history.push('/login');
+        navigate('/login');
     };
     const { t } = useTranslation();
 

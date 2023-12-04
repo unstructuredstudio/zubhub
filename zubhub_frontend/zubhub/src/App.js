@@ -3,7 +3,6 @@ import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
-import { SessionExpiredModal } from './components';
 import RoutesContainer from './Routes';
 import ZubhubAPI from '../src/api/api';
 const API = new ZubhubAPI();

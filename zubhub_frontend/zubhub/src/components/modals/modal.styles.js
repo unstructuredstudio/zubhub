@@ -21,10 +21,10 @@ export const modalStyles = theme => ({
     backgroundColor: colors.white,
   },
   dialogContainer: {
+    backdropFilter: 'blur(15px)',
     '& .MuiDialog-paper': {
       overflow: 'visible !important',
-    },,
-        backdropFilter: 'blur(15px)',
+    },
   },
   dialogPaper: {
     borderRadius: 8,

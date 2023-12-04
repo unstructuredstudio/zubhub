@@ -113,7 +113,7 @@ function PageWrapper(props) {
 
   useEffect(() => {
     if (!props.auth.token) {
-      props.history.push('/session-expired')
+      props.navigate('/session-expired')
     }
   }, [props.auth.token])
 
@@ -123,23 +123,6 @@ function PageWrapper(props) {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
-
-  const unprotectedRoutes = [
-    '/',
-    '/signup',
-    '/login',
-    '/password-reset',
-    '/projects/:id',
-    '/ambassadors',
-    '/creators/:username',
-    '/privacy_policy',
-    '/terms_of_use',
-    '/about',
-    '/challenge',
-    '/email-confirm',
-    '/password-reset-confirm',
-    '/session-expired'
-  ];
 
   const throttledFetchOptions = useMemo(
     () =>

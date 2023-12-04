@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ProtectedRoute } from './components';
+import { ProtectedRoute, SessionExpireModal } from './components';
 import PageWrapper from './wrapper/PageWrapper';
 import * as Views from './views';
 
@@ -52,6 +52,7 @@ const routeConfig = [
   { path: '/faqs', component: Views.FAQs, global: true },
   { path: '/create-team', component: Views.CreateTeam },
   { path: '/linked-projects', component: Views.LinkedProjects },
+  { path: 'session-expired', component: SessionExpireModal },
   { path: '/account-status', component: Views.AccounStatus },
   { path: '*', component: Views.NotFound },
 ];
