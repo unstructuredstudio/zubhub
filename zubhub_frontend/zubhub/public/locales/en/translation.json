@@ -32,18 +32,18 @@
       "unpublishedActivities": "Unpublished Activities",
       "myActivities": "My Activities"
     },
-    "sidebar":{
+    "sidebar": {
       "logout": "Logout",
-      "expoloreActivities":"Explore Activities",
-      "teams":"Teams",
-      "bookmarks":"Bookmarks",
-      "myProjects":"My Projects",
-      "myDrafts":"My Drafts",
-      "createActivity":"Create Activity",
-      "createProject":"Create Project",
-      "profile":"My Profile",
-      "projects":"All Projects",
-      "settings":"Settings"
+      "expoloreActivities": "Explore Activities",
+      "teams": "Teams",
+      "bookmarks": "Bookmarks",
+      "myProjects": "My Projects",
+      "myDrafts": "My Drafts",
+      "createActivity": "Create Activity",
+      "createProject": "Create Project",
+      "profile": "My Profile",
+      "projects": "All Projects",
+      "settings": "Settings"
     },
 
     "footer": {
@@ -258,14 +258,14 @@
   },
 
   "projects": {
-    "1":"Explore, ",
+    "1": "Explore, ",
     "2": "Create, Share!",
     "shareProject": "Share your work",
     "exploreIdeas": "Explore Ideas",
     "heroAlt": "Six animated children happily walking",
     "zubhubAmbassadors": "Become an Ambassador",
     "newStuff": "New Stuff",
-    "login":"Login to view more",
+    "login": "Login to view more",
     "allProjects": "All Projects",
     "prev": "Prev",
     "next": "Next",
@@ -278,39 +278,41 @@
       "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
       "noProject": "Seems like you have arrived at a new and fresh ZubHub! There are no projects at this moment. Maybe try creating one?"
     },
-    "child":{
-      "title":"Get Creative With ZubHub",
-      "1":"Connect with a global community  of curious creatives.",
-      "2":"Freedom to express yourself in different creative ways.",
-      "3":"Work as a team with co creators."
+    "child": {
+      "title": "Get Creative With ZubHub",
+      "1": "Connect with a global community  of curious creatives.",
+      "2": "Freedom to express yourself in different creative ways.",
+      "3": "Work as a team with co creators."
     },
-    "teams":{
-      "title":"ZubHub for Teams",
-      "1":"Set your team up for success with reimagined learning to empower their personal and professional growth.",
-      "2":"With inspiring activities on science, art, technology and more, your whole team will have deep knowledge and expertise at their fingertips.",
-      "button":"Sign Up - It's free!",
-      "button2":"Create Team"
+    "teams": {
+      "title": "ZubHub for Teams",
+      "1": "Set your team up for success with reimagined learning to empower their personal and professional growth.",
+      "2": "With inspiring activities on science, art, technology and more, your whole team will have deep knowledge and expertise at their fingertips.",
+      "button": "Sign Up - It's free!",
+      "button2": "Create Team"
     },
-    "reviews":{
+    "reviews": {
       "title": "Creator Reviews",
-      "1":{
-      "review": "“For me, ZubHub has grown incredibly important. I would advise anyone interested in creating projects and sharing to check it out.”",
-      "name": "Faridah Ejibunu",
-      "designation": "ZubHub Ambassador"},
-      "2":{
+      "1": {
+        "review": "“For me, ZubHub has grown incredibly important. I would advise anyone interested in creating projects and sharing to check it out.”",
+        "name": "Faridah Ejibunu",
+        "designation": "ZubHub Ambassador"
+      },
+      "2": {
         "review": "“The fact that anyone in the world can have an online presence for their work and show it to the world all for free just amazes me.”",
         "name": "Hemant Kumar Singh",
-        "designation": "ZubHub Ambassador"},
-      "3":{
+        "designation": "ZubHub Ambassador"
+      },
+      "3": {
         "review": "“ZubHub contributes immensely to people from not so well socio-econimic backgrounds, I would high recommend it.”",
         "name": "Yaya Mamoudou",
-        "designation": "ZubHub Ambassador"}
-
+        "designation": "ZubHub Ambassador"
+      }
     },
-    "global":{
-      "title":"Join a growing community of thousands of creators!",
+    "global": {
+      "title": "Join a growing community of thousands of creators!",
       "body": "Be a part of an active community of educators and creators.",
-      "body2":"Create projects, create activities, share ideas, and connect with the global community.",
+      "body2": "Create projects, create activities, share ideas, and connect with the global community.",
       "button": "Get Started, It's Free!",
       "button2": "Log In"
     }
@@ -454,8 +456,8 @@
       "videoFile": "Video file added",
       "videoURL": "Video URL added"
     },
-    "addedToDraft":"Project added as draft successfully!",
-    "savedStep":"Project has been saved successfully!",
+    "addedToDraft": "Project added as draft successfully!",
+    "savedStep": "Project has been saved successfully!",
     "createToastSuccess": "Your project was created successfully!",
     "updateToastSuccess": "Your project was updated successfully!",
     "errors": {
@@ -516,7 +518,7 @@
         "follow": "Follow",
         "unfollow": "Unfollow"
       },
-      "hashtags":"Project Hashtags",
+      "hashtags": "Project Hashtags",
       "description": "Description",
       "materials": "Materials Used",
       "category": "Category",
@@ -649,7 +651,7 @@
     },
     "activityLog": {
       "activity": "Activity Log",
-      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!"
     },
     "team": "Team",
     "createteam": "Create Team",
@@ -929,14 +931,14 @@
     "2ndpage": {
       "title": "Invite Team Members",
       "members": "Members",
-      "admins" : "Admin",
+      "admins": "Admin",
       "member-placeholder": "Members can add team to a project, view team members and leave at their convenience",
       "admin-placeholder": "Admins can assign admin status to other team members, add and remove team members, add team to a project, delete team profile",
       "member-input-placeholder": "Enter the list of members",
       "admin-input-placeholder": "Enter the list of admins"
     },
-    "3rdpage":{
-      "title":"Select Project you worked on with a Team"
+    "3rdpage": {
+      "title": "Select Project you worked on with a Team"
     }
   },
   "teamMembers": {
@@ -976,19 +978,19 @@
         }
       },
       "materials_used": {
-      "label": "What materials did you use?",
-      "addMore": "Add Material",
-      "helperText": "List some of the essential materials used to create this activity",
-      "encouragingText": "We strongly encourage you to upload an image containing all materials and tools used to create this activity",
-      "images": {
-        "label": "Add Image"
-      },
-      "errors": {
-        "max": "your material shouldn't be more than 50 characters",
-        "required": "this field is required",
-        "required1": "At least one material is required!",
-        "min": "your material should be at least 2 characters"
-      }
+        "label": "What materials did you use?",
+        "addMore": "Add Material",
+        "helperText": "List some of the essential materials used to create this activity",
+        "encouragingText": "We strongly encourage you to upload an image containing all materials and tools used to create this activity",
+        "images": {
+          "label": "Add Image"
+        },
+        "errors": {
+          "max": "your material shouldn't be more than 50 characters",
+          "required": "this field is required",
+          "required1": "At least one material is required!",
+          "min": "your material should be at least 2 characters"
+        }
       },
       "facilitation_tips": {
         "label": "Facilitation tips",
@@ -998,7 +1000,6 @@
           "max": "your facilitation tips shouldn't be more than 10,000 characters",
           "required": "This field is required"
         }
-
       },
       "activityImages": {
         "label": "Add Images of your activity",
@@ -1043,23 +1044,22 @@
         "image": {
           "label": "Add Example Image"
         },
-         "errors": {
+        "errors": {
           "max": "your inspiring example's description shouldn't be more than 100 characters",
           "required": "This field is required",
           "maxCredit": "your inspiring example's credit shouldn't be more than 50 characters"
-
         }
       },
-        "video": {
-          "label": "Let's add a video",
-          "label2": "Add Video",
-          "helperText": "You can provide video URL (Youtube, vimeo and Google Drive are supported) or a video file",
-          "errors": {
-            "shouldBeURL": "Select a valid video URL from YouTube, Vimeo, or Google Drive",
-            "shouldBeVideoFile": "Select a valid video file",
-            "maxVideoFileSize": "video file is more than 60MB",
-            "maxVideoURLLength": "video URL is too long"
-          }
+      "video": {
+        "label": "Let's add a video",
+        "label2": "Add Video",
+        "helperText": "You can provide video URL (Youtube, vimeo and Google Drive are supported) or a video file",
+        "errors": {
+          "shouldBeURL": "Select a valid video URL from YouTube, Vimeo, or Google Drive",
+          "shouldBeVideoFile": "Select a valid video file",
+          "maxVideoFileSize": "video file is more than 60MB",
+          "maxVideoURLLength": "video URL is too long"
+        }
       },
       "image": "Image added",
       "images": "Images added",
@@ -1074,28 +1074,28 @@
     }
   },
 
- "activities": {
-   "LinkedProjects": "Linked Projects",
-   "errors": {
+  "activities": {
+    "LinkedProjects": "Linked Projects",
+    "errors": {
       "emptyList": "No activities created yet !",
       "LinkedProjects": "No projects Linked to this activity yet created !",
       "dialog": {
-         "serverError": "Sorry the server is down try again later",
-         "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
-         "uploadError": "error occurred while downloading file : "
+        "serverError": "Sorry the server is down try again later",
+        "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
+        "uploadError": "error occurred while downloading file : "
       }
-   }
- },
+    }
+  },
 
   "activityDetails": {
     "subTitles": {
-       "learning_goals": "LEARNING GOALS",
-       "materials_required": "MATERIALS REQUIRED",
-       "making_steps": "MAKING STEPS",
-       "inspiring_person": "INSPIRING ARTIST/SCIENTIST",
-       "facilitation_tips": "FACILITATION TIPS",
-       "inspiring_examples": "SOME INSPIRING EXAMPLES",
-       "contributors": "CONTRIBUTORS"
+      "learning_goals": "LEARNING GOALS",
+      "materials_required": "MATERIALS REQUIRED",
+      "making_steps": "MAKING STEPS",
+      "inspiring_person": "INSPIRING ARTIST/SCIENTIST",
+      "facilitation_tips": "FACILITATION TIPS",
+      "inspiring_examples": "SOME INSPIRING EXAMPLES",
+      "contributors": "CONTRIBUTORS"
     },
     "made": "Made by",
     "activity": {
@@ -1142,20 +1142,20 @@
         }
       },
       "publish": {
-         "label": "Publish"
+        "label": "Publish"
       },
       "unpublish": {
-         "label": "UnPublish"
+        "label": "UnPublish"
       }
     },
-      "saveButton": {
-        "label": "save button",
-        "save": "save",
-        "unsave": "unsave"
-      }
+    "saveButton": {
+      "label": "save button",
+      "save": "save",
+      "unsave": "unsave"
+    }
   },
-  "breadCrumb":{
-    "link":{
+  "breadCrumb": {
+    "link": {
       "activities": "Activities",
       "projects": "Projects",
       "edit": "Edit",
