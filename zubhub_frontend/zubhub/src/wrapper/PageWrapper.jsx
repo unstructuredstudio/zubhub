@@ -113,9 +113,9 @@ function PageWrapper(props) {
 
   useEffect(() => {
     if (!props.auth.token) {
-      props.navigate('/session-expired')
+      props.navigate('/session-expired');
     }
-  }, [props.auth.token])
+  }, [props.auth.token]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
