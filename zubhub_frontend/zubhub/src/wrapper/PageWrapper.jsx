@@ -112,10 +112,10 @@ function PageWrapper(props) {
   }, [prevScrollPos]);
 
   useEffect(() => {
-    if (!props.auth.token) {
+    if (!props.global && !props.auth.token) {
       props.navigate('/session-expired');
     }
-  }, [props.auth.token]);
+  }, [props.auth.token, props.global]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
