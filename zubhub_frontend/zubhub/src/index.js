@@ -17,7 +17,7 @@ import './i18n';
 import { BrowserRouter } from 'react-router-dom';
 import { StyledEngineProvider } from '@mui/material/styles';
 
-let { store, persistor } = configureStore();
+const { store, persistor } = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
