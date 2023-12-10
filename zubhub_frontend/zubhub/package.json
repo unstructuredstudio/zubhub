@@ -65,17 +65,7 @@
     "build": "node --max-old-space-size=1024 `which react-scripts` build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --config ./.prettierrc.yaml --write \"src/**/*.{js,jsx}\" \"package.json\" \"public/**/*.{js,html,json}\"",
-    "prepare": "cd ../.. && husky install zubhub_frontend/zubhub/.husky",
-    "lint-frontend": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint --quiet --fix"
-    ],
-    "*.{json,md,html,js,jsx}": [
-      "prettier --write"
-    ]
+    "prettier": "prettier --config ./.prettierrc.yaml --write \"src/**/*.{js,jsx}\""
   },
   "eslintConfig": {
     "extends": [
@@ -96,8 +86,6 @@
     ]
   },
   "devDependencies": {
-    "husky": "^8.0.3",
-    "lint-staged": "^15.1.0",
     "prettier": "^3.1.0"
   }
 }
