@@ -1,7 +1,0 @@
-#!/bin/sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-set -e   # die on error
-
-cd zubhub_frontend/zubhub
-npm run prettier && npm run lint-frontend
