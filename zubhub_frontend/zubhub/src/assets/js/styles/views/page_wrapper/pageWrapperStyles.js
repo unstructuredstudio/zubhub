@@ -1,4 +1,4 @@
-import { colors } from "../../../colors";
+import { colors } from '../../../colors';
 
 const styles = theme => ({
   childrenContainer: { padding: '0' },
@@ -7,7 +7,7 @@ const styles = theme => ({
   },
   input: {
     flex: 1,
-    marginRight: '2rem',
+    marginRight: '5rem',
   },
   customButton: {
     fontSize: '1.15rem',
@@ -36,6 +36,9 @@ const styles = theme => ({
     },
   },
   searchFormStyle: {
+    '& .MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root': {
+      paddingRight: '15px',
+    },
     display: 'inline-block',
     position: 'relative',
     marginLeft: '2em',
@@ -77,6 +80,9 @@ const styles = theme => ({
     },
   },
   smallSearchFormStyle: {
+    '& .MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root': {
+      paddingRight: '15px',
+    },
     height: '4em',
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -128,7 +134,7 @@ const styles = theme => ({
   username: {
     color: `${colors.white} !important`,
     marginBottom: `${0} !important`,
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
 
   searchFormSubmitStyle: {
@@ -161,7 +167,7 @@ const styles = theme => ({
   navActionStyle: {
     display: 'flex',
     alignItems: 'center',
-    gap: 20
+    gap: '20px',
   },
   avatarStyle: {
     cursor: 'pointer',

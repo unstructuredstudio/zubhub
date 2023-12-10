@@ -23,7 +23,7 @@ const styles = theme => ({
   },
   ambassadorsBodyStyle: {
     marginBottom: '5em',
-    fontSize: '1.2rem'
+    fontSize: '1.2rem',
   },
   projectGridStyle: {
     marginBottom: '2em',

@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, ButtonGroup, Container, Card, Typography } from '@material-ui/core';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { makeStyles } from '@mui/styles';
+import { Grid, Box, ButtonGroup, Container, Card, Typography } from '@mui/material';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { toast } from 'react-toastify';
 import CustomButton from '../../components/button/Button';
 
@@ -15,7 +15,6 @@ import LoadingPage from '../loading/LoadingPage';
 import ErrorPage from '../error/ErrorPage';
 import Project from '../../components/project/Project';
 import { fetchPage, updateProjects } from './ambassadorsScripts';
-
 
 import styles from '../../assets/js/styles/views/ambassadors/ambassadorsStyles';
 
@@ -49,7 +48,6 @@ function Ambassadors(props) {
 
   const { loading, ambassadors } = state;
   const { t } = props;
-  
 
   if (loading) {
     return <LoadingPage />;
@@ -58,9 +56,7 @@ function Ambassadors(props) {
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
-            <Typography className={classes.ambassadorsHeadingStyle}>
-              Ambassadors
-            </Typography>
+            <Typography className={classes.ambassadorsHeadingStyle}>Ambassadors</Typography>
             <Box
               className={classes.ambassadorsBodyStyle}
               dangerouslySetInnerHTML={{ __html: ambassadors.ambassadors }}
@@ -68,27 +64,15 @@ function Ambassadors(props) {
           </Card>
         </Container>
         <Container className={classes.containerStyle}>
-            <Typography className={classes.ambassadorsHeadingStyle}>
-              Selected Projects
-            </Typography>
-
+          <Typography className={classes.ambassadorsHeadingStyle}>Selected Projects</Typography>
 
           <Grid container spacing={3}>
             {ambassadors.projects.results.map(project => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                align="center"
-                className={classes.projectGridStyle}
-              >
+              <Grid item xs={12} sm={6} md={4} align="center" className={classes.projectGridStyle}>
                 <Project
                   project={project}
                   key={project.id}
-                  updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props, toast))
-                  }
+                  updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                   {...props}
                 />
               </Grid>
@@ -127,7 +111,6 @@ function Ambassadors(props) {
               </CustomButton>
             ) : null}
           </ButtonGroup>
-  
         </Container>
       </Box>
     );
@@ -140,7 +123,7 @@ Ambassadors.propTypes = {
   auth: PropTypes.object.isRequired,
   getAmbassadors: PropTypes.func.isRequired,
   toggleLike: PropTypes.func.isRequired,
-  toggleSave: PropTypes.func.isRequired
+  toggleSave: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {

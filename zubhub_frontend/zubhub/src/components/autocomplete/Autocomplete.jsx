@@ -1,13 +1,7 @@
 import React from 'react';
-import MaterialAutcomplete from '@material-ui/lab/Autocomplete';
+import MaterialAutcomplete from '@mui/material/Autocomplete';
 
-const Autocomplete = ({
-  options,
-  children,
-  defaultValue,
-  renderOption,
-  ...otherProps
-}) => {
+const Autocomplete = ({ options, children, defaultValue, renderOption, ...otherProps }) => {
   return (
     <MaterialAutcomplete
       id="combo-box-demo"
@@ -15,7 +9,7 @@ const Autocomplete = ({
       freeSolo
       getOptionLabel={option => option.title || ''}
       defaultValue={defaultValue}
-      style={{ width: 300 }}
+      sx={{ width: 300 }}
       renderInput={children}
       renderOption={renderOption}
       {...otherProps}

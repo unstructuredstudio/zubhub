@@ -39,7 +39,7 @@ export const throttle = (func, frequency) => {
   return throttler;
 };
 
-export const sanitizeObject = (obj) => {
+export const sanitizeObject = obj => {
   const sanitizedObj = {};
 
   for (const key in obj) {
@@ -54,17 +54,17 @@ export const sanitizeObject = (obj) => {
   }
 
   return sanitizedObj;
-}
+};
 
 export const getUrlQueryObject = () => {
   if (window) {
     const params = new URLSearchParams(window.location.search);
     const queryParams = Object.fromEntries(params.entries());
-    return queryParams
+    return queryParams;
   }
-  return {}
-}
+  return {};
+};
 
-export const TEAM_ENABLED = false
+export const TEAM_ENABLED = false;
 
 export const PROJECTS_PAGE_SIZE = 18;

@@ -42,9 +42,7 @@ export const getMyActivities = ({ t, token }) => {
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(
-              t('activityDetails.activity.delete.dialog.forbidden'),
-            );
+            toast.warning(t('activityDetails.activity.delete.dialog.forbidden'));
           } else {
             toast.warning(t('activities.errors.dialog.serverError'));
           }
@@ -76,9 +74,7 @@ export const getUnPublishedActivities = ({ t, token }) => {
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(
-              t('activityDetails.activity.delete.dialog.forbidden'),
-            );
+            toast.warning(t('activityDetails.activity.delete.dialog.forbidden'));
           } else {
             toast.warning(t('activities.errors.dialog.serverError'));
           }
@@ -106,9 +102,7 @@ export const getActivities = t => {
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
-            toast.warning(
-              t('activityDetails.activity.delete.dialog.forbidden'),
-            );
+            toast.warning(t('activityDetails.activity.delete.dialog.forbidden'));
           } else {
             toast.warning(t('activities.errors.dialog.serverError'));
           }

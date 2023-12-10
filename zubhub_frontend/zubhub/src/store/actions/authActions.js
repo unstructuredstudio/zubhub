@@ -40,10 +40,10 @@ export const login = args => {
       .then(() => {
         const initialUrl = sessionStorage.getItem('initialUrl');
         if (initialUrl) {
-          sessionStorage.removeItem('initialUrl')
+          sessionStorage.removeItem('initialUrl');
           window.location.href = initialUrl;
         } else {
-          args.history.push('/');
+          args.navigate('/');
         }
       });
   };
@@ -72,7 +72,7 @@ export const logout = args => {
         });
       })
       .then(_ => {
-        args.history.push('/');
+        args.navigate('/');
       })
       .catch(_ => {
         toast.warning(args.t('pageWrapper.errors.logoutFailed'));
@@ -88,17 +88,17 @@ export const logout = args => {
  */
 export const getAuthUser = props => {
   return dispatch => {
-      return API.getAuthUser(props.auth.token)
+    return API.getAuthUser(props.auth.token)
       .then(res => {
         if (!res.id) {
           dispatch(
             logout({
               token: props.auth.token,
-              history: props.history,
+              navigate: props.navigate,
               t: props.t,
             }),
           ).then(() => {
-            props.history.push('/account-status');
+            props.navigate('/account-status');
           });
           throw new Error(props.t('pageWrapper.errors.unexpected'));
         } else {
@@ -120,7 +120,6 @@ export const getAuthUser = props => {
       .catch(error => toast.warning(error.message));
   };
 };
-
 
 export const AccountStatus = args => {
   return () => {
@@ -148,7 +147,7 @@ export const signup = args => {
           payload: { token: res.key },
         });
       })
-      .then(() => args.history.push('/profile'));
+      .then(() => args.navigate('/profile'));
   };
 };
 
@@ -166,7 +165,7 @@ export const sendEmailConfirmation = args => {
       } else {
         toast.success(args.t('emailConfirm.toastSuccess'));
         setTimeout(() => {
-          args.history.push('/');
+          args.navigate('/');
         }, 4000);
       }
     });
@@ -187,7 +186,7 @@ export const sendPhoneConfirmation = args => {
       } else {
         toast.success(args.t('phoneConfirm.toastSuccess'));
         setTimeout(() => {
-          args.history.push('/');
+          args.navigate('/');
         }, 4000);
       }
     });
@@ -208,7 +207,7 @@ export const sendPasswordResetLink = args => {
       } else {
         toast.success(args.t('passwordReset.toastSuccess'));
         setTimeout(() => {
-          args.history.push('/');
+          args.navigate('/');
         }, 4000);
       }
     });
@@ -229,7 +228,7 @@ export const passwordResetConfirm = args => {
       } else {
         toast.success(args.t('passwordResetConfirm.toastSuccess'));
         setTimeout(() => {
-          args.history.push('/login');
+          args.navigate('/login');
         }, 4000);
       }
     });

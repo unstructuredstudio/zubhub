@@ -26,7 +26,7 @@ const styles = theme => ({
     filter:
       "progid:DXImageTransform.Microsoft.gradient( startColorstr='var(--primary-color2)', endColorstr='#ffffff', GradientType=0 )",
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   mediaBoxStyle: {
     width: '100%',

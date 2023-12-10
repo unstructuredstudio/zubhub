@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -8,11 +8,11 @@ import { connect, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import TranslateIcon from '@material-ui/icons/Translate';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import SearchIcon from '@material-ui/icons/Search';
+import { makeStyles } from '@mui/styles';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import TranslateIcon from '@mui/icons-material/Translate';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import SearchIcon from '@mui/icons-material/Search';
 
 import {
   CssBaseline,
@@ -38,7 +38,7 @@ import {
   InputBase,
   TextField,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   logout,
@@ -51,10 +51,10 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
-import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
+import { getQueryParams, SearchType } from '../views/search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
-import LoadingPage from './loading/LoadingPage';
+import LoadingPage from '../views/loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
 import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
@@ -66,13 +66,13 @@ import languageMap from '../assets/js/languageMap.json';
 import InputSelect from '../components/input_select/InputSelect';
 import Autocomplete from '../components/autocomplete/Autocomplete';
 import API from '../api';
-import { throttle } from '../utils.js';
+import { throttle } from '../utils.js/index.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
 import BreadCrumb from '../components/breadCrumb/breadCrumb';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 import Navbar from '../components/Navbar/Navbar';
-import NotFoundPage from './not_found/NotFound';
+import NotFoundPage from '../views/not_found/NotFound';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -87,7 +87,7 @@ function PageWrapper(props) {
   const backToTopEl = useRef(null);
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
   const [isVisible, setIsVisible] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
@@ -112,10 +112,10 @@ function PageWrapper(props) {
   }, [prevScrollPos]);
 
   useEffect(() => {
-    if (!props.auth.token) {
-      props.history.push('/session-expired')
+    if (!props.global && !props.auth.token) {
+      props.navigate('/session-expired');
     }
-  }, [props.auth.token])
+  }, [props.auth.token, props.global]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -123,23 +123,6 @@ function PageWrapper(props) {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
-
-  const unprotectedRoutes = [
-    '/',
-    '/signup',
-    '/login',
-    '/password-reset',
-    '/projects/:id',
-    '/ambassadors',
-    '/creators/:username',
-    '/privacy_policy',
-    '/terms_of_use',
-    '/about',
-    '/challenge',
-    '/email-confirm',
-    '/password-reset-confirm',
-    '/session-expired'
-  ];
 
   const throttledFetchOptions = useMemo(
     () =>
@@ -249,15 +232,13 @@ function PageWrapper(props) {
 
       <Container className={classes.childrenContainer} maxWidth="lg">
         {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
-        {!props.auth?.token &&
-          !unprotectedRoutes.includes(props.match?.path) && (
-            <div style={{ minHeight: '80vh' }}>
-              <NotFoundPage />
-            </div>
-          )}
+        {!props.auth?.token && !props.global && (
+          <div style={{ minHeight: '80vh' }}>
+            <NotFoundPage />
+          </div>
+        )}
       </Container>
-      {!props.auth?.token &&
-        unprotectedRoutes.includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+      {!props.auth?.token && props.global && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
@@ -279,6 +260,7 @@ function PageWrapper(props) {
             >
               <TranslateIcon />
               <Select
+                variant="standard"
                 className={classes.languageSelectStyle}
                 value={props.i18n.language}
                 onChange={e => handleChangeLanguage({ e, props })}

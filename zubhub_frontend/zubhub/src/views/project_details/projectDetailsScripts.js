@@ -29,8 +29,7 @@ export const handleToggleDeleteProjectModal = state => {
  *
  * @todo - describe function's signature
  */
-export const isVideoFromGdrive = link =>
-  link.search('https://drive.google.com') !== -1 ? true : false;
+export const isVideoFromGdrive = link => (link.search('https://drive.google.com') !== -1 ? true : false);
 
 /**
  * @function deleteProject
@@ -45,7 +44,7 @@ export const deleteProject = (props, state) => {
         token: props.auth.token,
         id: state.project.id,
         t: props.t,
-        history: props.history,
+        navigate: props.navigate,
       })
       .catch(error => ({ delete_project_dialog_error: error.message }));
   } else {
@@ -60,10 +59,9 @@ export const deleteProject = (props, state) => {
  * @todo - describe function's signature
  */
 export const toggleSave = (e, props, id) => {
-
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props.toggleSave({
       id,
@@ -82,7 +80,7 @@ export const toggleSave = (e, props, id) => {
 export const toggleLike = (e, props, id) => {
   e.preventDefault();
   if (!props.auth.token) {
-    return props.history.push('/login');
+    return props.navigate('/login');
   } else {
     return props.toggleLike({ id, token: props.auth.token, t: props.t });
   }
@@ -97,18 +95,16 @@ export const toggleLike = (e, props, id) => {
 export const toggleFollow = (e, props, id, state) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
-    return props
-      .toggleFollow({ id, token: props.auth.token, t: props.t })
-      .then(({ profile }) => {
-        const { project } = state;
-        if (project.creator.id === profile.id) {
-          project.creator = profile;
-        }
+    return props.toggleFollow({ id, token: props.auth.token, t: props.t }).then(({ profile }) => {
+      const { project } = state;
+      if (project.creator.id === profile.id) {
+        project.creator = profile;
+      }
 
-        return { project };
-      });
+      return { project };
+    });
   }
 };
 
@@ -118,8 +114,7 @@ export const toggleFollow = (e, props, id, state) => {
  *
  * @todo - describe function's signature
  */
-export const isCloudinaryVideo = url =>
-  url.search('cloudinary.com') > -1 ? true : false;
+export const isCloudinaryVideo = url => (url.search('cloudinary.com') > -1 ? true : false);
 
 /**
  * @function isGdriveORVimeoORYoutube
@@ -139,15 +134,15 @@ export const isGdriveORVimeoORYoutube = url => {
   }
 };
 
-export const handleMobileShare = async (project) => {
+export const handleMobileShare = async project => {
   const shareData = {
     title: project.title,
-    text: "Check out this amazing Zubhub project! ",
-    url: ""
-  }
+    text: 'Check out this amazing Zubhub project! ',
+    url: '',
+  };
   try {
     await navigator.share(shareData);
   } catch (err) {
-    toast.warning("Failed to share project.");
+    toast.warning('Failed to share project.');
   }
-}
+};

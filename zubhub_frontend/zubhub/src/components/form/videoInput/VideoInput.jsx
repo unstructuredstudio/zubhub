@@ -1,5 +1,6 @@
-import { Box, CardMedia, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
-import { ClearRounded, CloudUploadOutlined } from '@material-ui/icons';
+import { Box, CardMedia, FormControl, TextField, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { ClearRounded, CloudUploadOutlined } from '@mui/icons-material';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { useRef } from 'react';

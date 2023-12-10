@@ -1,4 +1,5 @@
-import { Dialog, makeStyles } from '@material-ui/core';
+import { Dialog } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import React from 'react';
 import styles from '../../assets/js/styles';
 import { modalStyles } from './modal.styles';
@@ -22,7 +23,7 @@ Modal.WithIcon = ({ open, onClose = () => {}, children, icon }) => {
       maxWidth="xs"
       open={open}
       onClose={onClose}
-      PaperProps={{className: classes.dialogPaper}}
+      PaperProps={{ className: classes.dialogPaper }}
     >
       <div style={{ display: 'flex', justifyContent: 'end' }}>
         <div className={classes.successDialogHeaderIcon}>{icon}</div>

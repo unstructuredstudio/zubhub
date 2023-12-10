@@ -1,12 +1,7 @@
 import { nanoid } from 'nanoid';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import {
-  s3 as DO,
-  doConfig,
-  Compress,
-  slugify,
-} from '../../assets/js/utils/scripts';
+import { s3 as DO, doConfig, Compress, slugify } from '../../assets/js/utils/scripts';
 import worker from 'workerize-loader!../../assets/js/removeMetaDataWorker'; // eslint-disable-line import/no-webpack-loader-syntax
 import { site_mode, publish_type } from '../../assets/js/utils/constants';
 import API from '../../api';
@@ -216,18 +211,18 @@ export const handleSuggestTags = (e, props, state, handleSetState) => {
 
 export const searchTags = (value, callBack) => {
   clearTimeout(vars.timer.id);
-  const api = new API()
+  const api = new API();
   if (value !== '') {
     vars.timer.id = setTimeout(async () => {
       try {
-        const res = await api.suggestTags(value)
+        const res = await api.suggestTags(value);
         callBack(undefined, res);
       } catch (error) {
         callBack(error);
       }
     }, 500);
   }
-}
+};
 
 /**
  * @function suggestTags
@@ -276,11 +271,9 @@ export const removeTag = (_, props, value) => {
  * @todo - describe function's signature
  */
 export const handleImageFieldChange = (refs, props, state, handleSetState) => {
-  refs.image_count_el.current.innerText = `${refs.image_el.current.files.length
-    } ${props.t(
-      `createProject.inputs.${refs.image_el.current.files.length < 2 ? 'image' : 'images'
-      }`,
-    )}`;
+  refs.image_count_el.current.innerText = `${refs.image_el.current.files.length} ${props.t(
+    `createProject.inputs.${refs.image_el.current.files.length < 2 ? 'image' : 'images'}`,
+  )}`;
   console.log('image uploaded', refs.image_el.current.files);
   props.setFieldValue('project_images', refs.image_el.current).then(errors => {
     if (!errors['project_images']) {
@@ -348,8 +341,7 @@ export const handleAddTags = (e, props, add_tags_el) => {
   let tags = props.values['tags'];
   tags = tags ? JSON.parse(tags) : [];
 
-  const exists =
-    tags.filter(tag => tag.name === value[0]).length > 0 ? true : false;
+  const exists = tags.filter(tag => tag.name === value[0]).length > 0 ? true : false;
 
   if (!exists && value.length > 1 && value[0] && !(tags.length >= 5)) {
     tags.push({ name: value[0] });
@@ -456,10 +448,7 @@ export const handleAddPublishVisibleTo = (e, props, publish_visible_to_el) => {
   value[0] = value[0].trim();
   let publish = props.values['publish'];
 
-  const exists =
-    publish.visible_to.filter(username => username === value[0]).length > 0
-      ? true
-      : false;
+  const exists = publish.visible_to.filter(username => username === value[0]).length > 0 ? true : false;
 
   if (!exists && value.length > 1 && value[0]) {
     publish.visible_to.push(value[0]);
@@ -484,12 +473,7 @@ export const handleAddPublishVisibleTo = (e, props, publish_visible_to_el) => {
  *
  * @todo - describe function's signature
  */
-export const handleSuggestPublishVisibleTo = (
-  e,
-  props,
-  state,
-  handleSetState,
-) => {
+export const handleSuggestPublishVisibleTo = (e, props, state, handleSetState) => {
   clearTimeout(vars.timer.id);
   const value = e.currentTarget.value;
 
@@ -593,7 +577,7 @@ export const initUpload = (e, state, props, handleSetState) => {
   e.preventDefault();
 
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     props.setFieldTouched('title');
     props.setFieldTouched('description');
@@ -620,12 +604,8 @@ export const initUpload = (e, state, props, handleSetState) => {
       ) {
         return;
       } else if (
-        (state.media_upload.uploaded_images_url.length !== 0 ||
-          state.media_upload.uploaded_videos_url.length !== 0) &&
-        !(
-          state.media_upload.images_to_upload.length !== 0 ||
-          state.media_upload.videos_to_upload.length !== 0
-        )
+        (state.media_upload.uploaded_images_url.length !== 0 || state.media_upload.uploaded_videos_url.length !== 0) &&
+        !(state.media_upload.images_to_upload.length !== 0 || state.media_upload.videos_to_upload.length !== 0)
       ) {
         vars.upload_in_progress = true;
         uploadProject(state, props, handleSetState);
@@ -643,35 +623,13 @@ export const initUpload = (e, state, props, handleSetState) => {
         const promises = [];
 
         // upload images
-        for (
-          let index = 0;
-          index < state.media_upload.images_to_upload.length;
-          index++
-        ) {
-          promises.push(
-            uploadImage(
-              state.media_upload.images_to_upload[index],
-              state,
-              props,
-              handleSetState,
-            ),
-          );
+        for (let index = 0; index < state.media_upload.images_to_upload.length; index++) {
+          promises.push(uploadImage(state.media_upload.images_to_upload[index], state, props, handleSetState));
         }
 
         // upload videos
-        for (
-          let index = 0;
-          index < state.media_upload.videos_to_upload.length;
-          index++
-        ) {
-          promises.push(
-            uploadVideo(
-              state.media_upload.videos_to_upload[index],
-              state,
-              props,
-              handleSetState,
-            ),
-          );
+        for (let index = 0; index < state.media_upload.videos_to_upload.length; index++) {
+          promises.push(uploadVideo(state.media_upload.videos_to_upload[index], state, props, handleSetState));
         }
 
         // wait for all image and video promises to resolve before continuing
@@ -727,23 +685,19 @@ export const uploadProject = async (state, props, handleSetState) => {
     .filter(value => (value ? true : false))
     .join(',');
 
-  const tags = props.values['tags']
-    ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false))
-    : [];
+  const tags = props.values['tags'] ? JSON.parse(props.values['tags']).filter(tag => (tag.name ? true : false)) : [];
 
-  const create_or_update = props.match.params.id ? props.updateProject : props.createProject;
+  const create_or_update = props.params.id ? props.updateProject : props.createProject;
 
   create_or_update({
     ...props.values,
     materials_used,
     tags,
-    id: props.match.params.id,
+    id: props.params.id,
     token: props.auth.token,
     activity: props.location.state?.activity_id,
     images: state.media_upload.uploaded_images_url,
-    video: state.media_upload.uploaded_videos_url[0]
-      ? state.media_upload.uploaded_videos_url[0]
-      : '',
+    video: state.media_upload.uploaded_videos_url[0] ? state.media_upload.uploaded_videos_url[0] : '',
     category: props.values.category,
     t: props.t,
   })
@@ -785,9 +739,7 @@ export const uploadProject = async (state, props, handleSetState) => {
 export const uploadVideo = (video, state, props, handleSetState) => {
   if (
     typeof video === 'string' &&
-    video.match(
-      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
-    )
+    video.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g)
   ) {
     return new Promise(r => r({ secure_url: video }));
   } else {
@@ -828,16 +780,7 @@ export const uploadVideoToLocal = (video, state, props, handleSetState) => {
   formData.append('key', key);
 
   return new Promise((resolve, reject) => {
-    const um = new UploadMedia(
-      'video',
-      url,
-      formData,
-      state,
-      props,
-      handleSetState,
-      resolve,
-      reject,
-    );
+    const um = new UploadMedia('video', url, formData, state, props, handleSetState, resolve, reject);
     um.upload();
   });
 };
@@ -848,12 +791,7 @@ export const uploadVideoToLocal = (video, state, props, handleSetState) => {
  *
  * @todo - describe function's signature
  */
-export const uploadVideoToCloudinary = (
-  video,
-  state,
-  props,
-  handleSetState,
-) => {
+export const uploadVideoToCloudinary = (video, state, props, handleSetState) => {
   const url = process.env.REACT_APP_VIDEO_UPLOAD_URL;
 
   const upload_preset =
@@ -880,16 +818,7 @@ export const uploadVideoToCloudinary = (
       formData.append('signature', sig_res.signature);
 
       return new Promise((resolve, reject) => {
-        const um = new UploadMedia(
-          'video',
-          url,
-          formData,
-          state,
-          props,
-          handleSetState,
-          resolve,
-          reject,
-        );
+        const um = new UploadMedia('video', url, formData, state, props, handleSetState, resolve, reject);
         um.upload();
       });
     } else {
@@ -936,16 +865,7 @@ export const uploadImageToLocal = (image, state, props, handleSetState) => {
   formData.append('file', image);
   formData.append('key', `project_images/${nanoid()}`);
   return new Promise((resolve, reject) => {
-    const um = new UploadMedia(
-      'image',
-      url,
-      formData,
-      state,
-      props,
-      handleSetState,
-      resolve,
-      reject,
-    );
+    const um = new UploadMedia('image', url, formData, state, props, handleSetState, resolve, reject);
     um.upload();
   });
 };
@@ -972,9 +892,7 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
       .on('httpUploadProgress', e => {
         const progress = Math.round((e.loaded * 100.0) / e.total);
         const { media_upload } = state;
-        const upload_info = JSON.parse(
-          JSON.stringify(media_upload.upload_info),
-        );
+        const upload_info = JSON.parse(JSON.stringify(media_upload.upload_info));
         upload_info[image.name] = progress;
 
         let total = 0;
@@ -1018,7 +936,7 @@ export const uploadImageToDO = (image, state, props, handleSetState) => {
 export const getProject = (refs, props, state) => {
   return props
     .getProject({
-      id: props.match.params.id,
+      id: props.params.id,
       token: props.auth.token,
     })
     .then(obj => {
@@ -1038,19 +956,15 @@ export const getProject = (refs, props, state) => {
         }
 
         if (refs.video_selection_feedback_el.current && obj.project.video) {
-          refs.video_selection_feedback_el.current.innerText = `${props.t(
-            'createProject.inputs.videoURL',
-          )}`;
+          refs.video_selection_feedback_el.current.innerText = `${props.t('createProject.inputs.videoURL')}`;
 
           props.setFieldValue('video', obj.project.video, true);
         }
 
         if (refs.image_count_el.current && obj.project.images.length > 0) {
-          refs.image_count_el.current.innerText = `${obj.project.images.length
-            } ${props.t(
-              `createProject.inputs.${obj.project.images.length < 2 ? 'image' : 'images'
-              }`,
-            )}`;
+          refs.image_count_el.current.innerText = `${obj.project.images.length} ${props.t(
+            `createProject.inputs.${obj.project.images.length < 2 ? 'image' : 'images'}`,
+          )}`;
 
           const files = obj.project.images.map(url => ({
             name: url,
@@ -1062,11 +976,7 @@ export const getProject = (refs, props, state) => {
         }
 
         if (refs.add_materials_used_el.current && obj.project.materials_used) {
-          props.setFieldValue(
-            'materials_used',
-            obj.project.materials_used,
-            true,
-          );
+          props.setFieldValue('materials_used', obj.project.materials_used, true);
         }
 
         if (obj.project.category) {
@@ -1080,17 +990,13 @@ export const getProject = (refs, props, state) => {
         if (refs.publish_type_el.current && obj.project.publish) {
           const publish = {
             type: obj.project.publish.type,
-            visible_to: obj.project.publish.visible_to.map(
-              creator => creator.username,
-            ),
+            visible_to: obj.project.publish.visible_to.map(creator => creator.username),
           };
           props.setFieldValue('publish', publish, true);
         }
 
         media_upload.uploaded_images_url = obj.project.images;
-        media_upload.uploaded_videos_url = obj.project.video
-          ? [obj.project.video]
-          : [];
+        media_upload.uploaded_videos_url = obj.project.video ? [obj.project.video] : [];
 
         return {
           loading: false,
@@ -1131,26 +1037,17 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
 
   props.setStatus({ ...props.status, video: '' });
 
-  return props
-    .setFieldValue(
-      'video',
-      type === 'videoFile' ? video_node : video_node.value,
-    )
-    .then(errors => {
-      if (!errors['video']) {
-        const { media_upload } = state;
-        media_upload.videos_to_upload = [
-          type === 'videoFile' ? video_node.files[0] : video_node.value,
-        ];
-        refs.video_selection_feedback_el.current.innerText = props.t(
-          `createProject.inputs.${type}`,
-        );
-        return { media_upload };
-      } else {
-        refs.video_selection_feedback_el.current.innerText = '';
-        return {};
-      }
-    });
+  return props.setFieldValue('video', type === 'videoFile' ? video_node : video_node.value).then(errors => {
+    if (!errors['video']) {
+      const { media_upload } = state;
+      media_upload.videos_to_upload = [type === 'videoFile' ? video_node.files[0] : video_node.value];
+      refs.video_selection_feedback_el.current.innerText = props.t(`createProject.inputs.${type}`);
+      return { media_upload };
+    } else {
+      refs.video_selection_feedback_el.current.innerText = '';
+      return {};
+    }
+  });
 };
 
 /**
@@ -1162,19 +1059,13 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
 export const checkMediaFilesErrorState = (refs, props) => {
   if (props.auth.token) {
     if (props.touched['project_images'] && props.errors['project_images']) {
-      refs.image_upload_button_el.current.setAttribute(
-        'style',
-        'border-color:#F54336; color:#F54336',
-      );
+      refs.image_upload_button_el.current.setAttribute('style', 'border-color:#F54336; color:#F54336');
     } else {
       refs.image_upload_button_el.current.classList.add(ImageUploadButton);
     }
 
     if (props.touched['video'] && props.errors['video']) {
-      refs.video_upload_button_el.current.setAttribute(
-        'style',
-        'border-color:#F54336; color:#F54336',
-      );
+      refs.video_upload_button_el.current.setAttribute('style', 'border-color:#F54336; color:#F54336');
     } else {
       refs.video_upload_button_el.current.classList.add(ImageUploadButton);
     }
@@ -1205,9 +1096,7 @@ export const validationSchema = Yup.object().shape({
   description: Yup.string().max(10000, 'max').required('required'),
   project_images: Yup.mixed()
     .test('image_is_empty', 'imageOrVideo', function (value) {
-      return vars.image_field_touched && !value && !this.parent.video
-        ? false
-        : true;
+      return vars.image_field_touched && !value && !this.parent.video ? false : true;
     })
     .test('not_an_image', 'onlyImages', value => {
       if (value) {
@@ -1367,16 +1256,7 @@ export const validationSchema = Yup.object().shape({
  * @todo - describe function's signature
  */
 export class UploadMedia {
-  constructor(
-    type,
-    url,
-    formData,
-    state,
-    props,
-    handleSetState,
-    resolve,
-    reject,
-  ) {
+  constructor(type, url, formData, state, props, handleSetState, resolve, reject) {
     this.xhr = new XMLHttpRequest();
     this.type = type;
     this.url = url;
@@ -1400,19 +1280,11 @@ export class UploadMedia {
   };
 
   onReadyStateChange = () => {
-    if (
-      this.xhr.status === 200 &&
-      this.xhr.readyState === 4 &&
-      this.type === 'video'
-    ) {
+    if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === 'video') {
       const data = JSON.parse(this.xhr.response);
       const secure_url = data.secure_url;
       this.resolve({ secure_url });
-    } else if (
-      this.xhr.status === 200 &&
-      this.xhr.readyState === 4 &&
-      this.type === 'image'
-    ) {
+    } else if (this.xhr.status === 200 && this.xhr.readyState === 4 && this.type === 'image') {
       const data = JSON.parse(this.xhr.response);
       const secure_url = data.Location;
       const public_id = data.Key;
@@ -1455,10 +1327,7 @@ export class UploadMedia {
     if (!this.url.startsWith(process.env.REACT_APP_VIDEO_UPLOAD_URL)) {
       this.xhr.xsrfCookieName = 'csrftoken';
       this.xhr.xsrfHeaderName = 'X-CSRFToken';
-      this.xhr.setRequestHeader(
-        'Authorization',
-        `Token ${this.props.auth.token}`,
-      );
+      this.xhr.setRequestHeader('Authorization', `Token ${this.props.auth.token}`);
       this.xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     }
 

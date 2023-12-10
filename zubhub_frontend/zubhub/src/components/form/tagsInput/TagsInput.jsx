@@ -1,7 +1,8 @@
-import { Box, ClickAwayListener, FormControl, FormHelperText, Typography, makeStyles } from '@material-ui/core';
-import { Add, ClearRounded } from '@material-ui/icons';
+import { Box, ClickAwayListener, FormControl, FormHelperText, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Add, ClearRounded } from '@mui/icons-material';
 import clsx from 'clsx';
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../../../assets/js/styles';
 import CustomButton from '../../button/Button';
@@ -31,53 +32,65 @@ export default function TagsInput({
   const classes = makeStyles(tagsInputStyles)();
   const [isSearching, setIsSearching] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const selectedTags = [...(initialSelectedTags ?? [])];
+  const selectedTags = useMemo(() => [...(initialSelectedTags ?? [])], [initialSelectedTags]);
   const ref = useRef(null);
 
-  const validateTag = useCallback((tag, selectedTags) => {
-    const trimmedTag = tag.trim();
-    if (trimmedTag === '') {
-      return [t('pageWrapper.errors.tagCannotBeEmpty'), false];
-    } else if (selectedTags.includes(trimmedTag)) {
-      return [t('pageWrapper.errors.tagAlreadyInSearch', { tagName: trimmedTag }), false];
-    } else {
-      return ['', true];
-    }
-  }, [t]);
+  const validateTag = useCallback(
+    (tag, selectedTags) => {
+      const trimmedTag = tag.trim();
+      if (trimmedTag === '') {
+        return [t('pageWrapper.errors.tagCannotBeEmpty'), false];
+      } else if (selectedTags.includes(trimmedTag)) {
+        return [t('pageWrapper.errors.tagAlreadyInSearch', { tagName: trimmedTag }), false];
+      } else {
+        return ['', true];
+      }
+    },
+    [t],
+  );
 
-  const handleTagAddition = useCallback((value) => {
-    const [errMsg, isValid] = validateTag(value, selectedTags);
-    setErrorMessage(errMsg);
-    if (isValid) {
-      addTag(value);
-      setIsSearching(false);
-      setErrorMessage('');
-    }
-  }, [addTag, selectedTags, validateTag]);
-
-  const handleChange = useCallback((e) => {
-    const inputValue = e.target.value.trim();
-    const [errMsg, isValid] = validateTag(inputValue, selectedTags);
-    setIsSearching(isValid);
-    setErrorMessage(errMsg);
-    if (isValid) {
-      onChange(inputValue);
-    }
-  }, [onChange, selectedTags, validateTag]);
-
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter') {
-      const inputValue = ref.current.value.trim();
-      const [errMsg, isValid] = validateTag(inputValue, selectedTags);
+  const handleTagAddition = useCallback(
+    value => {
+      const [errMsg, isValid] = validateTag(value, selectedTags);
       setErrorMessage(errMsg);
       if (isValid) {
-        addTag(inputValue);
+        addTag(value);
         setIsSearching(false);
         setErrorMessage('');
-        ref.current.value = '';
       }
-    }
-  }, [addTag, selectedTags, validateTag]);
+    },
+    [addTag, selectedTags, validateTag],
+  );
+
+  const handleChange = useCallback(
+    e => {
+      const inputValue = e.target.value.trim();
+      const [errMsg, isValid] = validateTag(inputValue, selectedTags);
+      setIsSearching(isValid);
+      setErrorMessage(errMsg);
+      if (isValid) {
+        onChange(inputValue);
+      }
+    },
+    [onChange, selectedTags, validateTag],
+  );
+
+  const handleKeyDown = useCallback(
+    e => {
+      if (e.key === 'Enter') {
+        const inputValue = ref.current.value.trim();
+        const [errMsg, isValid] = validateTag(inputValue, selectedTags);
+        setErrorMessage(errMsg);
+        if (isValid) {
+          addTag(inputValue);
+          setIsSearching(false);
+          setErrorMessage('');
+          ref.current.value = '';
+        }
+      }
+    },
+    [addTag, selectedTags, validateTag],
+  );
 
   const handleClickAway = useCallback(() => {
     const inputValue = ref.current.value.trim();
@@ -96,8 +109,8 @@ export default function TagsInput({
       }
     }
   }, [t, addTag, remoteData, selectedTags]);
-  
-  const onSelectedTagClick = useCallback((index) => removeTag(index), [removeTag]);
+
+  const onSelectedTagClick = useCallback(index => removeTag(index), [removeTag]);
 
   return (
     <FormControl fullWidth>
@@ -137,13 +150,15 @@ export default function TagsInput({
           <Box className={classes.suggestionBox}>
             <ClickAwayListener onClickAway={handleClickAway}>
               <Box>
-                {remoteData.length > 0
-                  ? remoteData.map((tag, index) => (
-                      <Box key={index} onClick={() => handleTagAddition(tag.name)} className={classes.suggestion}>
-                        <Typography>{tag.name}</Typography>
-                      </Box>
-                    ))
-                  : <p>Item not found: Hit Enter to Save your Input</p>}
+                {remoteData.length > 0 ? (
+                  remoteData.map((tag, index) => (
+                    <Box key={index} onClick={() => handleTagAddition(tag.name)} className={classes.suggestion}>
+                      <Typography>{tag.name}</Typography>
+                    </Box>
+                  ))
+                ) : (
+                  <p>Item not found: Hit Enter to Save your Input</p>
+                )}
               </Box>
             </ClickAwayListener>
           </Box>
@@ -156,7 +171,11 @@ export default function TagsInput({
           <CustomButton
             onClick={() => handleTagAddition(tag)}
             disabled={selectedTags.includes(tag)}
-            className={clsx(classes.button, selectedTags.includes(tag) && classes.disabledButton, tag === 'General' && classes.generalTag)}
+            className={clsx(
+              classes.button,
+              selectedTags.includes(tag) && classes.disabledButton,
+              tag === 'General' && classes.generalTag,
+            )}
             key={index}
             startIcon={<Add />}
           >

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../../assets/js/colors';
 import FormLabel from '../../form_labels/formLabel';
-import { Checkbox, FormControl, FormHelperText, Grid, Typography, makeStyles } from '@material-ui/core';
+import { Checkbox, FormControl, FormHelperText, Grid, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import styles from '../../../assets/js/styles';
 import { selectFromPillsStyles } from './selectFromPills.styles';
 import _ from 'lodash';

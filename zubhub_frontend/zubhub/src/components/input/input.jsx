@@ -1,45 +1,15 @@
 import React from 'react';
 import clsx from 'clsx';
-import {
-  FormControl,
-  OutlinedInput,
-  FormHelperText,
-  InputLabel,
-  TextField,
-} from '@material-ui/core';
+import { FormControl, OutlinedInput, FormHelperText, InputLabel, TextField } from '@mui/material';
 import { handleInputBlur, handleInputChange } from './inputScripts';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
-import {
-  getValue,
-  getErrors,
-} from '../../views/create_activity/createActivityScripts';
+import { getValue, getErrors } from '../../views/create_activity/createActivityScripts';
 
 function Input(props) {
-  const {
-    label,
-    multiline,
-    name,
-    classes,
-    fieldType,
-    formikProps,
-    validateSteps,
-    disabled,
-  } = props;
+  const { label, multiline, name, classes, fieldType, formikProps, validateSteps, disabled } = props;
   const { route, field, index } = getRouteFieldIndex(name);
-  let fieldErrors = getErrors(
-    route,
-    field,
-    index,
-    formikProps.errors,
-    formikProps.touched,
-  );
-  let fieldValue = getValue(
-    route,
-    field,
-    index,
-    fieldType,
-    formikProps.formikValues,
-  );
+  let fieldErrors = getErrors(route, field, index, formikProps.errors, formikProps.touched);
+  let fieldValue = getValue(route, field, index, fieldType, formikProps.formikValues);
 
   return (
     <div>
@@ -62,19 +32,10 @@ function Input(props) {
           multiline={multiline ? multiline : false}
           disabled={disabled ? disabled : false}
           type="text"
-          value={
-            name === 'video'
-              ? fieldValue && fieldValue['file_url'] && fieldValue['file_url']
-              : fieldValue
-          }
+          value={name === 'video' ? fieldValue && fieldValue['file_url'] && fieldValue['file_url'] : fieldValue}
           onBlur={e => handleInputBlur(e, name, formikProps, validateSteps)}
           onChange={e =>
-            handleInputChange(
-              name,
-              e.target.value,
-              formikProps.setFieldValue,
-              formikProps.setFieldTouched,
-            )
+            handleInputChange(name, e.target.value, formikProps.setFieldValue, formikProps.setFieldTouched)
           }
         />
 
@@ -82,11 +43,7 @@ function Input(props) {
           {fieldErrors &&
             fieldErrors !== 'required1' &&
             field !== 'video' &&
-            props.t(
-              `createActivity.inputs.${
-                route ? route : field
-              }.errors.${fieldErrors}`,
-            )}
+            props.t(`createActivity.inputs.${route ? route : field}.errors.${fieldErrors}`)}
         </FormHelperText>
       </FormControl>
     </div>

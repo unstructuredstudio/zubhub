@@ -1,5 +1,5 @@
-import { Box, Checkbox, FormControl, TextField, Typography, makeStyles } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Box, Checkbox, FormControl, TextField, Typography, Autocomplete } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import { colors } from '../../../assets/js/colors';
@@ -35,19 +35,21 @@ export default function Dropdown({
     value = valueTemp;
   }
 
-  const labelView = (props, ...rest) => {
-    const color = rest[0].selected ? colors.primary : colors.light;
-    const checked = rest[0].selected;
+  const labelView = (props, option, { selected }) => {
+    const color = selected ? colors.primary : colors.light;
+    const checked = selected;
     return (
-      <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: 15, alignItems: 'center' }} {...props}>
-        {multiple && withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
-        {!multiple ? (
-          <div className={clsx(classes.radio, checked && classes.activeRadio)}>
-            <div></div>
-          </div>
-        ) : null}
-        <Typography style={{ fontWeight: '500' }}>{props.name}</Typography>
-      </Box>
+      <li {...props}>
+        <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: '15px', alignItems: 'center' }} {...props}>
+          {multiple && withCheckbox ? <Checkbox checked={checked} style={{ color }} /> : null}
+          {!multiple ? (
+            <div className={clsx(classes.radio, checked && classes.activeRadio)}>
+              <div></div>
+            </div>
+          ) : null}
+          <Typography style={{ fontWeight: '500' }}>{option.name}</Typography>
+        </Box>
+      </li>
     );
   };
 
@@ -67,8 +69,8 @@ export default function Dropdown({
   );
 
   const getOptionSelected = option => {
-    if (typeof maxSelection === 'number' && value?.length == maxSelection) {
-      return value.findIndex(item => item.id === option.id) == -1;
+    if (typeof maxSelection === 'number' && value?.length === maxSelection) {
+      return value.findIndex(item => item.id === option.id) === -1;
     }
   };
 
@@ -94,7 +96,7 @@ export default function Dropdown({
         getOptionLabel={option => option?.name || ''}
         renderOption={labelView}
         renderInput={inputView}
-        getOptionSelected={(option, value) => option.id === value.id} // Customize the equality test
+        isOptionEqualToValue={(option, value) => option.id === value.id} // Customize the equality test
         {...(maxSelection && { getOptionDisabled: getOptionSelected })}
       />
     </FormControl>

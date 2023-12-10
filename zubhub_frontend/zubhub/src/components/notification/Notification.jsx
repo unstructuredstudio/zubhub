@@ -1,18 +1,12 @@
 import React from 'react';
 import styles from '../../assets/js/styles/components/notification/NotificationStyles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 import API from '../../api/api';
-import {
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
-} from '@material-ui/core';
-import { AvatarGroup } from '@material-ui/lab';
+import { ListItem, ListItemAvatar, ListItemText, Avatar, AvatarGroup } from '@mui/material';
 import { dFormatter } from '../../assets/js/utils/scripts';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(styles);
 const Notification = ({ notification, onNotificationClick }) => {
@@ -43,22 +37,13 @@ const Notification = ({ notification, onNotificationClick }) => {
         <ListItemAvatar>
           {notification.sources.length === 1 && (
             <AvatarGroup className={classes.group}>
-              <Avatar
-                className={classes.image}
-                src={notification.sources[0].avatar}
-              />
+              <Avatar className={classes.image} src={notification.sources[0].avatar} />
             </AvatarGroup>
           )}
           {notification.sources.length > 1 && (
             <AvatarGroup className={classes.group}>
-              <Avatar
-                className={classes.firstImage}
-                src={notification.sources[0].avatar}
-              />
-              <Avatar
-                className={classes.secondImage}
-                src={notification.sources[1].avatar}
-              />
+              <Avatar className={classes.firstImage} src={notification.sources[0].avatar} />
+              <Avatar className={classes.secondImage} src={notification.sources[1].avatar} />
             </AvatarGroup>
           )}
         </ListItemAvatar>

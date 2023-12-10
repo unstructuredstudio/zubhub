@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, Container, Card, Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, Container, Card, Typography } from '@mui/material';
 
 import * as UserActions from '../../store/actions/userActions';
 import LoadingPage from '../loading/LoadingPage';
@@ -48,9 +48,7 @@ function TermsOfUse(props) {
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
-            <Typography className={classes.termsOfUseHeadingStyle}>
-              {t('termsOfUse.title')}
-            </Typography>
+            <Typography className={classes.termsOfUseHeadingStyle}>{t('termsOfUse.title')}</Typography>
             <Box
               className={classes.termsOfUseBodyStyle}
               dangerouslySetInnerHTML={{ __html: privacy.terms_of_use }}

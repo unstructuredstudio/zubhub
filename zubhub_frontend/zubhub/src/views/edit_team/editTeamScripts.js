@@ -6,17 +6,19 @@ import * as Yup from 'yup';
  *
  * @todo - describe function's signature
  */ export const getTeamProfile = (groupname, refs, props) => {
-  return props.getTeamProfile({
-    groupname,
-    token: props.auth.token
-  }).then(obj => {
-    if (refs.groupname_el.current && obj.groupname) {
-      props.setFieldValue('groupname', obj.groupname);
-    }
-    if (refs.description_el.current && obj.description) {
-      props.setFieldValue('description', obj.description);
-    }
-  })
+  return props
+    .getTeamProfile({
+      groupname,
+      token: props.auth.token,
+    })
+    .then(obj => {
+      if (refs.groupname_el.current && obj.groupname) {
+        props.setFieldValue('groupname', obj.groupname);
+      }
+      if (refs.description_el.current && obj.description) {
+        props.setFieldValue('description', obj.description);
+      }
+    });
 };
 
 /**
@@ -50,14 +52,13 @@ export const handleMouseDownPassword = e => {
   e.preventDefault();
 };
 
-
 /**
  * @function handleToggleDeleteAccountModal
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
- export const handleToggleDeleteAccountModal = state => {
+export const handleToggleDeleteAccountModal = state => {
   const open_delete_account_modal = !state.open_delete_account_modal;
   return { open_delete_account_modal, more_anchor_el: null };
 };
@@ -68,17 +69,15 @@ export const handleMouseDownPassword = e => {
  *
  * @todo - describe function's signature
  */
- export const deleteAccount = (groupname, props, state) => {
-    return props.deleteTeam({
-      token: props.auth.token,
-      history: props.history,
-      logout: props.logout,
-      t: props.t,
-      groupname: groupname,
-    });
-  }
-
-
+export const deleteAccount = (groupname, props, state) => {
+  return props.deleteTeam({
+    token: props.auth.token,
+    navigate: props.navigate,
+    logout: props.logout,
+    t: props.t,
+    groupname: groupname,
+  });
+};
 
 /**
  * @function editProfile
@@ -88,7 +87,7 @@ export const handleMouseDownPassword = e => {
  */
 export const editProfile = (e, groupname, props) => {
   e.preventDefault();
-  props.setFieldTouched('groupname', true)
+  props.setFieldTouched('groupname', true);
   if (props.values.groupname.length < 1) {
     props.validateField('groupname');
   } else {
@@ -96,11 +95,9 @@ export const editProfile = (e, groupname, props) => {
       groupname: props.values.groupname,
       description: props.values.description,
     };
-    return props
-      .editTeam({ groupname, data, token: props.auth.token })
-      .then(_ => {
-        props.history.push(`/teams/${props.values.groupname}`)
-      })
+    return props.editTeam({ groupname, data, token: props.auth.token }).then(_ => {
+      props.navigate(`/teams/${props.values.groupname}`);
+    });
   }
 };
 

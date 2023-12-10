@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   CircularProgress,
@@ -9,9 +10,8 @@ import {
   Grid,
   Link,
   Typography,
-  makeStyles,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { CustomButton, Modal, PreviewActivity, TagsInput } from '../../components';
 import StepWizard from 'react-step-wizard';
@@ -22,7 +22,7 @@ import {
   CloudDoneOutlined,
   DoneRounded,
   KeyboardBackspaceRounded,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { createActivityStyles } from './CreateActivity.styles';
 import clsx from 'clsx';
@@ -72,7 +72,7 @@ export default function CreateActivity(props) {
 
   useEffect(() => {
     if (firstRender) {
-      if (props.match.params.id) {
+      if (props.params.id) {
         setIsLoading(true);
         script
           .getActivity({ ...props, auth, formikStep1, formikStep2 }, state)
@@ -122,7 +122,7 @@ export default function CreateActivity(props) {
       success => {
         if (success) {
           if (activeStep == 1) go('next');
-          if (activeStep == 2) props.history.push(`/activities/${props.match.params.id}?success=true`);
+          if (activeStep == 2) props.navigate(`/activities/${props.params.id}?success=true`);
           setIsLoading(false);
         }
       },

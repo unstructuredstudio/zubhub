@@ -1,11 +1,12 @@
-import { Box, ClickAwayListener, FormHelperText, Typography, makeStyles } from '@material-ui/core';
+import { Box, ClickAwayListener, FormHelperText, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import {
   DescriptionOutlined,
   FileCopyOutlined,
   FormatBoldOutlined,
   FormatItalicOutlined,
   FormatUnderlinedOutlined,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import React, { memo, useMemo, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { editorStyle } from './editor.style';

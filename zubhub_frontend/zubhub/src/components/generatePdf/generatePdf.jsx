@@ -139,10 +139,7 @@ function GeneratePdf(props) {
         newContent.push(getPdfInspiringPerson(activity, promiseImages));
       }
 
-      if (
-        activity['inspiring_examples'] &&
-        activity['inspiring_examples'].length > 0
-      ) {
+      if (activity['inspiring_examples'] && activity['inspiring_examples'].length > 0) {
         newContent.push(getPdfInspiringExamples(activity, promiseImages));
       }
 
@@ -186,13 +183,7 @@ function GeneratePdf(props) {
   };
 
   return (
-    <CustomButton
-      variant="contained"
-      primaryButtonStyle
-      primaryButtonStyle3
-      fullWidth
-      onClick={e => create()}
-    >
+    <CustomButton variant="contained" primaryButtonStyle primaryButtonStyle3 fullWidth onClick={e => create()}>
       {t('activityDetails.activity.pdf')}
     </CustomButton>
   );

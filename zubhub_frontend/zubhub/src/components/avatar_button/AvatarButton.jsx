@@ -1,13 +1,12 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import React, { useRef, useState } from 'react';
-import commonStyles from '../../assets/js/styles/index';
-import { Avatar, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import HamburgerMenu from '../hamburger_menu/HamburgerMenu';
-import PanelPopper from '../notification_panel/PanelPopper';
+import { useRef, useState } from 'react';
+import { Avatar, Typography, ClickAwayListener } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 import { styles } from './avatarButton.styles';
 import { colors } from '../../assets/js/colors';
+import HamburgerMenu from '../hamburger_menu/HamburgerMenu';
+import PanelPopper from '../notification_panel/PanelPopper';
+import commonStyles from '../../assets/js/styles/index';
 import CustomButton from '../button/Button';
 
 const AvatarButton = props => {
@@ -19,7 +18,7 @@ const AvatarButton = props => {
   const auth = useSelector(state => state.auth);
   const goToProfile = () => {
     if (window.location.pathname !== '/profile') {
-      props.history.push('/profile');
+      props.navigate('/profile');
     }
   };
 
@@ -35,13 +34,13 @@ const AvatarButton = props => {
   return (
     <ClickAwayListener onClickAway={oncloseSignUp}>
       <div>
-          <Avatar
-            ref={buttonRef}
-            onClick={onClickSignUp}
-            className={`${commonClasses.iconBox} ${auth.token && classes.avatarIconStyle}`}
-            alt={auth?.username?.toUpperCase()}
-            src={!auth.token ? "/static/images/avatar/1.jpg" : auth?.avatar}
-          />
+        <Avatar
+          ref={buttonRef}
+          onClick={onClickSignUp}
+          className={`${commonClasses.iconBox} ${auth.token && classes.avatarIconStyle}`}
+          alt={auth?.username?.toUpperCase()}
+          src={!auth.token ? '/static/images/avatar/1.jpg' : auth?.avatar}
+        />
         <PanelPopper open={dropdownOpen} anchorEl={buttonRef} signUpStyles={signupStyles}>
           <div className={classes.container}>
             <Avatar style={{ fontSize: 35, color: colors.primary, backgroundColor: colors.white }} />

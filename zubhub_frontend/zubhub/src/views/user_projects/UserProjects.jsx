@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
-import { Box, ButtonGroup, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { Box, ButtonGroup, Grid, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 import { fetchPage, updateProjects } from './userProjectsScripts';
 
@@ -54,7 +54,7 @@ function UserProjects(props) {
 
   const { results: projects, prev_page, next_page, loading } = state;
   const { t } = props;
-  const username = props.match.params.username;
+  const username = props.params.username;
   if (loading) {
     return <LoadingPage />;
   } else if (projects && projects.length > 0) {

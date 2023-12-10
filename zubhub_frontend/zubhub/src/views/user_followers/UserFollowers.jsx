@@ -5,18 +5,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Container,
-  Box,
-  Card,
-  ButtonGroup,
-  Typography,
-  Avatar,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Grid, Container, Box, Card, ButtonGroup, Typography, Avatar } from '@mui/material';
 
 import { fetchPage, toggleFollow } from './userFollowersScripts';
 
@@ -36,32 +28,14 @@ const useStyles = makeStyles(styles);
  */
 const buildFollowers = (followers, classes, props, state, handleSetState) =>
   followers.map(follower => (
-    <Grid
-      item
-      xs={12}
-      sm={6}
-      md={4}
-      lg={3}
-      className={classes.followersGridStyle}
-      align="center"
-      key={follower.id}
-    >
-      <Link
-        className={classes.textDecorationNone}
-        to={`/creators/${follower.username}`}
-      >
+    <Grid item xs={12} sm={6} md={4} lg={3} className={classes.followersGridStyle} align="center" key={follower.id}>
+      <Link className={classes.textDecorationNone} to={`/creators/${follower.username}`}>
         <Card className={classes.cardStyle}>
-          <Avatar
-            className={classes.avatarStyle}
-            src={follower.avatar}
-            alt={follower.username}
-          />
+          <Avatar className={classes.avatarStyle} src={follower.avatar} alt={follower.username} />
           {follower.id !== props.auth.id ? (
             <CustomButton
               variant="contained"
-              onClick={(e, id = follower.id) =>
-                handleSetState(toggleFollow(e, props, state, id, toast))
-              }
+              onClick={(e, id = follower.id) => handleSetState(toggleFollow(e, props, state, id, toast))}
               primaryButtonStyle
             >
               {follower.followers.includes(props.auth.id)
@@ -69,11 +43,7 @@ const buildFollowers = (followers, classes, props, state, handleSetState) =>
                 : props.t('userFollowers.follower.follow')}
             </CustomButton>
           ) : null}
-          <Typography
-            component="h3"
-            color="textPrimary"
-            className={classes.userNameStyle}
-          >
+          <Typography component="h3" color="textPrimary" className={classes.userNameStyle}>
             {follower.username}
           </Typography>
         </Card>
@@ -110,7 +80,7 @@ function UserFollowers(props) {
   };
 
   const { followers, prev_page, next_page, loading } = state;
-  const username = props.match.params.username;
+  const username = props.params.username;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
@@ -120,20 +90,13 @@ function UserFollowers(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container spacing={3} justify="center">
             <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
+              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
                 {username}'s {t('userFollowers.title')}
               </Typography>
             </Grid>
             {buildFollowers(followers, classes, props, state, handleSetState)}
           </Grid>
-          <ButtonGroup
-            aria-label={t('userFollowers.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
+          <ButtonGroup aria-label={t('userFollowers.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}

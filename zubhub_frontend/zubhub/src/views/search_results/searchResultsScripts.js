@@ -68,9 +68,7 @@ export const updateProjects = (res, { results: projects }, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
+        projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         return { results: projects };
       } else {
         res = Object.keys(res)
@@ -98,15 +96,13 @@ export const updateProjects = (res, { results: projects }, props, toast) => {
 export const toggleFollow = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props
       .toggleFollow({ id, token: props.auth.token, t: props.t })
       .then(res => {
         if (res.profile && res.profile.username) {
-          const results = state.results.map(creator =>
-            creator.id !== res.profile.id ? creator : res.profile,
-          );
+          const results = state.results.map(creator => (creator.id !== res.profile.id ? creator : res.profile));
           return { results };
         } else {
           res = Object.keys(res)

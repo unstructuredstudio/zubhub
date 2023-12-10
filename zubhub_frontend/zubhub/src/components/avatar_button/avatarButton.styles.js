@@ -8,7 +8,7 @@ export const styles = theme => ({
     color: colors.black,
     textAlign: 'center',
     alignItems: 'center',
-    gap: 15,
+    gap: '15px',
     [theme.breakpoints.up('600')]: {
       maxHeight: '450px',
     },
@@ -17,7 +17,7 @@ export const styles = theme => ({
       height: '86%',
     },
   },
-  avatarIconStyle:{
-    backgroundColor: 'white'
-  }
+  avatarIconStyle: {
+    backgroundColor: 'white',
+  },
 });

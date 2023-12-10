@@ -10,7 +10,8 @@ const styles = theme => ({
     [theme.breakpoints.down('740')]: {
       margin: '1em',
     },
-    borderRadius: 8, overflow: 'hidden'
+    borderRadius: 8,
+    overflow: 'hidden',
   },
 
   viewAllBtn: {
@@ -22,21 +23,21 @@ const styles = theme => ({
   },
 
   tabStyle: {
-      '&.Mui-selected': {
-        color: 'var(--primary-color3)',
-        fontWeight: 'bold',
-        backgroundColor: '#ffffff',
-      },
+    '&.Mui-selected': {
+      color: 'var(--primary-color3)',
+      fontWeight: 'bold',
+      backgroundColor: '#ffffff',
+    },
 
-      backgroundColor: 'var(--text-color3)',
-      width: '50%',
-      maxWidth: '50%',
+    backgroundColor: 'var(--text-color3)',
+    width: '50%',
+    maxWidth: '50%',
   },
 
   indicator: {
-    backgroundColor: "var(--primary-color3)",
+    backgroundColor: 'var(--primary-color3)',
     height: '5px',
-  }
+  },
 });
 
 export default styles;

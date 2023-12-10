@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   CircularProgress,
@@ -9,21 +10,20 @@ import {
   Grid,
   Link,
   Typography,
-  makeStyles,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
   CloseOutlined,
   CloudDoneOutlined,
   Person,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { useSelector } from 'react-redux';
-import DoneRounded from '@material-ui/icons/DoneRounded';
-import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
+import DoneRounded from '@mui/icons-material/DoneRounded';
+import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import clsx from 'clsx';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState, lazy } from 'react';
@@ -52,7 +52,6 @@ import { TEAM_ENABLED } from '../../utils.js';
 const DRAFT_STATUSES = { saved: 'SAVED', saving: 'SAVING', idle: 'IDLE' };
 const steps = ['Team Details', 'Add Team Members', 'Select Team Project'];
 
-
 function CreateTeam(props) {
   const [completedSteps, setcompletedSteps] = useState([]);
   const { height } = useDomElementHeight('navbar-root');
@@ -73,10 +72,9 @@ function CreateTeam(props) {
   // const [selectedProjects, setSelectedProjects] = useState([]);
   let projs;
 
-  const updateSelectedProjects = (newSelectedProjects) => {
-    projs=newSelectedProjects;
+  const updateSelectedProjects = newSelectedProjects => {
+    projs = newSelectedProjects;
   };
-
 
   const isActive = index => index + 1 === activeStep;
   const isCompleted = index => completedSteps.includes(index + 1);
@@ -96,20 +94,20 @@ function CreateTeam(props) {
 
   const getToastMessage = () => {
     let message = '';
-    if (activeStep === 1 && props.match.path === '/projects/create') {
+    if (activeStep === 1 && props.location.pathname === '/projects/create') {
       message = 'createProject.addedToDraft';
     }
-    if ([1, 2].includes(activeStep) && props.match.params.id) {
+    if ([1, 2].includes(activeStep) && props.params.id) {
       message = 'createProject.savedStep';
     }
-    if (activeStep === 3 && props.match.params.id) {
+    if (activeStep === 3 && props.params.id) {
       message = 'createProject.createToastSuccess';
     }
     return message;
   };
 
   useEffect(() => {
-    if (props.match.params.id) {
+    if (props.params.id) {
       // Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
       //   handleSetState({ ...result[0], ...result[1] }),
       // );
@@ -127,10 +125,11 @@ function CreateTeam(props) {
 
   useEffect(() => {
     if (state.success) {
-      if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
+      if (props.location.pathname === '/projects/create')
+        props.navigate(`/projects/${state.id}/edit`, { replace: true });
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}?success=true`);
+        return props.navigate(`/projects/${props.params.id}?success=true`);
       }
       go('next');
     }
@@ -163,20 +162,27 @@ function CreateTeam(props) {
     togglePublishOrAddTags();
     toggleAddTagsDialog();
   };
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const submitData = async () => {
     try {
       if (!script.vars.upload_in_progress) {
-        const uploadStatus = await script.initUpload(state, { ...props, ...formik, step: activeStep }, handleSetState, projs);
-  
+        const uploadStatus = await script.initUpload(
+          state,
+          { ...props, ...formik, step: activeStep },
+          handleSetState,
+          projs,
+        );
+
         if (uploadStatus === 'success') {
           // Redirect to the desired URL on success
           const teamGroupName = formik.values.groupname; // Get the groupname from props
-          history.push(`/teams/${teamGroupName}`);
+          navigate(`/teams/${teamGroupName}`);
         } else {
           const apiError = uploadStatus;
-          toast.error(`An unexpected error occurred. Please check if you have entered all details properly and try again.`);
+          toast.error(
+            `An unexpected error occurred. Please check if you have entered all details properly and try again.`,
+          );
         }
       }
     } catch (error) {
@@ -248,10 +254,10 @@ function CreateTeam(props) {
       </Dialog>
       {/* Banner */}
       <Box className={classes.banner}>
-      <Link href="/create-team" color="inherit" >
-        <KeyboardBackspaceRoundedIcon/>
-      </Link>
-        {props.match.params.id && (
+        <Link href="/create-team" color="inherit">
+          <KeyboardBackspaceRoundedIcon />
+        </Link>
+        {props.params.id && (
           <>
             <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
               Preview
@@ -306,7 +312,7 @@ function CreateTeam(props) {
           )}
 
           <CustomButton
-            onClick={activeStep == 3 ?submitData :next}
+            onClick={activeStep == 3 ? submitData : next}
             loading={state.default_state?.loading}
             style={{ marginLeft: 'auto' }}
             primaryButtonStyle
@@ -441,7 +447,6 @@ const SelectModeUI = ({ setMode }) => {
 
 CreateTeam.propTypes = {
   auth: PropTypes.object.isRequired,
-
 };
 
 const mapStateToProps = state => {
@@ -452,9 +457,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-
-  };
+  return {};
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateTeam);

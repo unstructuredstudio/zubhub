@@ -14,8 +14,7 @@ export const vars = {
   phone_field_touched: undefined,
   email_field_touched: undefined,
   iti: undefined,
-  utils_scripts_url:
-    'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.min.js',
+  utils_scripts_url: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.min.js',
   preferred_countries: ['in', 'us'],
 };
 
@@ -70,7 +69,7 @@ export const signup = (e, props) => {
             subscribe: !props.values.subscribe,
             phone: vars.iti.getNumber(),
           },
-          history: props.history,
+          navigate: props.navigate,
         })
         .catch(error => {
           const messages = JSON.parse(error.message);
@@ -137,11 +136,7 @@ export const handleToggleSubscribeBox = (e, props, state) => {
  * @todo - describe function's signature
  */
 export const handleLocationChange = (e, props) => {
-  if (
-    vars.iti?.setCountry &&
-    e.target.value &&
-    vars.iti.getSelectedCountryData().iso2 !== countryMap[e.target.value]
-  ) {
+  if (vars.iti?.setCountry && e.target.value && vars.iti.getSelectedCountryData().iso2 !== countryMap[e.target.value]) {
     vars.iti.setCountry(countryMap[e.target.value]);
   }
   props.handleChange(e);
@@ -182,9 +177,7 @@ export const initIntlTelInput = (props, refs) => {
       preferredCountries: vars.preferred_countries,
       utilsScript: vars.utils_scripts_url,
     });
-    refs.phone_el.current.firstChild.addEventListener('countrychange', () =>
-      setLocationWithTelCountry(props),
-    );
+    refs.phone_el.current.firstChild.addEventListener('countrychange', () => setLocationWithTelCountry(props));
 
     setTimeout(() => setLocationWithTelCountry(props), 1000);
   }
@@ -218,22 +211,18 @@ export const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('invalid')
     .test('email_is_empty', 'phoneOrEmail', function (value) {
-      return vars.email_field_touched && !value && !this.parent.phone
-        ? false
-        : true;
+      return vars.email_field_touched && !value && !this.parent.phone ? false : true;
     }),
   phone: Yup.string()
     .test('phone_is_invalid', 'invalid', function () {
       return vars.iti.isValidNumber() || !vars.iti.getNumber() ? true : false;
     })
     .test('phone_is_empty', 'phoneOrEmail', function () {
-      return vars.phone_field_touched &&
-        !vars.iti.getNumber() &&
-        !this.parent.email
-        ? false
-        : true;
+      return vars.phone_field_touched && !vars.iti.getNumber() && !this.parent.email ? false : true;
     }),
-  dateOfBirth: Yup.date().max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough').required('required'),
+  dateOfBirth: Yup.date()
+    .max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough')
+    .required('required'),
   user_location: Yup.string().min(1, 'min').required('required'),
   password1: Yup.string().min(8, 'min').required('required'),
   password2: Yup.string()

@@ -1,4 +1,4 @@
-import { IconButton, useMediaQuery } from '@material-ui/core';
+import { IconButton, useMediaQuery } from '@mui/material';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -22,12 +22,12 @@ import {
   DialogTitle,
   Grid,
   Typography,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import CloseIcon from '@material-ui/icons/Close';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
@@ -47,10 +47,13 @@ import {
   toggleSave,
 } from './projectDetailsScripts';
 
-import { CloseOutlined } from '@material-ui/icons';
+import { CloseOutlined } from '@mui/icons-material';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
-import styles, { EnlargedImgArrow, sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import styles, {
+  EnlargedImgArrow,
+  sliderSettings,
+} from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import { cloudinaryFactory, getPlayerOptions, nFormatter, parseComments } from '../../assets/js/utils/scripts';
 import { Comments, Modal, Pill } from '../../components/index.js';
 import Project from '../../components/project/Project';
@@ -78,14 +81,14 @@ const buildMaterialsUsedComponent = (classes, state) => {
  *
  * @todo - describe function's signature
  */
-const buildTagsComponent = (classes, tags, history) => {
+const buildTagsComponent = (classes, tags, navigate) => {
   return tags.map((tag, index) => (
     <Pill key={index} text={`#${tag.name}`} />
     // <CustomButton
     //   key={index}
     //   primaryButtonOutlinedStyle
     //   style={{ borderRadius: 4 }}
-    //   onClick={() => history.push(`/search?q=${tag.name}`)}
+    //   onClick={() => navigate(`/search?q=${tag.name}`)}
     // >
     //   #{tag.name}
     // </CustomButton>
@@ -119,7 +122,7 @@ function ProjectDetails(props) {
   React.useEffect(() => {
     Promise.resolve(
       props.getProject({
-        id: props.match.params.id,
+        id: props.params.id,
         token: props.auth.token,
         t: props.t,
       }),
@@ -165,7 +168,7 @@ function ProjectDetails(props) {
 
   const toggleDialog = () => {
     setOpen(!open);
-    props.history.replace(window.location.pathname);
+    props.navigate(window.location.pathname, { replace: true });
   };
 
   const handleSetState = obj => {
@@ -375,7 +378,7 @@ function ProjectDetails(props) {
                         //   key={cat}
                         //   primaryButtonOutlinedStyle
                         //   style={{ borderRadius: 4 }}
-                        //   onClick={() => props.history.push(`/search?q=${cat}`)}
+                        //   onClick={() => props.navigate(`/search?q=${cat}`)}
                         // >
                         //   {cat}
                         // </CustomButton>
@@ -393,7 +396,7 @@ function ProjectDetails(props) {
                     </Typography>
 
                     <div className={classes.tagsBoxStyle}>
-                      {buildTagsComponent(classes, project.tags, props.history)}
+                      {buildTagsComponent(classes, project.tags, props.navigate)}
                     </div>
                   </Grid>
                 ) : null}
@@ -435,8 +438,8 @@ function ProjectDetails(props) {
           }}
           BackdropProps
           fullWidth
-          scroll='body'
-          maxWidth='md'
+          scroll="body"
+          maxWidth="md"
           className={classes.enlargedImageDialogStyle}
           open={open_enlarged_image_dialog}
           onClose={() =>
@@ -450,40 +453,29 @@ function ProjectDetails(props) {
           <Box className={classes.enlargedImageContainer}>
             <IconButton
               className={classes.cancelEnlargedImageBtn}
-              onClick={() => setState(state => ({...state, open_enlarged_image_dialog: !open_enlarged_image_dialog,}))}
+              onClick={() => setState(state => ({ ...state, open_enlarged_image_dialog: !open_enlarged_image_dialog }))}
               aria-label={t('projectDetails.ariaLabels.closeImageDialog')}
             >
-              <CloseIcon
-                className={classes.enlargedImageDialogCloseIcon}
-              />
+              <CloseIcon className={classes.enlargedImageDialogCloseIcon} />
             </IconButton>
             {project.images.length <= 1 ? (
-              <img
-                className={classes.enlargedImageStyle}
-                src={enlarged_image_url}
-                alt={`${project.title}`}
-              />
+              <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
             ) : (
-                <Slider
-                  initialSlide={enlarged_image_id}
-                  adaptiveHeight
-                  infinite
-                  speed={500}
-                  slidesToShow={1}
-                  slidesToScroll={1}
-                  className={classes.enlargedImageStyle}
-                  nextArrow={<EnlargedImgArrow />}
-                  prevArrow={<EnlargedImgArrow />}
-                >
-                  {project.images.map(image => (
-                    <img
-                      className={classes.sliderImageStyle}
-                      key={image.public_id}
-                      src={image.image_url}
-                      alt={''}
-                    />
-                  ))}
-                </Slider>
+              <Slider
+                initialSlide={enlarged_image_id}
+                adaptiveHeight
+                infinite
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                className={classes.enlargedImageStyle}
+                nextArrow={<EnlargedImgArrow />}
+                prevArrow={<EnlargedImgArrow />}
+              >
+                {project.images.map(image => (
+                  <img className={classes.sliderImageStyle} key={image.public_id} src={image.image_url} alt={''} />
+                ))}
+              </Slider>
             )}
           </Box>
         </Dialog>

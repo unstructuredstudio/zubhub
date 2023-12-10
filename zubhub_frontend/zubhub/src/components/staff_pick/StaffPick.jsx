@@ -2,8 +2,8 @@ import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, Grid, Typography } from '@mui/material';
 import Project from '../project/Project';
 import CustomButton from '../button/Button';
 
@@ -24,9 +24,7 @@ function StaffPick(props) {
   const common_classes = useCommonStyles();
 
   const { staff_pick, ...rest } = props;
-  return staff_pick.projects &&
-    staff_pick.projects.results &&
-    staff_pick.projects.results.length > 0 ? (
+  return staff_pick.projects && staff_pick.projects.results && staff_pick.projects.results.length > 0 ? (
     <Box className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
@@ -44,7 +42,7 @@ function StaffPick(props) {
               margin="normal"
               secondaryButtonStyle
               onClick={() =>
-                props.history.push(`/projects/staff-picks/${staff_pick.id}`)
+                props.navigate(`/projects/staff-picks/${staff_pick.id}`)
               }
             >
               {rest.t('staffPicks.viewAll')}

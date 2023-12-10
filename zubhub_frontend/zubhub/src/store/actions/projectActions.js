@@ -24,7 +24,6 @@ export const setProjects = projects => {
  * @todo - describe function's signature
  */
 export const createProject = props => {
-
   return () => {
     return API.createProject(props).then(res => {
       if (!res.id) {
@@ -70,7 +69,7 @@ export const updateProject = props => {
       if (!res.id) {
         throw new Error(JSON.stringify(res));
       } else {
-        return res
+        return res;
         // toast.success(props.t('createProject.updateToastSuccess'));
       }
     });
@@ -90,7 +89,7 @@ export const deleteProject = args => {
         throw new Error(res.detail);
       } else {
         toast.success(args.t('projectDetails.deleteProjectToastSuccess'));
-        return args.history.push('/profile');
+        return args.navigate('/profile');
       }
     });
   };
@@ -304,9 +303,7 @@ export const suggestTags = args => {
     return API.suggestTags(args.value)
       .then(res => {
         if (Array.isArray(res)) {
-          return res.length > 0
-            ? { tag_suggestion: res }
-            : { tag_suggestion_open: false };
+          return res.length > 0 ? { tag_suggestion: res } : { tag_suggestion_open: false };
         } else {
           res = Object.keys(res)
             .map(key => res[key])

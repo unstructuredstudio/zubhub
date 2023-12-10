@@ -5,12 +5,7 @@ import { toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import axios from 'axios';
 import Compressor from 'compressorjs';
-import {
-  s3 as DO,
-  doConfig,
-  Compress,
-  slugify,
-} from '../../assets/js/utils/scripts';
+import { s3 as DO, doConfig, Compress, slugify } from '../../assets/js/utils/scripts';
 
 const API = new ZubhubAPI();
 
@@ -36,15 +31,7 @@ export const compress = image => {
   });
 };
 
-export const handleFileFieldChange = (
-  name,
-  route,
-  field,
-  inputIndex,
-  fileInputRef,
-  formikProps,
-  validateSteps,
-) => {
+export const handleFileFieldChange = (name, route, field, inputIndex, fileInputRef, formikProps, validateSteps) => {
   formikProps.setFieldTouched(name, true, false);
   let selectedFiles = {};
   selectedFiles = fileInputRef.current.files;
@@ -53,16 +40,12 @@ export const handleFileFieldChange = (
       route
         ? inputIndex >= 0
           ? errors[route] &&
-          errors[route][inputIndex] &&
-          errors[route][inputIndex][field] &&
-          formikProps.setFieldValue(name, undefined, false)
-          : errors[route] &&
-          errors[route][field] &&
-          formikProps.setFieldValue(name, undefined, false)
+            errors[route][inputIndex] &&
+            errors[route][inputIndex][field] &&
+            formikProps.setFieldValue(name, undefined, false)
+          : errors[route] && errors[route][field] && formikProps.setFieldValue(name, undefined, false)
         : inputIndex >= 0
-          ? errors[field] &&
-          errors[field][inputIndex] &&
-          formikProps.setFieldValue(name, undefined, false)
+          ? errors[field] && errors[field][inputIndex] && formikProps.setFieldValue(name, undefined, false)
           : errors[field] && formikProps.setFieldValue(name, undefined, false);
     });
   }
@@ -72,25 +55,17 @@ export const handleFileFieldChange = (
 export const getErrors = (route, field, index, errors, touched) => {
   return route
     ? index < 0
-      ? errors[route] &&
-      errors[route][field] &&
-      touched[route] &&
-      touched[route][field] &&
-      errors[route][field]
+      ? errors[route] && errors[route][field] && touched[route] && touched[route][field] && errors[route][field]
       : errors[route] &&
-      errors[route][index] &&
-      errors[route][index][field] &&
-      touched[route] &&
-      touched[route][index] &&
-      touched[route][index][field] &&
-      errors[route][index][field]
+        errors[route][index] &&
+        errors[route][index][field] &&
+        touched[route] &&
+        touched[route][index] &&
+        touched[route][index][field] &&
+        errors[route][index][field]
     : index < 0
       ? errors[field] && touched[field] && errors[field]
-      : errors[field] &&
-      errors[field][index] &&
-      touched[field] &&
-      touched[field][index] &&
-      errors[field][index];
+      : errors[field] && errors[field][index] && touched[field] && touched[field][index] && errors[field][index];
 };
 
 export const imagesToPreview = files => {
@@ -100,16 +75,11 @@ export const imagesToPreview = files => {
       Object.entries(files).map(([index, value]) => {
         if (index !== 'length') {
           imagesToPreview[index] =
-            value instanceof Blob
-              ? { image: value, type: 'file' }
-              : { image: value, type: 'url' };
+            value instanceof Blob ? { image: value, type: 'file' } : { image: value, type: 'url' };
         }
       });
     } else {
-      imagesToPreview['0'] =
-        files instanceof Blob
-          ? { image: files, type: 'file' }
-          : { image: files, type: 'url' };
+      imagesToPreview['0'] = files instanceof Blob ? { image: files, type: 'file' } : { image: files, type: 'url' };
     }
   }
   return imagesToPreview;
@@ -121,12 +91,7 @@ export const deleteImage = (setFieldValue, fieldName, validateSteps) => {
   });
 };
 
-export const deleteImageAtIndex = (
-  formikProps,
-  field,
-  index,
-  validateSteps,
-) => {
+export const deleteImageAtIndex = (formikProps, field, index, validateSteps) => {
   let files = {};
   if (formikProps.formikValues[field].length === 1) {
     formikProps.setFieldTouched(field, true, false);
@@ -161,22 +126,13 @@ const getFilesFromNested = nestedObject => {
   });
   return files;
 };
-export const FormMediaUpload = (
-  state,
-  auth,
-  handleSetState,
-  formikValues,
-  getSignature,
-  t,
-) => {
+export const FormMediaUpload = (state, auth, handleSetState, formikValues, getSignature, t) => {
   let promises = [];
   let fileFields = [
     {
       field: 'materials_used_image',
       type: 'simple',
-      files:
-        formikValues['materials_used_image'] &&
-        formikValues['materials_used_image'],
+      files: formikValues['materials_used_image'] && formikValues['materials_used_image'],
     },
     {
       field: 'activity_images',
@@ -201,9 +157,7 @@ export const FormMediaUpload = (
       route: 'making_steps',
       field: 'image',
       type: 'objectsArray',
-      files:
-        formikValues['making_steps'] &&
-        getFilesFromNested(formikValues['making_steps']),
+      files: formikValues['making_steps'] && getFilesFromNested(formikValues['making_steps']),
     },
     // {
     //   route: 'inspiring_examples',
@@ -219,23 +173,10 @@ export const FormMediaUpload = (
   fileFields.map(item => {
     if (item.files) {
       Object.entries(item.files).forEach(([index, file]) => {
-        if (
-          index !== 'length' &&
-          (file instanceof Blob || file instanceof File)
-        ) {
+        if (index !== 'length' && (file instanceof Blob || file instanceof File)) {
           countFiles += 1;
           promises.push(
-            uploadFile(
-              file,
-              auth,
-              handleSetState,
-              item.route,
-              item.field,
-              item.type,
-              index,
-              getSignature,
-              t,
-            ),
+            uploadFile(file, auth, handleSetState, item.route, item.field, item.type, index, getSignature, t),
           );
         }
       });
@@ -247,43 +188,17 @@ export const FormMediaUpload = (
   return promises;
 };
 
-export const uploadFile = (
-  file,
-  auth,
-  handleSetState,
-  route,
-  field,
-  fieldType,
-  index,
-  getSignature,
-  t,
-) => {
+export const uploadFile = (file, auth, handleSetState, route, field, fieldType, index, getSignature, t) => {
   const args = {
     token: auth.token,
   };
 
   return API.shouldUploadToLocal(args).then(res => {
     if (res && res.local === true) {
-      return uploadFileToLocal(
-        file,
-        auth.token,
-        auth.username,
-        handleSetState,
-        route,
-        field,
-        fieldType,
-        index,
-      );
+      return uploadFileToLocal(file, auth.token, auth.username, handleSetState, route, field, fieldType, index);
     } else if (res && res.local === false) {
       // if (file.type.split('/')[0] === 'image') {
-      return uploadImageToDO(
-        file,
-        handleSetState,
-        route,
-        field,
-        fieldType,
-        index,
-      );
+      return uploadImageToDO(file, handleSetState, route, field, fieldType, index);
       // } else {
       //   return uploadVideoToCloudinary(
       //     file,
@@ -316,7 +231,7 @@ export const uploadFileToLocal = (
     let file = fileBeforeCompression;
     try {
       file = await compress(fileBeforeCompression);
-    } catch (error) { }
+    } catch (error) {}
     let fileFieldName = '';
     let NameArray = [route, field, index];
     NameArray.forEach(item => {
@@ -352,13 +267,8 @@ export const uploadFileToLocal = (
         onUploadProgress: e => {
           handleSetState(state => {
             let loadedPercent = state.loadedPercent;
-            loadedPercent[fileFieldName] = Math.round(
-              (e.loaded * 100) / e.total,
-            );
-            let loadProgress = Math.round(
-              Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
-              state.countFiles,
-            );
+            loadedPercent[fileFieldName] = Math.round((e.loaded * 100) / e.total);
+            let loadProgress = Math.round(Object.values(loadedPercent).reduce((a, b) => a + b, 0) / state.countFiles);
 
             return {
               ...state,
@@ -394,14 +304,7 @@ export const uploadFileToLocal = (
   });
 };
 
-export const uploadImageToDO = async (
-  fileBeforeCompression,
-  handleSetState,
-  route,
-  field,
-  fieldType,
-  index,
-) => {
+export const uploadImageToDO = async (fileBeforeCompression, handleSetState, route, field, fieldType, index) => {
   let file = fileBeforeCompression;
 
   try {
@@ -437,7 +340,6 @@ export const uploadImageToDO = async (
     };
 
     DO.upload(params, err => {
-
       reject({ message: 'uploadError', file: file.name, error: err });
       handleSetState(state => {
         return { ...state, submitting: false };
@@ -447,10 +349,7 @@ export const uploadImageToDO = async (
         handleSetState(state => {
           let loadedPercent = state.loadedPercent;
           loadedPercent[fileFieldName] = Math.round((e.loaded * 100) / e.total);
-          let loadProgress = Math.round(
-            Object.values(loadedPercent).reduce((a, b) => a + b, 0) /
-            state.countFiles,
-          );
+          let loadProgress = Math.round(Object.values(loadedPercent).reduce((a, b) => a + b, 0) / state.countFiles);
 
           return {
             ...state,

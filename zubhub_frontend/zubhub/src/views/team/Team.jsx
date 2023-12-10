@@ -1,16 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-
+import { makeStyles } from '@mui/styles';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import API from '../../api'
-
-import { makeStyles } from '@material-ui/core/styles';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import API from '../../api';
+import ShareIcon from '@mui/icons-material/Share';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Tooltip,
   Badge,
@@ -31,7 +28,7 @@ import {
   InputLabel,
   FormControl,
   Divider,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   getTeamProfile,
@@ -46,7 +43,7 @@ import {
   fetchPage,
   followTeam,
 } from './teamScripts';
-import GroupsIcon from '@material-ui/icons/Group';
+import GroupsIcon from '@mui/icons-material/Group';
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
@@ -76,11 +73,11 @@ function Team(props) {
   const username_el = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const username = props.match.params.username || props.auth.username;
+  const username = props.params.username || props.auth.username;
   const [page, setPage] = useState(1);
-  const [userActivity, setUserActivity] = useState([])
+  const [userActivity, setUserActivity] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [nextPage, setNextPage] = useState(false)
+  const [nextPage, setNextPage] = useState(false);
   const { groupname } = useParams();
   const [state, setState] = React.useState({
     results: [],
@@ -92,36 +89,37 @@ function Team(props) {
     drafts: [],
     badge_tags: [],
   });
-  const [followers,setFollowers]=React.useState([]);
-  
+  const [followers, setFollowers] = React.useState([]);
+
   React.useEffect(() => {
-  try{
-    let activitylogObj= new API()
-    const promises = [getTeamProfile(groupname, props), fetchPage(groupname, props)];
-    if (username === props.auth.username) {
-      promises.push(
-        // ProjectActions.getUserDrafts({
-        //   username,
-        //   token: props.auth.token,
-        //   t: props.t,
-        //   limit: 4,
-        // }),
-      );
+    try {
+      let activitylogObj = new API();
+      const promises = [getTeamProfile(groupname, props), fetchPage(groupname, props)];
+      if (username === props.auth.username) {
+        promises
+          .push
+          // ProjectActions.getUserDrafts({
+          //   username,
+          //   token: props.auth.token,
+          //   t: props.t,
+          //   limit: 4,
+          // }),
+          ();
+      }
+
+      Promise.all(promises).then(values => {
+        const obj = values[0];
+        const followers = values[1];
+
+        // if (obj.profile) {
+        //   parseComments(obj.profile.comments);
+        // }
+        handleSetState({ ...obj });
+        setFollowers(followers);
+      });
+    } catch (error) {
+      console.log(error);
     }
-
-    Promise.all(promises).then(values => {
-      const obj = values[0];
-      const followers = values[1];
-
-      // if (obj.profile) {
-      //   parseComments(obj.profile.comments);
-      // }
-      handleSetState({ ...obj });
-      setFollowers(followers);
-    });
-  } catch (error) {
-    console.log(error);
-  }
   }, [page]);
 
   const handleSetState = obj => {
@@ -132,24 +130,17 @@ function Team(props) {
     }
   };
 
-  const {
-    results: projects,
-    profile,
-    loading,
-    open_delete_account_modal,
-    dialog_error,
-    more_anchor_el,
-  } = state;
+  const { results: projects, profile, loading, open_delete_account_modal, dialog_error, more_anchor_el } = state;
 
   const more_menu_open = Boolean(more_anchor_el);
   const { t } = props;
 
-  const handleScroll = (e) => {
+  const handleScroll = e => {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && nextPage) { 
-            setPage(page => page + 1)
+    if (bottom && nextPage) {
+      setPage(page => page + 1);
     }
- }
+  };
 
   if (loading) {
     return <LoadingPage />;
@@ -158,62 +149,42 @@ function Team(props) {
       <>
         <Box className={classes.root}>
           <Paper className={classes.profileHeaderStyle}>
-            <Container maxWidth="md"
-            style={{padding: '0 3em'}}
-            >
-              <Box className= {classes.flexClass}>
+            <Container maxWidth="md" style={{ padding: '0 3em' }}>
+              <Box className={classes.flexClass}>
                 <Box className={classes.avatarBoxStyle}>
-                  <Avatar
-                    className={classes.avatarStyle}
-                    src={profile.avatar}
-                    alt={profile.groupname}
-                  />
+                  <Avatar className={classes.avatarStyle} src={profile.avatar} alt={profile.groupname} />
                   {profile.members.some(member => member.member === props.auth.username && member.role === 'admin') ? (
-                <>
-                  <CustomButton
-                    className={classes.editButton}
-                    variant="contained"
-                    margin="normal"
-                    primaryButtonStyle
-                    onClick={() => props.history.push('/'+groupname+'/edit-team')}
-                  >
-                    {t('editTeam.label')}
-                  </CustomButton>
-                </>
-              ) : (
-                <CustomButton
-                  className={classes.followButton}
-                  variant="outlined"
-                  margin="normal"
-                  secondaryButtonStyle
-                  onClick={() =>
-                    followTeam(groupname, props.auth.username, props)
-                  }
-                >
-                  {followers.followerIds.includes(props.auth.id)
-                    ? t('profile.unfollow')
-                    : t('profile.follow')}
-                </CustomButton>
-              )}
+                    <>
+                      <CustomButton
+                        className={classes.editButton}
+                        variant="contained"
+                        margin="normal"
+                        primaryButtonStyle
+                        onClick={() => props.navigate('/' + groupname + '/edit-team')}
+                      >
+                        {t('editTeam.info')}
+                      </CustomButton>
+                    </>
+                  ) : (
+                    <CustomButton
+                      className={classes.followButton}
+                      variant="outlined"
+                      margin="normal"
+                      secondaryButtonStyle
+                      onClick={() => followTeam(groupname, props.auth.username, props)}
+                    >
+                      {followers.followerIds.includes(props.auth.id) ? t('profile.unfollow') : t('profile.follow')}
+                    </CustomButton>
+                  )}
                 </Box>
                 <Box className={classes.ProfileNameStyle}>
-                  <Typography
-                    className={classes.userNameStyle}
-                    component="h1"
-                    color="textPrimary"
-                  >
+                  <Typography className={classes.userNameStyle} component="h1" color="textPrimary">
                     {profile.groupname}
                   </Typography>
                   <Box className={classes.tagsContainerStyle}>
-                    
-                      <Typography
-                        
-                        className={classes.baseTagStyle}
-                        component="h2"
-                      >
-                        Team  <GroupsIcon className={classes.iconWithSpace}/>
-                      </Typography>
-                    
+                    <Typography className={classes.baseTagStyle} component="h2">
+                      Team <GroupsIcon className={classes.iconWithSpace} />
+                    </Typography>
                   </Box>
                   {groupname === profile.groupname ? (
                     <>
@@ -225,82 +196,44 @@ function Team(props) {
                       </Typography>
                     </>
                   ) : null}
-                </Box> 
-                  <Box className={classes.moreInfoBoxStyle}>
-                    <Link
-                      className={classes.textDecorationNone}
-                      to={`/teams/${profile.groupname}/projects`}
-                    >
-                      <Typography
-                        className={classes.moreInfoStyle}
-                        component="h5"
-                      >
-                        <div className={classes.moreInfoTitleStyle}>
-                        {t('profile.projectsCount')}
-                        </div>
-                        <div className={classes.moreInfoCountStyle}>
-                        {profile.projects_count}
-                        </div>
-                      </Typography>
-                    </Link>
-                    <Link
-                      to={`/teams/${groupname}/followers`}
-                      className={classes.textDecorationNone}
-                    >
-                      <Typography
-                        className={classes.moreInfoStyle}
-                        component="h5"
-                      >
-                        <div className={classes.moreInfoTitleStyle}>
-                        {t('profile.followersCount')}
-                        </div>
-                        <div className={classes.moreInfoCountStyle}>
-                        {profile.followers_count} 
-                        </div>
-                      </Typography>
-                    </Link>
-                    <Link
-                      to={`/teams/${groupname}/members`}
-                      className={classes.textDecorationNone}
-                    >
-                      <Typography
-                        className={classes.moreInfoStyle}
-                        component="h5"
-                      >
-                        <div className={classes.moreInfoTitleStyle}>
-                        {t('profile.membersCount')}
-                        </div>
-                        <div className={classes.moreInfoCountStyle}>
-                        {profile.members.length} 
-                        </div>
-                      </Typography>
-                    </Link>
-                  </Box>
-              </Box> 
+                </Box>
+                <Box className={classes.moreInfoBoxStyle}>
+                  <Link className={classes.textDecorationNone} to={`/teams/${profile.groupname}/projects`}>
+                    <Typography className={classes.moreInfoStyle} component="h5">
+                      <div className={classes.moreInfoTitleStyle}>{t('profile.projectsCount')}</div>
+                      <div className={classes.moreInfoCountStyle}>{profile.projects_count}</div>
+                    </Typography>
+                  </Link>
+                  <Link to={`/teams/${groupname}/followers`} className={classes.textDecorationNone}>
+                    <Typography className={classes.moreInfoStyle} component="h5">
+                      <div className={classes.moreInfoTitleStyle}>{t('profile.followersCount')}</div>
+                      <div className={classes.moreInfoCountStyle}>{profile.followers_count}</div>
+                    </Typography>
+                  </Link>
+                  <Link to={`/teams/${groupname}/members`} className={classes.textDecorationNone}>
+                    <Typography className={classes.moreInfoStyle} component="h5">
+                      <div className={classes.moreInfoTitleStyle}>{t('profile.membersCount')}</div>
+                      <div className={classes.moreInfoCountStyle}>{profile.members.length}</div>
+                    </Typography>
+                  </Link>
+                </Box>
+              </Box>
             </Container>
           </Paper>
 
-            <div className= {classes.aboutMeBadgeBox}>
-              <Paper className={classes.aboutMeBox}>
-                <Typography
-                  gutterBottom
-                  component="h2"
-                  variant="h6"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
-                  {!profile.members_count
-                    ? t('About Us')
-                    : t('profile.about.label2')}
-                </Typography>
-                {profile.description
-                  ? profile.description
-                  : !profile.members_count
+          <div className={classes.aboutMeBadgeBox}>
+            <Paper className={classes.aboutMeBox}>
+              <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
+                {!profile.members_count ? t('About Us') : t('profile.about.label2')}
+              </Typography>
+              {profile.description
+                ? profile.description
+                : !profile.members_count
                   ? t('profile.about.placeholder1')
                   : t('profile.about.placeholder2')}
-              </Paper>
-             
-              {/* <Paper className={classes.badgeBox}>
+            </Paper>
+
+            {/* <Paper className={classes.badgeBox}>
                 <Typography
                     gutterBottom
                     component="h2"
@@ -326,70 +259,50 @@ function Team(props) {
                     </Box>
                   )}
               </Paper> */}
-            </div>
+          </div>
 
-            {profile.projects_count > 0 ? (
-              username === props.auth.username ? (
-                <Paper className={classes.profileLowerStyle}>
-                  <Typography
-                    gutterBottom
-                    component="h2"
-                    variant="h6"
-                    color="textPrimary"
-                    className={classes.titleStyle}
-                  >
-                    {t('Projects')}
-                    {/* <CustomButton
+          {profile.projects_count > 0 ? (
+            username === props.auth.username ? (
+              <Paper className={classes.profileLowerStyle}>
+                <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
+                  {t('Projects')}
+                  {/* <CustomButton
                       className={classes.teamButton}
                       variant="contained"
                       margin="normal"
                       primaryButtonStyle
-                      onClick={() => props.history.push('/create-team')}
+                      onClick={() => props.navigate('/create-team')}
                     >
                       {t('Add Project')}
                     </CustomButton> */}
-                    <CustomButton
-                      className={clsx(classes.floatRight)}
-                      variant="outlined"
-                      margin="normal"
-                      secondaryButtonStyle
-                      onClick={() =>
-                        props.history.push(
-                          `/teams/${groupname}/projects`,
-                        )
-                      }
-                    >
-                      {t('profile.projects.viewAll')}
-                    </CustomButton>
-                  </Typography>
-                  <Grid container>
-                    {Array.isArray(profile.projects) &&
-                      profile.projects.map(project => (
-                        <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          md={6}
-                          className={classes.projectGridStyle}
-                          align="center"
-                        >
-                          <Project
-                            project={project}
-                            key={project.id}
-                            updateProjects={res =>
-                              handleSetState(
-                                updateProjects(res, state, props, toast),
-                              )
-                            }
-                            {...props}
-                          />
-                        </Grid>
-                      ))}
-                  </Grid>
-                </Paper>
-              ) : null ): null}
+                  <CustomButton
+                    className={clsx(classes.floatRight)}
+                    variant="outlined"
+                    margin="normal"
+                    secondaryButtonStyle
+                    onClick={() => props.navigate(`/teams/${groupname}/projects`)}
+                  >
+                    {t('profile.projects.viewAll')}
+                  </CustomButton>
+                </Typography>
+                <Grid container>
+                  {Array.isArray(profile.projects) &&
+                    profile.projects.map(project => (
+                      <Grid item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
+                        <Project
+                          project={project}
+                          key={project.id}
+                          updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                          {...props}
+                        />
+                      </Grid>
+                    ))}
+                </Grid>
+              </Paper>
+            ) : null
+          ) : null}
 
-            {/* <Comments
+          {/* <Comments
               context={{ name: 'profile', body: profile }}
               handleSetState={handleSetState}
               {...props}
@@ -400,13 +313,8 @@ function Team(props) {
           onClose={() => handleSetState(handleToggleDeleteAccountModal(state))}
           aria-labelledby={t('profile.delete.ariaLabels.deleteAccount')}
         >
-          <DialogTitle id="delete-project">
-            {t('profile.delete.dialog.primary')}
-          </DialogTitle>
-          <Box
-            component="p"
-            className={dialog_error !== null && classes.errorBox}
-          >
+          <DialogTitle id="delete-project">{t('profile.delete.dialog.primary')}</DialogTitle>
+          <Box component="p" className={dialog_error !== null && classes.errorBox}>
             {dialog_error !== null && (
               <Box component="span" className={classes.error}>
                 {dialog_error}
@@ -422,10 +330,7 @@ function Team(props) {
               fullWidth
               margin="normal"
             >
-              <InputLabel
-                className={classes.customLabelStyle}
-                htmlFor="username"
-              >
+              <InputLabel className={classes.customLabelStyle} htmlFor="username">
                 {t('profile.delete.dialog.inputs.username')}
               </InputLabel>
               <OutlinedInput
@@ -440,9 +345,7 @@ function Team(props) {
           <DialogActions>
             <CustomButton
               variant="outlined"
-              onClick={() =>
-                handleSetState(handleToggleDeleteAccountModal(state))
-              }
+              onClick={() => handleSetState(handleToggleDeleteAccountModal(state))}
               color="primary"
               secondaryButtonStyle
             >
@@ -450,9 +353,7 @@ function Team(props) {
             </CustomButton>
             <CustomButton
               variant="contained"
-              onClick={e =>
-                handleSetState(deleteAccount(username_el, props, state))
-              }
+              onClick={e => handleSetState(deleteAccount(username_el, props, state))}
               dangerButtonStyle
               customButtonStyle
             >

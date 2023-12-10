@@ -5,24 +5,13 @@ import { connect } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid,
-  Box,
-  Container,
-  Card,
-  CardActionArea,
-  CardContent,
-  Typography,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Grid, Box, Container, Card, CardActionArea, CardContent, Typography } from '@mui/material';
 
 import * as UserActions from '../../store/actions/userActions';
 import CustomButton from '../../components/button/Button';
 import styles from '../../assets/js/styles/views/email_confirm/emailConfirmStyles';
-import {
-  getUsernameAndKey,
-  confirmGroupInvite,
-} from './groupInviteConfirmScripts';
+import { getUsernameAndKey, confirmGroupInvite } from './groupInviteConfirmScripts';
 
 const useStyles = makeStyles(styles);
 
@@ -64,41 +53,18 @@ function GroupInviteConfirm(props) {
                 className="auth-form"
                 name="email_confirm"
                 noValidate="noValidate"
-                onSubmit={e =>
-                  handleSetState(confirmGroupInvite(e, props, state))
-                }
+                onSubmit={e => handleSetState(confirmGroupInvite(e, props, state))}
               >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
+                <Typography gutterBottom variant="h5" component="h2" color="textPrimary" className={classes.titleStyle}>
                   {t('groupInviteConfirm.welcomeMsg.primary')}
                 </Typography>
-                <Typography
-                  className={classes.descStyle}
-                  variant="body2"
-                  color="textSecondary"
-                  component="p"
-                >
-                  {t('groupInviteConfirm.welcomeMsg.secondary').replace(
-                    '<>',
-                    username,
-                  )}
+                <Typography className={classes.descStyle} variant="body2" color="textSecondary" component="p">
+                  {t('groupInviteConfirm.welcomeMsg.secondary').replace('<>', username)}
                 </Typography>
 
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box
-                      component="p"
-                      className={
-                        props.status &&
-                        props.status['non_field_errors'] &&
-                        classes.errorBox
-                      }
-                    >
+                    <Box component="p" className={props.status && props.status['non_field_errors'] && classes.errorBox}>
                       {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
                           {props.status['non_field_errors']}

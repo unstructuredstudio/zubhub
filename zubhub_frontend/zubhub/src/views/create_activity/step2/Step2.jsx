@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { CustomButton, Editor, ImageInput, LabeledLine } from '../../../components';
-import { Box, Button, Divider, IconButton, Menu, MenuItem, Typography, makeStyles } from '@material-ui/core';
+import { Box, Button, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { step2Styles } from './Step2.styles';
 import styles from '../../../assets/js/styles';
-import { Add, MoreHoriz } from '@material-ui/icons';
 import TextInput from '../../../components/form/textInput/TextInput';
+import { Add, MoreHoriz } from '@mui/icons-material';
 import clsx from 'clsx';
 import { uniqueId } from 'lodash';
 import _ from 'lodash';
@@ -25,29 +26,11 @@ export default function Step2({ formik, id }) {
   };
 
   function EnhancedTextInput(props) {
-    return (
-      <TextInput
-        {...props}
-        label={
-          <span className={classes.stepTitle}>
-            {props.label}
-          </span>
-        }
-      />
-    );
+    return <TextInput {...props} label={<span className={classes.stepTitle}>{props.label}</span>} />;
   }
 
   function EnchancedEditor(props) {
-    return (
-      <Editor
-        {...props}
-        label={
-          <span className={classes.stepTitle}>
-            {props.label}
-          </span>
-        }
-      />
-    );
+    return <Editor {...props} label={<span className={classes.stepTitle}>{props.label}</span>} />;
   }
 
   const onStepChange = (data, type, stepIndex) => {

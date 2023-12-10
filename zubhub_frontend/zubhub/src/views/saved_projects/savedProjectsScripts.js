@@ -6,7 +6,7 @@
  */
 export const fetchPage = (page, props) => {
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props.getSaved({ page, token: props.auth.token, t: props.t });
   }
@@ -22,9 +22,7 @@ export const updateProjects = (res, { results: projects }, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
+        projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         return { results: projects };
       } else {
         res = Object.keys(res)

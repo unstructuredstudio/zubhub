@@ -7,11 +7,11 @@ import { getUserDrafts } from '../../store/actions/projectActions';
  *
  * @todo - describe function's signature
  */ export const getTeamProfile = (groupname, props) => {
-  // let username = props.match.params.username;
+  // let username = props.params.username;
 
   // if (!username) {
   //   username = props.auth.username;
-  // } else if (props.auth.username === username) props.history.replace('/profile');
+  // } else if (props.auth.username === username) props.navigate('/profile', { replace: true });
   return props.getTeamProfile({
     groupname,
     token: props.auth.token,
@@ -20,13 +20,13 @@ import { getUserDrafts } from '../../store/actions/projectActions';
 };
 
 export const fetchPage = (groupname, props) => {
-  let token=props.auth.token;
+  let token = props.auth.token;
   return props.getTeamFollowers({ groupname, token });
 };
 
-export const followTeam = (groupname, username,props) => {
-  let token=props.auth.token;
-  props.toggleTeamFollow({groupname, username, token})
+export const followTeam = (groupname, username, props) => {
+  let token = props.auth.token;
+  props.toggleTeamFollow({ groupname, username, token });
 };
 
 /**
@@ -62,13 +62,9 @@ export const updateProjects = (res, projects, props, toast) => {
     .then(res => {
       if (res.project && res.project.title) {
         if (projects[0]) {
-          projects = projects.map(project =>
-            project.id === res.project.id ? res.project : project,
-          );
+          projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         } else {
-          projects = projects.results.map(project =>
-            project.id === res.project.id ? res.project : project,
-          );
+          projects = projects.results.map(project => (project.id === res.project.id ? res.project : project));
         }
         return { results: projects };
       } else {
@@ -98,9 +94,7 @@ export const updateDrafts = (res, projects, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
+        projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         return { drafts: projects };
       } else {
         res = Object.keys(res)
@@ -127,7 +121,7 @@ export const updateDrafts = (res, projects, props, toast) => {
  */
 export const toggleFollow = (id, props) => {
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props.toggleFollow({ id, token: props.auth.token, t: props.t });
   }
@@ -213,7 +207,7 @@ export const deleteAccount = (username_el, props) => {
   } else {
     return props.deleteAccount({
       token: props.auth.token,
-      history: props.history,
+      navigate: props.navigate,
       logout: props.logout,
       t: props.t,
     });

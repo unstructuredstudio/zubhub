@@ -7,7 +7,7 @@ import { getUserDrafts } from '../../store/actions/projectActions';
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props) => {
-  const username = props.match.params.username;
+  const username = props.params.username;
   return getUserDrafts({ page, username, t: props.t, token: props.auth.token });
 };
 
@@ -21,9 +21,7 @@ export const updateDrafts = (res, { drafts: projects }, props, toast) => {
   return res
     .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
+        projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         return { drafts: projects };
       } else {
         res = Object.keys(res)

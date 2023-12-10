@@ -1,7 +1,7 @@
-import { Box, CircularProgress, Dialog, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { Box, CircularProgress, Dialog, Grid, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import clsx from 'clsx';
 import { withFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
@@ -23,8 +23,8 @@ const useProjectStyles = makeStyles(projectStyles);
 const useCommonStyles = makeStyles(commonStyles);
 
 function CreateActivity(props) {
-  const { t, history } = props;
-  const { id } = props.match.params;
+  const { t, navigate } = props;
+  const { id } = props.params;
   const classes = useStyles();
   const project_classes = useProjectStyles();
   const common_classes = useCommonStyles();
@@ -86,7 +86,7 @@ function CreateActivity(props) {
         deserialize(activityToUpdate, props.setFieldValue);
         setDeserializingForEdit(false);
       } else {
-        history.push('/activities');
+        navigate('/activities');
       }
     }
   }, []);
@@ -184,7 +184,7 @@ function CreateActivity(props) {
                             newActivityObject,
                             props,
                             setNewActivityObject,
-                            history,
+                            navigate,
                             formikProps,
                             setReadyForSubmit,
                           );

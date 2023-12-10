@@ -6,19 +6,11 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import AddIcon from '@material-ui/icons/Add';
-import {
-  Grid,
-  Container,
-  Box,
-  Card,
-  ButtonGroup,
-  Typography,
-  Avatar,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import AddIcon from '@mui/icons-material/Add';
+import { Grid, Container, Box, Card, ButtonGroup, Typography, Avatar } from '@mui/material';
 
 import { fetchPage, toggleFollow, removeMember } from './groupMembersScripts';
 
@@ -50,23 +42,14 @@ const buildMembers = (members, style, props, state, handleSetState) =>
       align="center"
       key={member.id}
     >
-      <Link
-        className={style.common_classes.textDecorationNone}
-        to={`/creators/${member.username}`}
-      >
+      <Link className={style.common_classes.textDecorationNone} to={`/creators/${member.username}`}>
         <Card className={style.classes.cardStyle}>
-          <Avatar
-            className={style.classes.avatarStyle}
-            src={member.avatar}
-            alt={member.username}
-          />
+          <Avatar className={style.classes.avatarStyle} src={member.avatar} alt={member.username} />
           {member.id !== props.auth.id ? (
             <CustomButton
               variant="outlined"
               className={style.common_classes.marginBottom1em}
-              onClick={(e, id = member.id) =>
-                handleSetState(toggleFollow(e, props, state, id, toast))
-              }
+              onClick={(e, id = member.id) => handleSetState(toggleFollow(e, props, state, id, toast))}
               secondaryButtonStyle
             >
               {member.followers.includes(props.auth.id)
@@ -74,23 +57,16 @@ const buildMembers = (members, style, props, state, handleSetState) =>
                 : props.t('userFollowers.follower.follow')}
             </CustomButton>
           ) : null}
-          {props.auth.members_count !== null &&
-          props.match.params.username === props.auth.username ? (
+          {props.auth.members_count !== null && props.params.username === props.auth.username ? (
             <CustomButton
               variant="outlined"
-              onClick={(e, id = member.id) =>
-                handleSetState(removeMember(e, props, state, id, toast))
-              }
+              onClick={(e, id = member.id) => handleSetState(removeMember(e, props, state, id, toast))}
               secondaryButtonStyle
             >
               {props.t('groupMembers.remove')}
             </CustomButton>
           ) : null}
-          <Typography
-            component="h3"
-            color="textPrimary"
-            className={style.classes.userNameStyle}
-          >
+          <Typography component="h3" color="textPrimary" className={style.classes.userNameStyle}>
             {member.username}
           </Typography>
         </Card>
@@ -128,7 +104,7 @@ function GroupMembers(props) {
   };
 
   const { members, prev_page, next_page, loading } = state;
-  const username = props.match.params.username;
+  const username = props.params.username;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
@@ -138,41 +114,25 @@ function GroupMembers(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container spacing={3} justify="center">
             <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h3"
-                gutterBottom
-              >
+              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
                 {username}'s {t('groupMembers.title')}
               </Typography>
 
-              {props.auth.members_count !== null &&
-              username === props.auth.username ? (
+              {props.auth.members_count !== null && username === props.auth.username ? (
                 <CustomButton
                   variant="contained"
                   className={common_classes.floatRight}
                   startIcon={<AddIcon />}
                   primaryButtonStyle
-                  onClick={() =>
-                    props.history.push(`/creators/${username}/add-members`)
-                  }
+                  onClick={() => props.navigate(`/creators/${username}/add-members`)}
                 >
                   {props.t('groupMembers.newMembers')}
                 </CustomButton>
               ) : null}
             </Grid>
-            {buildMembers(
-              members,
-              { classes, common_classes },
-              props,
-              state,
-              handleSetState,
-            )}
+            {buildMembers(members, { classes, common_classes }, props, state, handleSetState)}
           </Grid>
-          <ButtonGroup
-            aria-label={t('groupMembers.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
+          <ButtonGroup aria-label={t('groupMembers.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
@@ -208,19 +168,13 @@ function GroupMembers(props) {
   } else {
     return (
       <>
-        {props.auth.members_count !== null &&
-        username === props.auth.username ? (
+        {props.auth.members_count !== null && username === props.auth.username ? (
           <CustomButton
             variant="contained"
-            className={clsx(
-              common_classes.positionAbsolute,
-              classes.floatingButtonStyle,
-            )}
+            className={clsx(common_classes.positionAbsolute, classes.floatingButtonStyle)}
             startIcon={<AddIcon />}
             primaryButtonStyle
-            onClick={() =>
-              props.history.push(`/creators/${username}/add-members`)
-            }
+            onClick={() => props.navigate(`/creators/${username}/add-members`)}
           >
             {props.t('groupMembers.newMembers')}
           </CustomButton>

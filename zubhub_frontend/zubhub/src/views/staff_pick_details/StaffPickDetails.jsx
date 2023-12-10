@@ -5,16 +5,10 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Typography,
-  Container,
-} from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Grid, Box, ButtonGroup, Typography, Container } from '@mui/material';
 
 import { fetchPage, updateProjects } from './staffPickDetailsScripts';
 
@@ -68,29 +62,16 @@ function StaffPickDetails(props) {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography
-                className={classes.descriptionBodyStyle}
-                color="textSecondary"
-                gutterBottom
-              >
+              <Typography className={classes.descriptionBodyStyle} color="textSecondary" gutterBottom>
                 {staff_pick.description}
               </Typography>
             </Grid>
             {staff_pick.projects.results.map(project => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                align="center"
-                className={classes.projectGridStyle}
-              >
+              <Grid item xs={12} sm={6} md={4} align="center" className={classes.projectGridStyle}>
                 <Project
                   project={project}
                   key={project.id}
-                  updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props, toast))
-                  }
+                  updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                   {...props}
                 />
               </Grid>

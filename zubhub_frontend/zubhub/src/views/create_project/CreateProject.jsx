@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   CircularProgress,
@@ -9,9 +10,8 @@ import {
   Grid,
   Link,
   Typography,
-  makeStyles,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
@@ -20,16 +20,15 @@ import {
   CloudDoneOutlined,
   PeopleAltSharp,
   Person,
-} from '@material-ui/icons';
-import DoneRounded from '@material-ui/icons/DoneRounded';
-import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
+} from '@mui/icons-material';
+import DoneRounded from '@mui/icons-material/DoneRounded';
+import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import clsx from 'clsx';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState, lazy } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import StepWizard from 'react-step-wizard';
 import { toast } from 'react-toastify';
 import { colors } from '../../assets/js/colors';
@@ -87,13 +86,13 @@ function CreateProject(props) {
 
   const getToastMessage = () => {
     let message = '';
-    if (activeStep === 1 && props.match.path === '/projects/create') {
+    if (activeStep === 1 && props.location.pathname === '/projects/create') {
       message = 'createProject.addedToDraft';
     }
-    if ([1, 2].includes(activeStep) && props.match.params.id) {
+    if ([1, 2].includes(activeStep) && props.params.id) {
       message = 'createProject.savedStep';
     }
-    if (activeStep === 3 && props.match.params.id) {
+    if (activeStep === 3 && props.params.id) {
       message = 'createProject.createToastSuccess';
     }
     return message;
@@ -119,7 +118,7 @@ function CreateProject(props) {
   };
 
   useEffect(() => {
-    if (props.match.params.id) {
+    if (props.params.id) {
       Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
         handleSetState({ ...result[0], ...result[1] }),
       );
@@ -137,10 +136,11 @@ function CreateProject(props) {
 
   useEffect(() => {
     if (state.success) {
-      if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
+      if (props.location.pathname === '/projects/create')
+        props.navigate(`/projects/${state.id}/edit`, { replace: true });
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}?success=true`);
+        return props.navigate(`/projects/${props.params.id}?success=true`);
       }
       setState({ ...state, success: false });
       go('next');
@@ -168,7 +168,6 @@ function CreateProject(props) {
   const previous = () => go('prev');
   const next = async () => {
     let error = await checkErrors();
-    console.log('Validation errors', error);
     if (Object.keys(error).length > 0) return;
 
     if (activeStep === 3) {
@@ -194,8 +193,6 @@ function CreateProject(props) {
   };
 
   const checkErrors = async () => {
-    console.log(formik.errors);
-    formik.setFieldError('category', false, false);
     if (activeStep === 1) {
       return formik.setTouched({ title: true, materials_used: true, description: true, category: false }, true);
     }
@@ -252,7 +249,6 @@ function CreateProject(props) {
     if (mode.length == 0) return null;
   }
 
-
   return (
     <div className={classes.container}>
       <Dialog open={preview} fullScreen>
@@ -261,9 +257,9 @@ function CreateProject(props) {
       {/* Banner */}
       <Box className={classes.banner}>
         <Link href="/projects/create" color="inherit">
-          <KeyboardBackspaceRoundedIcon/>
+          <KeyboardBackspaceRoundedIcon />
         </Link>
-        {props.match.params.id && (
+        {props.params.id && (
           <>
             <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
               Preview
@@ -393,7 +389,6 @@ function CreateProject(props) {
 const SelectModeUI = ({ setMode, t }) => {
   const classes = makeStyles(createProjectStyle)();
   const commonClasses = makeStyles(styles)();
-  const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const [mode, setModeItem] = useState('');
   const modes = { personal: 'personal', team: 'team' };
 
@@ -410,9 +405,7 @@ const SelectModeUI = ({ setMode, t }) => {
       <Box className={clsx(classes.selectMode)}>
         <Box className={classes.selectModeTextContainer}>
           <Typography className={clsx(commonClasses.title1)}>{t('createProject.welcomeMsg.primary')}</Typography>
-          <Typography>
-            {t('createProject.selectMode.description')}
-          </Typography>
+          <Typography>{t('createProject.selectMode.description')}</Typography>
         </Box>
         <div className={clsx(classes.modeItemContainer)}>
           <div
@@ -420,11 +413,17 @@ const SelectModeUI = ({ setMode, t }) => {
             className={clsx(classes.modeItem, mode == modes.personal ? classes.modeItemSelected : null)}
           >
             <div className={classes.checkBoxContainer}>
-              <CheckCircle className={clsx(mode === modes.personal ? classes.checkBoxSelected : classes.checkBoxDefault)} />
+              <CheckCircle
+                className={clsx(mode === modes.personal ? classes.checkBoxSelected : classes.checkBoxDefault)}
+              />
             </div>
             <Person className={classes.modeItemIcon} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>{t('createProject.selectMode.personalMode.title')}</Typography>
-            <Typography className={classes.modeItemDescription}>{t('createProject.selectMode.personalMode.description')}</Typography>
+            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>
+              {t('createProject.selectMode.personalMode.title')}
+            </Typography>
+            <Typography className={classes.modeItemDescription}>
+              {t('createProject.selectMode.personalMode.description')}
+            </Typography>
           </div>
 
           <div
@@ -435,8 +434,12 @@ const SelectModeUI = ({ setMode, t }) => {
               <CheckCircle className={clsx(mode === modes.team ? classes.checkBoxSelected : classes.checkBoxDefault)} />
             </div>
             <PeopleAltSharp className={classes.modeItemIcon} />
-            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>{t('createProject.selectMode.teamMode.title')}</Typography>
-            <Typography className={classes.modeItemDescription}>{t('createProject.selectMode.teamMode.description')}</Typography>
+            <Typography className={clsx(commonClasses.title2, classes.modeItemTitle)}>
+              {t('createProject.selectMode.teamMode.title')}
+            </Typography>
+            <Typography className={classes.modeItemDescription}>
+              {t('createProject.selectMode.teamMode.description')}
+            </Typography>
           </div>
         </div>
         <CustomButton
