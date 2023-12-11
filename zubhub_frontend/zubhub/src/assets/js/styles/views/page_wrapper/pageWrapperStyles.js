@@ -7,16 +7,13 @@ const styles = theme => ({
   },
   input: {
     flex: 1,
-    marginRight: '5rem',
+    marginRight: '2.8rem',
   },
   customButton: {
     fontSize: '1.15rem',
   },
   mainContainerStyle: {
-    // maxWidth: '100vw',
     zIndex: 1,
-    // boxShadow:
-    //   '0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)',
   },
   toolBarStyle: {
     padding: '15px 0',
@@ -45,7 +42,7 @@ const styles = theme => ({
     verticalAlign: 'bottom',
     '& .search-form-input': {
       height: '2.5em',
-      maxWidth: '40em',
+      // maxWidth: '40em',
       backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'white',
       borderRadius: '50px',
