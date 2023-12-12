@@ -126,13 +126,8 @@ function ProjectDetails(props) {
     ).then(async obj => {
       if (obj.project) {
         let { project } = obj;
-        const userProjects = await props.getUserProjects({
-          limit: 4,
-          username: project.creator.username,
-          project_to_omit: project.id,
-        });
-        let moreProjects = userProjects.results;
-        setMoreProjects(moreProjects);
+        const moreProjects = await props.getMoreProjects(project.id);
+        setMoreProjects(moreProjects.results) 
         parseComments(project.comments);
       }
       handleSetState(obj);
@@ -558,6 +553,7 @@ function ProjectDetails(props) {
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
   getProject: PropTypes.func.isRequired,
+  getMoreProjects: PropTypes.func.isRequired,
   getUserProjects: PropTypes.func.isRequired,
   suggestCreators: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,
@@ -606,6 +602,9 @@ const mapDispatchToProps = dispatch => {
     },
     getUserProjects: args => {
       return dispatch(ProjectActions.getUserProjects(args));
+    },
+    getMoreProjects: args => {
+      return dispatch(ProjectActions.getMoreProjects(args));
     },
   };
 };
