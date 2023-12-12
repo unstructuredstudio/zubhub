@@ -457,7 +457,7 @@ class API {
    * @todo - describe method's signature
    */
   getUserProjects = ({ username, page, limit, token, project_to_omit }) => {
-    let url = `creators/${username}/projects`;
+    let url = `creators/${username}/projects/`;
     let queryParams = sanitizeObject({ page, limit, project_to_omit });
     const searchParams = new URLSearchParams(queryParams);
     url = `${url}?${searchParams}`;
@@ -875,7 +875,7 @@ class API {
    * @todo - describe method's signature
    */
   getProject = ({ id, token }) => {
-    const url = `projects/${id}`;
+    const url = `projects/${id}/`;
     if (token) {
       return this.request({ url, token }).then(res => res.json());
     } else {

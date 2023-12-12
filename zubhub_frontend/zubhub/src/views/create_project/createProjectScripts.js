@@ -938,6 +938,7 @@ export const getProject = (refs, props, state) => {
     .getProject({
       id: props.params.id,
       token: props.auth.token,
+      t: props.t
     })
     .then(obj => {
       if (!obj.project) {

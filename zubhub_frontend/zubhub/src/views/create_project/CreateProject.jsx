@@ -376,7 +376,8 @@ function CreateProject(props) {
                 remoteData={remoteTags}
                 clearSuggestions={clearSuggestions}
                 removeTag={removeTag}
-                placeholder="Start typing to search #science"
+                handleBlur={formik.handleBlur}
+                placeholder="Start typing to search"
               />
             </DialogContent>
           </Modal>

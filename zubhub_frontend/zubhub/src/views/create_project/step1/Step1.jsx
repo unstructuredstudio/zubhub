@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import { Box, FormControl, TextField } from '@mui/material';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useCallback } from 'react';
 import styles from '../../../assets/js/styles';
 import { Editor, TagsInput } from '../../../components';
 import { searchTags } from '../script';
@@ -39,10 +39,10 @@ function Step1({ formik, handleBlur }) {
     setValue('');
   };
 
-  const removeTag = tagIndex => {
+  const removeTag = useCallback(tagIndex => {
     const tags = [...formik.values.materials_used].filter((_, index) => index !== tagIndex);
     formik.setFieldValue('materials_used', tags);
-  };
+  }, [formik]);
 
   useEffect(() => {
     console.log('changed');
