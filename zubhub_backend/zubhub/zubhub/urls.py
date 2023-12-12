@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularRedocView
 
 
 schema_url_patterns = []
@@ -28,6 +29,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('api/', include('APIS.urls')),
+    re_path(r'^$', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 
