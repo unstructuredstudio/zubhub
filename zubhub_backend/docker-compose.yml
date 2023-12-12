@@ -59,13 +59,13 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./compose/celery/Dockerfile
+      dockerfile: ./compose/celery/prod/Dockerfile
     command: /celery/start-celeryworker
     restart: on-failure
     volumes:
       - ./zubhub:/zubhub_backend/zubhub
-      - ./compose/celery/start-celeryworker:/zubhub_backend/start-celeryworker:ro
-      - ./compose/celery/requirements.txt:/zubhub_backend/requirements.txt:ro
+      - ./compose/celery/prod/start-celeryworker:/zubhub_backend/start-celeryworker:ro
+      - ./compose/celery/prod/requirements.txt:/zubhub_backend/requirements.txt:ro
     depends_on:
       - rabbitmq
       - db

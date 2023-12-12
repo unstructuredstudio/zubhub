@@ -28,7 +28,7 @@ RUN pip install --upgrade pip wheel \
 # copy project
 COPY ./zubhub/ /flower/zubhub/
 
-COPY ./compose/flower/start-flower /flower/start-flower
+COPY ./compose/flower/prod/start-flower /flower/start-flower
 RUN sed -i 's/\r$//g' /flower/start-flower
 RUN chmod +x /flower/start-flower
 

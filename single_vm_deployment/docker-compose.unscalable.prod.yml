@@ -74,12 +74,12 @@ services:
       - ./zubhub_backend/.env
     build:
       context: ./zubhub_backend/
-      dockerfile: compose/celery/Dockerfile
+      dockerfile: compose/celery/prod/Dockerfile
     command: /celery/start-celeryworker
     restart: on-failure
     volumes:
       - ./zubhub_backend/zubhub:/zubhub_backend/zubhub
-      - ./zubhub_backend/compose/celery/start-celeryworker:/zubhub_backend/start-celeryworker:ro
+      - ./zubhub_backend/compose/celery/prod/start-celeryworker:/zubhub_backend/start-celeryworker:ro
       - ./zubhub_backend/compose/celery/requirements.txt:/zubhub_backend/requirements.txt:ro
     depends_on:
       - rabbitmq
@@ -116,14 +116,14 @@ services:
   #   env_file: .env
   #   build:
   #     context: .
-  #     dockerfile: ./compose/flower/Dockerfile
+  #     dockerfile: ./compose/flower/prod/Dockerfile
   #   ports:
   #     - 5555:5555
   #   command: /flower/start-flower
   #   restart: on-failure
   #   volumes:
   #     - ./zubhub:/zubhub_backend/zubhub
-  #     - ./compose/flower/start-flower:/start-flower:ro
+  #     - ./compose/flower/prod/start-flower:/start-flower:ro
   #     - ./requirements.txt:/requirements.txt:ro
   #   depends_on:
   #     - celery_worker

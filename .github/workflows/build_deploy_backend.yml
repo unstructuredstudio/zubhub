@@ -45,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./zubhub_backend/
-          file: ./zubhub_backend/compose/celery/Dockerfile
+          file: ./zubhub_backend/compose/celery/prod/Dockerfile
           push: true
           tags: unstructuredstudio/zubhub-services_celery:latest
       - name: Image digest

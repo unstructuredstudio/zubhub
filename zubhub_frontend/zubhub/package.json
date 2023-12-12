@@ -56,7 +56,7 @@
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
-    "build": "node --max-old-space-size=1024 `which react-scripts` build",
+    "build": "node --max-old-space-size=1024 node_modules/react-scripts/bin/react-scripts.js build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "pretty": "prettier --config ./.prettierrc.yaml --write \"src/**/*.{js,jsx}\""
