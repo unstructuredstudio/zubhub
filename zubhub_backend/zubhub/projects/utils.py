@@ -463,3 +463,30 @@ def perform_project_search(user, query_string, search_criteria: Optional[Set[Pro
             result.append(project)
 
     return result
+
+
+def recommend_projects(project):
+    """
+    Params:
+    project - Project object
+    Returns list of three projects to recommend to a user based on project's categories
+    """
+
+    Project = apps.get_model('projects.Project')
+    PublishingRule = apps.get_model('projects.PublishingRule')
+
+    categories = list(project.category.all())
+    projects = list(Project.objects.none())
+    
+    for c in categories:
+        for p in Project.objects.all().filter(publish__type=PublishingRule.PUBLIC).exclude(pk=project.pk).filter(category=c):
+            projects.append(p)
+            if len(projects) == 3:
+                return projects
+    # shows most liked projects if there are not enough projects with the same category
+    if len(projects) < 3:
+        for p in Project.objects.all().filter(publish__type=PublishingRule.PUBLIC).exclude(pk=project.pk).all().order_by('-likes_count'):
+            if not p in projects:
+                projects.append(p)
+                if len(projects) == 3:
+                    return projects
