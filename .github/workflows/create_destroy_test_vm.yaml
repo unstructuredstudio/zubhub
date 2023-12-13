@@ -24,6 +24,17 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
+      - name: Get commit ref
+        run: |
+
+          # for context read this https://github.com/Arelle/Arelle/pull/938/files#r1377926250 
+          merge_commit_sha=${{ github.event.pull_request.merge_commit_sha }}
+          head_ref=${{ github.event.pull_request.head.ref }}
+          COMMIT_REF=${merge_commit_sha:-$head_ref}
+          echo "COMMIT_REF=$COMMIT_REF" >> $GITHUB_ENV
+          echo "********************************* merge_commit_sha=$merge_commit_sha"
+          echo "********************************* head_ref=$head_ref"
+
 # careful with this as you are checking out the source branch of the PR
 # which is a potential security risk. Only do this when you know what you are doing
 # See https://stackoverflow.com/questions/75873833/how-to-protect-github-secrets-in-pull-request-actions-from-malicious-pull-reques
@@ -32,7 +43,7 @@ jobs:
       - name: Checkout source branch
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ env.COMMIT_REF }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Install doctl
@@ -93,11 +104,13 @@ jobs:
           echo "::set-output name=FRONTEND_DOMAIN::$FRONTEND_DOMAIN"
           echo "::set-output name=API_DOMAIN::$API_DOMAIN"
           echo "::set-output name=MEDIA_DOMAIN::$MEDIA_DOMAIN"
+          echo "::set-output name=COMMIT_REF::${{ env.COMMIT_REF }}"
     outputs:
       NEW_DROPLET_IP: ${{ steps.set_output.outputs.NEW_DROPLET_IP }}
       FRONTEND_DOMAIN: ${{ steps.set_output.outputs.FRONTEND_DOMAIN }}
       API_DOMAIN: ${{ steps.set_output.outputs.API_DOMAIN }}
       MEDIA_DOMAIN: ${{ steps.set_output.outputs.MEDIA_DOMAIN }}
+      COMMIT_REF: ${{ steps.set_output.outputs.COMMIT_REF }}
 
 #################################################################################
 
@@ -118,6 +131,7 @@ jobs:
           echo "FRONTEND_DOMAIN=${{ needs.create_test_vm.outputs.FRONTEND_DOMAIN }}" >> $GITHUB_ENV
           echo "API_DOMAIN=${{ needs.create_test_vm.outputs.API_DOMAIN }}" >> $GITHUB_ENV
           echo "MEDIA_DOMAIN=${{ needs.create_test_vm.outputs.MEDIA_DOMAIN }}" >> $GITHUB_ENV
+          echo "COMMIT_REF=${{ needs.create_test_vm.outputs.COMMIT_REF }}" >> $GITHUB_ENV
 
 # careful with this as you are checking out the source branch of the PR
 # which is a potential security risk. Only do this when you know what you are doing
@@ -127,7 +141,7 @@ jobs:
       - name: Checkout source branch
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ env.COMMIT_REF }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: create a .env file in the zubhub_frontend/zubhub/ directory
