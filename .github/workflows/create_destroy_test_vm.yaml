@@ -77,7 +77,7 @@ jobs:
           # check if droplet already exists and exit script if it does
           NEW_DROPLET_IP=$(doctl compute droplet get $NEW_DROPLET_NAME \
             --format PublicIPv4 --no-header 2>/dev/null || true)
-          if [ -n "$NEW_DROPLET_IP" ] ; then
+          if [[ -n "$NEW_DROPLET_IP" ]] ; then
             echo "Droplet already exists. Save droplet IP to env variable and exit..."
             echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $GITHUB_ENV
             exit 0
@@ -297,7 +297,7 @@ jobs:
 
           # for events like unlabelled, github.event.pull_request.number is available
           PR_NUMBER=${{ github.event.pull_request.number }}
-          if [ -z "$PR_NUMBER" ] ; then
+          if [[ -z "$PR_NUMBER" ]] ; then
             # github.event.pull_request.number is not available in closed event
             sudo apt-get install jq -y
             PR_NUMBER=$(curl --silent --show-error -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -305,7 +305,7 @@ jobs:
               jq -r '.[0].number')
           fi
 
-          if [ -z "$PR_NUMBER" ] ; then
+          if [[ -z "$PR_NUMBER" ]] ; then
             echo "PR_NUMBER is not available. Exiting..."
             exit 1
           fi
@@ -314,7 +314,7 @@ jobs:
           # Get droplet ip
           DROPLET_IP=$(doctl compute droplet get $DROPLET_NAME \
             --format PublicIPv4 --no-header 2>/dev/null || true)
-          if [ -z "$DROPLET_IP" ] ; then
+          if [[ -z "$DROPLET_IP" ]] ; then
             echo "Droplet does not exist. Exiting..."
             exit 0
           fi
@@ -334,14 +334,14 @@ jobs:
             IP=$(echo $record | cut -d' ' -f2)
 
             # Delete the record if it points to the droplet IP
-            if [ -n "$ID" && "$IP" == "${{env.DROPLET_IP}}" ]; then
+            if [[ -n "$ID" && "$IP" == "${{env.DROPLET_IP}}" ]]; then
               doctl compute domain records delete unstructured.studio $ID --force
             fi
           done <<< "$records"
 
       - name: Delete test droplet
         run: |
-          if [ -n "${{ env.DROPLET_NAME }}" ] ; then
+          if [[ -n "${{ env.DROPLET_NAME }}" ]] ; then
             doctl compute droplet  delete ${{ env.DROPLET_NAME }} --force
           fi
 ######################################################################################
