@@ -1,10 +1,14 @@
 name: Create/Destroy Test VM
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, synchronize, labeled, unlabeled, closed]
 
 jobs:
+##################################################################################
+# The following job is for creating a new DO droplet, creating DNS records for it
+# and copying the project files to it.
+##################################################################################
   create_test_vm:
     if: |
       (
@@ -20,13 +24,17 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout files
+# careful with this as you are checking out the source branch of the PR
+# which is a potential security risk. Only do this when you know what you are doing
+# See https://stackoverflow.com/questions/75873833/how-to-protect-github-secrets-in-pull-request-actions-from-malicious-pull-reques
+# See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
+# See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
+      - name: Checkout source branch
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-##################################################################################
-# The following steps are for creating a new DO droplet, creating DNS records for it
-# and copying the project files to it.
-##################################################################################
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -111,8 +119,16 @@ jobs:
           echo "API_DOMAIN=${{ needs.create_test_vm.outputs.API_DOMAIN }}" >> $GITHUB_ENV
           echo "MEDIA_DOMAIN=${{ needs.create_test_vm.outputs.MEDIA_DOMAIN }}" >> $GITHUB_ENV
 
-      - name: Checkout files
+# careful with this as you are checking out the source branch of the PR
+# which is a potential security risk. Only do this when you know what you are doing
+# See https://stackoverflow.com/questions/75873833/how-to-protect-github-secrets-in-pull-request-actions-from-malicious-pull-reques
+# See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
+# See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
+      - name: Checkout source branch
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: create a .env file in the zubhub_frontend/zubhub/ directory
         run: |
