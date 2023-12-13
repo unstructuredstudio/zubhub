@@ -32,7 +32,7 @@ jobs:
           head_ref=${{ github.event.pull_request.head.ref }}
           target_repo=${{ github.repository }}
           pr_repo=${{ github.event.pull_request.head.repo.full_name }}
-          CHECKOUT_COMMIT_REF=${$merge_commit_sha:-$head_ref}
+          CHECKOUT_COMMIT_REF=${merge_commit_sha:-$head_ref}
           CHECKOUT_REPO=${merge_commit_sha:+$target_repo:-$pr_repo}
           echo "CHECKOUT_COMMIT_REF=$CHECKOUT_COMMIT_REF" >> $GITHUB_ENV
           echo "CHECKOUT_REPO=$CHECKOUT_REPO" >> $GITHUB_ENV
