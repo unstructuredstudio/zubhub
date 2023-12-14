@@ -49,6 +49,8 @@ echo "done removing uneccessary frontend files and folders"
 
 echo "stopping and rebuilding the containers"
 cd /home/
+# pull the lastest images defined in the docker-compose file. This is to avoid using stale images
+docker-compose -f docker-compose.test.yml --env-file ./zubhub_backend/.env pull
 docker-compose -f docker-compose.test.yml --env-file ./zubhub_backend/.env down
 sleep 10s
 docker-compose -f docker-compose.test.yml --env-file ./zubhub_backend/.env up -d --build
