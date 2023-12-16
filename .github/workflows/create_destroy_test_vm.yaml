@@ -40,12 +40,6 @@ jobs:
 
           echo "CHECKOUT_COMMIT_REF=$CHECKOUT_COMMIT_REF" >> $GITHUB_ENV
           echo "CHECKOUT_REPO=$CHECKOUT_REPO" >> $GITHUB_ENV
-          echo "********************************* merge_commit_sha=$merge_commit_sha"
-          echo "********************************* head_ref=$head_ref"
-          echo "********************************* target_repo=$target_repo"
-          echo "********************************* pr_repo=$pr_repo"
-          echo "********************************* CHECKOUT_COMMIT_REF=$CHECKOUT_COMMIT_REF"
-          echo "********************************* CHECKOUT_REPO=$CHECKOUT_REPO"
 
 # careful with this as you are checking out the source branch of the PR
 # which is a potential security risk. Only do this when you know what you are doing
@@ -112,12 +106,12 @@ jobs:
       - name: Set output
         id: set_output
         run: |
-          echo "::set-output name=NEW_DROPLET_IP::$NEW_DROPLET_IP"
-          echo "::set-output name=FRONTEND_DOMAIN::$FRONTEND_DOMAIN"
-          echo "::set-output name=API_DOMAIN::$API_DOMAIN"
-          echo "::set-output name=MEDIA_DOMAIN::$MEDIA_DOMAIN"
-          echo "::set-output name=CHECKOUT_COMMIT_REF::${{ env.CHECKOUT_COMMIT_REF }}"
-          echo "::set-output name=CHECKOUT_REPO::${{ env.CHECKOUT_REPO }}"
+          echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $GITHUB_OUTPUT
+          echo "FRONTEND_DOMAIN=$FRONTEND_DOMAIN" >> $GITHUB_OUTPUT
+          echo "API_DOMAIN=$API_DOMAIN" >> $GITHUB_OUTPUT
+          echo "MEDIA_DOMAIN=$MEDIA_DOMAIN" >> $GITHUB_OUTPUT
+          echo "CHECKOUT_COMMIT_REF=${{ env.CHECKOUT_COMMIT_REF }}" >> $GITHUB_OUTPUT
+          echo "CHECKOUT_REPO=${{ env.CHECKOUT_REPO }}" >> $GITHUB_OUTPUT
     outputs:
       NEW_DROPLET_IP: ${{ steps.set_output.outputs.NEW_DROPLET_IP }}
       FRONTEND_DOMAIN: ${{ steps.set_output.outputs.FRONTEND_DOMAIN }}
@@ -252,14 +246,11 @@ jobs:
             POSTGRES_USER=postgres
             POSTGRES_PASSWORD=postgres
             POSTGRES_HOST=db
-            GF_ADMIN_USER=admin
-            GF_ADMIN_PASSWORD=admin
-            RABBITMQ_DEFAULT_USER=admin
-            RABBITMQ_DEFAULT_PASS=admin
+            RABBITMQ_USERNAME=admin
+            RABBITMQ_PASSWORD=admin
+            RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
             CELERY_BROKER=amqp://admin:admin@rabbitmq:5672/
             CELERY_BACKEND=django-db
-            CELERY_FLOWER_USER=admin
-            CELERY_FLOWER_PASSWORD=admin
             PROXY_COUNT=0
             DETECT_MISCONFIG=0
             SUPERUSER_PASSWORD=dummy_password

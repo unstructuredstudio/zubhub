@@ -50,7 +50,7 @@ services:
     container_name: rabbitmq
     env_file:
       - ./zubhub_backend/.env
-    image: rabbitmq:3-management
+    image: bitnami/rabbitmq:3.11
     restart: on-failure
     ports:
       - 5672:5672
