@@ -46,8 +46,10 @@ POSTGRES_HOST=db
 #DOSPACE_ENDPOINT_URL=<endpoint url>
 #DOSPACE_BUCKETNAME=<bucket name>
 
-RABBITMQ_DEFAULT_USER=admin
-RABBITMQ_DEFAULT_PASS=admin
+RABBITMQ_USERNAME=admin
+RABBITMQ_PASSWORD=admin
+# https://github.com/bitnami/containers/issues/53771
+RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
 
 CELERY_BROKER=amqp://admin:admin@rabbitmq:5672/
 CELERY_BACKEND=django-db
