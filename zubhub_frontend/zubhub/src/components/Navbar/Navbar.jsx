@@ -76,6 +76,7 @@ function NavBar(props) {
   const [searchType, setSearchType] = useState(getQueryParams(window.location.href).get('type') || SearchType.PROJECTS);
   const formRef = useRef();
   const token = useSelector(state => state.auth.token);
+  const hideSearchAndActions = pathname === '/signup' || pathname === '/login';
 
   const [state, setState] = React.useState({
     username: null,
@@ -215,11 +216,14 @@ function NavBar(props) {
       <AppBar className={classes.navBarStyle}>
         <Container id="navbar-root" className={classes.mainContainerStyle}>
           <Toolbar className={classes.toolBarStyle}>
-            <Hidden mdUp>
-              <Box style={{ marginRight: 10 }} onClick={toggleDrawer}>
-                <MenuIcon />
-              </Box>
-            </Hidden>
+            {!hideSearchAndActions && (
+              <Hidden mdUp>
+                <Box style={{ marginRight: 10 }} onClick={toggleDrawer}>
+                  <MenuIcon />
+                </Box>
+              </Hidden>
+            )}
+
             <Box className={classes.logoStyle}>
               <Link to="/">
                 <img src={zubhub?.header_logo_url ? zubhub.header_logo_url : logo} alt="logo" />
@@ -335,26 +339,27 @@ function NavBar(props) {
                 </FormControl>
               </form>
             </Box>
-            <div className={classes.navActionStyle}>
-              <SearchOutlined onClick={toggleSearchBar} className={classes.addOn894} />
+            {!hideSearchAndActions && (
+              <div className={classes.navActionStyle}>
+                <SearchOutlined onClick={toggleSearchBar} className={classes.addOn894} />
 
-              <NotificationButton />
-              <Hidden smDown>
-                {props.auth.username && (
-                  <Box>
-                    <Typography className={clsx(common_classes.title2, classes.username)}>
-                      {props.auth.username}
-                    </Typography>
-                    {/* Todo: Change this subheading based on current role of user */}
-                    <Typography className="">Creator</Typography>
-                  </Box>
-                )}
-              </Hidden>
+                <NotificationButton />
+                <Hidden smDown>
+                  {props.auth.username && (
+                    <Box>
+                      <Typography className={clsx(common_classes.title2, classes.username)}>
+                        {props.auth.username}
+                      </Typography>
+                      {/* Todo: Change this subheading based on current role of user */}
+                      <Typography className="">Creator</Typography>
+                    </Box>
+                  )}
+                </Hidden>
 
               <AvatarButton navigate={props.navigate} />
             </div>
           </Toolbar>
-          {open_search_form ? (
+          {!hideSearchAndActions && open_search_form ? (
             <ClickAwayListener onClickAway={e => handleSetState(closeSearchFormOrIgnore(e))}>
               <form
                 action="/search"

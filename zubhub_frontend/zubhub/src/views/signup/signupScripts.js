@@ -243,3 +243,17 @@ export const validationSchema = Yup.object().shape({
 });
 
 // /^[+][0-9]{9,15}$/g.test(value)
+
+export const formikSchema = {
+  initialValues: {
+    role: '',
+    username: '',
+    email: '',
+    phone: '',
+    location: '',
+    password1: '',
+    password2: '',
+    bio: '',
+  },
+  validationSchema,
+};
