@@ -17,6 +17,7 @@ import PreviewProject from './previewProject/PreviewProject';
 import Pill from './pill/Pill';
 import ProtectedRoute from './protected_route/ProtectedRoute';
 import SessionExpireModal from './sessionExpired/sessionExpired';
+import CustomErrorMessage from './form/errorMessage/ErrorMessage';
 
 export {
   Comments,
@@ -38,4 +39,5 @@ export {
   Pill,
   ProtectedRoute,
   SessionExpireModal,
+  CustomErrorMessage,
 };

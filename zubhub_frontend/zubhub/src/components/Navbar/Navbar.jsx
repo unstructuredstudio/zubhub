@@ -68,6 +68,9 @@ const anchor = 'left';
  * @todo - describe function's signature
  */
 function NavBar(props) {
+  const {
+    location: { pathname },
+  } = props;
   const backToTopEl = React.useRef(null);
   const navigate = useNavigate();
   const classes = useStyles();
@@ -76,6 +79,7 @@ function NavBar(props) {
   const [searchType, setSearchType] = useState(getQueryParams(window.location.href).get('type') || SearchType.PROJECTS);
   const formRef = useRef();
   const token = useSelector(state => state.auth.token);
+  const hideSearchAndActions = pathname === '/signup' || pathname === '/login';
 
   const [state, setState] = React.useState({
     username: null,
@@ -215,11 +219,14 @@ function NavBar(props) {
       <AppBar className={classes.navBarStyle}>
         <Container id="navbar-root" className={classes.mainContainerStyle}>
           <Toolbar className={classes.toolBarStyle}>
-            <Hidden mdUp>
-              <Box style={{ marginRight: 10 }} onClick={toggleDrawer}>
-                <MenuIcon />
-              </Box>
-            </Hidden>
+            {!hideSearchAndActions && (
+              <Hidden mdUp>
+                <Box style={{ marginRight: 10 }} onClick={toggleDrawer}>
+                  <MenuIcon />
+                </Box>
+              </Hidden>
+            )}
+
             <Box className={classes.logoStyle}>
               <Link to="/">
                 <img src={zubhub?.header_logo_url ? zubhub.header_logo_url : logo} alt="logo" />
@@ -268,98 +275,105 @@ function NavBar(props) {
                   ))}
                 </Select>
               </Box>
-              <form
-                action="/search"
-                className={clsx(classes.searchFormStyle, classes.removeOn894)}
-                role="search"
-                onSubmit={handleSubmit}
-                ref={formRef}
-              >
-                <FormControl
-                  className={clsx(
-                    common_classes.width100Percent,
-                    common_classes.displayFlex,
-                    common_classes.displayInlineFlex,
-                  )}
-                  variant="outlined"
+              {hideSearchAndActions && props?.customAction && (
+                <div style={{ marginLeft: 'auto' }}>{props?.customAction}</div>
+              )}
+              {!hideSearchAndActions && (
+                <form
+                  action="/search"
+                  className={clsx(classes.searchFormStyle, classes.removeOn894)}
+                  role="search"
+                  onSubmit={handleSubmit}
+                  ref={formRef}
                 >
-                  <InputLabel htmlFor="q" className={classes.searchFormLabelStyle}>
-                    {t('pageWrapper.inputs.search.label')}
-                  </InputLabel>
-                  <FormGroup row>
-                    <FormControl variant="outlined">
-                      <InputSelect searchType={searchType} onSearchTypeChange={setSearchType} name="type">
-                        <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
-                        <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
-                        <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
-                      </InputSelect>
-                    </FormControl>
-                    <Autocomplete
-                      className={classes.input}
-                      options={options}
-                      defaultValue={{ title: query }}
-                      value={{ title: query }}
-                      renderOption={(props, option, { inputValue }) => (
-                        <Option
-                          {...props}
-                          option={option}
-                          inputValue={inputValue}
-                          onOptionClick={onSearchOptionClick}
-                        />
-                      )}
-                    >
-                      {params => (
-                        <TextField
-                          name="q"
-                          id="q"
-                          type="search"
-                          variant="outlined"
-                          {...params}
-                          InputProps={{
-                            ...params.InputProps,
-                            className: clsx(classes.searchFormInputStyle, 'search-form-input'),
-                            endAdornment: (
-                              <InputAdornment position="end">
-                                <IconButton
-                                  type="submit"
-                                  className={classes.searchFormSubmitStyle}
-                                  aria-label={t('pageWrapper.inputs.search.label')}
-                                >
-                                  <SearchIcon />
-                                </IconButton>
-                              </InputAdornment>
-                            ),
-                            pattern: '(.|s)*S(.|s)*',
-                          }}
-                          onChange={handleTextField}
-                          placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                        />
-                      )}
-                    </Autocomplete>
-                  </FormGroup>
-                </FormControl>
-              </form>
+                  <FormControl
+                    className={clsx(
+                      common_classes.width100Percent,
+                      common_classes.displayFlex,
+                      common_classes.displayInlineFlex,
+                    )}
+                    variant="outlined"
+                  >
+                    <InputLabel htmlFor="q" className={classes.searchFormLabelStyle}>
+                      {t('pageWrapper.inputs.search.label')}
+                    </InputLabel>
+                    <FormGroup row>
+                      <FormControl variant="outlined">
+                        <InputSelect searchType={searchType} onSearchTypeChange={setSearchType} name="type">
+                          <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
+                          <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
+                          <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                        </InputSelect>
+                      </FormControl>
+                      <Autocomplete
+                        className={classes.input}
+                        options={options}
+                        defaultValue={{ title: query }}
+                        value={{ title: query }}
+                        renderOption={(props, option, { inputValue }) => (
+                          <Option
+                            {...props}
+                            option={option}
+                            inputValue={inputValue}
+                            onOptionClick={onSearchOptionClick}
+                          />
+                        )}
+                      >
+                        {params => (
+                          <TextField
+                            name="q"
+                            id="q"
+                            type="search"
+                            variant="outlined"
+                            {...params}
+                            InputProps={{
+                              ...params.InputProps,
+                              className: clsx(classes.searchFormInputStyle, 'search-form-input'),
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    type="submit"
+                                    className={classes.searchFormSubmitStyle}
+                                    aria-label={t('pageWrapper.inputs.search.label')}
+                                  >
+                                    <SearchIcon />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                              pattern: '(.|s)*S(.|s)*',
+                            }}
+                            onChange={handleTextField}
+                            placeholder={`${t('pageWrapper.inputs.search.label')}...`}
+                          />
+                        )}
+                      </Autocomplete>
+                    </FormGroup>
+                  </FormControl>
+                </form>
+              )}
             </Box>
-            <div className={classes.navActionStyle}>
-              <SearchOutlined onClick={toggleSearchBar} className={classes.addOn894} />
+            {!hideSearchAndActions && (
+              <div className={classes.navActionStyle}>
+                <SearchOutlined onClick={toggleSearchBar} className={classes.addOn894} />
 
-              <NotificationButton />
-              <Hidden smDown>
-                {props.auth.username && (
-                  <Box>
-                    <Typography className={clsx(common_classes.title2, classes.username)}>
-                      {props.auth.username}
-                    </Typography>
-                    {/* Todo: Change this subheading based on current role of user */}
-                    <Typography className="">Creator</Typography>
-                  </Box>
-                )}
-              </Hidden>
+                <NotificationButton />
+                <Hidden smDown>
+                  {props.auth.username && (
+                    <Box>
+                      <Typography className={clsx(common_classes.title2, classes.username)}>
+                        {props.auth.username}
+                      </Typography>
+                      {/* Todo: Change this subheading based on current role of user */}
+                      <Typography className="">Creator</Typography>
+                    </Box>
+                  )}
+                </Hidden>
 
-              <AvatarButton navigate={props.navigate} />
-            </div>
+                <AvatarButton navigate={props.navigate} />
+              </div>
+            )}
           </Toolbar>
-          {open_search_form ? (
+          {!hideSearchAndActions && open_search_form ? (
             <ClickAwayListener onClickAway={e => handleSetState(closeSearchFormOrIgnore(e))}>
               <form
                 action="/search"
