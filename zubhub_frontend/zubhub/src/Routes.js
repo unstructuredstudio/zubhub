@@ -52,6 +52,7 @@ const routeConfig = [
   { path: '/faqs', component: Views.FAQs, global: true },
   { path: '/create-team', component: Views.CreateTeam },
   { path: '/linked-projects', component: Views.LinkedProjects },
+  { path: 'session-expired', component: SessionExpireModal, global: true },
   { path: '/account-status', component: Views.AccounStatus },
   { path: '*', component: Views.NotFound },
 ];
