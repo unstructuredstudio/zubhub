@@ -1,0 +1,230 @@
+<!--
+  This template is to render the main frame of the email, logos and the footer section.
+  The title and the content of the email is to be determined by the child templates.
+-->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>{% block title %}{% endblock %}</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    :root {
+      color-scheme: light;
+      supported-color-schemes: light;
+    }
+  </style>
+</head>
+<body class="body" xml:lang="en" >
+
+  <!-- Empty preview text -->
+  <div style="display:none">&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;</div>
+
+<!-- main container -->
+  <div role="article" aria-roledescription="email" aria-label="email name" lang="en" dir="ltr" style="font-size: medium; font-size: max(16px, 1rem);">
+    <!--[if true]>
+    <table role="presentation" style="width:37.5em" align="center"><tr><td>
+    <![endif]-->
+    <div style="max-width: 37.5em; margin: 0 auto; padding: 1em; font-family: Arial, Helvetica, sans-serif;">
+
+
+  <!-- header logos -->
+    <!--[if true]>
+    <table role="presentation" width="100%" style="all:unset;opacity:0;">
+      <tr>
+    <![endif]-->
+    <!--[if false]></td></tr></table><![endif]-->
+    <div style="display: table; width: 100%;">
+      <!--[if true]>
+        <td width="90%">
+      <![endif]-->
+      <!--[if !true]><!-->
+        <div style="display: table-cell; width: 90%">
+      <!--<![endif]-->
+        <img
+          src="https://zubhub.unstructured.studio/static/media/logo.52347ac5.png"
+          alt="Zubhub's Logo"
+          style="width: 8em; margin-top: 0;"
+        >
+      <!--[if !true]><!-->
+        </div>
+      <!--<![endif]-->
+      <!--[if true]>
+        </td>
+      <![endif]-->
+      <!--[if true]>
+        <td width="10%">
+      <![endif]-->
+      <!--[if !true]><!-->
+        <div style="display: table-cell; width: 10%">
+      <!--<![endif]-->
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAA+CAYAAACbQR1vAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAUGSURBVHgB7ZtBbxtFFMf/M+sGk5BmuUJQN1J7KJdaQpQKCnUERSmXuvABmnwASnpHpOXIhXIBcaGJBEKcknJoKER4QwmNRKWEEwVVyiJVEMShLokrq7H3dd6u3TjZdbyO7fVm3Z+UZDyetfL+M/Pem7drgbCYXtKRLOhA0cCpV01EhATagWPsWgYicQSw0xBkgPK6+6aw1K8hRITWCcBGP5kfVa3TQD4NSNW03fdIbBn658tvpbBhpzQq6hDygNTsK0OLcyY6QPMCzN4wIO2zwPq4MlSvO15AlxsbS9wkwcIQSiXxGzrE7gXgGe+9/57a02XDRbDrCPVFCpHdCTB7Xe3r/GVljBHY8B1QK8FAh2hMAGfW8xPK8HHEhOAC8F4X+WllfApNw5FARYYIEEwAx/hSVrUMxAxZd0QbjL/z9ICBiLCzACHNvCDqWGTYWQBRmkYIy15IDKBD1Bbg2sKE+t0Chxdt/AXgOE90AV2AvwBCXEYbyfX25hARvAK4S99AG8n39EQmHd4qAHt92LHJ8oKwVQBhTwQ60bUYsjuXYG0KkM0qwymNLmNTgEJPBiGlukUhI+gEBZ1FSKzq/RFzgo7zQxpdiCuA3Ih9xlcLVwASaXQWAx2i7APEEXQprgAi3EPPWjKJqCCd+B9ypfb/SAlwv8dAFyPVTY1I1enDpj33Buuw9kRS1QVd3dkf/PdUP/DhB+lHA7hEJny2pZA6tpfPhKaqST4lNb6+eqwU5/HmK8veYc5NDpFF3CEa5rvSK8dGDOd1MpkbMmdy9avCMWFq8svp2y+epFKptOL85PNc7+QwmLDQBSTI39dJJAuROZm1k2dyOV87JYaHc8oTxF6E5+7maqwAhrCMGPP8P6t+3c4zCWUnSB17QCEMDq96BSApLf5bWQEziDFHV/7ydoqSs+pdAZLF5Tj7gWOW5ek7VH4myRWAHWFM/cBLKxaeveuZW7PS2EyEiC4ihry95OvepiqNTQHchxctxIhBFfrfWfIubE3TzEp7eyr8CWLEuz/O+3WbQ4vfWZUXWwUYOX4JMVkFtWYfVcuf8R6GiMYQA/xmXwhhHfz1h8nqPq8A7AuE2NN5AXt+v9knH0fvfxzueTC2V/OC/YUCPpq+4ukXwPL22Wf8BeC8wKYz2IOcy877xX1ITfO1p3ZBhLfCHssNxm4sYvSXRU8/CbpY7fmrqf+g7+xPk6oWF9qN093CJ75vP/3c+wbRzMGbczVXc/2S2KnXRlGVOkYRDnmfff2Np5+9vpZInN/p2mA1wZHjwyB7ChGEZ/6rL6Y8+56Nl1IO11r6j8ahEWavX1CfPIGIwKHu/avX0K88fzVBjXfGolGu/jwODROd/OIDhzr29n4OrxHjnfHYDc4zxPbHysNkEDKc5HCc9wt1ClPr6zvD9X4EpLmve8wujEJQ258rZNjRcXrrl+EpI3K2CtmHbs5dQoM0/30XxhWCQ2UaLYZnnM/0NQ42jKmOt2NBl/x2WiNABd4aZI9D0mk0sSoG1fI++fstvHHrD0eAGpjkzrqJJmitANV8v5A6N5cdv9fbe+Lvgf3GHV13boRWbooyg+V9zFVbbh9e/RdHVf1u0H9/O0udVE7fCsOrPrP93H7h9YwtZUYT4oT6541GrmWjVbYyU7Ixv6+vb6YRBxfw88NlJZ3Ri+vrKZWBpZQouhR0oPp9snFPEFlKKEvbV1oeWjQtPKZ9PARllM3AIwP0rQAAAABJRU5ErkJggg=="
+          alt="pie illustration"
+          style="width: 4em; padding-bottom: 1em"
+        >
+      <!--[if !true]><!-->
+        </div>
+      <!--<![endif]-->
+      <!--[if true]>
+        </td>
+      <![endif]-->
+    </div>
+    <!--[if true]>
+      </tr>
+    </table>
+    <![endif]-->
+  <!-- header logos end -->
+
+  {% block content %}{% endblock %}
+
+  <!-- footer -->
+      <hr style="border-width: 0; background: #000; color: #000; height:0.1em; margin-top: 3em;">
+
+      <div style="margin: 1.5em 0">
+        <img
+          src="data:image/png;base64,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"
+          alt="Unstructured Studio's Logo"
+          style="width: 10em;"
+        >
+        <p style="margin-top: 0.2">Creative learning for all!</p>
+      </div>
+
+      <div style="margin: 3em 0">
+        <a
+          href="https://www.facebook.com/unstructured.studio"
+          style=" text-decoration: none; color: #FCFDFF; margin-right: 1.3em; display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEySURBVHgBtVXtbcIwEH1E/G9GSCcI3cCdoB0h3aAjtBuwgcUEsAEZIUwQNgAmgDvhKI6JfXYCT3qK5bx354+zvYCMgqiIJTE3fWfigVgTj5gIRdwTrwJZUyEBPMptRGCXGvfZBsGCdkLwjm0oydzgdpJ8LIGOMPPSKcdXeXSiyOUa4/B5lS3aC8FP8K9tBX91YYm+zkNoMKz3FfHbtEuPR3HsJeTgwONh0iaJBJVFCl3kkbpVliCegrdMEPwQF+Zr4930j/0bgBOc8TpcOEGD16HhKqoDgi/cy5gHsbP6f9HvXRnw111DOmjaMbaIu8bRbfI/no+N2xF6A1JnoMcy5gFjSoLBm2CfAy7XT8x4Y413ECPzCDZIB1fZBxIGWKGvrtASsUZhBgo8Xoh/ZgCFZL4BTia42eJRaAQAAAAASUVORK5CYII="
+                    alt="Facebook logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <a
+          href="https://www.instagram.com/unstructuredstudio/"
+          style=" text-decoration: none; color: #FCFDFF; margin-right: 1.3em; display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFqSURBVHgBpVWLdYMwDLz0ZQBGcCZIOkFhgq7QTtB2AugETSfIDEwAnSB0gnoDskErhXMAF/P43HuXKBI6y4otNugjEr4IY6HBNFhhJfyk/Q8qWAt/VzB1Yht+qyOjXQpz4QXToLt8RLNLxZvwqIbprJhhOTJq1Fzsqq6OAvPx5OUWrsCtfOzpzEcEDqSiIhWx953TflBhQ+dQTzV26iQ6WGGCdvvfnobZIgwjPIP9YpUXtEdRY/fC56HkO4RRUNQKdxRJaFvGTqHkkPABbYsS9A++pQ+s/jBXWFFi+Dapr/KenSTsEI3ERi9QSLhbjRmIqy/2np0sXNIuPHGD9kJYBITHjpseozOFfriQtsb1VFuRhJLHemzRHDHL3zH6f2o3hqGKLauKAuI7hK+0j6iTd7uWS4aQDzeEjm4VN+BTLEeKdvwaN+hfhR+0S6wb9O/w5nqGda+lmgVesfFWNwzuMe9l+oWmr7dd/gFOTHlWi4rehwAAAABJRU5ErkJggg=="
+                    alt="Instagram logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <a
+          href="https://twitter.com/Unstructured_S"
+          style=" text-decoration: none; color: #FCFDFF; margin-right: 1.3em; display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEqSURBVHgBrVUBDcIwEDwSBBQHlYCESsACCsABcwAOmINJWFAwCcPBcDDa5D98f93WNVxyCSO//+v977sDYDyvSOPh+UEeHLH2fMsEo2cvGJ7vyIP1HCjpBJ1ng1jtSCrWkvb0vkkFHCkR22IouJ97QcVYLCAkHUQQF5uz5KniF9ESZbGUJTf6/4RMWFJxVcWkJRdKWmEjWOVRFQvNdaVJpUrZaS7GBYphKYlsXIP4JMXQjTNUrMUfoBvnEM97MXispCXhq8ye3xR4rNhbntmgPpyiyBL+6ip6rhGrdCiwxJIiOVYplZsssfitTr18XEJlh0xL1raVVmkxXQET3LF+tJQlegVE2LKtHKaW8AqIULKt+IbhNRtdZ3sKOnieMXNnzaBCfNG+xG/zBRivaolKHpZqAAAAAElFTkSuQmCC"
+                    alt="X logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <a
+          href="https://www.linkedin.com/company/unstructured-studio/"
+          style=" text-decoration: none; color: #FCFDFF;  display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADhSURBVHgB7VXtDYIwEH0SB2CEOoGMwAhuoBuwgm6gI7iBG8AGjmA3kA3wTs5QzkYsrf98ySPhBd59Nl2gh0E6tMwFPXLiHWmxysQ4OTKPxqVciBaRMMROeMNQgauH0uiMG8kYknGLmdDGGwwbUiGi/0v1zkbcDovIFdTGXPrJCVJJkLNoa2JBPGAY7o649ZkbjIen9drRSvjbc8TE8KbQoK/KKH2vPww1ZlzRV+ZWwsFsjHEhZJT4MOBQ46/Xb04r/sZh0CfPYHxIGKVHe6FW/76ZdYlpftWK553HyJH2irIPNVFMxQBgi5oAAAAASUVORK5CYII="
+                    alt="Linkedin logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+      </div>
+
+      <div style="margin: 2em 0;">
+        <a
+          href="https://www.google.com.tr/"
+          style="text-decoration: none; padding: 0; color: #000; display:inline-block; mso-padding-alt:0; text-underline-color:#FCFDFF"
+        >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->Help<!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <div style="height: 0.5em"></div>
+        <a
+          href="https://www.google.com.tr/"
+          style="text-decoration: none; padding: 0; color: #000; display:inline-block; mso-padding-alt:0; text-underline-color:#FCFDFF"
+        >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->Unsubscribe<!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+      </div>
+
+      <div style="margin: 0; color: #757575">
+        <p style="margin: 0.5em 0;">Unstructured Studio</p>
+        <p style="margin: 0.5em 0;">301-4 Elsinore Path, Etobicoke, ON</p>
+        <p style="margin: 0.5em 0;">M8V 4G7, CANADA</p>
+        <p style="margin: 0.5em 0;">&#169 2023 All rights reserved.</p>
+      </div>
+
+    </div>
+    <!--[if true]>
+    </td></tr></table>
+    <![en
+    dif]-->
+
+
+  </div>
+<!-- main container end -->
+
+
+</body>
+</html>
