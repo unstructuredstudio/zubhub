@@ -113,7 +113,7 @@ function PageWrapper(props) {
 
   useEffect(() => {
     if (!props.global && !props.auth.token) {
-      props.navigate('/session-expired');
+      return props.navigate('/session-expired');
     }
   }, [props.auth.token, props.global]);
 
@@ -251,7 +251,7 @@ function PageWrapper(props) {
           </div>
         )}
       </Container>
-      {!props.auth?.token && props.global && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+      {props.global && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
