@@ -1,0 +1,17 @@
+name: Checkout files action
+inputs:
+  ref:
+    required: false
+    type: string
+  repository:
+    required: false
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout files
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref }}
+        repository: ${{ inputs.repository }}
