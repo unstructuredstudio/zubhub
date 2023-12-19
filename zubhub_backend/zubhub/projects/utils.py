@@ -475,15 +475,44 @@ def recommend_projects(project):
     Project = apps.get_model('projects.Project')
     PublishingRule = apps.get_model('projects.PublishingRule')
 
+    title_words = project.title.split()
     categories = list(project.category.all())
+    tags = list(project.tags.all())
+
     projects = list(Project.objects.none())
-    
+
+    # looks for:
+    #   similar title, same category and same tag
+    #   similar title, same category or tags
+    #   similar title
     for c in categories:
-        for p in Project.objects.all().filter(publish__type=PublishingRule.PUBLIC).exclude(pk=project.pk).filter(category=c):
-            projects.append(p)
-            if len(projects) == 3:
-                return projects
-    # shows most liked projects if there are not enough projects with the same category
+        for p in Project.objects.all().filter(
+            (Q(category = c) & Q(tags__in = tags)) |
+            (Q(category = c) | Q(tags__in = tags)) |
+            Q(publish__type = PublishingRule.PUBLIC)
+        ).exclude(pk = project.pk):
+            if any(word in p.title for word in title_words):
+                if not p in projects:
+                    projects.append(p)
+                    if len(projects) == 3:
+                        return projects
+
+    # looks for:
+    #  same category and same tag
+    #  same category
+    if len(projects) < 3:
+        for c in categories:
+            for p in Project.objects.all().filter(
+                (Q(category = c) & Q(tags__in = tags)) |
+                (Q(category = c) | Q(tags__in = tags)),
+                publish__type=PublishingRule.PUBLIC
+            ).exclude(pk=project.pk):
+                projects.append(p)
+                if len(projects) == 3:
+                  return projects
+
+    # looks for:
+    #  most likes
     if len(projects) < 3:
         for p in Project.objects.all().filter(publish__type=PublishingRule.PUBLIC).exclude(pk=project.pk).all().order_by('-likes_count'):
             if not p in projects:
