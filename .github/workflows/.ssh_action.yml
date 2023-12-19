@@ -1,0 +1,19 @@
+name: Execute remote command workflow
+on:
+  workflow_call:
+    inputs:
+      script:
+        required: true
+        type: string
+
+jobs:
+  execute_command:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DO_BACKEND_HOST }}
+          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
+          script: ${{ inputs.script }}
