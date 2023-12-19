@@ -180,7 +180,7 @@ $ docker cp <container ID>:/etc/rabbitmq/rabbitmq.conf .
 ```sh
 $ docker cp rabbitmq.conf <container ID>:/etc/rabbitmq/rabbitmq.conf
 ```
-6. Run `make init`, and then run `make test` again.
+6. Restart the container, and then run `make test` again.
 
 **Note**: Alternatively, if you have a text editor configured with your Docker, you could just do only step 4 and then restart the container. 
 
