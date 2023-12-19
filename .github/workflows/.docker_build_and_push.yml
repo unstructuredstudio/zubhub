@@ -1,0 +1,44 @@
+name: Docker build and push workflow
+on:
+  workflow_call:
+    inputs:
+      context:
+        required: true
+        type: string
+      file:
+        required: true
+        type: string
+      tags:
+        required: true
+        type: string
+      push:
+        required: true
+        type: boolean
+
+jobs:
+  docker_build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ inputs.context }}}
+          file: ${{ inputs.file }}
+          push: ${{ inputs.push }}
+          tags: ${{ inputs.tags }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
