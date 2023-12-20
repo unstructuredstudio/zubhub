@@ -3,7 +3,7 @@ import { colors } from '../../../colors';
 const styles = theme => ({
   primaryButtonStyle: {
     backgroundColor: 'var(--primary-color3)',
-    borderRadius: 30,
+    borderRadius: theme.spacing(1),
     color: 'white',
     '&:hover': {
       backgroundColor: 'var(--secondary-color6)',

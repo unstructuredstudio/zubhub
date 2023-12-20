@@ -9,9 +9,9 @@ import { Container, Grid, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { formikSchema } from './signupScripts';
 import EducatorsForm from './EducatorsForm';
-import { mainGridStyles } from './signupStyles';
+import { mainStyles } from './signupStyles';
 
-const useStyles = makeStyles(mainGridStyles);
+const useStyles = makeStyles(mainStyles);
 function Signup(props) {
   const mainClasses = useStyles();
   const formik = useFormik({
@@ -42,13 +42,13 @@ function Signup(props) {
       <Grid container direction="column" alignItems="center" className={mainClasses.wrapper}>
         <Grid sx={{ width: '100%' }}>
           <StepWizard initialStep={activeStep} ref={wizardRef} className={mainClasses.wizard}>
+            <Step3 {...formik} goAction={wizardGo} />
             <Step1 {...formik} goAction={wizardGo} />
+            <Step2 {...formik} goAction={wizardGo} />
             <EducatorsForm {...formik} />
             <Step6 {...formik} goAction={wizardGo} />
             <Step5 {...formik} goAction={wizardGo} />
             <Step4 {...formik} goAction={wizardGo} />
-            <Step2 {...formik} goAction={wizardGo} />
-            <Step3 {...formik} goAction={wizardGo} />
           </StepWizard>
         </Grid>
         <Grid>
