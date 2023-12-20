@@ -1,0 +1,25 @@
+name: Execute remote command action
+inputs:
+  host:
+    required: true
+    type: string
+  username:
+    required: true
+    type: string
+  key:
+    required: true
+    type: string
+  script:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Executing remote command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        key: ${{ inputs.key }}
+        script: ${{ inputs.script }}

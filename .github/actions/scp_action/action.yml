@@ -1,0 +1,29 @@
+name: Copy files action
+inputs:
+  host:
+    required: true
+    type: string
+  username:
+    required: true
+    type: string
+  key:
+    required: true
+    type: string
+  source:
+    required: true
+    type: string
+  target:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Copy file via scp
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        key: ${{ inputs.key }}
+        source: ${{ inputs.source }}
+        target: ${{ inputs.target }}
