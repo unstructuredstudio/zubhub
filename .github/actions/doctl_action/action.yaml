@@ -1,0 +1,23 @@
+name: Doctl action
+inputs:
+  token:
+    required: true
+    type: string
+  script:
+    required: true
+    type: string
+outputs:
+  json_string: ${{ toJson(steps.script.outputs) }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ inputs.token }}
+
+    - name: execute script
+      id: script
+      run: ${{ inputs.script }}
+      shell: bash

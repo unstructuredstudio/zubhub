@@ -95,20 +95,20 @@ services:
     depends_on:
       - rabbitmq
 
-  prometheus:
-    image: prom/prometheus
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      placement:
-        max_replicas_per_node: 1
-        constraints:
-          - "node.role==manager"
-    volumes:
-      - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  # prometheus:
+  #   image: prom/prometheus
+  #   command:
+  #     - --config.file=/etc/prometheus/prometheus.yml
+  #   deploy:
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: on-failure
+  #     placement:
+  #       max_replicas_per_node: 1
+  #       constraints:
+  #         - "node.role==manager"
+  #   volumes:
+  #     - ./compose/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
 secrets:
   zubhub_services_secrets:

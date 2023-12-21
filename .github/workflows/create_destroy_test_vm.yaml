@@ -46,8 +46,7 @@ jobs:
 # See https://stackoverflow.com/questions/75873833/how-to-protect-github-secrets-in-pull-request-actions-from-malicious-pull-reques
 # See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
 # See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
-      - name: Checkout source branch
-        uses: actions/checkout@v2
+      - uses: unstructuredstudio/zubhub/.github/actions/checkout@master
         with:
           ref: ${{ env.CHECKOUT_COMMIT_REF }}
           repository: ${{ env.CHECKOUT_REPO }}
@@ -94,8 +93,7 @@ jobs:
           doctl compute domain records create unstructured.studio --record-type A --record-name \
             $MEDIA_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
 
-      - name: Copy file via scp
-        uses: appleboy/scp-action@master
+      - uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
         with:
           host: ${{env.NEW_DROPLET_IP}}
           username: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -112,6 +110,7 @@ jobs:
           echo "MEDIA_DOMAIN=$MEDIA_DOMAIN" >> $GITHUB_OUTPUT
           echo "CHECKOUT_COMMIT_REF=${{ env.CHECKOUT_COMMIT_REF }}" >> $GITHUB_OUTPUT
           echo "CHECKOUT_REPO=${{ env.CHECKOUT_REPO }}" >> $GITHUB_OUTPUT
+
     outputs:
       NEW_DROPLET_IP: ${{ steps.set_output.outputs.NEW_DROPLET_IP }}
       FRONTEND_DOMAIN: ${{ steps.set_output.outputs.FRONTEND_DOMAIN }}
@@ -147,8 +146,7 @@ jobs:
 # See https://stackoverflow.com/questions/75873833/how-to-protect-github-secrets-in-pull-request-actions-from-malicious-pull-reques
 # See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
 # See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
-      - name: Checkout source branch
-        uses: actions/checkout@v2
+      - uses: unstructuredstudio/zubhub/.github/actions/checkout@master
         with:
           ref: ${{ env.CHECKOUT_COMMIT_REF }}
           repository: ${{ env.CHECKOUT_REPO }}
@@ -174,22 +172,11 @@ jobs:
           REACT_APP_DEV_VIDEO_UPLOAD_PRESET_NAME=dev_video_upload_preset
           EOF
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+      - name: Build and push ${{ matrix.service }}
+        uses: unstructuredstudio/zubhub/.github/actions/docker_build_and_push@master
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and push ${{ matrix.service }}
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
+          token: ${{ secrets.DOCKERHUB_TOKEN }}
           # for frontend, context is ./zubhub_frontend/zubhub/
           # for backend services, context is ./zubhub_backend/
           context: ./zubhub_${{ matrix.service == 'frontend' && 'frontend/zubhub' || 'backend' }}/
@@ -198,9 +185,6 @@ jobs:
           file: ./zubhub_${{ matrix.service == 'frontend' && 'frontend/zubhub' || format('backend/compose/{0}', matrix.service) }}/${{ matrix.service != 'frontend' && 'prod/' || '' }}Dockerfile${{ matrix.service == 'frontend' && '.prod' || '' }}
           push: true
           tags: unstructuredstudio/zubhub-test_${{ matrix.service }}:latest
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
 ##################################################################################
 
 #################################################################################
@@ -221,7 +205,7 @@ jobs:
           echo "MEDIA_DOMAIN=${{ needs.create_test_vm.outputs.MEDIA_DOMAIN }}" >> $GITHUB_ENV
 
       - name: Executing remote command
-        uses: appleboy/ssh-action@master
+        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
           host: ${{env.NEW_DROPLET_IP}}
           username: ${{ secrets.DO_BACKEND_USERNAME }}
