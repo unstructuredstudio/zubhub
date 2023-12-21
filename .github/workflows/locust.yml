@@ -49,12 +49,12 @@ jobs:
               --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
             sleep 30s
             echo "NEW_DROPLET_IP=$(doctl compute droplet get locust \
-              --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_OUTPUT
+              --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_ENV
 
       - name: Deploy locust
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
-          host: ${{ fromJson(steps.create_droplet.outputs.json_string).NEW_DROPLET_IP }}
+          host: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).NEW_DROPLET_IP }}
           username: ${{ secrets.DO_BACKEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           script: |
