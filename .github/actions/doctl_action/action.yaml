@@ -7,7 +7,8 @@ inputs:
     required: true
     type: string
 outputs:
-  json_string: ${{ toJson(steps.script.outputs) }}
+  JSON_STRING:
+    value: ${{ steps.set_output.outputs.JSON_STRING }}
 
 runs:
   using: "composite"
@@ -21,3 +22,7 @@ runs:
       id: script
       run: ${{ inputs.script }}
       shell: bash
+
+    - name: Set output
+      id: set_output
+      run: echo "JSON_STRING=${{ toJson(env) }}" >> $GITHUB_OUTPUT
