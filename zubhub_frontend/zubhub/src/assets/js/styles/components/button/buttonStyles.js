@@ -5,6 +5,10 @@ const styles = theme => ({
     backgroundColor: 'var(--primary-color3)',
     borderRadius: theme.spacing(1),
     color: 'white',
+    '&.disabled': {
+      color: '#7BA8AB',
+      background: 'rgba(0, 184, 196, 0.10)',
+    },
     '&:hover': {
       backgroundColor: 'var(--secondary-color6)',
     },

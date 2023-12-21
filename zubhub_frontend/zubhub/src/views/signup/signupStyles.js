@@ -96,6 +96,23 @@ export const mainStyles = theme => ({
       padding: '5px 16px',
     },
   },
+  spaceBackground: {
+    width: '100%',
+    height: '100%',
+  },
+  backContainer: {
+    borderRadius: '50%',
+    background: theme.palette.background.default,
+    padding: '10px',
+  },
+  backIcon: {
+    fontSize: theme.spacing(3),
+  },
+  gridControl: {
+    background: theme.palette.background.default,
+    padding: '0 40px',
+    boxShadow: '2px 4px 5px 0px rgba(0, 184, 196, 0.05)',
+  },
 });
 
 export const step1Styles = theme => ({
@@ -116,7 +133,7 @@ export const step1Styles = theme => ({
       alignItems: 'unset',
     },
     '&.selected': {
-      border: '2px solid var(--primary-color3)',
+      border: '3px solid var(--primary-color3)',
     },
   },
   icon: {
@@ -139,18 +156,31 @@ export const step2Styles = theme => ({
   },
 });
 
-export const step3Styles = theme => ({
-  spaceBackground: {
-    width: '100%',
-    height: '100%',
+export const step3Styles = theme => ({});
+
+export const step4Styles = theme => ({});
+export const step5Styles = theme => ({
+  label: {
+    gap: theme.spacing(3),
   },
-  backContainer: {
-    borderRadius: '50%',
-    background: theme.palette.background.default,
-    padding: '10px',
+  formControl: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(5),
+    alignItems: 'left',
   },
-  backIcon: {
-    fontSize: theme.spacing(3),
+  fieldSet: {
+    padding: `20px ${theme.spacing(3)}`,
+    borderWidth: '1px',
+    borderColor: theme.palette.grey[300],
+    borderStyle: 'solid',
+    borderRadius: theme.spacing(1),
+    '&:hover': {
+      borderColor: theme.palette.primary.light,
+    },
+    '&.selected': {
+      borderWidth: '3px',
+      borderColor: theme.palette.primary.light,
+    },
   },
-  select: {},
 });
