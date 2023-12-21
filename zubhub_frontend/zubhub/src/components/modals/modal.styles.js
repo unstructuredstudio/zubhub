@@ -22,8 +22,7 @@ export const modalStyles = theme => ({
     dialogContainer: {
         '& .MuiDialog-paper': {
             overflow: 'visible !important'
-        },
-        backdropFilter: 'blur(15px)',
+        }
     },
     dialogPaper: {
         borderRadius: 8,
