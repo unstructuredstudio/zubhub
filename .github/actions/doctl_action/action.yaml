@@ -20,3 +20,4 @@ runs:
     - name: execute script
       id: script
       run: ${{ inputs.script }}
+      shell: bash
