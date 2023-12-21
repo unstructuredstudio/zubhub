@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: Create new DO droplet
         id: create_droplet
-        uses: unsctructuredstudio/zubhub/.github/actions/doctl@master
+        uses: unstructuredstudio/zubhub/.github/actions/doctl@master
         with:
           token: ${{ secrets.DO_ACCESS_TOKEN }}
           script: |

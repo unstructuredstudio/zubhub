@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-        uses: unstructuredstudio/zubhub/.github/actions/checkout@master
+      - uses: unstructuredstudio/zubhub/.github/actions/checkout@master
 
       - name: Build and push frontend
         uses: unstructuredstudio/zubhub/.github/actions/docker_build_and_push@master
