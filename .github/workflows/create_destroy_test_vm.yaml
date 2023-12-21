@@ -46,7 +46,7 @@ jobs:
 # See https://stackoverflow.com/questions/75873833/how-to-protect-github-secrets-in-pull-request-actions-from-malicious-pull-reques
 # See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
 # See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
-        uses: unstructuredstudio/zubhub/.github/actions/checkout@master
+      - uses: unstructuredstudio/zubhub/.github/actions/checkout@master
         with:
           ref: ${{ env.CHECKOUT_COMMIT_REF }}
           repository: ${{ env.CHECKOUT_REPO }}
@@ -93,7 +93,7 @@ jobs:
           doctl compute domain records create unstructured.studio --record-type A --record-name \
             $MEDIA_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
 
-        uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
+      - uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
         with:
           host: ${{env.NEW_DROPLET_IP}}
           username: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -110,6 +110,7 @@ jobs:
           echo "MEDIA_DOMAIN=$MEDIA_DOMAIN" >> $GITHUB_OUTPUT
           echo "CHECKOUT_COMMIT_REF=${{ env.CHECKOUT_COMMIT_REF }}" >> $GITHUB_OUTPUT
           echo "CHECKOUT_REPO=${{ env.CHECKOUT_REPO }}" >> $GITHUB_OUTPUT
+
     outputs:
       NEW_DROPLET_IP: ${{ steps.set_output.outputs.NEW_DROPLET_IP }}
       FRONTEND_DOMAIN: ${{ steps.set_output.outputs.FRONTEND_DOMAIN }}
@@ -145,7 +146,7 @@ jobs:
 # See https://stackoverflow.com/questions/75873833/how-to-protect-github-secrets-in-pull-request-actions-from-malicious-pull-reques
 # See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
 # See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
-        uses: unstructuredstudio/zubhub/.github/actions/checkout@master
+      - uses: unstructuredstudio/zubhub/.github/actions/checkout@master
         with:
           ref: ${{ env.CHECKOUT_COMMIT_REF }}
           repository: ${{ env.CHECKOUT_REPO }}
