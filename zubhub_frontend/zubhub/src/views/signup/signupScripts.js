@@ -214,32 +214,30 @@ export const setLabelWidthOfStaticFields = (refs, document, props) => {
  * @todo - describe object's function
  */
 export const validationSchema = Yup.object().shape({
+  role: Yup.string().required('Please choose a role'),
   username: Yup.string().required('required'),
-  email: Yup.string()
-    .email('invalid')
-    .test('email_is_empty', 'phoneOrEmail', function (value) {
-      return vars.email_field_touched && !value && !this.parent.phone
-        ? false
-        : true;
-    }),
-  phone: Yup.string()
-    .test('phone_is_invalid', 'invalid', function () {
-      return vars.iti.isValidNumber() || !vars.iti.getNumber() ? true : false;
-    })
-    .test('phone_is_empty', 'phoneOrEmail', function () {
-      return vars.phone_field_touched &&
-        !vars.iti.getNumber() &&
-        !this.parent.email
-        ? false
-        : true;
-    }),
-  dateOfBirth: Yup.date().max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough').required('required'),
-  user_location: Yup.string().min(1, 'min').required('required'),
-  password1: Yup.string().min(8, 'min').required('required'),
-  password2: Yup.string()
-    .oneOf([Yup.ref('password1'), null], 'noMatch')
+  email: Yup.string().email('invalid'),
+  // .test('email_is_empty', 'phoneOrEmail', function (value) {
+  //   return vars.email_field_touched && !value && !this.parent.phone ? false : true;
+  // }),
+  phone: Yup.string(),
+  // .test('phone_is_invalid', 'invalid', function () {
+  //   return vars.iti.isValidNumber() || !vars.iti.getNumber() ? true : false;
+  // })
+  // .test('phone_is_empty', 'phoneOrEmail', function () {
+  //   return vars.phone_field_touched && !vars.iti.getNumber() && !this.parent.email ? false : true;
+  // }),
+  dateOfBirth: Yup.date()
+    .max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough')
+    .required('required'),
+  location: Yup.string().min(1, 'min').required('required'),
+  password: Yup.string().min(8, 'min').required('required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('confirmPassword'), null], 'noMatch')
     .required('required'),
   bio: Yup.string().max(255, 'tooLong'),
+  parentEmail: Yup.string().email(),
+  parentPhone: Yup.string(),
 });
 
 // /^[+][0-9]{9,15}$/g.test(value)
@@ -251,9 +249,11 @@ export const formikSchema = {
     email: '',
     phone: '',
     location: '',
-    password1: '',
-    password2: '',
+    password: '',
+    confirmPassword: '',
     bio: '',
+    parentEmail: '',
+    parentPhone: '',
   },
   validationSchema,
 };

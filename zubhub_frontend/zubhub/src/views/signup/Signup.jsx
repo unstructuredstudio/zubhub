@@ -8,8 +8,8 @@ import { useFormik } from 'formik';
 import { Container, Grid, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { formikSchema } from './signupScripts';
-import EducatorsForm from './EducatorsForm';
 import { mainStyles } from './signupStyles';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(mainStyles);
 function Signup(props) {
@@ -24,6 +24,7 @@ function Signup(props) {
   const [activeStep, setActiveStep] = useState(1);
 
   const wizardGo = (direction, stepErrorsAvailable) => {
+    console.log(stepErrorsAvailable, 'fgsgsgsgsr');
     if (stepErrorsAvailable) {
       return;
     }
@@ -42,17 +43,21 @@ function Signup(props) {
       <Grid container direction="column" alignItems="center" className={mainClasses.wrapper}>
         <Grid sx={{ width: '100%' }}>
           <StepWizard initialStep={activeStep} ref={wizardRef} className={mainClasses.wizard}>
-            <Step3 {...formik} goAction={wizardGo} />
-            <Step1 {...formik} goAction={wizardGo} />
-            <Step2 {...formik} goAction={wizardGo} />
-            <EducatorsForm {...formik} />
-            <Step6 {...formik} goAction={wizardGo} />
-            <Step5 {...formik} goAction={wizardGo} />
-            <Step4 {...formik} goAction={wizardGo} />
+            <Step1 {...formik} goAction={wizardGo} {...props} />
+            <Step2 {...formik} goAction={wizardGo} {...props} />
+            <Step3 {...formik} goAction={wizardGo} {...props} />
+            <Step4 {...formik} goAction={wizardGo} {...props} />
+            <Step5 {...formik} goAction={wizardGo} {...props} />
+            <Step6 {...formik} goAction={wizardGo} {...props} />
           </StepWizard>
         </Grid>
-        <Grid>
-          <Typography>Already have an account? Log In </Typography>
+        <Grid mt={5} mb={5}>
+          <Typography>
+            Already have an account?{' '}
+            <Link style={{ color: 'var(--primary-color3)', textDecoration: 'none', fontWeight: 600 }} to="/login">
+              Login{' '}
+            </Link>
+          </Typography>
         </Grid>
       </Grid>
     </Container>

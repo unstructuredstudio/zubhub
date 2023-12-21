@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import { FaUserGraduate, FaChalkboardUser } from 'react-icons/fa6';
 import { makeStyles } from '@mui/styles';
 import { mainStyles, step1Styles } from '../../signupStyles';
@@ -12,6 +12,12 @@ const useStepStyles = makeStyles(step1Styles);
 const Step1 = props => {
   const mainClasses = useMainStyles();
   const classes = useStepStyles();
+  const {
+    goAction,
+    values: { role },
+    setFieldValue,
+  } = props;
+
   return (
     <Box sx={{ width: '100%' }}>
       <Grid
@@ -32,14 +38,26 @@ const Step1 = props => {
         <Grid item sx={{ width: '100%' }}>
           <Grid container justifyContent="space-around" rowGap={2}>
             <Grid item>
-              <Paper variant="elevation" elevation={2} className={clsx([classes.paper, 'selected'])}>
+              <Paper
+                component="div"
+                onClick={() => setFieldValue('role', 'creator')}
+                variant="elevation"
+                elevation={2}
+                className={clsx([classes.paper, role === 'creator' && 'selected'])}
+              >
                 <FaUserGraduate className={classes.icon} />
                 <Typography className={mainClasses.subHeader}>Creator</Typography>
                 <Typography className={mainClasses.text}>I am a Creator, who wants to create</Typography>
               </Paper>
             </Grid>
             <Grid item>
-              <Paper className={classes.paper} variant="elevation" elevetion={2}>
+              <Paper
+                component="div"
+                onClick={() => setFieldValue('role', 'educator')}
+                className={clsx([classes.paper, role === 'educator' && 'selected'])}
+                variant="elevation"
+                elevetion={2}
+              >
                 <FaChalkboardUser className={classes.icon} />
                 <Typography className={mainClasses.subHeader}>Educator</Typography>
                 <Typography className={mainClasses.text}>I am an Educator, looking to inspire</Typography>
@@ -48,8 +66,13 @@ const Step1 = props => {
           </Grid>
         </Grid>
         <Grid item>
-          <CustomButton className={classes.button} primaryButtonStyle>
-            JOIN AS A CREATOR
+          <CustomButton
+            disabled={!role}
+            className={clsx([classes.button, !role && 'disabled'])}
+            primaryButtonStyle
+            onClick={() => goAction('next', false)}
+          >
+            {!role ? 'CHOOSE A ROLE' : role === 'creator' ? 'JOIN AS A CREATOR' : 'JOIN AS AN EDUCATOR'}
           </CustomButton>
         </Grid>
       </Grid>

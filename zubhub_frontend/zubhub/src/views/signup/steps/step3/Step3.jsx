@@ -15,16 +15,25 @@ import {
 } from '@mui/material';
 import { CustomButton, CustomErrorMessage } from '../../../../components';
 import SpaceBackground from '../../../../assets/images/space.png';
-import classNames from 'classnames';
 import { makeStyles } from '@mui/styles';
 import { mainStyles, step3Styles } from '../../signupStyles';
+import { useEffect, useState } from 'react';
 
 const useMainStyles = makeStyles(mainStyles);
 const useStyles = makeStyles(step3Styles);
 
 const Step3 = props => {
+  const [locations, setLocations] = useState([]);
   const mainClasses = useMainStyles();
-  const classes = useStyles();
+  const { errors, handleChange, handleBlur, goAction, touched, getLocations } = props;
+
+  useEffect(() => {
+    const response = getLocations({ ...props });
+
+    if (response) {
+      Promise.resolve(response).then(data => setLocations(data));
+    }
+  }, [getLocations]);
 
   return (
     <Box width="100%">
@@ -38,48 +47,74 @@ const Step3 = props => {
         rowSpacing={{ xs: 2, sm: 3, md: 5 }}
       >
         <Grid item>
-          <Grid position="absolute" mt={5} ml={5}>
-            <IconButton className={classes.backContainer}>
-              <TfiArrowLeft className={classes.backIcon} />
-            </IconButton>
+          <Grid>
+            <div style={{ position: 'absolute', marginLeft: '40px', marginTop: '40px' }}>
+              <IconButton onClick={() => goAction('prev', false)} className={mainClasses.backContainer}>
+                <TfiArrowLeft className={mainClasses.backIcon} />
+              </IconButton>
+            </div>
           </Grid>
           <Grid>
-            <img src={SpaceBackground} alt="" className={classes.spaceBackground} />
+            <img src={SpaceBackground} alt="" className={mainClasses.spaceBackground} />
           </Grid>
         </Grid>
-        <Grid item>
-          <Typography maxWidth="342px" align="center" className={mainClasses.header2}>
-            What country do you live in?
-          </Typography>
-        </Grid>
-        <Grid item width="100%">
-          <FormControl fullWidth>
-            <Select
-              labelId="select-label"
-              name="location"
-              input={<OutlinedInput />}
-              className={mainClasses.outlinedInput}
-              IconComponent={TfiAngleDown}
-              startAdornment={
-                <InputAdornment>
-                  <TfiLocationPin />
-                </InputAdornment>
-              }
+        <Grid
+          item
+          container
+          direction="column"
+          alignItems="center"
+          rowSpacing={{ xs: 2, sm: 3, md: 5 }}
+          className={mainClasses.gridControl}
+        >
+          <Grid item>
+            <Typography maxWidth="342px" align="center" className={mainClasses.header2}>
+              What country do you live in?
+            </Typography>
+          </Grid>
+          <Grid item width="100%">
+            <FormControl fullWidth error={touched['location'] && errors['location']}>
+              <Select
+                id="location"
+                labelId="select-label"
+                name="location"
+                defaultValue="none"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                input={<OutlinedInput />}
+                className={mainClasses.outlinedInput}
+                IconComponent={() => <TfiAngleDown style={{ fontSize: '24px', fill: '#bdbdbd', marginLeft: '24px' }} />}
+                startAdornment={
+                  <InputAdornment>
+                    <TfiLocationPin className={mainClasses.inputIcon} />
+                  </InputAdornment>
+                }
+              >
+                <MenuItem value="none" disabled>
+                  <Typography color="dimgrey">Select a location</Typography>
+                </MenuItem>
+                <MenuItem value="testing">
+                  <Typography color="black">Testing</Typography>
+                </MenuItem>
+                {Array.isArray(locations) &&
+                  locations?.map((location, index) => (
+                    <MenuItem key={index} value={location.name}>
+                      {location.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+              <CustomErrorMessage name="location" {...props} />
+            </FormControl>
+          </Grid>
+          <Grid item width="100%">
+            <CustomButton
+              onClick={() => goAction('next', !!errors['location'])}
+              primaryButtonStyle
+              fullWidth
+              className={mainClasses.button}
             >
-              <MenuItem value="">
-                <em>Select a location</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-            <CustomErrorMessage name="location" {...props} />
-          </FormControl>
-        </Grid>
-        <Grid item width="100%">
-          <CustomButton primaryButtonStyle fullWidth className={mainClasses.button}>
-            Next
-          </CustomButton>
+              Next
+            </CustomButton>
+          </Grid>
         </Grid>
       </Grid>
     </Box>
