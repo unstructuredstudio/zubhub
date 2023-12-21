@@ -60,7 +60,6 @@ class TestUtils(TestCase):
     self.assertEqual(db_query.file_url, new_data['file_url'])
     self.assertNotEqual(new_image.file_url, self.test_image_data['file_url'])
     
-    
   def test_create_activity_images(self):
     images = [
       {
@@ -152,3 +151,73 @@ class TestUtils(TestCase):
     self.assertGreater(examples_count_after, examples_count_before)
     # Assert only one image was created
     self.assertEqual(images_count_after - images_count_before, 1)
+
+  def test_update_activity_image(self):
+    images = [
+      {
+        'image': {
+          'file_url': 'https://picsum.photos/500',
+          'public_id': 'Activity image 1',
+        }
+      },
+      {
+        'image': {
+          'file_url': 'https://picsum.photos/600',
+          'public_id': 'Activity image 2',
+        }
+      }
+    ]
+
+    update_activity_images(self.test_activity, images_to_save=images)
+    # get count of activity images after function call
+    activity_images_count_after = ActivityImage.objects.filter(activity=self.test_activity).count()
+    self.assertEqual(activity_images_count_after, len(images))
+    
+  def test_update_making_steps(self):
+    making_steps = [
+      {
+        'title': 'Step 1',
+        'description': 'Description for step 1',
+        'step_order': 1,
+        'image': [{'file_url': 'https://picsum.photos/710','public_id': '1',}]
+      },
+      {
+        'title': 'Step 2',
+        'description': 'Description for step 2',
+        'step_order': 2,
+        'image': [{'file_url': 'https://picsum.photos/720','public_id': '2',}]
+      },
+      {
+        'title': 'Step 3',
+        'description': 'Description for step 3',
+        'step_order': 3,
+        'image': [{'file_url': 'https://picsum.photos/730','public_id': '3',}]
+      },
+    ]
+    
+    update_making_steps(self.test_activity, making_steps)
+    # get counts after function call
+    activity_steps_count_after = ActivityMakingStep.objects.filter(activity=self.test_activity).count()
+    self.assertEqual(activity_steps_count_after, len(making_steps))
+
+  def test_update_inspiring_examples(self):
+    inspiring_examples_data = [
+      {
+        'description': 'Inspiring example 1',
+        'credit': 'credit',
+        'image': {
+          'file_url': 'https://picsum.photos/300',
+          'public_id': 'A sample image from the loren picsum website',
+        }
+      },
+      {
+        'description': 'Inspiring example 2',
+        'credit': 'credit',
+        # no image in this inspiring example
+      },
+    ]
+    
+    update_inspiring_examples(self.test_activity, inspiring_examples_data)
+    # get counts after function call
+    examples_count_after = InspiringExample.objects.filter(activity=self.test_activity).count()
+    self.assertEqual(examples_count_after, len(inspiring_examples_data))
