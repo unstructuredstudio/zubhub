@@ -23,9 +23,9 @@ runs:
       with:
         github-token: ${{ inputs.token }}
         script: |
-          const issue_number = ${{ inputs.issue_number }};
-          const owner = ${{ inputs.owner }};
-          const repo = ${{ inputs.repo }};
+          const issue_number = "${{ inputs.issue_number }}";
+          const owner = "${{ inputs.owner }}";
+          const repo = "${{ inputs.repo }}";
           await github.rest.issues.createComment({
             owner: owner,
             repo: repo,
