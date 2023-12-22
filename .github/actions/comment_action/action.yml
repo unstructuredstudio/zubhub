@@ -26,10 +26,9 @@ runs:
           const issue_number = ${{ inputs.issue_number }};
           const owner = ${{ inputs.owner }};
           const repo = ${{ inputs.repo }};
-          const message = ${{ inputs.message }};
           await github.rest.issues.createComment({
             owner: owner,
             repo: repo,
             issue_number: issue_number,
-            body: `${message}`
+            body: `${{ inputs.message }}`
           });
