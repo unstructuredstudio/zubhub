@@ -1,0 +1,35 @@
+name: Comment action
+inputs:
+  token:
+    required: true
+    type: string
+  issue_number:
+    required: true
+    type: string
+  owner:
+    required: true
+    type: string
+  repo:
+    required: true
+    type: string
+  message:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/github-script@v5
+      with:
+        github-token: ${{ inputs.token }}
+        script: |
+          const issue_number = ${{ inputs.issue_number }};
+          const owner = ${{ inputs.owner }};
+          const repo = ${{ inputs.repo }};
+          const message = ${{ inputs.message }};
+          await github.rest.issues.createComment({
+            owner: owner,
+            repo: repo,
+            issue_number: issue_number,
+            body: message
+          });
