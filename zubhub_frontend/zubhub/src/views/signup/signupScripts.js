@@ -209,7 +209,7 @@ export const setLabelWidthOfStaticFields = (refs, document, props) => {
 export const validationSchema = Yup.object().shape({
   role: Yup.string().required('Please choose a role'),
   username: Yup.string().required('required'),
-  email: Yup.string().email('invalid'),
+  email: Yup.string().email('invalid').required('Add your email'),
   // .test('email_is_empty', 'phoneOrEmail', function (value) {
   //   return vars.email_field_touched && !value && !this.parent.phone ? false : true;
   // }),
@@ -220,9 +220,7 @@ export const validationSchema = Yup.object().shape({
   // .test('phone_is_empty', 'phoneOrEmail', function () {
   //   return vars.phone_field_touched && !vars.iti.getNumber() && !this.parent.email ? false : true;
   // }),
-  dateOfBirth: Yup.date()
-    .max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough')
-    .required('required'),
+  dateOfBirth: Yup.date().required('required'),
   location: Yup.string().min(1, 'min').required('required'),
   password: Yup.string().min(8, 'min').required('required'),
   confirmPassword: Yup.string()
@@ -231,12 +229,15 @@ export const validationSchema = Yup.object().shape({
   bio: Yup.string().max(255, 'tooLong'),
   parentEmail: Yup.string().email(),
   parentPhone: Yup.string(),
+  gender: Yup.string().required('Choose your gender'),
+  sendTips: Yup.boolean(),
 });
 
 // /^[+][0-9]{9,15}$/g.test(value)
 
 export const formikSchema = {
   initialValues: {
+    dateOfBirth: '',
     role: '',
     username: '',
     email: '',
@@ -247,6 +248,26 @@ export const formikSchema = {
     bio: '',
     parentEmail: '',
     parentPhone: '',
+    gender: null,
+    sendTips: false,
   },
   validationSchema,
+};
+
+export const customValidation = (values, props) => {
+  const errors = {};
+  const { role, parentEmail, parentPhone } = values;
+
+  if (role === 'creator') {
+    errors.email = null;
+
+    if (!parentEmail && !parentPhone) {
+      errors.parentEmail = 'Please provide either parent email or phone number';
+      errors.parentPhone = 'Please provide either parent email or phone number';
+    } else {
+      errors.parentEmail = null;
+      errors.parentPhone = null;
+    }
+  }
+  return errors;
 };

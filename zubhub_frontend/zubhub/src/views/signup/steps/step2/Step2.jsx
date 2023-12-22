@@ -11,16 +11,19 @@ import {
 import { CustomButton, CustomErrorMessage } from '../../../../components';
 import { TfiLock, TfiArrowLeft } from 'react-icons/tfi';
 import { SlEye, SlUser } from 'react-icons/sl';
+import { BsEyeSlash } from 'react-icons/bs';
 import { makeStyles } from '@mui/styles';
+import { useState } from 'react';
 import { mainStyles, step2Styles } from '../../signupStyles';
 import EducatorsForm from '../../EducatorsForm';
 
 const useMainStyles = makeStyles(mainStyles);
 const useStyles = makeStyles(step2Styles);
 const Step2 = props => {
+  console.log(props, 'afafadh');
+  const [{ password, confirmPassword }, setShowPassword] = useState({ password: false, confirmPassword: false });
   const classes = useStyles();
   const mainClasses = useMainStyles();
-  console.log(props, 'PROPS');
   const {
     errors,
     handleChange,
@@ -79,17 +82,17 @@ const Step2 = props => {
             <CustomErrorMessage name="username" {...props} />
           </FormControl>
         </Grid>
-        <Grid item>
+        <Grid item width={'100%'}>
           <FormControl fullWidth className={mainClasses.formControl} error={touched['password'] && errors['password']}>
             <FormLabel className={mainClasses.subHeader2}>Password</FormLabel>
             <OutlinedInput
-              id="password"
               name="password"
-              type="password"
-              placeholder="Enter your password"
-              className={mainClasses.outlinedInput}
+              id="password"
+              type={password ? 'text' : 'password'}
               onChange={handleChange}
               onBlur={handleBlur}
+              placeholder="Enter your password"
+              className={mainClasses.outlinedInput}
               startAdornment={
                 <InputAdornment>
                   <TfiLock className={mainClasses.inputIcon} />
@@ -97,8 +100,12 @@ const Step2 = props => {
               }
               endAdornment={
                 <InputAdornment>
-                  <IconButton>
-                    <SlEye className={mainClasses.inputIcon} />
+                  <IconButton onClick={() => setShowPassword({ password: !password })}>
+                    {password ? (
+                      <BsEyeSlash className={mainClasses.inputIcon} />
+                    ) : (
+                      <SlEye className={mainClasses.inputIcon} />
+                    )}
                   </IconButton>
                 </InputAdornment>
               }
@@ -106,7 +113,7 @@ const Step2 = props => {
             <CustomErrorMessage name="password" {...props} />
           </FormControl>
         </Grid>
-        <Grid item>
+        <Grid item width={'100%'}>
           <FormControl
             fullWidth
             className={mainClasses.formControl}
@@ -114,13 +121,13 @@ const Step2 = props => {
           >
             <FormLabel className={mainClasses.subHeader2}>Confirm Password</FormLabel>
             <OutlinedInput
-              id="confirmPassword"
               name="confirmPassword"
-              type="password"
-              placeholder="Enter password again"
-              className={mainClasses.outlinedInput}
+              id="confirmPassword"
+              type={confirmPassword ? 'text' : 'password'}
               onChange={handleChange}
               onBlur={handleBlur}
+              placeholder="Enter password again"
+              className={mainClasses.outlinedInput}
               startAdornment={
                 <InputAdornment>
                   <TfiLock className={mainClasses.inputIcon} />
@@ -128,8 +135,12 @@ const Step2 = props => {
               }
               endAdornment={
                 <InputAdornment>
-                  <IconButton>
-                    <SlEye className={mainClasses.inputIcon} />
+                  <IconButton onClick={() => setShowPassword({ confirmPassword: !confirmPassword })}>
+                    {confirmPassword ? (
+                      <BsEyeSlash className={mainClasses.inputIcon} />
+                    ) : (
+                      <SlEye className={mainClasses.inputIcon} />
+                    )}
                   </IconButton>
                 </InputAdornment>
               }

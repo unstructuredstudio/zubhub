@@ -21,6 +21,8 @@ const useStyles = makeStyles(step4Styles);
 
 const Step6 = props => {
   const mainClasses = useMainStyles();
+  const { errors, handleChange, handleBlur, goAction, touched, handleSubmit } = props;
+
   return (
     <Box width={'100%'}>
       <Grid
@@ -32,13 +34,10 @@ const Step6 = props => {
         className={mainClasses.gridControl}
         borderRadius={1}
       >
-        <Grid item alignSelf={'flex-start'}>
-          {/* <Grid item position="absolute">
-            <IconButton className={mainClasses.backContainer}>
-              <TfiArrowLeft className={mainClasses.backIcon} />
-            </IconButton>
-          </Grid> */}
-          <Grid></Grid>
+        <Grid alignSelf="flex-start">
+          <IconButton onClick={() => goAction('prev', false)} className={mainClasses.backContainer}>
+            <TfiArrowLeft className={mainClasses.backIcon} />
+          </IconButton>
         </Grid>
         <Grid item>
           <Typography align="center" className={mainClasses.header2}>
@@ -46,42 +45,65 @@ const Step6 = props => {
           </Typography>
         </Grid>
         <Grid item>
-          <FormControl fullWidth className={mainClasses.formControl}>
+          <FormControl
+            fullWidth
+            className={mainClasses.formControl}
+            error={touched['parentEmail'] && errors['parentEmail']}
+          >
             <FormLabel className={mainClasses.subHeader2}>Parent's Emaol</FormLabel>
             <OutlinedInput
+              name="parentEmail"
+              id="parentEmail"
               placeholder="Enter parent's email address"
               className={mainClasses.outlinedInput}
+              onChange={handleChange}
+              onBlur={handleBlur}
               startAdornment={
                 <InputAdornment>
                   <SlEnvolope className={mainClasses.inputIcon} />
                 </InputAdornment>
               }
             />
-            <CustomErrorMessage name="parent-email" {...props} />
+            <CustomErrorMessage name="parentEmail" {...props} />
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl fullWidth className={mainClasses.formControl}>
+          <FormControl
+            fullWidth
+            className={mainClasses.formControl}
+            error={touched['parentPhone'] && errors['parentPhone']}
+          >
             <FormLabel className={mainClasses.subHeader2}>Parent's Phone number</FormLabel>
             <OutlinedInput
+              name="parentPhone"
+              id="parentPhone"
               placeholder="Enter parent's phone number"
               className={mainClasses.outlinedInput}
+              onChange={handleChange}
+              onBlur={handleBlur}
               startAdornment={
                 <InputAdornment>
                   <SlPhone className={mainClasses.inputIcon} />
                 </InputAdornment>
               }
             />
-            <CustomErrorMessage name="parent-phone" {...props} />
+            <CustomErrorMessage name="parentPhone" {...props} />
           </FormControl>
         </Grid>
         <Grid item>
           <FormControl>
-            <FormControlLabel label="Send me personalised recommendations and learning tips." control={<Checkbox />} />
+            <FormControlLabel
+              id="sendTips"
+              name="sendTips"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              label="Send me personalised recommendations and learning tips."
+              control={<Checkbox />}
+            />
           </FormControl>
         </Grid>
         <Grid item>
-          <CustomButton className={mainClasses.button} primaryButtonStyle fullWidth>
+          <CustomButton onClick={handleSubmit} className={mainClasses.button} primaryButtonStyle fullWidth>
             Create Your Account
           </CustomButton>
         </Grid>
