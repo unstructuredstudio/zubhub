@@ -17,23 +17,13 @@ import { CustomButton, CustomErrorMessage } from '../../../../components';
 import SpaceBackground from '../../../../assets/images/space.png';
 import { makeStyles } from '@mui/styles';
 import { mainStyles, step3Styles } from '../../signupStyles';
-import { useEffect, useState } from 'react';
 
 const useMainStyles = makeStyles(mainStyles);
 const useStyles = makeStyles(step3Styles);
 
 const Step3 = props => {
-  const [locations, setLocations] = useState([]);
   const mainClasses = useMainStyles();
-  const { errors, handleChange, handleBlur, goAction, touched, getLocations } = props;
-
-  useEffect(() => {
-    const response = getLocations({ ...props });
-
-    if (response) {
-      Promise.resolve(response).then(data => setLocations(data));
-    }
-  }, [getLocations]);
+  const { locations, errors, handleChange, handleBlur, goAction, touched } = props;
 
   return (
     <Box width="100%">

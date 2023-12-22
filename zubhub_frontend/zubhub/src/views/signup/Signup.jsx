@@ -3,19 +3,25 @@ import PropTypes from 'prop-types';
 import * as AuthActions from '../../store/actions/authActions';
 import { connect } from 'react-redux';
 import { Step1, Step2, Step3, Step4, Step5, Step6 } from './steps';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Container, Grid, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { formikSchema } from './signupScripts';
+import { customValidation, formikSchema } from './signupScripts';
 import { mainStyles } from './signupStyles';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(mainStyles);
 function Signup(props) {
+  const { getLocations } = props;
+  const [locations, setLocations] = useState([]);
   const mainClasses = useStyles();
+
   const formik = useFormik({
     ...formikSchema,
+    validate: values => {
+      return customValidation(values, props);
+    },
     onSubmit: (values, formikHelpers) => {
       console.log(values, formikHelpers, props);
     },
@@ -38,14 +44,22 @@ function Signup(props) {
     }
   };
 
+  useEffect(() => {
+    const response = getLocations({ ...props });
+
+    if (response) {
+      Promise.resolve(response).then(data => setLocations(data));
+    }
+  }, [getLocations]);
+
   return (
     <Container>
       <Grid container direction="column" alignItems="center" className={mainClasses.wrapper}>
         <Grid sx={{ width: '100%' }}>
           <StepWizard initialStep={activeStep} ref={wizardRef} className={mainClasses.wizard}>
             <Step1 {...formik} goAction={wizardGo} {...props} />
-            <Step2 {...formik} goAction={wizardGo} {...props} />
-            <Step3 {...formik} goAction={wizardGo} {...props} />
+            <Step2 {...formik} goAction={wizardGo} {...props} locations={locations} />
+            <Step3 {...formik} goAction={wizardGo} {...props} locations={locations} />
             <Step4 {...formik} goAction={wizardGo} {...props} />
             <Step5 {...formik} goAction={wizardGo} {...props} />
             <Step6 {...formik} goAction={wizardGo} {...props} />

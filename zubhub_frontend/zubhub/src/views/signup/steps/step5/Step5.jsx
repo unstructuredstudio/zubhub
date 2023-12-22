@@ -1,4 +1,4 @@
-import { Box, FormControl, FormControlLabel, Grid, Radio, Typography, IconButton } from '@mui/material';
+import { Box, FormControl, FormControlLabel, Grid, Radio, Typography, IconButton, RadioGroup } from '@mui/material';
 import { CustomErrorMessage, CustomButton } from '../../../../components';
 import { TfiArrowLeft } from 'react-icons/tfi';
 import { makeStyles } from '@mui/styles';
@@ -10,6 +10,7 @@ const useStyles = makeStyles(step5Styles);
 const Step5 = props => {
   const mainClasses = useMainStyles();
   const classes = useStyles();
+  const { errors, handleBlur, handleChange, goAction } = props;
   return (
     <Box width={'100%'}>
       <Grid
@@ -25,7 +26,7 @@ const Step5 = props => {
         <Grid item alignSelf={'flex-start'}>
           <Grid>
             <div style={{ position: 'absolute', marginLeft: '40px', marginTop: '40px' }}>
-              <IconButton className={mainClasses.backContainer}>
+              <IconButton onClick={() => goAction('prev', false)} className={mainClasses.backContainer}>
                 <TfiArrowLeft className={mainClasses.backIcon} />
               </IconButton>
             </div>
@@ -42,28 +43,35 @@ const Step5 = props => {
         </Grid>
         <Grid item width="100%">
           <FormControl fullWidth className={classes.formControl}>
-            <Grid component="fieldset" className={classes.fieldSet}>
-              <FormControlLabel className={classes.label} value="male" control={<Radio />} label="Male" />
-            </Grid>
-            <Grid component="fieldset" className={classes.fieldSet}>
-              <FormControlLabel className={classes.label} value="female" control={<Radio />} label="Female" />
-            </Grid>
-            <Grid component="fieldset" className={classes.fieldSet}>
-              <FormControlLabel className={classes.label} value="other" control={<Radio />} label="Other" />
-            </Grid>
-            <Grid component="fieldset" className={classes.fieldSet}>
-              <FormControlLabel
-                className={classes.label}
-                value="unspecified"
-                control={<Radio />}
-                label="Prefer not to say"
-              />
-            </Grid>
-            <CustomErrorMessage name="location" {...props} />
+            <RadioGroup name="gender" onChange={handleChange} onBlur={handleBlur} className={classes.formControl}>
+              <Grid component="fieldset" className={classes.fieldSet}>
+                <FormControlLabel className={classes.label} value="male" control={<Radio />} label="Male" />
+              </Grid>
+              <Grid component="fieldset" className={classes.fieldSet}>
+                <FormControlLabel className={classes.label} value="female" control={<Radio />} label="Female" />
+              </Grid>
+              <Grid component="fieldset" className={classes.fieldSet}>
+                <FormControlLabel className={classes.label} value="other" control={<Radio />} label="Other" />
+              </Grid>
+              <Grid component="fieldset" className={classes.fieldSet}>
+                <FormControlLabel
+                  className={classes.label}
+                  value="unspecified"
+                  control={<Radio />}
+                  label="Prefer not to say"
+                />
+              </Grid>
+              <CustomErrorMessage name="gender" {...props} />
+            </RadioGroup>
           </FormControl>
         </Grid>
         <Grid item width="100%">
-          <CustomButton className={mainClasses.button} primaryButtonStyle fullWidth>
+          <CustomButton
+            onClick={() => goAction('next', !!errors['gender'])}
+            className={mainClasses.button}
+            primaryButtonStyle
+            fullWidth
+          >
             NEXT
           </CustomButton>
         </Grid>
