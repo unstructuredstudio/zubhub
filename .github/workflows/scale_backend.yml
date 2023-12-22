@@ -60,6 +60,7 @@ jobs:
     steps:
       - name: Get target Droplet IP and Droplet Count
         id: get_target_droplet_ip
+        uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
         with:
           token: ${{ secrets.DO_ACCESS_TOKEN }}
           script: |
