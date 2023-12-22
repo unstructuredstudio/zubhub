@@ -13,25 +13,31 @@ jobs:
     if: ${{ github.event.inputs.scaling_type == 'up' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
+      - name: Create new droplet
+        id: create_droplet
+        uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
         with:
           token: ${{ secrets.DO_ACCESS_TOKEN }}
+          script: |
 
-      - name: Create new droplet
-        run: |
-          doctl compute droplet list 'zubhub-services*' > droplets.txt
-          droplets_count=`wc -l < droplets.txt`
-          echo "TARGET_DROPLETS_COUNT=$(($droplets_count))" >> $GITHUB_ENV
-          doctl compute droplet create zubhub-services-$(($droplets_count-1)) --image \
-            ${{ secrets.SOURCE_SNAPSHOT_ID }} --tag-name zubhub-services --size s-1vcpu-1gb \
-            --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
-          sleep 30s
-          echo "NEW_DROPLET_IP=$(doctl compute droplet get zubhub-services-$(($droplets_count-1)) \
-            --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_ENV
-
+            # This script will be executed inside a composite action.
+            # rename GITHUB_OUTPUT so that it's clear that it's a 
+            # composite output and should be handled differently from $GITHUB_OUTPUT
+            COMPOSITE_OUTPUT=$GITHUB_OUTPUT
+            doctl compute droplet list 'zubhub-services*' > droplets.txt
+            droplets_count=`wc -l < droplets.txt`
+            echo "TARGET_DROPLETS_COUNT=$(($droplets_count))" >> $COMPOSITE_OUTPUT
+            doctl compute droplet create zubhub-services-$(($droplets_count-1)) --image \
+              ${{ secrets.SOURCE_SNAPSHOT_ID }} --tag-name zubhub-services --size s-1vcpu-1gb \
+              --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
+            sleep 30s
+            echo "NEW_DROPLET_IP=$(doctl compute droplet get zubhub-services-$(($droplets_count-1)) \
+              --format PublicIPv4 --no-header)" >> $COMPOSITE_OUTPUT
+ 
       - name: Connect new droplet to swarm
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        env:
+          NEW_DROPLET_IP: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).NEW_DROPLET_IP }}
         with:
           HOST: ${{ env.NEW_DROPLET_IP }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -40,6 +46,8 @@ jobs:
 
       - name: Scale up deployment
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        env:
+          TARGET_DROPLETS_COUNT: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).TARGET_DROPLETS_COUNT }}
         with:
           HOST: ${{ secrets.DO_BACKEND_HOST }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -50,20 +58,25 @@ jobs:
     if: ${{ github.event.inputs.scaling_type == 'down' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
+      - name: Get target Droplet IP and Droplet Count
+        id: get_target_droplet_ip
         with:
           token: ${{ secrets.DO_ACCESS_TOKEN }}
+          script: |
 
-      - name: Get target Droplet IP and Droplet Count
-        run: |
-          doctl compute droplet list 'zubhub-services*' > droplets.txt
-          droplets_count=`wc -l < droplets.txt`
-          echo "TARGET_DROPLETS_COUNT=$(($droplets_count - 2))" >> $GITHUB_ENV
-          echo "TARGET_DROPLET_IP=$(doctl compute droplet get zubhub-services-$(($droplets_count-2)) \
-            --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_ENV
+            # This script will be executed inside a composite action.
+            # rename GITHUB_OUTPUT so that it's clear that it's a 
+            # composite output and should be handled differently from $GITHUB_OUTPUT
+            COMPOSITE_OUTPUT=$GITHUB_OUTPUT
+            doctl compute droplet list 'zubhub-services*' > droplets.txt
+            droplets_count=`wc -l < droplets.txt`
+            echo "TARGET_DROPLETS_COUNT=$(($droplets_count - 2))" >> $COMPOSITE_OUTPUT
+            echo "TARGET_DROPLET_IP=$(doctl compute droplet get zubhub-services-$(($droplets_count-2)) \
+              --format PublicIPv4 --no-header)" >> $COMPOSITE_OUTPUT
 
       - name: Scale down deployment
+        env:
+          TARGET_DROPLETS_COUNT: ${{ fromJson(steps.get_target_droplet_ip.outputs.JSON_STRING).TARGET_DROPLETS_COUNT }}
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
@@ -73,6 +86,9 @@ jobs:
           script: "docker service scale zubhub-services_web=${{env.TARGET_DROPLETS_COUNT}}"
 
       - name: Disconnect Target Droplet From Swarm
+        env:
+          TARGET_DROPLETS_COUNT: ${{ fromJson(steps.get_target_droplet_ip.outputs.JSON_STRING).TARGET_DROPLETS_COUNT }}
+          TARGET_DROPLET_IP: ${{ fromJson(steps.get_target_droplet_ip.outputs.JSON_STRING).TARGET_DROPLET_IP }}
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
@@ -82,12 +98,19 @@ jobs:
           script: "docker swarm leave;sleep 5s"
 
       - name: Destroy Target Droplet
+        uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
+        env:
+          TARGET_DROPLETS_COUNT: ${{ fromJson(steps.get_target_droplet_ip.outputs.JSON_STRING).TARGET_DROPLETS_COUNT }}
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
-        run: |
-          doctl compute droplet delete -f zubhub-services-$TARGET_DROPLETS_COUNT
-          sleep 10s
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+          script: |
+            doctl compute droplet delete -f zubhub-services-$TARGET_DROPLETS_COUNT
+            sleep 10s
 
       - name: Remove Target Droplet From Node List
+        env:
+          TARGET_DROPLETS_COUNT: ${{ fromJson(steps.get_target_droplet_ip.outputs.JSON_STRING).TARGET_DROPLETS_COUNT }}
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
         uses: unstucturedstudio/zubhub/.github/actions/ssh_action@master
         with:
