@@ -50,4 +50,4 @@ jobs:
           key: ${{ secrets.DO_SSHKEY }}
           script: |
             cp /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/deploy_frontend.sh /home/zubhub-frontend/
-            sudo bash /home/zubhub-frontend/deploy_frontend.sh
+            sudo bash /home/zubhub-frontend/deploy_frontend.sh"
