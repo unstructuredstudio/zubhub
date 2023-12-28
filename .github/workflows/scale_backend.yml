@@ -31,7 +31,7 @@ jobs:
             --template "{{(index .Networks.V4 1).IPAddress}}")" >> $GITHUB_ENV
 
       - name: Connect new droplet to swarm
-        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        uses: appleboy/ssh-action@master
         with:
           HOST: ${{ env.NEW_DROPLET_IP }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -39,7 +39,7 @@ jobs:
           script: "docker swarm join --token ${{secrets.SWARM_WORKER_JOIN_TOKEN}} ${{secrets.SWARM_MASTER_HOST_AND_PORT}};sleep 10"
 
       - name: Scale up deployment
-        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        uses: appleboy/ssh-action@master
         with:
           HOST: ${{ secrets.DO_BACKEND_HOST }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -65,7 +65,7 @@ jobs:
 
       - name: Scale down deployment
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
-        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        uses: appleboy/ssh-action@master
         with:
           HOST: ${{ secrets.DO_BACKEND_HOST }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -74,7 +74,7 @@ jobs:
 
       - name: Disconnect Target Droplet From Swarm
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
-        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        uses: appleboy/ssh-action@master
         with:
           HOST: ${{ env.TARGET_DROPLET_IP }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -89,7 +89,7 @@ jobs:
 
       - name: Remove Target Droplet From Node List
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
-        uses: unstucturedstudio/zubhub/.github/actions/ssh_action@master
+        uses: appleboy/ssh-action@master
         with:
           HOST: ${{ secrets.DO_BACKEND_HOST }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}

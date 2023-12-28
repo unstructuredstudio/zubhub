@@ -24,8 +24,8 @@ jobs:
       - name: Build and push ${{ matrix.service }}
         uses: unstructuredstudio/zubhub/.github/actions/docker_build_and_push@master
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          token: ${{ secrets.DOCKERHUB_TOKEN }}
+          dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
           context: ./zubhub_backend/
           file: ./zubhub_backend/compose/${{ matrix.service }}/prod/Dockerfile
           push: true
@@ -46,7 +46,7 @@ jobs:
           source: "."
           target: "/home/zubhub-services/zubhub"
 
-      - uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+      - uses: unsctructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
           host: ${{ secrets.DO_BACKEND_HOST }}
           username: ${{ secrets.DO_BACKEND_USERNAME }}
