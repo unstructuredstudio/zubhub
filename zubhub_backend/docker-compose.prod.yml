@@ -69,7 +69,8 @@ services:
       SITES:
         "api.zubhub.unstructured.studio=web:8000;www.api.zubhub.unstructured.studio=web:8000;\
         media.zubhub.unstructured.studio=media:8001;\
-        rabbitmq.zubhub.unstructured.studio=rabbitmq:15672;prometheus.zubhub.unstructured.studio=prometheus:9090"
+        rabbitmq.zubhub.unstructured.studio=rabbitmq:15672"
+      # ;prometheus.zubhub.unstructured.studio=prometheus:9090"
       FORCE_HTTPS: "true"
     depends_on:
       - web
