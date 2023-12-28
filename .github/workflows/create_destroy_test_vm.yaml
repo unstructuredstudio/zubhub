@@ -24,17 +24,6 @@ jobs:
       )
     runs-on: ubuntu-latest
     steps:
-      - uses: unstructuredstudio/zubhub/.github/actions/comment_action@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue_number: ${{ github.event.pull_request.number }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.repository }}
-          message: |
-            @${{ github.actor }} is creating a test VM for this PR 🚀🚀🚀
-            This may take a few minutes so relax and grab a cup of coffee ☕
-            We will notify you when the VM is ready.
-
       - name: Get checkout commit ref and repo
         run: |
 
@@ -62,54 +51,49 @@ jobs:
           ref: ${{ env.CHECKOUT_COMMIT_REF }}
           repository: ${{ env.CHECKOUT_REPO }}
 
-      - name: Create new droplet and DNS records
-        id: create_droplet
-        uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DO_ACCESS_TOKEN }}
-          script: |
 
-            # This script will be executed inside a composite action.
-            # rename GITHUB_OUTPUT so that it's clear that it's a 
-            # composite output and should be handled differently from $GITHUB_OUTPUT
-            COMPOSITE_OUTPUT=$GITHUB_OUTPUT
-            NEW_DROPLET_NAME=zubhub-test-${{ github.event.pull_request.number }}
-            FRONTEND_DOMAIN=${NEW_DROPLET_NAME}
-            API_DOMAIN=api.${FRONTEND_DOMAIN}
-            MEDIA_DOMAIN=media.${FRONTEND_DOMAIN}
-            echo "NEW_DROPLET_NAME=$NEW_DROPLET_NAME" >> $COMPOSITE_OUTPUT
-            echo "FRONTEND_DOMAIN=$FRONTEND_DOMAIN" >> $COMPOSITE_OUTPUT
-            echo "API_DOMAIN=$API_DOMAIN" >> $COMPOSITE_OUTPUT
-            echo "MEDIA_DOMAIN=$MEDIA_DOMAIN" >> $COMPOSITE_OUTPUT
-            # check if droplet already exists and exit script if it does
-            NEW_DROPLET_IP=$(doctl compute droplet get $NEW_DROPLET_NAME \
-              --format PublicIPv4 --no-header 2>/dev/null || true)
-            if [[ -n "$NEW_DROPLET_IP" ]] ; then
-              echo "Droplet already exists. Save droplet IP to env variable and exit..."
-              echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $COMPOSITE_OUTPUT
-              exit 0
-            fi
+      - name: Create new droplet and DNS records
+        run: |
 
-            # create new droplet
-            doctl compute droplet create $NEW_DROPLET_NAME --image \
-              ${{ secrets.ZUBHUB_TEST_SNAPSHOT_ID }} --tag-name zubhub-test --size s-1vcpu-1gb \
-              --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
-            sleep 30s
-            NEW_DROPLET_IP=$(doctl compute droplet get $NEW_DROPLET_NAME \
-              --format PublicIPv4 --no-header)
-            echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $COMPOSITE_OUTPUT
+          NEW_DROPLET_NAME=zubhub-test-${{ github.event.pull_request.number }}
+          FRONTEND_DOMAIN=${NEW_DROPLET_NAME}
+          API_DOMAIN=api.${FRONTEND_DOMAIN}
+          MEDIA_DOMAIN=media.${FRONTEND_DOMAIN}
+          echo "NEW_DROPLET_NAME=$NEW_DROPLET_NAME" >> $GITHUB_ENV
+          echo "FRONTEND_DOMAIN=$FRONTEND_DOMAIN" >> $GITHUB_ENV
+          echo "API_DOMAIN=$API_DOMAIN" >> $GITHUB_ENV
+          echo "MEDIA_DOMAIN=$MEDIA_DOMAIN" >> $GITHUB_ENV
+          # check if droplet already exists and exit script if it does
+          NEW_DROPLET_IP=$(doctl compute droplet get $NEW_DROPLET_NAME \
+            --format PublicIPv4 --no-header 2>/dev/null || true)
+          if [[ -n "$NEW_DROPLET_IP" ]] ; then
+            echo "Droplet already exists. Save droplet IP to env variable and exit..."
+            echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $GITHUB_ENV
+            exit 0
+          fi
 
-            # we only need records for frontend, media server and api server
-            doctl compute domain records create unstructured.studio --record-type A --record-name \
-              $FRONTEND_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
-            doctl compute domain records create unstructured.studio --record-type A --record-name \
-              $API_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
-            doctl compute domain records create unstructured.studio --record-type A --record-name \
-              $MEDIA_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
+          # create new droplet
+          doctl compute droplet create $NEW_DROPLET_NAME --image \
+            ${{ secrets.ZUBHUB_TEST_SNAPSHOT_ID }} --tag-name zubhub-test --size s-1vcpu-1gb \
+            --region nyc1 --enable-monitoring --ssh-keys ${{ secrets.DO_PUBLIC_SSHKEY_FP }} --wait
+          sleep 30s
+          NEW_DROPLET_IP=$(doctl compute droplet get $NEW_DROPLET_NAME \
+            --format PublicIPv4 --no-header)
+          echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $GITHUB_ENV
+
+          # we only need records for frontend, media server and api server
+          doctl compute domain records create unstructured.studio --record-type A --record-name \
+            $FRONTEND_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
+          doctl compute domain records create unstructured.studio --record-type A --record-name \
+            $API_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
+          doctl compute domain records create unstructured.studio --record-type A --record-name \
+            $MEDIA_DOMAIN --record-data $NEW_DROPLET_IP --record-ttl 600
 
       - uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
-        env:
-          NEW_DROPLET_IP: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).NEW_DROPLET_IP }}
         with:
           host: ${{env.NEW_DROPLET_IP}}
           username: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -119,11 +103,6 @@ jobs:
 
       - name: Set output
         id: set_output
-        env:
-          NEW_DROPLET_IP: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).NEW_DROPLET_IP }}
-          FRONTEND_DOMAIN: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).FRONTEND_DOMAIN }}
-          API_DOMAIN: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).API_DOMAIN }}
-          MEDIA_DOMAIN: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).MEDIA_DOMAIN }}
         run: |
           echo "NEW_DROPLET_IP=$NEW_DROPLET_IP" >> $GITHUB_OUTPUT
           echo "FRONTEND_DOMAIN=$FRONTEND_DOMAIN" >> $GITHUB_OUTPUT
@@ -268,17 +247,6 @@ jobs:
             sed -i '/"build":/ s/node /NODE_ENV=development node /' \
             /home/zubhub/zubhub_frontend/zubhub/package.json
             sudo bash /home/zubhub/test_vm_deployment/deploy_test_fullstack.sh
-
-      - uses: unstructuredstudio/zubhub/.github/actions/comment_action@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue_number: ${{ github.event.pull_request.number }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.repository }}
-          message: |
-            Test VM is ready ✔✔✔
-            You can access it with the url:
-            https://${{env.FRONTEND_DOMAIN}}.unstructured.studio
 ######################################################################################
 
 #################################################################################
@@ -294,85 +262,61 @@ jobs:
       ) && contains(github.event.pull_request.labels.*.name, 'create-test-vm') != true
     runs-on: ubuntu-latest
     steps:
-      - uses: unstructuredstudio/zubhub/.github/actions/comment_action@master
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue_number: ${{ github.event.pull_request.number }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.repository }}
-          message: |
-            @${{ github.actor }} is deleting test VM ...
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
 
       - name: Get pr number and droplet ip
-        id: get_pr_number_and_droplet_ip
-        uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
-        with:
-          token: ${{ secrets.DO_ACCESS_TOKEN }}
-          script: |
+        run: |
 
-            # This script will be executed inside a composite action.
-            # rename GITHUB_OUTPUT so that it's clear that it's a 
-            # composite output and should be handled differently from $GITHUB_OUTPUT
-            COMPOSITE_OUTPUT=$GITHUB_OUTPUT
-            # for events like unlabelled, github.event.pull_request.number is available
-            PR_NUMBER=${{ github.event.pull_request.number }}
-            if [[ -z "$PR_NUMBER" ]] ; then
-              # github.event.pull_request.number is not available in closed event
-              sudo apt-get install jq -y
-              PR_NUMBER=$(curl --silent --show-error -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls | \
-                jq -r '.[0].number')
+          # for events like unlabelled, github.event.pull_request.number is available
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          if [[ -z "$PR_NUMBER" ]] ; then
+            # github.event.pull_request.number is not available in closed event
+            sudo apt-get install jq -y
+            PR_NUMBER=$(curl --silent --show-error -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls | \
+              jq -r '.[0].number')
+          fi
+
+          if [[ -z "$PR_NUMBER" ]] ; then
+            echo "PR_NUMBER is not available. Exiting..."
+            exit 1
+          fi
+          DROPLET_NAME=zubhub-test-$PR_NUMBER
+
+          # Get droplet ip
+          DROPLET_IP=$(doctl compute droplet get $DROPLET_NAME \
+            --format PublicIPv4 --no-header 2>/dev/null || true)
+          if [[ -z "$DROPLET_IP" ]] ; then
+            echo "Droplet does not exist. Exiting..."
+            exit 0
+          fi
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+          echo "DROPLET_IP=$DROPLET_IP" >> $GITHUB_ENV
+          echo "DROPLET_NAME=$DROPLET_NAME" >> $GITHUB_ENV
+
+      - name: delete DNS records
+        run: |
+
+          # Get the domain records
+          records=$(doctl compute domain records list unstructured.studio --format ID,Data --no-header)
+          # Loop through the records
+          while IFS= read -r record; do
+            # Split the record into ID and IP
+            ID=$(echo $record | cut -d' ' -f1)
+            IP=$(echo $record | cut -d' ' -f2)
+
+            # Delete the record if it points to the droplet IP
+            if [[ -n "$ID" && "$IP" == "${{env.DROPLET_IP}}" ]]; then
+              doctl compute domain records delete unstructured.studio $ID --force
             fi
+          done <<< "$records"
 
-            if [[ -z "$PR_NUMBER" ]] ; then
-              echo "PR_NUMBER is not available. Exiting..."
-              exit 1
-            fi
-            DROPLET_NAME=zubhub-test-$PR_NUMBER
-
-            # Get droplet ip
-            DROPLET_IP=$(doctl compute droplet get $DROPLET_NAME \
-              --format PublicIPv4 --no-header 2>/dev/null || true)
-            if [[ -z "$DROPLET_IP" ]] ; then
-              echo "Droplet does not exist. Exiting..."
-              exit 0
-            fi
-            echo "DROPLET_IP=$DROPLET_IP" >> $COMPOSITE_OUTPUT
-            echo "DROPLET_NAME=$DROPLET_NAME" >> $COMPOSITE_OUTPUT
-
-      - name: delete DNS records and test droplet
-        uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
-        env:
-          DROPLET_IP: ${{ fromJson(steps.get_pr_number_and_droplet_ip.outputs.JSON_STRING).DROPLET_IP }}
-          DROPLET_NAME: ${{ fromJson(steps.get_pr_number_and_droplet_ip.outputs.JSON_STRING).DROPLET_NAME }}
-        with:
-          token: ${{ secrets.DO_ACCESS_TOKEN }}
-          script: |
-
-            # Get the domain records
-            records=$(doctl compute domain records list unstructured.studio --format ID,Data --no-header)
-            # Loop through the records
-            while IFS= read -r record; do
-              # Split the record into ID and IP
-              ID=$(echo $record | cut -d' ' -f1)
-              IP=$(echo $record | cut -d' ' -f2)
-
-              # Delete the record if it points to the droplet IP
-              if [[ -n "$ID" && "$IP" == "${{env.DROPLET_IP}}" ]]; then
-                doctl compute domain records delete unstructured.studio $ID --force
-              fi
-            done <<< "$records"
-            # delete test droplet
-            if [[ -n "${{ env.DROPLET_NAME }}" ]] ; then
-              doctl compute droplet  delete ${{ env.DROPLET_NAME }} --force
-            fi
-
-      - uses: unstructuredstudio/zubhub/.github/actions/comment_action@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue_number: ${{ github.event.pull_request.number }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.repository }}
-          message: |
-            Test VM deleted ✔✔✔
+      - name: Delete test droplet
+        run: |
+          if [[ -n "${{ env.DROPLET_NAME }}" ]] ; then
+            doctl compute droplet  delete ${{ env.DROPLET_NAME }} --force
+          fi
 ######################################################################################
