@@ -29,7 +29,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_number: ${{ github.event.pull_request.number }}
           owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
+          repo: ${{ github.repository }}
           message: |
             @${{ github.actor }} is creating a test VM for this PR 🚀🚀🚀
             This may take a few minutes so relax and grab a cup of coffee ☕
@@ -274,7 +274,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_number: ${{ github.event.pull_request.number }}
           owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
+          repo: ${{ github.repository }}
           message: |
             Test VM is ready ✔✔✔
             You can access it with the url:
@@ -299,7 +299,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_number: ${{ github.event.pull_request.number }}
           owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
+          repo: ${{ github.repository }}
           message: |
             @${{ github.actor }} is deleting test VM ...
 
@@ -372,7 +372,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_number: ${{ github.event.pull_request.number }}
           owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
+          repo: ${{ github.repository }}
           message: |
             Test VM deleted ✔✔✔
 ######################################################################################
