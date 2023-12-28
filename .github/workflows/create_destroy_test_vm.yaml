@@ -294,6 +294,15 @@ jobs:
       ) && contains(github.event.pull_request.labels.*.name, 'create-test-vm') != true
     runs-on: ubuntu-latest
     steps:
+      - uses: unstructuredstudio/zubhub/.github/actions/comment_action@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue_number: ${{ github.event.pull_request.number }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          message: |
+            @${{ github.actor }} is deleting test VM ...
+
       - name: Get pr number and droplet ip
         id: get_pr_number_and_droplet_ip
         uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
@@ -331,18 +340,6 @@ jobs:
             echo "DROPLET_IP=$DROPLET_IP" >> $COMPOSITE_OUTPUT
             echo "DROPLET_NAME=$DROPLET_NAME" >> $COMPOSITE_OUTPUT
 
-      - uses: unstructuredstudio/zubhub/.github/actions/comment_action@master
-        env:
-          DROPLET_IP: ${{ fromJson(steps.get_pr_number_and_droplet_ip.outputs.JSON_STRING).DROPLET_IP }}
-        if: ${{ env.DROPLET_IP != '' }}
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue_number: ${{ github.event.pull_request.number }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          message: |
-            @${{ github.actor }} is deleting test VM ...
-
       - name: delete DNS records and test droplet
         uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
         env:
@@ -371,9 +368,6 @@ jobs:
             fi
 
       - uses: unstructuredstudio/zubhub/.github/actions/comment_action@master
-        env:
-          DROPLET_IP: ${{ fromJson(steps.get_pr_number_and_droplet_ip.outputs.JSON_STRING).DROPLET_IP }}
-        if: ${{ env.DROPLET_IP != '' }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue_number: ${{ github.event.pull_request.number }}
