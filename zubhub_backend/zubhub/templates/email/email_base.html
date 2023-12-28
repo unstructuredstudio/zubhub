@@ -15,21 +15,6 @@
   <meta name="x-apple-disable-message-reformatting">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
-  <style>
-    .goomoji input{
-      display:none;
-    }
-    .goomoji img{
-      display:none!important;
-    }
-    .goomoji img + input{
-      font-size:inherit!important;
-      line-height:1em!important;
-      display:inline-block!important;
-      border:none;width:1em;
-      margin:0;padding:0;
-    }
-  </style>
   <title>{% block title %}{% endblock %}</title>
   <!--[if mso]>
   <noscript>
@@ -44,6 +29,19 @@
     :root {
       color-scheme: light;
       supported-color-schemes: light;
+    }
+    .goomoji input{
+      display:none;
+    }
+    .goomoji img{
+      display:none!important;
+    }
+    .goomoji img + input{
+      font-size:inherit!important;
+      line-height:1em!important;
+      display:inline-block!important;
+      border:none;width:1em;
+      margin:0;padding:0;
     }
   </style>
 </head>
@@ -230,7 +228,7 @@
         <p style="margin: 0.5em 0;">301-4 Elsinore Path, Etobicoke, ON</p>
         <p style="margin: 0.5em 0;">M8V 4G7, CANADA</p>
         <p style="margin: 0.5em 0;">
-          <span class="goomoji">&copy;<!--[if !mso]><!-- --><input value="&copy;" style="font-size:0;line-height:0;display:none;"><!--<![endif]--></span>          
+          <span class="goomoji">&copy;<!--[if !mso]><!-- --><input value="&copy;" style="font-size:0;line-height:0;display:none;"><!--<![endif]--></span>
           2023 All rights reserved.
         </p>
       </div>
