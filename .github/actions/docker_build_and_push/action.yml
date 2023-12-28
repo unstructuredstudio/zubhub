@@ -38,7 +38,7 @@ runs:
       id: docker_build
       uses: docker/build-push-action@v5
       with:
-        context: ${{ inputs.context }}
+        context: ${{ inputs.context }}}
         file: ${{ inputs.file }}
         push: ${{ inputs.push }}
         tags: ${{ inputs.tags }}
