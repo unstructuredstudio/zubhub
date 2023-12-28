@@ -113,7 +113,7 @@ jobs:
         env:
           TARGET_DROPLETS_COUNT: ${{ fromJson(steps.get_target_droplet_ip.outputs.JSON_STRING).TARGET_DROPLETS_COUNT }}
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
-        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        uses: unstucturedstudio/zubhub/.github/actions/ssh_action@master
         with:
           HOST: ${{ secrets.DO_BACKEND_HOST }}
           USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
