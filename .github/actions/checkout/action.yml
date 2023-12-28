@@ -6,6 +6,10 @@ inputs:
   repository:
     required: false
     type: string
+  fetch_depth:
+    required: false
+    type: number
+    default: 1
 
 runs:
   using: "composite"
@@ -15,3 +19,4 @@ runs:
       with:
         ref: ${{ inputs.ref }}
         repository: ${{ inputs.repository }}
+        fetch-depth: ${{ inputs.fetch_depth }}
