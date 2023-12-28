@@ -19,7 +19,9 @@
 {% block content %}
   <h1 style="margin: 2em 0; font-size: 2em">You got a comment!</h1>
 
-  <p style="margin: 2em 0;">Great news! Someone just left a comment on your post. &#127881</p>
+  <p style="margin: 2em 0;">Great news! Someone just left a comment on your post. 
+    <span class="goomoji">&#127881;<!--[if !mso]><!-- --><input value="&#127881;" style="font-size:0;line-height:0;display:none;"><!--<![endif]--></span>
+  </p>
 
   <img src={{ project.image }} alt="Project Image" style="width: 100%; max-height: 16em; object-fit: cover; background-color: #000; border-radius: 1em 1em 0 0;">
   <h3 style="margin: 0.5em 0; font-size:1.17em">{{ project.title }}</h3>

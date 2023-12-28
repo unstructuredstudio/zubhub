@@ -16,7 +16,9 @@
 
 {% block content %}
   <h1 style="margin: 2em 0; font-size:2em">You got a new badge!</h1>
-  <p style="margin: 2em 0;">Congratulations! You’ve unlocked a new achievement and earned the prestigious <b>{{ badge.name }}</b> badge. &#127775</p>
+  <p style="margin: 2em 0;">Congratulations! You’ve unlocked a new achievement and earned the prestigious <b>{{ badge.name }}</b> badge. 
+    <span class="goomoji">&#127775;<!--[if !mso]><!-- --><input value="&#127775;" style="font-size:0;line-height:0;display:none;"><!--<![endif]--></span>
+  </p>
   <center style="margin: 4em 0;">
     <img
       src={{ badge.image }}
