@@ -13,32 +13,64 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_push:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: ['web', 'celery', 'media']
     steps:
-      - uses: unstructuredstudio/zubhub/.github/actions/checkout@master
-
-      - name: Build and push ${{ matrix.service }}
-        uses: unstructuredstudio/zubhub/.github/actions/docker_build_and_push@master
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-          dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
-          dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Checkout files
+        uses: actions/checkout@v2
+
+      - name: Build and push django api
+        id: docker_build_web
+        uses: docker/build-push-action@v2
+        with:
           context: ./zubhub_backend/
-          file: ./zubhub_backend/compose/${{ matrix.service }}/prod/Dockerfile
+          file: ./zubhub_backend/compose/web/prod/Dockerfile
           push: true
-          tags: unstructuredstudio/zubhub-services_${{ matrix.service }}:latest
+          tags: unstructuredstudio/zubhub-services_web:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Build and push celery worker
+        id: docker_build_celery
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/compose/celery/prod/Dockerfile
+          push: true
+          tags: unstructuredstudio/zubhub-services_celery:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Build and push media service
+        id: docker_build_media
+        uses: docker/build-push-action@v2
+        with:
+          context: ./zubhub_backend/
+          file: ./zubhub_backend/compose/media/prod/Dockerfile
+          push: true
+          tags: unstructuredstudio/zubhub-services_media:latest
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
 
   deploy:
-    needs: build_and_push
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: unstructuredstudio/zubhub/.github/actions/checkout@master
+      - uses: actions/checkout@v1
 
-      - uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
+      - name: Copy file via scp
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DO_BACKEND_HOST }}
           username: ${{ secrets.DO_BACKEND_USERNAME }}
@@ -46,7 +78,8 @@ jobs:
           source: "."
           target: "/home/zubhub-services/zubhub"
 
-      - uses: unsctructuredstudio/zubhub/.github/actions/ssh_action@master
+      - name: Executing remote  command
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DO_BACKEND_HOST }}
           username: ${{ secrets.DO_BACKEND_USERNAME }}

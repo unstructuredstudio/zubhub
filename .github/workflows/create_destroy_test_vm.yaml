@@ -47,7 +47,7 @@ jobs:
 # See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
 # See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
       - name: Checkout source branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           ref: ${{ env.CHECKOUT_COMMIT_REF }}
           repository: ${{ env.CHECKOUT_REPO }}
@@ -148,7 +148,7 @@ jobs:
 # See https://stackoverflow.com/questions/74957218/what-is-the-difference-between-pull-request-and-pull-request-target-event-in-git
 # See https://dev.to/suzukishunsuke/secure-github-actions-by-pullrequesttarget-641#:~:text=pull_request_target%20is%20one%20of%20the,the%20pull%20request's%20base%20branch.
       - name: Checkout source branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           ref: ${{ env.CHECKOUT_COMMIT_REF }}
           repository: ${{ env.CHECKOUT_REPO }}
@@ -175,20 +175,20 @@ jobs:
           EOF
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v1
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v1
         
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push ${{ matrix.service }}
         id: docker_build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v2
         with:
           # for frontend, context is ./zubhub_frontend/zubhub/
           # for backend services, context is ./zubhub_backend/
