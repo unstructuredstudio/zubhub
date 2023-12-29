@@ -45,9 +45,32 @@ jobs:
 
       - uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
-          host: ${{ secrets.DO_BACKEND_HOST }}
-          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          host: ${{ secrets.DO_FRONTEND_HOST }}
+          username: ${{ secrets.DO_FRONTEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           script: |
             cp /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/deploy_frontend.sh /home/zubhub-frontend/
             sudo bash /home/zubhub-frontend/deploy_frontend.sh
+
+  prune:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute docker system prune on frontend host
+        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        with:
+          host: ${{ secrets.DO_FRONTEND_HOST }}
+          username: ${{ secrets.DO_FRONTEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
+          script: |
+
+            docker system prune -a -f
+            
+            volumes=$(docker volume ls -q)
+            # Loop through the volumes
+            while IFS= read -r volume; do
+              # Delete the volume if it doesn't end with "_data"
+              if [[ ! $volume =~ _data$ ]]; then
+                docker volume rm "$volume" 2> /dev/null
+              fi
+            done <<< "$volumes"
