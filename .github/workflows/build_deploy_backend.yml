@@ -101,6 +101,6 @@ jobs:
             while IFS= read -r volume; do
               # Delete the volume if it doesn't end with "_data"
               if [[ ! $volume =~ _data$ ]]; then
-                docker volume rm "$volume" 2> /dev/null
+                docker volume rm "$volume" 2> /dev/null || true
               fi
             done <<< "$volumes"
