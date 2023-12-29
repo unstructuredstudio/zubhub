@@ -21,7 +21,7 @@ jobs:
       - name: Build and push frontend
         uses: unstructuredstudio/zubhub/.github/actions/docker_build_and_push@master
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           token: ${{ secrets.DOCKERHUB_TOKEN }}
           context: ./zubhub_frontend/zubhub/
           file: ./zubhub_frontend/zubhub/Dockerfile.prod
@@ -37,16 +37,16 @@ jobs:
 
       - uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
         with:
-          host: ${{ secrets.DO_BACKEND_HOST }}
-          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          host: ${{ vars.DO_BACKEND_HOST }}
+          username: ${{ vars.DO_BACKEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           source: "."
           target: "/home/zubhub-frontend/zubhub"
 
       - uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
-          host: ${{ secrets.DO_FRONTEND_HOST }}
-          username: ${{ secrets.DO_FRONTEND_USERNAME }}
+          host: ${{ vars.DO_FRONTEND_HOST }}
+          username: ${{ vars.DO_FRONTEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           script: |
             cp /home/zubhub-frontend/zubhub/zubhub_frontend/zubhub/deploy_frontend.sh /home/zubhub-frontend/
@@ -59,8 +59,8 @@ jobs:
       - name: Execute docker system prune on frontend host
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
-          host: ${{ secrets.DO_FRONTEND_HOST }}
-          username: ${{ secrets.DO_FRONTEND_USERNAME }}
+          host: ${{ vars.DO_FRONTEND_HOST }}
+          username: ${{ vars.DO_FRONTEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           script: |
 

@@ -24,7 +24,7 @@ jobs:
       - name: Build and push ${{ matrix.service }}
         uses: unstructuredstudio/zubhub/.github/actions/docker_build_and_push@master
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           token: ${{ secrets.DOCKERHUB_TOKEN }}
           context: ./zubhub_backend/
           file: ./zubhub_backend/compose/${{ matrix.service }}/prod/Dockerfile
@@ -40,16 +40,16 @@ jobs:
 
       - uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
         with:
-          host: ${{ secrets.DO_BACKEND_HOST }}
-          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          host: ${{ vars.DO_BACKEND_HOST }}
+          username: ${{ vars.DO_BACKEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           source: "."
           target: "/home/zubhub-services/zubhub"
 
       - uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
-          host: ${{ secrets.DO_BACKEND_HOST }}
-          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          host: ${{ vars.DO_BACKEND_HOST }}
+          username: ${{ vars.DO_BACKEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           script: |
             cp /home/zubhub-services/zubhub/zubhub_backend/compose/deploy_backend.sh /home/zubhub-services/
@@ -90,7 +90,7 @@ jobs:
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
           host: ${{ matrix.host }}
-          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          username: ${{ vars.DO_BACKEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           script: |
 
