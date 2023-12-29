@@ -27,7 +27,7 @@ jobs:
       - name: Build and push locust
         uses: unstructuredstudio/zubhub/.github/actions/docker_build_and_push@master
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           token: ${{ secrets.DOCKERHUB_TOKEN }}
           context: ./locust/
           file: ./locust/Dockerfile
@@ -62,7 +62,7 @@ jobs:
           NEW_DROPLET_IP: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).NEW_DROPLET_IP }}
         with:
           host: ${{ env.NEW_DROPLET_IP }}
-          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          username: ${{ vars.DO_BACKEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           script: |
             docker run -d -p 8089:8089 unstructuredstudio/zubhub-services_locust:latest \

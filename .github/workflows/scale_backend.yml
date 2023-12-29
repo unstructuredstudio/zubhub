@@ -40,7 +40,7 @@ jobs:
           NEW_DROPLET_IP: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).NEW_DROPLET_IP }}
         with:
           HOST: ${{ env.NEW_DROPLET_IP }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          USERNAME: ${{ vars.DO_BACKEND_USERNAME }}
           KEY: ${{ secrets.DO_SSHKEY }}
           script: "docker swarm join --token ${{secrets.SWARM_WORKER_JOIN_TOKEN}} ${{secrets.SWARM_MASTER_HOST_AND_PORT}};sleep 10"
 
@@ -49,8 +49,8 @@ jobs:
         env:
           TARGET_DROPLETS_COUNT: ${{ fromJson(steps.create_droplet.outputs.JSON_STRING).TARGET_DROPLETS_COUNT }}
         with:
-          HOST: ${{ secrets.DO_BACKEND_HOST }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          HOST: ${{ vars.DO_BACKEND_HOST }}
+          USERNAME: ${{ vars.DO_BACKEND_USERNAME
           KEY: ${{ secrets.DO_SSHKEY }}
           script: "docker service scale zubhub-services_web=${{env.TARGET_DROPLETS_COUNT}}"
 
@@ -81,8 +81,8 @@ jobs:
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
-          HOST: ${{ secrets.DO_BACKEND_HOST }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          HOST: ${{ vars.DO_BACKEND_HOST }}
+          USERNAME: ${{ vars.DO_BACKEND_USERNAME }}
           KEY: ${{ secrets.DO_SSHKEY }}
           script: "docker service scale zubhub-services_web=${{env.TARGET_DROPLETS_COUNT}}"
 
@@ -94,7 +94,7 @@ jobs:
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
           HOST: ${{ env.TARGET_DROPLET_IP }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          USERNAME: ${{ vars.DO_BACKEND_USERNAME }}
           KEY: ${{ secrets.DO_SSHKEY }}
           script: "docker swarm leave;sleep 5s"
 
@@ -115,7 +115,7 @@ jobs:
         if: ${{ env.TARGET_DROPLETS_COUNT > 0 }}
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
-          HOST: ${{ secrets.DO_BACKEND_HOST }}
-          USERNAME: ${{ secrets.DO_BACKEND_USERNAME }}
+          HOST: ${{ vars.DO_BACKEND_HOST }}
+          USERNAME: ${{ vars.DO_BACKEND_USERNAME }}
           KEY: ${{ secrets.DO_SSHKEY }}
           script: "docker node rm zubhub-services-${{env.TARGET_DROPLETS_COUNT}}"
