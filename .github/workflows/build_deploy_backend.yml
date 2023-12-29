@@ -58,3 +58,49 @@ jobs:
             droplets_count=`wc -l < droplets.txt`
             rm droplets.txt
             docker service scale zubhub-services_web=$(($droplets_count - 1))
+
+      - name: Get zubhub-services droplet IPs
+        id: get_droplet_ips
+        uses: unstructuredstudio/zubhub/.github/actions/doctl_action@master
+        with:
+          token: ${{ secrets.DO_ACCESS_TOKEN }}
+          script: |
+
+            # This script will be executed inside a composite action.
+            # rename GITHUB_OUTPUT so that it's clear that it's a 
+            # composite output and should be handled differently from $GITHUB_OUTPUT
+            COMPOSITE_OUTPUT=$GITHUB_OUTPUT
+            doctl compute droplet list 'zubhub-services*' \
+            --format PublicIPv4 --no-header > droplets.txt
+
+            # convert to stringified array to be used in the prune job
+            echo "DROPLET_IPS=$( cat droplets.txt  | jq -Rsc '. / "\n" - [""]')" >> $COMPOSITE_OUTPUT
+
+    outputs:
+      DROPLET_IPS: ${{ fromJson(steps.get_droplet_ips.outputs.JSON_STRING).DROPLET_IPS }}
+
+  prune:
+    needs: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: ${{ fromJson(needs.deploy.outputs.DROPLET_IPS) }}
+    steps:
+      - name: Execute docker system prune on ${{ matrix.service }}
+        uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
+        with:
+          host: ${{ matrix.host }}
+          username: ${{ secrets.DO_BACKEND_USERNAME }}
+          key: ${{ secrets.DO_SSHKEY }}
+          script: |
+
+            docker system prune -a -f
+
+            volumes=$(docker volume ls -q)
+            # Loop through the volumes
+            while IFS= read -r volume; do
+              # Delete the volume if it doesn't end with "_data"
+              if [[ ! $volume =~ _data$ ]]; then
+                docker volume rm "$volume" 2> /dev/null
+              fi
+            done <<< "$volumes"
