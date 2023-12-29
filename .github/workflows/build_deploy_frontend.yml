@@ -56,7 +56,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Execute docker system prune on frontend host
+      - name: Execute docker system prune on ${{ vars.DO_FRONTEND_HOST }}
         uses: unstructuredstudio/zubhub/.github/actions/ssh_action@master
         with:
           host: ${{ vars.DO_FRONTEND_HOST }}
