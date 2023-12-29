@@ -26,6 +26,10 @@ services:
         max_replicas_per_node: 1
         constraints:
           - "node.role==worker"
+    volumes:
+      # We don't plan to ever use this in prod since we use external media storage services.
+      # This is just precautionary.
+      - media_data:/home/media/media_store
     environment:
       - SECRET_NAME=zubhub_services_secrets
     secrets:
@@ -117,3 +121,4 @@ secrets:
 
 volumes:
   ssl_data:
+  media_data:
