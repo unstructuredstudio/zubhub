@@ -276,7 +276,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           message: |
-            Test VM is ready ✔✔✔
+            Test VM is ready ✅✅✅
             You can access it with the url:
             https://${{env.FRONTEND_DOMAIN}}.unstructured.studio
 ######################################################################################
@@ -380,5 +380,5 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.event.repository.name }}
           message: |
-            Test VM deleted ✔✔✔
+            Test VM deleted ✅✅✅
 ######################################################################################
