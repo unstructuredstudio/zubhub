@@ -286,12 +286,14 @@ jobs:
 ##################################################################################
   destroy_test_vm:
     if: |
-      github.event.action == 'closed' ||
-      (github.event.action == 'unlabeled' && github.event.label.name == 'create-test-vm') ||
       (
-        github.event.action == 'reopened' ||
-        github.event.action == 'synchronize'
-      ) && contains(github.event.pull_request.labels.*.name, 'create-test-vm') != true
+        github.event.action == 'closed' &&
+        contains(github.event.pull_request.labels.*.name, 'create-test-vm')
+      ) ||
+      (
+        github.event.action == 'unlabeled' &&
+        github.event.label.name == 'create-test-vm'
+      )
     runs-on: ubuntu-latest
     steps:
       - name: Get pr number and droplet ip
