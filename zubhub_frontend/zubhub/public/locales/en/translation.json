@@ -1190,5 +1190,11 @@
       "text": "Get inspired by thousands of creators around the world.",
       "buttonLabel": "Get Started"
     }
+  },
+  "sessionExpired": {
+    "heading": "Session Expired",
+    "title": "Your session has expired",
+    "text": "You will be redirected to the login page.",
+    "buttonLabel": "ok"
   }
 }
