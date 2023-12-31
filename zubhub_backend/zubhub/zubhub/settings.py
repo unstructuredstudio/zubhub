@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import os
 import socket
+import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -70,17 +70,17 @@ if ENVIRONMENT == 'production':
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 ALLOWED_HOSTS = ['127.0.0.1', FRONTEND_HOST, "www." +
-                 FRONTEND_HOST, BACKEND_HOST, "www." + BACKEND_HOST, "web"]
+                 FRONTEND_HOST, BACKEND_HOST, "www."+BACKEND_HOST, "web"]
 # ALLOWED_HOSTS = ['*']
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
-    DEFAULT_FRONTEND_PROTOCOL + "://" + DEFAULT_FRONTEND_DOMAIN,
-    DEFAULT_BACKEND_PROTOCOL + "://" + DEFAULT_BACKEND_DOMAIN,
-    DEFAULT_FRONTEND_PROTOCOL + "://www." + DEFAULT_FRONTEND_DOMAIN,
-    DEFAULT_BACKEND_PROTOCOL + "://www." + DEFAULT_BACKEND_DOMAIN,
-    DEFAULT_MEDIA_SERVER_PROTOCOL + "://" + DEFAULT_MEDIA_SERVER_DOMAIN
+    DEFAULT_FRONTEND_PROTOCOL+"://"+DEFAULT_FRONTEND_DOMAIN,
+    DEFAULT_BACKEND_PROTOCOL+"://"+DEFAULT_BACKEND_DOMAIN,
+    DEFAULT_FRONTEND_PROTOCOL+"://www."+DEFAULT_FRONTEND_DOMAIN,
+    DEFAULT_BACKEND_PROTOCOL+"://www."+DEFAULT_BACKEND_DOMAIN,
+    DEFAULT_MEDIA_SERVER_PROTOCOL+"://"+DEFAULT_MEDIA_SERVER_DOMAIN
 )
 
 # Application definition
@@ -116,15 +116,13 @@ INSTALLED_APPS = [
     'notifications',
     'activitylog',
     'activities',
-    'drf_spectacular',
-    'drf_spectacular_sidecar',
 ]
 
 # askimet
 AKISMET_API_KEY = os.environ.get("AKISMET_API_KEY")
 
+
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
@@ -155,6 +153,7 @@ AUTH_USER_MODEL = 'creators.Creator'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
+
 # django-allauth config
 LOGIN_REDIRECT_URL = '/api'
 ACCOUNT_LOGOUT_REDIRECT = '/api'
@@ -172,7 +171,9 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 # ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -209,6 +210,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'zubhub.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -230,6 +232,7 @@ CACHES = {
     }
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -248,6 +251,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -262,6 +266,7 @@ USE_L10N = True
 USE_TZ = True
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -290,6 +295,7 @@ if ENVIRONMENT != 'production':
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
+
 ################################################################################
 # How to send email in Django project with Celery
 ################################################################################
@@ -305,6 +311,7 @@ EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 
+
 DEFAULT_FROM_PHONE = os.environ.get("DEFAULT_FROM_PHONE")
 DEFAULT_WHATSAPP_FROM_PHONE = os.environ.get("DEFAULT_WHATSAPP_FROM_PHONE")
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
@@ -317,6 +324,7 @@ CELERY_EMAIL_TASK_CONFIG = {
     'name': 'djcelery_email_send',
     'ignore_result': False,
 }
+
 
 SUMMERNOTE_CONFIG = {
 
@@ -344,19 +352,9 @@ SUMMERNOTE_CONFIG = {
     "js": ("/static/js/summernote_plugin.js",)
 }
 
+
 # for auto-generating the database schema
 GRAPH_MODELS = {
     'all_applications': True,
     'group_models': True,
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'ZubHub API',
-    'DESCRIPTION': 'API for ZubHub',
-    'VERSION': '0.0.1',
-    'SERVE_INCLUDE_SCHEMA': False,
-    'PREPROCESSING_HOOKS': [
-        'zubhub.utils.preprocess_schema',
-    ],
-    'theme': {},
 }
