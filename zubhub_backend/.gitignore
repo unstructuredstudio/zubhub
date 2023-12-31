@@ -11,5 +11,3 @@ cadvisor.htpasswd
 .ssl-data
 celerybeat-schedule
 celerybeat.pid
-venv/
-.idea/

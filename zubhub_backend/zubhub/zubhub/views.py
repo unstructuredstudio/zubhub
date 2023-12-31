@@ -12,8 +12,6 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes, throttle_classes
-from rest_framework.schemas.openapi import SchemaGenerator
-from .urls import schema_url_patterns
 from django.utils.text import slugify
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -325,6 +323,9 @@ def WebSchemaAPIView(request):
     some api endpoints even when told to generate schema for those.
     Returns Web API schema.
     """
+
+    from rest_framework.schemas.openapi import SchemaGenerator
+    from .urls import schema_url_patterns
 
     generator = SchemaGenerator(title='Zubhub Web Server API', patterns=schema_url_patterns)
 

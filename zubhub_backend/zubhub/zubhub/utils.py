@@ -11,8 +11,6 @@ from django.core.files.base import ContentFile
 from django.utils.deconstruct import deconstructible
 from django.conf import settings
 from projects.tasks import delete_file_task
-from os import path
-from base64 import b64encode
 
 
 def get_hash(string):
@@ -101,7 +99,7 @@ def get_image_paths(html):
     e.g. ["image.jpg", "image2.png", "image3.jpg"]
     """
     import re
-
+    
     try:
         paths =  re.findall(r'<img[^<>]+src=["\']./([^"\'<>]+\.(?:gif|png|jpe?g))["\']', html, re.I)
         return paths
@@ -111,8 +109,11 @@ def get_image_paths(html):
 def images_to_base64(paths, html):
     """ Replace all image names in html image tag with the base64 string of corresponding image """
 
+    from os import path
+    from base64 import b64encode
+
     try:
-        for image in paths: # path contains image file names e.g. one.jpg, two.png
+        for image in paths: # path contains image file names e.g. one.jpg, two.png 
             image_path = path.join(settings.BASE_DIR, 'docs', 'docs', image) # get image full path
             with open(image_path, "rb") as file:
                 base64_data = b64encode(file.read())
@@ -122,7 +123,7 @@ def images_to_base64(paths, html):
         return html
 #==================================================================================
 
-
+    
 @deconstructible
 class MediaStorage(Storage):
     def __eq__(self, other):
@@ -150,18 +151,3 @@ class MediaStorage(Storage):
     def url(self, name):
         return name
 
-
-def preprocess_schema(endpoints):
-    """
-    Replace all image names in html image tag with the base64 string of corresponding image
-    """
-    filtered = []
-    for (p, path_regex, method, callback) in endpoints:
-        if (
-            p.startswith("/api/") or
-            p.startswith("/rest-auth/") or
-            p.startswith("/summernote/") or
-            p.startswith("/api-auth/")
-        ):
-            filtered.append((p, path_regex, method, callback))
-    return filtered

@@ -1,8 +1,8 @@
 from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from zubhub.views import (UploadFileAPIView, DeleteFileAPIView,
                           HeroAPIView, HelpAPIView, ChallengeAPIView, PrivacyAPIView, FAQAPIView, AmbassadorsAPIView,
                           SigGenAPIView, UploadFileToLocalAPIView, ThemeAPIView)
+
 
 urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
@@ -24,7 +24,5 @@ urlpatterns = [
     path('challenge/', ChallengeAPIView.as_view(), name="challenge"),
     path('signature/', SigGenAPIView,
          name="signature_generator_api"),
-    path('theme/', ThemeAPIView.as_view(), name="theme"),
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+     path('theme/', ThemeAPIView.as_view(), name="theme"),
 ]
