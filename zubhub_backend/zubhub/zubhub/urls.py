@@ -59,6 +59,7 @@ if settings.DEFAULT_BACKEND_DOMAIN.startswith("localhost"):
             path('api/projects/', include('projects.urls')),
             path('api/activities/', include('activities.urls')),
             path('api/activitylog/', include('activitylog.urls')),
+            path('api/notifications/', include('notifications.urls')),
             path('api/upload-file/', UploadFileAPIView),
             path('api/delete-file/', DeleteFileAPIView),
             path('api/upload-file-to-local/', UploadFileToLocalAPIView),
