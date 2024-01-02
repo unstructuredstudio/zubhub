@@ -35,7 +35,7 @@ const styles = theme => ({
   },
   followButton: {
     display: 'flex',
-    marginTop: '0.75rem',
+    marginTop: '0.75rem'
   },
   mainContainerStyle: {
     maxWidth: '1190px',

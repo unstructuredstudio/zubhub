@@ -75,7 +75,11 @@ function TeamProjects(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
+              <Typography
+                className={classes.pageHeaderStyle}
+                variant="h3"
+                gutterBottom
+              >
                 {t('profile.allTeams')}
               </Typography>
             </Grid>
@@ -123,7 +127,11 @@ function TeamProjects(props) {
           </div>
           <Grid container>
             <Grid item xs={12}>
-              <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
+              <Typography
+                className={classes.pageHeaderStyle}
+                variant="h3"
+                gutterBottom
+              >
                 {props.auth.username}'s {t('profile.teams')}
               </Typography>
             </Grid>

@@ -1,4 +1,4 @@
-import { colors } from '../../../colors';
+import { colors } from "../../../colors";
 import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 
@@ -9,13 +9,13 @@ const styles = theme => ({
   box: {
     marginTop: 100,
     [theme.breakpoints.down('md')]: {
-      margin: '100px 1.5rem 0 1.5rem',
-    },
+      margin: '100px 1.5rem 0 1.5rem'
+    }
   },
   dialogTitle: {
     fontSize: '18px !important',
     lineHeight: '26px !important',
-    marginTop: 0,
+    marginTop: 0
   },
   projectDetailHeaderStyle: {
     paddingTop: '1.5em',
@@ -69,12 +69,11 @@ const styles = theme => ({
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     backgroundColor: '#ffffff',
     marginRight: '0.5em',
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
 
   sucessDialogHeadericon: {
-    height: 50,
-    width: 50,
+    height: 50, width: 50,
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -84,12 +83,12 @@ const styles = theme => ({
     alignSelf: 'center',
     left: '50%',
     top: -25,
-    backgroundColor: colors.white,
+    backgroundColor: colors.white
   },
   dialogContainer: {
     '& .MuiDialog-paper': {
-      overflow: 'visible !important',
-    },
+      overflow: 'visible !important'
+    }
   },
   headerStyle: {
     maxWidth: '1000px',
@@ -135,7 +134,8 @@ const styles = theme => ({
     justifyContent: 'center',
     padding: '0.5em 0px 0.5em',
 
-    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
     [theme.breakpoints.down('1080')]: {
       position: 'static',
       height: '3.5em',
@@ -146,9 +146,9 @@ const styles = theme => ({
     },
   },
   actionBoxMobileWrapper: {
-    flexDirection: 'row',
-    display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    display: "flex",
+    justifyContent: "space-between"
   },
   iconsBoxStyle: {
     [theme.breakpoints.down('1080')]: {
@@ -171,7 +171,7 @@ const styles = theme => ({
   sliderBoxStyle: {
     [theme.breakpoints.down('1080')]: {
       width: '90%',
-    },
+    }
   },
   carouselImageStyle: {
     borderRadius: '15px',
@@ -203,7 +203,7 @@ const styles = theme => ({
   },
   enlargedImageStyle: {
     alignSelf: 'center',
-    maxWidth: '840px',
+    maxWidth: '840px',  
     padding: 0,
     [theme.breakpoints.up('980')]: {
       width: '840px',
@@ -258,7 +258,7 @@ const styles = theme => ({
   tagsBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '20px',
+    gap: '20px'
   },
   tagsStyle: {
     backgroundColor: 'var(--text-color3)',
@@ -343,7 +343,8 @@ const styles = theme => ({
     borderRadius: '15px 0 0 15px',
     background: 'var(--text-color2)',
     zIndex: '10',
-    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
     backgroundColor: 'var(--primary-color3)',
     '&:hover': {
       backgroundColor: 'var(--secondary-color6)',
@@ -358,7 +359,8 @@ const styles = theme => ({
     borderRadius: '0 15px 15px 0',
     background: 'var(--text-color2)',
     zIndex: '10',
-    boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
+    boxShadow:
+      '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
     backgroundColor: 'var(--primary-color3)',
     '&:hover': {
       backgroundColor: 'var(--secondary-color6)',
@@ -375,9 +377,8 @@ const styles = theme => ({
     zIndex: '10',
     margin: '4px',
     boxShadow: '0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12)',
-    backgroundColor: '#00B8C4',
-    '&:hover': { backgroundColor: '#03848C' },
-  },
+    backgroundColor: '#00B8C4', '&:hover': { backgroundColor: '#03848C' },
+  }
 });
 
 const useStyles = makeStyles(styles);
@@ -427,19 +428,34 @@ export const sliderSettings = images_num => ({
 export function NextArrow(props) {
   const { className, onClick } = props;
   const classes = useStyles();
-  return <div className={clsx(className, classes.nextArrowStyle)} onClick={onClick} />;
+  return (
+    <div
+      className={clsx(className, classes.nextArrowStyle)}
+      onClick={onClick}
+    />
+  );
 }
 
 export function PrevArrow(props) {
   const { className, onClick } = props;
   const classes = useStyles();
-  return <div className={clsx(className, classes.prevArrowStyle)} onClick={onClick} />;
+  return (
+    <div
+      className={clsx(className, classes.prevArrowStyle)}
+      onClick={onClick}
+    />
+  );
 }
 
-export function EnlargedImgArrow(props) {
+export function EnlargedImgArrow (props) {
   const { className, onClick } = props;
   const classes = useStyles();
-  return <div className={clsx(className, classes.enlargedImageArrowStyle)} onClick={onClick} />;
-}
+  return (
+    <div
+      className={clsx(className, classes.enlargedImageArrowStyle)}
+      onClick={onClick}
+    />
+  )
+} 
 
 export default styles;

@@ -16,8 +16,8 @@ const styles = () => ({
     justifyContent: 'center',
   },
   outlined: {
-    border: ' 1px solid #eee',
-  },
+    border: ' 1px solid #eee'
+  }
 });
 
 export default styles;

@@ -7,9 +7,13 @@ export const timer = { id: null };
  * @todo - describe function's signature
  */
 export const constructCommentBox = refs => {
-  refs.comment_text.current.addEventListener('focus', e => handleCommentTextFocus(refs));
+  refs.comment_text.current.addEventListener('focus', e =>
+    handleCommentTextFocus(refs),
+  );
 
-  refs.comment_text.current.ownerDocument.addEventListener('click', e => handleDocumentClick(e, refs));
+  refs.comment_text.current.ownerDocument.addEventListener('click', e =>
+    handleDocumentClick(e, refs),
+  );
 };
 
 /**
@@ -34,7 +38,11 @@ export const handleCommentTextFocus = refs => {
 export const handleDocumentClick = (e, refs) => {
   try {
     if (
-      ![refs.comment_box.current, refs.comment_publish_button.current, refs.comment_text.current].includes(e.target)
+      ![
+        refs.comment_box.current,
+        refs.comment_publish_button.current,
+        refs.comment_text.current,
+      ].includes(e.target)
     ) {
       refs.comment_box.current.classList.remove('comment');
       refs.comment_box.current.classList.add('comment-collapsed');
@@ -88,7 +96,9 @@ export const handleSuggestCreators = (e, props, timer, handleSetState) => {
  */
 const suggestCreators = (query_string, props, handleSetState) => {
   handleSetState({ creator_suggestion_open: true });
-  handleSetState(props.suggestCreators({ page: null, query_string, t: props.t }));
+  handleSetState(
+    props.suggestCreators({ page: null, query_string, t: props.t }),
+  );
 };
 
 /**
@@ -102,7 +112,15 @@ export const handleInsertCreatorName = (value, comment_text_el) => {
   const comment_text_arr = comment_text.split('@');
   const old_value = comment_text_arr[comment_text_arr.length - 1];
 
-  if (comment_text !== '' && comment_text_arr.length > 1 && old_value !== '' && old_value.search(' ') === -1) {
-    comment_text_el.current.value = comment_text.replace(`@${old_value}`, `${value} `);
+  if (
+    comment_text !== '' &&
+    comment_text_arr.length > 1 &&
+    old_value !== '' &&
+    old_value.search(' ') === -1
+  ) {
+    comment_text_el.current.value = comment_text.replace(
+      `@${old_value}`,
+      `${value} `,
+    );
   }
 };

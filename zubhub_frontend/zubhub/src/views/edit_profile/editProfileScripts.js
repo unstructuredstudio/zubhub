@@ -180,6 +180,7 @@ export const editProfile = (values, formikBag, toast) => {
           });
       }
     });
+
 };
 
 /**
@@ -214,12 +215,12 @@ export const validationSchema = Yup.object().shape({
   password: Yup.string().required('Password is required'),
   email: Yup.string().email('Invalid email'),
   phone: Yup.string()
-    .when('email', {
-      is: email => !email || email.length === 0,
-      then: () => Yup.string().required('Provide an email or phone'),
-    })
-    .test('phone_is_invalid', 'invalid', function (value) {
-      return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
-    }),
+  .when('email', {
+    is: email => !email || email.length === 0,
+    then: () => Yup.string().required('Provide an email or phone'),
+  })
+  .test('phone_is_invalid', 'invalid', function (value) {
+    return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
+  }),
   bio: Yup.string().max(255, 'Bio must be at most 255 characters'),
 });

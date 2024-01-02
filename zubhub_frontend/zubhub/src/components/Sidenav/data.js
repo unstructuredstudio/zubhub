@@ -14,32 +14,27 @@ import {
 } from '@mui/icons-material';
 
 export const links = ({ draftCount, myProjectCount, auth, t }) => [
-  { label: t('pageWrapper.sidebar.projects'), link: '/', icon: Dashboard },
-  { label: t('pageWrapper.sidebar.profile'), link: '/profile', icon: Person, reactIcon: true, requireAuth: true },
-  { label: t('pageWrapper.sidebar.createProject'), link: '/projects/create', icon: EmojiObjects },
-  ...(auth?.tags.includes('staff')
-    ? [{ label: t('pageWrapper.sidebar.createActivity'), link: '/activities/create', icon: PostAddOutlined }]
-    : []),
-  {
-    label: `${t('pageWrapper.sidebar.myDrafts')}(${draftCount})`,
-    link: `/creators/${auth?.username}/drafts`,
-    icon: GiNotebook,
-    requireAuth: true,
-  },
-  {
-    label: `${t('pageWrapper.sidebar.myProjects')}(${myProjectCount})`,
-    link: `/creators/${auth?.username}/projects`,
-    icon: Publish,
-    requireAuth: true,
-  },
-  { label: t('pageWrapper.sidebar.bookmarks'), link: '/projects/saved', icon: Bookmark, requireAuth: true },
-  ...(TEAM_ENABLED ? [{ label: t('pageWrapper.sidebar.teams'), link: '/teams/all', icon: RiTeamFill }] : []),
-  {
-    label: t('pageWrapper.sidebar.expoloreActivities'),
-    link: 'https://kriti.unstructured.studio/',
-    target: '_blank',
-    icon: FeaturedPlayList,
-  },
+    { label: t('pageWrapper.sidebar.projects'), link: '/', icon: Dashboard },
+    { label: t('pageWrapper.sidebar.profile'), link: '/profile', icon: Person, reactIcon: true, requireAuth: true },
+    { label: t('pageWrapper.sidebar.createProject'), link: '/projects/create', icon: EmojiObjects },
+    ...(auth?.tags.includes('staff')
+        ? [{ label: t('pageWrapper.sidebar.createActivity'), link: '/activities/create', icon: PostAddOutlined }]
+        : []),
+    {
+        label: `${t('pageWrapper.sidebar.myDrafts')}(${draftCount})`,
+        link: `/creators/${auth?.username}/drafts`,
+        icon: GiNotebook,
+        requireAuth: true,
+    },
+    {
+        label: `${t('pageWrapper.sidebar.myProjects')}(${myProjectCount})`,
+        link: `/creators/${auth?.username}/projects`,
+        icon: Publish,
+        requireAuth: true,
+    },
+    { label: t('pageWrapper.sidebar.bookmarks'), link: '/projects/saved', icon: Bookmark, requireAuth: true },
+    ...(TEAM_ENABLED ? [{ label: t('pageWrapper.sidebar.teams'), link: '/teams/all', icon: RiTeamFill }] : []),
+    { label: t('pageWrapper.sidebar.expoloreActivities'), link: 'https://kriti.unstructured.studio/', target: '_blank', icon: FeaturedPlayList },
 ];
 
 export const bottomLinks = ({ t }) => [

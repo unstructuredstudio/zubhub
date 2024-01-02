@@ -23,7 +23,7 @@ Modal.WithIcon = ({ open, onClose = () => {}, children, icon }) => {
       maxWidth="xs"
       open={open}
       onClose={onClose}
-      PaperProps={{ className: classes.dialogPaper }}
+      PaperProps={{className: classes.dialogPaper}}
     >
       <div style={{ display: 'flex', justifyContent: 'end' }}>
         <div className={classes.successDialogHeaderIcon}>{icon}</div>

@@ -102,7 +102,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
             <MenuItem
               className={clsx(classes.paddingItem)}
               onClick={() => {
-                navigate('/activities', { state: { flag: 'educator' } });
+                navigate('/activities', {state: { flag: 'educator' }});
                 setHamburgerMenuOpen(false);
               }}
             >
@@ -118,7 +118,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
           <MenuItem
             className={clsx(classes.paddingItem)}
             onClick={() => {
-              navigate('/activities', { state: { flag: 'staff' } });
+              navigate('/activities', {state: { flag: 'staff' }});
               setHamburgerMenuOpen(false);
             }}
           >

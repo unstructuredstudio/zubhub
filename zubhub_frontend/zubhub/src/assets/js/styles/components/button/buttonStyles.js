@@ -1,4 +1,4 @@
-import { colors } from '../../../colors';
+import { colors } from "../../../colors";
 
 const styles = theme => ({
   primaryButtonStyle: {
@@ -16,7 +16,7 @@ const styles = theme => ({
     color: colors.primary,
     '&:hover': {
       backgroundColor: 'var(--primary-color3)',
-      color: colors.white,
+      color: colors.white
     },
   },
   primaryButtonStyle2: {
@@ -89,8 +89,8 @@ const styles = theme => ({
     padding: '8px 40px',
     textTransform: 'capitalize',
     fontSize: 14,
-    fontWeight: '500',
-  },
+    fontWeight: '500'
+  }
 });
 
 export default styles;

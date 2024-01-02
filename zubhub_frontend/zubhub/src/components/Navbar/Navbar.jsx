@@ -234,7 +234,7 @@ function NavBar(props) {
               >
                 <TranslateIcon />
                 <Select
-                  variant="standard"
+                  variant='standard'
                   className={classes.languageSelectStyle}
                   value=""
                   onChange={e => handleChangeLanguage({ e, props })}
@@ -256,7 +256,7 @@ function NavBar(props) {
               >
                 <TranslateIcon />
                 <Select
-                  variant="standard"
+                  variant='standard'
                   className={classes.languageSelectStyle}
                   value={props.i18n.language}
                   onChange={e => handleChangeLanguage({ e, props })}
@@ -300,12 +300,7 @@ function NavBar(props) {
                       defaultValue={{ title: query }}
                       value={{ title: query }}
                       renderOption={(props, option, { inputValue }) => (
-                        <Option
-                          {...props}
-                          option={option}
-                          inputValue={inputValue}
-                          onOptionClick={onSearchOptionClick}
-                        />
+                        <Option {...props} option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
                       )}
                     >
                       {params => (

@@ -72,7 +72,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
         {categories.map(cat => {
           let selected =
             formik.values.category.filter(selectedCategory => selectedCategory.name === cat.name).length > 0;
-          const color = selected ? colors.primary : isLimit || disableCategorySelection ? '#D9DEE2' : colors.light;
+          const color = selected ? colors.primary : (isLimit || disableCategorySelection) ? '#D9DEE2' : colors.light;
           return (
             <Grid item xs={6} md={4} key={cat.name}>
               <div
@@ -85,7 +85,7 @@ export default function Step3({ formik, handleBlur, ...props }) {
                 <Checkbox className={commonClasses.checkbox} checked={selected} style={{ color, borderWidth: 1 }} />
                 <Typography
                   className={commonClasses.inputText}
-                  style={{ ...((isLimit && !selected) || (disableCategorySelection && { color })) }}
+                  style={{ ...((isLimit && !selected) || disableCategorySelection && { color }) }}
                 >
                   {cat.name}
                 </Typography>
@@ -94,9 +94,8 @@ export default function Step3({ formik, handleBlur, ...props }) {
           );
         })}
         <Grid item xs={6} md={4}>
-          <div
-            className={classes.pill}
-            style={{ border: `solid 1px ${disableCategorySelection || isLimit ? '#D9DEE2' : colors.light}` }}
+          <div  className={classes.pill} 
+              style={{ border: `solid 1px ${disableCategorySelection || isLimit ? '#D9DEE2' : colors.light}` }}
           >
             <Checkbox
               id="disableCategorySelection"
@@ -107,7 +106,8 @@ export default function Step3({ formik, handleBlur, ...props }) {
             />
             <Typography
               className={commonClasses.inputText}
-              style={{ color: disableCategorySelection || isLimit ? '#D9DEE2' : colors.light }}
+              style={{ color: (disableCategorySelection || isLimit) ? '#D9DEE2' : colors.light}}
+
             >
               None
             </Typography>

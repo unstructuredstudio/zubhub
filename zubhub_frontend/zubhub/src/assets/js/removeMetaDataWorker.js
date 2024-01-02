@@ -43,7 +43,9 @@ export const removeMetaData = imageArr => {
           newPieces.push(this.result.slice(v.recess, v.offset));
         }, this);
         newPieces.push(this.result.slice(recess));
-        newImageArr.push(new Blob(newPieces, { type: imageArr[newImageArr.length].type }));
+        newImageArr.push(
+          new Blob(newPieces, { type: imageArr[newImageArr.length].type }),
+        );
 
         if (newImageArr.length === imageArr.length) {
           postMessage(newImageArr);

@@ -1,21 +1,22 @@
-import { colors } from '../../../assets/js/colors';
+import { colors } from "../../../assets/js/colors";
 
 export const labeledLineStyle = theme => ({
-  container: {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    '&>p': {
-      position: 'absolute',
-      marginTop: -10,
-      backgroundColor: colors.white,
-      padding: 5,
+    container: {
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center',
+        '&>p': {
+            position: 'absolute',
+            marginTop: -10,
+            backgroundColor: colors.white,
+            padding: 5
+        },
+        '&>hr': {
+            width: '100%',
+            border: 'none',
+            backgroundColor: colors.light,
+            height: 0.5,
+
+        }
     },
-    '&>hr': {
-      width: '100%',
-      border: 'none',
-      backgroundColor: colors.light,
-      height: 0.5,
-    },
-  },
-});
+})

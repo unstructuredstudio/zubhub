@@ -1,1 +1,3 @@
-export const step2Style = theme => ({});
+export const step2Style = theme => ({
+
+})

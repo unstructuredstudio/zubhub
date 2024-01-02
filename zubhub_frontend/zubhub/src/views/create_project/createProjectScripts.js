@@ -1024,15 +1024,15 @@ export const handleVideoFieldChange = async (e, refs, props, state) => {
       e.target === refs.video_file_el.current
         ? refs.video_file_el.current
         : e.target === refs.video_el.current.firstChild
-          ? e.target
-          : '';
+        ? e.target
+        : '';
 
     type =
       e.target === refs.video_file_el.current
         ? 'videoFile'
         : e.target === refs.video_el.current.firstChild
-          ? 'videoURL'
-          : null;
+        ? 'videoURL'
+        : null;
   }
 
   props.setStatus({ ...props.status, video: '' });

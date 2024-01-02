@@ -26,11 +26,29 @@ export default function Step2({ formik, id }) {
   };
 
   function EnhancedTextInput(props) {
-    return <TextInput {...props} label={<span className={classes.stepTitle}>{props.label}</span>} />;
+    return (
+      <TextInput
+        {...props}
+        label={
+          <span className={classes.stepTitle}>
+            {props.label}
+          </span>
+        }
+      />
+    );
   }
 
   function EnchancedEditor(props) {
-    return <Editor {...props} label={<span className={classes.stepTitle}>{props.label}</span>} />;
+    return (
+      <Editor
+        {...props}
+        label={
+          <span className={classes.stepTitle}>
+            {props.label}
+          </span>
+        }
+      />
+    );
   }
 
   const onStepChange = (data, type, stepIndex) => {

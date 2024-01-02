@@ -91,7 +91,7 @@ const styles = theme => ({
     height: '14px !important',
     [theme.breakpoints.up('sm')]: {
       width: '12px !important',
-      height: '12px !important',
+      height: '12px !important',  
     },
   },
   unviewed: {
@@ -100,7 +100,7 @@ const styles = theme => ({
     height: '14px !important',
     [theme.breakpoints.up('sm')]: {
       width: '12px !important',
-      height: '12px !important',
+      height: '12px !important',  
     },
   },
 });
