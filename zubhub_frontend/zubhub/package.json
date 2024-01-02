@@ -65,7 +65,7 @@
     "build": "node --max-old-space-size=1024 node_modules/react-scripts/bin/react-scripts.js build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --config ./.prettierrc.yaml --write \"src/**/*.{js,jsx}\""
+    "pretty": "prettier --config ./.prettierrc.yaml --write \"src/**/*.{js,jsx}\""
   },
   "eslintConfig": {
     "extends": [
