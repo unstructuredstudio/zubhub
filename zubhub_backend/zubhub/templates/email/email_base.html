@@ -1,0 +1,233 @@
+{% load static %}
+{% load default_template_tags %}
+
+<!--
+  This template is to render the main frame of the email, logos and the footer section.
+  The title and the content of the email is to be determined by the child templates.
+-->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>{% block title %}{% endblock %}</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    :root {
+      color-scheme: light;
+      supported-color-schemes: light;
+    }
+  </style>
+</head>
+<body class="body" xml:lang="en" >
+
+  <!-- Empty preview text -->
+  <div style="display:none">&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;</div>
+
+<!-- main container -->
+  <div role="article" aria-roledescription="email" aria-label="email name" lang="en" dir="ltr" style="font-size: medium; font-size: max(16px, 1rem);">
+    <!--[if true]>
+    <table role="presentation" style="width:37.5em" align="center"><tr><td>
+    <![endif]-->
+    <div style="max-width: 37.5em; margin: 0 auto; padding: 1em; font-family: Arial, Helvetica, sans-serif;">
+
+
+  <!-- header logos -->
+    <!--[if true]>
+    <table role="presentation" width="100%" style="all:unset;opacity:0;">
+      <tr>
+    <![endif]-->
+    <!--[if false]></td></tr></table><![endif]-->
+    <div style="display: table; width: 100%;">
+      <!--[if true]>
+        <td width="90%">
+      <![endif]-->
+      <!--[if !true]><!-->
+        <div style="display: table-cell; width: 90%">
+      <!--<![endif]-->
+        <img
+          src="{% default_backend_protocol %}://{% default_backend_domain %}{% static 'images/Zubhub-Logo.png' %}"
+          alt="Zubhub's Logo"
+          style="width: 8em; margin-top: 0;"
+        >
+      <!--[if !true]><!-->
+        </div>
+      <!--<![endif]-->
+      <!--[if true]>
+        </td>
+      <![endif]-->
+      <!--[if true]>
+        <td width="10%">
+      <![endif]-->
+      <!--[if !true]><!-->
+        <div style="display: table-cell; width: 10%">
+      <!--<![endif]-->
+        <img
+          src="{% default_backend_protocol %}://{% default_backend_domain %}{% static '/images/Pie-Illustration.png' %}"
+          alt="pie illustration"
+          style="width: 4em; padding-bottom: 1em"
+        >
+      <!--[if !true]><!-->
+        </div>
+      <!--<![endif]-->
+      <!--[if true]>
+        </td>
+      <![endif]-->
+    </div>
+    <!--[if true]>
+      </tr>
+    </table>
+    <![endif]-->
+  <!-- header logos end -->
+
+  {% block content %}{% endblock %}
+
+  <!-- footer -->
+      <hr style="border-width: 0; background: #000; color: #000; height:0.1em; margin-top: 3em;">
+
+      <div style="margin: 1.5em 0">
+        <img
+          src="{% default_backend_protocol %}://{% default_backend_domain %}{% static '/images/studio-logo-dark' %}"
+          alt="Unstructured Studio's Logo"
+          style="width: 10em;"
+        >
+        <p style="margin-top: 0.2">Creative learning for all!</p>
+      </div>
+
+      <div style="margin: 3em 0">
+        <a
+          href="https://www.facebook.com/unstructured.studio"
+          style=" text-decoration: none; color: #FCFDFF; margin-right: 1.3em; display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                  src="{% default_backend_protocol %}://{% default_backend_domain %}{% static '/images/Facebook.png' %}"
+                  alt="Facebook logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <a
+          href="https://www.instagram.com/unstructuredstudio/"
+          style=" text-decoration: none; color: #FCFDFF; margin-right: 1.3em; display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                    src="{% default_backend_protocol %}://{% default_backend_domain %}{% static '/images/Instagram.png' %}"
+                    alt="Instagram logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <a
+          href="https://twitter.com/Unstructured_S"
+          style=" text-decoration: none; color: #FCFDFF; margin-right: 1.3em; display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                    src="{% default_backend_protocol %}://{% default_backend_domain %}{% static '/images/Twitter.png' %}"
+                    alt="X logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <a
+          href="https://www.linkedin.com/company/unstructured-studio/"
+          style=" text-decoration: none; color: #FCFDFF;  display:inline-block; mso-padding-alt:0;"
+          >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->
+                  <img
+                    src="{% default_backend_protocol %}://{% default_backend_domain %}{% static '/images/Linkedin.png' %}"
+                    alt="Linkedin logo"
+                    style="width: 1.6em; margin: 0"
+                  >
+                <!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+      </div>
+
+      <div style="margin: 2em 0;">
+        <a
+          href="https://www.google.com.tr/"
+          style="text-decoration: none; padding: 0; color: #000; display:inline-block; mso-padding-alt:0; text-underline-color:#FCFDFF"
+        >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->Help<!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+        <div style="height: 0.5em"></div>
+        <a
+          href="https://www.google.com.tr/"
+          style="text-decoration: none; padding: 0; color: #000; display:inline-block; mso-padding-alt:0; text-underline-color:#FCFDFF"
+        >
+          <!--[if mso]>
+            <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+              <span style="mso-text-raise:50%;">
+                <![endif]-->Unsubscribe<!--[if mso]>
+              </span>
+            <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+          <![endif]-->
+        </a>
+      </div>
+
+      <div style="margin: 0; color: #757575">
+        <p style="margin: 0.5em 0;">Unstructured Studio</p>
+        <p style="margin: 0.5em 0;">301-4 Elsinore Path, Etobicoke, ON</p>
+        <p style="margin: 0.5em 0;">M8V 4G7, CANADA</p>
+        <p style="margin: 0.5em 0;">&#169; 2023 All rights reserved.</p>
+      </div>
+
+    </div>
+    <!--[if true]>
+    </td></tr></table>
+    <![en
+    dif]-->
+
+
+  </div>
+<!-- main container end -->
+
+
+</body>
+</html>

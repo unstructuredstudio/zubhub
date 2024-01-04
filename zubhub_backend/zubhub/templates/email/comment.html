@@ -1,0 +1,41 @@
+{% extends "email/email_base.html" %}
+{% load static %}
+
+<!--
+  This template is to inform users when their project receives a comment.
+
+  Required variables are the project object and the comment, to be used like the following:
+
+    project.title
+    project.description
+    project.image -> link for the project's image
+    project.pk
+
+    commented_by -> the username of the commenter
+    comment -> the content of the commment
+-->
+
+{% block title %}You got a comment!{% endblock %}
+
+{% block content %}
+  <h1 style="margin: 2em 0; font-size: 2em">You got a comment!</h1>
+
+  <p style="margin: 2em 0;">Great news! Someone just left a comment on your post. &#127881;</p>
+
+  <img src={{ project.image }} alt="Project Image" style="width: 100%; max-height: 16em; object-fit: cover; background-color: #000; border-radius: 1em 1em 0 0;">
+  <h3 style="margin: 0.5em 0; font-size:1.17em">{{ project.title }}</h3>
+  <p style="margin: 0; color: #757575">{{ project.description|striptags }}</p>
+  <hr style="border-width: 0; background: #757575; color: #757575; height: .1px; margin: 1em 0;">
+  <center>
+    <p style="margin: 0.5 0; font-size: 0.8em; width: 90%">{{ commented_by }} says "{{ comment }}"</p>
+  </center>
+
+  <div style="margin: 3em 0 0 0">
+    <p style="margin: 0;">Join the conversation now and engage with your audience. Click
+      <a href="https://zubhub.unstructured.studio/projects/{{ project.pk }}" style="color: #00B8C4; text-decoration: none;">
+        here
+      </a>
+      to view comment and respond.
+    </p>
+  </div>
+{% endblock %}
