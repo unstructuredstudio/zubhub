@@ -1054,7 +1054,16 @@
         "save": "सहेजें",
         "unsave": "बिना सोचे समझे"
       }
+    },
+    "pdfDetails": {
+      "introduction": "परिचय",
+      "category": "श्रेणी",
+      "classHeading": "कक्षा ग्रेड",
+      "materials": "उपयोग किए गए सामग्री",
+      "shareActivity": "इस गतिविधि को साझा करें",
+      "qrHeading": "कोड स्कैन करें ताकि गतिविधि देख सकें"
     }
+    
   },
   "breadCrumb": {
     "link": {

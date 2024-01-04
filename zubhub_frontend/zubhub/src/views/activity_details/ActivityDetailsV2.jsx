@@ -10,7 +10,12 @@ import {
   MenuItem,
   Typography,
   makeStyles,
+  Container,
 } from '@material-ui/core';
+import QRCode from 'qrcode.react';
+
+import html2pdf from 'html2pdf.js'; // Make sure the import path is correct
+import { images } from '../../assets/images';
 import { CloseOutlined, ExpandMore, MoreVert } from '@material-ui/icons';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -32,6 +37,7 @@ import { getUrlQueryObject } from '../../utils.js';
 import { activityDefailsStyles } from './ActivityDetails.styles';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
+import { MakeActivity } from './MakeActivity';
 
 const API = new ZubHubAPI();
 const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
@@ -85,26 +91,84 @@ export default function ActivityDetailsV2(props) {
     setOpen(!open);
     props.history.replace(window.location.pathname);
   };
+  const [isPrinting, setIsPrinting] = useState(false);
+  const componentRef = useRef();
 
-  const handleDownload = useReactToPrint({
+  const handleDownload = () => {
+      setIsPrinting(true); // Reset after printing
+  };
+  function beforeDownload() {
+    // Add your code here to execute before download
+    const downloadMessage = document.createElement('div');
+    downloadMessage.innerText = 'Preparing download...';
+    document.body.appendChild(downloadMessage);
+  }
+
+  useEffect(() => {
+    if (isPrinting) {
+      setTimeout(() => {
+        handlePrint(); // Trigger the print when the component is rendered
+      }, 1000);
+    }
+  }, [isPrinting]);
+  const handlePrint = useReactToPrint({
     onBeforePrint: () => setIsDownloading(true),
     onPrintError: error => setIsDownloading(false),
-    onAfterPrint: () => setIsDownloading(false),
-    content: () => ref.current,
+    onAfterPrint: () => {
+      setIsDownloading(false);
+      setIsPrinting(false);
+    },
+    content: () => componentRef.current,
     removeAfterPrint: true,
     print: async printIframe => {
+      // console.log(printIframe);
       const document = printIframe.contentDocument;
       if (document) {
         const html = document.getElementsByTagName('html')[0];
         const pdfOptions = {
-          padding: 10,
+          // padding: 10,
           filename: `${activity.title}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 2, useCORS: true },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         };
 
+        // Call the beforeDownload function before generating the PDF
+        beforeDownload();
+
+        // Generate the PDF
+        html2pdf()
+          .from(html)
+          .set(pdfOptions)
+          .outputPdf(pdf => {
+            // Remove the download message if it was added earlier
+            const downloadMessage = document.querySelector('.download-message');
+            if (downloadMessage) {
+              downloadMessage.remove();
+            }
+
+            // Trigger the download
+            pdf.save();
+          });
+
         const exporter = new Html2Pdf(html, pdfOptions);
+
+        exporter.postProcess = () => {
+          console.log('hi');
+          const totalPages = exporter.pdf.internal.getNumberOfPages();
+          console.log(totalPages);
+          for (let i = 1; i <= totalPages; i++) {
+            exporter.pdf.setPage(i);
+
+            // Add your footer content
+            const x = 10; // X-coordinate
+            const y = exporter.pdf.internal.pageSize.getHeight() - 10; // Y-coordinate
+            const text = `Your Footer Text Goes Here - Page ${i} of ${totalPages}`;
+            exporter.pdf.text(x, y, text);
+          }
+        };
+
         await exporter.getPdf(true);
       }
     },
@@ -151,6 +215,13 @@ export default function ActivityDetailsV2(props) {
             {isDownloading ? 'Downloading...' : 'Download PDF'}
           </CustomButton>
         </div>
+        {isPrinting && (
+          <div style={{ position: 'absolute', left: '-9999px', top: '-9999px', visibility: 'hidden' }}>
+            <div ref={componentRef}>
+              <MakeActivity activity={activity} />
+            </div>
+          </div>
+        )}
       </div>
       <div className={classes.socialButtons}>
         <IconButton
