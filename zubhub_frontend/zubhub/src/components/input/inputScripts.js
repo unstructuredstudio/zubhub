@@ -4,7 +4,7 @@ export const refactorVideoUrl = url => {
     return url.replace('watch?v=', 'embed/');
   } else {
     if (url.includes('youtu.be')) {
-      return 'https://www.youtube.com/embed/'.concat(url.split('/')[3]);
+      return 'https://www.youtube-nocookie.com/embed/'.concat(url.split('/')[3]);
     }
     if (url.includes('drive.google.com')) {
       if (url.includes('/view')) {
