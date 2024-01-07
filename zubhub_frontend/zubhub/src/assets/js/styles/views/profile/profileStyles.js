@@ -1,4 +1,5 @@
 import { fade } from '@material-ui/core/styles';
+import { colors } from "../../../colors";
 
 const styles = theme => ({
   root: {
@@ -91,9 +92,8 @@ const styles = theme => ({
     marginBottom: '0.1em'
   },
   baseTagStyle: {
-    backgroundColor: '#00B8C4',
-    borderRadius: '50px',
-    color: 'white',
+    color: colors.primary,
+    fontWeight: '500',
     padding: '0 0.5em',
     marginLeft: '0.4em',
     marginBottom: '0.4em',
