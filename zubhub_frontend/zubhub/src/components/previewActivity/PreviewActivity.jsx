@@ -213,7 +213,13 @@ function PreviewActivity({ onClose, ...props }) {
       </div>
     );
   } else {
-    return <ErrorPage error={t('projectDetails.errors.unexpected')} />;
+    return <ErrorPage
+      error={t('projectDetails.errors.unexpected')}
+      imgSrc={NoProjects}
+      routeTitle='Create Project'
+      routeLink='/create-project'
+      errorTitle='No projects found'
+    />;
   }
 }
 
