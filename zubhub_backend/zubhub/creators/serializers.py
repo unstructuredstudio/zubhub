@@ -8,8 +8,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 import csv
 from .admin import badges
-from .models import CreatorGroup, Creator, CreatorGroupMembership
-from .models import Location, PhoneNumber
+from .models import CreatorGroup, Creator, CreatorGroupMembership, Location, PhoneNumber, CreatorTag
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
 from rest_auth.serializers import PasswordResetSerializer
@@ -199,6 +198,9 @@ class CustomRegisterSerializer(RegisterSerializer):
                                             queryset=Location.objects.all())
     bio = serializers.CharField(allow_blank=True, default="", max_length=255)
     subscribe = serializers.BooleanField(default=False)
+    creator_tags = serializers.SlugRelatedField(slug_field='name',
+                                                queryset=CreatorTag.objects.all(),
+                                                many=True)
 
     def validate_username(self, username):
         # Check if the value is a valid email
@@ -259,6 +261,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 
     def save(self, request):
         creator = super().save(request)
+        creator.tags.set(self.validated_data.get('creator_tags', []))
         setup_user_phone(creator)
         return creator
 

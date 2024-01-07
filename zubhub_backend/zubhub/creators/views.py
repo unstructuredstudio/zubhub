@@ -188,6 +188,7 @@ class RegisterCreatorAPIView(RegisterView):
             "location": "string",\n
             "bio": "",\n
             "subscribe": false\n
+            "creator_tags": ["tag1", "tag2", ...]\n
         }\n
     """
 
