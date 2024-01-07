@@ -47,7 +47,7 @@ import {
   toggleSave,
 } from './projectDetailsScripts';
 
-import { CloseOutlined } from '@material-ui/icons';
+import { CloseOutlined, AddOutlined, CheckOutlined } from '@material-ui/icons';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
 import styles, { EnlargedImgArrow, sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
@@ -92,6 +92,12 @@ const buildTagsComponent = (classes, tags, history) => {
   ));
 };
 
+const followStatus = {
+  following: 'following',
+  notFollowing: 'notFollowing',
+  unfollowing: 'unfollowing',
+}
+
 /**
  * @function ProjectDetails View
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -105,9 +111,11 @@ function ProjectDetails(props) {
   const [moreProjects, setMoreProjects] = useState([]);
   const { id } = useParams();
   const [open, setOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const [state, setState] = React.useState({
     project: {},
+    followingState: followStatus.notFollowing,
     loading: true,
     enlarged_image_url: '',
     open_enlarged_image_dialog: false,
@@ -135,7 +143,12 @@ function ProjectDetails(props) {
         setMoreProjects(moreProjects);
         parseComments(project.comments);
       }
-      handleSetState(obj);
+      handleSetState(obj)
+      if (obj.project.creator.followers.includes(props.auth.id)) {
+        handleSetState({ followingState: followStatus.following })
+      } else {
+        handleSetState({ followingState: followStatus.notFollowing })
+      }
     });
   }, [id]);
 
@@ -175,9 +188,22 @@ function ProjectDetails(props) {
       });
     }
   };
+ 
+  const handleFollow = (e) => {
+    if (followingState === followStatus.notFollowing) {
+      handleSetState(toggleFollow(e, props, project.creator.id, state))
+      handleSetState({ followingState: followStatus.following})
+    } else if (followingState === followStatus.unfollowing) {
+      handleSetState(toggleFollow(e, props, project.creator.id, state))
+      handleSetState({ followingState: followStatus.notFollowing})
+    } else {
+      handleSetState({ followingState: followStatus.unfollowing})
+    }
+  }
 
   const {
     project,
+    followingState,
     loading,
     enlarged_image_url,
     open_enlarged_image_dialog,
@@ -186,6 +212,34 @@ function ProjectDetails(props) {
     enlarged_image_id,
   } = state;
   const { t } = props;
+
+  // React.useEffect(() => {
+  //   if (isHovering) {
+  //     handleSetState({ followingState: followStatus.unfollowing})
+  //   } else {
+  //     const currentState = project.creator?.followers.includes(props.auth.id) ? followStatus.following : followStatus.notFollowing
+  //     handleSetState({ followingState: currentState})
+  //   }
+  // }, [isHovering])
+
+  const followButtonConstants = {
+    [followStatus.notFollowing]: {
+      text: t('projectDetails.project.creator.follow'),
+      icon: <AddOutlined className={classes.followButtonIcon} />,
+      className: classes.notFollowingButton
+    },
+    [followStatus.following]: {
+      text: t('projectDetails.project.creator.following'),
+      icon: <CheckOutlined className={classes.followButtonIcon} />,
+      className: classes.followingButton
+    },
+    [followStatus.unfollowing]: {
+      text: t('projectDetails.project.creator.unfollow'),
+      icon: <CloseOutlined className={classes.followButtonIcon} />,
+      className: classes.unfollowingButton
+    }
+  }
+
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
@@ -234,14 +288,15 @@ function ProjectDetails(props) {
                     </Grid>
                   ) : (
                     <CustomButton
-                      className={common_classes.marginLeft1em}
+                      className={clsx(common_classes.marginLeft1em, classes.followButton, isHovering ? classes.unfollowingButton : followButtonConstants[followingState].className)}
                       variant="contained"
-                      onClick={e => handleSetState(toggleFollow(e, props, project.creator.id, state))}
+                      onClick={e => handleFollow(e)}
+                      onMouseEnter={() => { followingState === followStatus.following && setIsHovering(true) }}
+                      onMouseLeave={() => setIsHovering(false)}
                       primaryButtonStyle
                     >
-                      {project.creator.followers.includes(props.auth.id)
-                        ? t('projectDetails.project.creator.unfollow')
-                        : t('projectDetails.project.creator.follow')}
+                      {isHovering ? followButtonConstants.unfollowing.icon : followButtonConstants[followingState].icon}
+                      {isHovering ? followButtonConstants.unfollowing.text : followButtonConstants[followingState].text}
                     </CustomButton>
                   )}
                 </Grid>
