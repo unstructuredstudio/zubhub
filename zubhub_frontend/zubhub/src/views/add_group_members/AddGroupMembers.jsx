@@ -138,7 +138,12 @@ function AddGroupMembers(props) {
                   >
                     {t('addGroupMembers.welcomeMsg.primary')}
                   </Typography>
-                  <Typography variant="body2" color="textSecondary" component="p" className={classes.descStyle}>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                    className={classes.descStyle}
+                  >
                     {t('addGroupMembers.welcomeMsg.secondary')}
                   </Typography>
 
@@ -146,7 +151,11 @@ function AddGroupMembers(props) {
                     <Grid item xs={12}>
                       <Box
                         component="p"
-                        className={props.status && props.status['non_field_errors'] && classes.errorBox}
+                        className={
+                          props.status &&
+                          props.status['non_field_errors'] &&
+                          classes.errorBox
+                        }
                       >
                         {props.status && props.status['non_field_errors'] && (
                           <Box component="span" className={classes.error}>
@@ -164,13 +173,17 @@ function AddGroupMembers(props) {
                         margin="small"
                         error={
                           (props.status && props.status['group_members']) ||
-                          (props.touched['group_members'] && props.errors['group_members'])
+                          (props.touched['group_members'] &&
+                            props.errors['group_members'])
                         }
                       >
                         <label htmlFor="add_group_members">
                           <Typography
                             color="textSecondary"
-                            className={clsx(classes.customLabelStyle, common_classes.marginBottom1em)}
+                            className={clsx(
+                              classes.customLabelStyle,
+                              common_classes.marginBottom1em,
+                            )}
                           >
                             {t('addGroupMembers.inputs.groupMembers.label')}
                           </Typography>
@@ -198,41 +211,73 @@ function AddGroupMembers(props) {
                                   customButtonStyle
                                   fullWidth
                                 >
-                                  <AddIcon /> {t('addGroupMembers.inputs.groupMembers.addMore')}
+                                  <AddIcon />{' '}
+                                  {t(
+                                    'addGroupMembers.inputs.groupMembers.addMore',
+                                  )}
                                 </CustomButton>
                               </Grid>
-                              <FormHelperText error className={classes.fieldHelperTextStyle}>
-                                {(props.status && props.status['group_members']) ||
+                              <FormHelperText
+                                error
+                                className={classes.fieldHelperTextStyle}
+                              >
+                                {(props.status &&
+                                  props.status['group_members']) ||
                                   (props.touched['group_members'] &&
                                     props.errors['group_members'] &&
-                                    t(`addGroupMembers.inputs.groupMembers.errors.${props.errors['group_members']}`))}
+                                    t(
+                                      `addGroupMembers.inputs.groupMembers.errors.${props.errors['group_members']}`,
+                                    ))}
                               </FormHelperText>
                             </>
                           ) : (
-                            <label htmlFor="addcsv" className={classes.addCSVStyles}>
+                            <label
+                              htmlFor="addcsv"
+                              className={classes.addCSVStyles}
+                            >
                               <Box
                                 className={classes.CSVBoxStyles}
                                 ref={refs.drag_drop_el}
                                 onDragLeave={e => {
-                                  refs.drag_drop_el.current.style.border = '1px dashed rgb(196, 194, 194)';
+                                  refs.drag_drop_el.current.style.border =
+                                    '1px dashed rgb(196, 194, 194)';
                                 }}
                                 onDragOver={e => {
                                   e.preventDefault();
-                                  refs.drag_drop_el.current.style.border = '1px solid #878dcd';
+                                  refs.drag_drop_el.current.style.border =
+                                    '1px solid #878dcd';
                                 }}
-                                onDrop={e => handleSetState(handleAddCSV(e, refs))}
+                                onDrop={e =>
+                                  handleSetState(handleAddCSV(e, refs))
+                                }
                               >
                                 <img
                                   src={csvLogo}
-                                  alt={csv ? csv.name : t('addGroupMembers.inputs.groupMembers.addCSV')}
+                                  alt={
+                                    csv
+                                      ? csv.name
+                                      : t(
+                                          'addGroupMembers.inputs.groupMembers.addCSV',
+                                        )
+                                  }
                                 />
                                 <br />
-                                {csv ? csv.name : t('addGroupMembers.inputs.groupMembers.addCSV')}
-                                <FormHelperText error className={classes.fieldHelperTextStyle}>
-                                  {(props.status && props.status['group_members']) ||
+                                {csv
+                                  ? csv.name
+                                  : t(
+                                      'addGroupMembers.inputs.groupMembers.addCSV',
+                                    )}
+                                <FormHelperText
+                                  error
+                                  className={classes.fieldHelperTextStyle}
+                                >
+                                  {(props.status &&
+                                    props.status['group_members']) ||
                                     (props.touched['group_members'] &&
                                       props.errors['group_members'] &&
-                                      t(`addGroupMembers.inputs.groupMembers.errors.${props.errors['group_members']}`))}
+                                      t(
+                                        `addGroupMembers.inputs.groupMembers.errors.${props.errors['group_members']}`,
+                                      ))}
                                 </FormHelperText>
                                 <input
                                   type="file"
@@ -258,11 +303,18 @@ function AddGroupMembers(props) {
                           <Switch
                             className={classes.bulkAddStyles}
                             checked={bulk_add_checked}
-                            onChange={e => handleSetState(handleBulkAddCheck(bulk_add_checked))}
+                            onChange={e =>
+                              handleSetState(
+                                handleBulkAddCheck(bulk_add_checked),
+                              )
+                            }
                           />
                         }
                         label={
-                          <Typography color="textSecondary" className={classes.customLabelStyle}>
+                          <Typography
+                            color="textSecondary"
+                            className={classes.customLabelStyle}
+                          >
                             {t('addGroupMembers.inputs.groupMembers.bulkAdd')}
                           </Typography>
                         }
@@ -295,7 +347,11 @@ function AddGroupMembers(props) {
                   aria-label={t('addGroupMembers.ariaLabels.submitting')}
                 >
                   <Box position="relative" display="inline-flex">
-                    <CircularProgress className={classes.uploadProgressStyle} size={70} thickness={6} />
+                    <CircularProgress
+                      className={classes.uploadProgressStyle}
+                      size={70}
+                      thickness={6}
+                    />
                   </Box>
                 </Dialog>
               </CardContent>

@@ -3,7 +3,7 @@ const styles = theme => ({
     flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: '30px',
+    gap: 30
   },
   profileHeaderStyle: {
     paddingTop: '1.5em',
@@ -19,7 +19,7 @@ const styles = theme => ({
     border: 'solid 3px rgb(255 209 24)',
     borderRadius: 8,
     boxShadow: 'unset',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   avatarBoxStyle: {
     padding: '0 1em 2.5em 1em',
@@ -68,7 +68,7 @@ const styles = theme => ({
     padding: '0 2em 2em 2em',
     maxWidth: '35%',
     [theme.breakpoints.down('740')]: {
-      maxWidth: '100%',
+      maxWidth: '100%'
     },
   },
   userNameStyle: {
@@ -86,7 +86,7 @@ const styles = theme => ({
   tagsContainerStyle: {
     display: 'flex',
     flexWrap: 'wrap',
-    marginBottom: '0.1em',
+    marginBottom: '0.1em'
   },
   baseTagStyle: {
     backgroundColor: '#00B8C4',
@@ -100,12 +100,12 @@ const styles = theme => ({
       position: 'static',
       marginBottom: '0.4em',
     },
-    display: 'flex',
-    alignItems: 'center',
+    display: 'flex', 
+    alignItems: 'center', 
     marginRight: '0.5em',
   },
   iconWithSpace: {
-    marginLeft: theme.spacing(0.5),
+    marginLeft: theme.spacing(0.5)
   },
   emailStyle: { marginBottom: '0.5em' },
   moreInfoBoxStyle: {
@@ -122,6 +122,7 @@ const styles = theme => ({
     },
   },
   moreInfoStyle: {
+
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -268,7 +269,7 @@ const styles = theme => ({
   },
   followButton: {
     display: 'flex',
-    marginTop: '0.75rem',
+    marginTop: '0.75rem'
   },
   displayNone: { display: 'none' },
   largeLabel: {

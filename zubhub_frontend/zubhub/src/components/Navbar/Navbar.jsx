@@ -113,13 +113,13 @@ function NavBar(props) {
         } else if (searchType === SearchType.PROJECTS) {
           completions = await api.autocompleteProjects({ query, token });
           completions = completions
-            .filter(c => c.creator.id === props.auth.id && c.publish.type !== 1)
-            .map(({ id, title, creator, images }) => ({
-              title,
-              shortInfo: creator.username,
-              image: images.length > 0 ? images[0].image_url : null,
-              link: `/projects/${id}`,
-            }));
+          .filter(c=>( c.creator.id === props.auth.id && c.publish.type !== 1 ))
+          .map(({ id, title, creator, images }) => ({
+            title,
+            shortInfo: creator.username,
+            image: images.length > 0 ? images[0].image_url : null,
+            link: `/projects/${id}`,
+          }));
         } else {
           completions = await api.autocompleteCreators({ query, token });
           completions = completions?.map(({ username, avatar }) => ({

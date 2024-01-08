@@ -17,7 +17,7 @@ const styles = theme => ({
   },
   challengeBodyStyle: {
     marginBottom: '5em',
-    fontSize: '1.2rem',
+    fontSize: '1.2rem'
   },
 });
 

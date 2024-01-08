@@ -48,8 +48,13 @@ function About(props) {
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
-            <Typography className={classes.aboutHeadingStyle}>{t('about.title')}</Typography>
-            <Box className={classes.aboutBodyStyle} dangerouslySetInnerHTML={{ __html: help.about }}></Box>
+            <Typography className={classes.aboutHeadingStyle}>
+              {t('about.title')}
+            </Typography>
+            <Box
+              className={classes.aboutBodyStyle}
+              dangerouslySetInnerHTML={{ __html: help.about }}
+            ></Box>
           </Card>
         </Container>
       </Box>

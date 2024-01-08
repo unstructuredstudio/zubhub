@@ -4,7 +4,7 @@ const styles = theme => ({
     paddingBottom: '2em',
     flex: '1 0 auto',
     [theme.breakpoints.down('400')]: {
-      marginTop: '30px',
+      marginTop:'30px',
     },
     // background: 'var(--primary-color2)',
     // background:
@@ -15,6 +15,7 @@ const styles = theme => ({
     [theme.breakpoints.up('1600')]: {
       maxWidth: '950px',
     },
+  
   },
   cardStyle: {
     border: 0,

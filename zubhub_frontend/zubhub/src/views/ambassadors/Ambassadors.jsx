@@ -48,6 +48,7 @@ function Ambassadors(props) {
 
   const { loading, ambassadors } = state;
   const { t } = props;
+  
 
   if (loading) {
     return <LoadingPage />;
@@ -56,7 +57,9 @@ function Ambassadors(props) {
       <Box className={classes.root}>
         <Container className={classes.containerStyle}>
           <Card className={classes.cardStyle}>
-            <Typography className={classes.ambassadorsHeadingStyle}>Ambassadors</Typography>
+            <Typography className={classes.ambassadorsHeadingStyle}>
+              Ambassadors
+            </Typography>
             <Box
               className={classes.ambassadorsBodyStyle}
               dangerouslySetInnerHTML={{ __html: ambassadors.ambassadors }}
@@ -64,15 +67,27 @@ function Ambassadors(props) {
           </Card>
         </Container>
         <Container className={classes.containerStyle}>
-          <Typography className={classes.ambassadorsHeadingStyle}>Selected Projects</Typography>
+            <Typography className={classes.ambassadorsHeadingStyle}>
+              Selected Projects
+            </Typography>
+
 
           <Grid container spacing={3}>
             {ambassadors.projects.results.map(project => (
-              <Grid item xs={12} sm={6} md={4} align="center" className={classes.projectGridStyle}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                align="center"
+                className={classes.projectGridStyle}
+              >
                 <Project
                   project={project}
                   key={project.id}
-                  updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
+                  updateProjects={res =>
+                    handleSetState(updateProjects(res, state, props, toast))
+                  }
                   {...props}
                 />
               </Grid>
@@ -111,6 +126,7 @@ function Ambassadors(props) {
               </CustomButton>
             ) : null}
           </ButtonGroup>
+  
         </Container>
       </Box>
     );
@@ -123,7 +139,7 @@ Ambassadors.propTypes = {
   auth: PropTypes.object.isRequired,
   getAmbassadors: PropTypes.func.isRequired,
   toggleLike: PropTypes.func.isRequired,
-  toggleSave: PropTypes.func.isRequired,
+  toggleSave: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {

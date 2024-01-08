@@ -13,7 +13,7 @@ const styles = theme => ({
       maxWidth: '950px',
     },
     [theme.breakpoints.down('400')]: {
-      marginTop: '30px',
+      marginTop:'30px',
     },
   },
   cardStyle: {

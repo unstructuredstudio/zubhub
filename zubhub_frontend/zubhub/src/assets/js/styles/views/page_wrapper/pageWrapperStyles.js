@@ -42,7 +42,6 @@ const styles = theme => ({
     verticalAlign: 'bottom',
     '& .search-form-input': {
       height: '2.5em',
-      // maxWidth: '40em',
       backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'white',
       borderRadius: '50px',
@@ -164,7 +163,7 @@ const styles = theme => ({
   navActionStyle: {
     display: 'flex',
     alignItems: 'center',
-    gap: '20px'
+    gap: 20
   },
   avatarStyle: {
     cursor: 'pointer',

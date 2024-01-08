@@ -8,7 +8,7 @@ export const styles = theme => ({
     color: colors.black,
     textAlign: 'center',
     alignItems: 'center',
-    gap: '15px',
+    gap: 15,
     [theme.breakpoints.up('600')]: {
       maxHeight: '450px',
     },

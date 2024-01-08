@@ -32,7 +32,7 @@ export const collapsibleStyles = theme => ({
         height: 'fit-content',
         display: 'flex',
         flexDirection: 'column',
-        gap: '32px',
+        gap: 32,
         marginTop: 20,
     }
 })
