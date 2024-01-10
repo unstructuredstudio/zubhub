@@ -1,20 +1,6 @@
 {% extends "email/email_base.html" %}
 {% load static %}
 
-<!--
-  This template is to inform users when their project receives a comment.
-
-  Required variables are the project object and the comment, to be used like the following:
-
-    project.title
-    project.description
-    project.image -> link for the project's image
-    project.pk
-
-    commented_by -> the username of the commenter
-    comment -> the content of the commment
--->
-
 {% block title %}You got a comment!{% endblock %}
 
 {% block content %}
