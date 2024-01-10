@@ -11,7 +11,7 @@
   <p style="margin: 2em 0;">Welcome to ZubHub! We're thrilled to have you on board. To get started, we just need to confirm your email address. Please click on the button below to activate your account.</p>
 
   <a
-    href="{% default_frontend_protocol %}://{% default_frontend_domain %}/email-confirm?user={{ user.username }}&&key={{ user.pk }}"
+    href="{% default_frontend_protocol %}://{% default_frontend_domain %}/email-confirm?user={{ user_display }}&&key={{ key }}"
     style="margin: 2em 0; background-color:#00B8C4; text-decoration: none; padding: .8em 1.2em; color: #FCFDFF; display:inline-block; border-radius:.2em; mso-padding-alt:0; text-underline-color:#00B8C4"
     >
     <!--[if mso]>
