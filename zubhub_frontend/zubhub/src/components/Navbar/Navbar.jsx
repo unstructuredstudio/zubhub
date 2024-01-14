@@ -83,6 +83,7 @@ function PageWrapper(props) {
     loading: false,
     open_search_form: false,
     left: false,
+    is_autocomplete_open: false,
   });
 
   const [options, setOptions] = useState([]);
@@ -98,7 +99,7 @@ function PageWrapper(props) {
   const throttledFetchOptions = useMemo(
     () =>
       throttle(async (query, searchType) => {
-        if (query?.length === 0) {
+        if (query?.length === 0 || !props.auth.token) {
           setOptions([]);
           return;
         }
@@ -205,6 +206,16 @@ function PageWrapper(props) {
     setQuery(event.target.value);
   };
 
+  const handleAutocompleteOpen = () => {
+    if (props.auth.token) {
+      setState({ ...state, is_autocomplete_open: true})
+    }
+  }
+
+  const handleAutocompleteClose = () => {
+    setState({ ...state, is_autocomplete_open: false})
+  }
+
   const { anchor_el, loading, open_search_form } = state;
   const { t } = props;
   const { zubhub, hero } = props.projects;
@@ -293,6 +304,9 @@ function PageWrapper(props) {
                       </InputSelect>
                     </FormControl>
                     <Autocomplete
+                      open={state.is_autocomplete_open}
+                      onOpen={handleAutocompleteOpen}
+                      onClose={handleAutocompleteClose}
                       className={classes.input}
                       options={options}
                       defaultValue={{ title: query }}
