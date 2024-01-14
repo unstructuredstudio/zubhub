@@ -462,4 +462,7 @@ def perform_project_search(user, query_string, search_criteria: Optional[Set[Pro
         if can_view(user, project):
             result.append(project)
 
+    if not user.is_authenticated:
+        result = result[:3]
+
     return result

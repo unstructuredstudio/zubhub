@@ -184,6 +184,8 @@ class ProjectTagSearchAPIView(ListAPIView):
         rank = SearchRank(F('search_vector'), query)
         tags = Tag.objects.annotate(rank=rank).filter(
             search_vector=query).order_by('-rank')
+        if not self.request.user.is_authenticated:
+            tags = tags[:3]
         return tags
         
 

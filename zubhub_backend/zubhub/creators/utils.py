@@ -294,6 +294,9 @@ def perform_creator_search(user, query_string):
             search_vector=query,is_active=True ).order_by('-rank')
     ##############################################################
 
+    if not user.is_authenticated:
+        result_creators = result_creators[:3]
+
     return result_creators
 
 
