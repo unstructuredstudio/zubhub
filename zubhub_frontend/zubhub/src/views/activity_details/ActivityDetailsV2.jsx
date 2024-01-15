@@ -148,7 +148,7 @@ export default function ActivityDetailsV2(props) {
             primaryButtonOutlinedStyle
             style={{ borderRadius: 4 }}
           >
-            {isDownloading ? 'Downloading...' : 'Download PDF'}
+            {isDownloading ? t('activities.downloadButton.downloading') : t('activities.downloadButton.download')}
           </CustomButton>
         </div>
       </div>
