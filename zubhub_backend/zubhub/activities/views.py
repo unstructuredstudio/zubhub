@@ -1,7 +1,6 @@
-from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
 from rest_framework.generics import (
     ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
@@ -182,3 +181,35 @@ class togglePublishActivityAPIView(RetrieveAPIView):
         obj.publish = not obj.publish
         obj.save()
         return obj
+
+
+
+class DownloadActivityPDF(RetrieveAPIView):
+    """
+    Download an activities.
+    Requires activities id.
+    Returns activities file.
+    """
+    queryset = Activity.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = ActivitySerializer
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        obj = get_object_or_404(self.get_queryset(), pk=pk)
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        activity = self.get_object()
+
+        context = {
+            'activity': activity,
+        }
+        html_string = render_to_string('activities/activity_download.html', context)
+
+        html = HTML(string=html_string)
+        pdf = html.write_pdf()
+
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = f'filename="{activity.id}.pdf"'
+        return response
