@@ -1098,6 +1098,10 @@
          "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
          "uploadError": "error occurred while downloading file : "
       }
+   },
+   "downloadButton": {
+     "downloading": "Downloading...",
+     "download": "Download PDF"
    }
  },
 

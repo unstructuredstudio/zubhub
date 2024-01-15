@@ -1114,6 +1114,23 @@ class API {
     const url = `activities/${id}/toggle-publish/`;
     return this.request({ url, token }).then(res => res.json());
   };
+
+  activityDownload = async ({ id, token }) => {
+    const url = `${this.domain}activities/${id}/pdf/`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      const blob = await response.blob();
+      return blob;
+    }
+  };
 }
 
 export default API;
