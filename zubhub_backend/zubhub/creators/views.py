@@ -1,5 +1,3 @@
-import csv
-from io import StringIO
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from notifications.models import Notification
@@ -188,7 +186,7 @@ class RegisterCreatorAPIView(RegisterView):
             "location": "string",\n
             "bio": "",\n
             "subscribe": false\n
-            "creator_tags": ["tag1", "tag2", ...]\n
+            "creator_tags": "string",\n
         }\n
     """
 
