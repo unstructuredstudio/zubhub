@@ -269,7 +269,8 @@ function SearchResults(props) {
                       container: loginClasses.container,
                       card: loginClasses.card,
                       title: loginClasses.title,
-                      description: loginClasses.description
+                      description: loginClasses.description,
+                      grid: loginClasses.grid
                     }}
                   />
                 </div>

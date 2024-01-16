@@ -139,5 +139,8 @@ export const loginStyleOverrides = (theme) => ({
   },
   description: {
     display: 'none',
+  },
+  grid: {
+    margin: 0
   }
 })

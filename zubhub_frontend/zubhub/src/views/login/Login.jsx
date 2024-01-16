@@ -92,7 +92,7 @@ function Login(props) {
                 >
                   {t('login.welcomeMsg.secondary')}
                 </Typography>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} className={clsx(props.styleOverrides?.grid)}>
                   <Grid item xs={12}>
                     <Box
                       component="p"
@@ -222,7 +222,7 @@ function Login(props) {
                   </Grid>
                 </Grid>
               </form>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} className={clsx(props.styleOverrides?.grid)}>
                 <Grid item xs={12}>
                   <Box className={classes.center}>
                     <Divider className={classes.divider} />
