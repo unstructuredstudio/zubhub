@@ -483,7 +483,10 @@
       "noResult": "We could not find anything for your search term! Maybe try to search something else?"
     },
     "loginCard": {
-      "title": "Log in or sign up to search for projects"
+      "title": {
+        "projects": "Log in or sign up to search for projects",
+        "creators": "Log in or sign up to search for users"
+      }
     }
   },
 

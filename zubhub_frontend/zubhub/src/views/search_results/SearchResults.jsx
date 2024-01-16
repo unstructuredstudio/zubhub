@@ -69,7 +69,7 @@ const buildCreatorProfiles = (
         className={common_classes.textDecorationNone}
         to={`/creators/${creator.username}`}
       >
-        <Card className={classes.cardStyle}>
+        <Card className={clsx(classes.cardStyle, !props.auth?.token && classes.cardLoggedOutStyle)}>
           <Avatar
             className={classes.avatarStyle}
             src={creator.avatar}
@@ -197,10 +197,12 @@ function SearchResults(props) {
                   "{getQueryParams(window.location.href).get('q')}"
                 </Typography>
               </Grid>
+              <div className={clsx(classes.creatorsContainerStyle, !props.auth?.token && classes.creatorsContainerLoggedOutStyle)}>
               {getResults(
                 getQueryParams(window.location.href).get('type'),
                 results,
               )}
+              </div>
             </Grid>
             {prev_page || next_page &&
             <ButtonGroup
@@ -263,7 +265,7 @@ function SearchResults(props) {
                 <div className={classes.loginCardStyle}>
                   <Login
                     {...props} 
-                    title={t('searchResults.loginCard.title')}
+                    title={`${t(`searchResults.loginCard.title.${getQueryParams(window.location.href).get('type')}`)}`}
                     styleOverrides={{
                       root: loginClasses.root,
                       container: loginClasses.container,

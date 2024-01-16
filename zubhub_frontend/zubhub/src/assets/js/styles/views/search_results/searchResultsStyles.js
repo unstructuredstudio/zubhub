@@ -33,6 +33,13 @@ export const styles = theme => ({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  creatorsContainerStyle: {
+    width: '100%',
+  },
+  creatorsContainerLoggedOutStyle: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
   projectsContainerStyle: {
     margin: 0,
   },
@@ -48,6 +55,10 @@ export const styles = theme => ({
     borderRadius: '15px',
     textAlign: 'left',
     backgroundColor: '#ffffff',
+  },
+  cardLoggedOutStyle: {
+    marginBottom: '3em',
+    boxShadow: 'none',
   },
   avatarStyle: {
     width: '100%',
