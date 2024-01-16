@@ -64,9 +64,9 @@ function Login(props) {
   const { t } = props;
 
   return (
-    <Box className={classes.root}>
-      <Container className={classes.containerStyle}>
-        <Card className={classes.cardStyle}>
+    <Box className={clsx(classes.root, props.styleOverrides?.root)}>
+      <Container className={clsx(classes.containerStyle, props.styleOverrides?.container)}>
+        <Card className={clsx(classes.cardStyle, props.styleOverrides?.card)}>
           <CardActionArea>
             <CardContent>
               <form
@@ -80,12 +80,12 @@ function Login(props) {
                   variant="h5"
                   component="h2"
                   color="textPrimary"
-                  className={classes.titleStyle}
+                  className={clsx(classes.titleStyle, props.styleOverrides?.title)}
                 >
-                  {t('login.welcomeMsg.primary')}
+                  {props.title || t('login.welcomeMsg.primary')}
                 </Typography>
                 <Typography
-                  className={classes.descStyle}
+                  className={clsx(classes.descStyle, props.styleOverrides?.description)}
                   variant="body2"
                   color="textSecondary"
                   component="p"

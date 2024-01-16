@@ -34,12 +34,13 @@ import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
-import styles from '../../assets/js/styles/views/search_results/searchResultsStyles';
+import { styles, loginStyleOverrides } from '../../assets/js/styles/views/search_results/searchResultsStyles';
 import commonStyles from '../../assets/js/styles';
+import Login from '../login/Login';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
-
+const useLoginStyleOverrides = makeStyles(loginStyleOverrides);
 /**
  * @function buildCreatorProfiles Component
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
@@ -108,6 +109,7 @@ const buildCreatorProfiles = (
 function SearchResults(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const loginClasses = useLoginStyleOverrides();
 
   const [state, setState] = React.useState({
     results: [],
@@ -142,7 +144,7 @@ function SearchResults(props) {
       );
     } else {
       return (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className={classes.projectsContainerStyle}>
           {results.map(project => (
             <Grid
               item
@@ -181,11 +183,11 @@ function SearchResults(props) {
       <Box className={classes.root}>
         {results && results.length > 0 ? (
           <Container className={classes.mainContainerStyle}>
-            <Grid container>
+            <Grid container className={clsx(!props.auth.token && classes.mainContainerLoggedOutStyle)}>
               <Grid item xs={12}>
                 <Typography
                   className={classes.pageHeaderStyle}
-                  variant="h3"
+                  variant="h4"
                   gutterBottom
                 >
                   {count}{' '}
@@ -200,9 +202,10 @@ function SearchResults(props) {
                 results,
               )}
             </Grid>
+            {prev_page || next_page &&
             <ButtonGroup
               aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
-              className={classes.buttonGroupStyle}
+              className={clsx(classes.buttonGroupStyle, !props.auth?.token && classes.buttonGroupLoggedOut)}
             >
               {prev_page ? (
                 <CustomButton
@@ -253,6 +256,25 @@ function SearchResults(props) {
                 </CustomButton>
               ) : null}
             </ButtonGroup>
+            }
+            {!props.auth?.token &&
+              <>
+                <div className={classes.transitionStyle}></div>
+                <div className={classes.loginCardStyle}>
+                  <Login
+                    {...props} 
+                    title={t('searchResults.loginCard.title')}
+                    styleOverrides={{
+                      root: loginClasses.root,
+                      container: loginClasses.container,
+                      card: loginClasses.card,
+                      title: loginClasses.title,
+                      description: loginClasses.description
+                    }}
+                  />
+                </div>
+              </>
+            }
           </Container>
         ) : (
           <ErrorPage

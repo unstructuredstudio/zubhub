@@ -1,4 +1,4 @@
-const styles = theme => ({
+export const styles = theme => ({
   root: {
     paddingBottom: '2em',
     flex: '1 0 auto',
@@ -16,11 +16,25 @@ const styles = theme => ({
     maxWidth: '1190px',
     width: '100%',
   },
-
+  mainContainerLoggedOutStyle: {
+    background: 'white',
+    padding: '0 3em',
+    marginTop: '3em',
+    borderRadius: '15px',
+    [theme.breakpoints.down('1080')]: {
+      padding: '0 1em'
+    },
+    [theme.breakpoints.down('500')]: {
+      padding: 0,
+    }
+  },
   pageHeaderStyle: {
-    marginTop: '1em',
+    margin: '1em 0',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  projectsContainerStyle: {
+    margin: 0,
   },
   cardStyle: {
     display: 'flex',
@@ -61,6 +75,9 @@ const styles = theme => ({
     maxWidth: '2000px',
     width: '100%',
   },
+  buttonGroupLoggedOut: {
+    background: 'white'
+  },
   floatRight: {
     float: 'right',
   },
@@ -89,6 +106,38 @@ const styles = theme => ({
     fontWeight: '900',
     fontSize: '1.5rem',
   },
+  transitionStyle: {
+    height: '20em',
+    marginTop: '-20em',
+    background: 'linear-gradient(0deg, rgba(255,255,255,1) 38%, rgba(212,46,46,0) 75%)',
+    position: 'relative'
+  },
+  loginCardStyle: {
+    background: 'white',
+    marginTop: '-6em',
+  },
 });
 
-export default styles;
+export const loginStyleOverrides = (theme) => ({
+  root: {
+    paddingTop: 0,
+  },
+  container: {
+    [theme.breakpoints.down('400')]: {
+      padding: 0
+    },
+  },
+  card: {
+    boxShadow: 'none',
+    [theme.breakpoints.down('500')]: {
+      padding: 0
+    }
+  },
+  title: {
+    textAlign: 'center',
+    margin: 0,
+  },
+  description: {
+    display: 'none',
+  }
+})
