@@ -16,9 +16,12 @@ export const getLocations = props => {
  *
  * @todo - describe function's signature
  */
-export const handleClickShowPassword = state => {
-  const { show_password } = state;
-  return { show_password: !show_password };
+export const handleClickShowPassword = (state, value) => {
+  const currentValue = state[value]
+  return {
+      ...state,
+      [value]: !currentValue
+  }
 };
 
 /**
@@ -135,20 +138,12 @@ export const deleteAccount = (username_el, props, toast) => {
  *
  * @todo - describe function's signature
  */
-export const editProfile = (e, props, toast) => {
-  e.preventDefault();
-  props.setFieldTouched('username', true);
-  props.setFieldTouched('email', true);
-  props.setFieldTouched('phone', true);
-  props.setFieldTouched('password', true);
-  props.setFieldTouched('user_location', true);
+export const editProfile = (values, props, toast) => {  
   let password_match = true;
-  if (props.values.user_location.length < 1) {
-    props.validateField('user_location');
-  } else if (props.values.password.length < 1) {
-    props.validateField('password');
-  } else {
-    props.login({ values: props.values, history: props.history }).catch(error => {
+
+  if (values.password) {
+    props.validateField('password')
+    props.login({ values: values, history: props.history }).catch(error => {
       try{
         const messages = JSON.parse(error.message);
         toast.error(props.t('editProfile.inputs.password.errors.invalid'));
@@ -162,7 +157,7 @@ export const editProfile = (e, props, toast) => {
         return;
       } else {
         return props
-          .editUserProfile({ ...props.values, token: props.auth.token })
+          .editUserProfile({ ...values, token: props.auth.token })
           .then(_ => {
             toast.success(props.t('editProfile.toastSuccess'));
             props.history.push('/profile');
@@ -221,7 +216,15 @@ export const handleTooltipClose = () => {
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   user_location: Yup.string().min(1, 'min').required('required'),
-  password: Yup.string().required('required'),
+  password: Yup.string().required('Your password is required'),
+  newPassword: Yup.string()
+    .oneOf([Yup.ref('confirmNewPassword'), null], 'Passwords must match'),
+  confirmNewPassword: Yup.string()
+    .when('newPassword', {
+      is: (newPassword) => newPassword && newPassword.length > 0,
+      then: Yup.string().oneOf([Yup.ref('newPassword')], 'Passwords must match').required('Retype new password'),
+      otherwise: Yup.string().notRequired(),
+    }),
   email: Yup.string().email('invalid').when('phone', {
     is: (phone) => !phone || phone.length === 0,
     then: Yup.string().required('phoneOrEmail')
@@ -234,3 +237,15 @@ export const validationSchema = Yup.object().shape({
   }),
   bio: Yup.string().max(255, 'tooLong'),
 }, ['phone', 'email']);
+
+
+
+ export function customValidation(values, props) {
+  const errors = {};
+  if (values.confirmNewPassword && !values.newPassword) {
+    errors.newPassword = 'You have to input here first';
+  }
+
+  return errors;
+
+}
