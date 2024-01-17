@@ -1,6 +1,5 @@
 import {
   CircularProgress,
-  Link,
   List,
   ListItem,
   ListItemIcon,
@@ -12,7 +11,7 @@ import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 import API from '../../api';
 import { images } from '../../assets/images';
 import { logout } from '../../store/actions/authActions';
@@ -67,7 +66,7 @@ export default function Sidenav() {
     <div className={classes.container}>
       <List className={classes.listContainer}>
         {isSmallScreen && (
-          <Link className={clsx(classes.logo, classes.link)} href="/">
+          <Link className={clsx(classes.logo, classes.link)} to="/">
             <ListItem>
               <img alt="Zubhub Logo" src={images.logo} />
             </ListItem>
@@ -82,7 +81,7 @@ export default function Sidenav() {
                   <Link
                     key={index + label}
                     className={clsx(classes.label, classes.link, pathname === link && classes.active, red && classes.red)}
-                    href={link}
+                    to={link}
                     target={target || '_self'}
                   >
                     <ListItem key={label}>
@@ -114,7 +113,7 @@ export default function Sidenav() {
                   <Link
                     key={index + label}
                     className={clsx(classes.label, classes.link, pathname == link && classes.active, red && classes.red)}
-                    href={link}
+                    to={link}
                     target={target || '_self'}
                   >
                     <ListItem key={label}>
@@ -138,7 +137,7 @@ export default function Sidenav() {
                 key={index + label}
                 className={clsx(classes.label, classes.link, pathname == link && classes.active, red && classes.red)}
                 style={{ marginTop: index == 0 && 'auto' }}
-                {...(link && { href: link })}
+                {...(link && { to: link })}
                 onClick={action == 'logout' ? handleLogout : null}
               >
                 <ListItem key={label}>
