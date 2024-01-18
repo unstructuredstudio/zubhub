@@ -27,15 +27,15 @@ function StaffPick(props) {
   return staff_pick.projects &&
     staff_pick.projects.results &&
     staff_pick.projects.results.length > 0 ? (
-    <Box className={classes.root}>
-      <Grid container spacing={3}>
+    <Box className={clsx(classes.root, props.styleOverrides?.root)}>
+      <Grid container spacing={3} className={clsx(props.styleOverrides?.mainContainer)}>
         <Grid item xs={12}>
           <Typography
             gutterBottom
             // component="h2"
             // variant="h6"
             // color="textPrimary"
-            className={classes.MessagePrimaryStyle}
+            className={clsx(classes.MessagePrimaryStyle, props.styleOverrides?.MessagePrimary)}
           >
             {staff_pick.title}
             {/* <CustomButton

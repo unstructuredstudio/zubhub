@@ -35,9 +35,10 @@ export const styles = theme => ({
   },
   creatorsContainerStyle: {
     width: '100%',
+    display: 'flex',
+    gap: '1em',
   },
   creatorsContainerLoggedOutStyle: {
-    display: 'flex',
     justifyContent: 'center'
   },
   projectsContainerStyle: {
@@ -57,7 +58,7 @@ export const styles = theme => ({
     backgroundColor: '#ffffff',
   },
   cardLoggedOutStyle: {
-    marginBottom: '3em',
+    marginBottom: '9em',
     boxShadow: 'none',
   },
   avatarStyle: {
@@ -127,6 +128,44 @@ export const styles = theme => ({
     background: 'white',
     marginTop: '-6em',
   },
+  notFoundRobotStyle: {
+    width: '20em',
+    marginTop: '3em',
+    [theme.breakpoints.down('600')]: {
+      width: '15em'
+    },
+    [theme.breakpoints.down('400')]: {
+      width: '12em'
+    }
+  },
+  noResultContainerStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  noResultTitleStyle: {
+    width: '70%',
+    padding: '0 1em',
+    [theme.breakpoints.down('600')]: {
+      width: '100%',
+      fontSize: '1.5rem'
+    }
+
+  },
+  noResultDescStyle: {
+    padding: '0 1em',
+    fontSize: '1.2rem',
+    textAlign: 'center',
+    marginBottom: '3em',
+    [theme.breakpoints.down('600')]: {
+      fontSize: '1rem'
+    }
+  },
+  marginBottom: {
+    marginBottom: '4em',
+    zIndex: 10
+  },
 });
 
 export const loginStyleOverrides = (theme) => ({
@@ -154,4 +193,25 @@ export const loginStyleOverrides = (theme) => ({
   grid: {
     margin: 0
   }
+})
+
+export const staffPickStyleOverrides = (theme) => ({
+  root: {
+    margin: 0,
+    width: '80%',
+    [theme.breakpoints.down('400')]: {
+      width: '100%'
+    }
+  },
+  mainContainerStyle: {
+    margin: 0
+  },
+  MessagePrimaryStyle: {
+    fontSize: '1.8rem',
+    fontWeight: 700,
+    [theme.breakpoints.down('600')]: {
+      fontSize: '1.5rem',
+    },
+  },
+
 })
