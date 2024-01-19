@@ -191,6 +191,7 @@ class DownloadActivityPDF(RetrieveAPIView):
     """
     queryset = Activity.objects.all()
     permission_classes = [IsAuthenticated]
+    # TODO: Add serializer a binary file serializer
     serializer_class = ActivitySerializer
     template_path = 'activities/activity_download.html'
 
