@@ -1,16 +1,15 @@
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from weasyprint import HTML
 from rest_framework.generics import (
     ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from .permissions import IsStaffOrModeratorOrEducator, IsOwner, IsStaffOrModerator
 from django.shortcuts import get_object_or_404
+from django.contrib.sites.shortcuts import get_current_site
 from .models import *
 from .serializers import *
 from django.db import transaction
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import AnonymousUser
+from .utils import generate_pdf, generate_qr_code
+from django.conf import settings
 
 
 
@@ -193,6 +192,7 @@ class DownloadActivityPDF(RetrieveAPIView):
     queryset = Activity.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = ActivitySerializer
+    template_path = 'activities/activity_download.html'
 
     def get_object(self):
         pk = self.kwargs.get("pk")
@@ -201,15 +201,27 @@ class DownloadActivityPDF(RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         activity = self.get_object()
-
+        activity_images = ActivityImage.objects.filter(activity=activity)
+        activity_steps = ActivityMakingStep.objects.filter(activity=activity)
+        if settings.ENVIRONMENT == 'production':
+            qr_code = generate_qr_code(
+                link=f"https://zubhub.unstructured.studio/activities/{activity.id}"
+            )
+        else:
+            qr_code = generate_qr_code(
+                link=f"{settings.DEFAULT_BACKEND_PROTOCOL}//{settings.DEFAULT_BACKEND_DOMAIN}/activities/{activity.id}"
+            )
         context = {
             'activity': activity,
+            'activity_id': activity.id,
+            'activity_images': activity_images,
+            'activity_steps': activity_steps,
+            'activity_steps_images': [step.image.all() for step in activity_steps],
+            'activity_category': [category.name for category in activity.category.all()],
+            'creators': [creator for creator in activity.creators.all()],
+            'qr_code': qr_code
         }
-        html_string = render_to_string('activities/activity_download.html', context)
-
-        html = HTML(string=html_string)
-        pdf = html.write_pdf()
-
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = f'filename="{activity.id}.pdf"'
-        return response
+        return generate_pdf(
+            template_path=self.template_path,
+            context=context
+        )
