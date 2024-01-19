@@ -1,7 +1,6 @@
 import io
 import base64
 import qrcode
-import requests
 from django.http import HttpResponse
 from django.template.loader import get_template
 from weasyprint import HTML
@@ -41,20 +40,21 @@ def create_inspiring_examples(activity, inspiring_examples):
 
 
 def create_activity_images(activity, images):
+   
     for image in images:
         saved_image = Image.objects.create(**image['image'])
         ActivityImage.objects.create(activity=activity, image=saved_image)
 
 
 def update_image(image, image_data):
-    if (image_data is not None and image is not None):
+    if(image_data is not None and image is not None):
         if image_data["file_url"] == image.file_url:
             return image
         else:
             image.delete()
             return Image.objects.create(**image_data)
     else:
-        if (image):
+        if(image):
             image.delete()
         else:
             return Image.objects.create(**image_data)
@@ -123,7 +123,7 @@ def generate_pdf(template_path, context):
     html = template.render(context)
 
     pdf = HTML(string=html).write_pdf()
-
+    
     activity_id = context['activity_id']
 
     response = HttpResponse(pdf, content_type="application/pdf")
@@ -131,21 +131,3 @@ def generate_pdf(template_path, context):
 
     return response
 
-
-def download_file(file_url):
-    """
-    Download a file from a given URL and save it to the local filesystem.
-
-    Args:
-        file_url (str): The URL of the file to download.
-
-    Returns:
-        bytes: The file data.
-    """
-    response = requests.get(file_url, stream=True)
-    response.raise_for_status()
-    file_data = b""
-    for chunk in response.iter_content(chunk_size=4096):
-        if chunk:
-            file_data += chunk
-    return file_data
