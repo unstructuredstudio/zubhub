@@ -204,7 +204,7 @@ function SearchResults(props) {
                   "{getQueryParams(window.location.href).get('q')}"
                 </Typography>
               </Grid>
-              <div className={clsx(classes.creatorsContainerStyle, !props.auth?.token && classes.creatorsContainerLoggedOutStyle)}>
+              <div className={clsx(classes.creatorsContainerStyle, !props.auth?.token && classes.creatorsContainerLoggedOutStyle && classes.loggedOutResultsContainer)}>
               {getResults(
                 getQueryParams(window.location.href).get('type'),
                 results,
@@ -237,24 +237,26 @@ function SearchResults(props) {
                     >
                       {t('searchResults.errors.noResultDescription')}
                     </Typography>
-                    {staff_picks.map(staff_pick => (
-                      <StaffPick
-                        key={staff_pick.id}
-                        staff_pick={staff_pick}
-                        updateProjects={res =>
-                          handleSetState(
-                            updateStaffPicks(res, staff_pick.id, props, toast),
-                          )
-                        }
-                        styleOverrides={{
-                          root: staffPickClasses.root,
-                          mainContainer: staffPickClasses.mainContainerStyle,
-                          MessagePrimary: staffPickClasses.MessagePrimaryStyle,
-                        }}
-                        {...props}
-                      />
-                      ))
-                    }
+                    <div className={clsx(!props.auth?.token && classes.loggedOutResultsContainer)}>
+                      {staff_picks.map(staff_pick => (
+                        <StaffPick
+                          key={staff_pick.id}
+                          staff_pick={staff_pick}
+                          updateProjects={res =>
+                            handleSetState(
+                              updateStaffPicks(res, staff_pick.id, props, toast),
+                            )
+                          }
+                          styleOverrides={{
+                            root: staffPickClasses.root,
+                            mainContainer: staffPickClasses.mainContainerStyle,
+                            MessagePrimary: staffPickClasses.MessagePrimaryStyle,
+                          }}
+                          {...props}
+                        />
+                        ))
+                      }
+                    </div>
                   </>
                 )
               }

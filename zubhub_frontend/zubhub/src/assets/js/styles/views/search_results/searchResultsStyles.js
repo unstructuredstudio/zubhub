@@ -44,6 +44,12 @@ export const styles = theme => ({
   projectsContainerStyle: {
     margin: 0,
   },
+  loggedOutResultsContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    maxHeight: '400px',
+    overflow: 'hidden',
+  },
   cardStyle: {
     display: 'flex',
     flexDirection: 'column',
@@ -121,7 +127,7 @@ export const styles = theme => ({
   transitionStyle: {
     height: '20em',
     marginTop: '-20em',
-    background: 'linear-gradient(0deg, rgba(255,255,255,1) 38%, rgba(212,46,46,0) 75%)',
+    background: 'linear-gradient(0deg, rgba(255,255,255,1) 34%, rgba(255,255,255,0) 100%)',
     position: 'relative'
   },
   loginCardStyle: {
@@ -207,6 +213,7 @@ export const staffPickStyleOverrides = (theme) => ({
     margin: 0
   },
   MessagePrimaryStyle: {
+    margin: 0,
     fontSize: '1.8rem',
     fontWeight: 700,
     [theme.breakpoints.down('600')]: {
