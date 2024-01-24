@@ -3,14 +3,12 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from .permissions import IsStaffOrModeratorOrEducator, IsOwner, IsStaffOrModerator
 from django.shortcuts import get_object_or_404
-from django.contrib.sites.shortcuts import get_current_site
 from .models import *
 from .serializers import *
 from django.db import transaction
 from django.contrib.auth.models import AnonymousUser
-from .utils import generate_pdf, generate_qr_code
+from .utils import generate_pdf, generate_qr_code, download_file
 from django.conf import settings
-
 
 
 class ActivityListAPIView(ListAPIView):
