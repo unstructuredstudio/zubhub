@@ -218,12 +218,14 @@
             {{ activity.introduction | safe }}
         </div>
         <div class="intro-images">
+            {% for activity_image in activity_images %}
                 <span class="i-img">
-                <img
-                        src="{{ activity_images }}"
-                        alt=""
-                />
-        </span>
+                    <img
+                            src="data:image/png;base64,{{ activity_image }}"
+                            alt=""
+                    />
+                </span>
+            {% endfor %}
         </div>
     </div>
     <div class="category">
@@ -252,10 +254,14 @@
             </div>
             <div class="intro-images">
                     <span class="i-img">
-              <img
-                      src="{{ activity.materials_used_image.file_url }}"
+              <!--<img
+                      src="{{ activity.materials_used_image.file_url }}.png"
                       alt=""
-              />
+              />-->
+                        <img
+                                src="https://zubhub.sfo2.digitaloceanspaces.com/project_images/wwFFnvp25C2PGRsNo-TFN"
+                                alt=""
+                        />
             </span>
             </div>
         </div>
@@ -271,9 +277,8 @@
                 </div>
                 <div class="intro-images">
                     {% for img in activity_steps_images %}
-                        {{ img.file_url }}
                         <span class="i-img">
-                        <img src="{{ img.file_url }}" alt="Activity image"/>
+                        <img src="{{ img.file_url }}.png" alt="Activity image"/>
                     </span>
                     {% endfor %}
                 </div>
