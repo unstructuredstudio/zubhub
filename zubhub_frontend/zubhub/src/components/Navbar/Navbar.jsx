@@ -1,15 +1,15 @@
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { connect, useSelector } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import TranslateIcon from '@material-ui/icons/Translate';
+import { makeStyles } from '@mui/styles';
+import SearchIcon from '@mui/icons-material/Search';
+import TranslateIcon from '@mui/icons-material/Translate';
 
 import {
   AppBar,
@@ -29,14 +29,14 @@ import {
   Toolbar,
   Typography,
   useScrollTrigger,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   closeSearchFormOrIgnore,
   fetchHero,
   handleChangeLanguage,
   handleProfileMenuClose,
-} from '../../views/pageWrapperScripts';
+} from '../../wrapper/pageWrapperScripts';
 
 import { getQueryParams, SearchType } from '../../views/search_results/searchResultsScripts';
 
@@ -46,7 +46,7 @@ import styles from '../../assets/js/styles/views/page_wrapper/pageWrapperStyles'
 import * as AuthActions from '../../store/actions/authActions';
 import * as ProjectActions from '../../store/actions/projectActions';
 
-import { Menu as MenuIcon, SearchOutlined } from '@material-ui/icons';
+import { Menu as MenuIcon, SearchOutlined } from '@mui/icons-material';
 import API from '../../api';
 import languageMap from '../../assets/js/languageMap.json';
 import Autocomplete from '../../components/autocomplete/Autocomplete';
@@ -62,14 +62,14 @@ const useCommonStyles = makeStyles(commonStyles);
 const anchor = 'left';
 
 /**
- * @function PageWrapper View
+ * @function NavBar View
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
-function PageWrapper(props) {
+function NavBar(props) {
   const backToTopEl = React.useRef(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
@@ -107,7 +107,7 @@ function PageWrapper(props) {
         let completions = [];
         if (searchType === SearchType.TAGS) {
           completions = await api.autocompleteTags({ query, token });
-          completions = completions.map(({ name }) => ({
+          completions = completions?.map(({ name }) => ({
             title: name,
           }));
         } else if (searchType === SearchType.PROJECTS) {
@@ -122,7 +122,7 @@ function PageWrapper(props) {
           }));
         } else {
           completions = await api.autocompleteCreators({ query, token });
-          completions = completions.map(({ username, avatar }) => ({
+          completions = completions?.map(({ username, avatar }) => ({
             title: username,
             image: avatar,
             link: `/creators/${username}`,
@@ -130,7 +130,7 @@ function PageWrapper(props) {
         }
         setOptions(completions);
       }, 2),
-    [],
+    [props.auth.id, token],
   );
 
   useEffect(() => {
@@ -138,11 +138,11 @@ function PageWrapper(props) {
       query || (props.location.search && getQueryParams(window.location.href).get('q')),
       searchType,
     );
-  }, [query, searchType]);
+  }, [props.location.search, query, searchType, throttledFetchOptions]);
 
   useEffect(() => {
     throttledFetchOptions.cancel();
-  }, []);
+  }, [throttledFetchOptions]);
 
   useEffect(() => {
     handleSetState({ loading: true });
@@ -234,6 +234,7 @@ function PageWrapper(props) {
               >
                 <TranslateIcon />
                 <Select
+                  variant="standard"
                   className={classes.languageSelectStyle}
                   value=""
                   onChange={e => handleChangeLanguage({ e, props })}
@@ -255,6 +256,7 @@ function PageWrapper(props) {
               >
                 <TranslateIcon />
                 <Select
+                  variant="standard"
                   className={classes.languageSelectStyle}
                   value={props.i18n.language}
                   onChange={e => handleChangeLanguage({ e, props })}
@@ -297,8 +299,8 @@ function PageWrapper(props) {
                       options={options}
                       defaultValue={{ title: query }}
                       value={{ title: query }}
-                      renderOption={(option, { inputValue }) => (
-                        <Option option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
+                      renderOption={(props, option, { inputValue }) => (
+                        <Option {...props} option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
                       )}
                     >
                       {params => (
@@ -349,7 +351,7 @@ function PageWrapper(props) {
                 )}
               </Hidden>
 
-              <AvatarButton history={props.history} />
+              <AvatarButton navigate={props.navigate} />
             </div>
           </Toolbar>
           {open_search_form ? (
@@ -376,8 +378,8 @@ function PageWrapper(props) {
                     options={options}
                     defaultValue={{ title: query }}
                     value={{ title: query }}
-                    renderOption={(option, { inputValue }) => (
-                      <Option option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
+                    renderOption={(props, option, { inputValue }) => (
+                      <Option {...props} option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
                     )}
                   >
                     {params => (
@@ -422,7 +424,7 @@ function PageWrapper(props) {
   );
 }
 
-PageWrapper.propTypes = {
+NavBar.propTypes = {
   auth: PropTypes.object.isRequired,
   setAuthUser: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
@@ -453,4 +455,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PageWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

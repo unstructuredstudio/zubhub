@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   CircularProgress,
@@ -9,9 +10,8 @@ import {
   Grid,
   Link,
   Typography,
-  makeStyles,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   ArrowBackIosRounded,
   ArrowForwardIosRounded,
@@ -20,9 +20,9 @@ import {
   CloudDoneOutlined,
   PeopleAltSharp,
   Person,
-} from '@material-ui/icons';
-import DoneRounded from '@material-ui/icons/DoneRounded';
-import KeyboardBackspaceRoundedIcon from '@material-ui/icons/KeyboardBackspaceRounded';
+} from '@mui/icons-material';
+import DoneRounded from '@mui/icons-material/DoneRounded';
+import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import clsx from 'clsx';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
@@ -87,13 +87,13 @@ function CreateProject(props) {
 
   const getToastMessage = () => {
     let message = '';
-    if (activeStep === 1 && props.match.path === '/projects/create') {
+    if (activeStep === 1 && props.location.pathname === '/projects/create') {
       message = 'createProject.addedToDraft';
     }
-    if ([1, 2].includes(activeStep) && props.match.params.id) {
+    if ([1, 2].includes(activeStep) && props.params.id) {
       message = 'createProject.savedStep';
     }
-    if (activeStep === 3 && props.match.params.id) {
+    if (activeStep === 3 && props.params.id) {
       message = 'createProject.createToastSuccess';
     }
     return message;
@@ -119,7 +119,7 @@ function CreateProject(props) {
   };
 
   useEffect(() => {
-    if (props.match.params.id) {
+    if (props.params.id) {
       Promise.all([script.getProject({ ...props, ...formik }, state), script.getCategories(props)]).then(result =>
         handleSetState({ ...result[0], ...result[1] }),
       );
@@ -137,10 +137,10 @@ function CreateProject(props) {
 
   useEffect(() => {
     if (state.success) {
-      if (props.location.pathname === '/projects/create') props.history.replace(`/projects/${state.id}/edit`);
+      if (props.location.pathname === '/projects/create') props.navigate(`/projects/${state.id}/edit`, { replace: true });
       toast.success(props.t(getToastMessage()));
       if (activeStep === 3) {
-        return props.history.push(`/projects/${props.match.params.id}?success=true`);
+        return props.navigate(`/projects/${props.params.id}?success=true`);
       }
       setState({ ...state, success: false });
       go('next');
@@ -195,7 +195,6 @@ function CreateProject(props) {
 
   const checkErrors = async () => {
     console.log(formik.errors);
-    formik.setFieldError('category', false, false);
     if (activeStep === 1) {
       return formik.setTouched({ title: true, materials_used: true, description: true, category: false }, true);
     }
@@ -263,7 +262,7 @@ function CreateProject(props) {
         <Link href="/projects/create" color="inherit">
           <KeyboardBackspaceRoundedIcon/>
         </Link>
-        {props.match.params.id && (
+        {props.params.id && (
           <>
             <CustomButton onClick={togglePreview} className={classes.previewButton} variant="outlined">
               Preview
