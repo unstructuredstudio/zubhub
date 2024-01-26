@@ -36,7 +36,8 @@ export const links = ({ draftCount, myProjectCount, auth, t }) => [
     },
     { label: t('pageWrapper.sidebar.bookmarks'), link: '/projects/saved', icon: Bookmark, requireAuth: true },
     ...(TEAM_ENABLED ? [{ label: t('pageWrapper.sidebar.teams'), link: '/teams/all', icon: RiTeamFill }] : []),
-    { label: t('pageWrapper.sidebar.expoloreActivities'), link: 'https://kriti.unstructured.studio/', target: '_blank', icon: FeaturedPlayList },
+    { label: t('pageWrapper.sidebar.exploreActivities'), link: 'https://kriti.unstructured.studio/', target: '_blank', icon: FeaturedPlayList },
+    { label: t('pageWrapper.sidebar.editProfile'), link: '/edit-profile', icon: Settings, reactIcon: true, requireAuth: true },
 ];
 
 export const bottomLinks = ({ t }) => [
