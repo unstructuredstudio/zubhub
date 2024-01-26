@@ -6,7 +6,7 @@ import {
   FormHelperText,
   InputLabel,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 import { handleInputBlur, handleInputChange } from './inputScripts';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
 import {

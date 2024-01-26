@@ -1,18 +1,18 @@
 import React, { useState, useCallback } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import styles from '../../assets/js/styles/components/projects_drafts/projectsDraftsGridStyles';
 import commonStyles from '../../assets/js/styles';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CustomButton from '../../components/button/Button';
-import { Typography, Grid, Paper, Tabs, Tab, Box, Divider } from '@material-ui/core';
+import { Typography, Grid, Paper, Tabs, Tab, Box, Divider } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../../store/actions/authActions';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Project from '../../components/project/Project';
 import { updateProjects, updateDrafts } from '../../views/profile/profileScripts';
 
@@ -55,7 +55,7 @@ function a11yProps(index) {
 const ProjectsDraftsGrid = ({ profile, projects, drafts, handleSetState, ...props }) => {
   const classes = useStyles();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [value, setValue] = React.useState(0);
 
@@ -85,7 +85,7 @@ const ProjectsDraftsGrid = ({ profile, projects, drafts, handleSetState, ...prop
             variant="outlined"
             margin="normal"
             secondaryButtonStyle
-            onClick={() => history.push(`/creators/${profile.username}/projects`)}
+            onClick={() => navigate(`/creators/${profile.username}/projects`)}
           >
             {t('profile.projects.viewAll')}
           </CustomButton>
@@ -111,7 +111,7 @@ const ProjectsDraftsGrid = ({ profile, projects, drafts, handleSetState, ...prop
             variant="outlined"
             margin="normal"
             secondaryButtonStyle
-            onClick={() => history.push(`/creators/${profile.username}/drafts`)}
+            onClick={() => navigate(`/creators/${profile.username}/drafts`)}
           >
             {t('profile.projects.viewAll')}
           </CustomButton>

@@ -9,7 +9,7 @@ import { publish_type } from '../../assets/js/utils/constants';
 export const toggleLike = (e, id, props) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     const toggle_like_promise = props.toggleLike({
       id,
@@ -28,7 +28,7 @@ export const toggleLike = (e, id, props) => {
 export const toggleSave = (e, id, props) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     const toggle_save_promise = props.toggleSave({
       id,

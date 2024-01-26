@@ -5,7 +5,7 @@
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props) => {
-  const username = props.match.params.username;
+  const username = props.params.username;
   return props.getMembers({ page, username, t: props.t });
 };
 
@@ -18,7 +18,7 @@ export const fetchPage = (page, props) => {
 export const toggleFollow = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props
       .toggleFollow({ id, token: props.auth.token, t: props.t })
@@ -55,7 +55,7 @@ export const toggleFollow = (e, props, state, id, toast) => {
 export const removeMember = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props
       .removeMember({ id, token: props.auth.token, t: props.t })

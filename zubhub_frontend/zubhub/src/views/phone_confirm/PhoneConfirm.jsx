@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import {
   Grid,
   Box,
@@ -14,7 +14,7 @@ import {
   CardActionArea,
   CardContent,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { getUsernameAndKey, confirmPhone } from './phoneConfirmScripts';
 

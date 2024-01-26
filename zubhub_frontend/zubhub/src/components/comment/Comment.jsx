@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import ReplyIcon from '@material-ui/icons/Reply';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Avatar, Box, Typography, Menu, MenuItem } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ReplyIcon from '@mui/icons-material/Reply';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Avatar, Box, Typography, Menu, MenuItem } from '@mui/material';
 
 import CustomButton from '../../components/button/Button';
 import CommentInput from '../../components/comment_input/CommentInput';

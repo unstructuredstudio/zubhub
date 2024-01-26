@@ -1,5 +1,6 @@
-import { Box, FormControl, IconButton, Typography, makeStyles } from '@material-ui/core';
-import { ArrowBackOutlined, ArrowForwardOutlined, ClearRounded, CloudUploadOutlined } from '@material-ui/icons';
+import { Box, FormControl, IconButton, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { ArrowBackOutlined, ArrowForwardOutlined, ClearRounded, CloudUploadOutlined } from '@mui/icons-material';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import styles from '../../../assets/js/styles';

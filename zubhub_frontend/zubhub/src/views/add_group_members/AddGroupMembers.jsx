@@ -7,8 +7,8 @@ import { withFormik } from 'formik';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
+import { makeStyles } from '@mui/styles';
+import AddIcon from '@mui/icons-material/Add';
 import {
   Grid,
   Box,
@@ -24,7 +24,7 @@ import {
   FormControlLabel,
   OutlinedInput,
   Switch,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   vars,

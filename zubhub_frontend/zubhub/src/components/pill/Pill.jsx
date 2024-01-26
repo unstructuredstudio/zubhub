@@ -1,6 +1,7 @@
 import React from 'react';
 import { colors } from '../../assets/js/colors';
-import { Typography, makeStyles } from '@material-ui/core';
+import { Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 
 export default function Pill({ text }) {
   const classes = makeStyles(styles)();

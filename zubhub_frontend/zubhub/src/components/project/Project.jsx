@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import LockIcon from '@material-ui/icons/Lock';
-import PublicIcon from '@material-ui/icons/Public';
+import { makeStyles } from '@mui/styles';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import LockIcon from '@mui/icons-material/Lock';
+import PublicIcon from '@mui/icons-material/Public';
 
 import {
   Tooltip,
@@ -20,7 +20,7 @@ import {
   CardContent,
   Fab,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CommentIcon from '../../assets/js/icons/CommentIcon';

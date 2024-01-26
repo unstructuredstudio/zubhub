@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../../assets/js/styles/components/notification/NotificationStyles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { useSelector } from 'react-redux';
 import API from '../../api/api';
 import {
@@ -8,7 +8,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Avatar,
-} from '@material-ui/core';
+} from '@mui/material';
 import { AvatarGroup } from '@material-ui/lab';
 import { dFormatter } from '../../assets/js/utils/scripts';
 import { useTranslation } from 'react-i18next';

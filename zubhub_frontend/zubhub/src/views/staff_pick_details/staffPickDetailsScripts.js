@@ -7,7 +7,7 @@
 export const fetchPage = (page, props) => {
   return props.getStaffPick({
     page,
-    id: props.match.params.id,
+    id: props.params.id,
     t: props.t,
     token: props.auth.token,
   });

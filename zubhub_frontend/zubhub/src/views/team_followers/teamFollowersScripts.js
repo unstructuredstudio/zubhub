@@ -18,7 +18,7 @@ export const fetchPage = (groupname, props) => {
 export const toggleFollow = (e, props, state, id, toast) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props
       .toggleFollow({ id, token: props.auth.token, t: props.t })

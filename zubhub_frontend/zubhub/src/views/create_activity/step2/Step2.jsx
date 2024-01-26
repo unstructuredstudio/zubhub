@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { CustomButton, Editor, ImageInput, LabeledLine } from '../../../components';
-import { Box, Button, Divider, IconButton, Menu, MenuItem, Typography, makeStyles } from '@material-ui/core';
+import { Box, Button, Divider, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { step2Styles } from './Step2.styles';
 import styles from '../../../assets/js/styles';
-import { Add, MoreHoriz } from '@material-ui/icons';
+import { Add, MoreHoriz } from '@mui/icons-material';
 import TextInput from '../../../components/form/textInput/TextInput';
 import clsx from 'clsx';
 import { uniqueId } from 'lodash';

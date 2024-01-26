@@ -1,11 +1,11 @@
 import React from 'react';
-import { ButtonGroup } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import LinkIcon from '@material-ui/icons/Link';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import IconButton from '@material-ui/core/IconButton';
-import { useMediaQuery } from '@material-ui/core';
+import { ButtonGroup } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import LinkIcon from '@mui/icons-material/Link';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import IconButton from '@mui/material/IconButton';
+import { useMediaQuery } from '@mui/material';
 import styles from '../../assets/js/styles/components/social_share_buttons/socialShareButtonsStyles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';

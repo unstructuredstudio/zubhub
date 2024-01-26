@@ -1,11 +1,11 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import React, { useRef, useState } from 'react';
 import styles from '../../assets/js/styles/components/notification_button/notificationButtonStyles';
 import commonStyles from '../../assets/js/styles/index';
 import NotificationPanel from '../notification_panel/NotificationPanel';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { Notifications } from '@material-ui/icons';
+import { makeStyles } from '@mui/styles';
+import { Notifications } from '@mui/icons-material';
 import clsx from 'clsx';
 import { colors } from '../../assets/js/colors';
 import HamburgerMenu from '../hamburger_menu/HamburgerMenu';

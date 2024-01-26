@@ -1,4 +1,5 @@
-import { Grid, Hidden, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Grid, Hidden } from '@mui/material';
 import React from 'react';
 import Sidenav from '../../components/Sidenav/Sidenav';
 import { dashboardLayoutStyles } from './dashboardLayout.styles';

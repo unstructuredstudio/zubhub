@@ -9,9 +9,9 @@ import { withFormik } from 'formik';
 
 import 'intl-tel-input/build/css/intlTelInput.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { makeStyles } from '@mui/styles';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Grid,
   Box,
@@ -33,7 +33,7 @@ import {
   FormControl,
   FormControlLabel,
   Checkbox,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   vars,

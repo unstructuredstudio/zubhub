@@ -6,10 +6,10 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import AddIcon from '@material-ui/icons/Add';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import AddIcon from '@mui/icons-material/Add';
 import {
   Grid,
   Container,
@@ -18,7 +18,7 @@ import {
   ButtonGroup,
   Typography,
   Avatar,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { fetchPage, toggleFollow, removeMember } from './groupMembersScripts';
 
@@ -75,7 +75,7 @@ const buildMembers = (members, style, props, state, handleSetState) =>
             </CustomButton>
           ) : null}
           {props.auth.members_count !== null &&
-          props.match.params.username === props.auth.username ? (
+          props.params.username === props.auth.username ? (
             <CustomButton
               variant="outlined"
               onClick={(e, id = member.id) =>
@@ -128,7 +128,7 @@ function GroupMembers(props) {
   };
 
   const { members, prev_page, next_page, loading } = state;
-  const username = props.match.params.username;
+  const username = props.params.username;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
@@ -154,7 +154,7 @@ function GroupMembers(props) {
                   startIcon={<AddIcon />}
                   primaryButtonStyle
                   onClick={() =>
-                    props.history.push(`/creators/${username}/add-members`)
+                    props.navigate(`/creators/${username}/add-members`)
                   }
                 >
                   {props.t('groupMembers.newMembers')}
@@ -219,7 +219,7 @@ function GroupMembers(props) {
             startIcon={<AddIcon />}
             primaryButtonStyle
             onClick={() =>
-              props.history.push(`/creators/${username}/add-members`)
+              props.navigate(`/creators/${username}/add-members`)
             }
           >
             {props.t('groupMembers.newMembers')}

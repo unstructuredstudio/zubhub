@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../../assets/js/styles/components/notification_panel/notificationPanelStyles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import NotificationPanelButton from './NotificationPanelButton';
 import cn from 'classnames';
 import PanelPopper from './PanelPopper';
 import Notification from '../notification/Notification';
-import { useMediaQuery, CircularProgress, Typography } from '@material-ui/core';
+import { useMediaQuery, CircularProgress, Typography } from '@mui/material';
 import API from '../../api/api';
 import { useSelector } from 'react-redux';
-import { Notifications } from '@material-ui/icons';
+import { Notifications } from '@mui/icons-material';
 import { colors } from '../../assets/js/colors';
 import CustomButton from '../button/Button';
 

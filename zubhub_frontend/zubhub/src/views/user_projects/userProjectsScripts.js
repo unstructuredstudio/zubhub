@@ -5,7 +5,7 @@
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props) => {
-  const username = props.match.params.username;
+  const username = props.params.username;
   return props.getUserProjects({
     page,
     username,

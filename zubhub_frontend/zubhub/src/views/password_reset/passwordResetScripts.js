@@ -13,7 +13,7 @@ export const sendPasswordResetLink = (e, props) => {
     .sendPasswordResetLink({
       email: props.values.email,
       t: props.t,
-      history: props.history,
+      navigate: props.navigate,
     })
     .catch(error => {
       const messages = JSON.parse(error.message);

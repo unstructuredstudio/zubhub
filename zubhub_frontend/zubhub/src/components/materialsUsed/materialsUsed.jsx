@@ -23,7 +23,7 @@ import {
   FormControl,
   InputLabel,
   ClickAwayListener,
-} from '@material-ui/core';
+} from '@mui/material';
 import { handleImageFieldChange } from '../../views/create_activity/createActivityScripts';
 import UploadFile from '../../components/upload_file/uploadFile';
 

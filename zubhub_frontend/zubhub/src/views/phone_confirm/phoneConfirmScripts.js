@@ -23,7 +23,7 @@ export const confirmPhone = (e, props, state) => {
     .sendPhoneConfirmation({
       key: state.key,
       t: props.t,
-      history: props.history,
+      navigate: props.navigate,
     })
     .catch(error => {
       if (error.message.startsWith('Unexpected')) {

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
 import styles from '../../assets/js/styles/components/button/buttonStyles';
 import clsx from 'clsx'
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 
 const useStyles = makeStyles(styles);
 

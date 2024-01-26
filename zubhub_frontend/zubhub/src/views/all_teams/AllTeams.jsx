@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
   Grid,
   Box,
@@ -15,7 +15,7 @@ import {
   CardContent,
   Link,
   Avatar
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { fetchPage, followTeam } from './allteamScripts';
 import * as UserActions from '../../store/actions/userActions';

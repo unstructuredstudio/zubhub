@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import API from '../../api'
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {
@@ -31,7 +31,7 @@ import {
   InputLabel,
   FormControl,
   Divider,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   getTeamProfile,
@@ -46,7 +46,7 @@ import {
   fetchPage,
   followTeam,
 } from './teamScripts';
-import GroupsIcon from '@material-ui/icons/Group';
+import GroupsIcon from '@mui/icons-material/Group';
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import * as UserActions from '../../store/actions/userActions';
@@ -76,7 +76,7 @@ function Team(props) {
   const username_el = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const username = props.match.params.username || props.auth.username;
+  const username = props.params.username || props.auth.username;
   const [page, setPage] = useState(1);
   const [userActivity, setUserActivity] = useState([])
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -175,9 +175,9 @@ function Team(props) {
                     variant="contained"
                     margin="normal"
                     primaryButtonStyle
-                    onClick={() => props.history.push('/'+groupname+'/edit-team')}
+                    onClick={() => props.navigate('/' + groupname + '/edit-team')}
                   >
-                    {t('editTeam.label')}
+                    {t('editTeam.info')}
                   </CustomButton>
                 </>
               ) : (
@@ -354,7 +354,7 @@ function Team(props) {
                       margin="normal"
                       secondaryButtonStyle
                       onClick={() =>
-                        props.history.push(
+                        props.navigate(
                           `/teams/${groupname}/projects`,
                         )
                       }

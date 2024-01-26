@@ -1,3 +1,5 @@
+import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import {
   CircularProgress,
   Link,
@@ -5,14 +7,13 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
   useMediaQuery,
-} from '@material-ui/core';
+} from '@mui/material';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import API from '../../api';
 import { images } from '../../assets/images';
 import { logout } from '../../store/actions/authActions';
@@ -21,12 +22,13 @@ import { sidenavStyle } from './sidenav.styles';
 import CustomButton from '../button/Button';
 
 export default function Sidenav() {
+  const theme = useTheme();
   const classes = makeStyles(sidenavStyle)();
-  const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const auth = useSelector(state => state.auth);
   const [isLogginOut, setIsLogginOut] = useState(false);
   const [draftCount, setDraftCount] = useState(0);
@@ -55,7 +57,7 @@ export default function Sidenav() {
 
   const handleLogout = async () => {
     setIsLogginOut(true);
-    const res = await dispatch(logout({ token: auth.token, history, t }));
+    const res = await dispatch(logout({ token: auth.token, navigate, t }));
   };
 
   const displayLink = requireAuth => {

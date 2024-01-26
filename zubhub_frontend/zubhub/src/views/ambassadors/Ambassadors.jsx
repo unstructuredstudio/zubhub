@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, ButtonGroup, Container, Card, Typography } from '@material-ui/core';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { makeStyles } from '@mui/styles';
+import { Grid, Box, ButtonGroup, Container, Card, Typography } from '@mui/material';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { toast } from 'react-toastify';
 import CustomButton from '../../components/button/Button';
 
