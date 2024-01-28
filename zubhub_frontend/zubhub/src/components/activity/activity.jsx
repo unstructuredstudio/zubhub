@@ -50,14 +50,16 @@ function Activity(props) {
           <CardActions>
             <CardContent className={classes.activityCardContent}>
               <Typography
-                // variant="h6"
-                // component="h6"
+                variant="h5"
+                component="h2"
                 className={classes.activityTitle}
               >
                 {activity.title}
               </Typography>
               <Typography
+                variant="subtitle2"
                 color="textSecondary"
+                component="p"
                 className={classes.activityDescription}
               >
                 {activity.introduction.replace(/(<([^>]+)>)/gi, "")}
@@ -69,39 +71,45 @@ function Activity(props) {
                   ))}
                 </div>
               )}
-              <div className={classes.activityCreatorContainer}>
-                {activity.creators?.length > 0 &&
-                  activity.creators.map(creator => (
-                    <Link
-                      to={`/creators/${creator.username}`}
-                      className={clsx(common_classes.textDecorationNone, classes.creatorBoxContainer)}
-                    >
-                      <Box className={classes.creatorBox}>
-                        <Avatar 
-                          className={classes.creatorAvatar}
-                          src={creator.avatar}
-                          alt={creator.username}
-                        />
-                        <Tooltip
-                          title={creator.username}
-                          placement="bottom"
-                          arrow
-                          className={classes.creatorUsernameTooltip}
-                        >
-                          <Box>
-                            <Typography color="textSecondary" variant="caption" component="p" className={classes.creatorUsername}>
-                              {creator.username}
-                            </Typography>
-                          </Box>
-                        </Tooltip>
-                      </Box>
-                      <Typography color="textPrimary" className={classes.creatorTag} component="p">
-                        {creator.tags[0]}
-                      </Typography>
-                    </Link>
-                  ))
-                }
-              </div>
+              {activity.creators?.length > 0 &&
+                activity.creators.map(creator => (
+                  <Link
+                    to={`/creators/${creator.username}`}
+                    className={common_classes.textDecorationNone}
+                  >
+                    <Box className={classes.creatorBox}>
+                      <Avatar 
+                        className={classes.creatorAvatar}
+                        src={creator.avatar}
+                        alt={creator.username}
+                      />
+                      <Tooltip
+                        title={creator.username}
+                        placement="bottom"
+                        arrow
+                        className={classes.creatorUsernameTooltip}
+                      >
+                        <Box>
+                          <Typography
+                            color="textSecondary"
+                            variant="caption"
+                            component="p"
+                            className={classes.creatorUsername}
+                          >
+                            {creator.username}
+                          </Typography>
+                          <Typography
+                            color="textPrimary"
+                            className={classes.creatorTag} component="p"
+                          >
+                            {creator.tags[0]}
+                          </Typography>
+                        </Box>
+                      </Tooltip>
+                    </Box>
+                  </Link>
+                ))
+              }
               <Box className={classes.footer}>
                 <Box className={classes.captionStyle}>
                   <Typography

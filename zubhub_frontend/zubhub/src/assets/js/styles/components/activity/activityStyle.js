@@ -1,13 +1,12 @@
 export const style = theme => ({
   activityCardContainer: {
     position: 'relative',
-    // maxWidth: '350px',
-    // minWidth: '300px',
+    width: '100%',
+    textAlign: 'left',
   },
   activityCard: {
     maxWidth: '100%',
-    height: '100%',
-    minHeight: '34em',
+    height: '33em',
     borderRadius: '20px',
     position: 'relative!important',
   },
@@ -29,7 +28,7 @@ export const style = theme => ({
   },
   mediaBoxStyle: {
     width: '100%',
-    height: '14em',
+    height: '13em',
     position: 'relative',
     padding: '2%',
     display: 'flex',
@@ -38,13 +37,13 @@ export const style = theme => ({
   },
   activityCardContent: {
     width: '100%',
-    position: 'relative',
-    padding: '6px',
+    padding: '16px',
+    "&:last-child": {
+      paddingBottom: '12px'
+    },
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'start',
-    gap: '8px'
+    justifyContent: 'space-between'
   },
   projectsCount: {
     color: 'white',
@@ -58,14 +57,13 @@ export const style = theme => ({
     marginLeft: '5px',
   },
   activityTitle: {
-    fontSize: '1.4rem',
+    fontSize: '1.3rem',
     fontWeight: 700,
     color: 'var(--text-color1)',
   },
   activityDescription: {
-    fontSize: '1rem',
-    fontWeight: 500,
-    textAlign: 'start',
+    height: '48px',
+    margin: '8px 0',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     display: '-webkit-box',
@@ -73,32 +71,23 @@ export const style = theme => ({
     '-webkit-box-orient': 'vertical',
   },
   activityCategoryContainer: {
-    margin: '8px 0',
+    margin: '12px 0',
     display: 'flex',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     gap: '8px',
   },
   activityCategory: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontSize: '0.9em',
     padding: '2px 10px',
     border: '1px solid #7E5B4B',
     borderRadius: '10em',
     background: '#F1D27C'
   },
 
-  activityCreatorContainer: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-    alignItems: 'start'
-  },
-  creatorBoxContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
   creatorBox: {
+    margin: '15px 0 0.5em 0',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -117,24 +106,20 @@ export const style = theme => ({
     fontSize: '1.1em'
   },
   creatorUsernameTooltip: {
-    maxWidth: '70%',
     marginRight: 'auto',
     fontWeight: '700',
   },
   creatorTag: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
     fontWeight: '500',
-    fontSize: '1rem',
-    textAlign: 'center',
+    fontSize: '0.9rem',
   },
 
   footer: {
-    width: '100%',
     marginTop: 10,
-    flexDirection: 'row',
     display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    overflow: 'hidden',
   },
   captionStyle: {
     display: 'flex',
@@ -159,6 +144,9 @@ export const style = theme => ({
   date: {
     fontSize: '0.9rem',
     fontWeight: '600',
-    marginLeft: 'auto'
+    marginLeft: 'auto',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   }
 });
