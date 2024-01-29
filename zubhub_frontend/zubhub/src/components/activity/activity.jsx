@@ -25,6 +25,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import commonStyles from '../../assets/js/styles';
 import { dFormatter } from '../../assets/js/utils/scripts';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
+import Categories from '../categories/Categories';
 
 const useCommonStyles = makeStyles(commonStyles);
 const useStyles = makeStyles(style);
@@ -65,11 +66,7 @@ function Activity(props) {
                 {activity.introduction.replace(/(<([^>]+)>)/gi, "")}
               </Typography>
               {activity.category.length > 0 && (
-                <div className={classes.activityCategoryContainer}>
-                  {activity.category.map(cat => (
-                    <div className={classes.activityCategory}>{cat}</div>
-                  ))}
-                </div>
+                <Categories categories={activity.category} />
               )}
               {activity.creators?.length === 1 ?
                 activity.creators.map(creator => (
@@ -112,7 +109,7 @@ function Activity(props) {
                 : (
                   <Box className={classes.creatorBox}>
                     <Box className={clsx(activity.creators?.length === 2 ? classes.twoCreatorBox : classes.multipleCreatorBox)}>
-                      {activity.CardMediacreators.slice(0, 3).map((creator, index) => (
+                      {activity.creators.slice(0, 3).map((creator, index) => (
                         <Tooltip
                           key={creator.id}
                           title={index === 2 && activity.creators.length > 3 ? `${activity.creators.length - 2} more` : creator.username}

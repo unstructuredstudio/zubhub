@@ -117,7 +117,6 @@ export const style = theme => ({
     boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
     background: 'white',
     color: 'black',
-    fontWeigth: '400'
   },
   creatorUsername: {
     flex: 1,
@@ -129,7 +128,8 @@ export const style = theme => ({
   },
   creatorUsernameTooltip: {
     marginRight: 'auto',
-    fontWeight: '700',
+    fontWeight: '400',
+    fontSize: '1.2em'
   },
   creatorTag: {
     fontWeight: '500',

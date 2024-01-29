@@ -20,3 +20,18 @@ export const borders = {
     borderRadiusMd: 8,
     borderRadiusSm: 4,
 }
+
+export const categoryColors = {
+    border: '#7E5B4B',
+    Animations: '#FCB07F',
+    Art: '#F8D991',
+    Science: '#FBC9B3',
+    Coding: '#65B4BD',
+    Electronics: '#F1D27C',
+    Toys: '#FAC5C2',
+    Games: '#6065A4',
+    Mechanical: '#F571AE',
+    Music: '#F1FC73',
+    Robotics: '#A66CA9',
+    Structures: '#FAE393',
+}
