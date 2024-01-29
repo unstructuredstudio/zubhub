@@ -71,7 +71,7 @@ function Activity(props) {
                   ))}
                 </div>
               )}
-              {activity.creators?.length > 0 &&
+              {activity.creators?.length === 1 ?
                 activity.creators.map(creator => (
                   <Link
                     to={`/creators/${creator.username}`}
@@ -109,6 +109,50 @@ function Activity(props) {
                     </Box>
                   </Link>
                 ))
+                : (
+                  <Box className={classes.creatorBox}>
+                    <Box className={clsx(activity.creators?.length === 2 ? classes.twoCreatorBox : classes.multipleCreatorBox)}>
+                      {activity.CardMediacreators.slice(0, 3).map((creator, index) => (
+                        <Tooltip
+                          key={creator.id}
+                          title={index === 2 && activity.creators.length > 3 ? `${activity.creators.length - 2} more` : creator.username}
+                          placement="bottom"
+                          arrow
+                          className={classes.creatorUsernameTooltip}
+                          style={{ zIndex: index }}
+                        >
+                          {index === 2 && activity.creators.length > 3 ? (
+                            <Avatar className={classes.creatorAvatar}>
+                              {`+${activity.creators.length - 2}`}
+                            </Avatar>
+                          ): (
+                            <Avatar 
+                              className={classes.creatorAvatar}
+                              src={creator.avatar}
+                              alt={creator.username}
+                            />
+                          )}
+                        </Tooltip>
+                      ))}
+                    </Box>
+                    <Box>
+                      <Typography
+                        color="textSecondary"
+                        variant="caption"
+                        component="p"
+                        className={classes.creatorUsername}
+                      >
+                        {activity.creators[activity.creators.length - 1].username}
+                      </Typography>
+                      <Typography
+                        color="textPrimary"
+                        className={classes.creatorTag} component="p"
+                      >
+                        {activity.creators[activity.creators.length - 1].tags[0]}
+                      </Typography>
+                    </Box>
+                  </Box>
+                )
               }
               <Box className={classes.footer}>
                 <Box className={classes.captionStyle}>
