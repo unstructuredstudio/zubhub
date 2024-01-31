@@ -35,9 +35,9 @@ export default function Dropdown({
     value = valueTemp;
   }
 
-  const labelView = (props, option, { selected }) => {
-    const color = selected ? colors.primary : colors.light;
-    const checked = selected;
+  const labelView = (props, ...rest) => {
+    const color = rest[0].selected ? colors.primary : colors.light;
+    const checked = rest[0].selected;
     return (
       <li {...props}>
         <Box component="li" sx={{ '& > *': { mr: 2 }, display: 'flex', gap: 15, alignItems: 'center' }} {...props}>

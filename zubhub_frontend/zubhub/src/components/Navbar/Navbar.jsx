@@ -36,7 +36,7 @@ import {
   fetchHero,
   handleChangeLanguage,
   handleProfileMenuClose,
-} from '../../wrapper/pageWrapperScripts';
+} from '../../views/pageWrapperScripts';
 
 import { getQueryParams, SearchType } from '../../views/search_results/searchResultsScripts';
 

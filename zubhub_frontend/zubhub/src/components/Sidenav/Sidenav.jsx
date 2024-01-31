@@ -1,5 +1,4 @@
 import { makeStyles } from '@mui/styles';
-import { useTheme } from '@mui/material/styles';
 import {
   CircularProgress,
   Link,
@@ -22,9 +21,8 @@ import { sidenavStyle } from './sidenav.styles';
 import CustomButton from '../button/Button';
 
 export default function Sidenav() {
-  const theme = useTheme();
   const classes = makeStyles(sidenavStyle)();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isSmallScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const { t } = useTranslation();
