@@ -308,7 +308,11 @@ class ProjectRecommendAPIView(ListAPIView):
 
     def get_queryset(self):
         pk = self.kwargs.get("pk")
-        return recommend_projects(Project.objects.get(pk=pk))
+        project = get_object_or_404(Project, pk=pk)
+        try: 
+            return recommend_projects(project)
+        except Exception as e: 
+            return Project.objects.none()
 
 
 class SavedProjectsAPIView(ListAPIView):

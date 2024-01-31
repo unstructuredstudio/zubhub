@@ -476,46 +476,26 @@ def recommend_projects(project):
     PublishingRule = apps.get_model('projects.PublishingRule')
 
     title_words = project.title.split()
-    categories = list(project.category.all())
-    tags = list(project.tags.all())
+    categories = project.category.all()
+    tags = project.tags.all()
 
-    projects = list(Project.objects.none())
+    all_projects = Project.objects.filter(publish__type=PublishingRule.PUBLIC).exclude(pk=project.pk)
+    
+    similar_title = Q()
+    for word in title_words:
+        similar_title |= Q(title__icontains=word)
+    same_category = Q(category__in=categories)
+    same_tags = Q(tags__in=tags)
 
-    # looks for:
-    #   similar title, same category and same tag
-    #   similar title, same category or tags
-    #   similar title
-    for c in categories:
-        for p in Project.objects.all().filter(
-            (Q(category = c) & Q(tags__in = tags)) |
-            (Q(category = c) | Q(tags__in = tags)) |
-            Q(publish__type = PublishingRule.PUBLIC)
-        ).exclude(pk = project.pk):
-            if any(word in p.title for word in title_words):
-                if not p in projects:
-                    projects.append(p)
-                    if len(projects) == 3:
-                        return projects
+    projects = all_projects.filter(similar_title & (same_category | same_tags)).distinct()
 
-    # looks for:
-    #  same category and same tag
-    #  same category
-    if len(projects) < 3:
-        for c in categories:
-            for p in Project.objects.all().filter(
-                (Q(category = c) & Q(tags__in = tags)) |
-                (Q(category = c) | Q(tags__in = tags)),
-                publish__type=PublishingRule.PUBLIC
-            ).exclude(pk=project.pk):
-                projects.append(p)
-                if len(projects) == 3:
-                  return projects
+    if projects.count() < 3:
+        projects |= all_projects.filter(same_category & same_tags).distinct()
+    
+    if projects.count() < 3:
+        projects |= all_projects.filter(similar_title | same_category | same_tags).distinct()
 
-    # looks for:
-    #  most likes
-    if len(projects) < 3:
-        for p in Project.objects.all().filter(publish__type=PublishingRule.PUBLIC).exclude(pk=project.pk).all().order_by('-likes_count'):
-            if not p in projects:
-                projects.append(p)
-                if len(projects) == 3:
-                    return projects
+    if projects.count() < 3:
+        projects |= all_projects.order_by('-likes_count').distinct()
+
+    return list(projects[:3])
