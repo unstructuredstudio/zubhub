@@ -1084,7 +1084,8 @@
          "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
          "uploadError": "error occurred while downloading file : "
       }
-   }
+   },
+   "tooltipMore": " more"
  },
 
   "activityDetails": {

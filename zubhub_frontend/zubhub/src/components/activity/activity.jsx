@@ -95,12 +95,15 @@ function Activity(props) {
                           >
                             {creator.username}
                           </Typography>
-                          <Typography
-                            color="textPrimary"
-                            className={classes.creatorTag} component="p"
-                          >
-                            {creator.tags[0]}
-                          </Typography>
+                          {creator.tags.map(tag => (
+                            <Typography
+                              color="textPrimary"
+                              className={classes.creatorTag}
+                              component="p"
+                            >
+                              {tag}
+                            </Typography>
+                          ))}
                         </Box>
                       </Tooltip>
                     </Box>
@@ -112,7 +115,7 @@ function Activity(props) {
                       {activity.creators.slice(0, 3).map((creator, index) => (
                         <Tooltip
                           key={creator.id}
-                          title={index === 2 && activity.creators.length > 3 ? `${activity.creators.length - 2} more` : creator.username}
+                          title={index === 2 && activity.creators.length > 3 ? `${activity.creators.length - 2} ${t('activities.tooltipMore')}` : creator.username}
                           placement="bottom"
                           arrow
                           className={classes.creatorUsernameTooltip}
@@ -141,12 +144,15 @@ function Activity(props) {
                       >
                         {activity.creators[activity.creators.length - 1].username}
                       </Typography>
-                      <Typography
-                        color="textPrimary"
-                        className={classes.creatorTag} component="p"
-                      >
-                        {activity.creators[activity.creators.length - 1].tags[0]}
-                      </Typography>
+                      {activity.creators[activity.creators.length - 1].tags.map(tag => (
+                        <Typography
+                          color="textPrimary"
+                          className={classes.creatorTag}
+                          component="p"
+                        >
+                          {tag}
+                        </Typography>
+                      ))}
                     </Box>
                   </Box>
                 )

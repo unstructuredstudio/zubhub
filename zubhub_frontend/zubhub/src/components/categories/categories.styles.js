@@ -1,4 +1,4 @@
-import { categoryColors } from "../../assets/js/colors"
+import { colors } from "../../assets/js/colors";
 
 export const styles = theme => ({
   container: {
@@ -12,7 +12,7 @@ export const styles = theme => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     fontSize: '0.9em',
-    border: `1px solid ${categoryColors.border}`,
+    border: `1px solid ${colors.border}`,
     borderRadius: '10em',
   },
 });

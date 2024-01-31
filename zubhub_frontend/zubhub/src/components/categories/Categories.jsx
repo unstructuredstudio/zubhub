@@ -1,10 +1,10 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core";
 import { styles } from "./categories.styles";
 import Chip from '@material-ui/core/Chip';
-import { categoryColors } from "../../assets/js/colors"
 
 const Categories = ({ categories }) => {
   const classes = makeStyles(styles)();
+  const theme = useTheme();
   return (
     <div className={classes.container}>
       {categories?.map(category => (
@@ -14,7 +14,7 @@ const Categories = ({ categories }) => {
           variant="outlined"
           className={classes.chip}
           size="small"
-          style={{ background: categoryColors[category]}}
+          style={{ background: theme.categoryColors[category]}}
         />
       ))}
     </div>
