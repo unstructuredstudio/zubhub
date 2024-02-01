@@ -113,14 +113,14 @@ export default function ActivityDetailsV2(props) {
   return (
     <div ref={ref} style={{ margin: '0 24px' }}>
       {open ? <ReactConfetti width={width} height={height} /> : null}
-      <div className={clsx(classes.header, classes.card)}>
+      <div className={classes.card}>
         <Typography align="center" className={clsx(commonClasses.title1, commonClasses.textCapitalize)}>
           {activity?.title}
         </Typography>
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32 }}>
           <div style={{ gap: 8 }} className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
-            <Avatar className={classes.creatorAvatarStyle} src={creator?.avatar} alt={'Faridah_ux'} />
+            <Avatar src={creator?.avatar} alt={'Faridah_ux'} />
             <div>
               <Typography
                 style={{ fontWeight: '500', fontSize: 16, textTransform: 'capitalize' }}
@@ -289,7 +289,7 @@ export default function ActivityDetailsV2(props) {
         </div>
 
         <DialogTitle>
-          <Typography align="center" className={clsx(commonClasses.title2, classes.dialogTitle)}>
+          <Typography align="center" className={commonClasses.title2}>
             Congratulations your Activity has been successfully created!
           </Typography>
         </DialogTitle>
