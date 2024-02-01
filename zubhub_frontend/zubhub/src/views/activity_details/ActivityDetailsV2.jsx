@@ -10,6 +10,7 @@ import {
   MenuItem,
   Typography,
   makeStyles,
+  Chip
 } from '@material-ui/core';
 import { CloseOutlined, ExpandMore, MoreVert } from '@material-ui/icons';
 import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
@@ -32,6 +33,7 @@ import { getUrlQueryObject } from '../../utils.js';
 import { activityDefailsStyles } from './ActivityDetails.styles';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
+import Categories from '../../components/categories/Categories.jsx';
 
 const API = new ZubHubAPI();
 const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
@@ -111,7 +113,7 @@ export default function ActivityDetailsV2(props) {
   });
 
   return (
-    <div ref={ref} style={{ margin: '0 24px' }}>
+    <div ref={ref} className={classes.mainContainer}>
       {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={classes.card}>
         <Typography align="center" className={clsx(commonClasses.title1, commonClasses.textCapitalize)}>
@@ -151,8 +153,7 @@ export default function ActivityDetailsV2(props) {
             {isDownloading ? 'Downloading...' : 'Download PDF'}
           </CustomButton>
         </div>
-      </div>
-      <div className={classes.socialButtons}>
+        <div className={classes.socialButtons}>
         <IconButton
           className={classes.actionBoxButtonStyle}
           aria-label={t('projectDetails.ariaLabels.likeButton.label')}
@@ -182,85 +183,91 @@ export default function ActivityDetailsV2(props) {
 
         <SocialButtons />
       </div>
-
-      <Collapsible title={'Introduction'}>
-        {activity.images?.length > 0 && <Gallery images={activity.images?.map(img => img.image?.file_url)} />}
+      </div>
+      <div className={classes.card}>
+        <Typography
+          variant="h6"
+          className={classes.cardTitle}
+        >
+          Introduction
+        </Typography>
         <ReactQuill
           className={classes.descriptionBodyStyle}
           theme={'bubble'}
           readOnly={true}
           value={activity.introduction || ''}
         />
-      </Collapsible>
-
-      {activity.category?.length > 0 && (
-        <Collapsible title={'Categories'}>
-          <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
-            {activity.category?.map((cat, index) => (
-              <Pill key={index} text={cat} />
-            ))}
-          </div>
-        </Collapsible>
-      )}
-
-      {activity.class_grade && (
-        <Collapsible title={'Class Grade'}>
-          <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
-            <Pill text={activity.class_grade} />
-          </div>
-        </Collapsible>
-      )}
-
-      {activity.materials_used && (
-        <Collapsible title={'Materials Used'}>
-          {activity.materials_used_image && <Gallery images={[activity.materials_used_image?.file_url]} />}
+        {activity.images?.length > 0 && <Gallery images={activity.images?.map(img => img.image?.file_url)} />}
+        <Divider />
+        <Typography
+          variant="h6"
+          className={classes.cardTitle}
+        >
+          Categories
+        </Typography>
+        {activity.category?.length > 0 && <Categories categories={activity.category} />}
+        <Divider />
+        <Typography
+          variant="h6"
+          className={classes.cardTitle}
+        >
+          Class Grade
+        </Typography>
+        {activity.class_grade &&
+          <Chip
+            className={classes.classGrade}
+            label={activity.class_grade}
+            size='small'
+          />
+        }
+        <Divider />
+        <Typography
+          variant="h6"
+          className={classes.cardTitle}
+        >
+          Materials Used
+        </Typography>
+        {activity.materials_used && (
           <ReactQuill
             className={classes.descriptionBodyStyle}
             theme={'bubble'}
             readOnly={true}
             value={activity.materials_used || ''}
           />
-        </Collapsible>
-      )}
-
-      {activity.making_steps?.map((step, index) => (
-        <Collapsible key={index} title={`Step ${step?.step_order}: ${step.title}`}>
-          {step.image?.length > 0 && <Gallery images={step.image?.map(img => img?.file_url)} />}
-          {step.description && (
-            <ReactQuill
-              className={classes.descriptionBodyStyle}
-              theme={'bubble'}
-              readOnly={true}
-              value={step.description || ''}
-            />
-          )}
-        </Collapsible>
-      ))}
-
-      <div style={{ marginTop: 40 }} className={clsx(classes.card, commonClasses.boxShadow)}>
-        <div
-          className={clsx(
-            commonClasses.displayFlex,
-            commonClasses.flexColumn,
-            commonClasses.justifyCenter,
-            commonClasses.gap,
-          )}
-        >
-          <Typography align="center" className={commonClasses.title1}>
-            Did you like this activity?
+        )}
+        {activity.materials_used_image && <Gallery images={[activity.materials_used_image?.file_url]} />}
+        {activity.making_steps?.map(step => (
+          <>
+          <Divider />
+          <Typography
+            variant="h6"
+            className={classes.cardTitle}
+          >
+            {`Step ${step?.step_order}: ${step.title}`}
           </Typography>
-          <Typography align="center">Be the first to create it</Typography>
-          <CustomButton style={{ alignSelf: 'center' }} primaryButtonStyle>
-            Create It!
-          </CustomButton>
-        </div>
-
-        <Typography className={classes.moreTextTitle} align="center">
+          <ReactQuill
+            className={classes.descriptionBodyStyle}
+            theme={'bubble'}
+            readOnly={true}
+            value={step.description || ''}
+          />
+          {step.image?.length > 0 && <Gallery images={step.image?.map(img => img?.file_url)} />}
+          </>
+        ))}
+      </div>
+      <div className={clsx(classes.card, classes.footer)}>
+        <Typography variant="h6" className={classes.footerTitle}>
+          Did you like this activity?
+        </Typography>
+        <CustomButton primaryButtonStyle className={classes.footerButton}>
+          Create It!
+        </CustomButton>
+        <Divider />
+        <Typography variant="h6" className={classes.footerTitle}>
           More Activities
         </Typography>
-
-        <Grid container spacing={4} justifyContent="center">
-          {moreActivities.map((activity, index) => (
+        <Grid container spacing={4}>
+          {moreActivities.slice(0, 2).map((activity, index) => (
             <Grid
               key={index}
               item
@@ -276,9 +283,7 @@ export default function ActivityDetailsV2(props) {
               />
             </Grid>
           ))}
-        </Grid>
-
-        {/* <Comments context={{ name: 'activity', body: { ...activity, comments: [] } }} {...{ ...props, auth }} /> */}
+          </Grid>
       </div>
 
       <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
