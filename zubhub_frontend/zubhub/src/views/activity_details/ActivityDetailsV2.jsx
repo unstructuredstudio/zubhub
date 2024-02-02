@@ -28,7 +28,7 @@ import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
 import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import styles from '../../assets/js/styles/index';
-import { Collapsible, CustomButton, Gallery, Modal, Pill } from '../../components';
+import { CustomButton, Gallery, Modal } from '../../components';
 import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
@@ -137,7 +137,7 @@ export default function ActivityDetailsV2(props) {
             </div>
           </div>
           <CustomButton primaryButtonStyle className={classes.headerButton}>
-            Create Activity
+            {t('activityDetails.activity.create.dialog.primary')}
           </CustomButton>
         </div>
         <Divider />
@@ -162,9 +162,9 @@ export default function ActivityDetailsV2(props) {
             component="span"
           >
             <EmojiObjectsIcon  fontSize="small" />
-            Re-created
+            {t('activityDetails.inspired.recreated')}
             <strong>{activity.views_count}</strong>
-            times
+            {t('activityDetails.inspired.times')}
           </Typography>
           <Divider orientation='vertical' flexItem />
           <Typography color="textSecondary" variant="caption" component="span" className={classes.headerIconText}>
@@ -184,7 +184,7 @@ export default function ActivityDetailsV2(props) {
             className={classes.headerButton}
           >
             <FiDownload fontSize="medium" />
-            {isDownloading ? 'Downloading...' : 'Download PDF'}
+            {isDownloading ? t('activityDetails.activity.pdf.downloading') : t('activityDetails.activity.pdf.download')}
           </CustomButton>
           <ShareButton />
         </div>
@@ -194,7 +194,7 @@ export default function ActivityDetailsV2(props) {
           variant="h6"
           className={classes.cardTitle}
         >
-          Introduction
+          {t('activityDetails.activity.introduction')}
         </Typography>
         <ReactQuill
           className={classes.descriptionBodyStyle}
@@ -208,7 +208,7 @@ export default function ActivityDetailsV2(props) {
           variant="h6"
           className={classes.cardTitle}
         >
-          Categories
+          {t('activityDetails.activity.categories')}
         </Typography>
         {activity.category?.length > 0 && <Categories categories={activity.category} />}
         <Divider />
@@ -216,7 +216,7 @@ export default function ActivityDetailsV2(props) {
           variant="h6"
           className={classes.cardTitle}
         >
-          Class Grade
+          {t('activityDetails.activity.classGrade')}
         </Typography>
         {activity.class_grade &&
           <Chip
@@ -230,7 +230,7 @@ export default function ActivityDetailsV2(props) {
           variant="h6"
           className={classes.cardTitle}
         >
-          Materials Used
+          {t('activityDetails.activity.materials')}
         </Typography>
         {activity.materials_used && (
           <ReactQuill
@@ -262,14 +262,14 @@ export default function ActivityDetailsV2(props) {
       </div>
       <div className={clsx(classes.card, classes.footer)}>
         <Typography variant="h6" className={classes.footerTitle}>
-          Did you like this activity?
+          {t('activityDetails.footer.introductionText')}
         </Typography>
         <CustomButton primaryButtonStyle className={classes.footerButton}>
-          Create It!
+          {t('activityDetails.footer.buttonLabel')}
         </CustomButton>
         <Divider />
         <Typography variant="h6" className={classes.footerTitle}>
-          More Activities
+          {t('activityDetails.footer.moreActivitiesTitle')}
         </Typography>
         <Grid container spacing={4}>
           {moreActivities.slice(0, 2).map((activity, index) => (
@@ -299,12 +299,12 @@ export default function ActivityDetailsV2(props) {
 
         <DialogTitle>
           <Typography align="center" className={commonClasses.title2}>
-            Congratulations your Activity has been successfully created!
+            {t('activityDetails.activity.create.modal.success')}
           </Typography>
         </DialogTitle>
         <DialogContent>
           <Typography align="center">
-            Share your activity with the world. Post it on the following platforms:
+            {t('activityDetails.activity.create.modal.share')}
           </Typography>
           <div className={clsx(commonClasses.displayFlex, commonClasses.justifyCenter)} style={{ margin: '20px 0' }}>
             <SocialButtons containerStyle={{ gap: 50 }} withColor link facebook whatsapp />
