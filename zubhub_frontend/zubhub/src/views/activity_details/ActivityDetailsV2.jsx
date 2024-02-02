@@ -19,7 +19,8 @@ import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactConfetti from 'react-confetti';
 import { useTranslation } from 'react-i18next';
-import { FiShare } from 'react-icons/fi';
+import { FiShare, FiDownload } from 'react-icons/fi';
+import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
 import ZubHubAPI from '../../api';
@@ -30,6 +31,7 @@ import { Collapsible, CustomButton, Gallery, Modal, Pill } from '../../component
 import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
+import { dFormatter } from '../../assets/js/utils/scripts';
 import { activityDefailsStyles } from './ActivityDetails.styles';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
@@ -51,7 +53,7 @@ export default function ActivityDetailsV2(props) {
   const [{ height, width }, setDimensions] = useState({});
   const [open, setOpen] = useState(false);
   const [moreActivities, setMoreActivities] = useState([]);
-  const [isLoading, setIsLoading] = useState({});
+  // const [isLoading, setIsLoading] = useState({});
   const [isDownloading, setIsDownloading] = useState(undefined);
 
   const creator = activity.creators?.[0];
@@ -72,16 +74,16 @@ export default function ActivityDetailsV2(props) {
       .then(data => setMoreActivities(data));
   }, []);
 
-  const handleDelete = () => {
-    setIsLoading({ ...isLoading, delete: true });
-    API.deleteActivity({ token: auth.token, id: activity.id })
-      .then(() => props.history.push(`/activities`))
-      .finally(() => setIsLoading({ ...isLoading, delete: false }));
-  };
+  // const handleDelete = () => {
+  //   setIsLoading({ ...isLoading, delete: true });
+  //   API.deleteActivity({ token: auth.token, id: activity.id })
+  //     .then(() => props.history.push(`/activities`))
+  //     .finally(() => setIsLoading({ ...isLoading, delete: false }));
+  // };
 
-  const handleEdit = () => {
-    props.history.push(`${props.location.pathname}/edit`);
-  };
+  // const handleEdit = () => {
+  //   props.history.push(`${props.location.pathname}/edit`);
+  // };
 
   const toggleDialog = () => {
     setOpen(!open);
@@ -116,13 +118,9 @@ export default function ActivityDetailsV2(props) {
     <div ref={ref} className={classes.mainContainer}>
       {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={classes.card}>
-        <Typography align="center" className={clsx(commonClasses.title1, commonClasses.textCapitalize)}>
-          {activity?.title}
-        </Typography>
-
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32 }}>
-          <div style={{ gap: 8 }} className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
-            <Avatar src={creator?.avatar} alt={'Faridah_ux'} />
+        <div className={classes.headerFlex}>
+          <div className={classes.creatorBox}>
+            <Avatar src={creator?.avatar} alt={creator?.username} />
             <div>
               <Typography
                 style={{ fontWeight: '500', fontSize: 16, textTransform: 'capitalize' }}
@@ -133,56 +131,61 @@ export default function ActivityDetailsV2(props) {
               </Typography>
               <br />
               <Typography color="textSecondary" component="span">
-                Educator
+                {creator?.tags[0]}
               </Typography>
             </div>
           </div>
-          <AnchorElemt isLoading={isLoading.delete} onDelete={handleDelete} onEdit={handleEdit} />
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32, gap: 10 }}>
-          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-            Create this Project
+          <CustomButton primaryButtonStyle className={classes.headerButton}>
+            Create Activity
           </CustomButton>
+        </div>
+        <Divider />
+        <Typography variant="h5" component="h1" className={classes.headerTitle}>
+          {activity?.title}
+        </Typography>
+        <div className={classes.headerIconBox}>
+          <Typography
+            className={classes.headerIconText}
+            color="textSecondary"
+            variant="caption"
+            component="span"
+          >
+            <VisibilityIcon fontSize="small" />
+            {activity.views_count}
+          </Typography>
+          <Divider orientation='vertical' flexItem />
+          <Typography
+            className={classes.headerIconText}
+            color="textSecondary"
+            variant="caption"
+            component="span"
+          >
+            <EmojiObjectsIcon  fontSize="small" />
+            Re-created
+            <strong>{activity.views_count}</strong>
+            times
+          </Typography>
+          <Divider orientation='vertical' flexItem />
+          <Typography color="textSecondary" variant="caption" component="span" className={classes.headerIconText}>
+            {`
+              ${dFormatter(activity.created_on).value} 
+              ${t(`date.${dFormatter(activity.created_on).key}`)} 
+              ${t('date.ago',)}
+            `}
+          </Typography>
+        </div>
+        {activity.images?.length > 0 && <Gallery images={[activity.images[0].image.file_url]} />}
+        <div className={classes.headerFlex}>
           <CustomButton
             onClick={handleDownload}
             loading={isDownloading}
             primaryButtonOutlinedStyle
-            style={{ borderRadius: 4 }}
+            className={classes.headerButton}
           >
+            <FiDownload fontSize="medium" />
             {isDownloading ? 'Downloading...' : 'Download PDF'}
           </CustomButton>
         </div>
-        <div className={classes.socialButtons}>
-        <IconButton
-          className={classes.actionBoxButtonStyle}
-          aria-label={t('projectDetails.ariaLabels.likeButton.label')}
-          //   onClick={e => handleSetState(toggleLike(e, props, project.id))}
-        >
-          {/* {project.likes.includes(props.auth.id) ? (
-            <ClapIcon color={colors.white} arial-label={t('projectDetails.ariaLabels.likeButton.unlilke')} />
-          ) : ( */}
-          <ClapBorderIcon color={colors.white} arial-label={t('projectDetails.ariaLabels.likeButton.like')} />
-          {/* )} */}
-        </IconButton>
-        <IconButton
-          className={classes.actionBoxButtonStyle}
-          aria-label={t('projectDetails.ariaLabels.saveButton.label')}
-          //   onClick={e => handleSetState(toggleSave(e, props, project.id))}
-        >
-          {/* {project.saved_by.includes(props.auth.id) ? (
-            <BookmarkIcon aria-label={t('projectDetails.ariaLabels.saveButton.unsave')} />
-          ) : ( */}
-          <BookmarkBorderIcon aria-label={t('projectDetails.ariaLabels.saveButton.save')} />
-          {/* )} */}
-        </IconButton>
-
-        <IconButton className={classes.actionBoxButtonStyle}>
-          <VisibilityIcon />
-        </IconButton>
-
-        <SocialButtons />
-      </div>
       </div>
       <div className={classes.card}>
         <Typography
@@ -238,20 +241,20 @@ export default function ActivityDetailsV2(props) {
         {activity.materials_used_image && <Gallery images={[activity.materials_used_image?.file_url]} />}
         {activity.making_steps?.map(step => (
           <>
-          <Divider />
-          <Typography
-            variant="h6"
-            className={classes.cardTitle}
-          >
-            {`Step ${step?.step_order}: ${step.title}`}
-          </Typography>
-          <ReactQuill
-            className={classes.descriptionBodyStyle}
-            theme={'bubble'}
-            readOnly={true}
-            value={step.description || ''}
-          />
-          {step.image?.length > 0 && <Gallery images={step.image?.map(img => img?.file_url)} />}
+            <Divider />
+            <Typography
+              variant="h6"
+              className={classes.cardTitle}
+            >
+              {`Step ${step?.step_order}: ${step.title}`}
+            </Typography>
+            <ReactQuill
+              className={classes.descriptionBodyStyle}
+              theme={'bubble'}
+              readOnly={true}
+              value={step.description || ''}
+            />
+            {step.image?.length > 0 && <Gallery images={step.image?.map(img => img?.file_url)} />}
           </>
         ))}
       </div>
@@ -278,12 +281,11 @@ export default function ActivityDetailsV2(props) {
                 activity={activity}
                 key={activity.id}
                 t={t}
-                // updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                 {...props}
               />
             </Grid>
           ))}
-          </Grid>
+        </Grid>
       </div>
 
       <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
