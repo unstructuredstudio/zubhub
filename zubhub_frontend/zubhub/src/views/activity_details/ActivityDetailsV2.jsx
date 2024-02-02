@@ -21,6 +21,7 @@ import ReactConfetti from 'react-confetti';
 import { useTranslation } from 'react-i18next';
 import { FiShare, FiDownload } from 'react-icons/fi';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
+import ShareIcon from '@material-ui/icons/Share';
 import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
 import ZubHubAPI from '../../api';
@@ -32,7 +33,7 @@ import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
 import { dFormatter } from '../../assets/js/utils/scripts';
-import { activityDefailsStyles } from './ActivityDetails.styles';
+import { activityDefailsStyles, socialButtonsStyleOverrides } from './ActivityDetails.styles';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
 import Categories from '../../components/categories/Categories.jsx';
@@ -185,6 +186,7 @@ export default function ActivityDetailsV2(props) {
             <FiDownload fontSize="medium" />
             {isDownloading ? 'Downloading...' : 'Download PDF'}
           </CustomButton>
+          <ShareButton />
         </div>
       </div>
       <div className={classes.card}>
@@ -358,6 +360,51 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
         <Divider />
         <MenuItem onClick={handledelete}>Delete</MenuItem>
+      </Menu>
+    </>
+  );
+};
+
+const ShareButton = () => {
+  const socialClasses = makeStyles(socialButtonsStyleOverrides)();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton
+        id={`basic-button`}
+        aria-controls={open ? `social-buttons-menu` : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <ShareIcon />
+      </IconButton>
+      <Menu
+        id={`social-buttons-menu`}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': `basic-button`,
+        }}
+      >
+        <SocialButtons
+          withColor
+          styleOverrides={{
+            containerStyle: socialClasses.containerStyle,
+            outlined: socialClasses.outlined
+          }} 
+        />
       </Menu>
     </>
   );

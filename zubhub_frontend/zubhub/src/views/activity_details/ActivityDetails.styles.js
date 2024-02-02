@@ -24,7 +24,8 @@ export const activityDefailsStyles = theme => ({
     headerFlex: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     headerTitle: {
         fontWeight: 700
@@ -91,5 +92,14 @@ export const activityDefailsStyles = theme => ({
         alignSelf: 'center',
         borderRadius: 4,
         fontSize: '1.2em'
+    }
+})
+
+export const socialButtonsStyleOverrides = (theme) => ({
+    containerStyle: {
+        display: 'flex'
+    },
+    outlined: {
+        border: 'none',
     }
 })
