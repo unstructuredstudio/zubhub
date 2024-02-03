@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -17,15 +17,13 @@ import {
   CardMedia,
   Typography,
   Box,
-  Grid,
-  Avatar,
-  Tooltip,
 } from '@material-ui/core';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import commonStyles from '../../assets/js/styles';
 import { dFormatter } from '../../assets/js/utils/scripts';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import Categories from '../categories/Categories';
+import Creators from '../creators/Creators';
 
 const useCommonStyles = makeStyles(commonStyles);
 const useStyles = makeStyles(style);
@@ -68,95 +66,7 @@ function Activity(props) {
               {activity.category.length > 0 && (
                 <Categories categories={activity.category} />
               )}
-              {activity.creators?.length === 1 ?
-                activity.creators.map(creator => (
-                  <Link
-                    to={`/creators/${creator.username}`}
-                    className={common_classes.textDecorationNone}
-                  >
-                    <Box className={classes.creatorBox}>
-                      <Avatar 
-                        className={classes.creatorAvatar}
-                        src={creator.avatar}
-                        alt={creator.username}
-                      />
-                      <Tooltip
-                        title={creator.username}
-                        placement="bottom"
-                        arrow
-                        className={classes.creatorUsernameTooltip}
-                      >
-                        <Box>
-                          <Typography
-                            color="textSecondary"
-                            variant="caption"
-                            component="p"
-                            className={classes.creatorUsername}
-                          >
-                            {creator.username}
-                          </Typography>
-                          {creator.tags.map(tag => (
-                            <Typography
-                              color="textPrimary"
-                              className={classes.creatorTag}
-                              component="p"
-                            >
-                              {tag}
-                            </Typography>
-                          ))}
-                        </Box>
-                      </Tooltip>
-                    </Box>
-                  </Link>
-                ))
-                : (
-                  <Box className={classes.creatorBox}>
-                    <Box className={clsx(activity.creators?.length === 2 ? classes.twoCreatorBox : classes.multipleCreatorBox)}>
-                      {activity.creators.slice(0, 3).map((creator, index) => (
-                        <Tooltip
-                          key={creator.id}
-                          title={index === 2 && activity.creators.length > 3 ? `${activity.creators.length - 2} ${t('activities.tooltipMore')}` : creator.username}
-                          placement="bottom"
-                          arrow
-                          className={classes.creatorUsernameTooltip}
-                          style={{ zIndex: index }}
-                        >
-                          {index === 2 && activity.creators.length > 3 ? (
-                            <Avatar className={classes.creatorAvatar}>
-                              {`+${activity.creators.length - 2}`}
-                            </Avatar>
-                          ): (
-                            <Avatar 
-                              className={classes.creatorAvatar}
-                              src={creator.avatar}
-                              alt={creator.username}
-                            />
-                          )}
-                        </Tooltip>
-                      ))}
-                    </Box>
-                    <Box>
-                      <Typography
-                        color="textSecondary"
-                        variant="caption"
-                        component="p"
-                        className={classes.creatorUsername}
-                      >
-                        {activity.creators[activity.creators.length - 1].username}
-                      </Typography>
-                      {activity.creators[activity.creators.length - 1].tags.map(tag => (
-                        <Typography
-                          color="textPrimary"
-                          className={classes.creatorTag}
-                          component="p"
-                        >
-                          {tag}
-                        </Typography>
-                      ))}
-                    </Box>
-                  </Box>
-                )
-              }
+              <Creators creators={activity?.creators} />
               <Box className={classes.footer}>
                 <Box className={classes.captionStyle}>
                   <Typography
