@@ -1,6 +1,6 @@
 import { colors } from "../../assets/js/colors"
 
-export const activityDefailsStyles = theme => ({
+export const activityDetailsStyles = theme => ({
     mainContainer: {
         [theme.breakpoints.down('sm')]: {
             margin: '0 24px'
@@ -44,18 +44,35 @@ export const activityDefailsStyles = theme => ({
     headerIconBox: {
         display: 'flex',
         alignItems: 'center',
-        gap: '1em'
+        gap: '1em',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        [theme.breakpoints.down('400')]: {
+            gap: '0.5em',
+            fontSize: '0.9em'
+        }
     },
     headerIconText: {
         display: 'flex',
-        justifyContent: 'center',
+        alignItems: 'center',
         gap: '0.5em',
-        fontSize: '1em'
+        fontSize: '1em',
+        [theme.breakpoints.down('400')]: {
+            '& .MuiSvgIcon-root': {
+                fontSize: '1.2em'
+            }
+        }
     },
     creatorBox: {
         display: 'flex',
         alignItems: 'center',
         gap: 8
+    },
+    creatorUsername: {
+        fontWeight: 500,
+        fontSize: 16,
+        textTransform: 'capitalize'
     },
     cardTitle: {
         fontSize: '1.2em',
@@ -87,11 +104,11 @@ export const activityDefailsStyles = theme => ({
         fontSize: 22,
         fontWeight: 700,
     },
-    footerButton: {
-        width: 'fit-content',
-        alignSelf: 'center',
-        borderRadius: 4,
-        fontSize: '1.2em'
+    menuItemIcon: {
+        minWidth: '2em',
+    },
+    dangerButton: {
+        color: colors.secondary
     }
 })
 

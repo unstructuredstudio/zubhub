@@ -1160,7 +1160,7 @@
          "label": "Publish"
       },
       "unpublish": {
-         "label": "UnPublish"
+         "label": "Unpublish"
       }
     },
       "saveButton": {

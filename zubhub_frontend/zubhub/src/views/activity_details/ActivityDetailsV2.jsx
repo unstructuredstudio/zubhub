@@ -10,30 +10,31 @@ import {
   MenuItem,
   Typography,
   makeStyles,
-  Chip
+  Chip,
+  ListItemIcon,
+  ListItemText
 } from '@material-ui/core';
-import { CloseOutlined, ExpandMore, MoreVert } from '@material-ui/icons';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import { CloseOutlined, MoreVert } from '@material-ui/icons';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactConfetti from 'react-confetti';
 import { useTranslation } from 'react-i18next';
-import { FiShare, FiDownload } from 'react-icons/fi';
+import { FiShare, FiDownload, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { MdPublish, MdFileDownloadOff } from "react-icons/md";
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import ShareIcon from '@material-ui/icons/Share';
 import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
 import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
-import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import styles from '../../assets/js/styles/index';
 import { CustomButton, Gallery, Modal } from '../../components';
 import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
 import { dFormatter } from '../../assets/js/utils/scripts';
-import { activityDefailsStyles, socialButtonsStyleOverrides } from './ActivityDetails.styles';
+import { activityDetailsStyles, socialButtonsStyleOverrides } from './ActivityDetails.styles';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
 import Categories from '../../components/categories/Categories.jsx';
@@ -43,7 +44,7 @@ const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
 const unauthenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 3 };
 
 export default function ActivityDetailsV2(props) {
-  const classes = makeStyles(activityDefailsStyles)();
+  const classes = makeStyles(activityDetailsStyles)();
   const commonClasses = makeStyles(styles)();
 
   const { t } = useTranslation();
@@ -54,7 +55,7 @@ export default function ActivityDetailsV2(props) {
   const [{ height, width }, setDimensions] = useState({});
   const [open, setOpen] = useState(false);
   const [moreActivities, setMoreActivities] = useState([]);
-  // const [isLoading, setIsLoading] = useState({});
+  const [isLoading, setIsLoading] = useState({});
   const [isDownloading, setIsDownloading] = useState(undefined);
 
   const creator = activity.creators?.[0];
@@ -75,16 +76,16 @@ export default function ActivityDetailsV2(props) {
       .then(data => setMoreActivities(data));
   }, []);
 
-  // const handleDelete = () => {
-  //   setIsLoading({ ...isLoading, delete: true });
-  //   API.deleteActivity({ token: auth.token, id: activity.id })
-  //     .then(() => props.history.push(`/activities`))
-  //     .finally(() => setIsLoading({ ...isLoading, delete: false }));
-  // };
+  const handleDelete = () => {
+    setIsLoading({ ...isLoading, delete: true });
+    API.deleteActivity({ token: auth.token, id: activity.id })
+      .then(() => props.history.push(`/activities`))
+      .finally(() => setIsLoading({ ...isLoading, delete: false }));
+  };
 
-  // const handleEdit = () => {
-  //   props.history.push(`${props.location.pathname}/edit`);
-  // };
+  const handleEdit = () => {
+    props.history.push(`${props.location.pathname}/edit`);
+  };
 
   const toggleDialog = () => {
     setOpen(!open);
@@ -124,16 +125,18 @@ export default function ActivityDetailsV2(props) {
             <Avatar src={creator?.avatar} alt={creator?.username} />
             <div>
               <Typography
-                style={{ fontWeight: '500', fontSize: 16, textTransform: 'capitalize' }}
                 color={colors.black}
                 component="span"
+                className={classes.creatorUsername}
               >
                 {creator?.username}
               </Typography>
               <br />
-              <Typography color="textSecondary" component="span">
-                {creator?.tags[0]}
-              </Typography>
+              {creator?.tags.map(tag => (
+                <Typography color="textSecondary" component="span">
+                  {tag}
+                </Typography>
+              ))}
             </div>
           </div>
           <CustomButton primaryButtonStyle className={classes.headerButton}>
@@ -141,9 +144,18 @@ export default function ActivityDetailsV2(props) {
           </CustomButton>
         </div>
         <Divider />
-        <Typography variant="h5" component="h1" className={classes.headerTitle}>
-          {activity?.title}
-        </Typography>
+        <div className={classes.headerFlex}>
+          <Typography variant="h5" component="h1" className={classes.headerTitle}>
+            {activity?.title}
+          </Typography>
+          <AnchorElemt
+            isLoading={isLoading.delete}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            publish={activity?.publish} 
+            tags={auth?.tags}
+          />
+        </div>
         <div className={classes.headerIconBox}>
           <Typography
             className={classes.headerIconText}
@@ -261,12 +273,6 @@ export default function ActivityDetailsV2(props) {
         ))}
       </div>
       <div className={clsx(classes.card, classes.footer)}>
-        <Typography variant="h6" className={classes.footerTitle}>
-          {t('activityDetails.footer.introductionText')}
-        </Typography>
-        <CustomButton primaryButtonStyle className={classes.footerButton}>
-          {t('activityDetails.footer.buttonLabel')}
-        </CustomButton>
         <Divider />
         <Typography variant="h6" className={classes.footerTitle}>
           {t('activityDetails.footer.moreActivitiesTitle')}
@@ -315,8 +321,10 @@ export default function ActivityDetailsV2(props) {
   );
 }
 
-const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
+const AnchorElemt = ({ onEdit, onDelete, isLoading = false, publish, tags }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const classes = makeStyles(activityDetailsStyles)();
+  const { t } = useTranslation();
 
   const open = Boolean(anchorEl);
   const handleClick = event => {
@@ -336,6 +344,23 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
     onEdit();
     handleClose();
   };
+
+  const PublishButton = () => {
+    if (tags.includes("staff")) {
+      return (
+        <MenuItem className={classes.menuItem}>
+          <ListItemIcon className={classes.menuItemIcon}>
+            {publish ? <MdFileDownloadOff fontSize="large" /> : <MdPublish fontSize="large" />}
+          </ListItemIcon>
+          <ListItemText className={classes.menuItemText}>
+            {publish ? t('activityDetails.activity.unpublish.label') : t('activityDetails.activity.publish.label')}
+          </ListItemText>
+        </MenuItem>
+      )
+    } else {
+      return null
+    }
+  }
 
   return (
     <>
@@ -357,9 +382,23 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
           'aria-labelledby': `basic-button`,
         }}
       >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <Divider />
-        <MenuItem onClick={handledelete}>Delete</MenuItem>
+        <MenuItem onClick={handleEdit} className={classes.menuItem}>
+          <ListItemIcon className={classes.menuItemIcon}>
+            <FiEdit fontSize="medium" />
+          </ListItemIcon>
+          <ListItemText className={classes.menuItemText}>
+            {t('activityDetails.activity.edit.label')}
+          </ListItemText>
+        </MenuItem>
+        <PublishButton />
+        <MenuItem onClick={handledelete} className={clsx(classes.menuItem, classes.dangerButton)} >
+          <ListItemIcon className={classes.menuItemIcon}>
+            <FiTrash2 fontSize="medium" className={classes.dangerButton} />
+          </ListItemIcon>
+          <ListItemText className={classes.menuItemText}>
+            {t('activityDetails.activity.delete.label')}
+          </ListItemText>
+        </MenuItem>
       </Menu>
     </>
   );
