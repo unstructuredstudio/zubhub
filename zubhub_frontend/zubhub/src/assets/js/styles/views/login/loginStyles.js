@@ -1,4 +1,4 @@
-import { fade } from '@material-ui/core/styles';
+import { fade } from '@mui/material/styles';
 
 const styles = theme => ({
   root: {

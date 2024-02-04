@@ -1,5 +1,5 @@
 import { colors } from "../../../colors";
-import zIndex from "@material-ui/core/styles/zIndex";
+import zIndex from "@mui/material/styles/zIndex";
 import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 

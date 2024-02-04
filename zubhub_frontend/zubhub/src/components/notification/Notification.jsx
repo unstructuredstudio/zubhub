@@ -9,7 +9,7 @@ import {
   ListItemText,
   Avatar,
 } from '@mui/material';
-import { AvatarGroup } from '@material-ui/lab';
+import { AvatarGroup } from '@mui/lab';
 import { dFormatter } from '../../assets/js/utils/scripts';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';

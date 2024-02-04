@@ -11,8 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@mui/styles';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import TranslateIcon from '@mui/icons-material/Translate';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import SearchIcon from '@material-ui/icons/Search';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import SearchIcon from '@mui/icons-material/Search';
 
 import {
   CssBaseline,

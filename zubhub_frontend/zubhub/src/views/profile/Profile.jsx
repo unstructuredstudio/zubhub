@@ -9,8 +9,8 @@ import { toast } from 'react-toastify';
 import API from '../../api';
 import { TEAM_ENABLED } from '../../utils.js';
 import { makeStyles } from '@mui/styles';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ShareIcon from '@mui/icons-material/Share';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Tooltip,
   Badge,
