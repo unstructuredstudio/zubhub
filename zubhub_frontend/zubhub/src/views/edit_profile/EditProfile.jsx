@@ -117,7 +117,7 @@ function EditProfile(props) {
                 className="auth-form"
                 name="signup"
                 noValidate="noValidate"
-                onSubmit={props.handleSubmit}
+                onSubmit={e => editProfile(e, props, toast)}
               >
                 <Typography
                   gutterBottom

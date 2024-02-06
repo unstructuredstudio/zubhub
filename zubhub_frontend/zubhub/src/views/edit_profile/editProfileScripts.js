@@ -135,24 +135,35 @@ export const deleteAccount = (username_el, props, toast) => {
  *
  * @todo - describe function's signature
  */
-export const editProfile = (values, formikBag, toast) => {
-  const { props, formik } = formikBag;
-
+export const editProfile = (e, props, toast) => {
+  e.preventDefault();
+  props.setFieldTouched('username', true);
+  props.setFieldTouched('email', true);
+  props.setFieldTouched('phone', true);
+  props.setFieldTouched('password', true);
+  props.setFieldTouched('user_location', true);
   let password_match = true;
-
-  props
-    .login({ values, navigate: props.navigate })
-    .catch(error => {
-      password_match = false;
-      toast.error(props.t('err.message'));
-    })
-    .finally(() => {
-      if (password_match === false) {
+  if (props.values.user_location.length < 1) {
+    props.validateField('user_location');
+  } else if (props.values.password.length < 1) {
+    props.validateField('password');
+  } else {
+    props.login({ values: props.values, navigate: props.navigate }).catch(error => {
+      try{
+        const messages = JSON.parse(error.message);
+        toast.error(props.t('editProfile.inputs.password.errors.invalid'));
+        password_match = false;
+        return;
+      } catch (err) {
+        toast.error(props.t('err.message'));
+      }
+    }).finally(() => {
+      if (password_match == false) {
         return;
       } else {
         return props
-          .editUserProfile({ ...values, token: values.auth.token })
-          .then(() => {
+          .editUserProfile({ ...props.values, token: props.auth.token })
+          .then(_ => {
             toast.success(props.t('editProfile.toastSuccess'));
             props.navigate('/profile');
           })
@@ -171,14 +182,15 @@ export const editProfile = (values, formikBag, toast) => {
                 }
               });
             } else {
-              formik.setStatus({
+              props.setStatus({
                 non_field_errors: props.t('editProfile.errors.unexpected'),
               });
             }
           });
       }
     });
-};
+  }
+}
 
 /**
  * @function handleTooltipOpen
@@ -207,17 +219,18 @@ export const handleTooltipClose = () => {
  * @todo - describe object's function
  */
 export const validationSchema = Yup.object().shape({
-  username: Yup.string().required('Username is required'),
-  user_location: Yup.string().required('Location is required'),
-  password: Yup.string().required('Password is required'),
-  email: Yup.string().email('Invalid email'),
-  phone: Yup.string()
-    .when('email', {
-      is: email => !email || email.length === 0,
-      then: () => Yup.string().required('Provide an email or phone'),
-    })
-    .test('phone_is_invalid', 'invalid', function (value) {
-      return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
-    }),
-  bio: Yup.string().max(255, 'Bio must be at most 255 characters'),
-});
+  username: Yup.string().required('required'),
+  user_location: Yup.string().min(1, 'min').required('required'),
+  password: Yup.string().required('required'),
+  email: Yup.string().email('invalid').when('phone', {
+    is: (phone) => !phone || phone.length === 0,
+    then: Yup.string().required('phoneOrEmail')
+  }),
+  phone: Yup.string().when('email', {
+    is: (email) => !email || email.length === 0,
+    then: Yup.string().required('phoneOrEmail')
+  }).test('phone_is_invalid', 'invalid', function (value) {
+    return /^[+][0-9]{9,15}$/g.test(value) || !value ? true : false;
+  }),
+  bio: Yup.string().max(255, 'tooLong'),
+}, ['phone', 'email']);
