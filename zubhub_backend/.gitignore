@@ -11,3 +11,9 @@ cadvisor.htpasswd
 .ssl-data
 celerybeat-schedule
 celerybeat.pid
+# Ignore package.json and package-lock.json files
+**/package.json
+**/package-lock.json
+# Ignore Pipfile and Pipfile.lock files
+**/Pipfile
+**/Pipfile.lock

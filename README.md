@@ -165,6 +165,25 @@ To stop:
 ```
 
 You can run test by running `make test`.
+> **_NOTE_**: While running tests, follow these steps if you encounter an error whose last line in the traceback is: 
+```sh
+amqp.exceptions.AccessRefused: (0, 0): (403) ACCESS_REFUSED - Login was refused using authentication mechanism AMQPLAIN. For details see the broker logfile.
+```
+1. From the command line, get the rabbitmq container id from the list of running containers and copy it. You can get the list by running: ```$ docker ps```
+2. Copy the configuration file from the docker container to a path in your local machine you can use:
+```sh
+$ docker cp <container ID>:/etc/rabbitmq/rabbitmq.conf .
+```
+3. Open the `rabbitmq.conf` file from where you've copied it to in your local machine, with a text editor. 
+4. Change `loopback_users.admin` to `false`, save the file, and then close it.
+5. Copy the `rabbitmq.conf` back to its original location in the container. You can do this via:
+```sh
+$ docker cp rabbitmq.conf <container ID>:/etc/rabbitmq/rabbitmq.conf
+```
+6. Restart the container, and then run `make test` again.
+
+**Note**: Alternatively, if you have a text editor configured with your Docker, you could just do only step 4 and then restart the container. 
+
 For other make commands: run **make help**
 
 Visit http://localhost:8000 on your browser to access the API documentation.
