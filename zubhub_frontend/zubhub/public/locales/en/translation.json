@@ -481,6 +481,9 @@
     "errors": {
       "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
       "noResult": "We could not find anything for your search term! Maybe try to search something else?"
+    },
+    "loginModal": {
+      "title": "Log in or Sign up to search for {{type}}"
     }
   },
 
