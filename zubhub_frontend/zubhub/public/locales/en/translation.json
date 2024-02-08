@@ -480,7 +480,15 @@
     },
     "errors": {
       "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
-      "noResult": "We could not find anything for your search term! Maybe try to search something else?"
+      "noResult": "We could not find anything for your search term! Maybe try to search something else?",
+      "noResult2": "Sorry, but we couldn't find any results for ",
+      "noResultDescription": "Try searching for something else or browse our suggestions!"
+    },
+    "loginCard": {
+      "title": {
+        "projects": "Log in or sign up to search for projects",
+        "creators": "Log in or sign up to search for users"
+      }
     }
   },
 

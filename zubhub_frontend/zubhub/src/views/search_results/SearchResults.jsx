@@ -34,11 +34,17 @@ import CustomButton from '../../components/button/Button';
 import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
-import styles from '../../assets/js/styles/views/search_results/searchResultsStyles';
+import { styles, loginStyleOverrides, staffPickStyleOverrides } from '../../assets/js/styles/views/search_results/searchResultsStyles';
 import commonStyles from '../../assets/js/styles';
+import Login from '../login/Login';
+import broken_robot from '../../assets/images/broken_robot.svg';
+import { fetchStaffPicks, updateStaffPicks } from '../home/projectsScripts';
+import StaffPick from '../../components/staff_pick/StaffPick';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
+const useLoginStyleOverrides = makeStyles(loginStyleOverrides);
+const useStaffPickStyleOverrides = makeStyles(staffPickStyleOverrides)
 
 /**
  * @function buildCreatorProfiles Component
@@ -68,7 +74,7 @@ const buildCreatorProfiles = (
         className={common_classes.textDecorationNone}
         to={`/creators/${creator.username}`}
       >
-        <Card className={classes.cardStyle}>
+        <Card className={clsx(classes.cardStyle, !props.auth?.token && classes.cardLoggedOutStyle)}>
           <Avatar
             className={classes.avatarStyle}
             src={creator.avatar}
@@ -108,6 +114,8 @@ const buildCreatorProfiles = (
 function SearchResults(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
+  const loginClasses = useLoginStyleOverrides();
+  const staffPickClasses = useStaffPickStyleOverrides();
 
   const [state, setState] = React.useState({
     results: [],
@@ -119,7 +127,7 @@ function SearchResults(props) {
 
   React.useEffect(() => {
     const params = getQueryParams(window.location.href);
-
+    fetchStaffPicks(props);
     handleSetState(fetchPage(null, props, params.get('q'), params.get('type')));
   }, []);
 
@@ -142,7 +150,7 @@ function SearchResults(props) {
       );
     } else {
       return (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className={classes.projectsContainerStyle}>
           {results.map(project => (
             <Grid
               item
@@ -173,19 +181,20 @@ function SearchResults(props) {
     next: next_page,
     loading,
   } = state;
+  const staff_picks = props.projects.staff_picks;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
   } else {
     return (
       <Box className={classes.root}>
-        {results && results.length > 0 ? (
           <Container className={classes.mainContainerStyle}>
-            <Grid container>
+            {results && results.length > 0 ? (
+            <Grid container className={clsx(!props.auth.token && classes.mainContainerLoggedOutStyle)}>
               <Grid item xs={12}>
                 <Typography
                   className={classes.pageHeaderStyle}
-                  variant="h3"
+                  variant="h4"
                   gutterBottom
                 >
                   {count}{' '}
@@ -195,14 +204,69 @@ function SearchResults(props) {
                   "{getQueryParams(window.location.href).get('q')}"
                 </Typography>
               </Grid>
+              <div className={clsx(classes.creatorsContainerStyle, !props.auth?.token && classes.creatorsContainerLoggedOutStyle && classes.loggedOutResultsContainer)}>
               {getResults(
                 getQueryParams(window.location.href).get('type'),
                 results,
               )}
+              </div>
             </Grid>
+            ) : (
+            <div className={clsx(classes.noResultContainerStyle, !props.auth.token && classes.mainContainerLoggedOutStyle)}>
+              <div>
+                <img className={classes.notFoundRobotStyle} src={broken_robot} alt={'error'} />
+              </div>
+              <Typography
+                className={clsx(classes.pageHeaderStyle, classes.noResultTitleStyle, getQueryParams(window.location.href).get('type') === SearchType.CREATORS && !props.auth?.token && classes.marginBottom)}
+                variant="h4"
+                gutterBottom
+              >
+                {t('searchResults.errors.noResult2')}
+                "
+                {getQueryParams(window.location.href).get('q')}
+                "
+              </Typography>
+              {staff_picks &&
+                getQueryParams(window.location.href).get('type') === SearchType.PROJECTS && (
+                  <>
+                    <Typography
+                      className={classes.noResultDescStyle}
+                      variant="body2"
+                      color="textSecondary"
+                      component="p"
+                    >
+                      {t('searchResults.errors.noResultDescription')}
+                    </Typography>
+                    <div className={clsx(!props.auth?.token && classes.loggedOutResultsContainer)}>
+                      {staff_picks.map(staff_pick => (
+                        <StaffPick
+                          key={staff_pick.id}
+                          staff_pick={staff_pick}
+                          updateProjects={res =>
+                            handleSetState(
+                              updateStaffPicks(res, staff_pick.id, props, toast),
+                            )
+                          }
+                          styleOverrides={{
+                            root: staffPickClasses.root,
+                            mainContainer: staffPickClasses.mainContainerStyle,
+                            MessagePrimary: staffPickClasses.MessagePrimaryStyle,
+                          }}
+                          {...props}
+                        />
+                        ))
+                      }
+                    </div>
+                  </>
+                )
+              }
+              
+            </div>
+            )}
+            {prev_page || next_page &&
             <ButtonGroup
               aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
-              className={classes.buttonGroupStyle}
+              className={clsx(classes.buttonGroupStyle, !props.auth?.token && classes.buttonGroupLoggedOut)}
             >
               {prev_page ? (
                 <CustomButton
@@ -253,12 +317,27 @@ function SearchResults(props) {
                 </CustomButton>
               ) : null}
             </ButtonGroup>
+            }
+            {!props.auth?.token &&
+              <>
+                <div className={classes.transitionStyle}></div>
+                <div className={classes.loginCardStyle}>
+                  <Login
+                    {...props} 
+                    title={`${t(`searchResults.loginCard.title.${getQueryParams(window.location.href).get('type')}`)}`}
+                    styleOverrides={{
+                      root: loginClasses.root,
+                      container: loginClasses.container,
+                      card: loginClasses.card,
+                      title: loginClasses.title,
+                      description: loginClasses.description,
+                      grid: loginClasses.grid
+                    }}
+                  />
+                </div>
+              </>
+            }
           </Container>
-        ) : (
-          <ErrorPage
-            error={t('searchResults.errors.noResult')}
-          />
-        )}
       </Box>
     );
   }
@@ -277,6 +356,7 @@ SearchResults.propTypes = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    projects: state.projects,
   };
 };
 
@@ -300,6 +380,12 @@ const mapDispatchToProps = dispatch => {
     toggleSave: args => {
       return dispatch(ProjectActions.toggleSave(args));
     },
+    getStaffPicks: args => {
+      return dispatch(ProjectActions.getStaffPicks(args));
+    },
+    setStaffPicks: args => {
+      return dispatch(ProjectActions.setStaffPicks(args));
+    }
   };
 };
 
