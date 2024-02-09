@@ -10,11 +10,11 @@ import styles from '../../assets/js/styles/components/social_share_buttons/socia
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
-import { RiFacebookCircleFill, RiWhatsappFill } from 'react-icons/ri';
+import { RiFacebookCircleFill, RiWhatsappFill, RiInstagramFill, RiTiktokFill } from 'react-icons/ri';
 import { colors } from '../../assets/js/colors';
 
 const useStyles = makeStyles(styles);
-const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {} }) => {
+const SocialButtons = ({ facebook, whatsapp, link, tiktok, instagram, withColor, containerStyle = {} }) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const url = window.location.href;
@@ -68,6 +68,29 @@ const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {
             }}
           >
             <LinkIcon style={{ color: withColor ? colors.black : colors.white }} />
+          </IconButton>
+        )}
+        {(showAll || tiktok) && (
+          <IconButton
+            className={clsx(classes.button, withColor && classes.outlined)}
+            onClick={() =>
+              window.open('https://www.tiktok.com/tag/' + t('projectDetails.socialShare.tiktok'))
+            }
+          >
+            {!withColor && <RiTiktokFill />}
+            {withColor && <RiTiktokFill color="#000000" />}
+          </IconButton>
+        )}
+
+        {(showAll || instagram) && (
+          <IconButton
+            className={clsx(classes.button, withColor && classes.outlined)}
+            onClick={() => {
+              toast.warning(t('projectDetails.socialShare.instagram'));
+            }}
+          >
+            {!withColor && <RiInstagramFill />}
+            {withColor && <RiInstagramFill color="#C13584" />}
           </IconButton>
         )}
       </ButtonGroup>
