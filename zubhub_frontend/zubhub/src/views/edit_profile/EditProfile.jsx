@@ -712,8 +712,5 @@ export default connect(
       bio: '',
     }),
     validationSchema,
-    handleSubmit: (values, formikBag) => {
-      editProfile(values, formikBag, toast);
-    },
   })(EditProfile),
 );

@@ -195,6 +195,7 @@ function CreateProject(props) {
 
   const checkErrors = async () => {
     console.log(formik.errors);
+    formik.setFieldError('category', false, false);
     if (activeStep === 1) {
       return formik.setTouched({ title: true, materials_used: true, description: true, category: false }, true);
     }

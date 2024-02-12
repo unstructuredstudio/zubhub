@@ -51,10 +51,10 @@ import {
   closeSearchFormOrIgnore,
 } from './pageWrapperScripts';
 
-import { getQueryParams, SearchType } from '../views/search_results/searchResultsScripts';
+import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
 
 import CustomButton from '../components/button/Button.js';
-import LoadingPage from '../views/loading/LoadingPage';
+import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
 import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
@@ -72,7 +72,7 @@ import NotificationButton from '../components/notification_button/NotificationBu
 import BreadCrumb from '../components/breadCrumb/breadCrumb';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 import Navbar from '../components/Navbar/Navbar';
-import NotFoundPage from '../views/not_found/NotFound';
+import NotFoundPage from './not_found/NotFound';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -241,13 +241,44 @@ function PageWrapper(props) {
 
       <Container className={classes.childrenContainer} maxWidth="lg">
         {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
-        {!props.auth?.token && !props.global && (
-          <div style={{ minHeight: '80vh' }}>
-            <NotFoundPage />
-          </div>
-        )}
+        {!props.auth?.token &&
+          ![
+            '/',
+            '/signup',
+            '/login',
+            '/projects/:id',
+            '/ambassadors',
+            '/creators/:username',
+            '/privacy_policy',
+            '/terms_of_use',
+            '/about',
+            '/challenge',
+            '/password-reset',
+            '/email-confirm',
+            '/password-reset-confirm'
+          ].includes(props.match?.path) && (
+            <div style={{ minHeight: '80vh' }}>
+              <NotFoundPage />
+            </div>
+          )}
       </Container>
-      {props.global && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+      {!props.auth?.token &&
+        [
+          '/',
+          '/signup',
+          '/login',
+          '/password-reset',
+          '/projects/:id',
+          '/ambassadors',
+          '/creators/:username',
+          '/privacy_policy',
+          '/terms_of_use',
+          '/about',
+          '/challenge',
+          '/email-confirm',
+          '/password-reset-confirm'
+        ].includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
           <a href="https://unstructured.studio">
