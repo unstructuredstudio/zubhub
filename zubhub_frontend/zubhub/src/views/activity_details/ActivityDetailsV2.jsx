@@ -87,6 +87,11 @@ export default function ActivityDetailsV2(props) {
     props.history.push(`${props.location.pathname}/edit`);
   };
 
+  const handlePublish = () => {
+    API.activityTogglePublish({ token: auth.token, id: activity.id })
+      .then(() => window.location.reload())
+  }
+
   const toggleDialog = () => {
     setOpen(!open);
     props.history.replace(window.location.pathname);
@@ -153,6 +158,7 @@ export default function ActivityDetailsV2(props) {
               isLoading={isLoading.delete}
               onDelete={handleDelete}
               onEdit={handleEdit}
+              onPublish={handlePublish}
               activity={activity} 
               auth={auth}
             />
@@ -323,7 +329,7 @@ export default function ActivityDetailsV2(props) {
   );
 }
 
-const AnchorElemt = ({ onEdit, onDelete, isLoading = false, activity, auth }) => {
+const AnchorElemt = ({ onEdit, onDelete, onPublish, isLoading = false, activity, auth }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = makeStyles(activityDetailsStyles)();
   const { t } = useTranslation();
@@ -347,6 +353,11 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false, activity, auth }) =>
     handleClose();
   };
 
+  const handlePublish = () => {
+    onPublish();
+    handleClose();
+  }
+
   const ActionButtons = () => {
     if (activity.creators?.some(creator => creator.id === auth.id)) {
       return (
@@ -361,7 +372,7 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false, activity, auth }) =>
       )
     } else if (auth.tags.includes("staff")) {
       return (
-        <MenuItem className={classes.menuItem}>
+        <MenuItem onClick={handlePublish} className={classes.menuItem}>
           <ListItemIcon className={classes.menuItemIcon}>
             {activity?.publish ? <MdFileDownloadOff fontSize="large" /> : <MdPublish fontSize="large" />}
           </ListItemIcon>
