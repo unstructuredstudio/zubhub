@@ -47,7 +47,7 @@ class ActivityDetailsAPIView(RetrieveAPIView):
 
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_object(self):
         queryset = self.get_queryset()

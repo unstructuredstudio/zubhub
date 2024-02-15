@@ -7,6 +7,15 @@ export const activityDetailsStyles = theme => ({
         },
         [theme.breakpoints.down('xs')]: {
             margin: '0 12px'
+        },
+    },
+    signedOutMainContainer: {
+        padding: '2em 12em',
+        [theme.breakpoints.down('sm')]: {
+            padding: '2em 0'
+        },
+        [theme.breakpoints.down('xs')]: {
+            padding: '3em 0'
         }
     },
     card: {

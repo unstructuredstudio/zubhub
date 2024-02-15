@@ -124,7 +124,7 @@ export default function ActivityDetailsV2(props) {
   });
 
   return (
-    <div ref={ref} className={classes.mainContainer}>
+    <div ref={ref} className={clsx(classes.mainContainer, !auth?.token && classes.signedOutMainContainer)}>
       {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={classes.card}>
         <div className={classes.headerFlex}>
