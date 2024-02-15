@@ -1084,7 +1084,8 @@
          "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
          "uploadError": "error occurred while downloading file : "
       }
-   }
+   },
+   "tooltipMore": " more"
  },
 
   "activityDetails": {
@@ -1098,11 +1099,18 @@
        "contributors": "CONTRIBUTORS"
     },
     "made": "Made by",
+    "inspired": {
+      "recreated": "Re-created",
+      "times": "times"
+    },
     "activity": {
       "creator": {
         "follow": "Follow",
         "unfollow": "Unfollow"
       },
+      "introduction": "Introduction",
+      "categories": "Categories",
+      "classGrade": "Class Grade",
       "description": "Description",
       "materials": "Materials Used",
       "category": "Category",
@@ -1110,7 +1118,10 @@
       "none": "None",
 
       "build": "Let's Make This Project",
-      "pdf": "Download Pdf",
+      "pdf": {
+        "downloading": "Downloading...",
+        "download": "Download PDF"
+      },
       "create": {
         "dialog": {
           "primary": "Create Activity",
@@ -1118,6 +1129,10 @@
           "proceed": "Proceed",
           "success": "activity Created successfully",
           "forbidden": "You must be staff monitor ao educator to be able to create a new activity "
+        },
+        "modal": {
+          "success": "Congratulations your Activity has been successfully created!",
+          "share": "Share your activity with the world. Post it on the following platforms:"
         }
       },
       "edit": {
@@ -1145,14 +1160,19 @@
          "label": "Publish"
       },
       "unpublish": {
-         "label": "UnPublish"
+         "label": "Unpublish"
       }
     },
       "saveButton": {
         "label": "save button",
         "save": "save",
         "unsave": "unsave"
-      }
+      },
+    "footer": {
+      "introductionText": "Did you like this activity?",
+      "buttonLabel": "Create it!",
+      "moreActivitiesTitle": "More Activities"
+    }
   },
   "breadCrumb":{
     "link":{
