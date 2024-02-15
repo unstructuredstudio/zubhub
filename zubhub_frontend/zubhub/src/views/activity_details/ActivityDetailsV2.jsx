@@ -122,7 +122,7 @@ export default function ActivityDetailsV2(props) {
       <div className={classes.card}>
         <div className={classes.headerFlex}>
           <div className={classes.creatorBox}>
-            <Avatar src={creator?.avatar} alt={creator?.username} />
+            <Avatar src={creator?.avatar} alt={creator?.username} className={classes.avatar} />
             <div>
               <Typography
                 color={colors.black}
@@ -148,13 +148,15 @@ export default function ActivityDetailsV2(props) {
           <Typography variant="h5" component="h1" className={classes.headerTitle}>
             {activity?.title}
           </Typography>
-          <AnchorElemt
-            isLoading={isLoading.delete}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            publish={activity?.publish} 
-            tags={auth?.tags}
-          />
+          {(activity.creators?.some(creator => creator.id === auth.id) || auth.tags.includes('staff')) && (
+            <AnchorElemt
+              isLoading={isLoading.delete}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              activity={activity} 
+              auth={auth}
+            />
+          )}
         </div>
         <div className={classes.headerIconBox}>
           <Typography
@@ -321,7 +323,7 @@ export default function ActivityDetailsV2(props) {
   );
 }
 
-const AnchorElemt = ({ onEdit, onDelete, isLoading = false, publish, tags }) => {
+const AnchorElemt = ({ onEdit, onDelete, isLoading = false, activity, auth }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = makeStyles(activityDetailsStyles)();
   const { t } = useTranslation();
@@ -345,20 +347,29 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false, publish, tags }) => 
     handleClose();
   };
 
-  const PublishButton = () => {
-    if (tags.includes("staff")) {
+  const ActionButtons = () => {
+    if (activity.creators?.some(creator => creator.id === auth.id)) {
       return (
-        <MenuItem className={classes.menuItem}>
+        <MenuItem onClick={handleEdit} className={classes.menuItem}>
           <ListItemIcon className={classes.menuItemIcon}>
-            {publish ? <MdFileDownloadOff fontSize="large" /> : <MdPublish fontSize="large" />}
+            <FiEdit fontSize="medium" />
           </ListItemIcon>
           <ListItemText className={classes.menuItemText}>
-            {publish ? t('activityDetails.activity.unpublish.label') : t('activityDetails.activity.publish.label')}
+            {t('activityDetails.activity.edit.label')}
           </ListItemText>
         </MenuItem>
       )
-    } else {
-      return null
+    } else if (auth.tags.includes("staff")) {
+      return (
+        <MenuItem className={classes.menuItem}>
+          <ListItemIcon className={classes.menuItemIcon}>
+            {activity?.publish ? <MdFileDownloadOff fontSize="large" /> : <MdPublish fontSize="large" />}
+          </ListItemIcon>
+          <ListItemText className={classes.menuItemText}>
+            {activity?.publish ? t('activityDetails.activity.unpublish.label') : t('activityDetails.activity.publish.label')}
+          </ListItemText>
+        </MenuItem>
+      )
     }
   }
 
@@ -382,15 +393,7 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false, publish, tags }) => 
           'aria-labelledby': `basic-button`,
         }}
       >
-        <MenuItem onClick={handleEdit} className={classes.menuItem}>
-          <ListItemIcon className={classes.menuItemIcon}>
-            <FiEdit fontSize="medium" />
-          </ListItemIcon>
-          <ListItemText className={classes.menuItemText}>
-            {t('activityDetails.activity.edit.label')}
-          </ListItemText>
-        </MenuItem>
-        <PublishButton />
+        <ActionButtons />
         <MenuItem onClick={handledelete} className={clsx(classes.menuItem, classes.dangerButton)} >
           <ListItemIcon className={classes.menuItemIcon}>
             <FiTrash2 fontSize="medium" className={classes.dangerButton} />

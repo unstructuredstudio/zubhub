@@ -69,6 +69,9 @@ export const activityDetailsStyles = theme => ({
         alignItems: 'center',
         gap: 8
     },
+    avatar: {
+        boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
+    },
     creatorUsername: {
         fontWeight: 500,
         fontSize: 16,
