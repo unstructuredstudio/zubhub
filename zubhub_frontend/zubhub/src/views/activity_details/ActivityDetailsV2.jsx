@@ -128,7 +128,10 @@ export default function ActivityDetailsV2(props) {
       {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={classes.card}>
         <div className={classes.headerFlex}>
-          <Link className={commonClasses.textDecorationNone} to={`/creators/${creator?.username}`}>
+          <Link
+            className={commonClasses.textDecorationNone}
+            to={{ pathname: `/creators/${creator?.username}`, state: { prevPath: window.location.pathname } }}
+          >
             <div className={classes.creatorBox}>
               <Avatar src={creator?.avatar} alt={creator?.username} className={classes.avatar} />
               <div>

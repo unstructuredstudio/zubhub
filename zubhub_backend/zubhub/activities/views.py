@@ -128,7 +128,7 @@ class ActivityDeleteAPIView(DestroyAPIView):
     """
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsOwner, IsStaffOrModeratorOrEducator]
 
     def delete(self, request, *args, **kwargs):
         activity = self.get_object()
