@@ -26,6 +26,7 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import ShareIcon from '@material-ui/icons/Share';
 import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
 import styles from '../../assets/js/styles/index';
@@ -38,6 +39,7 @@ import { activityDetailsStyles, socialButtonsStyleOverrides } from './ActivityDe
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
 import Categories from '../../components/categories/Categories.jsx';
+import { USER_TAGS } from '../../assets/js/utils/constants';
 
 const API = new ZubHubAPI();
 const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
@@ -126,24 +128,30 @@ export default function ActivityDetailsV2(props) {
       {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={classes.card}>
         <div className={classes.headerFlex}>
-          <div className={classes.creatorBox}>
-            <Avatar src={creator?.avatar} alt={creator?.username} className={classes.avatar} />
-            <div>
-              <Typography
-                color={colors.black}
-                component="span"
-                className={classes.creatorUsername}
-              >
-                {creator?.username}
-              </Typography>
-              <br />
-              {creator?.tags.map(tag => (
-                <Typography color="textSecondary" component="span">
-                  {tag}
+          <Link className={commonClasses.textDecorationNone} to={`/creators/${creator?.username}`}>
+            <div className={classes.creatorBox}>
+              <Avatar src={creator?.avatar} alt={creator?.username} className={classes.avatar} />
+              <div>
+                <Typography
+                  color={colors.black}
+                  component="span"
+                  className={classes.creatorUsername}
+                >
+                  {creator?.username}
                 </Typography>
-              ))}
+                <br />
+                {creator?.tags.includes(USER_TAGS.educator) && (
+                  <Typography
+                    color="textSecondary"
+                    component="span"
+                    className={commonClasses.textCapitalize}
+                  >
+                    {USER_TAGS.educator}
+                  </Typography>
+                )}
+              </div>
             </div>
-          </div>
+          </Link>
           <CustomButton primaryButtonStyle className={classes.headerButton}>
             {t('activityDetails.activity.create.dialog.primary')}
           </CustomButton>
@@ -153,7 +161,7 @@ export default function ActivityDetailsV2(props) {
           <Typography variant="h5" component="h1" className={classes.headerTitle}>
             {activity?.title}
           </Typography>
-          {(activity.creators?.some(creator => creator.id === auth.id) || auth.tags.includes('staff')) && (
+          {(activity.creators?.some(creator => creator.id === auth.id) || auth.tags.includes(USER_TAGS.staff)) && (
             <AnchorElemt
               isLoading={isLoading.delete}
               onDelete={handleDelete}
@@ -370,7 +378,7 @@ const AnchorElemt = ({ onEdit, onDelete, onPublish, isLoading = false, activity,
           </ListItemText>
         </MenuItem>
       )
-    } else if (auth.tags.includes("staff")) {
+    } else if (auth.tags.includes(USER_TAGS.staff)) {
       return (
         <MenuItem onClick={handlePublish} className={classes.menuItem}>
           <ListItemIcon className={classes.menuItemIcon}>

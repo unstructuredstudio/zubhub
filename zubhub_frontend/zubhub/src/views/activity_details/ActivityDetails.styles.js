@@ -75,7 +75,8 @@ export const activityDetailsStyles = theme => ({
     creatorUsername: {
         fontWeight: 500,
         fontSize: 16,
-        textTransform: 'capitalize'
+        textTransform: 'capitalize',
+        color: colors.black
     },
     cardTitle: {
         fontSize: '1.2em',
