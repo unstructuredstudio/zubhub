@@ -76,6 +76,7 @@ function NavBar(props) {
   const [searchType, setSearchType] = useState(getQueryParams(window.location.href).get('type') || SearchType.PROJECTS);
   const formRef = useRef();
   const token = useSelector(state => state.auth.token);
+  const pathname = props.location?.pathname
   const hideSearchAndActions = pathname === '/signup' || pathname === '/login';
 
   const [state, setState] = React.useState({
@@ -355,11 +356,11 @@ function NavBar(props) {
                     </Box>
                   )}
                 </Hidden>
-
               <AvatarButton navigate={props.navigate} />
             </div>
+            )}
           </Toolbar>
-          {!hideSearchAndActions && open_search_form ? (
+          {open_search_form ? (
             <ClickAwayListener onClickAway={e => handleSetState(closeSearchFormOrIgnore(e))}>
               <form
                 action="/search"

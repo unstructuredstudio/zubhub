@@ -37,6 +37,5 @@ export {
   PreviewActivity,
   Pill,
   ProtectedRoute,
-  SessionExpireModal,
   CustomErrorMessage,
 };
