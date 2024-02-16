@@ -98,7 +98,7 @@ default-theme:
 	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py create_default_theme"
 .PHONY: default-theme
 
-init: .env start migrate admin-user add-theme ## Initialize docker-compose containers
+init: .env start migrate admin-user default-theme ## Initialize docker-compose containers
 .PHONY: init
 
 search-index:
