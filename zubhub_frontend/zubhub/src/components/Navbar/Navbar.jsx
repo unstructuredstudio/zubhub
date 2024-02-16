@@ -417,7 +417,7 @@ function NavBar(props) {
         </Container>
         {/* <BreadCrumb /> */}
         <SwipeableDrawer anchor={anchor} open={state.left} onClose={toggleDrawer} onOpen={toggleDrawer}>
-          <Sidenav />
+          { state.left ? <Sidenav /> : null }
         </SwipeableDrawer>
       </AppBar>
     </>
