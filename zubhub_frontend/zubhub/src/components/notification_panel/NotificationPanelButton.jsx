@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../../assets/js/styles/components/notification_panel/notificationPanelButtonStyles';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import cn from 'classnames';
 import { useHistory } from 'react-router-dom';
 

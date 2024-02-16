@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { style } from '../../assets/js/styles/components/activity/activityStyle';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import {
   getActivities,
   activityToggleSave,
@@ -24,7 +24,7 @@ import {
   ListItemText,
   Grid,
   Fab,
-} from '@material-ui/core';
+} from '@mui/material';
 import commonStyles from '../../assets/js/styles';
 import Creator from '../creator/creator';
 import { toggleSave } from './activityScripts';
@@ -138,7 +138,7 @@ function Activity(props) {
                     e,
                     activity.id,
                     props.auth,
-                    props.history,
+                    props.navigate,
                     handleSetState,
                     props.activityToggleSave,
                     t,

@@ -1,7 +1,7 @@
-import { Avatar, Box, IconButton, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import { Avatar, Box, IconButton, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +18,7 @@ import LoadingPage from '../../views/loading/LoadingPage';
 import CustomButton from '../button/Button';
 import SocialButtons from '../social_share_buttons/socialShareButtons.jsx';
 
-import { DescriptionOutlined } from '@material-ui/icons';
+import { DescriptionOutlined } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { images } from '../../assets/images';
@@ -42,7 +42,7 @@ function PreviewActivity({ onClose, ...props }) {
 
   useEffect(() => {
     setIsLoading(true);
-    API.getActivity({ token: auth?.token, id: props.match.params.id })
+    API.getActivity({ token: auth?.token, id: props.params.id })
       .then(data => {
         setActivity(data);
       })
@@ -51,7 +51,7 @@ function PreviewActivity({ onClose, ...props }) {
 
   const toggleDialog = () => {
     setOpen(!open);
-    props.history.replace(window.location.pathname);
+    props.navigate(window.location.pathname, { replace: true });
   };
 
   if (isLoading) {

@@ -11,7 +11,7 @@ import {
     PostAddOutlined,
     Publish,
     Settings,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 export const links = ({ draftCount, myProjectCount, auth, t }) => [
     { label: t('pageWrapper.sidebar.projects'), link: '/', icon: Dashboard },

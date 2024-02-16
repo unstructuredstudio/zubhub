@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import InputText from '../../components/inputText/inputText';
-import CancelIcon from '@material-ui/icons/Cancel';
+import CancelIcon from '@mui/icons-material/Cancel';
 import 'react-toastify/dist/ReactToastify.css';
 import { vars } from '../create_project/createProjectScripts';
 import {
   getMakingStepsRequiredError,
   getStepError,
 } from './createActivityScripts';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, FormControl, Box, Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Grid, FormControl, Box, Typography } from '@mui/material';
 import CustomButton from '../../components/button/Button';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 import projectStyles from '../../assets/js/styles/views/create_project/createProjectStyles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
 import commonStyles from '../../assets/js/styles';

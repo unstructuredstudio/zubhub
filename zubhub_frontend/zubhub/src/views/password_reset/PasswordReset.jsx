@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import {
   Grid,
   Box,
@@ -19,7 +19,7 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   sendPasswordResetLink,

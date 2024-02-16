@@ -1,4 +1,5 @@
-import { Dialog, makeStyles } from '@material-ui/core';
+import { Dialog } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import React from 'react';
 import styles from '../../assets/js/styles';
 import { modalStyles } from './modal.styles';

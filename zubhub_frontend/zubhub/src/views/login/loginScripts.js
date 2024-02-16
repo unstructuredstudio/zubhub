@@ -31,7 +31,7 @@ export const login = (e, props) => {
   e.preventDefault();
   props.setFieldTouched('username', true);
   return props
-    .login({ values: props.values, history: props.history })
+    .login({ values: props.values, navigate: props.navigate })
     .catch(error => {
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {

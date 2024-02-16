@@ -1,6 +1,6 @@
 import { colors } from "../../../colors";
-import zIndex from "@material-ui/core/styles/zIndex";
-import { makeStyles } from '@material-ui/core/styles';
+import zIndex from "@mui/material/styles/zIndex";
+import { makeStyles } from '@mui/styles';
 import clsx from 'clsx';
 
 const styles = theme => ({
@@ -259,7 +259,7 @@ const styles = theme => ({
   tagsBoxStyle: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: 20
+    gap: '20px'
   },
   tagsStyle: {
     backgroundColor: 'var(--text-color3)',

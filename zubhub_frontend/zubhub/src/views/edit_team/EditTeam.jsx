@@ -7,7 +7,7 @@ import { withFormik } from 'formik';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 import {
   Box,
@@ -28,8 +28,8 @@ import {
   OutlinedInput,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { ArrowBack, ErrorOutline } from '@material-ui/icons'
+} from '@mui/material';
+import { ArrowBack, ErrorOutline } from '@mui/icons-material';
 import {
   deleteAccount,
   editProfile,

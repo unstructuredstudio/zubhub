@@ -127,7 +127,7 @@ export const updateDrafts = (res, projects, props, toast) => {
  */
 export const toggleFollow = (id, props) => {
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props.toggleFollow({ id, token: props.auth.token, t: props.t });
   }
@@ -213,7 +213,7 @@ export const deleteAccount = (username_el, props) => {
   } else {
     return props.deleteAccount({
       token: props.auth.token,
-      history: props.history,
+      navigate: props.navigate,
       logout: props.logout,
       t: props.t,
     });

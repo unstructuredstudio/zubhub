@@ -377,7 +377,7 @@ export const initUpload = async (
   state,
   props,
   handleSetState,
-  history,
+  navigate,
   formikProps,
   setReadyForSubmit,
 ) => {
@@ -386,7 +386,7 @@ export const initUpload = async (
     return { ...state, ['submitting']: true };
   });
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     let uploadedMediaPromises = await FormMediaUpload(
       state,
@@ -550,7 +550,7 @@ export const initUpload = async (
           toast.success(
             props.t('activityDetails.activity.edit.dialog.success'),
           );
-          return props.history.push(`/activities/${values['id']}`);
+          return props.navigate(`/activities/${values['id']}`);
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {
             toast.warning(
@@ -559,7 +559,7 @@ export const initUpload = async (
           } else {
             toast.warning(props.t('activities.errors.dialog.serverError'));
           }
-          return props.history.push(`/activities/${values['id']}`);
+          return props.navigate(`/activities/${values['id']}`);
         }
       });
     } else {
@@ -575,7 +575,7 @@ export const initUpload = async (
             toast.success(
               props.t('activityDetails.activity.create.dialog.success'),
             );
-            return props.history.push(`/activities/${res.id}`);
+            return props.navigate(`/activities/${res.id}`);
           });
         } else {
           if (res.status === 403 && res.statusText === 'Forbidden') {

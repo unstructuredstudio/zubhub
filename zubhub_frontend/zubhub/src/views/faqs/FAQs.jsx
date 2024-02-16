@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { makeStyles } from '@mui/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Box,
   Container,
@@ -14,7 +14,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import * as UserActions from '../../store/actions/userActions';
 import LoadingPage from '../loading/LoadingPage';

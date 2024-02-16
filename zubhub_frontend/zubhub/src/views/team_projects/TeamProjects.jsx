@@ -5,16 +5,16 @@ import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
   Grid,
   Box,
   ButtonGroup,
   Typography,
   Container,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { fetchPage, updateProjects } from './teamProjectsScripts';
 

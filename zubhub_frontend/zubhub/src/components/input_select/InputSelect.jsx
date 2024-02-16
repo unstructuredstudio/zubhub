@@ -1,4 +1,5 @@
-import { InputBase, Select, withStyles } from '@material-ui/core';
+import { InputBase, Select } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import React from 'react';
 
 const BootstrapInput = withStyles(theme => ({
@@ -8,7 +9,7 @@ const BootstrapInput = withStyles(theme => ({
     borderBottomLeftRadius: 250,
     position: 'relative',
     fontSize: 16,
-    padding: '10px 26px 10px 18px',
+    padding: '9px 26px 8px 18px',
     backgroundColor: 'var(--primary-color3)',
     color: 'white',
     transition: 'background-color 250ms ease',
@@ -26,10 +27,10 @@ const BootstrapInput = withStyles(theme => ({
       borderRadius: 0,
       borderTopLeftRadius: 250,
       borderBottomLeftRadius: 250,
-      backgroundColor: 'white',
-      color: 'var(--primary-color3)',
+      color: 'white',
+      backgroundColor: 'var(--primary-color3)',
       '& ~ svg': {
-        color: 'var(--primary-color3)',
+        color: 'white',
       },
     },
   },

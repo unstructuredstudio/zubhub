@@ -28,7 +28,7 @@ export const resetPassword = (e, props) => {
       uid,
       token,
       t: props.t,
-      history: props.history,
+      navigate: props.navigate,
     })
     .catch(error => {
       const messages = JSON.parse(error.message);

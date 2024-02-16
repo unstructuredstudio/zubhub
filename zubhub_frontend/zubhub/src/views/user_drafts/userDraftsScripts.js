@@ -7,7 +7,7 @@ import { getUserDrafts } from '../../store/actions/projectActions';
  * @todo - describe function's signature
  */
 export const fetchPage = (page, props) => {
-  const username = props.match.params.username;
+  const username = props.params.username;
   return getUserDrafts({ page, username, t: props.t, token: props.auth.token });
 };
 

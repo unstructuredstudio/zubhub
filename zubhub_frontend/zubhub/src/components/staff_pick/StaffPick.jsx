@@ -2,8 +2,8 @@ import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, Grid, Typography } from '@mui/material';
 import Project from '../project/Project';
 import CustomButton from '../button/Button';
 

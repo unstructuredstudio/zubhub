@@ -59,7 +59,7 @@ export const deleteTeam = args => {
       } else {
         toast.success(args.t('profile.delete.toastSuccess'));
         // args.logout(args);
-        args.history.push('/profile');
+        args.navigate('/profile');
       }
     })
     .catch(error => {
@@ -361,7 +361,7 @@ export const addMembers = args => {
         throw new Error(JSON.stringify(res));
       } else {
         toast.success(args.t('addGroupMembers.createToastSuccess'));
-        return args.history.push('/profile');
+        return args.navigate('/profile');
       }
     });
   };
@@ -646,7 +646,7 @@ export const sendGroupInviteConfirmation = args => {
       } else {
         toast.success(args.t('emailConfirm.toastSuccess'));
         setTimeout(() => {
-          args.history.push('/');
+          args.navigate('/');
         }, 4000);
       }
     });

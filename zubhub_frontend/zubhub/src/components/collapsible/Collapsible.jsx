@@ -1,5 +1,6 @@
-import { IconButton, Typography, makeStyles } from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+import { IconButton, Typography } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
 import styles from '../../assets/js/styles/index';
 import { collapsibleStyles } from './collapsible.styles';
 import clsx from 'clsx';

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, connect } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { deleteActivity, togglePublish } from './activityDetailsScripts';
 import CustomButton from '../../components/button/Button';
 import GeneratePdf from '../../components/generatePdf/generatePdf';
 import styles from '../../assets/js/styles/views/activity_details/activityDetailsStyles';
 import commonStyles from '../../assets/js/styles';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box, CardMedia, Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Grid, Box, CardMedia, Typography } from '@mui/material';
 import ActionIconsContainer from '../../components/actionIconsContainer/actionIconsContainer';
 import ReactQuill from 'react-quill';
 import clsx from 'clsx';
@@ -26,7 +26,7 @@ const useCommonStyles = makeStyles(commonStyles);
 
 function ActivityDetails(props) {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const common_classes = useCommonStyles();
   const { t } = props;
   const { id } = props.match.params;
@@ -57,7 +57,7 @@ function ActivityDetails(props) {
   }, []);
 
   const handleDelete = () => {
-    deleteActivity({ token: auth.token, id: id, history: history, t: t });
+    deleteActivity({ token: auth.token, id: id, navigate: navigate, t: t });
   };
 
   return (
@@ -111,7 +111,7 @@ function ActivityDetails(props) {
                         e,
                         activity.id,
                         auth,
-                        history,
+                        navigate,
                         props.activityTogglePublish,
                         t,
                       )
@@ -222,7 +222,7 @@ function ActivityDetails(props) {
                         primaryButtonStyle3
                         fullWidth
                         onClick={() => {
-                          history.push('/projects/create', { activity_id: id });
+                          navigate('/projects/create', { activity_id: id });
                         }}
                       >
                         {t('activityDetails.activity.build')}
@@ -636,7 +636,7 @@ function ActivityDetails(props) {
           </Grid>
         </Box>
       ) : (
-        history.push('/activities')
+        navigate('/activities')
       )}
     </>
   );

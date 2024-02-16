@@ -18,7 +18,7 @@ export const logout = (e, props) => {
   e.preventDefault();
   return props.logout({
     token: props.auth.token,
-    history: props.history,
+    navigate: props.navigate,
     t: props.t,
   });
 };

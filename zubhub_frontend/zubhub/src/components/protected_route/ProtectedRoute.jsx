@@ -1,25 +1,10 @@
 import React from 'react'
-import { Redirect, Route } from 'react-router-dom'
-import PageWrapper from '../../views/PageWrapper';
-import LoadingPage from '../../views/loading/LoadingPage';
+import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ component: LazyComponent, ...props }) => {
-    return (
-      <Route
-        {...props}
-        render={routeProps =>
-          props.auth?.token ? (
-            <PageWrapper {...props} {...routeProps}>
-              <React.Suspense fallback={<LoadingPage />}>
-                <LazyComponent {...routeProps} {...props} />
-              </React.Suspense>
-            </PageWrapper>
-          ) : (
-            <Redirect to="/login" />
-          )
-        }
-      />
-    );
+const ProtectedRoute = props => {
+  const { wrapper: Wrapper, component, ...rest } = props;
+
+  return props.auth?.token ? <Wrapper component={component} {...rest} /> : <Navigate to="/login" replace />;
   };
 
   export default ProtectedRoute

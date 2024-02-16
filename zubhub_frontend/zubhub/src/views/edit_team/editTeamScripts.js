@@ -71,7 +71,7 @@ export const handleMouseDownPassword = e => {
  export const deleteAccount = (groupname, props, state) => {
     return props.deleteTeam({
       token: props.auth.token,
-      history: props.history,
+      navigate: props.navigate,
       logout: props.logout,
       t: props.t,
       groupname: groupname,
@@ -99,7 +99,7 @@ export const editProfile = (e, groupname, props) => {
     return props
       .editTeam({ groupname, data, token: props.auth.token })
       .then(_ => {
-        props.history.push(`/teams/${props.values.groupname}`)
+        props.navigate(`/teams/${props.values.groupname}`);
       })
   }
 };

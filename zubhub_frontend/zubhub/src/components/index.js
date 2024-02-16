@@ -15,6 +15,7 @@ import Modal from "./modals/Modal";
 import PreviewActivity from "./previewActivity/PreviewActivity";
 import PreviewProject from "./previewProject/PreviewProject";
 import Pill from "./pill/Pill";
+import ProtectedRoute from './protected_route/ProtectedRoute';
 
 export {
     Comments,
@@ -24,5 +25,6 @@ export {
     SelectFromPills, Sidenav, TagsInput, VideoInput,
     Collapsible,
     PreviewActivity,
-    Pill
+    Pill,
+    ProtectedRoute,
 };

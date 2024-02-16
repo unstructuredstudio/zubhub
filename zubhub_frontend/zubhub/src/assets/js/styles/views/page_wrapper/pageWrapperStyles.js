@@ -7,7 +7,7 @@ const styles = theme => ({
   },
   input: {
     flex: 1,
-    marginRight: '2rem',
+    marginRight: '2.8rem',
   },
   customButton: {
     fontSize: '1.15rem',
@@ -36,13 +36,15 @@ const styles = theme => ({
     },
   },
   searchFormStyle: {
+    '& .MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root': {
+      paddingRight: '15px',
+    },
     display: 'inline-block',
     position: 'relative',
     marginLeft: '2em',
     verticalAlign: 'bottom',
     '& .search-form-input': {
       height: '2.5em',
-      maxWidth: '40em',
       backgroundColor: 'rgba(0,0,0,0.2)',
       color: 'white',
       borderRadius: '50px',
@@ -77,6 +79,9 @@ const styles = theme => ({
     },
   },
   smallSearchFormStyle: {
+    '& .MuiAutocomplete-hasClearIcon .MuiOutlinedInput-root': {
+      paddingRight: '15px',
+    },
     height: '4em',
     display: 'flex',
     flexFlow: 'row nowrap',

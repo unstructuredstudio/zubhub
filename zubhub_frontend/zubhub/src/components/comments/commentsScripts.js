@@ -20,7 +20,7 @@ export const addComment = (
   handleSetState,
 ) => {
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     const comment_text = comment_text_el.current.value;
     comment_text_el.current.value = '';
@@ -77,7 +77,7 @@ export const unpublishComment = (props, context, id) => {
         token: props.auth.token,
         id: id,
         t: props.t,
-        history: props.history,
+        navigate: props.navigate,
       })
       .then(updated_comment => {
         if (updated_comment) {
@@ -124,7 +124,7 @@ export const deleteComment = (
         token: props.auth.token,
         id: id,
         t: props.t,
-        history: props.history,
+        navigate: props.navigate,
       })
       .then(() => {
         tempDeleteComment(context.body.comments, id);
