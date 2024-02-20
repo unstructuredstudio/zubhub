@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { withTranslation } from 'react-i18next';
 import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
-import CreateActivity from './views/create_activity/CreateActivity';
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
+import CreateActivity from './views/create_activity/CreateActivity';
 import LoadingPage from './views/loading/LoadingPage';
 import PageWrapper from './views/PageWrapper';
-import ZubhubAPI from '../src/api/api';
+import ZubhubAPI from './api/api';
 import { updateTheme } from './theme';
 import ScrollToTop from './ScrollToTop';
 
@@ -52,8 +51,8 @@ const About = React.lazy(() => import('./views/about/About'));
 const Challenge = React.lazy(() => import('./views/challenge/Challenge'));
 const FAQs = React.lazy(() => import('./views/faqs/FAQs'));
 const NotFound = React.lazy(() => import('./views/not_found/NotFound'));
-const API = new ZubhubAPI();
 const Settings = React.lazy(() => import('./views/settings/Settings'));
+const API = new ZubhubAPI();
 
 const LazyImport = props => {
   const { LazyComponent, ...restOfProps } = props;
@@ -79,454 +78,451 @@ function App(props) {
     navigate,
   };
 
-  useEffect(() => {
-    handleThemeChange();
-  }, []);
-
   const handleThemeChange = async () => {
     try {
       const data = await API.theme();
 
       updateTheme(data);
     } catch (error) {
-      console.error(error);
+      console.error(error); // eslint-disable-line no-console
     }
   };
+
+  useEffect(() => {
+    handleThemeChange();
+  }, []);
 
   return (
     <ThemeContext.Provider value={theme}>
       <ScrollToTop />
       <Routes>
-          <Route
-            path="/"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Home} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Home} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/projects"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/projects"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/activities/create"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/activities/create"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/activities/:id/linkedProjects"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={LinkedProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/activities/:id/linkedProjects"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={LinkedProjects} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/search"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={SearchResults} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/search"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={SearchResults} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/signup"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Signup} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/signup"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Signup} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/login"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Login} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/login"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Login} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/password-reset"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={PasswordReset} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/password-reset"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={PasswordReset} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/password-reset-confirm"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={PasswordResetConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/password-reset-confirm"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={PasswordResetConfirm} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/email-confirm"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={EmailConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/email-confirm"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={EmailConfirm} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/phone-confirm"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={PhoneConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/phone-confirm"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={PhoneConfirm} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/group-invite-confirm"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={GroupInviteConfirm} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/group-invite-confirm"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={GroupInviteConfirm} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/creators/:username/projects"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/creators/:username/projects"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={UserProjects} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/settings"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Settings} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/settings"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Settings} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/profile"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/profile"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/team"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Teams} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/teams/:groupname/projects"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TeamProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/team"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Teams} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/teams/:groupname/projects"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={TeamProjects} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/creators/:username/drafts"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserDrafts} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/creators/:username/drafts"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={UserDrafts} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/creators/:username/followers"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserFollowers} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/creators/:username/followers"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={UserFollowers} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/teams/:groupname/followers"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TeamFollowers} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/teams/:groupname/followers"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={TeamFollowers} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/teams/:groupname/members"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TeamMembers} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/teams/:groupname/members"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={TeamMembers} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/creators/:username/following"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={UserFollowing} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/creators/:username/following"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={UserFollowing} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/teams/all"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={AllTeams} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/teams/all"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={AllTeams} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/creators/:username/members"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={GroupMembers} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/creators/:username/members"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={GroupMembers} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/creators/:username/add-members"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={AddGroupMembers} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/creators/:username/add-members"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={AddGroupMembers} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/creators/:username"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/creators/:username"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/account-status"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={AccounStatus} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/account-status"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={AccounStatus} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/teams/:groupname"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Team} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/teams/:groupname"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Team} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/edit-profile"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={EditProfile} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/edit-profile"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={EditProfile} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/:groupname/edit-team"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={EditTeam} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/:groupname/edit-team"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={EditTeam} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/projects/staff-picks/:id"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={StaffPickDetails} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/projects/staff-picks/:id"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={StaffPickDetails} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/projects/create"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/projects/create"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/projects/saved"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={SavedProjects} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/projects/:id/edit"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/projects/:activity_id/create"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/projects/saved"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={SavedProjects} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/projects/:id/edit"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/projects/:activity_id/create"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          {/* <ProtectedRoute path="/profile" component={ProjectDetails} {...props} /> */}
-          <Route
-            path="/projects/:id"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={ProjectDetails} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/projects/:id"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={ProjectDetails} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/ambassadors"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Ambassadors} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/ambassadors"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Ambassadors} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/privacy_policy"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Guidelines} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/privacy_policy"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Guidelines} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/terms_of_use"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={TermsOfUse} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/terms_of_use"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={TermsOfUse} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/about"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={About} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/about"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={About} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/challenge"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/challenge"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/faqs"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={FAQs} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/faqs"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={FAQs} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/activities/:id/edit"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/activities/:id/edit"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/activities/:id"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={ActivityDetails} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/activities/:id"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={ActivityDetails} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/activities"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={Activities} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/activities"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={Activities} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="/create-team"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={CreateTeam} {...routeProps} {...props} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="/create-team"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={CreateTeam} {...routeProps} {...props} />
+            </PageWrapper>
+          }
+        />
 
-          <Route
-            path="*"
-            element={
-              <PageWrapper {...routeProps} {...props}>
-                <LazyImport LazyComponent={NotFound} {...routeProps} />
-              </PageWrapper>
-            }
-          />
+        <Route
+          path="*"
+          element={
+            <PageWrapper {...routeProps} {...props}>
+              <LazyImport LazyComponent={NotFound} {...routeProps} />
+            </PageWrapper>
+          }
+        />
       </Routes>
     </ThemeContext.Provider>
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
 
 const ConnectedApp = connect(mapStateToProps)(App);
 

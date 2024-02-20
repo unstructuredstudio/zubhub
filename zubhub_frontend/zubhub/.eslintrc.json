@@ -1,0 +1,80 @@
+{
+	"parser": "@babel/eslint-parser",
+	"env": {
+		"browser": true,
+		"node": true,
+		"es6": true
+	  },
+	"parserOptions": {
+		"ecmaVersion": 12,
+		"sourceType": "module",
+		"requireConfigFile": false,
+		"ecmaFeatures": {
+			"jsx": true,
+			"modules":true,
+			"arrowFunctions":true,
+			"classes":true,
+			"spread":true
+		},
+		"babelOptions": {
+		  "parserOpts": {
+			"plugins": ["jsx"]
+		  }
+		}
+	},
+	"plugins": [
+		"import",
+		"prettier",
+		"react",
+		"react-hooks",
+		"compat",
+		"jest",
+		"json"
+	],
+	"extends": [
+		"airbnb-base",
+		"prettier",
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:jest/recommended",
+		"plugin:import/recommended"
+	],
+	"rules": {
+		"import/no-unresolved": "error",
+		"react/react-in-jsx-scope": "off",
+		"react/prop-types": "off",
+		"no-param-reassign": "off",
+		"no-shadow": "off",
+		"dot-notation": "off",
+		"camelcase": "off",
+		"no-else-return": "off",
+		"consistent-return": "off",
+		"no-nested-ternary": "off",
+		"prefer-destructuring": "off",
+		"no-unused-expressions": "off",
+		"no-promise-executor-return": "off",
+		"func-names": "off",
+		"default-param-last": "off",
+		"no-unneeded-ternary": "off",
+		"class-methods-use-this": "off",
+		"no-continue": "off",
+		"no-underscore-dangle": "off",
+		"import/prefer-default-export": "off",
+		"import/extensions": "off",
+		"jest/no-disabled-tests": "warn",
+		"jest/no-focused-tests": "error",
+		"jest/no-identical-title": "off",
+		"jest/prefer-to-have-length": "warn",
+		"jest/valid-expect": "error"
+	},
+	"settings": {
+		"import/resolver": {
+			"node": {
+			"extensions": [".js", ".jsx"]
+			}
+		},
+		"react": {
+			"version": "detect"
+		}
+	}
+}

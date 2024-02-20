@@ -86,9 +86,13 @@ migrate: ## Run `manage.py migrate`
 	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py migrate"
 .PHONY: migrate
 
-test: ## Run `manage.py test`
+zubhub-test: ## Run `manage.py test` on the web container
 	docker-compose -f docker-compose.yml exec web bash -c "cd zubhub && python manage.py test"
-.PHONY: test
+.PHONY: zubhub-test
+
+media-test: ## Run `manage.py test` on the media container
+	docker-compose -f docker-compose.yml exec media bash -c "cd media && python manage.py test"
+.PHONY: media-test
 
 admin-user:
 	docker-compose -f docker-compose.yml exec web bash -c "python zubhub/manage.py create_dummy_admin_user"

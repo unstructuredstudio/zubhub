@@ -30,6 +30,8 @@ Follow the instructions below to set up your local development environment
 6. Install make. ( [jump to section](#install-make) )
 7. Setup Backend. ( [jump to section](#setup-backend) )
 8. Setup Frontend. ( [jump to section](#setup-frontend) )
+9. Tests
+10. Making changes and Commiting
 
 <br/>
 <br/>
@@ -201,6 +203,30 @@ Visit **localhost:3000** on your browser to access the frontend.
 
 <br/>
 <br/>
+
+# Tests
+Before you get started making changes and commiting, you should setup pre-commit on your development machine:
+- Run `pip install pre-commit`
+- Run `pre-commit --version` to verify that pre-commit installation was successful
+- Run `cd <path to cloned zubhub repository>`
+- Run `pre-commit install` to install the git hook scripts
+
+To verify that your setup was successful, run `pre-commit` in the root of your cloned zubhub repo. You should see this running a number of checks.
+
+## Frontend
+You can also test the frontend seperately by going to the root of the frontend project (the place you have package.json) and running `npm run test -- --coverage --watchAll=false`
+
+## Backend
+To test the backend seperately,
+- Run `cd ./zubhub_backend`
+- Run `make zubhub-test` to run the test suites of the web django app
+- Run `make media-test` to run the test suites of the media django app
+
+# Making changes and Commiting
+Before making changes, make sure that you've set up pre-commit as described in the previous step.
+After that just `git add .` and `git commit` your changes. pre-commit will automatically run the different tests and will fail to commit until you fix all the errors.
+
+> **_NOTE:_** If you fail to setup pre-commit on your local machine before making pull requests, our pre-commit action on github will run the same tests on your code and if it fails to pass, your code won't be merged.
 
 # Deployment
 
