@@ -463,3 +463,39 @@ def perform_project_search(user, query_string, search_criteria: Optional[Set[Pro
             result.append(project)
 
     return result
+
+
+def recommend_projects(project):
+    """
+    Params:
+    project - Project object
+    Returns list of three projects to recommend to a user based on project's categories
+    """
+
+    Project = apps.get_model('projects.Project')
+    PublishingRule = apps.get_model('projects.PublishingRule')
+
+    title_words = project.title.split()
+    categories = project.category.all()
+    tags = project.tags.all()
+
+    all_projects = Project.objects.filter(publish__type=PublishingRule.PUBLIC).exclude(pk=project.pk)
+    
+    similar_title = Q()
+    for word in title_words:
+        similar_title |= Q(title__icontains=word)
+    same_category = Q(category__in=categories)
+    same_tags = Q(tags__in=tags)
+
+    projects = all_projects.filter(similar_title & (same_category | same_tags)).distinct()
+
+    if projects.count() < 3:
+        projects |= all_projects.filter(same_category & same_tags).distinct()
+    
+    if projects.count() < 3:
+        projects |= all_projects.filter(similar_title | same_category | same_tags).distinct()
+
+    if projects.count() < 3:
+        projects |= all_projects.order_by('-likes_count').distinct()
+
+    return list(projects[:3])

@@ -20,7 +20,7 @@ from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
 from creators.models import Creator
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
                     perform_project_search, can_view,
-                    get_published_projects_for_user)
+                    get_published_projects_for_user, recommend_projects)
 from creators.utils import (activity_notification, send_notification,  activity_log, set_badge_like_category,
                             set_badge_project_category, set_badge_view_category,
                              set_badge_comment_category)
@@ -291,6 +291,28 @@ class ProjectDetailsAPIView(RetrieveAPIView):
         else:
             raise PermissionDenied(
                 _('you are not permitted to view this project'))
+
+
+class ProjectRecommendAPIView(ListAPIView):
+    """
+    Fetch 3 projects to recommend.
+
+    Requires project id.
+    Returns list of three projects.
+    """
+
+    serializer_class = ProjectSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+        
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        project = get_object_or_404(Project, pk=pk)
+        try: 
+            return recommend_projects(project)
+        except Exception as e: 
+            return Project.objects.none()
 
 
 class SavedProjectsAPIView(ListAPIView):

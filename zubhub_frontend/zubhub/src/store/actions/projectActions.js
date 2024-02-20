@@ -208,6 +208,33 @@ export const getProjects = args => {
   };
 };
 
+export const getMoreProjects = args => {
+  return () => {
+    return API.getMoreProjects(args)
+      .then(res => {
+        if (Array.isArray(res)) {
+          return {
+            results: res,
+            loading: false,
+          };
+        } else {
+          res = Object.keys(res)
+            .map(key => res[key])
+            .join('\n');
+          throw new Error(res);
+        }
+      })
+      .catch(error => {
+        if (error.message.startsWith('Unexpected')) {
+          toast.warning(args.t('projectDetails.errors.unexpected'));
+        } else {
+          toast.warning(error.message);
+        }
+        return { loading: false };
+      });
+  };
+};
+
 /**
  * @function getCategories
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
