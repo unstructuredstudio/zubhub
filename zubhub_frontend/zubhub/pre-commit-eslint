@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# get a list of staged files that end with .js or .jsx in zubhub_frontend dir
+target_files=$(git diff --name-only --cached | grep -E '^zubhub_frontend/.*\.(js|jsx)$')
+
+# if there are no staged files that end with .js or .jsx, exit
+if [ -z "$target_files" ]; then
+    exit 0
+fi
+
+npx eslint --config ./zubhub_frontend/zubhub/.eslintrc.json \
+--ignore-path ./zubhub_frontend/zubhub/.eslintignore $target_files

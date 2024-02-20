@@ -1,0 +1,91 @@
+default_language_version:
+  python: python3
+
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+      - id: black
+        args: ["-l 88"]
+        files: zubhub_backend/.*\.py$
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.11.5 # do not update this until our CI runner uses Python >=3.8.1
+    hooks:
+      - id: isort
+        files: zubhub_backend/.*\.py$
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 5.0.4 # do not update this until our CI runner uses Python >=3.8.1
+    hooks:
+      - id: flake8
+        # use same max-line-length as black
+        # E121, E123, E126, E133, E226, E241, E242, E704 and W503 are default ignores
+        # E124: closing bracket does not match visual indentation
+        # E203: non-pep8 compliant brainfart of flake8
+        args:
+          [
+            "--max-line-length=88",
+            "--ignore=E121,E123,E126,E133,E203,E226,E241,E242,E704,W503,E124",
+          ]
+        files: zubhub_backend/.*\.py$
+
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.0.0
+  #   hooks:
+  #     - id: mypy
+  #       exclude: ^tests/
+  #       verbose: true
+  #       args: [--show-error-codes, --ignore-missing-imports]
+  #       additional_dependencies:
+  #         ["types-requests", "types-PyYAML", "types-flask", "toolforge-weld"]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-shebang-scripts-are-executable
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v7.32.0
+    hooks:
+      - id: eslint
+        entry: ./zubhub_frontend/zubhub/pre-commit-eslint
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        files: zubhub_frontend/.*\.[jt]sx?$
+        exclude: ^zubhub_frontend/zubhub/node_modules/
+        args: ["--config", "./zubhub_frontend/zubhub/.prettierrc.yaml"]
+
+  - repo: local
+    hooks:
+      - id: zubhub-test
+        name: zubhub-test
+        entry: ./zubhub_backend/pre-commit-zubhub-test
+        language: system
+        files: zubhub_backend/zubhub/.*\.py$
+        pass_filenames: false
+
+      - id: media-test
+        name: media-test
+        entry: ./zubhub_backend/pre-commit-media-test
+        language: system
+        files: zubhub_backend/media/.*\.py$
+        pass_filenames: false
+
+      - id: react-test
+        name: react-test
+        entry: npm --prefix ./zubhub_frontend/zubhub/ run test -- --coverage --watchAll=false
+        language: node
+        files: zubhub_frontend/.*\.[jt]sx?$
+        exclude: ^zubhub_frontend/zubhub/node_modules/
+        pass_filenames: false

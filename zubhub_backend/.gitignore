@@ -1,5 +1,5 @@
 media_store/
-media/
+zubhub/media/
 # migrations/
 __pycache__/
 *.pyc
@@ -11,3 +11,5 @@ cadvisor.htpasswd
 .ssl-data
 celerybeat-schedule
 celerybeat.pid
+venv/
+.idea/

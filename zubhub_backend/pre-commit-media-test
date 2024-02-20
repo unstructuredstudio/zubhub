@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Get the absolute path of the script's directory
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# if .env file does not exist, create it
+if [ ! -f "$DIR/.env" ]; then
+    touch $DIR/.env
+    docker run -v $DIR/compose/make_backend_env.sh:/make_backend_env.sh \
+    -v $DIR/.env:/.env \
+    --rm busybox /bin/sh /make_backend_env.sh /.env
+fi
+
+docker-compose -f $DIR/docker-compose.yml up --detach --build
+sleep 20
+docker exec media bash -c "cd media && python manage.py test && exit 0 || exit 1"
