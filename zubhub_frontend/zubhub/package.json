@@ -57,7 +57,7 @@
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "react-scripts start",
+    "start": "ESLINT_NO_DEV_ERRORS=true react-scripts start",
     "build": "node --max-old-space-size=1024 node_modules/react-scripts/bin/react-scripts.js build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -76,15 +76,15 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^3.1.0",
     "@babel/eslint-parser": "^7.0.0",
-    "eslint-config-prettier": "^8.0.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.0.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-react": "^7.0.0",
-    "eslint-plugin-jest": "^26.0.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-compat": "^4.0.0",
-    "eslint-plugin-json": "^3.1.0"
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^26.0.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^3.1.0"
   }
 }
