@@ -38,7 +38,7 @@ jobs:
       - name: Get checkout commit ref and repo
         run: |
 
-          # for context read this https://github.com/Arelle/Arelle/pull/938/files#r1377926250 
+          # for context read this https://github.com/Arelle/Arelle/pull/938/files#r1377926250
           merge_commit_sha=${{ github.event.pull_request.merge_commit_sha }}
           head_ref=${{ github.event.pull_request.head.ref }}
           target_repo=${{ github.repository }}
@@ -70,7 +70,7 @@ jobs:
           script: |
 
             # This script will be executed inside a composite action.
-            # rename GITHUB_OUTPUT so that it's clear that it's a 
+            # rename GITHUB_OUTPUT so that it's clear that it's a
             # composite output and should be handled differently from $GITHUB_OUTPUT
             COMPOSITE_OUTPUT=$GITHUB_OUTPUT
             NEW_DROPLET_NAME=zubhub-test-${{ github.event.pull_request.number }}
@@ -279,6 +279,8 @@ jobs:
             Test VM is ready ✅✅✅
             You can access it with the url:
             https://${{env.FRONTEND_DOMAIN}}.unstructured.studio
+            Default username: dummy
+            default password: dummy_password
 ######################################################################################
 
 #################################################################################
@@ -304,7 +306,7 @@ jobs:
           script: |
 
             # This script will be executed inside a composite action.
-            # rename GITHUB_OUTPUT so that it's clear that it's a 
+            # rename GITHUB_OUTPUT so that it's clear that it's a
             # composite output and should be handled differently from $GITHUB_OUTPUT
             COMPOSITE_OUTPUT=$GITHUB_OUTPUT
             # for events like unlabelled, github.event.pull_request.number is available
