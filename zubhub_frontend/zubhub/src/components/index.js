@@ -15,16 +15,27 @@ import Modal from "./modals/Modal";
 import PreviewActivity from "./previewActivity/PreviewActivity";
 import PreviewProject from "./previewProject/PreviewProject";
 import Pill from "./pill/Pill";
+import CustomErrorMessage from './form/errorMessage/ErrorMessage';
 import ProtectedRoute from './protected_route/ProtectedRoute';
 
 export {
-    Comments,
-    CustomButton, Dropdown,
-    Editor, Gallery, ImageInput,
-    LabeledLine, Modal, OrDivider, PreviewProject,
-    SelectFromPills, Sidenav, TagsInput, VideoInput,
-    Collapsible,
-    PreviewActivity,
-    Pill,
-    ProtectedRoute,
+  Comments,
+  CustomButton,
+  Dropdown,
+  Editor,
+  Gallery,
+  ImageInput,
+  LabeledLine,
+  Modal,
+  OrDivider,
+  PreviewProject,
+  SelectFromPills,
+  Sidenav,
+  TagsInput,
+  VideoInput,
+  Collapsible,
+  PreviewActivity,
+  Pill,
+  ProtectedRoute,
+  CustomErrorMessage,
 };
