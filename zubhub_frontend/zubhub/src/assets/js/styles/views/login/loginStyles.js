@@ -1,127 +1,188 @@
-import { fade } from '@mui/material/styles';
-
-const styles = theme => ({
-  root: {
-    paddingTop: '2em',
-    paddingBottom: '2em',
-    flex: '1 0 auto',
-    // background: 'var(--primary-color2)',
-    // background:
-    //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
-  },
-  containerStyle: {
-    maxWidth: '600px',
-    [theme.breakpoints.up('1600')]: {
-      maxWidth: '950px',
+export const mainStyles = theme => ({
+  wrapper: {
+    marginTop: theme.spacing(10),
+    [theme.breakpoints.down('lg')]: {
+      marginTop: theme.spacing(10),
     },
-    [theme.breakpoints.down('400')]: {
-      marginTop:'30px',
+    [theme.breakpoints.down('md')]: {
+      marginTop: theme.spacing(5),
     },
   },
-  cardStyle: {
-    border: 0,
-    borderRadius: 15,
-    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .12)',
-    color: 'white',
-    padding: '0 30px',
+  gridContainer: {
+    alignItems: 'center',
+    borderRadius: theme.spacing(1),
   },
-  titleStyle: {
-    fontWeight: 'bold',
-    fontSize: '1.7rem',
-    [theme.breakpoints.up('1600')]: {
-      fontSize: '2.5rem',
+  header: {
+    color: theme.palette.text.primary,
+    fontSize: theme.spacing(5),
+    fontWeight: 800,
+    lineHeight: '50px',
+    [theme.breakpoints.down('sm')]: {
+      lineHeight: 'unset',
+      fontSize: '15px',
     },
   },
-  descStyle: {
-    [theme.breakpoints.up('1600')]: {
-      fontSize: '1.7rem',
+  subHeader: {
+    color: theme.palette.text.primary,
+    fontSize: theme.spacing(3),
+    fontWeight: 800,
+    lineHeight: 'normal',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '18px',
+      fontWeight: 700,
     },
   },
-  customLabelStyle: {
-    '&.MuiFormLabel-root.Mui-focused': {
-      color: 'var(--primary-color3)',
-    },
-    [theme.breakpoints.up('1600')]: {
-      fontSize: '1.7rem',
+  text: {
+    fontSize: theme.spacing(2),
+    fontWeight: 400,
+    lineHeight: '32px',
+    color: theme.palette.text.secondary,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '12px',
+      lineHeight: 'unset',
     },
   },
-  customInputStyle: {
-    borderRadius: 15,
-    '&.MuiOutlinedInput-notchedOutline': {
-      border: '2px solid var(--primary-color3)',
-      boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+  header2: {
+    color: theme.palette.text.primary,
+    fontSize: '30px',
+    fontWeight: 700,
+    lineHeight: '50px',
+  },
+  subHeader2: {
+    color: theme.palette.text.primary,
+    fontSize: '18px',
+    fontWeight: 600,
+    lineHeight: '24px',
+  },
+  text2: {
+    marginBottom: '40px'
+  },
+  wizard: {
+    width: '100%',
+  },
+  outlinedInput: {
+    borderRadius: theme.spacing(1),
+    paddingInline: theme.spacing(3),
+    gap: theme.spacing(3),
+    '& .MuiOutlinedInput-input': {
+      padding: '20px 0',
     },
     '&.MuiOutlinedInput-root': {
       '&:hover fieldset': {
-        border: '2px solid var(--primary-color3)',
-        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
+        border: `1px solid ${theme.palette.primary.light}`,
       },
       '&.Mui-focused fieldset': {
-        border: '2px solid var(--primary-color3)',
-        boxShadow: `rgba(var(--primary-color3), 0.2rem) 0 0 0 0.2rem`,
-      },
-      [theme.breakpoints.up('1600')]: {
-        fontSize: '1.7rem',
+        border: `2px solid ${theme.palette.primary.light}`,
       },
     },
   },
-  secondaryLink: {
-    color: 'var(--primary-color3)',
-    '&:hover': {
-      color: 'var(--secondary-color6)',
+  formControl: {
+    gap: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+      gap: theme.spacing(2),
     },
-    [theme.breakpoints.up('1600')]: {
-      fontSize: '1.2rem',
-    },
-  },
-  center: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dividerText: {
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.up('1600')]: {
-      fontSize: '1.2rem',
+    [theme.breakpoints.down('sm')]: {
+      gap: theme.spacing(1),
     },
   },
-  divider: {
-    width: '30%',
-    marginRight: '1em',
-    marginLeft: '1em',
-    [theme.breakpoints.up('1600')]: {
-      height: '0.1em',
-    },
-    [theme.breakpoints.down('510')]: {
-      width: '20%',
-    },
-    [theme.breakpoints.down('381')]: {
-      marginLeft: '0.5em',
-      marginRight: '0.5em',
+  inputIcon: {
+    fontSize: theme.spacing(3),
+    fill: theme.palette.grey[400],
+  },
+  button: {
+    fontSize: '18px',
+    fontWeight: 600,
+    paddingBlock: '20px',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '12px',
+      padding: '5px 16px',
     },
   },
-  textDecorationNone: {
-    textDecoration: 'none',
-  },
-  errorBox: {
+  spaceBackground: {
     width: '100%',
-    padding: '1em',
-    borderRadius: 6,
-    borderWidth: '1px',
-    borderColor: 'var(--primary-color2)',
-    backgroundColor: 'var(--secondary-color1)',
-    [theme.breakpoints.up('1600')]: {
-      fontSize: '1.5rem',
+    height: '100%',
+  },
+  backContainer: {
+    borderRadius: '50%',
+    background: theme.palette.background.default,
+    padding: '10px',
+  },
+  backIcon: {
+    fontSize: theme.spacing(3),
+  },
+  gridControl: {
+    background: theme.palette.background.default,
+    padding: '0 40px',
+    boxShadow: '2px 4px 5px 0px rgba(0, 184, 196, 0.05)',
+  },
+});
+
+export const step1Styles = theme => ({
+  paper: {
+    cursor: 'pointer',
+    width: '350px',
+    height: '300px',
+    borderRadius: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    justifyContent: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(2, 3),
+      width: '342px',
+      height: '124px',
+      alignItems: 'unset',
+    },
+    '&.selected': {
+      border: '3px solid var(--primary-color3)',
     },
   },
-  error: {
-    color: 'var(--primary-color2)',
-  },
-  fieldHelperTextStyle: {
-    [theme.breakpoints.up('1600')]: {
-      fontSize: '1.2rem',
+  icon: {
+    fill: '#00B8C4',
+    fontSize: '64px',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 'unset',
+      height: '32px',
+      width: '32px',
     },
   },
 });
 
-export default styles;
+export const step2Styles = theme => ({
+  container: {
+    background: theme.palette.background.paper,
+    borderRadius: theme.spacing(1),
+    padding: theme.spacing(8, 5),
+    boxShadow: '2px 4px 5px 0px rgba(0, 184, 196, 0.05)',
+  },
+});
+
+export const step3Styles = theme => ({});
+
+export const step4Styles = theme => ({});
+export const step5Styles = theme => ({
+  label: {
+    gap: theme.spacing(3),
+  },
+  formControl: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(5),
+    alignItems: 'left',
+  },
+  fieldSet: {
+    padding: `20px ${theme.spacing(3)}`,
+    borderWidth: '1px',
+    borderColor: theme.palette.grey[300],
+    borderStyle: 'solid',
+    borderRadius: theme.spacing(1),
+    '&:hover': {
+      borderColor: theme.palette.primary.light,
+    },
+    '&.selected': {
+      borderWidth: '3px',
+      borderColor: theme.palette.primary.light,
+    },
+  },
+});
