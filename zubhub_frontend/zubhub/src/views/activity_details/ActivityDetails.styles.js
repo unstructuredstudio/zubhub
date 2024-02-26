@@ -84,4 +84,16 @@ export const activityDefailsStyles = theme => ({
     gap: 32,
     marginTop: 20,
   },
+  dialogCloseButton: {
+    display: 'flex',
+    justifyContent: 'end',
+    marginTop: '-1em',
+  },
+  dialogTitle: {
+    fontWeight: 600,
+    fontSize: '1em',
+  },
+  dialogText: {
+    fontSize: '1.1em',
+  },
 });

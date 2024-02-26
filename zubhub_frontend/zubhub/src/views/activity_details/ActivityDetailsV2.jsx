@@ -23,7 +23,6 @@ import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
-
 import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
 import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
@@ -283,24 +282,21 @@ export default function ActivityDetailsV2(props) {
       </div>
 
       <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
-        <div style={{ display: 'flex', justifyContent: 'end' }}>
+        <div className={classes.dialogCloseButton}>
           <IconButton onClick={toggleDialog}>
             <CloseOutlined />
           </IconButton>
         </div>
 
         <DialogTitle>
-          <Typography align="center" className={clsx(commonClasses.title2, classes.dialogTitle)}>
-            Congratulations your Activity has been successfully created!
+          <Typography align="center" className={classes.dialogTitle}>
+            {t('activityDetails.activity.create.modal.primary')}
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <Typography align="center">
-            Share your activity with the world. Post it on the following platforms:
+          <Typography align="center" className={classes.dialogText}>
+            {t('activityDetails.activity.create.modal.secondary')}
           </Typography>
-          <div className={clsx(commonClasses.displayFlex, commonClasses.justifyCenter)} style={{ margin: '20px 0' }}>
-            <SocialButtons containerStyle={{ gap: 50 }} withColor link facebook whatsapp />
-          </div>
         </DialogContent>
       </Modal.WithIcon>
     </div>
