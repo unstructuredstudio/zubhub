@@ -30,7 +30,6 @@ function Signup(props) {
   const [activeStep, setActiveStep] = useState(1);
 
   const wizardGo = (direction, stepErrorsAvailable) => {
-    console.log(stepErrorsAvailable, 'fgsgsgsgsr');
     if (stepErrorsAvailable) {
       return;
     }

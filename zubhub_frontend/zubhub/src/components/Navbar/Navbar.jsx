@@ -273,6 +273,8 @@ function NavBar(props) {
                   ))}
                 </Select>
               </Box>
+              {
+                !hideSearchAndActions && (
               <form
                 action="/search"
                 className={clsx(classes.searchFormStyle, classes.removeOn894)}
@@ -339,6 +341,8 @@ function NavBar(props) {
                   </FormGroup>
                 </FormControl>
               </form>
+              )
+            }
             </Box>
             {!hideSearchAndActions && (
               <div className={classes.navActionStyle}>
