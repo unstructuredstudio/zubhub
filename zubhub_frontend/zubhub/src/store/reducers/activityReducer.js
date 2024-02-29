@@ -1,9 +1,11 @@
 import * as at from '../actionTypes';
+
 const default_state = {
   all_activities: [],
   published: [],
   unPublishedActivities: [],
   selectedActivity: {},
+  userActivities: [],
 };
 const activities = (state = default_state, action) => {
   switch (action.type) {
