@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Grid, Typography } from '@mui/material';
-import clsx from 'clsx';
-
 import {
   getActivities,
   getMyActivities,
@@ -23,73 +20,107 @@ import LoadingPage from '../loading/LoadingPage';
 const useStyles = makeStyles(styles);
 
 function Activities(props) {
-  const location = useLocation();
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const { activities } = useSelector(state => state);
-  const [activityList, setActivityList] = useState([]);
-
+  const [activityList, setActivityList] = useState({
+    published: [],
+    unPublishedActivities: [],
+    userActivities: [],
+  });
+  const [tab, setTab] = useState('published');
   const commonClasses = makeStyles(DefaultStyles)();
+  const { t } = props;
 
   useEffect(() => {
-    setActivityList(activities.all_activities);
+    setActivityList(activities);
   }, [activities]);
 
-  const flagMap = {
-    staff: () =>
-      props.getUnPublishedActivities({
-        t: props.t,
-        token: props.auth.token,
-      }),
-    educator: () =>
-      props.getMyActivities({
-        t: props.t,
-        token: props.auth.token,
-      }),
-  };
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
-    if (location.state?.flag && flagMap[location.state.flag]) {
-      await flagMap[location.state.flag]();
-    } else {
+    async function getActivityList() {
+      if (props.auth?.tags.includes('staff')) {
+        await props.getUnPublishedActivities({
+          t: props.t,
+          token: props.auth.token,
+        });
+      } else if (props.auth?.tags.includes('educator')) {
+        await props.getMyActivities({
+          t: props.t,
+          token: props.auth.token,
+        });
+      }
       await props.getActivities(props.t);
     }
-    setActivityList(activities.all_activities);
+    getActivityList();
     setLoading(false);
-  }, [location]);
+  }, []);
+
+  const handleTabChange = (event, newTab) => {
+    setTab(newTab);
+  };
+
+  const ActivityCard = ({ activity }) => (
+    <Grid key={activity.id} item xs={12} sm={6} lg={4} align="center" className={classes.activityBoxContainer}>
+      <Activity
+        key={activity.id}
+        activity={activity}
+        auth={props.auth}
+        activityToggleSave={props.activityToggleSave}
+        t={props.t}
+        navigate={props.navigate}
+      />
+    </Grid>
+  );
 
   if (loading) {
     return <LoadingPage />;
   } else if (!activityList || activityList.length === 0) {
-    return <ErrorPage error={props.t('activities.errors.emptyList')} />;
+    return <ErrorPage error={t('activities.errors.emptyList')} />;
   } else {
     return (
-      <div className={clsx(classes.activityListContainer, commonClasses.smallScreenPadding)}>
-        <Typography style={{ marginBottom: 50 }} className={commonClasses.title1}>
-          Activities
-        </Typography>
-        <Grid container spacing={3}>
-          {activityList &&
-            activityList.map((activity, index) => (
-              <Grid
-                key={`activityContainer-${index}`}
-                item
-                xs={12}
-                sm={6}
-                lg={4}
-                align="center"
-                className={classes.activityBoxContainer}
-              >
-                <Activity
-                  key={`activity-${index}`}
-                  activity={activity}
-                  auth={props.auth}
-                  activityToggleSave={props.activityToggleSave}
-                  t={props.t}
-                  navigate={props.navigate}
-                />
-              </Grid>
-            ))}
+      <div className={commonClasses.smallScreenPadding}>
+        <Typography className={commonClasses.title1}>{t('activities.title')}</Typography>
+        {(props.auth?.tags.includes('staff') || props.auth?.tags.includes('educator')) && (
+          <Tabs
+            value={tab}
+            onChange={handleTabChange}
+            aria-label={t('activities.tabs.ariaLabel')}
+            indicatorColor="primary"
+            variant="fullWidth"
+            className={classes.tabs}
+          >
+            <Tab
+              value="published"
+              label={`${t('activities.tabs.published')} (${activityList.published?.length})`}
+              className={classes.tab}
+            />
+            <Tab
+              value="unpublished"
+              label={`${t('activities.tabs.unpublished')} (${
+                props.auth?.tags.includes('staff')
+                  ? activityList.unPublishedActivities?.length
+                  : activityList.userActivities.filter(activity => !activity.publish).length
+              })
+                  `}
+              className={classes.tab}
+            />
+          </Tabs>
+        )}
+        <Grid container spacing={3} className={classes.activitiesContainer}>
+          {activityList.published &&
+            tab === 'published' &&
+            activityList.published.map(activity => <ActivityCard activity={activity} key={activity.id} />)}
+          {activityList.unPublishedActivities &&
+            tab === 'unpublished' &&
+            props.auth?.tags.includes('staff') &&
+            activityList.unPublishedActivities.map(activity => <ActivityCard activity={activity} key={activity.id} />)}
+          {activityList.userActivities &&
+            tab === 'unpublished' &&
+            props.auth?.tags.includes('educator') &&
+            activityList.userActivities
+              .filter(activity => !activity.publish)
+              .map(activity => <ActivityCard activity={activity} key={activity.id} />)}
         </Grid>
       </div>
     );

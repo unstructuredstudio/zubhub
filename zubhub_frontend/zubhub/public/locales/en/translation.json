@@ -1089,6 +1089,12 @@
   },
 
  "activities": {
+  "title": "Activities",
+  "tabs": {
+    "published": "Published",
+    "unpublished": "Unpublished",
+    "ariaLabel": "Activity Tabs"
+  },
    "LinkedProjects": "Linked Projects",
    "errors": {
       "emptyList": "No activities created yet !",
