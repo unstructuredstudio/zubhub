@@ -159,7 +159,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     def validate_video(self, video):
         if(self.initial_data.get('publish').get('type') == 1):
             return video
-        
+
         if(video == "" and len(self.initial_data.get("images")) == 0):
             raise serializers.ValidationError(
                 _("You must provide either image(s), video file, or video URL to create your project!"))
@@ -168,7 +168,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     def validate_images(self, images):
         if(self.initial_data.get('publish').get('type') == 1):
             return images
-        
+
         if(len(images) == 0 and len(self.initial_data["video"]) == 0):
             raise serializers.ValidationError(
                 _("You must provide either image(s), video file, or video URL to create your project!"))
@@ -265,7 +265,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             if project.video.find("cloudinary.com") > -1 and project.video.split(".")[-1] != "mpd":
                 update_video_url_if_transform_ready.delay(
                     {"url": project.video, "project_id": project.id})
-            
+
             return project
 
     def update(self, project, validated_data):
@@ -276,7 +276,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         category = None
         if validated_data.get('category', []):
             category = validated_data.pop('category')
-        
+
         video_data = validated_data.pop("video")
 
         if (project.video.find("cloudinary.com") > -1 or
@@ -327,6 +327,8 @@ class ProjectListSerializer(serializers.ModelSerializer):
         many=True, slug_field='id', read_only=True)
     created_on = serializers.DateTimeField(read_only=True)
     publish = PublishingRuleSerializer(read_only=True)
+    activity = serializers.SlugRelatedField(
+        slug_field="id", queryset=Activity.objects.all(), required=False)
 
     class Meta:
         model = Project
@@ -343,7 +345,8 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "comments_count",
             "created_on",
             "publish",
-            "group"
+            "group",
+            "activity"
         ]
 
 
