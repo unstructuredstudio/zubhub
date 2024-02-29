@@ -87,6 +87,10 @@ export default function ActivityDetailsV2(props) {
     props.navigate(`${props.location.pathname}/edit`);
   };
 
+  const handleCreateProject = () => {
+    props.history.push('/projects/create', { activity_id: activity.id });
+  };
+
   const handleDownload = useReactToPrint({
     onBeforePrint: () => setIsDownloading(true),
     onPrintError: () => setIsDownloading(false),
@@ -140,7 +144,7 @@ export default function ActivityDetailsV2(props) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32, gap: 10 }}>
-          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
+          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }} onClick={handleCreateProject}>
             Create this Project
           </CustomButton>
           <CustomButton

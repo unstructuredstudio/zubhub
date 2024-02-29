@@ -299,6 +299,7 @@
   },
 
   "createProject": {
+    "activityProjectCreate": "यह प्रोजेक्ट बनाएं",
     "welcomeMsg": {
       "primary": "प्रोजेक्ट बनाएं",
       "secondary": "हमें अपनी परियोजना के बारे में बताएं!"
