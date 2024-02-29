@@ -649,7 +649,7 @@
     },
     "activityLog": {
       "activity": "Activity Log",
-      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!"
     },
     "team": "Team",
     "createteam": "Create Team",
@@ -949,6 +949,7 @@
       "primary": "Create Activity",
       "edit": "Update Activity"
     },
+    "unauthorized": "You have to be an educator to create activities",
     "inputs": {
       "title": {
         "label": "Name your Activity",

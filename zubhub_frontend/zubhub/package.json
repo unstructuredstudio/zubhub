@@ -18,6 +18,7 @@
     "axios": "^1.5.1",
     "caniuse-lite": "^1.0.30001543",
     "classnames": "^2.2.6",
+    "clsx": "^2.1.0",
     "compressorjs": "^1.0.7",
     "dayjs": "^1.11.10",
     "formik": "^2.2.5",
