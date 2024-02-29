@@ -37,8 +37,8 @@ jobs:
 
       - uses: unstructuredstudio/zubhub/.github/actions/scp_action@master
         with:
-          host: ${{ vars.DO_BACKEND_HOST }}
-          username: ${{ vars.DO_BACKEND_USERNAME }}
+          host: ${{ vars.DO_FRONTEND_HOST }}
+          username: ${{ vars.DO_FRONTEND_USERNAME }}
           key: ${{ secrets.DO_SSHKEY }}
           source: "."
           target: "/home/zubhub-frontend/zubhub"
@@ -65,7 +65,7 @@ jobs:
           script: |
 
             docker system prune -a -f
-            
+
             volumes=$(docker volume ls -q)
             # Loop through the volumes
             while IFS= read -r volume; do
