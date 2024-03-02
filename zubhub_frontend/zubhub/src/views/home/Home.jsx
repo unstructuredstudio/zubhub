@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { connect } from 'react-redux';
-import CheckIcon from '@material-ui/icons/CheckCircle';
+import CheckIcon from '@mui/icons-material/CheckCircle';
 import { toast } from 'react-toastify';
 import child from '../../assets/images/child.jpg';
 import teams from '../../assets/images/teams.JPG';
@@ -12,10 +12,10 @@ import review1 from '../../assets/images/faridah.png';
 import review2 from '../../assets/images/hemant.png';
 import review3 from '../../assets/images/yaya.png';
 import global from '../../assets/images/global.JPG';
-import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { Grid, Box, ButtonGroup, Typography, Container, IconButton } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Grid, Box, ButtonGroup, Typography, Container, IconButton } from '@mui/material';
 
 import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
 
@@ -150,7 +150,7 @@ function Projects(props) {
   } else if (projects && projects.length >= 0) {
     return (
       <>
-      {props.auth.username ? (props.history.push('/projects')) : ''}
+        {props.auth.username ? props.navigate('/projects') : ''}
         {projects.length > 0 ?
           (
             <Box className={classes.root}>
@@ -183,7 +183,7 @@ function Projects(props) {
                        className={classes.heroButtonStyle}
                        size="small"
                        primaryButtonStyle
-                       onClick={() => props.history.push('/login')}
+                       onClick={() => props.navigate('/login')}
                      >
                        {t('projects.shareProject')}
                      </CustomButton>
@@ -219,7 +219,7 @@ function Projects(props) {
                   className={classes.heroButtonStyle}
                   size="small"
                   primaryButtonStyle
-                  onClick={() => props.history.push('/login')}
+                  onClick={() => props.navigate('/login')}
                 >
                   {t('projects.login')}
               </CustomButton>
@@ -242,7 +242,7 @@ function Projects(props) {
                       className={classes.heroButtonStyle}
                       size="small"
                       primaryButtonStyle
-                      onClick={() => props.history.push('/projects/create')}
+                      onClick={() => props.navigate('/projects/create')}
                     >
                       {t('projects.createProject')}
                     </CustomButton>
@@ -302,7 +302,7 @@ function Projects(props) {
                         className={classes.heroButtonStyle}
                         size="small"
                         primaryButtonStyle
-                        onClick={() => props.history.push('/ambassadors')}
+                        onClick={() => props.navigate('/ambassadors')}
                       >
                         {t('projects.zubhubAmbassadors')}
                       </CustomButton>
@@ -338,7 +338,7 @@ function Projects(props) {
                   className={classes.heroButtonStyle}
                   size="small"
                   primaryButtonStyle
-                  onClick={() => props.history.push('/signup')}
+                  onClick={() => props.navigate('/signup')}
                 >
                   {t('projects.teams.button')}
                 </CustomButton>
@@ -527,7 +527,7 @@ function Projects(props) {
                   className={classes.heroButtonStyle}
                   size="small"
                   primaryButtonStyle
-                  onClick={() => props.history.push('/signup')}
+                  onClick={() => props.navigate('/signup')}
                 >
                   {t('projects.global.button')}
                 </CustomButton>
@@ -537,7 +537,7 @@ function Projects(props) {
                   variant="outlined"
                   size="small"
                   secondaryButtonStyle
-                  onClick={() => props.history.push('/login')}
+                  onClick={() => props.navigate('/login')}
                 >
                   {t('projects.global.button2')}
                 </CustomButton>

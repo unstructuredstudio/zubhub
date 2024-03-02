@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Grid, Box, CardMedia, Typography } from '@material-ui/core';
+import { useNavigate } from 'react-router-dom';
+import { Grid, Box, CardMedia, Typography } from '@mui/material';
 import styles from '../../assets/js/styles/components/actionIconsContainer/actionIconsContainerStyles';
-import { makeStyles } from '@material-ui/core/styles';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import { makeStyles } from '@mui/styles';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import CustomButton from '../../components/button/Button';
 import SocialButtons from '../social_share_buttons/socialShareButtons.jsx';
-import { ButtonGroup } from '@material-ui/core';
+import { ButtonGroup } from '@mui/material';
 import { activityToggleSave } from '../../store/actions/activityActions';
-import LinkIcon from '@material-ui/icons/Link';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import IconButton from '@material-ui/core/IconButton';
-import { useMediaQuery } from '@material-ui/core';
+import LinkIcon from '@mui/icons-material/Link';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import IconButton from '@mui/material/IconButton';
+import { useMediaQuery } from '@mui/material';
 import { toggleSave } from '../activity/activityScripts';
 import { toast } from 'react-toastify';
 const useStyles = makeStyles(styles);
 function ActionIconsContainer(props) {
   const classes = useStyles();
   const { activity, t, auth, url } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, handleSetState] = useState({ loading: false });
  
   return (
@@ -36,7 +36,7 @@ function ActionIconsContainer(props) {
               e,
               activity.id,
               auth,
-              history,
+              navigate,
               handleSetState,
               activityToggleSave,
               t,

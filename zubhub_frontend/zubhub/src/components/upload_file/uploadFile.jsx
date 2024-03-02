@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import ImageIcon from '@material-ui/icons/Image';
-import MovieIcon from '@material-ui/icons/Movie';
-import CancelIcon from '@material-ui/icons/Cancel';
+import ImageIcon from '@mui/icons-material/Image';
+import MovieIcon from '@mui/icons-material/Movie';
+import CancelIcon from '@mui/icons-material/Cancel';
 import CustomButton from '../button/Button';
 import {
   handleFileButtonClick,
@@ -14,7 +14,7 @@ import {
   getErrors,
 } from './uploadFileScripts.js';
 import { getValue } from '../../views/create_activity/createActivityScripts';
-import { Typography, FormControl, FormHelperText, Grid, Paper, CardMedia } from '@material-ui/core';
+import { Typography, FormControl, FormHelperText, Grid, Paper, CardMedia } from '@mui/material';
 import { getRouteFieldIndex, buildVideoThumbnailURL } from '../../assets/js/utils/scripts';
 
 function UploadFile(props) {

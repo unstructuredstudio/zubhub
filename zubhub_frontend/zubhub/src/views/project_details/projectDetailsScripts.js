@@ -45,7 +45,7 @@ export const deleteProject = (props, state) => {
         token: props.auth.token,
         id: state.project.id,
         t: props.t,
-        history: props.history,
+        navigate: props.navigate,
       })
       .catch(error => ({ delete_project_dialog_error: error.message }));
   } else {
@@ -63,7 +63,7 @@ export const toggleSave = (e, props, id) => {
 
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props.toggleSave({
       id,
@@ -82,7 +82,7 @@ export const toggleSave = (e, props, id) => {
 export const toggleLike = (e, props, id) => {
   e.preventDefault();
   if (!props.auth.token) {
-    return props.history.push('/login');
+    return props.navigate('/login');
   } else {
     return props.toggleLike({ id, token: props.auth.token, t: props.t });
   }
@@ -97,7 +97,7 @@ export const toggleLike = (e, props, id) => {
 export const toggleFollow = (e, props, id, state) => {
   e.preventDefault();
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props
       .toggleFollow({ id, token: props.auth.token, t: props.t })

@@ -70,7 +70,7 @@ export const signup = (e, props) => {
             subscribe: !props.values.subscribe,
             phone: vars.iti.getNumber(),
           },
-          history: props.history,
+          navigate: props.navigate,
         })
         .catch(error => {
           const messages = JSON.parse(error.message);

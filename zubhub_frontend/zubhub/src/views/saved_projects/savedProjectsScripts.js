@@ -6,7 +6,7 @@
  */
 export const fetchPage = (page, props) => {
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props.getSaved({ page, token: props.auth.token, t: props.t });
   }

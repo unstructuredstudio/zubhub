@@ -40,7 +40,7 @@ export const submit = (state, handleSetState, props) => {
       data,
       token: props.auth.token,
       t: props.t,
-      history: props.history,
+      navigate: props.navigate,
     })
     .catch(error => {
       const messages = JSON.parse(error.message);
@@ -76,7 +76,7 @@ export const handleSubmit = (e, state, handleSetState, props) => {
   e.preventDefault();
 
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     props.setFieldTouched('group_members');
 

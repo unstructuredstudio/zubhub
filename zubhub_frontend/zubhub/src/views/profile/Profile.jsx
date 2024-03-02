@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import API from '../../api';
 import { TEAM_ENABLED } from '../../utils.js';
-import { makeStyles } from '@material-ui/core/styles';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { makeStyles } from '@mui/styles';
+import ShareIcon from '@mui/icons-material/Share';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   Tooltip,
   Badge,
@@ -33,7 +33,7 @@ import {
   InputLabel,
   FormControl,
   Divider,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   getUserProfile,
@@ -78,7 +78,7 @@ function Profile(props) {
   const username_el = React.useRef(null);
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const username = props.match.params.username || props.auth.username;
+  const username = props.params.username || props.auth.username;
   const [page, setPage] = useState(1);
   const [userActivity, setUserActivity] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -118,7 +118,7 @@ function Profile(props) {
         handleSetTeams(team);
         const activity = values[2] || {};
         const drafts = values[3] || {};
-        const badges = obj.profile.badges;
+        const badges = obj.profile?.badges;
 
         if (obj.profile) {
           parseComments(obj.profile.comments);
@@ -184,7 +184,7 @@ function Profile(props) {
                         variant="contained"
                         margin="normal"
                         primaryButtonStyle
-                        onClick={() => props.history.push('/edit-profile')}
+                        onClick={() => props.navigate('/edit-profile')}
                       >
                         {t('profile.edit')}
                       </CustomButton>
@@ -322,7 +322,7 @@ function Profile(props) {
               variant="contained"
               margin="normal"
               primaryButtonStyle
-              onClick={() => props.history.push('/create-team')}
+              onClick={() => props.navigate('/create-team')}
             >
               {t('profile.createteam')}
             </CustomButton>
@@ -385,7 +385,7 @@ function Profile(props) {
                     variant="outlined"
                     margin="normal"
                     secondaryButtonStyle
-                    onClick={() => props.history.push(`/creators/${profile.username}/projects`)}
+                    onClick={() => props.navigate(`/creators/${profile.username}/projects`)}
                   >
                     {t('profile.projects.viewAll')}
                   </CustomButton>

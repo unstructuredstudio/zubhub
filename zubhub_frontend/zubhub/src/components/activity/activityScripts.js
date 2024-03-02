@@ -2,7 +2,7 @@ export const toggleSave = async (
   e,
   id,
   auth,
-  history,
+  navigate,
   setState,
   activityToggleSave,
   t,
@@ -15,7 +15,7 @@ export const toggleSave = async (
   });
   e.preventDefault();
   if (!auth.token) {
-    history.push('/login');
+    navigate('/login');
   } else {
     const result = await activityToggleSave({
       id,
@@ -35,14 +35,14 @@ export const addView = async (
   e,
   id,
   auth,
-  history,
+  navigate,
   setState,
   activityCountView,
   t,
 ) => {
   e.preventDefault();
   if (!auth.token) {
-    history.push('/login');
+    navigate('/login');
   } else {
     const result = await activityCountView({
       id,

@@ -6,7 +6,8 @@ const styles = theme => ({
   popperArrowStyle: {
     width: '50px',
     height: '50px',
-    top: '-19px',
+    top: '10px',
+    right: '-9px',
     background: 'white',
     position: 'absolute',
     transform: 'scaleX(0.7) rotate(45deg)',
@@ -20,6 +21,8 @@ const styles = theme => ({
   },
 
   container: {
+    marginTop: '20px',
+    marginRight: '-12px',
     backgroundColor: 'white',
     minWidth: 200,
     maxWidth:340,
@@ -29,6 +32,8 @@ const styles = theme => ({
     boxShadow: '0px 4px 4px 0px rgb(0 0 0 / 25%)',
   },
   signUpcontainer: {
+    marginTop: '20px',
+    marginRight: '-12px',
     backgroundColor: 'white',
     minWidth: 200,
     zIndex: 20,

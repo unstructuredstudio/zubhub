@@ -90,7 +90,7 @@ export const deleteProject = args => {
         throw new Error(res.detail);
       } else {
         toast.success(args.t('projectDetails.deleteProjectToastSuccess'));
-        return args.history.push('/profile');
+        return args.navigate('/profile');
       }
     });
   };

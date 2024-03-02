@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { styles } from '../../assets/js/styles/views/create_activity/createActivityStyles';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box } from '@mui/material';
 import commonStyles from '../../assets/js/styles';
 import {
   calcAlignLeft,

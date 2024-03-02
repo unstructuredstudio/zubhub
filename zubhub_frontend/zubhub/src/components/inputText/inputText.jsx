@@ -17,7 +17,7 @@ import {
   FormControl,
   FormHelperText,
   ClickAwayListener,
-} from '@material-ui/core';
+} from '@mui/material';
 import { getRouteFieldIndex } from '../../assets/js/utils/scripts';
 
 function InputText(props) {

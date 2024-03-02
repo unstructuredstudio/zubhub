@@ -1,4 +1,4 @@
-import { Translate } from "@material-ui/icons";
+import { Translate } from "@mui/icons-material";
 import { colors } from "../../../colors";
 
 const styles = theme => ({

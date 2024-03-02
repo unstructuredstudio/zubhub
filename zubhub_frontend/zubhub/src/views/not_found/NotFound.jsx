@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import { Box, Typography, Container } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, Typography, Container } from '@mui/material';
 import CustomButton from '../../components/button/Button';
 import brokenRobot from '../../assets/images/broken_robot.svg';
 import styles from '../../assets/js/styles/views/not_found/notFoundStyles';

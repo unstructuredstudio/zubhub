@@ -1,12 +1,13 @@
 import React, { useEffect, useState , useCallback } from 'react';
-import { Checkbox, Grid, Typography, makeStyles } from '@material-ui/core';
+import { Checkbox, Grid, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import styles from '../../../assets/js/styles';
 import { step3Style } from './step3.styles';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import Project from '../../../components/project/Project';
-import { Box, Paper, FormLabel } from '@material-ui/core';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { Box, Paper, FormLabel } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useDispatch } from 'react-redux';
 import ZubhubAPI from '../../../api/api';
 const API = new ZubhubAPI();

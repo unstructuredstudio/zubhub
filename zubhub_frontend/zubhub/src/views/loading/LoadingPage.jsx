@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { Container, Box, CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Container, Box, CircularProgress } from '@mui/material';
 import styles from '../../assets/js/styles/views/loading/loadingPageStyles';
 
 const useStyles = makeStyles(styles);

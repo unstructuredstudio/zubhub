@@ -23,7 +23,7 @@ export const confirmEmail = (e, props, state) => {
     .sendEmailConfirmation({
       key: state.key,
       t: props.t,
-      history: props.history,
+      navigate: props.navigate,
     })
     .catch(error => {
       if (error.message.startsWith('Unexpected')) {

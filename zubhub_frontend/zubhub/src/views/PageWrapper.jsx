@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
@@ -8,11 +8,11 @@ import { connect, useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { makeStyles } from '@material-ui/core/styles';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import TranslateIcon from '@material-ui/icons/Translate';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
-import SearchIcon from '@material-ui/icons/Search';
+import { makeStyles } from '@mui/styles';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import TranslateIcon from '@mui/icons-material/Translate';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import SearchIcon from '@mui/icons-material/Search';
 
 import {
   CssBaseline,
@@ -38,7 +38,7 @@ import {
   InputBase,
   TextField,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   logout,
@@ -66,7 +66,7 @@ import languageMap from '../assets/js/languageMap.json';
 import InputSelect from '../components/input_select/InputSelect';
 import Autocomplete from '../components/autocomplete/Autocomplete';
 import API from '../api';
-import { throttle } from '../utils.js';
+import { throttle } from '../utils.js/index.js';
 import Option from '../components/autocomplete/Option';
 import NotificationButton from '../components/notification_button/NotificationButton';
 import BreadCrumb from '../components/breadCrumb/breadCrumb';
@@ -87,7 +87,7 @@ function PageWrapper(props) {
   const backToTopEl = useRef(null);
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
   const [isVisible, setIsVisible] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
@@ -110,6 +110,8 @@ function PageWrapper(props) {
     setIsVisible(prevScrollPos < currentScrollPos);
     setPrevScrollPos(currentScrollPos);
   }, [prevScrollPos]);
+
+
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -254,7 +256,7 @@ function PageWrapper(props) {
             '/password-reset',
             '/email-confirm',
             '/password-reset-confirm'
-          ].includes(props.match?.path) && (
+          ].includes(props.location?.pathname) && (
             <div style={{ minHeight: '80vh' }}>
               <NotFoundPage />
             </div>
@@ -275,7 +277,7 @@ function PageWrapper(props) {
           '/challenge',
           '/email-confirm',
           '/password-reset-confirm'
-        ].includes(props.match?.path) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+        ].includes(props.location?.pathname) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
@@ -297,6 +299,7 @@ function PageWrapper(props) {
             >
               <TranslateIcon />
               <Select
+                variant="standard"
                 className={classes.languageSelectStyle}
                 value={props.i18n.language}
                 onChange={e => handleChangeLanguage({ e, props })}

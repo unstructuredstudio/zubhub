@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 
 import { withFormik } from 'formik';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { makeStyles } from '@mui/styles';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Grid,
   Box,
@@ -23,7 +23,7 @@ import {
   InputLabel,
   FormHelperText,
   FormControl,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   validationSchema,

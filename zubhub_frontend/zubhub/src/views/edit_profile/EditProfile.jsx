@@ -9,11 +9,11 @@ import { withFormik } from 'formik';
 
 import { toast } from 'react-toastify';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
-import Visibility from '@material-ui/icons/Visibility';
+import Visibility from '@mui/icons-material/Visibility';
 
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import {
   Grid,
@@ -38,7 +38,7 @@ import {
   DialogTitle,
   InputAdornment,
   IconButton,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import {
   validationSchema,
@@ -490,7 +490,7 @@ function EditProfile(props) {
                     </CustomButton>
                   </Grid>
                 </Grid>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} marginBlock={0.5}>
               <Grid item xs={12}>
                   <Link to="/profile" className={classes.textDecorationNone}>
                     <CustomButton
@@ -506,7 +506,7 @@ function EditProfile(props) {
                 </Grid>
               </Grid>
               </form>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} marginBlock={1}>
                 <Grid item xs={12}>
                   <Box className={classes.center}>
                     <Divider className={classes.divider} />
@@ -521,7 +521,7 @@ function EditProfile(props) {
                   </Box>
                 </Grid>
               </Grid>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} marginBlock={1}>
                 <Grid item xs={12}>
                     <CustomButton
                       variant="outlined"

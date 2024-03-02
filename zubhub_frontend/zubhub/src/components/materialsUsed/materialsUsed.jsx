@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import AddMore from '../../components/addMore/addMore';
 import clsx from 'clsx';
-import ImageIcon from '@material-ui/icons/Image';
-import AddIcon from '@material-ui/icons/Add';
+import ImageIcon from '@mui/icons-material/Image';
+import AddIcon from '@mui/icons-material/Add';
 import CustomButton from '../../components/button/Button';
 import Input from '../input/input';
 import {
@@ -23,7 +23,7 @@ import {
   FormControl,
   InputLabel,
   ClickAwayListener,
-} from '@material-ui/core';
+} from '@mui/material';
 import { handleImageFieldChange } from '../../views/create_activity/createActivityScripts';
 import UploadFile from '../../components/upload_file/uploadFile';
 

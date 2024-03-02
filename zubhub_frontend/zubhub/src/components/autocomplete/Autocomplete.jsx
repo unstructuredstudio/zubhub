@@ -1,5 +1,5 @@
 import React from 'react';
-import MaterialAutcomplete from '@material-ui/lab/Autocomplete';
+import MaterialAutcomplete from '@mui/material/Autocomplete';
 
 const Autocomplete = ({
   options,
@@ -15,7 +15,7 @@ const Autocomplete = ({
       freeSolo
       getOptionLabel={option => option.title || ''}
       defaultValue={defaultValue}
-      style={{ width: 300 }}
+      sx={{ width: 300 }}
       renderInput={children}
       renderOption={renderOption}
       {...otherProps}

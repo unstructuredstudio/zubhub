@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { makeStyles } from '@material-ui/core/styles';
+import { Link, useNavigate } from 'react-router-dom';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { makeStyles } from '@mui/styles';
 import styles from '../../assets/js/styles/components/hamburger_menu/hamburgerMenuStyles.js';
 import commonStyles from '../../assets/js/styles';
 import cn from 'classnames';
 import clsx from 'clsx';
-import { Typography, Drawer, Avatar, MenuItem, Box } from '@material-ui/core';
+import { Typography, Drawer, Avatar, MenuItem, Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -22,7 +22,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
   const common_classes = useCommonStyles();
   const [hamburgerMenuOpen, setHamburgerMenuOpen] = useState(false);
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const auth = useSelector(state => state.auth);
 
@@ -102,7 +102,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
             <MenuItem
               className={clsx(classes.paddingItem)}
               onClick={() => {
-                history.push('/activities', { flag: 'educator' });
+                navigate('/activities', { state: { flag: 'educator' } });
                 setHamburgerMenuOpen(false);
               }}
             >
@@ -118,7 +118,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
           <MenuItem
             className={clsx(classes.paddingItem)}
             onClick={() => {
-              history.push('/activities', { flag: 'staff' });
+              navigate('/activities', { state: { flag: 'staff' } });
               setHamburgerMenuOpen(false);
             }}
           >
@@ -193,7 +193,7 @@ const HamburgerMenu = ({ setDropdownOpen, dropdownOpen }) => {
       </Link>
       <MenuItem
         className={clsx(classes.logOutStyle, common_classes.textDecorationNone)}
-        onClick={() => dispatch(AuthActions.logout({ token: auth.token, history, t }))}
+        onClick={() => dispatch(AuthActions.logout({ token: auth.token, navigate, t }))}
       >
         <Typography className={clsx(common_classes.colorRed, classes.paddingItem)} variant="subtitle2" component="span">
           {t('pageWrapper.navbar.logout')}

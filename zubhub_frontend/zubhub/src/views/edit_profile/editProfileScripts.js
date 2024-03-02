@@ -105,7 +105,7 @@ export const deleteAccount = (username_el, props, toast) => {
   } else if (!props?.values?.password)  {
     return { dialog_error: props.t('profile.delete.errors.emptyPassword') };
   } else {
-    props.login({ values: props.values, history: props.history }).catch(error => {
+    props.login({ values: props.values, navigate: props.navigate }).catch(error => {
       try{
         toast.error(props.t('editProfile.inputs.password.errors.invalid'));
         password_match = false;
@@ -119,7 +119,7 @@ export const deleteAccount = (username_el, props, toast) => {
       } else {
         return props.deleteAccount({
           token: props.auth.token,
-          history: props.history,
+          navigate: props.navigate,
           logout: props.logout,
           t: props.t,
         })
@@ -148,7 +148,7 @@ export const editProfile = (e, props, toast) => {
   } else if (props.values.password.length < 1) {
     props.validateField('password');
   } else {
-    props.login({ values: props.values, history: props.history }).catch(error => {
+    props.login({ values: props.values, navigate: props.navigate }).catch(error => {
       try{
         const messages = JSON.parse(error.message);
         toast.error(props.t('editProfile.inputs.password.errors.invalid'));
@@ -165,7 +165,7 @@ export const editProfile = (e, props, toast) => {
           .editUserProfile({ ...props.values, token: props.auth.token })
           .then(_ => {
             toast.success(props.t('editProfile.toastSuccess'));
-            props.history.push('/profile');
+            props.navigate('/profile');
           })
           .catch(error => {
             const messages = JSON.parse(error.message);
@@ -190,7 +190,7 @@ export const editProfile = (e, props, toast) => {
       }
     });
   }
-};
+}
 
 /**
  * @function handleTooltipOpen

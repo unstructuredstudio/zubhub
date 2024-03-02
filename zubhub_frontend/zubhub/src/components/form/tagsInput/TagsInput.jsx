@@ -1,7 +1,8 @@
-import { Box, ClickAwayListener, FormControl, FormHelperText, Typography, makeStyles } from '@material-ui/core';
-import { Add, ClearRounded } from '@material-ui/icons';
+import { Box, ClickAwayListener, FormControl, FormHelperText, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Add, ClearRounded } from '@mui/icons-material';
 import clsx from 'clsx';
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from '../../../assets/js/styles';
 import CustomButton from '../../button/Button';
@@ -31,7 +32,7 @@ export default function TagsInput({
   const classes = makeStyles(tagsInputStyles)();
   const [isSearching, setIsSearching] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const selectedTags = [...(initialSelectedTags ?? [])];
+  const selectedTags = useMemo(() => [...(initialSelectedTags ?? [])], [initialSelectedTags]);
   const ref = useRef(null);
 
   const validateTag = useCallback((tag, selectedTags) => {

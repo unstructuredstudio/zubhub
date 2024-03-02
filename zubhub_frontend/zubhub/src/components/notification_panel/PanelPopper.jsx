@@ -1,7 +1,7 @@
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 import React from 'react';
-import Popper from '@material-ui/core/Popper';
-import { makeStyles } from '@material-ui/core/styles';
+import Popper from '@mui/material/Popper';
+import { makeStyles } from '@mui/styles';
 
 import styles from '../../assets/js/styles/components/notification_panel/panelPopperStyles';
 

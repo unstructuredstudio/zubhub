@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@material-ui/core/styles';
-import CommentIcon from '@material-ui/icons/Comment';
-import { Typography, Container, Dialog, DialogTitle, Box, DialogActions, DialogContent } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import CommentIcon from '@mui/icons-material/Comment';
+import { Typography, Container, Dialog, DialogTitle, Box, DialogActions, DialogContent } from '@mui/material';
 
 import Comment from '../../components/comment/Comment';
 import CommentInput from '../../components/comment_input/CommentInput';

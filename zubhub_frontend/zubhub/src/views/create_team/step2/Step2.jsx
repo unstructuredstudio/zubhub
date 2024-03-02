@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Paper, Grid, InputBase, Typography, FormControl, TextField, makeStyles, Chip } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, Paper, Grid, InputBase, Typography, FormControl, TextField, Chip } from '@mui/material';
 import styles from '../../../assets/js/styles';
 import API from '../../../api/api';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import Autocomplete from '@mui/lab/Autocomplete';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 export default function Step2({ formik }) {
   const useStyles = makeStyles(styles);

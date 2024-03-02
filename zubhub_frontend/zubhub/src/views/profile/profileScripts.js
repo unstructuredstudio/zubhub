@@ -7,11 +7,11 @@ import { getUserDrafts } from '../../store/actions/projectActions';
  *
  * @todo - describe function's signature
  */ export const getUserProfile = props => {
-  let username = props.match.params.username;
+  let username = props.params.username;
 
   if (!username) {
     username = props.auth.username;
-  } else if (props.auth.username === username) props.history.replace('/profile');
+  } else if (props.auth.username === username) props.navigate('/profile', { replace: true });
   return props.getUserProfile({
     username,
     token: props.auth.token,
@@ -30,11 +30,11 @@ export const followTeam = (groupname, username,props) => {
  *
  * @todo - describe function's signature
  */ export const getUserTeams = props => {
-  let username = props.match.params.username;
+  let username = props.params.username;
 
   if (!username) {
     username = props.auth.username;
-  } else if (props.auth.username === username) props.history.replace('/profile');
+  } else if (props.auth.username === username) props.navigate('/profile', { replace: true });
   return props.getUserTeams({
     username,
     token: props.auth.token,
@@ -139,7 +139,7 @@ export const updateDrafts = (res, projects, props, toast) => {
  */
 export const toggleFollow = (id, props) => {
   if (!props.auth.token) {
-    props.history.push('/login');
+    props.navigate('/login');
   } else {
     return props.toggleFollow({ id, token: props.auth.token, t: props.t });
   }
@@ -225,7 +225,7 @@ export const deleteAccount = (username_el, props) => {
   } else {
     return props.deleteAccount({
       token: props.auth.token,
-      history: props.history,
+      navigate: props.navigate,
       logout: props.logout,
       t: props.t,
     });

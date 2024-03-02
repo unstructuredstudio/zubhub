@@ -1,4 +1,5 @@
-import { Box, FormControl, TextField, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, FormControl, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import styles from '../../../assets/js/styles';
 // import { Editor, TagsInput } from '../../../components';

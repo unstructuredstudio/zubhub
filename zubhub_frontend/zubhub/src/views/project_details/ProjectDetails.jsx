@@ -1,4 +1,4 @@
-import { IconButton, useMediaQuery } from '@material-ui/core';
+import { IconButton, useMediaQuery } from '@mui/material';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -22,12 +22,12 @@ import {
   DialogTitle,
   Grid,
   Typography,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
-import BookmarkBorderIcon from '@material-ui/icons/BookmarkBorder';
-import CloseIcon from '@material-ui/icons/Close';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import CloseIcon from '@mui/icons-material/Close';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
@@ -47,7 +47,7 @@ import {
   toggleSave,
 } from './projectDetailsScripts';
 
-import { CloseOutlined } from '@material-ui/icons';
+import { CloseOutlined } from '@mui/icons-material';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
 import styles, { EnlargedImgArrow, sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
@@ -119,7 +119,7 @@ function ProjectDetails(props) {
   React.useEffect(() => {
     Promise.resolve(
       props.getProject({
-        id: props.match.params.id,
+        id: props.params.id,
         token: props.auth.token,
         t: props.t,
       }),
@@ -165,7 +165,7 @@ function ProjectDetails(props) {
 
   const toggleDialog = () => {
     setOpen(!open);
-    props.history.replace(window.location.pathname);
+    props.navigate(window.location.pathname, { replace: true });
   };
 
   const handleSetState = obj => {
@@ -393,7 +393,7 @@ function ProjectDetails(props) {
                     </Typography>
 
                     <div className={classes.tagsBoxStyle}>
-                      {buildTagsComponent(classes, project.tags, props.history)}
+                      {buildTagsComponent(classes, project.tags, props.navigate)}
                     </div>
                   </Grid>
                 ) : null}
