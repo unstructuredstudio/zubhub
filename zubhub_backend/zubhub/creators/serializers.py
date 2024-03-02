@@ -263,7 +263,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         data_dict['location'] = self.validated_data.get('location', '')
         data_dict['bio'] = self.validated_data.get('bio', '')
         data_dict['subscribe'] = self.validated_data.get('subscribe', '')
-        data_dict['creator_tags'] = self.validated_data.get('creator_tags', [])
+        data_dict['creator_tags'] = self.validated_data.get('creator_tags', '')
 
         return data_dict
 
