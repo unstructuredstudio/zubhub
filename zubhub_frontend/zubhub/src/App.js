@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { withTranslation } from 'react-i18next';
-import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import CreateActivity from './views/create_activity/CreateActivity';
 import LoadingPage from './views/loading/LoadingPage';
@@ -69,15 +69,6 @@ const ThemeContext = React.createContext();
 function App(props) {
   const theme = useContext(ThemeContext);
 
-  const location = useLocation();
-  const navigate = useNavigate();
-  const params = useParams();
-  const routeProps = {
-    location,
-    params,
-    navigate,
-  };
-
   const handleThemeChange = async () => {
     try {
       const data = await API.theme();
@@ -99,8 +90,8 @@ function App(props) {
         <Route
           path="/"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Home} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Home} />
             </PageWrapper>
           }
         />
@@ -108,8 +99,8 @@ function App(props) {
         <Route
           path="/projects"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Projects} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Projects} />
             </PageWrapper>
           }
         />
@@ -117,8 +108,8 @@ function App(props) {
         <Route
           path="/activities/create"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={CreateActivity} />
             </PageWrapper>
           }
         />
@@ -126,8 +117,8 @@ function App(props) {
         <Route
           path="/activities/:id/linkedProjects"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={LinkedProjects} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={LinkedProjects} />
             </PageWrapper>
           }
         />
@@ -135,8 +126,8 @@ function App(props) {
         <Route
           path="/search"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={SearchResults} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={SearchResults} />
             </PageWrapper>
           }
         />
@@ -144,8 +135,8 @@ function App(props) {
         <Route
           path="/signup"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Signup} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Signup} />
             </PageWrapper>
           }
         />
@@ -153,8 +144,8 @@ function App(props) {
         <Route
           path="/login"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Login} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Login} />
             </PageWrapper>
           }
         />
@@ -162,8 +153,8 @@ function App(props) {
         <Route
           path="/password-reset"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={PasswordReset} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={PasswordReset} />
             </PageWrapper>
           }
         />
@@ -171,8 +162,8 @@ function App(props) {
         <Route
           path="/password-reset-confirm"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={PasswordResetConfirm} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={PasswordResetConfirm} />
             </PageWrapper>
           }
         />
@@ -180,8 +171,8 @@ function App(props) {
         <Route
           path="/email-confirm"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={EmailConfirm} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={EmailConfirm} />
             </PageWrapper>
           }
         />
@@ -189,8 +180,8 @@ function App(props) {
         <Route
           path="/phone-confirm"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={PhoneConfirm} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={PhoneConfirm} />
             </PageWrapper>
           }
         />
@@ -198,8 +189,8 @@ function App(props) {
         <Route
           path="/group-invite-confirm"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={GroupInviteConfirm} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={GroupInviteConfirm} />
             </PageWrapper>
           }
         />
@@ -207,8 +198,8 @@ function App(props) {
         <Route
           path="/creators/:username/projects"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={UserProjects} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={UserProjects} />
             </PageWrapper>
           }
         />
@@ -216,8 +207,8 @@ function App(props) {
         <Route
           path="/settings"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Settings} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Settings} />
             </PageWrapper>
           }
         />
@@ -225,8 +216,8 @@ function App(props) {
         <Route
           path="/profile"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Profile} />
             </PageWrapper>
           }
         />
@@ -234,16 +225,16 @@ function App(props) {
         <Route
           path="/team"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Teams} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Teams} />
             </PageWrapper>
           }
         />
         <Route
           path="/teams/:groupname/projects"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={TeamProjects} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={TeamProjects} />
             </PageWrapper>
           }
         />
@@ -251,8 +242,8 @@ function App(props) {
         <Route
           path="/creators/:username/drafts"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={UserDrafts} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={UserDrafts} />
             </PageWrapper>
           }
         />
@@ -260,8 +251,8 @@ function App(props) {
         <Route
           path="/creators/:username/followers"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={UserFollowers} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={UserFollowers} />
             </PageWrapper>
           }
         />
@@ -269,8 +260,8 @@ function App(props) {
         <Route
           path="/teams/:groupname/followers"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={TeamFollowers} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={TeamFollowers} />
             </PageWrapper>
           }
         />
@@ -278,8 +269,8 @@ function App(props) {
         <Route
           path="/teams/:groupname/members"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={TeamMembers} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={TeamMembers} />
             </PageWrapper>
           }
         />
@@ -287,8 +278,8 @@ function App(props) {
         <Route
           path="/creators/:username/following"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={UserFollowing} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={UserFollowing} />
             </PageWrapper>
           }
         />
@@ -296,8 +287,8 @@ function App(props) {
         <Route
           path="/teams/all"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={AllTeams} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={AllTeams} />
             </PageWrapper>
           }
         />
@@ -305,8 +296,8 @@ function App(props) {
         <Route
           path="/creators/:username/members"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={GroupMembers} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={GroupMembers} />
             </PageWrapper>
           }
         />
@@ -314,8 +305,8 @@ function App(props) {
         <Route
           path="/creators/:username/add-members"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={AddGroupMembers} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={AddGroupMembers} />
             </PageWrapper>
           }
         />
@@ -323,8 +314,8 @@ function App(props) {
         <Route
           path="/creators/:username"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Profile} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Profile} />
             </PageWrapper>
           }
         />
@@ -332,8 +323,8 @@ function App(props) {
         <Route
           path="/account-status"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={AccounStatus} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={AccounStatus} />
             </PageWrapper>
           }
         />
@@ -341,8 +332,8 @@ function App(props) {
         <Route
           path="/teams/:groupname"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Team} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Team} />
             </PageWrapper>
           }
         />
@@ -350,8 +341,8 @@ function App(props) {
         <Route
           path="/edit-profile"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={EditProfile} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={EditProfile} />
             </PageWrapper>
           }
         />
@@ -359,8 +350,8 @@ function App(props) {
         <Route
           path="/:groupname/edit-team"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={EditTeam} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={EditTeam} />
             </PageWrapper>
           }
         />
@@ -368,8 +359,8 @@ function App(props) {
         <Route
           path="/projects/staff-picks/:id"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={StaffPickDetails} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={StaffPickDetails} />
             </PageWrapper>
           }
         />
@@ -377,8 +368,8 @@ function App(props) {
         <Route
           path="/projects/create"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={CreateProject} />
             </PageWrapper>
           }
         />
@@ -386,24 +377,24 @@ function App(props) {
         <Route
           path="/projects/saved"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={SavedProjects} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={SavedProjects} />
             </PageWrapper>
           }
         />
         <Route
           path="/projects/:id/edit"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={CreateProject} />
             </PageWrapper>
           }
         />
         <Route
           path="/projects/:activity_id/create"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={CreateProject} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={CreateProject} />
             </PageWrapper>
           }
         />
@@ -411,8 +402,8 @@ function App(props) {
         <Route
           path="/projects/:id"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={ProjectDetails} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={ProjectDetails} />
             </PageWrapper>
           }
         />
@@ -420,8 +411,8 @@ function App(props) {
         <Route
           path="/ambassadors"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Ambassadors} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Ambassadors} />
             </PageWrapper>
           }
         />
@@ -429,8 +420,8 @@ function App(props) {
         <Route
           path="/privacy_policy"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Guidelines} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Guidelines} />
             </PageWrapper>
           }
         />
@@ -438,8 +429,8 @@ function App(props) {
         <Route
           path="/terms_of_use"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={TermsOfUse} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={TermsOfUse} />
             </PageWrapper>
           }
         />
@@ -447,8 +438,8 @@ function App(props) {
         <Route
           path="/about"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={About} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={About} />
             </PageWrapper>
           }
         />
@@ -456,8 +447,8 @@ function App(props) {
         <Route
           path="/challenge"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Challenge} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Challenge} />
             </PageWrapper>
           }
         />
@@ -465,8 +456,8 @@ function App(props) {
         <Route
           path="/faqs"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={FAQs} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={FAQs} />
             </PageWrapper>
           }
         />
@@ -474,8 +465,8 @@ function App(props) {
         <Route
           path="/activities/:id/edit"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={CreateActivity} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={CreateActivity} />
             </PageWrapper>
           }
         />
@@ -483,8 +474,8 @@ function App(props) {
         <Route
           path="/activities/:id"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={ActivityDetails} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={ActivityDetails} />
             </PageWrapper>
           }
         />
@@ -492,8 +483,8 @@ function App(props) {
         <Route
           path="/activities"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={Activities} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={Activities} />
             </PageWrapper>
           }
         />
@@ -501,8 +492,8 @@ function App(props) {
         <Route
           path="/create-team"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={CreateTeam} {...routeProps} {...props} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={CreateTeam} />
             </PageWrapper>
           }
         />
@@ -510,8 +501,8 @@ function App(props) {
         <Route
           path="*"
           element={
-            <PageWrapper {...routeProps} {...props}>
-              <LazyImport LazyComponent={NotFound} {...routeProps} />
+            <PageWrapper {...props}>
+              <LazyImport LazyComponent={NotFound} />
             </PageWrapper>
           }
         />
