@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,65 +11,30 @@ import 'react-toastify/dist/ReactToastify.css';
 import { makeStyles } from '@mui/styles';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import TranslateIcon from '@mui/icons-material/Translate';
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import SearchIcon from '@mui/icons-material/Search';
 
 import {
   CssBaseline,
   Container,
-  AppBar,
   Toolbar,
-  ClickAwayListener,
   Typography,
   useScrollTrigger,
   Box,
-  IconButton,
-  OutlinedInput,
-  InputAdornment,
-  FormControl,
-  InputLabel,
   Fab,
   Zoom,
-  Menu,
   MenuItem,
-  Avatar,
   Select,
-  FormGroup,
-  InputBase,
-  TextField,
-  Tooltip,
 } from '@mui/material';
 
-import {
-  logout,
-  fetchHero,
-  handleScrollTopClick,
-  handleProfileMenuOpen,
-  handleProfileMenuClose,
-  handleChangeLanguage,
-  handleToggleSearchForm,
-  closeSearchFormOrIgnore,
-} from './pageWrapperScripts';
+import { fetchHero, handleScrollTopClick, handleProfileMenuClose, handleChangeLanguage } from './pageWrapperScripts';
 
-import { getQueryParams, SearchType } from './search_results/searchResultsScripts';
-
-import CustomButton from '../components/button/Button.js';
 import LoadingPage from './loading/LoadingPage';
 import * as AuthActions from '../store/actions/authActions';
 import * as ProjectActions from '../store/actions/projectActions';
 import unstructuredLogo from '../assets/images/logos/unstructured-logo.png';
-import logo from '../assets/images/logos/logo.png';
 import styles from '../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import commonStyles from '../assets/js/styles';
 
 import languageMap from '../assets/js/languageMap.json';
-import InputSelect from '../components/input_select/InputSelect';
-import Autocomplete from '../components/autocomplete/Autocomplete';
-import API from '../api';
-import { throttle } from '../utils.js/index.js';
-import Option from '../components/autocomplete/Option';
-import NotificationButton from '../components/notification_button/NotificationButton';
-import BreadCrumb from '../components/breadCrumb/breadCrumb';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 import Navbar from '../components/Navbar/Navbar';
 import NotFoundPage from './not_found/NotFound';
@@ -91,19 +56,25 @@ function PageWrapper(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
-  const [searchType, setSearchType] = useState(getQueryParams(window.location.href).get('type') || SearchType.PROJECTS);
-  const formRef = useRef();
-  const token = useSelector(state => state.auth.token);
+  const params = useParams();
+  const location = useLocation();
+  const routeProps = {
+    location,
+    params,
+    navigate,
+  };
 
   const [state, setState] = React.useState({
-    username: null,
-    anchor_el: null,
     loading: false,
-    open_search_form: false,
   });
 
-  const [options, setOptions] = useState([]);
-  const [query, setQuery] = useState(props.location.search ? getQueryParams(window.location.href).get('q') : '');
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
+    }
+  };
 
   const handleScroll = useCallback(() => {
     const currentScrollPos = window.pageYOffset;
@@ -111,61 +82,12 @@ function PageWrapper(props) {
     setPrevScrollPos(currentScrollPos);
   }, [prevScrollPos]);
 
-
-
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
-
-  const throttledFetchOptions = useMemo(
-    () =>
-      throttle(async (query, searchType) => {
-        if (query?.length === 0) {
-          setOptions([]);
-          return;
-        }
-
-        const api = new API();
-        let completions = [];
-        if (searchType === SearchType.TAGS) {
-          completions = await api.autocompleteTags({ query, token });
-          completions = completions.map(({ name }) => ({
-            title: name,
-          }));
-        } else if (searchType === SearchType.PROJECTS) {
-          completions = await api.autocompleteProjects({ query, token });
-          completions = completions.map(({ id, title, creator, images }) => ({
-            title,
-            shortInfo: creator.username,
-            image: images.length > 0 ? images[0].image_url : null,
-            link: `/projects/${id}`,
-          }));
-        } else {
-          completions = await api.autocompleteCreators({ query, token });
-          completions = completions.map(({ username, avatar }) => ({
-            title: username,
-            image: avatar,
-            link: `/creators/${username}`,
-          }));
-        }
-        setOptions(completions);
-      }, 2),
-    [],
-  );
-
-  useEffect(() => {
-    throttledFetchOptions(
-      query || (props.location.search && getQueryParams(window.location.href).get('q')),
-      searchType,
-    );
-  }, [query, searchType]);
-
-  useEffect(() => {
-    throttledFetchOptions.cancel();
-  }, []);
 
   useEffect(() => {
     handleSetState({ loading: true });
@@ -184,53 +106,15 @@ function PageWrapper(props) {
     handleSetState(handleProfileMenuClose());
   }, [trigger]);
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
-
-  const onSearchOptionClick = async (_, option) => {
-    if (!option || !option.title) return;
-
-    await new Promise(resolve => setTimeout(resolve, 100));
-    if (option.link) {
-      window.history.pushState({}, '', option.link);
-      window.location.reload();
-      return;
-    }
-
-    const queryParams = new URLSearchParams({
-      type: searchType,
-      q: option.title,
-    });
-    window.history.pushState({}, '', `/search?${queryParams}`);
-    window.location.reload();
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (query.length == 0) return;
-    const queryParams = new URLSearchParams({
-      type: searchType,
-      q: query,
-    });
-
-    window.history.pushState({}, '', `/search?${queryParams}`);
-    window.location.reload();
-  };
-
-  const handleTextField = event => {
-    setQuery(event.target.value);
-  };
-
-  const { anchor_el, loading, open_search_form } = state;
+  const { loading } = state;
   const { t } = props;
   const { zubhub, hero } = props.projects;
 
-  const profileMenuOpen = Boolean(anchor_el);
+  // TODO: remove childrenRenderer and use children directly. this will likely mean having useNavigate, useParams,
+  //       useLocation in every component that needs them.
+  //       React.cloneElement makes our code brittle: see https://react.dev/reference/react/cloneElement
+  const childrenRenderer = () =>
+    React.Children.map(props.children, child => React.cloneElement(child, { ...routeProps, ...props }));
   return (
     <>
       <ToastContainer />
@@ -240,7 +124,7 @@ function PageWrapper(props) {
       <Navbar {...props} />
 
       <Container className={classes.childrenContainer} maxWidth="lg">
-        {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : props.children}</DashboardLayout> : null}
+        {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : childrenRenderer()}</DashboardLayout> : null}
         {!props.auth?.token &&
           ![
             '/',
@@ -255,8 +139,8 @@ function PageWrapper(props) {
             '/challenge',
             '/password-reset',
             '/email-confirm',
-            '/password-reset-confirm'
-          ].includes(props.location?.pathname) && (
+            '/password-reset-confirm',
+          ].includes(location?.pathname) && (
             <div style={{ minHeight: '80vh' }}>
               <NotFoundPage />
             </div>
@@ -276,8 +160,8 @@ function PageWrapper(props) {
           '/about',
           '/challenge',
           '/email-confirm',
-          '/password-reset-confirm'
-        ].includes(props.location?.pathname) && <div style={{ minHeight: '90vh' }}>{props.children}</div>}
+          '/password-reset-confirm',
+        ].includes(location?.pathname) && <div style={{ minHeight: '90vh' }}>{childrenRenderer()}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>
@@ -406,28 +290,18 @@ PageWrapper.propTypes = {
   getAuthUser: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-    projects: state.projects,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+  projects: state.projects,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setAuthUser: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
-    },
-    logout: args => {
-      return dispatch(AuthActions.logout(args));
-    },
-    getAuthUser: props => {
-      return dispatch(AuthActions.getAuthUser(props));
-    },
-    getHero: args => {
-      return dispatch(ProjectActions.getHero(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  setAuthUser: auth_user => {
+    dispatch(AuthActions.setAuthUser(auth_user));
+  },
+  logout: args => dispatch(AuthActions.logout(args)),
+  getAuthUser: props => dispatch(AuthActions.getAuthUser(props)),
+  getHero: args => dispatch(ProjectActions.getHero(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(PageWrapper);
