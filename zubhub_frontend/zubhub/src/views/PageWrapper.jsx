@@ -114,14 +114,14 @@ function PageWrapper(props) {
   //       useLocation in every component that needs them.
   //       React.cloneElement makes our code brittle: see https://react.dev/reference/react/cloneElement
   const childrenRenderer = () =>
-    React.Children.map(props.children, child => React.cloneElement(child, { ...routeProps, ...props }));
+    React.Children.map(props.children, child => React.cloneElement(child, { ...props, ...routeProps }));
   return (
     <>
       <ToastContainer />
       <CssBaseline />
 
       <Toolbar ref={backToTopEl} className={classes.marginBottom} />
-      <Navbar {...props} />
+      <Navbar {...props} {...routeProps} />
 
       <Container className={classes.childrenContainer} maxWidth="lg">
         {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : childrenRenderer()}</DashboardLayout> : null}
