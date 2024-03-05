@@ -8,8 +8,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 import csv
 from .admin import badges
-from .models import CreatorGroup, Creator, CreatorGroupMembership
-from .models import Location, PhoneNumber
+from .models import CreatorGroup, Creator, CreatorGroupMembership, Location, PhoneNumber, CreatorTag
 from allauth.account.models import EmailAddress
 from rest_auth.registration.serializers import RegisterSerializer
 from rest_auth.serializers import PasswordResetSerializer
@@ -199,6 +198,8 @@ class CustomRegisterSerializer(RegisterSerializer):
                                             queryset=Location.objects.all())
     bio = serializers.CharField(allow_blank=True, default="", max_length=255)
     subscribe = serializers.BooleanField(default=False)
+    creator_tags = serializers.SlugRelatedField(slug_field='name',
+                                                queryset=CreatorTag.objects.all())
 
     def validate_username(self, username):
         # Check if the value is a valid email
@@ -247,6 +248,14 @@ class CustomRegisterSerializer(RegisterSerializer):
             raise serializers.ValidationError(_("Location is required"))
         return location
 
+    def validate_creator_tags(self, creator_tags):
+        if (len(creator_tags) < 1):
+            raise serializers.ValidationError(_("Creator tags are required"))
+        for tag in creator_tags:
+            if not CreatorTag.objects.filter(name=tag).exists():
+                raise serializers.ValidationError(_("Invalid creator tag: {}".format(tag)))
+        return creator_tags
+
     def get_cleaned_data(self):
         data_dict = super().get_cleaned_data()
         data_dict['phone'] = self.validated_data.get('phone', '')
@@ -254,6 +263,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         data_dict['location'] = self.validated_data.get('location', '')
         data_dict['bio'] = self.validated_data.get('bio', '')
         data_dict['subscribe'] = self.validated_data.get('subscribe', '')
+        data_dict['creator_tags'] = self.validated_data.get('creator_tags', '')
 
         return data_dict
 

@@ -38,6 +38,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         creator.bio = data.get('bio')
         creator.location = location
         creator.is_active = is_active
+        creator.tags.set(data.get('creator_tags'))
         creator.save()
 
         Setting(creator=creator, subscribe=data.get("subscribe")).save()
