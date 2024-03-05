@@ -1,6 +1,8 @@
 from rest_framework.generics import (
     ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView)
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .permissions import IsStaffOrModeratorOrEducator, IsOwner, IsStaffOrModerator
 from django.shortcuts import get_object_or_404
 from .models import *
@@ -19,7 +21,7 @@ class ActivityListAPIView(ListAPIView):
     def get_queryset(self):
         all = Activity.objects.all()
         return all
-    
+
 
 class UserActivitiesAPIView(ListAPIView):
     """
@@ -29,7 +31,7 @@ class UserActivitiesAPIView(ListAPIView):
 
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticated, IsOwner]
-    
+
     def get_queryset(self):
         return self.request.user.activities_created.all()
 
@@ -49,7 +51,7 @@ class ActivityDetailsAPIView(RetrieveAPIView):
         queryset = self.get_queryset()
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(queryset, pk=pk)
-        
+
         if obj:
             with transaction.atomic():
                 if isinstance(self.request.user, AnonymousUser):
@@ -61,7 +63,7 @@ class ActivityDetailsAPIView(RetrieveAPIView):
                         obj.views_count += 1
                         obj.save()
             return obj
-    
+
         else:
             raise Exception()
 
@@ -73,7 +75,7 @@ class PublishedActivitiesAPIView(ListAPIView):
 
     serializer_class = ActivitySerializer
     permission_classes = [AllowAny]
-    
+
     def get_queryset(self):
         limit = self.request.query_params.get('limit', 10000)
 
@@ -83,7 +85,7 @@ class PublishedActivitiesAPIView(ListAPIView):
             limit = 10
 
         return Activity.objects.filter(publish= True)[:limit]
-    
+
 class UnPublishedActivitiesAPIView(ListAPIView):
     """
     Fetch list of unpublished activities by authenticated staff member.
@@ -96,7 +98,7 @@ class UnPublishedActivitiesAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
 
     def get_queryset(self):
-        return Activity.objects.filter(publish= False)  
+        return Activity.objects.filter(publish= False)
 
 class ActivityCreateAPIView(CreateAPIView):
     """
@@ -146,11 +148,11 @@ class ToggleSaveAPIView(RetrieveAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticated]
-  
+
     def get_object(self):
         pk = self.kwargs.get("pk")
         obj = get_object_or_404(self.get_queryset(), pk=pk)
-       
+
         if self.request.user in obj.saved_by.all():
             obj.saved_by.remove(self.request.user)
             obj.save()
@@ -169,29 +171,30 @@ class togglePublishActivityAPIView(RetrieveAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
-   
+
 
     def get_object(self):
-       
+
         pk = self.kwargs.get("pk")
-        obj = get_object_or_404(self.get_queryset(), pk=pk)  
+        obj = get_object_or_404(self.get_queryset(), pk=pk)
         obj.publish = not obj.publish
         obj.save()
         return obj
 
 
 
-class DownloadActivityPDF(RetrieveAPIView):
+class DownloadActivityPDF(APIView):
     """
     Download an activities.
     Requires activities id.
     Returns activities file.
     """
     queryset = Activity.objects.all()
-    permission_classes = [IsAuthenticated]
-    # TODO: Add serializer a binary file serializer
-    serializer_class = ActivitySerializer
     template_path = 'activities/activity_download.html'
+
+
+    def get_queryset(self):
+        return self.queryset
 
     def get_object(self):
         pk = self.kwargs.get("pk")
