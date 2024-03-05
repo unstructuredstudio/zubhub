@@ -27,12 +27,12 @@ class API {
    * @returns {Promise<>}
    */
   request = ({
-    url = '/',
-    method = 'GET',
-    token,
-    body,
-    content_type = 'application/json',
-  }) => {
+               url = '/',
+               method = 'GET',
+               token,
+               body,
+               content_type = 'application/json',
+             }) => {
     if (method === 'GET' && !token) {
       return fetch(this.domain + url, {
         method,
@@ -139,16 +139,16 @@ class API {
    * @todo - describe method's signature
    */
   signup = ({
-    username,
-    email,
-    phone,
-    dateOfBirth,
-    user_location,
-    password1,
-    password2,
-    bio,
-    subscribe,
-  }) => {
+              username,
+              email,
+              phone,
+              dateOfBirth,
+              user_location,
+              password1,
+              password2,
+              bio,
+              subscribe,
+            }) => {
     const url = 'creators/register/';
     const method = 'POST';
     const body = JSON.stringify({
@@ -296,7 +296,7 @@ class API {
     const url = `creators/${groupname}/remove-member/${username}/`;
     const method = 'DELETE';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -312,7 +312,7 @@ class API {
     const url = `creators/${groupname}/toggle-follow/${username}/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -328,7 +328,7 @@ class API {
     const url = `creators/${groupname}/members/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -340,7 +340,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  teamMembersId = ( id ) => {
+  teamMembersId = (id) => {
     const url = `creators/id/${id}/`;
     const method = 'GET';
     return this.request({ url, method }).then(res => res.json());
@@ -356,7 +356,7 @@ class API {
     const url = `creators/${groupname}/delete-group/`;
     const method = 'DELETE';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -372,7 +372,7 @@ class API {
     const url = `creators/${groupname}/group-followers/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -388,7 +388,7 @@ class API {
     const url = `creators/groups/${username}/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -404,7 +404,7 @@ class API {
     const url = `creators/teams/`;
     const method = 'GET';
     if (token) {
-      return this.request({ url, method ,token }).then(res => res.json());
+      return this.request({ url, method, token }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -422,7 +422,7 @@ class API {
     const content_type = false;
     const body = data;
     if (token) {
-      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+      return this.request({ url, method, token, body, content_type }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -439,7 +439,7 @@ class API {
     const method = 'POST';
     const content_type = 'application/json';
     const body = JSON.stringify(data);
-  
+
     if (token) {
       return this.request({ url, method, token, body, content_type }).then(res => res.json());
     } else {
@@ -459,7 +459,7 @@ class API {
     const content_type = 'application/json';
     const body = JSON.stringify(data);
     if (token) {
-      return this.request({ url, method ,token, body, content_type }).then(res => res.json());
+      return this.request({ url, method, token, body, content_type }).then(res => res.json());
     } else {
       return this.request({ url, method }).then(res => res.json());
     }
@@ -732,17 +732,17 @@ class API {
    * @todo - describe method's signature
    */
   createProject = ({
-    token,
-    title,
-    description,
-    video,
-    images,
-    materials_used,
-    category,
-    tags,
-    publish,
-    activity,
-  }) => {
+                     token,
+                     title,
+                     description,
+                     video,
+                     images,
+                     materials_used,
+                     category,
+                     tags,
+                     publish,
+                     activity,
+                   }) => {
     const url = 'projects/create/';
     const method = 'POST';
     const body = JSON.stringify({
@@ -766,17 +766,17 @@ class API {
    * @todo - describe method's signature
    */
   updateProject = ({
-    token,
-    id,
-    title,
-    description,
-    video,
-    images,
-    materials_used,
-    category,
-    tags,
-    publish,
-  }) => {
+                     token,
+                     id,
+                     title,
+                     description,
+                     video,
+                     images,
+                     materials_used,
+                     category,
+                     tags,
+                     publish,
+                   }) => {
     const url = `projects/${id}/update/`;
     const method = 'PATCH';
 
@@ -862,11 +862,11 @@ class API {
   };
 
   /**
-  * @method getActivity
-  * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
-  *
-  * @todo - describe method's signature
-  */
+   * @method getActivity
+   * @author Yaya Mamoudou <yayamamoudou0@gmail.com>
+   *
+   * @todo - describe method's signature
+   */
   getActivity = ({ token, id }) => {
     const url = `activities/${id}`;
     return this.request({ token, url }).then(res => res.json());
@@ -1024,10 +1024,10 @@ class API {
   };
 
   /**
- * @method getChallenge
- * @author Suchakra Sharma <suchakra@unstructured.studio>
- *
- */
+   * @method getChallenge
+   * @author Suchakra Sharma <suchakra@unstructured.studio>
+   *
+   */
   getChallenge = () => {
     const url = `challenge/`;
 
@@ -1165,6 +1165,23 @@ class API {
   activityTogglePublish = ({ id, token }) => {
     const url = `activities/${id}/toggle-publish/`;
     return this.request({ url, token }).then(res => res.json());
+  };
+
+  activityDownload = async ({ id, token }) => {
+    const url = `${this.domain}activities/${id}/pdf/`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      const blob = await response.blob();
+      return blob;
+    }
   };
 }
 
