@@ -30,8 +30,6 @@ import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
 import { activityDefailsStyles } from './ActivityDetails.styles';
-import { useReactToPrint } from 'react-to-print';
-import Html2Pdf from 'html2pdf.js';
 
 const API = new ZubHubAPI();
 const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
@@ -86,29 +84,24 @@ export default function ActivityDetailsV2(props) {
     props.navigate(window.location.pathname, { replace: true });
   };
 
-  const handleDownload = useReactToPrint({
-    onBeforePrint: () => setIsDownloading(true),
-    onPrintError: error => setIsDownloading(false),
-    onAfterPrint: () => setIsDownloading(false),
-    content: () => ref.current,
-    removeAfterPrint: true,
-    print: async printIframe => {
-      const document = printIframe.contentDocument;
-      if (document) {
-        const html = document.getElementsByTagName('html')[0];
-        const pdfOptions = {
-          padding: 10,
-          filename: `${activity.title}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        };
-
-        const exporter = new Html2Pdf(html, pdfOptions);
-        await exporter.getPdf(true);
-      }
-    },
-  });
+  const handleDownload = () => {
+    setIsDownloading(true);
+    API.activityDownload({ token: auth.token, id: activity.id })
+      .then(res => {
+        // Assuming 'res' is the blob itself, no need for 'res.blob()'
+        const url = window.URL.createObjectURL(new Blob([res]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${activity.title}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .catch(error => {
+        console.error('Error downloading PDF:', error);
+      })
+      .finally(() => setIsDownloading(false));
+  };
 
   return (
     <div ref={ref} style={{ margin: '0 24px' }}>
