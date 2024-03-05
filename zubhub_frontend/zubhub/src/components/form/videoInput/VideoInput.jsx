@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { ClearRounded, CloudUploadOutlined } from '@mui/icons-material';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styles from '../../../assets/js/styles';
 import { isGdriveORVimeoORYoutube } from '../../../views/project_details/projectDetailsScripts';
 import { refactorVideoUrl } from '../../input/inputScripts';
@@ -15,7 +15,7 @@ function VideoInput({ name, label, required, value = [], handleChange, linkValue
   const classes = makeStyles(videoInputStyles)();
   const input = useRef(null);
   const videoRef = useRef(null);
-  const clickCount = 0;
+  var clickCount = 0;
 
   const handleFileChange = files => {
     const maxAssets = 1;
@@ -75,6 +75,12 @@ function VideoInput({ name, label, required, value = [], handleChange, linkValue
     }
     handleChange('', 'link');
   };
+
+  useEffect(() => {
+    if (linkValue) {
+      handleChange(linkValue, 'link');
+    }
+  }, [linkValue, handleChange]);
 
   const uploadedVideo = () => {
     if (typeof value !== 'string' && value?.length > 0) {

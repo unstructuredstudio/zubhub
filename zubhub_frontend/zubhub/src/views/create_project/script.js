@@ -693,21 +693,8 @@ export const validationSchema = Yup.object().shape({
     //       ? false
     //       : true;
     //   }),
-    materials_used: Yup.string()
-        .max(10000, 'max')
-        .test('empty', 'required', value => {
-            let is_empty = true;
-
-            value &&
-                value.split(',').forEach(material => {
-                    if (material) {
-                        is_empty = false;
-                    }
-                });
-
-            return !is_empty;
-        }),
-    category: Yup.string(),
+    materials_used: Yup.array().required('required'),
+    category: Yup.array(),
     // tags: Yup.mixed().test('unsupported', 'unsupported', tags => {
     //     if (tags) {
     //         tags = JSON.parse(tags);
