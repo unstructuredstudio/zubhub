@@ -255,7 +255,7 @@
       <div class="intro-images">
                     <span class="i-img">
               <img
-                src="{{ activity.materials_used_image.file_url|convert_link }}"
+                src="{{ activity.materials_used_image.file_url }}"
                 alt=""
               />
             </span>
@@ -274,7 +274,7 @@
         <div class="intro-images">
           {% for img in activity_steps_images %}
             <span class="i-img">
-                        <img src="{{ img.file_url|convert_link }}" alt="Activity image" />
+                        <img src="{{ img.file_url }}" alt="Activity image" />
                     </span>
           {% endfor %}
         </div>
