@@ -1,4 +1,15 @@
 const styles = theme => ({
+  tabs: {
+    margin: '2em 0',
+    [theme.breakpoints.up('900')]: {
+      paddingRight: '1em',
+    },
+  },
+  tab: {
+    textTransform: 'none',
+    fontSize: '1.2em',
+    fontWeight: 600,
+  },
   activityListContainer: {
     padding: '4em 0',
     width: '70%',
@@ -9,6 +20,9 @@ const styles = theme => ({
     [theme.breakpoints.down('400')]: {
       width: '95%',
     },
+  },
+  activitiesContainer: {
+    marginTop: 0,
   },
   activityBoxContainer: {
     padding: '5vh 10px',
