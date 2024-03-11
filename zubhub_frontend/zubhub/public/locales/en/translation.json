@@ -649,7 +649,7 @@
     },
     "activityLog": {
       "activity": "Activity Log",
-      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!"
     },
     "team": "Team",
     "createteam": "Create Team",
@@ -1084,7 +1084,9 @@
          "mediaServerError": "Sorry media server is down we couldn't upload your files! try again later",
          "uploadError": "error occurred while downloading file : "
       }
-   }
+   },
+   "tooltipMore": " more",
+   "tooltipUnpublished": "Unpublished"
  },
 
   "activityDetails": {
