@@ -92,6 +92,7 @@ function Profile(props) {
     dialog_error: null,
     more_anchor_el: null,
     drafts: [],
+    activities: [],
     badge_tags: [],
   });
 
@@ -133,6 +134,19 @@ function Profile(props) {
     }
   }, [page]);
 
+
+  React.useEffect(() => {
+    const api = new API()
+    async function handleActivities() {
+      await api.getActivities().then(async (res) => { 
+        const data = await res.json()
+        setState((state) => ({ ...state, activities: data}))
+      }).catch((err) => console.error(err))
+    }
+
+    handleActivities()
+  }, [])
+
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -153,6 +167,7 @@ function Profile(props) {
     dialog_error,
     more_anchor_el,
     drafts,
+    activities,
     badge_tags,
   } = state;
 
@@ -371,6 +386,7 @@ function Profile(props) {
             username === props.auth.username ? (
               <ProjectsDraftsGrid
                 profile={profile}
+                activities={activities}
                 projects={projects}
                 drafts={drafts}
                 handleSetState={handleSetState}

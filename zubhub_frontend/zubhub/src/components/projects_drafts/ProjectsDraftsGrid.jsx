@@ -15,7 +15,7 @@ import * as AuthActions from '../../store/actions/authActions';
 import { useNavigate } from 'react-router-dom';
 import Project from '../../components/project/Project';
 import { updateProjects, updateDrafts } from '../../views/profile/profileScripts';
-
+import Activity from '../activity/activity'
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
 
@@ -52,7 +52,7 @@ function a11yProps(index) {
   };
 }
 
-const ProjectsDraftsGrid = ({ profile, projects, drafts, handleSetState, ...props }) => {
+const ProjectsDraftsGrid = ({ activities, profile, projects, drafts, handleSetState, ...props }) => {
   const classes = useStyles();
 
   const navigate = useNavigate();
@@ -70,12 +70,18 @@ const ProjectsDraftsGrid = ({ profile, projects, drafts, handleSetState, ...prop
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
+          style={{ display: "flex", width: "100%"}}
           classes={{
             indicator: classes.indicator,
           }}
         >
           <Tab label="Projects" {...a11yProps(0)} className={classes.tabStyle} />
           <Tab label="Drafts" {...a11yProps(1)} className={classes.tabStyle} />
+          {
+            profile.tags.includes('educator') && (
+              <Tab label="Activities" {...a11yProps(2)} className={classes.tabStyle} />
+            )
+          }
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -124,6 +130,30 @@ const ProjectsDraftsGrid = ({ profile, projects, drafts, handleSetState, ...prop
                   project={draft}
                   key={draft.id}
                   updateProjects={res => handleSetState(updateDrafts(res, drafts, t, toast))}
+                  {...props}
+                />
+              </Grid>
+            ))}
+        </Grid>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 20 }}>
+          <CustomButton
+            className={clsx(classes.viewAllBtn)}
+            variant="outlined"
+            margin="normal"
+            secondaryButtonStyle
+            onClick={() => navigate(`/activities`)}
+          >
+            {t('profile.activities.viewAll')}
+          </CustomButton>
+        </div>
+        <Grid container spacing={4}>
+          {Array.isArray(activities) &&
+            activities.map(activity => (
+              <Grid item xs={12} sm={6} md={6} className={classes.gridStyle} align="center" key={activity.id}>
+                <Activity
+                  activity={activity}
                   {...props}
                 />
               </Grid>
