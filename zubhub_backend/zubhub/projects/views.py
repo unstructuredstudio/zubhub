@@ -16,6 +16,7 @@ from projects.permissions import (IsOwner, IsStaffOrModerator,
                                   SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, CustomUserRateThrottle)
 from activitylog.models import Activitylog  
+from zubhub.tasks import send_comment_notification_email, send_bookmark_notification_email
 from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
 from creators.models import Creator
 from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
@@ -410,6 +411,16 @@ class ToggleSaveAPIView(RetrieveAPIView):
                         f'/projects/{obj.pk}'
                     )
 
+                    context = {
+                        "project": {
+                            "title": obj.title,
+                            "description": obj.description,
+                            "pk": obj.pk,
+                            "image": obj.images.first().image_url,
+                        },
+                        "bookmarked_by": self.request.user.username,
+                    }
+                    send_bookmark_notification_email.delay(obj.creator.email, context)
 
             return obj
         else:
@@ -506,6 +517,18 @@ class AddCommentAPIView(CreateAPIView):
                 Activitylog.Type.COMMENT,
                 f'/projects/{result.pk}'
             )
+
+            context = {
+                "project": {
+                    "title": result.title, 
+                    "description": result.description, 
+                    "pk": result.pk, 
+                    "image": result.images.first().image_url
+                },
+                "comment": text,
+                "commented_by": creator_str,
+            }
+            send_comment_notification_email.delay(result.creator.email, context)
 
         return Response(ProjectSerializer(result, context={
             'request': request
