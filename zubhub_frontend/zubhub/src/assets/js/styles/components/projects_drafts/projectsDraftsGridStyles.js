@@ -10,7 +10,9 @@ const styles = theme => ({
     [theme.breakpoints.down('740')]: {
       margin: '1em',
     },
-    borderRadius: 8, overflow: 'hidden'
+    borderRadius: 8,
+    display: 'flex',
+    flexDirection: 'column'
   },
 
   viewAllBtn: {
@@ -29,8 +31,7 @@ const styles = theme => ({
       },
 
       backgroundColor: 'var(--text-color3)',
-      width: '50%',
-      maxWidth: '50%',
+      flexGrow: 1
   },
 
   indicator: {
