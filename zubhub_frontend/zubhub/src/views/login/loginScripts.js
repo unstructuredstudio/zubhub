@@ -27,11 +27,9 @@ export const handleMouseDownPassword = e => {
  *
  * @todo - describe function's signature
  */
-export const login = (e, props) => {
-  e.preventDefault();
-  props.setFieldTouched('username', true);
+export const handleLogin = (props, values) => {
   return props
-    .login({ values: props.values, navigate: props.navigate })
+    .login({ values, navigate: props.navigate })
     .catch(error => {
       const messages = JSON.parse(error.message);
       if (typeof messages === 'object') {
@@ -61,4 +59,5 @@ export const login = (e, props) => {
 export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   password: Yup.string().min(8, 'min').required('required'),
+  remember: Yup.boolean()
 });

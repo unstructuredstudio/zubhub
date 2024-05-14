@@ -19,7 +19,7 @@ export const mainStyles = theme => ({
     lineHeight: '50px',
     [theme.breakpoints.down('sm')]: {
       lineHeight: 'unset',
-      fontSize: '15px',
+      fontSize: '20px',
     },
   },
   subHeader: {
@@ -54,9 +54,7 @@ export const mainStyles = theme => ({
     fontWeight: 600,
     lineHeight: '24px',
   },
-  text2: {
-    marginBottom: '40px'
-  },
+  text2: {},
   wizard: {
     width: '100%',
   },

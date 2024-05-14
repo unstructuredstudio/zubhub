@@ -1,6 +1,3 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import * as AuthActions from '../../store/actions/authActions';
 import {
   Box,
   Grid,
@@ -10,41 +7,37 @@ import {
   InputAdornment,
   Typography,
   IconButton,
-  FormControlLabel,
-  Checkbox
 } from '@mui/material';
-import { CustomButton, CustomErrorMessage } from '../../components';
+import { CustomButton, CustomErrorMessage } from '../../../../components';
 import { TfiLock, TfiArrowLeft } from 'react-icons/tfi';
 import { SlEye, SlUser } from 'react-icons/sl';
 import { BsEyeSlash } from 'react-icons/bs';
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
-import { mainStyles, step2Styles } from '../../assets/js/styles/views/login/loginStyles';
-import { handleLogin, validationSchema } from './loginScripts';
-import { useFormik } from 'formik';
+import { mainStyles, step2Styles } from '../../signupStyles';
+import EducatorsForm from '../../EducatorsForm';
 
 const useMainStyles = makeStyles(mainStyles);
 const useStyles = makeStyles(step2Styles);
-
-const Login = props => {
-  const [{ password }, setShowPassword] = useState({ password: false });
+const Step2 = props => {
+  console.log(props, 'afafadh');
+  const [{ password, confirmPassword }, setShowPassword] = useState({ password: false, confirmPassword: false });
   const classes = useStyles();
   const mainClasses = useMainStyles();
   const {
     errors,
     handleChange,
     handleBlur,
-    handleSubmit,
+    goAction,
     touched,
-  } = useFormik({
-    initialValues: {
-      username: '',
-      password: '',
-      remember: false
-    },
-    validationSchema: validationSchema,
-    onSubmit: async (values) => await handleLogin(props, values)
-  })
+    values: { role },
+  } = props;
+
+  const errorsAvailable = errors['username'] || errors['password'] || errors['confirmPassword'];
+
+  if (role === 'educator') {
+    return <EducatorsForm {...props} />;
+  }
 
   return (
     <Box width={'100%'}>
@@ -56,23 +49,27 @@ const Login = props => {
         rowSpacing={{ xs: 2, sm: 3, md: 5 }}
         className={classes.container}
       >
-        <form onSubmit={handleSubmit}>
+        <Grid alignSelf="flex-start">
+          <IconButton onClick={() => goAction('prev', false)} className={mainClasses.backContainer}>
+            <TfiArrowLeft className={mainClasses.backIcon} />
+          </IconButton>
+        </Grid>
         <Grid item>
           <Typography align="center" className={mainClasses.header2}>
             Welcome to ZubHub !
           </Typography>
           <Typography align="center" className={mainClasses.text2}>
-          Log Into your ZubHub account to share ideas
+            Create projects, share ideas, make friends. It’s free{' '}
           </Typography>
         </Grid>
         <Grid item>
           <FormControl fullWidth className={mainClasses.formControl} error={touched['username'] && errors['username']}>
-            <FormLabel className={mainClasses.subHeader2}>Username or Email address</FormLabel>
+            <FormLabel className={mainClasses.subHeader2}>Username</FormLabel>
             <OutlinedInput
               id="username"
               name="username"
               type="text"
-              placeholder="Enter username or email address"
+              placeholder="Enter a username"
               onChange={handleChange}
               onBlur={handleBlur}
               className={mainClasses.outlinedInput}
@@ -82,7 +79,7 @@ const Login = props => {
                 </InputAdornment>
               }
             />
-           <CustomErrorMessage name="username" errors={errors} touched={touched} />
+            <CustomErrorMessage name="username" {...props} />
           </FormControl>
         </Grid>
         <Grid item width={'100%'}>
@@ -94,7 +91,7 @@ const Login = props => {
               type={password ? 'text' : 'password'}
               onChange={handleChange}
               onBlur={handleBlur}
-              placeholder="Enter password"
+              placeholder="Enter your password"
               className={mainClasses.outlinedInput}
               startAdornment={
                 <InputAdornment>
@@ -113,61 +110,57 @@ const Login = props => {
                 </InputAdornment>
               }
             />
-            <CustomErrorMessage name="password" errors={errors} touched={touched} />
+            <CustomErrorMessage name="password" {...props} />
           </FormControl>
         </Grid>
-        <Grid item>
-          <FormControl>
-            <FormControlLabel
-              name="remember"
-              id="remember"
+        <Grid item width={'100%'}>
+          <FormControl
+            fullWidth
+            className={mainClasses.formControl}
+            error={touched['confirmPassword'] && errors['confirmPassword']}
+          >
+            <FormLabel className={mainClasses.subHeader2}>Confirm Password</FormLabel>
+            <OutlinedInput
+              name="confirmPassword"
+              id="confirmPassword"
+              type={confirmPassword ? 'text' : 'password'}
               onChange={handleChange}
               onBlur={handleBlur}
-              label="Remember me"
-              control={<Checkbox />}
+              placeholder="Enter password again"
+              className={mainClasses.outlinedInput}
+              startAdornment={
+                <InputAdornment>
+                  <TfiLock className={mainClasses.inputIcon} />
+                </InputAdornment>
+              }
+              endAdornment={
+                <InputAdornment>
+                  <IconButton onClick={() => setShowPassword({ confirmPassword: !confirmPassword })}>
+                    {confirmPassword ? (
+                      <BsEyeSlash className={mainClasses.inputIcon} />
+                    ) : (
+                      <SlEye className={mainClasses.inputIcon} />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
             />
+            <CustomErrorMessage name="confirmPassword" {...props} />
           </FormControl>
         </Grid>
         <Grid item>
           <CustomButton
-          type='submit'
+            onClick={() => goAction('next', !!errorsAvailable)}
             className={mainClasses.button}
             primaryButtonStyle
             fullWidth
           >
-            Login
+            NEXT
           </CustomButton>
         </Grid>
-        </form>
       </Grid>
     </Box>
   );
 };
 
-Login.propTypes = {
-  auth: PropTypes.object.isRequired,
-  setAuthUser: PropTypes.object.isRequired,
-  login: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setAuthUser: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
-    },
-    login: args => {
-      return dispatch(AuthActions.login(args));
-    },
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Login);
+export default Step2;
