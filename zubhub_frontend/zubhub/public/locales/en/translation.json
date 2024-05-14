@@ -649,7 +649,7 @@
     },
     "activityLog": {
       "activity": "Activity Log",
-      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!"
     },
     "team": "Team",
     "createteam": "Create Team",
@@ -1075,6 +1075,12 @@
   },
 
  "activities": {
+  "title": "Activities",
+  "tabs": {
+    "published": "Published",
+    "unpublished": "Unpublished",
+    "ariaLabel": "Activity Tabs"
+  },
    "LinkedProjects": "Linked Projects",
    "errors": {
       "emptyList": "No activities created yet !",
