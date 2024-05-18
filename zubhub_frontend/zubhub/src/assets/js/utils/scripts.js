@@ -21,12 +21,11 @@ export const doConfig = {
  *
  * @todo - describe function's signature
  */
-export const cloudinaryFactory = window => {
-  return window.cloudinary.Cloudinary.new({
+export const cloudinaryFactory = window =>
+  window.cloudinary.Cloudinary.new({
     cloud_name: 'zubhub',
     secure: true,
   });
-};
 
 /**
  * @function buildVideoThumbnailURL
@@ -36,7 +35,7 @@ export const cloudinaryFactory = window => {
  */
 
 export const videoOrUrl = video_url => {
-  let regex =
+  const regex =
     /^((http[s]?:\/\/)?(www\.)?youtube\.com)?((http[s]?:\/\/)?(www\.)?vimeo\.com)?((http[s]?:\/\/)?(www\.)?drive.google\.com)?/gm;
   return video_url.match(regex)[0] !== '' ? false : true;
 };
@@ -61,7 +60,7 @@ export const buildVideoThumbnailURL = video_url => {
       return video_url;
     }
   } else {
-    return video_url + '.jpg';
+    return `${video_url}.jpg`;
   }
 };
 
@@ -71,15 +70,13 @@ export const buildVideoThumbnailURL = video_url => {
  *
  * @todo - describe function's signature
  */
-export const getPlayerOptions = (window, video_url) => {
-  return {
-    posterOptions: { publicId: buildVideoThumbnailURL(video_url) },
-    hideContextMenu: true,
-    logoImageUrl: logo,
-    logoOnclickUrl: window.location.origin,
-    showLogo: true,
-  };
-};
+export const getPlayerOptions = (window, video_url) => ({
+  posterOptions: { publicId: buildVideoThumbnailURL(video_url) },
+  hideContextMenu: true,
+  logoImageUrl: logo,
+  logoOnclickUrl: window.location.origin,
+  showLogo: true,
+});
 
 /**
  * @object s3
@@ -113,9 +110,7 @@ const shouldSetImages = (compressed, images, state, handleSetState) => {
  *
  * @todo - describe function's signature
  */
-export const slugify = str => {
-  return str.replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-};
+export const slugify = str => str.replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
 
 /**
  * @function recursiveCountComments
@@ -124,10 +119,10 @@ export const slugify = str => {
  * @todo - describe function's signature
  */
 const recursiveCountComments = (comments, countArr) => {
-  for (let comment of comments) {
+  comments.forEach(comment => {
     countArr['count'] += 1;
     recursiveCountComments(comment['replies'], countArr);
-  }
+  });
 };
 
 /**
@@ -149,11 +144,12 @@ export const countComments = comments => {
  * @todo - describe function's signature
  */
 export const Compress = (images, state, handleSetState) => {
-  let compressed = [];
+  const compressed = [];
   for (let index = 0; index < images.length; index += 1) {
-    let image = images[index];
+    const image = images[index];
 
     if (image && image.type.split('/')[1] !== 'gif') {
+      // eslint-disable-next-line no-new
       new Compressor(image, {
         quality: 0.6,
         convertSize: 100000,
@@ -188,42 +184,42 @@ export const dFormatter = str => {
   let interval = seconds / 31536000;
 
   if (interval > 1) {
-    let result = Math.round(interval);
+    const result = Math.round(interval);
     return { value: result, key: result > 1 ? 'years' : 'year' };
   }
   interval = seconds / 2592000;
   if (interval > 1) {
-    let result = Math.round(interval);
+    const result = Math.round(interval);
     return { value: result, key: result > 1 ? 'months' : 'month' };
   }
   interval = seconds / 86400;
   if (interval > 1) {
-    let result = Math.round(interval);
+    const result = Math.round(interval);
     return { value: result, key: result > 1 ? 'days' : 'day' };
   }
   interval = seconds / 3600;
   if (interval > 1) {
-    let result = Math.round(interval);
+    const result = Math.round(interval);
     return { value: result, key: result > 1 ? 'hours' : 'hour' };
   }
   interval = seconds / 60;
   if (interval > 1) {
-    let result = Math.round(interval);
+    const result = Math.round(interval);
     return { value: result, key: result > 1 ? 'minutes' : 'minute' };
   }
-  let result = Math.round(interval);
+  const result = Math.round(interval);
   return { value: result, key: result > 1 ? 'seconds' : 'second' };
 };
 
 export function nFormatter(num) {
   if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+    return `${(num / 1000000000).toFixed(1).replace(/\.0$/, '')}G`;
   }
   if (num >= 1000000) {
-    return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    return `${(num / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
   }
   if (num >= 1000) {
-    return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return `${(num / 1000).toFixed(1).replace(/\.0$/, '')}K`;
   }
   return num;
 }
@@ -235,20 +231,18 @@ export function nFormatter(num) {
  * @todo - describe function's signature
  */
 export const parseComments = comments => {
-  for (let each_comment of comments) {
+  comments.forEach(each_comment => {
     const mentions = each_comment.text.match(/\B@[a-z0-9_.-]+/gi);
     if (Array.isArray(mentions)) {
-      for (let mention of mentions) {
+      mentions.forEach(mention => {
         each_comment.text = each_comment.text.replace(
           mention,
-          `<a href="/creators/${
-            mention.split('@')[1]
-          }" class="mention">${mention}</a>`,
+          `<a href="/creators/${mention.split('@')[1]}" class="mention">${mention}</a>`,
         );
-      }
+      });
     }
     parseComments(each_comment['replies']);
-  }
+  });
 };
 
 /**
@@ -258,14 +252,13 @@ export const parseComments = comments => {
  * @todo - describe function's signature
  */
 export const tempAddComment = (comment, comments, parent_id) => {
-  for (let each_comment of comments) {
+  comments.forEach(each_comment => {
     if (each_comment.id === parent_id) {
       each_comment.replies.unshift(comment);
-      break;
     } else {
       tempAddComment(comment, each_comment['replies'], parent_id);
     }
-  }
+  });
 };
 
 /**
@@ -275,7 +268,7 @@ export const tempAddComment = (comment, comments, parent_id) => {
  * @todo - describe function's signature
  */
 export const tempDeleteComment = (comments, comment_id) => {
-  for (let index = 0; index < comments.length; index++) {
+  for (let index = 0; index < comments.length; index += 1) {
     if (Number(comments[index].id) === Number(comment_id)) {
       comments.splice(index, 1);
       break;
@@ -293,19 +286,11 @@ export const tempDeleteComment = (comments, comment_id) => {
  */
 export const calculateLabelWidth = (text, document) => {
   if (text?.length) {
-    let label = document.evaluate(
-      `//label[text()='${text}']`,
-      document,
-      null,
-      0,
-      null,
-    );
+    let label = document.evaluate(`//label[text()='${text}']`, document, null, 0, null);
     label = label?.iterateNext();
 
-    let label_width = label?.offsetWidth;
+    const label_width = label?.offsetWidth;
     return label_width ? label_width : text?.length;
-  } else {
-    return;
   }
 };
 
@@ -317,40 +302,36 @@ export const calculateLabelWidth = (text, document) => {
  * @param {String} tag - name of tag.
  * @returns {boolean}
  */
-export const isBaseTag = tag => {
-  return BASE_TAGS.includes(tag);
-};
-
-export const getRouteFieldIndex = str => {
-  let arr = str.split('.');
-  let { route, index } = getRouteAndIndex(arr[0]);
-  return arr.length > 1
-    ? { route: route, field: arr[1], index: index }
-    : { field: route, index: index };
-};
+export const isBaseTag = tag => BASE_TAGS.includes(tag);
 
 export const getRouteAndIndex = str => {
-  let arr = str.split('[');
+  const arr = str.split('[');
   return arr.length > 1
-    ? { route: arr[0], index: parseInt(arr[1].split('')[0]) }
+    ? { route: arr[0], index: parseInt(arr[1].split('')[0], 10) }
     : { route: arr[0], index: parseInt('-1', 10) };
 };
 
+export const getRouteFieldIndex = str => {
+  const arr = str.split('.');
+  const { route, index } = getRouteAndIndex(arr[0]);
+  return arr.length > 1 ? { route, field: arr[1], index } : { field: route, index };
+};
+
 export const getIndexFromFieldName = fieldName => {
-  let arr = fieldName.split('[');
-  return arr.length > 1 ? parseInt(arr[1].split('')[0]) : parseInt('-1', 10);
+  const arr = fieldName.split('[');
+  return arr.length > 1 ? parseInt(arr[1].split('')[0], 10) : parseInt('-1', 10);
 };
 
 export const getFieldAndIndex = str => {
-  let arr = str.split('[');
+  const arr = str.split('[');
   return arr.length > 1
-    ? { field: arr[0], index: parseInt(arr[1].split('')[0]) }
+    ? { field: arr[0], index: parseInt(arr[1].split('')[0], 10) }
     : { field: arr[0], index: parseInt('-1', 10) };
 };
 
-export const getBase64ImageFromURL = (url, field, index) => {
-  return new Promise((resolve, reject) => {
-    var img = new Image();
+export const getBase64ImageFromURL = (url, field, index) =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
     img.setAttribute('crossOrigin', 'anonymous');
     // function draw(img) {
     //   var buffer = document.createElement('canvas');
@@ -378,17 +359,15 @@ export const getBase64ImageFromURL = (url, field, index) => {
     //   draw(img);
     // };
     img.onload = () => {
-      var canvas = document.createElement('canvas');
+      const canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
-      var ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#FFF';
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
-      var dataURL = canvas.toDataURL('image/jpeg');
-      index >= 0
-        ? resolve({ [`${field}${index}image`]: dataURL })
-        : resolve({ [field]: dataURL });
+      const dataURL = canvas.toDataURL('image/jpeg');
+      index >= 0 ? resolve({ [`${field}${index}image`]: dataURL }) : resolve({ [field]: dataURL });
     };
     img.onerror = error => {
       reject(error);
@@ -396,9 +375,13 @@ export const getBase64ImageFromURL = (url, field, index) => {
 
     img.src = url;
   });
-};
 
 export const capitalize = str => {
-  let newStr = str.toString().toLowerCase();
+  const newStr = str.toString().toLowerCase();
   return newStr.charAt(0).toUpperCase() + newStr.slice(1);
+};
+
+export const getRedirectPath = url => {
+  url = url.split('redirect=');
+  return url.length > 1 ? url[1] : '';
 };

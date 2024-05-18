@@ -6,14 +6,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
-import API from '../../api';
-import { TEAM_ENABLED } from '../../utils.js';
+
 import { makeStyles } from '@mui/styles';
-import ShareIcon from '@mui/icons-material/Share';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
-  Tooltip,
-  Badge,
   Avatar,
   Grid,
   Box,
@@ -21,28 +16,24 @@ import {
   Paper,
   Card,
   CardContent,
-  Menu,
-  MenuItem,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Fab,
   Typography,
   OutlinedInput,
   InputLabel,
   FormControl,
-  Divider,
 } from '@mui/material';
 
+import API from '../../api';
+import { TEAM_ENABLED } from '../../utils.js';
 import {
   getUserProfile,
-  copyProfileUrl,
+  // copyProfileUrl,
   updateProjects,
   toggleFollow,
   sortTags,
-  handleMoreMenuOpen,
-  handleMoreMenuClose,
   handleToggleDeleteAccountModal,
   deleteAccount,
   getUserTeams,
@@ -57,7 +48,6 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import Comments from '../../components/comments/Comments';
-import Team from '../../views/team/Team';
 import { parseComments, isBaseTag } from '../../assets/js/utils/scripts';
 
 import styles from '../../assets/js/styles/views/profile/profileStyles';
@@ -81,7 +71,6 @@ function Profile(props) {
   const username = props.params.username || props.auth.username;
   const [page, setPage] = useState(1);
   const [userActivity, setUserActivity] = useState([]);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [nextPage, setNextPage] = useState(false);
   const [teams, setTeams] = useState([]);
   const [state, setState] = React.useState({
@@ -95,9 +84,21 @@ function Profile(props) {
     badge_tags: [],
   });
 
+  const handleSetTeams = newTeams => {
+    newTeams && setTeams(teams => [...teams, ...newTeams]);
+  };
+
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
+    }
+  };
+
   React.useEffect(() => {
     try {
-      let activitylogObj = new API();
+      const activitylogObj = new API();
       const promises = [getUserProfile(props), getUserTeams(props), activitylogObj.getUserActivity(username, page)];
       if (username === props.auth.username) {
         promises.push(
@@ -133,30 +134,8 @@ function Profile(props) {
     }
   }, [page]);
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
+  const { results: projects, profile, loading, open_delete_account_modal, dialog_error, drafts, badge_tags } = state;
 
-  const handleSetTeams = newTeams => {
-    newTeams && setTeams(teams => [...teams, ...newTeams]);
-  };
-
-  const {
-    results: projects,
-    profile,
-    loading,
-    open_delete_account_modal,
-    dialog_error,
-    more_anchor_el,
-    drafts,
-    badge_tags,
-  } = state;
-
-  const more_menu_open = Boolean(more_anchor_el);
   const { t } = props;
 
   const handleScroll = e => {
@@ -269,8 +248,8 @@ function Profile(props) {
               {profile.bio
                 ? profile.bio
                 : !profile.members_count
-                ? t('profile.about.placeholder1')
-                : t('profile.about.placeholder2')}
+                  ? t('profile.about.placeholder1')
+                  : t('profile.about.placeholder2')}
             </Paper>
 
             <Paper className={classes.badgeBox}>
@@ -308,28 +287,23 @@ function Profile(props) {
             </div>
           </Paper>
 
-            {TEAM_ENABLED== true ? (<Paper   className= {classes.profileLowerStyle}>
-            <Typography
-             gutterBottom
-             component="h2"
-             variant="h6"
-             color="textPrimary"
-             className= {classes.titleStyle}
-            >
-            {t('Teams')}
-            <CustomButton
-              className={classes.teamButton}
-              variant="contained"
-              margin="normal"
-              primaryButtonStyle
-              onClick={() => props.navigate('/create-team')}
-            >
-              {t('profile.createteam')}
-            </CustomButton>
-            </Typography>
-            <Grid container spacing={2}>
+          {TEAM_ENABLED === true ? (
+            <Paper className={classes.profileLowerStyle}>
+              <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
+                {t('Teams')}
+                <CustomButton
+                  className={classes.teamButton}
+                  variant="contained"
+                  margin="normal"
+                  primaryButtonStyle
+                  onClick={() => props.navigate('/create-team')}
+                >
+                  {t('profile.createteam')}
+                </CustomButton>
+              </Typography>
+              <Grid container spacing={2}>
                 {teams.map(team => (
-                  <Grid item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
+                  <Grid key={team.id} item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
                     <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>
                       <Card>
                         <CardContent className={classes.mediaBoxStyle}>
@@ -393,7 +367,15 @@ function Profile(props) {
                 <Grid container spacing={3}>
                   {Array.isArray(projects) &&
                     projects.map(project => (
-                      <Grid item xs={12} sm={6} md={4} className={classes.projectGridStyle} align="center">
+                      <Grid
+                        key={project.id}
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        className={classes.projectGridStyle}
+                        align="center"
+                      >
                         <Project
                           project={project}
                           key={project.id}
@@ -453,7 +435,7 @@ function Profile(props) {
             </CustomButton>
             <CustomButton
               variant="contained"
-              onClick={e => handleSetState(deleteAccount(username_el, props, state))}
+              onClick={() => handleSetState(deleteAccount(username_el, props, state))}
               dangerButtonStyle
               customButtonStyle
             >
@@ -483,54 +465,26 @@ Profile.propTypes = {
   toggleSave: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setAuthUser: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
-    },
-    getUserProfile: args => {
-      return dispatch(UserActions.getUserProfile(args));
-    },
-    getUserTeams: args => {
-      return dispatch(UserActions.getUserTeams(args));
-    },
-    toggleTeamFollow: args => {
-      return dispatch(UserActions.toggleTeamFollow(args));
-    },
-    suggestCreators: args => {
-      return dispatch(UserActions.suggestCreators(args));
-    },
-    addComment: args => {
-      return dispatch(UserActions.addComment(args));
-    },
-    unpublishComment: args => {
-      return dispatch(ProjectActions.unpublishComment(args));
-    },
-    deleteComment: args => {
-      return dispatch(ProjectActions.deleteComment(args));
-    },
-    deleteAccount: args => {
-      return dispatch(AuthActions.deleteAccount(args));
-    },
-    logout: args => {
-      return dispatch(AuthActions.logout(args));
-    },
-    toggleFollow: args => {
-      return dispatch(UserActions.toggleFollow(args));
-    },
-    toggleLike: args => {
-      return dispatch(ProjectActions.toggleLike(args));
-    },
-    toggleSave: args => {
-      return dispatch(ProjectActions.toggleSave(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  setAuthUser: auth_user => {
+    dispatch(AuthActions.setAuthUser(auth_user));
+  },
+  getUserProfile: args => dispatch(UserActions.getUserProfile(args)),
+  getUserTeams: args => dispatch(UserActions.getUserTeams(args)),
+  toggleTeamFollow: args => dispatch(UserActions.toggleTeamFollow(args)),
+  suggestCreators: args => dispatch(UserActions.suggestCreators(args)),
+  addComment: args => dispatch(UserActions.addComment(args)),
+  unpublishComment: args => dispatch(ProjectActions.unpublishComment(args)),
+  deleteComment: args => dispatch(ProjectActions.deleteComment(args)),
+  deleteAccount: args => dispatch(AuthActions.deleteAccount(args)),
+  logout: args => dispatch(AuthActions.logout(args)),
+  toggleFollow: args => dispatch(UserActions.toggleFollow(args)),
+  toggleLike: args => dispatch(ProjectActions.toggleLike(args)),
+  toggleSave: args => dispatch(ProjectActions.toggleSave(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

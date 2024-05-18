@@ -25,18 +25,14 @@ import {
   FormControl,
 } from '@mui/material';
 
-import {
-  validationSchema,
-  handleClickShowPassword,
-  handleMouseDownPassword,
-  login,
-} from './loginScripts';
-
 import { withFormik } from 'formik';
+
+import { validationSchema, handleClickShowPassword, handleMouseDownPassword, login } from './loginScripts';
 
 import CustomButton from '../../components/button/Button';
 import * as AuthActions from '../../store/actions/authActions';
 import styles from '../../assets/js/styles/views/login/loginStyles';
+
 const useStyles = makeStyles(styles);
 
 /**
@@ -75,33 +71,15 @@ function Login(props) {
                 noValidate="noValidate"
                 onSubmit={e => handleSetState(login(e, props))}
               >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
+                <Typography gutterBottom variant="h5" component="h2" color="textPrimary" className={classes.titleStyle}>
                   {t('login.welcomeMsg.primary')}
                 </Typography>
-                <Typography
-                  className={classes.descStyle}
-                  variant="body2"
-                  color="textSecondary"
-                  component="p"
-                >
+                <Typography className={classes.descStyle} variant="body2" color="textSecondary" component="p">
                   {t('login.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box
-                      component="p"
-                      className={
-                        props.status &&
-                        props.status['non_field_errors'] &&
-                        classes.errorBox
-                      }
-                    >
+                    <Box component="p" className={props.status && props.status['non_field_errors'] && classes.errorBox}>
                       {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
                           {props.status['non_field_errors']}
@@ -121,10 +99,7 @@ function Login(props) {
                         (props.touched['username'] && props.errors['username'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="username"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="username">
                         {t('login.inputs.username.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -136,16 +111,11 @@ function Login(props) {
                         onBlur={props.handleBlur}
                         label={t('login.inputs.username.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['username']) ||
                           (props.touched['username'] &&
                             props.errors['username'] &&
-                            t(
-                              `login.inputs.username.errors.${props.errors['username']}`,
-                            ))}
+                            t(`login.inputs.username.errors.${props.errors['username']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -162,10 +132,7 @@ function Login(props) {
                         (props.touched['password'] && props.errors['password'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="password">
                         {t('login.inputs.password.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -179,32 +146,21 @@ function Login(props) {
                           <InputAdornment position="end">
                             <IconButton
                               aria-label="toggle password visibility"
-                              onClick={() =>
-                                handleSetState(handleClickShowPassword(state))
-                              }
+                              onClick={() => handleSetState(handleClickShowPassword(state))}
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {show_password ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
+                              {show_password ? <Visibility /> : <VisibilityOff />}
                             </IconButton>
                           </InputAdornment>
                         }
                         label={t('login.inputs.password.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['password']) ||
                           (props.touched['password'] &&
                             props.errors['password'] &&
-                            t(
-                              `login.inputs.password.errors.${props.errors['password']}`,
-                            ))}
+                            t(`login.inputs.password.errors.${props.errors['password']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -226,36 +182,22 @@ function Login(props) {
                 <Grid item xs={12}>
                   <Box className={classes.center}>
                     <Divider className={classes.divider} />
-                    <Typography
-                      className={classes.dividerText}
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
+                    <Typography className={classes.dividerText} variant="body2" color="textSecondary" component="p">
                       {t('login.notAMember')}
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Link to="/signup" className={classes.textDecorationNone}>
-                    <CustomButton
-                      variant="outlined"
-                      size="large"
-                      secondaryButtonStyle
-                      customButtonStyle
-                      fullWidth
-                    >
+                  <Link to={`/signup${props.location.search}`} className={classes.textDecorationNone}>
+                    <CustomButton variant="outlined" size="large" secondaryButtonStyle customButtonStyle fullWidth>
                       {t('login.signup')}
                     </CustomButton>
                   </Link>
                 </Grid>
                 <Grid item xs={12}>
                   <Box className={classes.center}>
-                    <Link
-                      to="/password-reset"
-                      className={classes.secondaryLink}
-                    >
+                    <Link to="/password-reset" className={classes.secondaryLink}>
                       {t('login.forgotPassword')}
                     </Link>
                   </Box>
@@ -275,22 +217,16 @@ Login.propTypes = {
   login: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setAuthUser: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
-    },
-    login: args => {
-      return dispatch(AuthActions.login(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  setAuthUser: auth_user => {
+    dispatch(AuthActions.setAuthUser(auth_user));
+  },
+  login: args => dispatch(AuthActions.login(args)),
+});
 
 export default connect(
   mapStateToProps,
