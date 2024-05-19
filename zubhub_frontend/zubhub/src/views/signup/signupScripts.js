@@ -1,8 +1,9 @@
 import * as Yup from 'yup';
-import countryMap from '../../assets/js/countryMap.json';
 import intlTelInput from 'intl-tel-input';
-import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 import { toast } from 'react-toastify';
+
+import countryMap from '../../assets/js/countryMap.json';
+import { calculateLabelWidth } from '../../assets/js/utils/scripts';
 
 /**
  * @constant vars
@@ -14,8 +15,7 @@ export const vars = {
   phone_field_touched: undefined,
   email_field_touched: undefined,
   iti: undefined,
-  utils_scripts_url:
-    'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.min.js',
+  utils_scripts_url: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.min.js',
   preferred_countries: ['in', 'us'],
 };
 
@@ -35,9 +35,7 @@ export const handleMouseDownPassword = e => {
  *
  * @todo - describe function's signature
  */
-export const getLocations = props => {
-  return props.getLocations({ t: props.t });
-};
+export const getLocations = props => props.getLocations({ t: props.t });
 
 /**
  * @function signup
@@ -71,6 +69,7 @@ export const signup = (e, props) => {
             phone: vars.iti.getNumber(),
           },
           navigate: props.navigate,
+          location: props.location,
         })
         .catch(error => {
           const messages = JSON.parse(error.message);
@@ -104,9 +103,7 @@ export const signup = (e, props) => {
  *
  * @todo - describe function's signature
  */
-export const handleTooltipOpen = () => {
-  return { tool_tip_open: true };
-};
+export const handleTooltipOpen = () => ({ tool_tip_open: true });
 
 /**
  * @function handleTooltipClose
@@ -114,9 +111,7 @@ export const handleTooltipOpen = () => {
  *
  * @todo - describe function's signature
  */
-export const handleTooltipClose = () => {
-  return { tool_tip_open: false };
-};
+export const handleTooltipClose = () => ({ tool_tip_open: false });
 
 /**
  * @function handleToggleSubscribeBox
@@ -125,7 +120,7 @@ export const handleTooltipClose = () => {
  * @todo - describe function's signature
  */
 export const handleToggleSubscribeBox = (e, props, state) => {
-  let subscribe_box_checked = !state.subscribe_box_checked;
+  const subscribe_box_checked = !state.subscribe_box_checked;
   props.setFieldValue('subscribe', subscribe_box_checked);
   return { subscribe_box_checked };
 };
@@ -137,11 +132,7 @@ export const handleToggleSubscribeBox = (e, props, state) => {
  * @todo - describe function's signature
  */
 export const handleLocationChange = (e, props) => {
-  if (
-    vars.iti?.setCountry &&
-    e.target.value &&
-    vars.iti.getSelectedCountryData().iso2 !== countryMap[e.target.value]
-  ) {
+  if (vars.iti?.setCountry && e.target.value && vars.iti.getSelectedCountryData().iso2 !== countryMap[e.target.value]) {
     vars.iti.setCountry(countryMap[e.target.value]);
   }
   props.handleChange(e);
@@ -156,8 +147,8 @@ export const handleLocationChange = (e, props) => {
 export const setLocationWithTelCountry = props => {
   if (vars.iti?.getSelectedCountryData) {
     let country_name;
-    let keys = Object.keys(countryMap);
-    for (let i = 0; i < keys.length; i++) {
+    const keys = Object.keys(countryMap);
+    for (let i = 0; i < keys.length; i += 1) {
       if (countryMap[keys[i]] === vars.iti.getSelectedCountryData().iso2) {
         country_name = keys[i];
         break;
@@ -182,9 +173,7 @@ export const initIntlTelInput = (props, refs) => {
       preferredCountries: vars.preferred_countries,
       utilsScript: vars.utils_scripts_url,
     });
-    refs.phone_el.current.firstChild.addEventListener('countrychange', () =>
-      setLocationWithTelCountry(props),
-    );
+    refs.phone_el.current.firstChild.addEventListener('countrychange', () => setLocationWithTelCountry(props));
 
     setTimeout(() => setLocationWithTelCountry(props), 1000);
   }
@@ -217,23 +206,17 @@ export const validationSchema = Yup.object().shape({
   username: Yup.string().required('required'),
   email: Yup.string()
     .email('invalid')
-    .test('email_is_empty', 'phoneOrEmail', function (value) {
-      return vars.email_field_touched && !value && !this.parent.phone
-        ? false
-        : true;
-    }),
+    .test('email_is_empty', 'phoneOrEmail', value =>
+      vars.email_field_touched && !value && !this.parent.phone ? false : true,
+    ),
   phone: Yup.string()
-    .test('phone_is_invalid', 'invalid', function () {
-      return vars.iti.isValidNumber() || !vars.iti.getNumber() ? true : false;
-    })
-    .test('phone_is_empty', 'phoneOrEmail', function () {
-      return vars.phone_field_touched &&
-        !vars.iti.getNumber() &&
-        !this.parent.email
-        ? false
-        : true;
-    }),
-  dateOfBirth: Yup.date().max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough').required('required'),
+    .test('phone_is_invalid', 'invalid', () => (vars.iti.isValidNumber() || !vars.iti.getNumber() ? true : false))
+    .test('phone_is_empty', 'phoneOrEmail', () =>
+      vars.phone_field_touched && !vars.iti.getNumber() && !this.parent.email ? false : true,
+    ),
+  dateOfBirth: Yup.date()
+    .max(new Date(new Date().getFullYear() - 12, 1, 1), 'oldEnough')
+    .required('required'),
   user_location: Yup.string().min(1, 'min').required('required'),
   password1: Yup.string().min(8, 'min').required('required'),
   password2: Yup.string()
