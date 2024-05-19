@@ -1,10 +1,7 @@
-import React from 'react'
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = props => {
-  const { wrapper: Wrapper, component, ...rest } = props;
+const ProtectedRoute = props =>
+  props.auth?.token ? props.children : <Navigate to={`/login?redirect=${props.location?.pathname}`} replace />;
 
-  return props.auth?.token ? <Wrapper component={component} {...rest} /> : <Navigate to="/login" replace />;
-  };
-
-  export default ProtectedRoute
+export default ProtectedRoute;

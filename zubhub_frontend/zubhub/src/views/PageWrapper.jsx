@@ -37,7 +37,7 @@ import commonStyles from '../assets/js/styles';
 import languageMap from '../assets/js/languageMap.json';
 import DashboardLayout from '../layouts/DashboardLayout/DashboardLayout';
 import Navbar from '../components/Navbar/Navbar';
-import NotFoundPage from './not_found/NotFound';
+import { ProtectedRoute } from '../components';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -52,17 +52,9 @@ function PageWrapper(props) {
   const backToTopEl = useRef(null);
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
   const [isVisible, setIsVisible] = useState(false);
-  const navigate = useNavigate();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
-  const params = useParams();
-  const location = useLocation();
-  const routeProps = {
-    location,
-    params,
-    navigate,
-  };
 
   const [state, setState] = React.useState({
     loading: false,
@@ -107,14 +99,18 @@ function PageWrapper(props) {
   }, [trigger]);
 
   const { loading } = state;
-  const { t } = props;
+  const { t, Component } = props;
   const { zubhub, hero } = props.projects;
 
-  // TODO: remove childrenRenderer and use children directly. this will likely mean having useNavigate, useParams,
-  //       useLocation in every component that needs them.
-  //       React.cloneElement makes our code brittle: see https://react.dev/reference/react/cloneElement
-  const childrenRenderer = () =>
-    React.Children.map(props.children, child => React.cloneElement(child, { ...props, ...routeProps }));
+  const navigate = useNavigate();
+  const params = useParams();
+  const location = useLocation();
+  const routeProps = {
+    location,
+    params,
+    navigate,
+  };
+
   return (
     <>
       <ToastContainer />
@@ -124,44 +120,26 @@ function PageWrapper(props) {
       <Navbar {...props} {...routeProps} />
 
       <Container className={classes.childrenContainer} maxWidth="lg">
-        {props.auth?.token ? <DashboardLayout>{loading ? <LoadingPage /> : childrenRenderer()}</DashboardLayout> : null}
-        {!props.auth?.token &&
-          ![
-            '/',
-            '/signup',
-            '/login',
-            '/projects/:id',
-            '/ambassadors',
-            '/creators/:username',
-            '/privacy_policy',
-            '/terms_of_use',
-            '/about',
-            '/challenge',
-            '/password-reset',
-            '/email-confirm',
-            '/password-reset-confirm',
-          ].includes(location?.pathname) && (
-            <div style={{ minHeight: '80vh' }}>
-              <NotFoundPage />
-            </div>
-          )}
+        {loading ? (
+          <LoadingPage />
+        ) : props.auth?.token ? (
+          <DashboardLayout>
+            <React.Suspense fallback={<LoadingPage />}>
+              <Component {...props} {...routeProps} />
+            </React.Suspense>
+          </DashboardLayout>
+        ) : props.protected ? (
+          <ProtectedRoute {...props} {...routeProps}>
+            <React.Suspense fallback={<LoadingPage />}>
+              <Component {...props} {...routeProps} />
+            </React.Suspense>
+          </ProtectedRoute>
+        ) : (
+          <React.Suspense fallback={<LoadingPage />}>
+            <Component {...props} {...routeProps} />
+          </React.Suspense>
+        )}
       </Container>
-      {!props.auth?.token &&
-        [
-          '/',
-          '/signup',
-          '/login',
-          '/password-reset',
-          '/projects/:id',
-          '/ambassadors',
-          '/creators/:username',
-          '/privacy_policy',
-          '/terms_of_use',
-          '/about',
-          '/challenge',
-          '/email-confirm',
-          '/password-reset-confirm',
-        ].includes(location?.pathname) && <div style={{ minHeight: '90vh' }}>{childrenRenderer()}</div>}
 
       <footer className={clsx('footer-distributed', classes.footerStyle)}>
         <Box>

@@ -1,7 +1,10 @@
-import { colors } from "../../../colors";
+import { colors } from '../../../colors';
 
 const styles = theme => ({
-  childrenContainer: { padding: '0' },
+  childrenContainer: {
+    padding: '0',
+    minHeight: '90vh',
+  },
   navBarStyle: {
     backgroundColor: 'var(--primary-color1)',
   },
@@ -133,7 +136,7 @@ const styles = theme => ({
   username: {
     color: `${colors.white} !important`,
     marginBottom: `${0} !important`,
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
 
   searchFormSubmitStyle: {
@@ -166,7 +169,7 @@ const styles = theme => ({
   navActionStyle: {
     display: 'flex',
     alignItems: 'center',
-    gap: 20
+    gap: 20,
   },
   avatarStyle: {
     cursor: 'pointer',

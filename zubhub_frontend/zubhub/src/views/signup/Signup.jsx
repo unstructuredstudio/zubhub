@@ -78,6 +78,14 @@ function Signup(props) {
     subscribe_box_checked: false,
   });
 
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
+    }
+  };
+
   React.useEffect(() => {
     handleSetState(getLocations(props));
   }, []);
@@ -104,21 +112,7 @@ function Signup(props) {
     }
   }, [props.touched['email'], props.touched['phone']]);
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
-
-  const {
-    locations,
-    tool_tip_open,
-    show_password1,
-    show_password2,
-    subscribe_box_checked,
-  } = state;
+  const { locations, tool_tip_open, show_password1, show_password2, subscribe_box_checked } = state;
   const { t } = props;
 
   return (
@@ -127,39 +121,16 @@ function Signup(props) {
         <Card className={classes.cardStyle}>
           <CardActionArea>
             <CardContent>
-              <form
-                className="auth-form"
-                name="signup"
-                noValidate="noValidate"
-                onSubmit={e => signup(e, props)}
-              >
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  color="textPrimary"
-                  className={classes.titleStyle}
-                >
+              <form className="auth-form" name="signup" noValidate="noValidate" onSubmit={e => signup(e, props)}>
+                <Typography gutterBottom variant="h5" component="h2" color="textPrimary" className={classes.titleStyle}>
                   {t('signup.welcomeMsg.primary')}
                 </Typography>
-                <Typography
-                  className={classes.descStyle}
-                  variant="body2"
-                  color="textSecondary"
-                  component="p"
-                >
+                <Typography className={classes.descStyle} variant="body2" color="textSecondary" component="p">
                   {t('signup.welcomeMsg.secondary')}
                 </Typography>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
-                    <Box
-                      component="p"
-                      className={
-                        props.status &&
-                        props.status['non_field_errors'] &&
-                        classes.errorBox
-                      }
-                    >
+                    <Box component="p" className={props.status && props.status['non_field_errors'] && classes.errorBox}>
                       {props.status && props.status['non_field_errors'] && (
                         <Box component="span" className={classes.error}>
                           {props.status['non_field_errors']}
@@ -179,15 +150,10 @@ function Signup(props) {
                         (props.touched['username'] && props.errors['username'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="username"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="username">
                         {t('signup.inputs.username.label')}
                       </InputLabel>
-                      <ClickAwayListener
-                        onClickAway={() => handleSetState(handleTooltipClose())}
-                      >
+                      <ClickAwayListener onClickAway={() => handleSetState(handleTooltipClose())}>
                         <Tooltip
                           title={t('signup.tooltips.noRealName')}
                           placement="top-start"
@@ -213,16 +179,11 @@ function Signup(props) {
                           />
                         </Tooltip>
                       </ClickAwayListener>
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['username']) ||
                           (props.touched['username'] &&
                             props.errors['username'] &&
-                            t(
-                              `signup.inputs.username.errors.${props.errors['username']}`,
-                            ))}
+                            t(`signup.inputs.username.errors.${props.errors['username']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -236,14 +197,10 @@ function Signup(props) {
                       margin="normal"
                       error={
                         (props.status && props.status['user_location']) ||
-                        (props.touched['user_location'] &&
-                          props.errors['user_location'])
+                        (props.touched['user_location'] && props.errors['user_location'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        id="user_location"
-                      >
+                      <InputLabel className={classes.customLabelStyle} id="user_location">
                         {t('signup.inputs.location.label')}
                       </InputLabel>
                       <Select
@@ -252,11 +209,7 @@ function Signup(props) {
                         id="user_location"
                         name="user_location"
                         className={classes.customInputStyle}
-                        value={
-                          props.values.user_location
-                            ? props.values.user_location
-                            : ''
-                        }
+                        value={props.values.user_location ? props.values.user_location : ''}
                         onChange={e => handleLocationChange(e, props)}
                         onBlur={props.handleBlur}
                         // label="Location"
@@ -272,16 +225,11 @@ function Signup(props) {
                             </MenuItem>
                           ))}
                       </Select>
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['user_location']) ||
                           (props.touched['user_location'] &&
                             props.errors['user_location'] &&
-                            t(
-                              `signup.inputs.location.errors.${props.errors['user_location']}`,
-                            ))}
+                            t(`signup.inputs.location.errors.${props.errors['user_location']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -295,15 +243,10 @@ function Signup(props) {
                       margin="normal"
                       error={
                         (props.status && props.status['dateOfBirth']) ||
-                        (props.touched['dateOfBirth'] &&
-                          props.errors['dateOfBirth'])
+                        (props.touched['dateOfBirth'] && props.errors['dateOfBirth'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="dateOfBirth"
-                        shrink
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="dateOfBirth" shrink>
                         {t('signup.inputs.dateOfBirth.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -315,16 +258,11 @@ function Signup(props) {
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['dateOfBirth']) ||
                           (props.touched['dateOfBirth'] &&
                             props.errors['dateOfBirth'] &&
-                            t(
-                              `signup.inputs.dateOfBirth.errors.${props.errors['dateOfBirth']}`,
-                            ))}
+                            t(`signup.inputs.dateOfBirth.errors.${props.errors['dateOfBirth']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -337,39 +275,26 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        (props.status && props.status['phone']) ||
-                        (props.touched['phone'] && props.errors['phone'])
+                        (props.status && props.status['phone']) || (props.touched['phone'] && props.errors['phone'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        shrink
-                        htmlFor="phone"
-                      >
+                      <InputLabel className={classes.customLabelStyle} shrink htmlFor="phone">
                         {t('signup.inputs.phone.label')}
                       </InputLabel>
                       <OutlinedInput
                         ref={refs.phone_el}
-                        className={clsx(
-                          classes.customInputStyle,
-                          classes.locationInputStyle,
-                        )}
+                        className={clsx(classes.customInputStyle, classes.locationInputStyle)}
                         id="phone"
                         name="phone"
                         type="phone"
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['phone']) ||
                           (props.touched['phone'] &&
                             props.errors['phone'] &&
-                            t(
-                              `signup.inputs.phone.errors.${props.errors['phone']}`,
-                            ))}
+                            t(`signup.inputs.phone.errors.${props.errors['phone']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -382,14 +307,10 @@ function Signup(props) {
                       fullWidth
                       margin="normal"
                       error={
-                        (props.status && props.status['email']) ||
-                        (props.touched['email'] && props.errors['email'])
+                        (props.status && props.status['email']) || (props.touched['email'] && props.errors['email'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="email"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="email">
                         {t('signup.inputs.email.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -401,16 +322,11 @@ function Signup(props) {
                         onBlur={props.handleBlur}
                         label={t('signup.inputs.email.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['email']) ||
                           (props.touched['email'] &&
                             props.errors['email'] &&
-                            t(
-                              `signup.inputs.email.errors.${props.errors['email']}`,
-                            ))}
+                            t(`signup.inputs.email.errors.${props.errors['email']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -424,14 +340,10 @@ function Signup(props) {
                       margin="normal"
                       error={
                         (props.status && props.status['password1']) ||
-                        (props.touched['password1'] &&
-                          props.errors['password1'])
+                        (props.touched['password1'] && props.errors['password1'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password1"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="password1">
                         {t('signup.inputs.password1.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -444,9 +356,7 @@ function Signup(props) {
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
-                              aria-label={t(
-                                'signup.ariaLabel.togglePasswordVisibility',
-                              )}
+                              aria-label={t('signup.ariaLabel.togglePasswordVisibility')}
                               onClick={() =>
                                 setState({
                                   ...state,
@@ -456,26 +366,17 @@ function Signup(props) {
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {show_password1 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
+                              {show_password1 ? <Visibility /> : <VisibilityOff />}
                             </IconButton>
                           </InputAdornment>
                         }
                         label={t('signup.inputs.password1.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['password1']) ||
                           (props.touched['password1'] &&
                             props.errors['password1'] &&
-                            t(
-                              `signup.inputs.password1.errors.${props.errors['password1']}`,
-                            ))}
+                            t(`signup.inputs.password1.errors.${props.errors['password1']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -489,14 +390,10 @@ function Signup(props) {
                       margin="normal"
                       error={
                         (props.status && props.status['password2']) ||
-                        (props.touched['password2'] &&
-                          props.errors['password2'])
+                        (props.touched['password2'] && props.errors['password2'])
                       }
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="password2"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="password2">
                         {t('signup.inputs.password2.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -509,9 +406,7 @@ function Signup(props) {
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
-                              aria-label={t(
-                                'signup.ariaLabel.togglePasswordVisibility',
-                              )}
+                              aria-label={t('signup.ariaLabel.togglePasswordVisibility')}
                               onClick={() =>
                                 setState({
                                   ...state,
@@ -521,26 +416,17 @@ function Signup(props) {
                               onMouseDown={handleMouseDownPassword}
                               edge="end"
                             >
-                              {show_password2 ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
+                              {show_password2 ? <Visibility /> : <VisibilityOff />}
                             </IconButton>
                           </InputAdornment>
                         }
                         label={t('signup.inputs.password2.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         {(props.status && props.status['password2']) ||
                           (props.touched['password2'] &&
                             props.errors['password2'] &&
-                            t(
-                              `signup.inputs.password2.errors.${props.errors['password2']}`,
-                            ))}
+                            t(`signup.inputs.password2.errors.${props.errors['password2']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
@@ -552,15 +438,9 @@ function Signup(props) {
                       size="small"
                       fullWidth
                       margin="small"
-                      error={
-                        (props.status && props.status['bio']) ||
-                        (props.touched['bio'] && props.errors['bio'])
-                      }
+                      error={(props.status && props.status['bio']) || (props.touched['bio'] && props.errors['bio'])}
                     >
-                      <InputLabel
-                        className={classes.customLabelStyle}
-                        htmlFor="bio"
-                      >
+                      <InputLabel className={classes.customLabelStyle} htmlFor="bio">
                         {t('signup.inputs.bio.label')}
                       </InputLabel>
                       <OutlinedInput
@@ -575,10 +455,7 @@ function Signup(props) {
                         onBlur={props.handleBlur}
                         label={t('signup.inputs.bio.label')}
                       />
-                      <FormHelperText
-                        className={classes.fieldHelperTextStyle}
-                        error
-                      >
+                      <FormHelperText className={classes.fieldHelperTextStyle} error>
                         <Typography
                           color="textSecondary"
                           variant="caption"
@@ -591,27 +468,15 @@ function Signup(props) {
                         {(props.status && props.status['bio']) ||
                           (props.touched['bio'] &&
                             props.errors['bio'] &&
-                            t(
-                              `signup.inputs.bio.errors.${props.errors['bio']}`,
-                            ))}
+                            t(`signup.inputs.bio.errors.${props.errors['bio']}`))}
                       </FormHelperText>
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControlLabel
                       value={subscribe_box_checked}
-                      onChange={e =>
-                        handleSetState(
-                          handleToggleSubscribeBox(e, props, state),
-                        )
-                      }
-                      control={
-                        <Checkbox
-                          name="subscribe"
-                          id="subscribe"
-                          color="primary"
-                        />
-                      }
+                      onChange={e => handleSetState(handleToggleSubscribeBox(e, props, state))}
+                      control={<Checkbox name="subscribe" id="subscribe" color="primary" />}
                       label={
                         <Typography
                           color="textSecondary"
@@ -644,25 +509,15 @@ function Signup(props) {
                 <Grid item xs={12}>
                   <Box className={classes.center}>
                     <Divider className={classes.divider} />
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
+                    <Typography variant="body2" color="textSecondary" component="p">
                       {t('signup.alreadyAMember')}
                     </Typography>
                     <Divider className={classes.divider} />
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Link to="/login" className={classes.textDecorationNone}>
-                    <CustomButton
-                      variant="outlined"
-                      size="large"
-                      secondaryButtonStyle
-                      customButtonStyle
-                      fullWidth
-                    >
+                  <Link to={`/login${props.location.search}`} className={classes.textDecorationNone}>
+                    <CustomButton variant="outlined" size="large" secondaryButtonStyle customButtonStyle fullWidth>
                       {t('signup.login')}
                     </CustomButton>
                   </Link>
@@ -683,25 +538,17 @@ Signup.propTypes = {
   getLocations: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setAuthUser: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
-    },
-    signup: args => {
-      return dispatch(AuthActions.signup(args));
-    },
-    getLocations: args => {
-      return dispatch(AuthActions.getLocations(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  setAuthUser: auth_user => {
+    dispatch(AuthActions.setAuthUser(auth_user));
+  },
+  signup: args => dispatch(AuthActions.signup(args)),
+  getLocations: args => dispatch(AuthActions.getLocations(args)),
+});
 
 export default connect(
   mapStateToProps,

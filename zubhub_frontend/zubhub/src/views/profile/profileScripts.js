@@ -1,17 +1,14 @@
 import { BASE_TAGS } from '../../assets/js/utils/constants';
-import { getUserDrafts } from '../../store/actions/projectActions';
 
 /**
  * @function getUserProfile
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
- */ export const getUserProfile = props => {
-  let username = props.params.username;
-
-  if (!username) {
-    username = props.auth.username;
-  } else if (props.auth.username === username) props.navigate('/profile', { replace: true });
+ */
+export const getUserProfile = props => {
+  const username = props.params.username || props.auth.username;
+  if (props.auth.username === username) props.navigate('/profile', { replace: true });
   return props.getUserProfile({
     username,
     token: props.auth.token,
@@ -19,9 +16,9 @@ import { getUserDrafts } from '../../store/actions/projectActions';
   });
 };
 
-export const followTeam = (groupname, username,props) => {
-  let token=props.auth.token;
-  props.toggleTeamFollow({groupname, username, token})
+export const followTeam = (groupname, username, props) => {
+  const token = props.auth.token;
+  props.toggleTeamFollow({ groupname, username, token });
 };
 
 /**
@@ -29,7 +26,8 @@ export const followTeam = (groupname, username,props) => {
  * @author Hemant <hks@iamhks.com>
  *
  * @todo - describe function's signature
- */ export const getUserTeams = props => {
+ */
+export const getUserTeams = props => {
   let username = props.params.username;
 
   if (!username) {
@@ -69,18 +67,14 @@ export const copyProfileUrl = (profile, props, toast) => {
  *
  * @todo - describe function's signature
  */
-export const updateProjects = (res, projects, props, toast) => {
-  return res
+export const updateProjects = (res, projects, props, toast) =>
+  res
     .then(res => {
       if (res.project && res.project.title) {
         if (projects[0]) {
-          projects = projects.map(project =>
-            project.id === res.project.id ? res.project : project,
-          );
+          projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         } else {
-          projects = projects.results.map(project =>
-            project.id === res.project.id ? res.project : project,
-          );
+          projects = projects.results.map(project => (project.id === res.project.id ? res.project : project));
         }
         return { results: projects };
       } else {
@@ -98,7 +92,6 @@ export const updateProjects = (res, projects, props, toast) => {
       }
       return { loading: false };
     });
-};
 
 /**
  * @function updateProjects
@@ -106,13 +99,11 @@ export const updateProjects = (res, projects, props, toast) => {
  *
  * @todo - describe function's signature
  */
-export const updateDrafts = (res, projects, props, toast) => {
-  return res
+export const updateDrafts = (res, projects, props, toast) =>
+  res
     .then(res => {
       if (res.project && res.project.title) {
-        projects = projects.map(project =>
-          project.id === res.project.id ? res.project : project,
-        );
+        projects = projects.map(project => (project.id === res.project.id ? res.project : project));
         return { drafts: projects };
       } else {
         res = Object.keys(res)
@@ -129,7 +120,6 @@ export const updateDrafts = (res, projects, props, toast) => {
       }
       return { loading: false };
     });
-};
 
 /**
  * @function toggleFollow
@@ -158,10 +148,10 @@ export const toggleFollow = (id, props) => {
  * @param {Array} tags - an array containing tag strings
  * @returns {Array} - sorted array of tags.
  */
-export const sortTags = tags => {
-  return tags.sort((a, b) => {
+export const sortTags = tags =>
+  tags.sort((a, b) => {
     if (BASE_TAGS.includes(a) && BASE_TAGS.includes(b)) {
-      //standard reverse sort.
+      // standard reverse sort.
       if (a > b) {
         return -1;
       } else {
@@ -171,16 +161,12 @@ export const sortTags = tags => {
       return -1;
     } else if (BASE_TAGS.includes(b)) {
       return 1;
+    } else if (a > b) {
+      return 1;
     } else {
-      //standard sort.
-      if (a > b) {
-        return 1;
-      } else {
-        return -1;
-      }
+      return -1;
     }
   });
-};
 
 /**
  * @function handleMoreMenuOpen
@@ -188,9 +174,7 @@ export const sortTags = tags => {
  *
  * @todo - describe function's signature
  */
-export const handleMoreMenuOpen = e => {
-  return { more_anchor_el: e.currentTarget };
-};
+export const handleMoreMenuOpen = e => ({ more_anchor_el: e.currentTarget });
 
 /**
  * @function handleMoreMenuClose
@@ -198,9 +182,7 @@ export const handleMoreMenuOpen = e => {
  *
  * @todo - describe function's signature
  */
-export const handleMoreMenuClose = () => {
-  return { more_anchor_el: null };
-};
+export const handleMoreMenuClose = () => ({ more_anchor_el: null });
 
 /**
  * @function handleToggleDeleteAccountModal
