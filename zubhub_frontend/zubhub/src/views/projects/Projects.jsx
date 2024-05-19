@@ -10,7 +10,7 @@ import { makeStyles } from '@mui/styles';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Pagination } from '@mui/lab';
-import { Grid, Box, ButtonGroup, Typography, Container } from '@mui/material';
+import { Grid, Box, Typography, Container } from '@mui/material';
 
 import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
 
@@ -20,13 +20,13 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import StaffPick from '../../components/staff_pick/StaffPick';
-import activity_of_the_month_svg from '../../assets/images/activity_of_the_month.svg';
-import activity_of_the_month_small_svg from '../../assets/images/activity_of_the_month_small.svg';
+// import activity_of_the_month_svg from '../../assets/images/activity_of_the_month.svg';
+// import activity_of_the_month_small_svg from '../../assets/images/activity_of_the_month_small.svg';
 import new_stuff from '../../assets/images/new_stuff.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
-import { PROJECTS_PAGE_SIZE } from '../../../src/utils.js';
+import { PROJECTS_PAGE_SIZE } from '../../utils.js';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -47,6 +47,14 @@ function Projects(props) {
     isMobileView: false,
   });
 
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
+    }
+  };
+
   React.useEffect(() => {
     fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
@@ -65,14 +73,6 @@ function Projects(props) {
       window.removeEventListener('resize', checkMobileView);
     };
   }, []);
-
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
 
   const { loading, isMobileView } = state;
   const { count: totalProjects, results: projects, previous: prev_page, next: next_page } = props.projects.all_projects;
@@ -163,7 +163,7 @@ function Projects(props) {
                     </Typography>
                   </Grid>
                 ) : null}
-                {projects.map((project, index) => (
+                {projects.map(project => (
                   <Grid
                     key={project.id}
                     xs={12}
@@ -285,34 +285,18 @@ Projects.propTypes = {
   toggleSave: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-    projects: state.projects,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+  projects: state.projects,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProjects: page => {
-      return dispatch(ProjectActions.getProjects(page));
-    },
-    setProjects: args => {
-      return dispatch(ProjectActions.setProjects(args));
-    },
-    toggleLike: args => {
-      return dispatch(ProjectActions.toggleLike(args));
-    },
-    toggleSave: args => {
-      return dispatch(ProjectActions.toggleSave(args));
-    },
-    getStaffPicks: args => {
-      return dispatch(ProjectActions.getStaffPicks(args));
-    },
-    setStaffPicks: args => {
-      return dispatch(ProjectActions.setStaffPicks(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  getProjects: page => dispatch(ProjectActions.getProjects(page)),
+  setProjects: args => dispatch(ProjectActions.setProjects(args)),
+  toggleLike: args => dispatch(ProjectActions.toggleLike(args)),
+  toggleSave: args => dispatch(ProjectActions.toggleSave(args)),
+  getStaffPicks: args => dispatch(ProjectActions.getStaffPicks(args)),
+  setStaffPicks: args => dispatch(ProjectActions.setStaffPicks(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projects);

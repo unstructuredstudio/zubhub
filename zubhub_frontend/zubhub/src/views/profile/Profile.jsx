@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { toast } from 'react-toastify';
-
 import { makeStyles } from '@mui/styles';
 import {
   Avatar,
@@ -150,7 +149,7 @@ function Profile(props) {
   } else if (profile && Object.keys(profile).length > 0) {
     return (
       <>
-        <Box className={classes.root}>
+        <Box className={clsx(classes.root)}>
           <Paper className={classes.profileHeaderStyle}>
             <Container maxWidth="md" style={{ padding: '0 3em' }}>
               <Box className={classes.flexClass}>
@@ -303,7 +302,15 @@ function Profile(props) {
               </Typography>
               <Grid container spacing={2}>
                 {teams.map(team => (
-                  <Grid key={team.id} item xs={12} sm={6} md={6} className={classes.projectGridStyle} align="center">
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={6}
+                    className={classes.projectGridStyle}
+                    align="center"
+                    key={team.groupname}
+                  >
                     <Link to={`/teams/${team.groupname}`} className={classes.textDecorationNone}>
                       <Card>
                         <CardContent className={classes.mediaBoxStyle}>
@@ -351,7 +358,7 @@ function Profile(props) {
                 {...props}
               />
             ) : (
-              <Box style={{ borderRadius: 8, overflow: 'hidden' }}>
+              <Box className={classes.projectsSection}>
                 <Typography gutterBottom component="h2" variant="h6" color="textPrimary" className={classes.titleStyle}>
                   {t('profile.projects.label')}
                   <CustomButton
@@ -465,9 +472,7 @@ Profile.propTypes = {
   toggleSave: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth,
-});
+const mapStateToProps = state => ({ auth: state.auth });
 
 const mapDispatchToProps = dispatch => ({
   setAuthUser: auth_user => {

@@ -1,7 +1,5 @@
 const styles = theme => ({
   root: {
-
-    paddingBottom: '2em',
     flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
@@ -39,27 +37,27 @@ const styles = theme => ({
     // width: '100%',
     // maxWidth: '1230px',
     marginBottom: '2em',
-    height:'100vh',
+    height: '100vh',
     [theme.breakpoints.down('1000')]: {
       width: '100%',
-      padding: '0 1em'
+      padding: '0 1em',
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      height:'fit-content',
+      height: 'fit-content',
     },
   },
-    heroSectionStyle: {
-      backgroundColor: 'var(--primary-color1)',
-      boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-      WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-      MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-      display: 'flex',
-      paddingTop: '2.3em',
-      paddingBottom: '2.85em',
-      justifyContent: 'center',
-      width: '100vw',
-      marginBottom: '2em'
+  heroSectionStyle: {
+    backgroundColor: 'var(--primary-color1)',
+    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    display: 'flex',
+    paddingTop: '2.3em',
+    paddingBottom: '2.85em',
+    justifyContent: 'center',
+    width: '100vw',
+    marginBottom: '2em',
   },
   imageLeft: {
     flexDirection: 'row',
@@ -85,14 +83,14 @@ const styles = theme => ({
     textAlign: 'center',
     padding: theme.spacing(3),
   },
-  titleStyle: {
-    fontFamily: 'Nanum Pen, sans-serif',
-    fontSize: '30px',
-    fontWeight: 400,
-    lineHeight: '40px',
-    letterSpacing: '0em',
-    textAlign: 'left',
-  },
+  // titleStyle: {
+  //   fontFamily: 'Nanum Pen, sans-serif',
+  //   fontSize: '30px',
+  //   fontWeight: 400,
+  //   lineHeight: '40px',
+  //   letterSpacing: '0em',
+  //   textAlign: 'left',
+  // },
   SectionStyle: {
     backgroundColor: '#FFFFFF',
     boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
@@ -112,7 +110,7 @@ const styles = theme => ({
       padding: '2rem 1rem',
       flexDirection: 'column-reverse',
       width: '100',
-      height:'fit-content',
+      height: 'fit-content',
     },
   },
   heroContainerStyle: {
@@ -153,20 +151,20 @@ const styles = theme => ({
     fontSize: '4.5rem',
     fontWeight: '700',
     [theme.breakpoints.down('1480')]: {
-      fontSize: '3.5rem'
+      fontSize: '3.5rem',
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: '2.5rem'
+      fontSize: '2.5rem',
     },
   },
   heroMainMessagePrimaryStyle: {
     fontSize: '2.2rem',
     fontWeight: 500,
     [theme.breakpoints.down('1480')]: {
-      fontSize: '1.7rem'
+      fontSize: '1.7rem',
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1.2rem'
+      fontSize: '1.2rem',
     },
   },
   heroButtonStyle: {
@@ -180,13 +178,13 @@ const styles = theme => ({
     padding: '1rem 2rem',
     borderRadius: '2rem',
     gap: '1rem',
-  [theme.breakpoints.down('sm')]: {
-    height:'fit-content',
-    padding: '0.1em 0.7em',
-    marginBottom: '3rem',
-    width: 'fit-content',
-    fontSize: "1.2rem"
-  },
+    [theme.breakpoints.down('sm')]: {
+      height: 'fit-content',
+      padding: '0.1em 0.7em',
+      marginBottom: '3rem',
+      width: 'fit-content',
+      fontSize: '1.2rem',
+    },
   },
   heroBtnStyle: {
     textTransform: 'none',
@@ -199,8 +197,7 @@ const styles = theme => ({
   heroImageContainerStyle: {
     display: 'flex',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('1000')]: {
-    },
+    [theme.breakpoints.down('1000')]: {},
     [theme.breakpoints.down('500')]: {
       flexDirection: 'column',
       alignItems: 'center',
@@ -319,7 +316,10 @@ const styles = theme => ({
   },
 
   mainContainerStyle: {
-    // marginTop: '3em',
+    marginTop: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+    },
     maxWidth: '1190px',
     width: '100%',
     padding: '0 2rem',
@@ -353,7 +353,7 @@ const styles = theme => ({
       display: 'flex',
     },
   },
-  paginationComp:{
+  paginationComp: {
     width: '5rem',
     height: '2rem',
     display: 'flex',
@@ -362,9 +362,9 @@ const styles = theme => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: '0.5rem'
+      width: '0.5rem',
     },
-    '& .MuiPaginationItem-ul':{
+    '& .MuiPaginationItem-ul': {
       display: 'flex',
     },
   },
@@ -380,24 +380,23 @@ const styles = theme => ({
         display: 'flex',
       },
     },
-    '& .MuiPaginationItem-ul':{
+    '& .MuiPaginationItem-ul': {
       display: 'flex',
-    }
+    },
   },
   buttonGroupStyleAlternative: {
     padding: '7px 21px',
     [theme.breakpoints.down('600')]: {
       padding: '3px 3px 3px 6px',
       fontSize: '15px',
-      paddingTop: '0'
+      paddingTop: '0',
     },
   },
   floatRight: {
     float: 'right',
-
   },
-  visibilityNone:{
-    visibility: 'hidden'
+  visibilityNone: {
+    visibility: 'hidden',
   },
   floatLeft: {
     float: 'left',

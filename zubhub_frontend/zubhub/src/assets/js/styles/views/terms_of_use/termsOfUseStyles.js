@@ -1,11 +1,13 @@
-import { fade } from '@mui/material/styles';
-
 const styles = theme => ({
   root: {
     color: 'black',
-    paddingTop: '2em',
-    paddingBottom: '2em',
     flex: '1 0 auto',
+    marginTop: '2em',
+    marginBottom: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+      marginBottom: '3em',
+    },
     // background: 'var(--primary-color2)',
     // background:
     //   'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',

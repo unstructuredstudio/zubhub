@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -9,24 +8,9 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@mui/styles';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Button,
-  Typography,
-  Container,
-  Card,
-  Avatar,
-} from '@mui/material';
+import { Grid, Box, ButtonGroup, Typography, Container, Card, Avatar } from '@mui/material';
 
-import {
-  getQueryParams,
-  fetchPage,
-  updateProjects,
-  toggleFollow,
-  SearchType,
-} from './searchResultsScripts';
+import { getQueryParams, fetchPage, updateProjects, toggleFollow, SearchType } from './searchResultsScripts';
 
 import * as ProjectActions from '../../store/actions/projectActions';
 import * as CreatorActions from '../../store/actions/userActions';
@@ -46,40 +30,16 @@ const useCommonStyles = makeStyles(commonStyles);
  *
  * @todo - describe function's signature
  */
-const buildCreatorProfiles = (
-  results,
-  { classes, common_classes },
-  props,
-  state,
-  handleSetState,
-) =>
+const buildCreatorProfiles = (results, { classes, common_classes }, props, state, handleSetState) =>
   results.map(creator => (
-    <Grid
-      item
-      xs={12}
-      sm={6}
-      md={4}
-      lg={3}
-      className={classes.projectGridStyle}
-      align="center"
-      key={creator.id}
-    >
-      <Link
-        className={common_classes.textDecorationNone}
-        to={`/creators/${creator.username}`}
-      >
+    <Grid item xs={12} sm={6} md={4} lg={3} className={classes.projectGridStyle} align="center" key={creator.id}>
+      <Link className={common_classes.textDecorationNone} to={`/creators/${creator.username}`}>
         <Card className={classes.cardStyle}>
-          <Avatar
-            className={classes.avatarStyle}
-            src={creator.avatar}
-            alt={creator.username}
-          />
+          <Avatar className={classes.avatarStyle} src={creator.avatar} alt={creator.username} />
           {creator.id !== props.auth.id ? (
             <CustomButton
               variant="contained"
-              onClick={(e, id = creator.id) =>
-                handleSetState(toggleFollow(e, props, state, id, toast))
-              }
+              onClick={(e, id = creator.id) => handleSetState(toggleFollow(e, props, state, id, toast))}
               primaryButtonStyle
             >
               {creator.followers.includes(props.auth.id)
@@ -87,11 +47,7 @@ const buildCreatorProfiles = (
                 : props.t('searchResults.following.follow')}
             </CustomButton>
           ) : null}
-          <Typography
-            component="h3"
-            color="textPrimary"
-            className={classes.userNameStyle}
-          >
+          <Typography component="h3" color="textPrimary" className={classes.userNameStyle}>
             {creator.username}
           </Typography>
         </Card>
@@ -117,12 +73,6 @@ function SearchResults(props) {
     loading: true,
   });
 
-  React.useEffect(() => {
-    const params = getQueryParams(window.location.href);
-
-    handleSetState(fetchPage(null, props, params.get('q'), params.get('type')));
-  }, []);
-
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -131,48 +81,33 @@ function SearchResults(props) {
     }
   };
 
+  React.useEffect(() => {
+    const params = getQueryParams(window.location.href);
+
+    handleSetState(fetchPage(null, props, params.get('q'), params.get('type')));
+  }, []);
+
   const getResults = (type, results) => {
     if (type === SearchType.CREATORS) {
-      return buildCreatorProfiles(
-        results,
-        { classes, common_classes },
-        props,
-        state,
-        handleSetState,
-      );
+      return buildCreatorProfiles(results, { classes, common_classes }, props, state, handleSetState);
     } else {
       return (
         <Grid container spacing={3}>
           {results.map(project => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              align="center"
-            >
+            <Grid item xs={12} sm={6} md={4} align="center" key={project.id}>
               <Project
                 project={project}
-                key={project.id}
-                updateProjects={res =>
-                  handleSetState(updateProjects(res, state, props, toast))
-                }
+                updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                 {...props}
               />
             </Grid>
           ))}
         </Grid>
-      )
+      );
     }
   };
 
-  const {
-    count,
-    results,
-    previous: prev_page,
-    next: next_page,
-    loading,
-  } = state;
+  const { count, results, previous: prev_page, next: next_page, loading } = state;
   const { t } = props;
   if (loading) {
     return <LoadingPage />;
@@ -183,36 +118,20 @@ function SearchResults(props) {
           <Container className={classes.mainContainerStyle}>
             <Grid container>
               <Grid item xs={12}>
-                <Typography
-                  className={classes.pageHeaderStyle}
-                  variant="h3"
-                  gutterBottom
-                >
-                  {count}{' '}
-                  {count > 1
-                    ? t('searchResults.resultsFound')
-                    : t('searchResults.resultFound')}{' '}
-                  "{getQueryParams(window.location.href).get('q')}"
+                <Typography className={classes.pageHeaderStyle} variant="h3" gutterBottom>
+                  {count} {count > 1 ? t('searchResults.resultsFound') : t('searchResults.resultFound')}{' '}
+                  {`"${getQueryParams(window.location.href).get('q')}"`}
                 </Typography>
               </Grid>
-              {getResults(
-                getQueryParams(window.location.href).get('type'),
-                results,
-              )}
+              {getResults(getQueryParams(window.location.href).get('type'), results)}
             </Grid>
-            <ButtonGroup
-              aria-label={t('searchResults.ariaLabels.prevNxtButtons')}
-              className={classes.buttonGroupStyle}
-            >
+            <ButtonGroup aria-label={t('searchResults.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
               {prev_page ? (
                 <CustomButton
                   className={classes.floatLeft}
                   size="large"
                   startIcon={<NavigateBeforeIcon />}
-                  onClick={(
-                    _,
-                    page = getQueryParams(prev_page).get('page'),
-                  ) => {
+                  onClick={(_, page = getQueryParams(prev_page).get('page')) => {
                     handleSetState({ loading: true });
                     handleSetState(
                       fetchPage(
@@ -233,10 +152,7 @@ function SearchResults(props) {
                   className={classes.floatRight}
                   size="large"
                   endIcon={<NavigateNextIcon />}
-                  onClick={(
-                    _,
-                    page = getQueryParams(next_page).get('page'),
-                  ) => {
+                  onClick={(_, page = getQueryParams(next_page).get('page')) => {
                     handleSetState({ loading: true });
                     handleSetState(
                       fetchPage(
@@ -255,9 +171,7 @@ function SearchResults(props) {
             </ButtonGroup>
           </Container>
         ) : (
-          <ErrorPage
-            error={t('searchResults.errors.noResult')}
-          />
+          <ErrorPage error={t('searchResults.errors.noResult')} />
         )}
       </Box>
     );
@@ -274,33 +188,15 @@ SearchResults.propTypes = {
   toggleSave: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({ auth: state.auth });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    searchProjects: args => {
-      return dispatch(ProjectActions.searchProjects(args));
-    },
-    searchCreators: args => {
-      return dispatch(CreatorActions.searchCreators(args));
-    },
-    searchTags: args => {
-      return dispatch(ProjectActions.searchTags(args));
-    },
-    toggleFollow: args => {
-      return dispatch(CreatorActions.toggleFollow(args));
-    },
-    toggleLike: args => {
-      return dispatch(ProjectActions.toggleLike(args));
-    },
-    toggleSave: args => {
-      return dispatch(ProjectActions.toggleSave(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  searchProjects: args => dispatch(ProjectActions.searchProjects(args)),
+  searchCreators: args => dispatch(CreatorActions.searchCreators(args)),
+  searchTags: args => dispatch(ProjectActions.searchTags(args)),
+  toggleFollow: args => dispatch(CreatorActions.toggleFollow(args)),
+  toggleLike: args => dispatch(ProjectActions.toggleLike(args)),
+  toggleSave: args => dispatch(ProjectActions.toggleSave(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchResults);

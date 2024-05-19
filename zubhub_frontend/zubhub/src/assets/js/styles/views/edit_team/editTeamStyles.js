@@ -1,12 +1,16 @@
-import { Translate } from "@mui/icons-material";
-import { colors } from "../../../colors";
+import { colors } from '../../../colors';
 
 const styles = theme => ({
   root: {
-    paddingTop: '2em',
-    paddingBottom: '2em',
+    marginTop: '2em',
+    marginBottom: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+      marginBottom: '3em',
+    },
     flex: '1 0 auto',
-    background: 'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
+    background:
+      'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
   },
   containerStyle: {
     maxWidth: '600px',

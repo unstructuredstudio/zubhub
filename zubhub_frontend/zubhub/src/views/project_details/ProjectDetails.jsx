@@ -1,12 +1,11 @@
-import { IconButton, useMediaQuery } from '@mui/material';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FiShare } from 'react-icons/fi';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.bubble.css';
 import { connect } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
@@ -22,12 +21,14 @@ import {
   DialogTitle,
   Grid,
   Typography,
+  IconButton,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import CloseOutlined from '@mui/icons-material/CloseOutlined';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
@@ -46,11 +47,12 @@ import {
   toggleLike,
   toggleSave,
 } from './projectDetailsScripts';
-
-import { CloseOutlined } from '@mui/icons-material';
 import { colors } from '../../assets/js/colors.js';
 import commonStyles from '../../assets/js/styles';
-import styles, { EnlargedImgArrow, sliderSettings } from '../../assets/js/styles/views/project_details/projectDetailsStyles';
+import styles, {
+  EnlargedImgArrow,
+  sliderSettings,
+} from '../../assets/js/styles/views/project_details/projectDetailsStyles';
 import { cloudinaryFactory, getPlayerOptions, nFormatter, parseComments } from '../../assets/js/utils/scripts';
 import { Comments, Modal, Pill } from '../../components/index.js';
 import Project from '../../components/project/Project';
@@ -78,9 +80,9 @@ const buildMaterialsUsedComponent = (classes, state) => {
  *
  * @todo - describe function's signature
  */
-const buildTagsComponent = (classes, tags, history) => {
-  return tags.map((tag, index) => (
-    <Pill key={index} text={`#${tag.name}`} />
+const buildTagsComponent = (_, tags) =>
+  tags.map((tag, index) => (
+    <Pill key={`${tag.name}-${index}`} text={`#${tag.name}`} />
     // <CustomButton
     //   key={index}
     //   primaryButtonOutlinedStyle
@@ -90,7 +92,6 @@ const buildTagsComponent = (classes, tags, history) => {
     //   #{tag.name}
     // </CustomButton>
   ));
-};
 
 /**
  * @function ProjectDetails View
@@ -101,11 +102,10 @@ const buildTagsComponent = (classes, tags, history) => {
 function ProjectDetails(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
-  const [{ height, width }, setDimensions] = useState({});
-  const [moreProjects, setMoreProjects] = useState([]);
-  const { id } = useParams();
-  const [open, setOpen] = useState(false);
-
+  const [{ height, width }, setDimensions] = React.useState({});
+  const [moreProjects, setMoreProjects] = React.useState([]);
+  const { id } = props.params;
+  const [open, setOpen] = React.useState(false);
   const [state, setState] = React.useState({
     project: {},
     loading: true,
@@ -116,6 +116,19 @@ function ProjectDetails(props) {
     enlarged_image_id: 0,
   });
 
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
+    }
+  };
+
+  const toggleDialog = () => {
+    setOpen(!open);
+    props.navigate(window.location.pathname, { replace: true });
+  };
+
   React.useEffect(() => {
     Promise.resolve(
       props.getProject({
@@ -125,13 +138,13 @@ function ProjectDetails(props) {
       }),
     ).then(async obj => {
       if (obj.project) {
-        let { project } = obj;
+        const { project } = obj;
         const userProjects = await props.getUserProjects({
           limit: 4,
           username: project.creator.username,
           project_to_omit: project.id,
         });
-        let moreProjects = userProjects.results;
+        const moreProjects = userProjects.results;
         setMoreProjects(moreProjects);
         parseComments(project.comments);
       }
@@ -163,19 +176,6 @@ function ProjectDetails(props) {
     }
   }, [state.project.video]);
 
-  const toggleDialog = () => {
-    setOpen(!open);
-    props.navigate(window.location.pathname, { replace: true });
-  };
-
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
-
   const {
     project,
     loading,
@@ -186,6 +186,7 @@ function ProjectDetails(props) {
     enlarged_image_id,
   } = state;
   const { t } = props;
+
   if (loading) {
     return <LoadingPage />;
   } else if (Object.keys(project).length > 0) {
@@ -328,9 +329,8 @@ function ProjectDetails(props) {
                     <Box className={classes.sliderBoxStyle}>
                       <Slider {...sliderSettings(project.images.length)}>
                         {project.images.map((image, index) => (
-                          <div>
+                          <div key={image.public_id}>
                             <img
-                              key={image.public_id}
                               className={classes.carouselImageStyle}
                               src={image.image_url}
                               alt={image.public_id}
@@ -435,8 +435,8 @@ function ProjectDetails(props) {
           }}
           BackdropProps
           fullWidth
-          scroll='body'
-          maxWidth='md'
+          scroll="body"
+          maxWidth="md"
           className={classes.enlargedImageDialogStyle}
           open={open_enlarged_image_dialog}
           onClose={() =>
@@ -450,40 +450,29 @@ function ProjectDetails(props) {
           <Box className={classes.enlargedImageContainer}>
             <IconButton
               className={classes.cancelEnlargedImageBtn}
-              onClick={() => setState(state => ({...state, open_enlarged_image_dialog: !open_enlarged_image_dialog,}))}
+              onClick={() => setState(state => ({ ...state, open_enlarged_image_dialog: !open_enlarged_image_dialog }))}
               aria-label={t('projectDetails.ariaLabels.closeImageDialog')}
             >
-              <CloseIcon
-                className={classes.enlargedImageDialogCloseIcon}
-              />
+              <CloseIcon className={classes.enlargedImageDialogCloseIcon} />
             </IconButton>
             {project.images.length <= 1 ? (
-              <img
-                className={classes.enlargedImageStyle}
-                src={enlarged_image_url}
-                alt={`${project.title}`}
-              />
+              <img className={classes.enlargedImageStyle} src={enlarged_image_url} alt={`${project.title}`} />
             ) : (
-                <Slider
-                  initialSlide={enlarged_image_id}
-                  adaptiveHeight
-                  infinite
-                  speed={500}
-                  slidesToShow={1}
-                  slidesToScroll={1}
-                  className={classes.enlargedImageStyle}
-                  nextArrow={<EnlargedImgArrow />}
-                  prevArrow={<EnlargedImgArrow />}
-                >
-                  {project.images.map(image => (
-                    <img
-                      className={classes.sliderImageStyle}
-                      key={image.public_id}
-                      src={image.image_url}
-                      alt={''}
-                    />
-                  ))}
-                </Slider>
+              <Slider
+                initialSlide={enlarged_image_id}
+                adaptiveHeight
+                infinite
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                className={classes.enlargedImageStyle}
+                nextArrow={<EnlargedImgArrow />}
+                prevArrow={<EnlargedImgArrow />}
+              >
+                {project.images.map(image => (
+                  <img className={classes.sliderImageStyle} key={image.public_id} src={image.image_url} alt={''} />
+                ))}
+              </Slider>
             )}
           </Box>
         </Dialog>
@@ -539,7 +528,7 @@ function ProjectDetails(props) {
             </CustomButton>
             <CustomButton
               variant="contained"
-              onClick={e => handleSetState(deleteProject(props, state))}
+              onClick={() => handleSetState(deleteProject(props, state))}
               dangerButtonStyle
             >
               {t('projectDetails.project.delete.dialog.proceed')}
@@ -569,45 +558,19 @@ ProjectDetails.propTypes = {
   addComment: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({ auth: state.auth });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProject: args => {
-      return dispatch(ProjectActions.getProject(args));
-    },
-    suggestCreators: args => {
-      return dispatch(UserActions.suggestCreators(args));
-    },
-    deleteProject: args => {
-      return dispatch(ProjectActions.deleteProject(args));
-    },
-    unpublishComment: args => {
-      return dispatch(ProjectActions.unpublishComment(args));
-    },
-    deleteComment: args => {
-      return dispatch(ProjectActions.deleteComment(args));
-    },
-    toggleFollow: args => {
-      return dispatch(UserActions.toggleFollow(args));
-    },
-    toggleLike: args => {
-      return dispatch(ProjectActions.toggleLike(args));
-    },
-    toggleSave: args => {
-      return dispatch(ProjectActions.toggleSave(args));
-    },
-    addComment: args => {
-      return dispatch(ProjectActions.addComment(args));
-    },
-    getUserProjects: args => {
-      return dispatch(ProjectActions.getUserProjects(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  getProject: args => dispatch(ProjectActions.getProject(args)),
+  suggestCreators: args => dispatch(UserActions.suggestCreators(args)),
+  deleteProject: args => dispatch(ProjectActions.deleteProject(args)),
+  unpublishComment: args => dispatch(ProjectActions.unpublishComment(args)),
+  deleteComment: args => dispatch(ProjectActions.deleteComment(args)),
+  toggleFollow: args => dispatch(UserActions.toggleFollow(args)),
+  toggleLike: args => dispatch(ProjectActions.toggleLike(args)),
+  toggleSave: args => dispatch(ProjectActions.toggleSave(args)),
+  addComment: args => dispatch(ProjectActions.addComment(args)),
+  getUserProjects: args => dispatch(ProjectActions.getUserProjects(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetails);
