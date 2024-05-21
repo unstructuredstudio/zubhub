@@ -8,13 +8,7 @@ import { toast } from 'react-toastify';
 import { makeStyles } from '@mui/styles';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {
-  Grid,
-  Box,
-  ButtonGroup,
-  Typography,
-  Container,
-} from '@mui/material';
+import { Grid, Box, ButtonGroup, Typography, Container } from '@mui/material';
 
 import { fetchPage, updateProjects } from './savedProjectsScripts';
 
@@ -43,10 +37,6 @@ function SavedProjects(props) {
     loading: true,
   });
 
-  React.useEffect(() => {
-    handleSetState(fetchPage(null, props));
-  }, []);
-
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
@@ -54,6 +44,11 @@ function SavedProjects(props) {
       });
     }
   };
+
+  React.useEffect(() => {
+    handleSetState(fetchPage(null, props));
+  }, []);
+
   const { results: projects, prev_page, next_page, loading } = state;
   const { t } = props;
   if (loading) {
@@ -64,38 +59,21 @@ function SavedProjects(props) {
         <Container className={classes.mainContainerStyle}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Typography
-                className={classes.pageHeaderStyle}
-                variant="h4"
-                gutterBottom
-              >
+              <Typography className={classes.pageHeaderStyle} variant="h4" gutterBottom>
                 {t('savedProjects.title')}
               </Typography>
             </Grid>
             {projects.map(project => (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                align="center"
-                className={classes.projectGridStyle}
-              >
+              <Grid item xs={12} sm={6} md={4} align="center" className={classes.projectGridStyle} key={project.id}>
                 <Project
                   project={project}
-                  key={project.id}
-                  updateProjects={res =>
-                    handleSetState(updateProjects(res, state, props, toast))
-                  }
+                  updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
                   {...props}
                 />
               </Grid>
             ))}
           </Grid>
-          <ButtonGroup
-            aria-label={t('savedProjects.ariaLabels.prevNxtButtons')}
-            className={classes.buttonGroupStyle}
-          >
+          <ButtonGroup aria-label={t('savedProjects.ariaLabels.prevNxtButtons')} className={classes.buttonGroupStyle}>
             {prev_page ? (
               <CustomButton
                 className={classes.floatLeft}
@@ -140,24 +118,12 @@ SavedProjects.propTypes = {
   toggleSave: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({ auth: state.auth });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getSaved: props => {
-      return dispatch(ProjectActions.getSaved(props));
-    },
-    toggleLike: props => {
-      return dispatch(ProjectActions.toggleLike(props));
-    },
-    toggleSave: props => {
-      return dispatch(ProjectActions.toggleSave(props));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  getSaved: props => dispatch(ProjectActions.getSaved(props)),
+  toggleLike: props => dispatch(ProjectActions.toggleLike(props)),
+  toggleSave: props => dispatch(ProjectActions.toggleSave(props)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(SavedProjects);
