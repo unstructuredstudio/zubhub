@@ -1,13 +1,8 @@
 const styles = theme => ({
   activityListContainer: {
-    padding: '4em 0',
-    width: '70%',
-    margin: 'auto',
-    [theme.breakpoints.down('1000')]: {
-      width: '90%',
-    },
-    [theme.breakpoints.down('400')]: {
-      width: '95%',
+    marginTop: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
     },
   },
   activityBoxContainer: {

@@ -16,9 +16,7 @@ import review1 from '../../assets/images/faridah.png';
 import review2 from '../../assets/images/hemant.png';
 import review3 from '../../assets/images/yaya.png';
 import global from '../../assets/images/global.JPG';
-
 import { fetchPage, fetchStaffPicks, updateStaffPicks } from './projectsScripts';
-
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import LoadingPage from '../loading/LoadingPage';

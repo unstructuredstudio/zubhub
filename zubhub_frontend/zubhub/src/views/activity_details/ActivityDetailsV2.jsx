@@ -11,7 +11,7 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-import { CloseOutlined, ExpandMore, MoreVert } from '@mui/icons-material';
+import { CloseOutlined, MoreVert } from '@mui/icons-material';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import clsx from 'clsx';
@@ -21,6 +21,9 @@ import { useTranslation } from 'react-i18next';
 import { FiShare } from 'react-icons/fi';
 import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
+import { useReactToPrint } from 'react-to-print';
+import Html2Pdf from 'html2pdf.js';
+
 import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
 import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
@@ -30,10 +33,8 @@ import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
 import { activityDefailsStyles } from './ActivityDetails.styles';
-import { useReactToPrint } from 'react-to-print';
-import Html2Pdf from 'html2pdf.js';
 
-const API = new ZubHubAPI();
+const API = new ZubHubAPI(); // TODO: move api request to redux action
 const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
 const unauthenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 3 };
 
@@ -43,7 +44,7 @@ export default function ActivityDetailsV2(props) {
 
   const { t } = useTranslation();
   const auth = useSelector(state => state.auth);
-  let ref = useRef(null);
+  const ref = useRef(null);
 
   const [activity, setActivity] = useState({});
   const [{ height, width }, setDimensions] = useState({});
@@ -53,6 +54,11 @@ export default function ActivityDetailsV2(props) {
   const [isDownloading, setIsDownloading] = useState(undefined);
 
   const creator = activity.creators?.[0];
+
+  const toggleDialog = () => {
+    setOpen(!open);
+    props.navigate(window.location.pathname, { replace: true });
+  };
 
   useEffect(() => {
     API.getActivity({ token: auth?.token, id: props.params.id }).then(data => {
@@ -81,14 +87,9 @@ export default function ActivityDetailsV2(props) {
     props.navigate(`${props.location.pathname}/edit`);
   };
 
-  const toggleDialog = () => {
-    setOpen(!open);
-    props.navigate(window.location.pathname, { replace: true });
-  };
-
   const handleDownload = useReactToPrint({
     onBeforePrint: () => setIsDownloading(true),
-    onPrintError: error => setIsDownloading(false),
+    onPrintError: () => setIsDownloading(false),
     onAfterPrint: () => setIsDownloading(false),
     content: () => ref.current,
     removeAfterPrint: true,
@@ -111,7 +112,7 @@ export default function ActivityDetailsV2(props) {
   });
 
   return (
-    <div ref={ref} style={{ margin: '0 24px' }}>
+    <div ref={ref} className={classes.container}>
       {open ? <ReactConfetti width={width} height={height} /> : null}
       <div className={clsx(classes.header, classes.card)}>
         <Typography align="center" className={clsx(commonClasses.title1, commonClasses.textCapitalize)}>

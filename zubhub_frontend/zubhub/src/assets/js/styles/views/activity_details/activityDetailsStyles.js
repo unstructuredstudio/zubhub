@@ -1,6 +1,10 @@
 const styles = theme => ({
   root: {
     flex: '1 0 auto',
+    marginTop: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+    },
   },
   activityDetailContainer: {
     width: '100%',
@@ -54,7 +58,7 @@ const styles = theme => ({
   },
   demoImageStyle: {
     objectFit: 'cover',
-    //height: '60vh',
+    // height: '60vh',
     maxWidth: '100%',
     borderRadius: '15px',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
