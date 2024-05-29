@@ -1,17 +1,13 @@
 import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import { Box, Grid, Typography } from '@mui/material';
 import Project from '../project/Project';
-import CustomButton from '../button/Button';
 
 import styles from '../../assets/js/styles/components/staff_pick/staffPickStyles';
-import commonStyles from '../../assets/js/styles';
 
 const useStyles = makeStyles(styles);
-const useCommonStyles = makeStyles(commonStyles);
 
 /**
  * @function StaffPick
@@ -21,12 +17,9 @@ const useCommonStyles = makeStyles(commonStyles);
  */
 function StaffPick(props) {
   const classes = useStyles();
-  const common_classes = useCommonStyles();
 
   const { staff_pick, ...rest } = props;
-  return staff_pick.projects &&
-    staff_pick.projects.results &&
-    staff_pick.projects.results.length > 0 ? (
+  return staff_pick.projects && staff_pick.projects.results && staff_pick.projects.results.length > 0 ? (
     <Box className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>

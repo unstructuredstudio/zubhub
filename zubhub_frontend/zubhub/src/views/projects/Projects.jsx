@@ -10,7 +10,7 @@ import { makeStyles } from '@mui/styles';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Pagination } from '@mui/lab';
-import { Grid, Box, ButtonGroup, Typography, Container } from '@mui/material';
+import { Grid, Box, Typography, Container } from '@mui/material';
 
 import { fetchPage, fetchStaffPicks, updateProjects, updateStaffPicks } from './projectsScripts';
 
@@ -20,13 +20,12 @@ import ErrorPage from '../error/ErrorPage';
 import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import StaffPick from '../../components/staff_pick/StaffPick';
-import activity_of_the_month_svg from '../../assets/images/activity_of_the_month.svg';
-import activity_of_the_month_small_svg from '../../assets/images/activity_of_the_month_small.svg';
 import new_stuff from '../../assets/images/new_stuff.svg';
+import heroMainImage from '../../assets/images/heroMainImage.svg';
 import styles from '../../assets/js/styles/views/projects/projectsStyles';
 import commonStyles from '../../assets/js/styles';
 import hikingIcon from '../../assets/images/hiking.svg';
-import { PROJECTS_PAGE_SIZE } from '../../../src/utils.js';
+import { PROJECTS_PAGE_SIZE } from '../../utils.js';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -47,6 +46,14 @@ function Projects(props) {
     isMobileView: false,
   });
 
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
+    }
+  };
+
   React.useEffect(() => {
     fetchStaffPicks(props);
     handleSetState(fetchPage(null, props));
@@ -66,14 +73,6 @@ function Projects(props) {
     };
   }, []);
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
-
   const { loading, isMobileView } = state;
   const { count: totalProjects, results: projects, previous: prev_page, next: next_page } = props.projects.all_projects;
   const { hero } = props.projects;
@@ -88,54 +87,50 @@ function Projects(props) {
         {projects.length > 0 ? (
           <Box className={classes.root}>
             {!props.auth?.token && hero && hero.id ? (
-              <Box className={classes.heroSectionStyle}>
-                <Box className={classes.heroContainerStyle}>
-                  <Box className={classes.heroMessageContainerStyle}>
-                    <Typography className={classes.heroMessageSecondaryStyle}>{hero.description}</Typography>
-                    <Typography className={classes.heroMessagePrimaryStyle}>{hero.title}</Typography>
-                    <CustomButton
-                      className={classes.heroButtonStyle}
-                      size="small"
-                      primaryButtonStyle
-                      onClick={() => props.navigate('/projects/create')}
-                    >
-                      {t('projects.shareProject')}
-                    </CustomButton>
-                    <a
-                      className={common_classes.textDecorationNone}
-                      href={hero.explore_ideas_url ? hero.explore_ideas_url : 'https://kriti.unstructured.studio/'}
-                      target="__blank"
-                      rel="noreferrer"
-                    >
-                      <CustomButton className={classes.heroButtonStyle} size="small" darkDangerButtonStyle>
-                        {t('projects.exploreIdeas')}
-                      </CustomButton>
-                    </a>
-                    <CustomButton
-                      className={classes.heroButtonStyle}
-                      size="small"
-                      customWarningButtonStyle
-                      onClick={() => props.navigate('/ambassadors')}
-                    >
-                      {t('projects.zubhubAmbassadors')}
-                    </CustomButton>
-                  </Box>
-                  <Box
-                    className={clsx(classes.heroImageContainerStyle, {
-                      [common_classes.displayNone]: !hero.activity_url,
-                    })}
+              <Box className={classes.heroMainSectionStyle}>
+                <Box className={classes.heroMessageContainerStyle}>
+                  <Typography className={classes.heroMessageSecondaryStyle}>{hero.description}</Typography>
+                  <Typography className={classes.heroMessagePrimaryStyle}>{hero.title}</Typography>
+                  <CustomButton
+                    className={classes.heroButtonStyle}
+                    size="small"
+                    primaryButtonStyle
+                    onClick={() => props.navigate('/projects/create')}
                   >
-                    <img className={classes.heroImageTextSmallStyle} src={new_stuff} alt={t('projects.newStuff')} />
-                    <img className={classes.heroImageTextStyle} src={new_stuff} alt={t('projects.newStuff')} />
-                    <a
-                      className={classes.heroImageLinkStyle}
-                      href={hero.activity_url}
-                      target="__blank"
-                      rel="noreferrer"
-                    >
-                      <img className={classes.heroImageStyle} src={hero.image_url} alt="" />
-                    </a>
-                  </Box>
+                    {t('projects.shareProject')}
+                  </CustomButton>
+                  <a
+                    className={common_classes.textDecorationNone}
+                    href={hero.explore_ideas_url ? hero.explore_ideas_url : 'https://kriti.unstructured.studio/'}
+                    target="__blank"
+                    rel="noreferrer"
+                  >
+                    <CustomButton className={classes.heroButtonStyle} size="small" darkDangerButtonStyle>
+                      {t('projects.exploreIdeas')}
+                    </CustomButton>
+                  </a>
+                  <CustomButton
+                    className={classes.heroButtonStyle}
+                    size="small"
+                    customWarningButtonStyle
+                    onClick={() => props.navigate('/ambassadors')}
+                  >
+                    {t('projects.zubhubAmbassadors')}
+                  </CustomButton>
+                </Box>
+                <Box
+                  className={clsx(classes.heroImageContainerStyle, {
+                    [common_classes.displayNone]: !hero.activity_url,
+                  })}
+                >
+                  <img src={new_stuff} alt={t('projects.newStuff')} />
+                  <a href={hero.activity_url} target="__blank" rel="noreferrer">
+                    <img
+                      className={classes.heroImageStyle}
+                      src={hero.image_url ? hero.image_url : heroMainImage}
+                      alt={t('projects.heroAlt')}
+                    />
+                  </a>
                 </Box>
               </Box>
             ) : null}
@@ -163,7 +158,7 @@ function Projects(props) {
                     </Typography>
                   </Grid>
                 ) : null}
-                {projects.map((project, index) => (
+                {projects.map(project => (
                   <Grid
                     key={project.id}
                     xs={12}
@@ -285,34 +280,18 @@ Projects.propTypes = {
   toggleSave: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-    projects: state.projects,
-  };
-};
+const mapStateToProps = state => ({
+  auth: state.auth,
+  projects: state.projects,
+});
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getProjects: page => {
-      return dispatch(ProjectActions.getProjects(page));
-    },
-    setProjects: args => {
-      return dispatch(ProjectActions.setProjects(args));
-    },
-    toggleLike: args => {
-      return dispatch(ProjectActions.toggleLike(args));
-    },
-    toggleSave: args => {
-      return dispatch(ProjectActions.toggleSave(args));
-    },
-    getStaffPicks: args => {
-      return dispatch(ProjectActions.getStaffPicks(args));
-    },
-    setStaffPicks: args => {
-      return dispatch(ProjectActions.setStaffPicks(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  getProjects: page => dispatch(ProjectActions.getProjects(page)),
+  setProjects: args => dispatch(ProjectActions.setProjects(args)),
+  toggleLike: args => dispatch(ProjectActions.toggleLike(args)),
+  toggleSave: args => dispatch(ProjectActions.toggleSave(args)),
+  getStaffPicks: args => dispatch(ProjectActions.getStaffPicks(args)),
+  setStaffPicks: args => dispatch(ProjectActions.setStaffPicks(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Projects);

@@ -1,4 +1,4 @@
-const styles = theme => ({
+const styles = () => ({
   root: {
     // marginTop: '2em',
     marginRight: '2em',
@@ -14,6 +14,7 @@ const styles = theme => ({
     marginBottom: '2em',
   },
   MessagePrimaryStyle: {
+    marginTop: '1em',
     fontSize: '2.5rem',
     fontWeight: 1000,
   },

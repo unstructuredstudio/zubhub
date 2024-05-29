@@ -1,6 +1,5 @@
 const styles = theme => ({
   root: {
-
     paddingBottom: '2em',
     flex: '1 0 auto',
     display: 'flex',
@@ -32,51 +31,33 @@ const styles = theme => ({
   heroMainSectionStyle: {
     backgroundColor: 'var(--primary-color1)',
     display: 'flex',
-    padding: '0 calc((100vw - 1350px) / 2)',
-    paddingTop: '2em',
-    paddingBottom: '2em',
-    justifyContent: 'center',
-    // width: '100%',
-    // maxWidth: '1230px',
-    marginBottom: '2em',
-    height:'100vh',
+    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    padding: '4em 0',
+    minHeight: '80vh',
     [theme.breakpoints.down('1000')]: {
-      width: '100%',
-      padding: '0 1em'
+      flexDirection: 'column-reverse',
     },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      height:'fit-content',
+    [theme.breakpoints.down('500')]: {
+      flexDirection: 'column',
     },
   },
-    heroSectionStyle: {
-      backgroundColor: 'var(--primary-color1)',
-      boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-      WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-      MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-      display: 'flex',
-      paddingTop: '2.3em',
-      paddingBottom: '2.85em',
-      justifyContent: 'center',
-      width: '100vw',
-      marginBottom: '2em'
+  carouselSectionStyle: {
+    backgroundColor: 'var(--primary-color1)',
+    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
+    paddingTop: '2.3em',
+    paddingBottom: '2.85em',
+    width: '100%',
+    marginBottom: '2em',
   },
   imageLeft: {
     flexDirection: 'row',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
     },
-  },
-  centerCarousel: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-    },
-  },
-  carouselContainer: {
-    maxWidth: '100%',
   },
   carouselSlide: {
     display: 'flex',
@@ -85,55 +66,36 @@ const styles = theme => ({
     textAlign: 'center',
     padding: theme.spacing(3),
   },
-  titleStyle: {
-    fontFamily: 'Nanum Pen, sans-serif',
-    fontSize: '30px',
-    fontWeight: 400,
-    lineHeight: '40px',
-    letterSpacing: '0em',
-    textAlign: 'left',
-  },
-  SectionStyle: {
-    backgroundColor: '#FFFFFF',
-    boxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    WebkitBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    MozBoxShadow: '-2px 25px 13px -18px rgba(220,53,69,0.7)',
-    display: 'flex',
-    paddingTop: '2.3em',
-    paddingBottom: '2.8em',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  heroMainContainerStyle: {
-    width: '100%',
-    padding: '7rem 4rem',
-    display: 'flex',
-    [theme.breakpoints.down('1000')]: {
-      padding: '2rem 1rem',
-      flexDirection: 'column-reverse',
-      width: '100',
-      height:'fit-content',
-    },
-  },
-  heroContainerStyle: {
+  // titleStyle: {
+  //   fontFamily: 'Nanum Pen, sans-serif',
+  //   fontSize: '30px',
+  //   fontWeight: 400,
+  //   lineHeight: '40px',
+  //   letterSpacing: '0em',
+  //   textAlign: 'left',
+  // },
+  sectionStyle: {
     width: '100%',
     maxWidth: '1190px',
-    padding: '1.2em 1.2em',
+    padding: '2.3em 1.2em 2.8em 1.2em',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    margin: 'auto',
     [theme.breakpoints.down('1000')]: {
       flexDirection: 'column-reverse',
     },
   },
-  MessageContainerStyle: {
-    flexGrow: 1,
-    // color: 'white',
-  },
   heroMessageContainerStyle: {
-    flexGrow: 1,
     color: 'white',
-    maxWidth: '37.8rem',
+    maxWidth: '50%',
+    margin: '2em 2em 0 4em',
+    alignSelf: 'center',
+    [theme.breakpoints.down('1000')]: {
+      maxWidth: '100%',
+      margin: '3em',
+      alignSelf: 'unset',
+    },
   },
   heroMessageSecondaryStyle: {
     fontSize: '2.2rem',
@@ -153,20 +115,20 @@ const styles = theme => ({
     fontSize: '4.5rem',
     fontWeight: '700',
     [theme.breakpoints.down('1480')]: {
-      fontSize: '3.5rem'
+      fontSize: '3.5rem',
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: '2.5rem'
+      fontSize: '2.5rem',
     },
   },
   heroMainMessagePrimaryStyle: {
     fontSize: '2.2rem',
     fontWeight: 500,
     [theme.breakpoints.down('1480')]: {
-      fontSize: '1.7rem'
+      fontSize: '1.7rem',
     },
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1.2rem'
+      fontSize: '1.2rem',
     },
   },
   heroButtonStyle: {
@@ -180,13 +142,13 @@ const styles = theme => ({
     padding: '1rem 2rem',
     borderRadius: '2rem',
     gap: '1rem',
-  [theme.breakpoints.down('sm')]: {
-    height:'fit-content',
-    padding: '0.1em 0.7em',
-    marginBottom: '3rem',
-    width: 'fit-content',
-    fontSize: "1.2rem"
-  },
+    [theme.breakpoints.down('sm')]: {
+      height: 'fit-content',
+      padding: '0.1em 0.7em',
+      marginBottom: '3rem',
+      width: 'fit-content',
+      fontSize: '1.2rem',
+    },
   },
   heroBtnStyle: {
     textTransform: 'none',
@@ -198,8 +160,13 @@ const styles = theme => ({
   },
   heroImageContainerStyle: {
     display: 'flex',
-    justifyContent: 'space-between',
+    maxWidth: '50%',
+    margin: '0 2em',
+    alignSelf: 'center',
     [theme.breakpoints.down('1000')]: {
+      maxWidth: '100%',
+      margin: '0 2em',
+      alignSelf: 'unset',
     },
     [theme.breakpoints.down('500')]: {
       flexDirection: 'column',
@@ -207,49 +174,8 @@ const styles = theme => ({
       justifyContent: 'center',
     },
   },
-  heroImageTextSmallStyle: {
-    display: 'none',
-    [theme.breakpoints.down('500')]: {
-      display: 'block',
-    },
-  },
-  heroImageTextStyle: {
-    marginLeft: '2em',
-    [theme.breakpoints.down('500')]: {
-      display: 'none',
-    },
-  },
-  heroImageLinkStyle: {
-    alignSelf: 'flex-end',
-    [theme.breakpoints.down('500')]: {
-      alignSelf: 'center',
-    },
-  },
   heroImageStyle: {
-    marginLeft: '4em',
-    marginRight: '2em',
-    height: '100%',
     width: '100%',
-    [theme.breakpoints.down('1480')]: {
-      marginLeft: '0',
-      marginRight: '0',
-    },
-    [theme.breakpoints.down('500')]: {
-      marginLeft: '0',
-      marginRight: '0',
-      // marginTop: '100em',
-    },
-  },
-  desktopheroImageStyle: {
-    marginLeft: '2em',
-    marginRight: '2em',
-    height: '27.5em',
-    width: '40em',
-    [theme.breakpoints.down('500')]: {
-      marginLeft: '0',
-      marginRight: '0',
-      // marginTop: '100em',
-    },
   },
   ambassadorImageStyle: {
     marginLeft: '2em',
@@ -353,7 +279,7 @@ const styles = theme => ({
       display: 'flex',
     },
   },
-  paginationComp:{
+  paginationComp: {
     width: '5rem',
     height: '2rem',
     display: 'flex',
@@ -362,9 +288,9 @@ const styles = theme => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      width: '0.5rem'
+      width: '0.5rem',
     },
-    '& .MuiPaginationItem-ul':{
+    '& .MuiPaginationItem-ul': {
       display: 'flex',
     },
   },
@@ -380,24 +306,23 @@ const styles = theme => ({
         display: 'flex',
       },
     },
-    '& .MuiPaginationItem-ul':{
+    '& .MuiPaginationItem-ul': {
       display: 'flex',
-    }
+    },
   },
   buttonGroupStyleAlternative: {
     padding: '7px 21px',
     [theme.breakpoints.down('600')]: {
       padding: '3px 3px 3px 6px',
       fontSize: '15px',
-      paddingTop: '0'
+      paddingTop: '0',
     },
   },
   floatRight: {
     float: 'right',
-
   },
-  visibilityNone:{
-    visibility: 'hidden'
+  visibilityNone: {
+    visibility: 'hidden',
   },
   floatLeft: {
     float: 'left',
