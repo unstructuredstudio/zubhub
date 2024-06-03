@@ -28,7 +28,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import CloseOutlined from '@mui/icons-material/CloseOutlined';
+import { CloseOutlined } from '@mui/icons-material';
 
 import ClapIcon, { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import CustomButton from '../../components/button/Button';
@@ -80,7 +80,7 @@ const buildMaterialsUsedComponent = (classes, state) => {
  *
  * @todo - describe function's signature
  */
-const buildTagsComponent = (_, tags) =>
+const buildTagsComponent = tags =>
   tags.map((tag, index) => (
     <Pill key={`${tag.name}-${index}`} text={`#${tag.name}`} />
     // <CustomButton
@@ -116,17 +116,17 @@ function ProjectDetails(props) {
     enlarged_image_id: 0,
   });
 
+  const toggleDialog = () => {
+    setOpen(!open);
+    props.navigate(window.location.pathname, { replace: true });
+  };
+
   const handleSetState = obj => {
     if (obj) {
       Promise.resolve(obj).then(obj => {
         setState(state => ({ ...state, ...obj }));
       });
     }
-  };
-
-  const toggleDialog = () => {
-    setOpen(!open);
-    props.navigate(window.location.pathname, { replace: true });
   };
 
   React.useEffect(() => {
@@ -139,13 +139,8 @@ function ProjectDetails(props) {
     ).then(async obj => {
       if (obj.project) {
         const { project } = obj;
-        const userProjects = await props.getUserProjects({
-          limit: 4,
-          username: project.creator.username,
-          project_to_omit: project.id,
-        });
-        const moreProjects = userProjects.results;
-        setMoreProjects(moreProjects);
+        const moreProjects = await props.getMoreProjects(project.id);
+        setMoreProjects(moreProjects.results);
         parseComments(project.comments);
       }
       handleSetState(obj);
@@ -329,7 +324,7 @@ function ProjectDetails(props) {
                     <Box className={classes.sliderBoxStyle}>
                       <Slider {...sliderSettings(project.images.length)}>
                         {project.images.map((image, index) => (
-                          <div key={image.public_id}>
+                          <div key={`${image.public_id}-${index}`}>
                             <img
                               className={classes.carouselImageStyle}
                               src={image.image_url}
@@ -392,9 +387,7 @@ function ProjectDetails(props) {
                       {t('projectDetails.project.hashtags')}
                     </Typography>
 
-                    <div className={classes.tagsBoxStyle}>
-                      {buildTagsComponent(classes, project.tags, props.navigate)}
-                    </div>
+                    <div className={classes.tagsBoxStyle}>{buildTagsComponent(project.tags)}</div>
                   </Grid>
                 ) : null}
               </Grid>
@@ -547,6 +540,7 @@ function ProjectDetails(props) {
 ProjectDetails.propTypes = {
   auth: PropTypes.object.isRequired,
   getProject: PropTypes.func.isRequired,
+  getMoreProjects: PropTypes.func.isRequired,
   getUserProjects: PropTypes.func.isRequired,
   suggestCreators: PropTypes.func.isRequired,
   deleteProject: PropTypes.func.isRequired,
@@ -571,6 +565,7 @@ const mapDispatchToProps = dispatch => ({
   toggleSave: args => dispatch(ProjectActions.toggleSave(args)),
   addComment: args => dispatch(ProjectActions.addComment(args)),
   getUserProjects: args => dispatch(ProjectActions.getUserProjects(args)),
+  getMoreProjects: args => dispatch(ProjectActions.getMoreProjects(args)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetails);

@@ -1,5 +1,6 @@
-import ZubhubAPI from '../../api';
 import { toast } from 'react-toastify';
+import ZubhubAPI from '../../api';
+
 const API = new ZubhubAPI();
 
 /**
@@ -8,13 +9,11 @@ const API = new ZubhubAPI();
  *
  * @todo - describe function's signature
  */
-export const setProjects = projects => {
-  return dispatch => {
-    dispatch({
-      type: 'SET_PROJECTS',
-      payload: { all_projects: projects },
-    });
-  };
+export const setProjects = projects => dispatch => {
+  dispatch({
+    type: 'SET_PROJECTS',
+    payload: { all_projects: projects },
+  });
 };
 
 /**
@@ -23,18 +22,14 @@ export const setProjects = projects => {
  *
  * @todo - describe function's signature
  */
-export const createProject = props => {
-
-  return () => {
-    return API.createProject(props).then(res => {
-      if (!res.id) {
-        throw new Error(JSON.stringify(res));
-      } else {
-        return res;
-      }
-    });
-  };
-};
+export const createProject = props => () =>
+  API.createProject(props).then(res => {
+    if (!res.id) {
+      throw new Error(JSON.stringify(res));
+    } else {
+      return res;
+    }
+  });
 
 /**
  * @function shouldUploadToLocal
@@ -42,21 +37,18 @@ export const createProject = props => {
  *
  * @todo - describe function's signature
  */
-export const shouldUploadToLocal = args => {
-  return () => {
-    return API.shouldUploadToLocal(args)
-      .then(res => {
-        if (res.local === undefined) {
-          throw new Error();
-        } else {
-          return res;
-        }
-      })
-      .catch(() => {
-        toast.warning(args.t('createProject.errors.unexpected'));
-      });
-  };
-};
+export const shouldUploadToLocal = args => () =>
+  API.shouldUploadToLocal(args)
+    .then(res => {
+      if (res.local === undefined) {
+        throw new Error();
+      } else {
+        return res;
+      }
+    })
+    .catch(() => {
+      toast.warning(args.t('createProject.errors.unexpected'));
+    });
 
 /**
  * @function updateProject
@@ -64,18 +56,15 @@ export const shouldUploadToLocal = args => {
  *
  * @todo - describe function's signature
  */
-export const updateProject = props => {
-  return () => {
-    return API.updateProject(props).then(res => {
-      if (!res.id) {
-        throw new Error(JSON.stringify(res));
-      } else {
-        return res
-        // toast.success(props.t('createProject.updateToastSuccess'));
-      }
-    });
-  };
-};
+export const updateProject = props => () =>
+  API.updateProject(props).then(res => {
+    if (!res.id) {
+      throw new Error(JSON.stringify(res));
+    } else {
+      return res;
+      // toast.success(props.t('createProject.updateToastSuccess'));
+    }
+  });
 
 /**
  * @function deleteProject
@@ -83,18 +72,15 @@ export const updateProject = props => {
  *
  * @todo - describe function's signature
  */
-export const deleteProject = args => {
-  return () => {
-    return API.deleteProject({ token: args.token, id: args.id }).then(res => {
-      if (res.detail !== 'ok') {
-        throw new Error(res.detail);
-      } else {
-        toast.success(args.t('projectDetails.deleteProjectToastSuccess'));
-        return args.navigate('/profile');
-      }
-    });
-  };
-};
+export const deleteProject = args => () =>
+  API.deleteProject({ token: args.token, id: args.id }).then(res => {
+    if (res.detail !== 'ok') {
+      throw new Error(res.detail);
+    } else {
+      toast.success(args.t('projectDetails.deleteProjectToastSuccess'));
+      return args.navigate('/profile');
+    }
+  });
 
 /**
  * @function unpublishComment
@@ -102,29 +88,26 @@ export const deleteProject = args => {
  *
  * @todo - describe function's signature
  */
-export const unpublishComment = args => {
-  return () => {
-    return API.unpublishComment({ token: args.token, id: args.id })
-      .then(res => {
-        if (res.text) {
-          toast.success(args.t('comments.unpublishCommentToastSuccess'));
-          return res;
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('comments.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-      });
-  };
-};
+export const unpublishComment = args => () =>
+  API.unpublishComment({ token: args.token, id: args.id })
+    .then(res => {
+      if (res.text) {
+        toast.success(args.t('comments.unpublishCommentToastSuccess'));
+        return res;
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('comments.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+    });
 
 /**
  * @function deleteComment
@@ -132,17 +115,14 @@ export const unpublishComment = args => {
  *
  * @todo - describe function's signature
  */
-export const deleteComment = args => {
-  return () => {
-    return API.deleteComment({ token: args.token, id: args.id }).then(res => {
-      if (res.detail !== 'ok') {
-        throw new Error(res.detail);
-      } else {
-        toast.success(args.t('comments.deleteCommentToastSuccess'));
-      }
-    });
-  };
-};
+export const deleteComment = args => () =>
+  API.deleteComment({ token: args.token, id: args.id }).then(res => {
+    if (res.detail !== 'ok') {
+      throw new Error(res.detail);
+    } else {
+      toast.success(args.t('comments.deleteCommentToastSuccess'));
+    }
+  });
 
 /**
  * @function getProject
@@ -150,29 +130,26 @@ export const deleteComment = args => {
  *
  * @todo - describe function's signature
  */
-export const getProject = args => {
-  return () => {
-    return API.getProject(args)
-      .then(res => {
-        if (res.title) {
-          return { project: res, loading: false };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projectDetails.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  };
-};
+export const getProject = args => () =>
+  API.getProject(args)
+    .then(res => {
+      if (res.title) {
+        return { project: res, loading: false };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projectDetails.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function getProjects
@@ -180,33 +157,54 @@ export const getProject = args => {
  *
  * @todo - describe function's signature
  */
-export const getProjects = args => {
-  return dispatch => {
-    return API.getProjects(args)
-      .then(res => {
-        if (Array.isArray(res.results)) {
-          dispatch({
-            type: 'SET_PROJECTS',
-            payload: { all_projects: res },
-          });
-          return { loading: false };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
+export const getProjects = args => dispatch =>
+  API.getProjects(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        dispatch({
+          type: 'SET_PROJECTS',
+          payload: { all_projects: res },
+        });
         return { loading: false };
-      });
-  };
-};
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
+
+export const getMoreProjects = args => () =>
+  API.getMoreProjects(args)
+    .then(res => {
+      if (Array.isArray(res)) {
+        return {
+          results: res,
+          loading: false,
+        };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projectDetails.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function getCategories
@@ -214,29 +212,26 @@ export const getProjects = args => {
  *
  * @todo - describe function's signature
  */
-export const getCategories = args => {
-  return () => {
-    return API.getCategories()
-      .then(res => {
-        if (Array.isArray(res) && res.length > 0 && res[0].name) {
-          return { categories: res, loading: false };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  };
-};
+export const getCategories = args => () =>
+  API.getCategories()
+    .then(res => {
+      if (Array.isArray(res) && res.length > 0 && res[0].name) {
+        return { categories: res, loading: false };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function searchProjects
@@ -244,54 +239,48 @@ export const getCategories = args => {
  *
  * @todo - describe function's signature
  */
-export const searchProjects = args => {
-  return () => {
-    return API.searchProjects(args)
-      .then(res => {
-        if (Array.isArray(res.results)) {
-          return { ...res, loading: false, tab: args.tab };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false, tab: args.tab };
-      });
-  };
-};
+export const searchProjects = args => () =>
+  API.searchProjects(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        return { ...res, loading: false, tab: args.tab };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false, tab: args.tab };
+    });
 
-export const searchTags = args => {
-  return () => {
-    return API.searchTags(args)
-      .then(res => {
-        if (Array.isArray(res.results)) {
-          return { ...res, loading: false, tab: args.tab };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false, tab: args.tab };
-      });
-  };
-};
+export const searchTags = args => () =>
+  API.searchTags(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        return { ...res, loading: false, tab: args.tab };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false, tab: args.tab };
+    });
 
 /**
  * @function suggestTags
@@ -299,31 +288,26 @@ export const searchTags = args => {
  *
  * @todo - describe function's signature
  */
-export const suggestTags = args => {
-  return () => {
-    return API.suggestTags(args.value)
-      .then(res => {
-        if (Array.isArray(res)) {
-          return res.length > 0
-            ? { tag_suggestion: res }
-            : { tag_suggestion_open: false };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { tag_suggestion_open: false };
-      });
-  };
-};
+export const suggestTags = args => () =>
+  API.suggestTags(args.value)
+    .then(res => {
+      if (Array.isArray(res)) {
+        return res.length > 0 ? { tag_suggestion: res } : { tag_suggestion_open: false };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { tag_suggestion_open: false };
+    });
 
 /**
  * @function getUserProjects
@@ -331,34 +315,31 @@ export const suggestTags = args => {
  *
  * @todo - describe function's signature
  */
-export const getUserProjects = args => {
-  return () => {
-    return API.getUserProjects(args)
-      .then(res => {
-        if (Array.isArray(res.results)) {
-          return {
-            results: res.results,
-            prev_page: res.previous,
-            next_page: res.next,
-            loading: false,
-          };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  };
-};
+export const getUserProjects = args => () =>
+  API.getUserProjects(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        return {
+          results: res.results,
+          prev_page: res.previous,
+          next_page: res.next,
+          loading: false,
+        };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function getUserProjects
@@ -366,8 +347,8 @@ export const getUserProjects = args => {
  *
  * @todo - describe function's signature
  */
-export const getUserDrafts = args => {
-  return API.getUserDrafts(args)
+export const getUserDrafts = args =>
+  API.getUserDrafts(args)
     .then(res => {
       if (Array.isArray(res.results)) {
         return {
@@ -391,7 +372,6 @@ export const getUserDrafts = args => {
       }
       return { loading: false };
     });
-};
 
 /**
  * @function getSaved
@@ -399,32 +379,29 @@ export const getUserDrafts = args => {
  *
  * @todo - describe function's signature
  */
-export const getSaved = args => {
-  return () => {
-    return API.getSaved(args)
-      .then(res => {
-        if (Array.isArray(res.results)) {
-          return {
-            ...res,
-            loading: false,
-          };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('savedProjects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  };
-};
+export const getSaved = args => () =>
+  API.getSaved(args)
+    .then(res => {
+      if (Array.isArray(res.results)) {
+        return {
+          ...res,
+          loading: false,
+        };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('savedProjects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function toggleLike
@@ -432,30 +409,27 @@ export const getSaved = args => {
  *
  * @todo - describe function's signature
  */
-export const toggleLike = args => {
-  return () => {
-    return API.toggleLike(args)
-      .then(res => {
-        if (res.title) {
-          return { project: res };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projectDetails.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
+export const toggleLike = args => () =>
+  API.toggleLike(args)
+    .then(res => {
+      if (res.title) {
+        return { project: res };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projectDetails.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
 
-        return { loading: false };
-      });
-  };
-};
+      return { loading: false };
+    });
 
 /**
  * @function toggleSave
@@ -463,29 +437,26 @@ export const toggleLike = args => {
  *
  * @todo - describe function's signature
  */
-export const toggleSave = args => {
-  return () => {
-    return API.toggleSave(args)
-      .then(res => {
-        if (res.title) {
-          return { project: res };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  };
-};
+export const toggleSave = args => () =>
+  API.toggleSave(args)
+    .then(res => {
+      if (res.title) {
+        return { project: res };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function addComment
@@ -493,29 +464,26 @@ export const toggleSave = args => {
  *
  * @todo - describe function's signature
  */
-export const addComment = args => {
-  return () => {
-    return API.addComment(args)
-      .then(res => {
-        if (res.title) {
-          return { project: res, loading: false };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('comments.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  };
-};
+export const addComment = args => () =>
+  API.addComment(args)
+    .then(res => {
+      if (res.title) {
+        return { project: res, loading: false };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('comments.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function setStaffPicks
@@ -523,13 +491,11 @@ export const addComment = args => {
  *
  * @todo - describe function's signature
  */
-export const setStaffPicks = staff_picks => {
-  return dispatch => {
-    dispatch({
-      type: 'SET_PROJECTS',
-      payload: { staff_picks },
-    });
-  };
+export const setStaffPicks = staff_picks => dispatch => {
+  dispatch({
+    type: 'SET_PROJECTS',
+    payload: { staff_picks },
+  });
 };
 
 /**
@@ -538,13 +504,11 @@ export const setStaffPicks = staff_picks => {
  *
  * @todo - describe function's signature
  */
-export const setHero = hero => {
-  return dispatch => {
-    dispatch({
-      type: 'SET_PROJECTS',
-      payload: { hero },
-    });
-  };
+export const setHero = hero => dispatch => {
+  dispatch({
+    type: 'SET_PROJECTS',
+    payload: { hero },
+  });
 };
 
 /**
@@ -553,13 +517,11 @@ export const setHero = hero => {
  *
  * @todo - describe function's signature
  */
-export const setZubhub = zubhub => {
-  return dispatch => {
-    dispatch({
-      type: 'SET_PROJECTS',
-      payload: { zubhub },
-    });
-  };
+export const setZubhub = zubhub => dispatch => {
+  dispatch({
+    type: 'SET_PROJECTS',
+    payload: { zubhub },
+  });
 };
 
 /**
@@ -568,33 +530,30 @@ export const setZubhub = zubhub => {
  *
  * @todo - describe function's signature
  */
-export const getHero = args => {
-  return dispatch => {
-    return API.getHero()
-      .then(res => {
-        if (res.id || res.title !== undefined) {
-          const { header_logo_url, footer_logo_url, site_mode } = res;
-          delete res.header_logo_url;
-          delete res.footer_logo_url;
-          delete res.site_mode;
+export const getHero = args => dispatch =>
+  API.getHero()
+    .then(res => {
+      if (res.id || res.title !== undefined) {
+        const { header_logo_url, footer_logo_url, site_mode } = res;
+        delete res.header_logo_url;
+        delete res.footer_logo_url;
+        delete res.site_mode;
 
-          dispatch(setHero(res));
-          dispatch(setZubhub({ header_logo_url, footer_logo_url, site_mode }));
-          return { loading: false };
-        } else {
-          throw new Error();
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
+        dispatch(setHero(res));
+        dispatch(setZubhub({ header_logo_url, footer_logo_url, site_mode }));
         return { loading: false };
-      });
-  };
-};
+      } else {
+        throw new Error();
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function getStaffPicks
@@ -602,33 +561,30 @@ export const getHero = args => {
  *
  * @todo - describe function's signature
  */
-export const getStaffPicks = args => {
-  return dispatch => {
-    return API.getStaffPicks(args)
-      .then(res => {
-        if (Array.isArray(res)) {
-          dispatch(setStaffPicks(res));
-          return { loading: false };
-        } else if (res.detail === 'not found') {
-          dispatch(setStaffPicks([]));
-        } else {
-          dispatch(setStaffPicks([]));
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('projects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
+export const getStaffPicks = args => dispatch =>
+  API.getStaffPicks(args)
+    .then(res => {
+      if (Array.isArray(res)) {
+        dispatch(setStaffPicks(res));
         return { loading: false };
-      });
-  };
-};
+      } else if (res.detail === 'not found') {
+        dispatch(setStaffPicks([]));
+      } else {
+        dispatch(setStaffPicks([]));
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('projects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
 
 /**
  * @function getStaffPick
@@ -636,29 +592,26 @@ export const getStaffPicks = args => {
  *
  * @todo - describe function's signature
  */
-export const getStaffPick = args => {
-  return () => {
-    return API.getStaffPick(args)
-      .then(res => {
-        if (res.id) {
-          return {
-            staff_pick: res,
-            loading: false,
-          };
-        } else {
-          res = Object.keys(res)
-            .map(key => res[key])
-            .join('\n');
-          throw new Error(res);
-        }
-      })
-      .catch(error => {
-        if (error.message.startsWith('Unexpected')) {
-          toast.warning(args.t('savedProjects.errors.unexpected'));
-        } else {
-          toast.warning(error.message);
-        }
-        return { loading: false };
-      });
-  };
-};
+export const getStaffPick = args => () =>
+  API.getStaffPick(args)
+    .then(res => {
+      if (res.id) {
+        return {
+          staff_pick: res,
+          loading: false,
+        };
+      } else {
+        res = Object.keys(res)
+          .map(key => res[key])
+          .join('\n');
+        throw new Error(res);
+      }
+    })
+    .catch(error => {
+      if (error.message.startsWith('Unexpected')) {
+        toast.warning(args.t('savedProjects.errors.unexpected'));
+      } else {
+        toast.warning(error.message);
+      }
+      return { loading: false };
+    });
