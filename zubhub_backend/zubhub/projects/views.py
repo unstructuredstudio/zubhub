@@ -1,33 +1,62 @@
-from django.shortcuts import get_object_or_404
+from activitylog.models import Activitylog
+from creators.models import Creator
+from creators.utils import (
+    activity_log,
+    activity_notification,
+    send_notification,
+    set_badge_comment_category,
+    set_badge_like_category,
+    set_badge_project_category,
+    set_badge_view_category,
+)
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.postgres.search import SearchQuery, SearchRank, TrigramSimilarity
+from django.core.exceptions import PermissionDenied
+from django.db import transaction
+from django.db.models import F
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from notifications.models import Notification
-from rest_framework.response import Response
-from django.contrib.auth.models import AnonymousUser
-from django.contrib.postgres.search import TrigramSimilarity, SearchQuery, SearchRank
-from django.core.exceptions import PermissionDenied
-from django.db.models import F
-from django.db import transaction
+from projects.permissions import (
+    CustomUserRateThrottle,
+    GetUserRateThrottle,
+    IsOwner,
+    IsStaffOrModerator,
+    PostUserRateThrottle,
+    SustainedRateThrottle,
+)
 from rest_framework import status
-from rest_framework.generics import (UpdateAPIView, CreateAPIView, ListAPIView,
-                                     RetrieveAPIView, DestroyAPIView)
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
-from projects.permissions import (IsOwner, IsStaffOrModerator,
-                                  SustainedRateThrottle, PostUserRateThrottle,
-                                  GetUserRateThrottle, CustomUserRateThrottle)
-from activitylog.models import Activitylog  
-from .models import Project, Comment, StaffPick, Category, Tag, PublishingRule
-from creators.models import Creator
-from .utils import (ProjectSearchCriteria, project_changed, detect_mentions,
-                    perform_project_search, can_view,
-                    get_published_projects_for_user)
-from creators.utils import (activity_notification, send_notification,  activity_log, set_badge_like_category,
-                            set_badge_project_category, set_badge_view_category,
-                             set_badge_comment_category)
-from .serializers import (ProjectSerializer, ProjectListSerializer,
-                          CommentSerializer, CategorySerializer, TagSerializer,
-                          StaffPickSerializer)
-from .pagination import ProjectNumberPagination 
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+
+from .models import Category, Comment, Project, PublishingRule, StaffPick, Tag
+from .pagination import ProjectNumberPagination
+from .serializers import (
+    CategorySerializer,
+    CommentSerializer,
+    ProjectListSerializer,
+    ProjectSerializer,
+    StaffPickSerializer,
+    TagSerializer,
+)
+from .utils import (
+    ProjectSearchCriteria,
+    can_view,
+    detect_mentions,
+    get_published_projects_for_user,
+    perform_project_search,
+    project_changed,
+    recommend_projects,
+)
+
 
 class ProjectCreateAPIView(CreateAPIView):
     """
@@ -50,6 +79,7 @@ class ProjectCreateAPIView(CreateAPIView):
             "publish": {"type": 4, "visible_to": []}\n
         }\n
     """
+
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated]
@@ -60,20 +90,22 @@ class ProjectCreateAPIView(CreateAPIView):
 
         self.request.user.save()
 
-        creator = Creator.objects.get(id = obj.creator_id)
-        project_count= creator.projects_count
+        creator = Creator.objects.get(id=obj.creator_id)
+        project_count = creator.projects_count
         set_badge_project_category(creator, project_count)
 
         if self.request.user.followers is not None:
             send_notification(
                 list(self.request.user.followers.all()),
                 self.request.user,
-                [{"project": obj.title} for _ in list(self.request.user.followers.all())],
+                [
+                    {"project": obj.title}
+                    for _ in list(self.request.user.followers.all())
+                ],
                 Notification.Type.FOLLOWING_PROJECT,
-                f'/creators/{self.request.user.username}'
+                f"/creators/{self.request.user.username}",
             )
-        
-        
+
 
 class ProjectUpdateAPIView(UpdateAPIView):
     """
@@ -98,6 +130,7 @@ class ProjectUpdateAPIView(UpdateAPIView):
             "publish": {"type": 4, "visible_to": []}\n
         }\n
     """
+
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -113,10 +146,7 @@ class ProjectUpdateAPIView(UpdateAPIView):
         self.request.user.save()
 
         if project_changed(old, new):
-            info = {
-                "project_id": str(new.pk),
-                "editor": self.request.user.username
-            }
+            info = {"project_id": str(new.pk), "editor": self.request.user.username}
             activity_notification(["edited_project"], **info)
 
         # because project_changed still needs to make reference to the
@@ -133,6 +163,7 @@ class ProjectDeleteAPIView(DestroyAPIView):
     Requires project id.
     Returns {details: "ok"}
     """
+
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -140,10 +171,10 @@ class ProjectDeleteAPIView(DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         project = self.get_object()
-        creator = Creator.objects.get(id = project.creator_id)
+        creator = Creator.objects.get(id=project.creator_id)
         if project:
             result = self.destroy(request, *args, **kwargs)
-            project_count_after_deletion = creator.projects_count -1
+            project_count_after_deletion = creator.projects_count - 1
             request.user.save()
             set_badge_project_category(creator, project_count_after_deletion)
             return result
@@ -162,7 +193,7 @@ class ProjectListAPIView(ListAPIView):
     pagination_class = ProjectNumberPagination
 
     def get_queryset(self):
-        all = Project.objects.prefetch_related('publish__visible_to').all()
+        all = Project.objects.prefetch_related("publish__visible_to").all()
         return get_published_projects_for_user(self.request.user, all)
 
 
@@ -179,13 +210,16 @@ class ProjectTagSearchAPIView(ListAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
-        query_string = self.request.GET.get('q')
+        query_string = self.request.GET.get("q")
         query = SearchQuery(query_string)
-        rank = SearchRank(F('search_vector'), query)
-        tags = Tag.objects.annotate(rank=rank).filter(
-            search_vector=query).order_by('-rank')
+        rank = SearchRank(F("search_vector"), query)
+        tags = (
+            Tag.objects.annotate(rank=rank)
+            .filter(search_vector=query)
+            .order_by("-rank")
+        )
         return tags
-        
+
 
 class ProjectTagAutocompleteAPIView(ListAPIView):
     """
@@ -200,10 +234,12 @@ class ProjectTagAutocompleteAPIView(ListAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
-        query_string = self.request.GET.get('q')
-        tags = Tag.objects.annotate(
-            similarity=TrigramSimilarity('name', query_string)).filter(
-                similarity__gt=0.25).order_by('-similarity')[:20]
+        query_string = self.request.GET.get("q")
+        tags = (
+            Tag.objects.annotate(similarity=TrigramSimilarity("name", query_string))
+            .filter(similarity__gt=0.25)
+            .order_by("-similarity")[:20]
+        )
         return tags
 
 
@@ -220,10 +256,14 @@ class ProjectAutocompleteAPIView(ListAPIView):
     throttle_classes = [GetUserRateThrottle, SustainedRateThrottle]
 
     def get_queryset(self):
-        query_string = self.request.GET.get('q')
-        projects = Project.objects.annotate(
-            similarity=TrigramSimilarity('title', query_string)).filter(
-                similarity__gt=0.01).order_by('-similarity')[:20]
+        query_string = self.request.GET.get("q")
+        projects = (
+            Project.objects.annotate(
+                similarity=TrigramSimilarity("title", query_string)
+            )
+            .filter(similarity__gt=0.01)
+            .order_by("-similarity")[:20]
+        )
         result = []
         for project in projects:
             if can_view(self.request.user, project):
@@ -247,14 +287,13 @@ class ProjectSearchAPIView(ListAPIView):
     def get_queryset(self):
         try:
             search_criteria = {
-                ProjectSearchCriteria(int(self.request.GET.get('criteria',
-                                                               '')))
+                ProjectSearchCriteria(int(self.request.GET.get("criteria", "")))
             }
         except (KeyError, ValueError):
             search_criteria = None
-        return perform_project_search(self.request.user,
-                                      self.request.GET.get("q"),
-                                      search_criteria)
+        return perform_project_search(
+            self.request.user, self.request.GET.get("q"), search_criteria
+        )
 
 
 class ProjectDetailsAPIView(RetrieveAPIView):
@@ -281,16 +320,36 @@ class ProjectDetailsAPIView(RetrieveAPIView):
                     obj.views_count += 1
                     obj.save()
                 else:
-                    if not self.request.user in obj.views.all():
+                    if self.request.user not in obj.views.all():
                         obj.views.add(self.request.user)
                         obj.views_count += 1
                         obj.save()
-                creator = Creator.objects.get(id = obj.creator_id)
+                creator = Creator.objects.get(id=obj.creator_id)
                 set_badge_view_category(creator)
             return obj
         else:
-            raise PermissionDenied(
-                _('you are not permitted to view this project'))
+            raise PermissionDenied(_("you are not permitted to view this project"))
+
+
+class ProjectRecommendAPIView(ListAPIView):
+    """
+    Fetch 3 projects to recommend.
+
+    Requires project id.
+    Returns list of three projects.
+    """
+
+    serializer_class = ProjectSerializer
+    permission_classes = [AllowAny]
+    throttle_classes = [CustomUserRateThrottle, SustainedRateThrottle]
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        project = get_object_or_404(Project, pk=pk)
+        try:
+            return recommend_projects(project)
+        except Exception:
+            return Project.objects.none()
 
 
 class SavedProjectsAPIView(ListAPIView):
@@ -308,7 +367,8 @@ class SavedProjectsAPIView(ListAPIView):
 
     def get_queryset(self):
         all = self.request.user.saved_for_future.prefetch_related(
-            'publish__visible_to').all()
+            "publish__visible_to"
+        ).all()
         return get_published_projects_for_user(self.request.user, all)
 
 
@@ -331,9 +391,7 @@ class ToggleLikeAPIView(RetrieveAPIView):
         obj = get_object_or_404(self.get_queryset(), pk=pk)
         """ check if user is permitted to view this project """
         if can_view(self.request.user, obj):
-
             with transaction.atomic():
-
                 if self.request.user in obj.likes.all():
                     obj.likes.remove(self.request.user)
                     obj.save()
@@ -344,26 +402,26 @@ class ToggleLikeAPIView(RetrieveAPIView):
                     send_notification(
                         [obj.creator],
                         self.request.user,
-                        [{'project': obj.title}],
+                        [{"project": obj.title}],
                         Notification.Type.CLAP,
-                        f'/projects/{obj.pk}'
+                        f"/projects/{obj.pk}",
                     )
 
                     activity_log(
                         [obj.creator],
                         self.request.user,
-                        [{'project': obj.title}],
+                        [{"project": obj.title}],
                         Activitylog.Type.CLAP,
-                        f'/projects/{obj.pk}'
+                        f"/projects/{obj.pk}",
                     )
 
-                creator = Creator.objects.get(id = obj.creator_id)
+                creator = Creator.objects.get(id=obj.creator_id)
                 set_badge_like_category(creator)
 
             return obj
         else:
-            raise PermissionDenied(
-                _('you are not permitted to view this project'))
+            raise PermissionDenied(_("you are not permitted to view this project"))
+
 
 class ToggleSaveAPIView(RetrieveAPIView):
     """
@@ -384,9 +442,7 @@ class ToggleSaveAPIView(RetrieveAPIView):
         obj = get_object_or_404(self.get_queryset(), pk=pk)
         """ check if user is permitted to view this project """
         if can_view(self.request.user, obj):
-
             with transaction.atomic():
-
                 if self.request.user in obj.saved_by.all():
                     obj.saved_by.remove(self.request.user)
                     obj.save()
@@ -397,24 +453,23 @@ class ToggleSaveAPIView(RetrieveAPIView):
                     send_notification(
                         [obj.creator],
                         self.request.user,
-                        [{'project': obj.title}],
+                        [{"project": obj.title}],
                         Notification.Type.BOOKMARK,
-                        f'/projects/{obj.pk}'
+                        f"/projects/{obj.pk}",
                     )
 
                     activity_log(
                         [obj.creator],
                         self.request.user,
-                        [{'project': obj.title}],
+                        [{"project": obj.title}],
                         Activitylog.Type.BOOKMARK,
-                        f'/projects/{obj.pk}'
+                        f"/projects/{obj.pk}",
                     )
-
 
             return obj
         else:
-            raise PermissionDenied(
-                _('you are not permitted to view this project'))
+            raise PermissionDenied(_("you are not permitted to view this project"))
+
 
 class AddCommentAPIView(CreateAPIView):
     """
@@ -442,76 +497,77 @@ class AddCommentAPIView(CreateAPIView):
         if can_view(self.request.user, obj):
             return obj
         else:
-            raise PermissionDenied(
-                _('you are not permitted to view this project'))
+            raise PermissionDenied(_("you are not permitted to view this project"))
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=self.request.data)
 
         if not serializer.is_valid():
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         parent_id = self.request.data.get("parent_id", None)
         text = serializer.validated_data.get("text", None)
 
         with transaction.atomic():
-
             publishing_rule = PublishingRule.objects.create(
-                type=PublishingRule.PUBLIC,
-                publisher_id=str(self.request.user.id))
+                type=PublishingRule.PUBLIC, publisher_id=str(self.request.user.id)
+            )
 
             if parent_id:
-
                 try:
                     parent_comment = Comment.objects.get(id=parent_id)
                 except Comment.DoesNotExist:
                     raise Http404(_("parent comment does not exist"))
 
-                parent_comment.add_child(project=self.get_object(),
-                                         creator=self.request.user,
-                                         text=text,
-                                         publish=publishing_rule)
+                parent_comment.add_child(
+                    project=self.get_object(),
+                    creator=self.request.user,
+                    text=text,
+                    publish=publishing_rule,
+                )
             else:
-                Comment.add_root(project=self.get_object(),
-                                 creator=self.request.user,
-                                 text=text,
-                                 publish=publishing_rule)
+                Comment.add_root(
+                    project=self.get_object(),
+                    creator=self.request.user,
+                    text=text,
+                    publish=publishing_rule,
+                )
 
         result = self.get_object()
 
-        creator_str= self.request.user.username
-        creator_id= Creator.objects.get(username= creator_str).id
-        creator= Creator.objects.get(id = creator_id)
+        creator_str = self.request.user.username
+        creator_id = Creator.objects.get(username=creator_str).id
+        creator = Creator.objects.get(id=creator_id)
         set_badge_comment_category(creator)
 
         if result:
-            detect_mentions({
-                "text": text,
-                "project_id": result.pk,
-                "creator": request.user.username
-            })
+            detect_mentions(
+                {
+                    "text": text,
+                    "project_id": result.pk,
+                    "creator": request.user.username,
+                }
+            )
             send_notification(
                 [result.creator],
                 self.request.user,
-                [{'project': result.title}],
+                [{"project": result.title}],
                 Notification.Type.COMMENT,
-                f'/projects/{result.pk}'
+                f"/projects/{result.pk}",
             )
 
             activity_log(
                 [result.creator],
                 self.request.user,
-                [{'project': result.title}],
+                [{"project": result.title}],
                 Activitylog.Type.COMMENT,
-                f'/projects/{result.pk}'
+                f"/projects/{result.pk}",
             )
 
-        return Response(ProjectSerializer(result, context={
-            'request': request
-        }).data,
-                        status=status.HTTP_201_CREATED)
-            
+        return Response(
+            ProjectSerializer(result, context={"request": request}).data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class CategoryListAPIView(ListAPIView):
@@ -588,6 +644,7 @@ class UnpublishCommentAPIView(UpdateAPIView):
     Requires comment id.
     Returns unpublished comment.
     """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsStaffOrModerator]
@@ -598,8 +655,8 @@ class UnpublishCommentAPIView(UpdateAPIView):
             old_publishing_rule = self.get_object().publish
 
             publishing_rule = PublishingRule.objects.create(
-                type=PublishingRule.DRAFT,
-                publisher_id=str(self.request.user.id))
+                type=PublishingRule.DRAFT, publisher_id=str(self.request.user.id)
+            )
 
             comment = serializer.save(publish=publishing_rule)
             old_publishing_rule.delete()
