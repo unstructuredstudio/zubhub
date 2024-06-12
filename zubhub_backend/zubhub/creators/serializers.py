@@ -302,6 +302,10 @@ class CustomPasswordResetSerializer(PasswordResetSerializer):
                 _('No account found with this email. Verify and try again.'))
         return value
 
+    def get_email_options(self):
+        return {
+            'html_email_template_name': 'registration/password_reset_email.html'
+        }
 
 class CreatorGroupWithMembershipsSerializer(serializers.ModelSerializer):
     members = CreatorGroupMembershipSerializer(many=True)

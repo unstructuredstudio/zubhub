@@ -32,6 +32,7 @@ from projects.utils import detect_mentions, get_published_projects_for_user
 from projects.permissions import (SustainedRateThrottle, PostUserRateThrottle,
                                   GetUserRateThrottle, GetAnonRateThrottle,
                                   CustomUserRateThrottle)
+from zubhub.tasks import send_follower_notification_email
 # from ..projects.models import Project
 
 from .models import Location, CreatorGroup, PhoneConfirmationHMAC, GroupInviteConfirmationHMAC, CreatorGroupMembership
@@ -471,6 +472,14 @@ class ToggleFollowAPIView(RetrieveAPIView):
                         Activitylog.Type.FOLLOW,
                         f'/creators/{obj}'
                     )
+            context = {
+                "user": {
+                    "username": self.request.user.username,
+                    "avatar": self.request.user.avatar,
+                    "pk": self.request.user.pk
+                }
+            }
+            send_follower_notification_email.delay(obj.email, context)
         self.request.user.save()
 
         return obj
