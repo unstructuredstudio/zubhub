@@ -81,6 +81,10 @@ export default function ActivityDetailsV2(props) {
     props.navigate(`${props.location.pathname}/edit`);
   };
 
+  const handleCreateProject = () => {
+    props.history.push('/projects/create', {activity_id: id});
+  };
+
   const toggleDialog = () => {
     setOpen(!open);
     props.navigate(window.location.pathname, { replace: true });
@@ -139,7 +143,11 @@ export default function ActivityDetailsV2(props) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32, gap: 10 }}>
-          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
+          <CustomButton
+            primaryButtonOutlinedStyle
+            style={{ borderRadius: 4 }}
+            onclick={handleCreateProject}
+          >
             Create this Project
           </CustomButton>
           <CustomButton
