@@ -129,6 +129,7 @@ class API {
    *
    * @todo - describe method's signature
    */
+
   signup = ({ username, email, phone, dateOfBirth, user_location, password1, password2, bio, subscribe }) => {
     const url = 'creators/register/';
     const method = 'POST';
@@ -321,7 +322,7 @@ class API {
    *
    * @todo - describe method's signature
    */
-  teamMembersId = id => {
+  teamMembersId = (id) => {
     const url = `creators/id/${id}/`;
     const method = 'GET';
     return this.request({ url, method }).then(res => res.json());
@@ -1108,6 +1109,23 @@ class API {
   activityTogglePublish = ({ id, token }) => {
     const url = `activities/${id}/toggle-publish/`;
     return this.request({ url, token }).then(res => res.json());
+  };
+
+  activityDownload = async ({ id, token }) => {
+    const url = `${this.domain}activities/${id}/pdf/`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      const blob = await response.blob();
+      return blob;
+    }
   };
 }
 

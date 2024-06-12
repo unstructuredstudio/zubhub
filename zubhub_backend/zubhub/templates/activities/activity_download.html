@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+  <style type="text/css">
+      @page {
+          margin: 20px -10px -10px -10px;
+      }
+
+      body {
+          display: flex;
+          flex-direction: column;
+      }
+
+      .logo-image {
+          width: 100px;
+          height: auto;
+          padding: 3em 0 0 3em;
+      }
+
+      .headline {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 30px 0 30px 0;
+      }
+
+      .headline .activity-title {
+          font-size: 30px;
+          font-family: "Roboto", sans-serif;
+          color: #292535;
+      }
+
+      .content {
+          flex-grow: 1;
+          padding: 3em;
+      }
+
+      .user-content img {
+          width: 40px;
+          height: 40px;
+          vertical-align: middle;
+      }
+
+      .user-content span {
+          font-size: 14px;
+          font-family: "Roboto", sans-serif;
+          color: #7e7e7e;
+          vertical-align: middle;
+      }
+
+      .sub-heading b {
+          font-size: 18px;
+          font-weight: 600;
+          font-family: "verdana", sans-serif;
+          color: #292535;
+      }
+
+      .intro-content {
+          font-size: 16px;
+          font-family: "Roboto", sans-serif;
+          color: #292535;
+          font-weight: 200;
+          margin: 15px 25px 15px 10px;
+      }
+
+      .intro-images {
+          display: flex;
+          justify-content: space-between;
+          margin: 30px 0 50px 0;
+      }
+
+      .intro-images .i-img img {
+          width: 150px;
+          height: auto;
+          border-radius: 5px;
+      }
+
+      .intro-images span {
+          margin: 0 20px 0 0;
+      }
+
+      .badges {
+          display: flex;
+          margin: 30px 0 30px 0;
+      }
+
+      .badge-primary {
+          display: inline-block;
+          font-weight: 400;
+          color: #00b8c4;
+          text-align: center;
+          vertical-align: middle;
+          background-color: transparent;
+          border: 1px solid #00b8c4;
+          padding: 0.375rem 0.75rem;
+          font-size: 1rem;
+          line-height: 1.5;
+          border-radius: 0.25rem;
+          margin: 0 15px 0 0;
+          transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      .material-content {
+          font-size: 16px;
+          font-family: "Roboto", sans-serif;
+          color: #292535;
+          font-weight: 200;
+          margin: 15px 25px 15px 10px;
+      }
+
+      .footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #dc3545;
+          padding-bottom: 10px;
+      }
+
+      .footer .white-logo img {
+          width: 150px;
+          height: auto;
+          margin-left: 30px;
+      }
+
+      .footer .footer-share {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .footer .footer-share div p {
+          font-size: 10px;
+          font-family: "Roboto", sans-serif;
+          color: #ffffff;
+          font-weight: 600;
+          margin: 15px 25px 0 10px;
+          white-space: nowrap;
+      }
+
+      .footer .footer-share .socials {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 0 25px 0 10px;
+      }
+
+      .footer .footer-share .socials .social-item {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
+          font-family: "Roboto", sans-serif;
+          color: #ffffff;
+          font-weight: 200;
+          margin: 0 25px 0 10px;
+          padding: 5px;
+      }
+
+      .footer .qr-code {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .footer .qr-code img {
+          width: 80px;
+          height: auto;
+      }
+
+      .footer .qr-code p {
+          font-size: 8px;
+          font-family: "Roboto", sans-serif;
+          color: #ffffff;
+          font-weight: 400;
+          margin: 0 25px 15px 10px;
+          white-space: nowrap;
+      }
+  </style>
+</head>
+<body>
+<div class="logo">
+  <img
+    src="https://zubhub.unstructured.studio/static/media/logo.52347ac5.png"
+    alt="Zubhub logo"
+    class="logo-image"
+  />
+</div>
+<div class="content">
+  <div class="headline">
+    <div class="activity-title">
+      <b>{{ activity.title }}</b>
+    </div>
+    <div class="user-content">
+      {% if creators %}
+        {% for creator in creators %}
+          <img
+            src="{{ creator.avatar }}"
+            alt="{{ creator.username }} avatar"
+            style="border-radius: 50%"
+          />
+          <span>{{ creator.username }}</span>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="intro">
+    <p class="sub-heading">
+      <b> Introduction </b>
+    </p>
+    <div class="intro-content">
+      {{ activity.introduction | safe }}
+    </div>
+    <div class="intro-images">
+      {% for activity_image in activity_images %}
+        <span class="i-img">
+                    <img
+                      src="{{ activity_image.file_url }}"
+                      alt=""
+                    />
+                </span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="category">
+    <p class="sub-heading">
+      <b> Category </b>
+    </p>
+    <div class="badges">
+      {% for category in activity_category %}
+        <span class="badge-primary"> {{ category }} </span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="grade">
+    <p class="sub-heading">
+      <b> Class Grade </b>
+    </p>
+    <div class="badges">
+      <span class="badge-primary">{{ activity.class_grade }}</span>
+    </div>
+  </div>
+  {% if activity.materials_used %}
+    <div class="materials">
+      <p class="sub-heading"><b>Material Used</b></p>
+      <div class="material-content">
+        {{ activity.materials_used | safe }}
+      </div>
+      <div class="intro-images">
+                    <span class="i-img">
+              <img
+                src="{{ activity.materials_used_image.file_url }}"
+                alt=""
+              />
+            </span>
+      </div>
+    </div>
+  {% endif %}
+  {% if activity_steps %}
+    {% for step in activity_steps %}
+      <div class="step-1 {{ step.step_order }}">
+        <p class="sub-heading">
+          <b>Step {{ step.step_order }}: {{ step.title }}</b>
+        </p>
+        <div class="steps-content">
+          {{ step.description | safe }}
+        </div>
+        <div class="intro-images">
+          {% for img in activity_steps_images %}
+            <span class="i-img">
+                        <img src="{{ img.file_url }}" alt="Activity image" />
+                    </span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+<div class="footer">
+  <div class="white-logo">
+    <img
+      src="https://zubhub.unstructured.studio/static/media/unstructured-logo.3218289e.png"
+      alt=""
+    />
+  </div>
+  <div class="footer-share">
+    <div class="share-text">
+      <p>SHARE THIS ACTIVITY</p>
+    </div>
+    <div class="socials">
+          <span class="social-item">
+            <i class="fa fa-facebook"></i>
+          </span>
+      <span class="social-item">
+            <i class="fa fa-whatsapp"></i>
+          </span>
+      <span class="social-item">
+            <i class="fa fa-link"></i>
+          </span>
+    </div>
+  </div>
+  <div class="qr-code">
+    <!--<img
+      src="https://1.bp.blogspot.com/-Flq3GA43Uk8/T86NADW0hfI/AAAAAAAAAIQ/cimkummQaS4/s1600/QR+Tag+-+GreenBox+Website.png"
+      alt="Zubhub QR code"
+    />-->
+    <img src="data:image/png;base64,{{ qr_code }}" alt="{{ activity.title }}" />
+    <p>SCAN CODE TO VIEW ACTIVITY</p>
+  </div>
+</div>
+</body>
+</html>

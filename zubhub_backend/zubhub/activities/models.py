@@ -117,7 +117,7 @@ class ActivityImage(models.Model):
                               blank=True)
 
     def __str__(self):
-        return self.image
+        return self.image.file_url
 
 
 class ActivityMakingStep(models.Model):
