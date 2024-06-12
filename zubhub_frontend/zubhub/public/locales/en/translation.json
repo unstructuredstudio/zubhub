@@ -34,7 +34,7 @@
     },
     "sidebar":{
       "logout": "Logout",
-      "expoloreActivities":"Explore Activities",
+      "exploreActivities":"Explore Activities",
       "teams":"Teams",
       "bookmarks":"Bookmarks",
       "myProjects":"My Projects",
@@ -43,7 +43,8 @@
       "createProject":"Create Project",
       "profile":"My Profile",
       "projects":"All Projects",
-      "settings":"Settings"
+      "settings":"Settings",
+      "editProfile": "Account Settings"
     },
 
     "footer": {
