@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import { Box, Typography, Container } from '@mui/material';
 
-import disconnected from '../../assets/images/disconnected-chains.svg';
 import styles from '../../assets/js/styles/views/error/errorPageStyles';
+import CustomButton from '../../components/button/Button';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(styles);
 
@@ -21,21 +22,35 @@ function ErrorPage(props) {
   return (
     <Box className={classes.root} style={propStyle ? propStyle : null}>
       <Container className={classes.mainContainerStyle}>
-        <img className={classes.disconnectedStyle} src={disconnected} alt={props.error} />
+        <img className={classes.disconnectedStyle} src={props.imgSrc} alt={props.error} />
         <Box className={classes.errorBoxStyle}>
-          <Typography variant="h1">Oops!!</Typography>
-          <Typography style={{ marginBottom: 50 }} variant="h5">
+          <Typography variant="h3">{props.errorTitle}</Typography>
+          <Typography variant="h5">
             {props.error}
           </Typography>
           {props.children}
         </Box>
+        <Link to={props.routeLink}>
+          <CustomButton
+            variant="outlined"
+            size="large"
+            secondaryButtonStyle
+            customButtonStyle
+          >
+            {props.routeTitle}
+          </CustomButton>
+        </Link>
       </Container>
     </Box>
   );
 }
 
 ErrorPage.propTypes = {
+  routeLink: PropTypes.string.isRequired,
+  routeTitle: PropTypes.string.isRequired,
+  errorTitle: PropTypes.string,
   error: PropTypes.string.isRequired,
+  imgSrc: PropTypes.string,
 };
 
 export default ErrorPage;

@@ -166,7 +166,7 @@ function Projects(props) {
                     lg={4}
                     item
                     align="center"
-                    // className={classes.projectGridStyle}
+                  // className={classes.projectGridStyle}
                   >
                     <Project
                       project={project}
@@ -268,7 +268,13 @@ function Projects(props) {
       </>
     );
   } else {
-    return <ErrorPage error={t('projects.errors.unexpected')} />;
+    return <ErrorPage
+      error={t('projects.errors.unexpected')}
+      imgSrc={NoProjects}
+      routeTitle='Create Project'
+      routeLink='/create-project'
+      errorTitle='No projects yet'
+    />
   }
 }
 
