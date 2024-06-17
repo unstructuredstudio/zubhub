@@ -60,9 +60,9 @@ function Login(props) {
   const { t } = props;
 
   return (
-    <Box className={classes.root}>
-      <Container className={classes.containerStyle}>
-        <Card className={classes.cardStyle}>
+    <Box className={clsx(classes.root, props.styleOverrides?.rootStyle)}>
+      <Container className={clsx(classes.containerStyle, props.styleOverrides?.containerStyle)}>
+        <Card className={clsx(classes.cardStyle, props.styleOverrides?.cardStyle)}>
           <CardActionArea>
             <CardContent>
               <form
@@ -71,13 +71,24 @@ function Login(props) {
                 noValidate="noValidate"
                 onSubmit={e => handleSetState(login(e, props))}
               >
-                <Typography gutterBottom variant="h5" component="h2" color="textPrimary" className={classes.titleStyle}>
-                  {t('login.welcomeMsg.primary')}
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="h2"
+                  color="textPrimary"
+                  className={clsx(classes.titleStyle, props.styleOverrides?.titleStyle)}
+                >
+                  {props.title || t('login.welcomeMsg.primary')}
                 </Typography>
-                <Typography className={classes.descStyle} variant="body2" color="textSecondary" component="p">
+                <Typography
+                  className={clsx(classes.descStyle, props.styleOverrides?.descriptionStyle)}
+                  variant="body2"
+                  color="textSecondary"
+                  component="p"
+                >
                   {t('login.welcomeMsg.secondary')}
                 </Typography>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} className={clsx(props.styleOverrides?.gridStyle)}>
                   <Grid item xs={12}>
                     <Box component="p" className={props.status && props.status['non_field_errors'] && classes.errorBox}>
                       {props.status && props.status['non_field_errors'] && (
@@ -178,7 +189,7 @@ function Login(props) {
                   </Grid>
                 </Grid>
               </form>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} className={clsx(props.styleOverrides?.gridStyle)}>
                 <Grid item xs={12}>
                   <Box className={classes.center}>
                     <Divider className={classes.divider} />

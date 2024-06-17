@@ -147,7 +147,7 @@ function Projects(props) {
             {hero && hero.id ? (
               <Box className={classes.heroMainSectionStyle}>
                 <Box className={classes.heroMessageContainerStyle}>
-                  <Typography className={classes.heroMainMessageSecondaryStyle}>{t('projects.1')}</Typography>
+                  <Typography className={classes.heroMainMessageSecondaryStyle}>{`${t('projects.1')} `}</Typography>
                   <Typography className={classes.heroMainMessageSecondaryStyle}>{t('projects.2')}</Typography>
                   <Typography className={classes.heroMainMessagePrimaryStyle}>{hero.description}</Typography>
                   <CustomButton

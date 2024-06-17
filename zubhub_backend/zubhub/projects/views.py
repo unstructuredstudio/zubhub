@@ -218,6 +218,8 @@ class ProjectTagSearchAPIView(ListAPIView):
             .filter(search_vector=query)
             .order_by("-rank")
         )
+        if not self.request.user.is_authenticated:
+            tags = tags[:4]
         return tags
 
 

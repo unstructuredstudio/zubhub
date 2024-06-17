@@ -1,54 +1,25 @@
-export const toggleSave = async (
-  e,
-  id,
-  auth,
-  navigate,
-  setState,
-  activityToggleSave,
-  t,
-) => {
-  setState(state => {
-    return {
-      ...state,
-      loading: true,
-    };
-  });
+export const toggleSave = async (e, id, auth, navigate, activityToggleSave, t) => {
   e.preventDefault();
   if (!auth.token) {
     navigate('/login');
   } else {
-    const result = await activityToggleSave({
+    await activityToggleSave({
       id,
       token: auth.token,
-      t: t,
+      t,
     });
-    setState(state => {
-      return {
-        ...state,
-        ...result,
-      };
-    }); 
   }
 };
 
-export const addView = async (
-  e,
-  id,
-  auth,
-  navigate,
-  setState,
-  activityCountView,
-  t,
-) => {
+export const addView = async (e, id, auth, navigate, setState, activityCountView, t) => {
   e.preventDefault();
   if (!auth.token) {
     navigate('/login');
   } else {
-    const result = await activityCountView({
+    await activityCountView({
       id,
       token: auth.token,
-      t: t,
+      t,
     });
   }
 };
-

@@ -615,3 +615,39 @@ export const getStaffPick = args => () =>
       }
       return { loading: false };
     });
+
+/**
+ * @function autoCompleteProjects
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const autoCompleteProjects = args => () =>
+  API.autocompleteProjects(args).catch(error => {
+    // fail silently for now
+    console.log(error);
+    // if (error.message.startsWith('Unexpected')) {
+    //   toast.warning(args.t('savedProjects.errors.unexpected'));
+    // } else {
+    //   toast.warning(error.message);
+    // }
+    return [];
+  });
+
+/**
+ * @function autoCompleteTags
+ * @author Raymond Ndibe <ndiberaymond1@gmail.com>
+ *
+ * @todo - describe function's signature
+ */
+export const autoCompleteTags = args => () =>
+  API.autocompleteTags(args).catch(error => {
+    // fail silently for now
+    console.log(error);
+    // if (error.message.startsWith('Unexpected')) {
+    //   toast.warning(args.t('savedProjects.errors.unexpected'));
+    // } else {
+    //   toast.warning(error.message);
+    // }
+    return [];
+  });
