@@ -1,9 +1,11 @@
-import { fade } from '@mui/material/styles';
-
 const styles = theme => ({
   root: {
-    paddingTop: '2em',
-    paddingBottom: '2em',
+    marginTop: '2em',
+    marginBottom: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+      marginBottom: '3em',
+    },
     flex: '1 0 auto',
     // background: 'var(--primary-color2)',
     // background:
@@ -15,7 +17,7 @@ const styles = theme => ({
       maxWidth: '950px',
     },
     [theme.breakpoints.down('400')]: {
-      marginTop:'30px',
+      marginTop: '30px',
     },
   },
   cardStyle: {

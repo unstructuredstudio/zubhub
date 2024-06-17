@@ -809,6 +809,11 @@ class API {
     return this.request({ token, url }).then(res => res.json());
   };
 
+  getMoreProjects = id => {
+    const url = `projects/${id}/recommend/`;
+    return this.request({ url }).then(res => res.json());
+  };
+
   /**
    * @method getActivity
    * @author Yaya Mamoudou <yayamamoudou0@gmail.com>

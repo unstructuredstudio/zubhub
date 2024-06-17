@@ -4,14 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import clsx from 'clsx';
 import { makeStyles } from '@mui/styles';
-import { style } from '../../assets/js/styles/components/activity/activityStyle';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import {
-  getActivities,
-  activityToggleSave,
-  setActivity,
-} from '../../store/actions/activityActions';
+
 import {
   Card,
   CardActions,
@@ -25,10 +20,12 @@ import {
   Grid,
   Fab,
 } from '@mui/material';
+
+import { getActivities, activityToggleSave, setActivity } from '../../store/actions/activityActions';
 import commonStyles from '../../assets/js/styles';
 import Creator from '../creator/creator';
 import { toggleSave } from './activityScripts';
-import CustomButton from '../button/Button';
+import { style } from '../../assets/js/styles/components/activity/activityStyle';
 
 const useCommonStyles = makeStyles(commonStyles);
 const useStyles = makeStyles(style);
@@ -38,23 +35,18 @@ function Activity(props) {
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const topMarginCoefficient = activity.creator?.length < 6 ? 2 : 1;
-  const [state, handleSetState] = useState({ loading: false });
 
   return (
     <div className={classes.activityCardContainer}>
       {activity.creators?.length > 0
         ? activity.creators.map((creator, index) => (
-            <Creator
-              key={index}
-              creator={creator}
-              top={index * topMarginCoefficient - 1 + 'em'}
-            />
+            <Creator key={index} creator={creator} top={`${index * topMarginCoefficient - 1}em`} />
           ))
         : ''}
       <Link
         to={`/activities/${activity.id}`}
         className={common_classes.textDecorationNone}
-        onClick={e => props.setActivity(activity)}
+        onClick={() => props.setActivity(activity)}
       >
         <Card className={clsx(classes.activityCard)}>
           <CardMedia title={activity.title} className={classes.mediaBoxStyle}>
@@ -67,14 +59,7 @@ function Activity(props) {
             <Box className={classes.activityTagsBox}>
               {activity.tags?.length > 0
                 ? activity.tags.slice(0, 3).map(tag => (
-                    <Typography
-                      className={
-                        common_classes.baseTagStyle +
-                        ' ' +
-                        classes.activityTagPill
-                      }
-                      key={tag.id}
-                    >
+                    <Typography className={clsx(common_classes.baseTagStyle, classes.activityTagPill)} key={tag.id}>
                       {tag.name}
                     </Typography>
                   ))
@@ -86,11 +71,7 @@ function Activity(props) {
                   onMouseOut={() => setTagsShowMore(false)}
                 >
                   <Typography
-                    className={
-                      common_classes.baseTagStyle +
-                      ' ' +
-                      classes.activityTagsShowMore
-                    }
+                    className={clsx(common_classes.baseTagStyle, classes.activityTagsShowMore)}
                     key="activityTagsShowMore"
                   >
                     {['+', activity.tags.length - 3].join('')}
@@ -133,17 +114,7 @@ function Activity(props) {
                 className={common_classes.fabButtonStyle}
                 size="small"
                 aria-label="save button"
-                onClick={e =>
-                  toggleSave(
-                    e,
-                    activity.id,
-                    props.auth,
-                    props.navigate,
-                    handleSetState,
-                    props.activityToggleSave,
-                    t,
-                  )
-                }
+                onClick={e => toggleSave(e, activity.id, props.auth, props.navigate, props.activityToggleSave, t)}
               >
                 {props.auth && activity.saved_by.includes(props.auth.id) ? (
                   <BookmarkIcon aria-label="unsave" />
@@ -151,19 +122,9 @@ function Activity(props) {
                   <BookmarkBorderIcon aria-label="save" />
                 )}
               </Fab>
-              <Grid
-                container
-                className={clsx(
-                  classes.activityCardInfoBox,
-                  common_classes.alignCenter,
-                )}
-              >
+              <Grid container className={clsx(classes.activityCardInfoBox, common_classes.alignCenter)}>
                 <Grid item xs={6} sm={6}>
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    className={classes.activityTitle}
-                  >
+                  <Typography variant="h6" component="h6" className={classes.activityTitle}>
                     {activity.title}
                   </Typography>
                 </Grid>
@@ -171,16 +132,11 @@ function Activity(props) {
                   <Link
                     to={`/activities/${activity.id}/linkedProjects`}
                     className={common_classes.textDecorationNone}
-                    onClick={e => props.setActivity(activity)}
+                    onClick={() => props.setActivity(activity)}
                   >
-                    <Typography
-                      variant="caption"
-                      className={classes.projectsCount}
-                    >
+                    <Typography variant="caption" className={classes.projectsCount}>
                       {`${t('activities.LinkedProjects')} `}{' '}
-                      <span
-                        className={classes.projectsCountNumber}
-                      >{` ${activity.inspired_projects.length}`}</span>
+                      <span className={classes.projectsCountNumber}>{` ${activity.inspired_projects.length}`}</span>
                     </Typography>
                   </Link>
                 </Grid>
@@ -198,25 +154,12 @@ Activity.propTypes = {
   activity: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    activities: state.activities,
-    auth: state.auth,
-  };
-};
+const mapStateToProps = state => ({ activities: state.activities, auth: state.auth });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getActivities: () => {
-      return dispatch(getActivities());
-    },
-    activityToggleSave: args => {
-      return dispatch(activityToggleSave(args));
-    },
-    setActivity: args => {
-      return dispatch(setActivity(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  getActivities: () => dispatch(getActivities()),
+  activityToggleSave: args => dispatch(activityToggleSave(args)),
+  setActivity: args => dispatch(setActivity(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Activity);

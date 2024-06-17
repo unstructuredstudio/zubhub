@@ -245,7 +245,10 @@ const styles = theme => ({
   },
 
   mainContainerStyle: {
-    // marginTop: '3em',
+    marginTop: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+    },
     maxWidth: '1190px',
     width: '100%',
     padding: '0 2rem',

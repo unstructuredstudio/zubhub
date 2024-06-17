@@ -1,27 +1,37 @@
-import { fade } from '@mui/material/styles';
-
 const styles = theme => ({
   root: {
+    maxWidth: '940px',
+    margin: '2em auto',
     flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: 30
+    gap: 30,
+    [theme.breakpoints.down('lg')]: {
+      padding: '0 2em',
+    },
+    [theme.breakpoints.down('md')]: {
+      padding: '0 2em',
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: '0 1.2em',
+    },
+    [theme.breakpoints.down('378')]: {
+      margin: '3em auto',
+    },
   },
   profileHeaderStyle: {
-    paddingTop: '1.5em',
+    paddingTop: '1.2em',
     background: 'var(--primary-color2)',
+    // eslint-disable-next-line no-dupe-keys
     background:
       'linear-gradient(to bottom, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',
     [theme.breakpoints.down('511')]: {
       paddingTop: '4em',
     },
-    [theme.breakpoints.down('740')]: {
-      margin: '1em',
-    },
     border: 'solid 3px rgb(255 209 24)',
     borderRadius: 8,
     boxShadow: 'unset',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   avatarBoxStyle: {
     padding: '0 1em 2.5em 1em',
@@ -70,7 +80,7 @@ const styles = theme => ({
     padding: '0 2em 2em 2em',
     maxWidth: '35%',
     [theme.breakpoints.down('740')]: {
-      maxWidth: '100%'
+      maxWidth: '100%',
     },
   },
   userNameStyle: {
@@ -88,7 +98,7 @@ const styles = theme => ({
   tagsContainerStyle: {
     display: 'flex',
     flexWrap: 'wrap',
-    marginBottom: '0.1em'
+    marginBottom: '0.1em',
   },
   baseTagStyle: {
     backgroundColor: '#00B8C4',
@@ -102,12 +112,12 @@ const styles = theme => ({
       position: 'static',
       marginBottom: '0.4em',
     },
-    display: 'flex', 
-    alignItems: 'center', 
+    display: 'flex',
+    alignItems: 'center',
     marginRight: '0.5em',
   },
   iconWithSpace: {
-    marginLeft: theme.spacing(0.5)
+    marginLeft: theme.spacing(0.5),
   },
   emailStyle: { marginBottom: '0.5em' },
   moreInfoBoxStyle: {
@@ -124,7 +134,6 @@ const styles = theme => ({
     },
   },
   moreInfoStyle: {
-
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -149,11 +158,7 @@ const styles = theme => ({
     fontSize: '1.9rem',
   },
   profileLowerStyle: {
-    // margin: '1em',
     padding: '1em',
-    [theme.breakpoints.down('740')]: {
-      margin: '1em',
-    },
     borderRadius: 8,
   },
   titleStyle: {
@@ -178,30 +183,26 @@ const styles = theme => ({
   },
   aboutMeBadgeBox: {
     display: 'flex',
-    [theme.breakpoints.down('900')]: {
-      display: 'block',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      gap: '1em',
     },
   },
   aboutMeBox: {
     flexGrow: 1,
     padding: '1em',
-    // margin: '1em 0 0 1em',
     borderRadius: '8px 0 0 8px',
-    [theme.breakpoints.down('900')]: {
-      margin: '1em',
+    [theme.breakpoints.down('sm')]: {
       borderRadius: '4px',
     },
   },
   badgeBox: {
     backgroundColor: 'var(--secondary-color3)',
-    // margin: '1em 1em 0 0',
     padding: '1em',
     width: '40%',
     borderRadius: '0 8px 8px 0',
-    [theme.breakpoints.down('900')]: {
+    [theme.breakpoints.down('sm')]: {
       width: 'auto',
-      margin: '1em',
-      padding: '1em',
       borderRadius: '4px',
     },
   },
@@ -230,6 +231,10 @@ const styles = theme => ({
     },
   },
 
+  projectsSection: {
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
   projectGridStyle: {
     marginBottom: '2em',
   },
@@ -271,7 +276,7 @@ const styles = theme => ({
   },
   followButton: {
     display: 'flex',
-    marginTop: '0.75rem'
+    marginTop: '0.75rem',
   },
   displayNone: { display: 'none' },
   largeLabel: {

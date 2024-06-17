@@ -1,7 +1,8 @@
 const styles = theme => ({
   root: {
+    margin: '2em 16px',
     [theme.breakpoints.down('sm')]: {
-      padding: '2rem 16px',
+      margin: '3em 16px',
     },
     flex: '1 0 auto',
     display: 'flex',
@@ -35,7 +36,7 @@ const styles = theme => ({
   },
   followButton: {
     display: 'flex',
-    marginTop: '0.75rem'
+    marginTop: '0.75rem',
   },
   mainContainerStyle: {
     maxWidth: '1190px',

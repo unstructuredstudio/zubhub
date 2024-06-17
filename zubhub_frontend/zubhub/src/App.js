@@ -153,7 +153,7 @@ function App(props) {
           element={<PageWrapper {...props} Component={CreateProject} protected />}
         />
 
-        <Route path="/projects/:id" element={<PageWrapper {...props} Component={ProjectDetails} protected />} />
+        <Route path="/projects/:id" element={<PageWrapper {...props} Component={ProjectDetails} />} />
 
         <Route path="/ambassadors" element={<PageWrapper {...props} Component={Ambassadors} />} />
 
