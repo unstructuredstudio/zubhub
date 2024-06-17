@@ -1,15 +1,20 @@
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import _ from 'lodash';
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import { makeStyles } from '@mui/styles';
-import SearchIcon from '@mui/icons-material/Search';
-import TranslateIcon from '@mui/icons-material/Translate';
+import {
+  Menu as MenuIcon,
+  Search as SearchIcon,
+  Translate as TranslateIcon,
+  SearchOutlined,
+} from '@mui/icons-material';
 
 import {
   AppBar,
@@ -31,6 +36,8 @@ import {
   useScrollTrigger,
 } from '@mui/material';
 
+import { capitalize } from '../../assets/js/utils/scripts';
+
 import {
   closeSearchFormOrIgnore,
   fetchHero,
@@ -45,21 +52,26 @@ import commonStyles from '../../assets/js/styles';
 import styles from '../../assets/js/styles/views/page_wrapper/pageWrapperStyles';
 import * as AuthActions from '../../store/actions/authActions';
 import * as ProjectActions from '../../store/actions/projectActions';
+import * as CreatorActions from '../../store/actions/userActions';
 
-import { Menu as MenuIcon, SearchOutlined } from '@mui/icons-material';
-import API from '../../api';
 import languageMap from '../../assets/js/languageMap.json';
-import Autocomplete from '../../components/autocomplete/Autocomplete';
-import Option from '../../components/autocomplete/Option';
-import InputSelect from '../../components/input_select/InputSelect';
-import NotificationButton from '../../components/notification_button/NotificationButton';
-import { throttle } from '../../utils.js';
+import Autocomplete from '../autocomplete/Autocomplete';
+import Option from '../autocomplete/Option';
+import InputSelect from '../input_select/InputSelect';
+import NotificationButton from '../notification_button/NotificationButton';
 import AvatarButton from '../avatar_button/AvatarButton';
 import Sidenav from '../Sidenav/Sidenav';
+import {
+  toggleDrawer,
+  toggleSearchBar,
+  autoComplete,
+  isSearch,
+  handleSubmit,
+  onSearchOptionClick,
+} from './navbarScripts';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
-const anchor = 'left';
 
 /**
  * @function NavBar View
@@ -68,81 +80,45 @@ const anchor = 'left';
  * @todo - describe function's signature
  */
 function NavBar(props) {
-  const backToTopEl = React.useRef(null);
-  const navigate = useNavigate();
   const classes = useStyles();
   const common_classes = useCommonStyles();
   const trigger = useScrollTrigger();
-  const [searchType, setSearchType] = useState(getQueryParams(window.location.href).get('type') || SearchType.PROJECTS);
   const formRef = useRef();
-  const token = useSelector(state => state.auth.token);
 
   const [state, setState] = React.useState({
-    username: null,
-    anchor_el: null,
-    loading: false,
     open_search_form: false,
-    left: false,
+    sidenav_open: false,
+    is_autocomplete_open: false,
+    autocomplete: [],
+    autocomplete_reset: null,
+    search_type: getQueryParams(window.location.href).get('type') || SearchType.PROJECTS,
+    query: isSearch(props.location.pathname) ? getQueryParams(window.location.href).get('q') : '',
   });
 
-  const [options, setOptions] = useState([]);
-  const [query, setQuery] = useState(props.location.search ? getQueryParams(window.location.href).get('q') : '');
-
-  const toggleDrawer = event => {
-    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
+  const handleSetState = obj => {
+    if (obj) {
+      Promise.resolve(obj).then(obj => {
+        setState(state => ({ ...state, ...obj }));
+      });
     }
-    setState(oldState => ({ ...oldState, left: !state.left }));
   };
 
-  const throttledFetchOptions = useMemo(
-    () =>
-      throttle(async (query, searchType) => {
-        if (query?.length === 0) {
-          setOptions([]);
-          return;
-        }
-
-        const api = new API();
-        let completions = [];
-        if (searchType === SearchType.TAGS) {
-          completions = await api.autocompleteTags({ query, token });
-          completions = completions?.map(({ name }) => ({
-            title: name,
-          }));
-        } else if (searchType === SearchType.PROJECTS) {
-          completions = await api.autocompleteProjects({ query, token });
-          completions = completions
-          .filter(c=>( c.creator.id === props.auth.id && c.publish.type !== 1 ))
-          .map(({ id, title, creator, images }) => ({
-            title,
-            shortInfo: creator.username,
-            image: images.length > 0 ? images[0].image_url : null,
-            link: `/projects/${id}`,
-          }));
-        } else {
-          completions = await api.autocompleteCreators({ query, token });
-          completions = completions?.map(({ username, avatar }) => ({
-            title: username,
-            image: avatar,
-            link: `/creators/${username}`,
-          }));
-        }
-        setOptions(completions);
-      }, 2),
-    [props.auth.id, token],
-  );
-
   useEffect(() => {
-    throttledFetchOptions(
-      query || (props.location.search && getQueryParams(window.location.href).get('q')),
-      searchType,
+    state.autocomplete_reset && state.autocomplete_reset();
+    const debouncedAutoComplete = _.debounce(
+      () =>
+        handleSetState(
+          autoComplete(
+            props,
+            state.query || (props.location.search && getQueryParams(window.location.href).get('q')),
+            state.search_type,
+          ),
+        ),
+      1000,
     );
-  }, [props.location.search, query, searchType, throttledFetchOptions]);
-
-  useEffect(() => {
-    throttledFetchOptions.cancel();
-  }, [throttledFetchOptions]);
+    debouncedAutoComplete();
+    handleSetState({ autocomplete_reset: debouncedAutoComplete.cancel });
+  }, [state.query, state.search_type, props.auth.token]);
 
   useEffect(() => {
     handleSetState({ loading: true });
@@ -161,62 +137,17 @@ function NavBar(props) {
     handleSetState(handleProfileMenuClose());
   }, [trigger]);
 
-  const handleSetState = obj => {
-    if (obj) {
-      Promise.resolve(obj).then(obj => {
-        setState(state => ({ ...state, ...obj }));
-      });
-    }
-  };
-
-  const toggleSearchBar = () => setState({ ...state, open_search_form: !state.open_search_form });
-
-  const onSearchOptionClick = async (_, option) => {
-    if (!option || !option.title) return;
-
-    await new Promise(resolve => setTimeout(resolve, 100));
-    if (option.link) {
-      window.history.pushState({}, '', option.link);
-      window.location.reload();
-      return;
-    }
-
-    const queryParams = new URLSearchParams({
-      type: searchType,
-      q: option.title,
-    });
-    window.history.pushState({}, '', `/search?${queryParams}`);
-    window.location.reload();
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (query.length == 0) return;
-    const queryParams = new URLSearchParams({
-      type: searchType,
-      q: query,
-    });
-
-    window.history.pushState({}, '', `/search?${queryParams}`);
-    window.location.reload();
-  };
-
-  const handleTextField = event => {
-    setQuery(event.target.value);
-  };
-
-  const { anchor_el, loading, open_search_form } = state;
+  const { open_search_form, sidenav_open, search_type, is_autocomplete_open, query, autocomplete } = state;
   const { t } = props;
-  const { zubhub, hero } = props.projects;
+  const { zubhub } = props.projects;
 
-  const profileMenuOpen = Boolean(anchor_el);
   return (
     <>
       <AppBar className={classes.navBarStyle}>
         <Container id="navbar-root" className={classes.mainContainerStyle}>
           <Toolbar className={classes.toolBarStyle}>
             <Hidden mdUp>
-              <Box style={{ marginRight: 10 }} onClick={toggleDrawer}>
+              <Box style={{ marginRight: 10 }} onClick={e => handleSetState(toggleDrawer(e, sidenav_open))}>
                 <MenuIcon />
               </Box>
             </Hidden>
@@ -272,7 +203,7 @@ function NavBar(props) {
                 action="/search"
                 className={clsx(classes.searchFormStyle, classes.removeOn894)}
                 role="search"
-                onSubmit={handleSubmit}
+                onSubmit={e => handleSubmit(e, props, query, search_type)}
                 ref={formRef}
               >
                 <FormControl
@@ -288,19 +219,31 @@ function NavBar(props) {
                   </InputLabel>
                   <FormGroup row>
                     <FormControl variant="outlined">
-                      <InputSelect searchType={searchType} onSearchTypeChange={setSearchType} name="type">
-                        <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
-                        <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
-                        <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                      <InputSelect
+                        searchType={search_type}
+                        onSearchTypeChange={value => handleSetState({ search_type: value })}
+                        name="type"
+                      >
+                        <MenuItem value={SearchType.PROJECTS}>{t('pageWrapper.navbar.searchType.projects')}</MenuItem>
+                        <MenuItem value={SearchType.CREATORS}>{t('pageWrapper.navbar.searchType.creators')}</MenuItem>
+                        <MenuItem value={SearchType.TAGS}>{t('pageWrapper.navbar.searchType.tags')}</MenuItem>
                       </InputSelect>
                     </FormControl>
                     <Autocomplete
+                      open={is_autocomplete_open}
+                      onOpen={() => props.auth.token && handleSetState({ is_autocomplete_open: true })}
+                      onClose={() => handleSetState({ is_autocomplete_open: false })}
                       className={classes.input}
-                      options={options}
+                      options={autocomplete}
                       defaultValue={{ title: query }}
                       value={{ title: query }}
-                      renderOption={(props, option, { inputValue }) => (
-                        <Option {...props} option={option} inputValue={inputValue} onOptionClick={onSearchOptionClick} />
+                      renderOption={(renderOptionProps, option, { inputValue }) => (
+                        <Option
+                          {...renderOptionProps}
+                          option={option}
+                          inputValue={inputValue}
+                          onOptionClick={(e, option) => onSearchOptionClick(e, props, option, search_type)}
+                        />
                       )}
                     >
                       {params => (
@@ -326,7 +269,7 @@ function NavBar(props) {
                             ),
                             pattern: '(.|s)*S(.|s)*',
                           }}
-                          onChange={handleTextField}
+                          onChange={e => handleSetState({ query: e.target.value })}
                           placeholder={`${t('pageWrapper.inputs.search.label')}...`}
                         />
                       )}
@@ -336,7 +279,10 @@ function NavBar(props) {
               </form>
             </Box>
             <div className={classes.navActionStyle}>
-              <SearchOutlined onClick={toggleSearchBar} className={classes.addOn894} />
+              <SearchOutlined
+                onClick={() => handleSetState(toggleSearchBar(open_search_form))}
+                className={classes.addOn894}
+              />
 
               <NotificationButton />
               <Hidden smDown>
@@ -345,8 +291,7 @@ function NavBar(props) {
                     <Typography className={clsx(common_classes.title2, classes.username)}>
                       {props.auth.username}
                     </Typography>
-                    {/* Todo: Change this subheading based on current role of user */}
-                    <Typography className="">Creator</Typography>
+                    <Typography className="">{props.auth.tags ? capitalize(props.auth.tags[0]) : ''}</Typography>
                   </Box>
                 )}
               </Hidden>
@@ -363,10 +308,14 @@ function NavBar(props) {
                 ref={formRef}
               >
                 <FormControl variant="outlined" style={{ minWidth: 'unset' }} className={classes.formControlStyle}>
-                  <InputSelect searchType={searchType} onSearchTypeChange={setSearchType} name="type">
-                    <MenuItem value={SearchType.PROJECTS}>Projects</MenuItem>
-                    <MenuItem value={SearchType.CREATORS}>Creators</MenuItem>
-                    <MenuItem value={SearchType.TAGS}>Tags</MenuItem>
+                  <InputSelect
+                    searchType={search_type}
+                    onSearchTypeChange={value => handleSetState({ search_type: value })}
+                    name="type"
+                  >
+                    <MenuItem value={SearchType.PROJECTS}>{t('pageWrapper.navbar.searchType.projects')}</MenuItem>
+                    <MenuItem value={SearchType.CREATORS}>{t('pageWrapper.navbar.searchType.creators')}</MenuItem>
+                    <MenuItem value={SearchType.TAGS}>{t('pageWrapper.navbar.searchType.tags')}</MenuItem>
                   </InputSelect>
                 </FormControl>
                 <FormControl variant="outlined" style={{ flex: '1 1 auto', maxWidth: '350px' }}>
@@ -375,7 +324,7 @@ function NavBar(props) {
                   </InputLabel>
                   <Autocomplete
                     style={{ width: '100%' }}
-                    options={options}
+                    options={autocomplete}
                     defaultValue={{ title: query }}
                     value={{ title: query }}
                     renderOption={(props, option, { inputValue }) => (
@@ -406,7 +355,7 @@ function NavBar(props) {
                           pattern: '(.|s)*S(.|s)*',
                         }}
                         placeholder={`${t('pageWrapper.inputs.search.label')}...`}
-                        onChange={handleTextField}
+                        onChange={e => handleSetState({ query: e.target.value })}
                       />
                     )}
                   </Autocomplete>
@@ -416,8 +365,8 @@ function NavBar(props) {
           ) : null}
         </Container>
         {/* <BreadCrumb /> */}
-        <SwipeableDrawer anchor={anchor} open={state.left} onClose={toggleDrawer} onOpen={toggleDrawer}>
-          { state.left ? <Sidenav /> : null }
+        <SwipeableDrawer anchor="sidenav_anchor" open={sidenav_open} onClose={toggleDrawer} onOpen={toggleDrawer}>
+          {sidenav_open ? <Sidenav /> : null}
         </SwipeableDrawer>
       </AppBar>
     </>
@@ -431,28 +380,16 @@ NavBar.propTypes = {
   getAuthUser: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-    projects: state.projects,
-  };
-};
+const mapStateToProps = state => ({ auth: state.auth, projects: state.projects });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setAuthUser: auth_user => {
-      dispatch(AuthActions.setAuthUser(auth_user));
-    },
-    logout: args => {
-      return dispatch(AuthActions.logout(args));
-    },
-    getAuthUser: props => {
-      return dispatch(AuthActions.getAuthUser(props));
-    },
-    getHero: args => {
-      return dispatch(ProjectActions.getHero(args));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  setAuthUser: auth_user => dispatch(AuthActions.setAuthUser(auth_user)),
+  logout: args => dispatch(AuthActions.logout(args)),
+  getAuthUser: props => dispatch(AuthActions.getAuthUser(props)),
+  getHero: args => dispatch(ProjectActions.getHero(args)),
+  autoCompleteTags: args => dispatch(ProjectActions.autoCompleteTags(args)),
+  autoCompleteCreators: args => dispatch(CreatorActions.autoCompleteCreators(args)),
+  autoCompleteProjects: args => dispatch(ProjectActions.autoCompleteProjects(args)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

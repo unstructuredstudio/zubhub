@@ -478,6 +478,9 @@ def perform_project_search(
         if can_view(user, project):
             result.append(project)
 
+    if not user.is_authenticated:
+        result = result[:4]
+
     return result
 
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { makeStyles } from '@mui/styles';
 import { Box, Grid, Typography } from '@mui/material';
 import Project from '../project/Project';
@@ -20,15 +21,15 @@ function StaffPick(props) {
 
   const { staff_pick, ...rest } = props;
   return staff_pick.projects && staff_pick.projects.results && staff_pick.projects.results.length > 0 ? (
-    <Box className={classes.root}>
-      <Grid container spacing={3}>
+    <Box className={clsx(classes.root, props.styleOverrides?.rootStyle)}>
+      <Grid container spacing={3} className={clsx(props.styleOverrides?.mainContainerStyle)}>
         <Grid item xs={12}>
           <Typography
             gutterBottom
             // component="h2"
             // variant="h6"
             // color="textPrimary"
-            className={classes.MessagePrimaryStyle}
+            className={clsx(classes.MessagePrimaryStyle, props.styleOverrides?.messagePrimaryStyle)}
           >
             {staff_pick.title}
             {/* <CustomButton

@@ -1,4 +1,4 @@
-const styles = theme => ({
+export const styles = theme => ({
   root: {
     marginTop: '2em',
     marginBottom: '2em',
@@ -21,10 +21,40 @@ const styles = theme => ({
     maxWidth: '1190px',
     width: '100%',
   },
-
+  mainContainerLoggedOutStyle: {
+    background: 'white',
+    padding: '0 3em',
+    marginTop: '3em',
+    borderRadius: '15px',
+    [theme.breakpoints.down('1080')]: {
+      padding: '0 1em',
+    },
+    [theme.breakpoints.down('500')]: {
+      padding: 0,
+    },
+  },
   pageHeaderStyle: {
+    margin: '1em 0',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  creatorsContainerStyle: {
+    width: '100%',
+    display: 'flex',
+    gap: '1em',
+  },
+  creatorsContainerLoggedOutStyle: {
+    justifyContent: 'center',
+  },
+  projectsContainerStyle: {
+    margin: 0,
+  },
+  loggedOutResultsContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    maxHeight: '400px',
+    overflow: 'hidden',
   },
   cardStyle: {
     display: 'flex',
@@ -38,6 +68,10 @@ const styles = theme => ({
     borderRadius: '15px',
     textAlign: 'left',
     backgroundColor: '#ffffff',
+  },
+  cardLoggedOutStyle: {
+    marginBottom: '9em',
+    boxShadow: 'none',
   },
   avatarStyle: {
     width: '100%',
@@ -64,6 +98,10 @@ const styles = theme => ({
     marginTop: '2em',
     maxWidth: '2000px',
     width: '100%',
+  },
+  buttonGroupLoggedOut: {
+    // background: 'white'
+    display: 'none',
   },
   floatRight: {
     float: 'right',
@@ -93,6 +131,100 @@ const styles = theme => ({
     fontWeight: '900',
     fontSize: '1.5rem',
   },
+  transitionStyle: {
+    height: '20em',
+    marginTop: '-20em',
+    background: 'linear-gradient(0deg, rgba(255,255,255,80%) 34%, rgba(255,255,255,0) 100%)',
+    position: 'relative',
+    zIndex: 1060,
+  },
+  loginCardStyle: {
+    background: 'white',
+    marginTop: '-2em',
+  },
+  notFoundRobotStyle: {
+    width: '20em',
+    marginTop: '3em',
+    [theme.breakpoints.down('600')]: {
+      width: '15em',
+    },
+    [theme.breakpoints.down('400')]: {
+      width: '12em',
+    },
+  },
+  noResultContainerStyle: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noResultTitleStyle: {
+    width: '70%',
+    padding: '0 1em',
+    [theme.breakpoints.down('600')]: {
+      width: '100%',
+      fontSize: '1.5rem',
+    },
+  },
+  noResultDescStyle: {
+    padding: '0 1em',
+    fontSize: '1.2rem',
+    textAlign: 'center',
+    marginBottom: '3em',
+    [theme.breakpoints.down('600')]: {
+      fontSize: '1rem',
+    },
+  },
+  marginBottom: {
+    marginBottom: '4em',
+    zIndex: 10,
+  },
 });
 
-export default styles;
+export const loginStyleOverrides = theme => ({
+  rootStyle: {
+    paddingTop: 0,
+  },
+  containerStyle: {
+    [theme.breakpoints.down('400')]: {
+      padding: 0,
+    },
+  },
+  cardStyle: {
+    boxShadow: 'none',
+    [theme.breakpoints.down('500')]: {
+      padding: 0,
+    },
+  },
+  titleStyle: {
+    textAlign: 'center',
+    margin: 0,
+  },
+  descriptionStyle: {
+    display: 'none',
+  },
+  gridStyle: {
+    margin: 0,
+  },
+});
+
+export const staffPickStyleOverrides = theme => ({
+  rootStyle: {
+    margin: 0,
+    width: '80%',
+    [theme.breakpoints.down('400')]: {
+      width: '100%',
+    },
+  },
+  mainContainerStyle: {
+    margin: 0,
+  },
+  messagePrimaryStyle: {
+    margin: 0,
+    fontSize: '1.8rem',
+    fontWeight: 700,
+    [theme.breakpoints.down('600')]: {
+      fontSize: '1.5rem',
+    },
+  },
+});
