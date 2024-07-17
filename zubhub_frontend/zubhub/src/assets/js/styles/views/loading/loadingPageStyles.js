@@ -1,10 +1,11 @@
-const styles = theme => ({
+const styles = () => ({
   root: {
     paddingBottom: '2em',
     display: 'flex',
     flex: '1 0 auto',
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: '90vh',
     // background: 'var(--primary-color2)',
     // background:
     //   '-moz-linear-gradient(top, var(--primary-color2) 0%, var(--primary-color2) 25%, rgba(255,255,255,1) 61%, rgba(255,255,255,1) 100%)',

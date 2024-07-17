@@ -16,9 +16,7 @@ import review1 from '../../assets/images/faridah.png';
 import review2 from '../../assets/images/hemant.png';
 import review3 from '../../assets/images/yaya.png';
 import global from '../../assets/images/global.JPG';
-
 import { fetchPage, fetchStaffPicks, updateStaffPicks } from './projectsScripts';
-
 import * as ProjectActions from '../../store/actions/projectActions';
 import CustomButton from '../../components/button/Button';
 import LoadingPage from '../loading/LoadingPage';
@@ -149,7 +147,7 @@ function Projects(props) {
             {hero && hero.id ? (
               <Box className={classes.heroMainSectionStyle}>
                 <Box className={classes.heroMessageContainerStyle}>
-                  <Typography className={classes.heroMainMessageSecondaryStyle}>{t('projects.1')}</Typography>
+                  <Typography className={classes.heroMainMessageSecondaryStyle}>{`${t('projects.1')} `}</Typography>
                   <Typography className={classes.heroMainMessageSecondaryStyle}>{t('projects.2')}</Typography>
                   <Typography className={classes.heroMainMessagePrimaryStyle}>{hero.description}</Typography>
                   <CustomButton

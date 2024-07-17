@@ -2,4 +2,7 @@ from django.apps import AppConfig
 
 
 class ActivitiesConfig(AppConfig):
-    name = 'activities'
+    name = "activities"
+
+    def ready(self):
+        import activities.signals  # noqa: F401
