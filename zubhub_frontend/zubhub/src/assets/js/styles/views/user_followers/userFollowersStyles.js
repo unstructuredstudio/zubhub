@@ -1,6 +1,11 @@
 const styles = theme => ({
   root: {
-    paddingBottom: '2em',
+    marginTop: '2em',
+    marginBottom: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+      marginBottom: '3em',
+    },
     flex: '1 0 auto',
     display: 'flex',
     flexDirection: 'column',
@@ -30,7 +35,6 @@ const styles = theme => ({
     width: '100%',
   },
   pageHeaderStyle: {
-    marginTop: '1em',
     fontWeight: 'bold',
     textAlign: 'center',
   },

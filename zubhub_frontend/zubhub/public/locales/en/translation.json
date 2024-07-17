@@ -30,7 +30,12 @@
       "createActivity": "CREATE ACTIVITY",
       "createActivityMenu": "Create Activity",
       "unpublishedActivities": "Unpublished Activities",
-      "myActivities": "My Activities"
+      "myActivities": "My Activities",
+      "searchType": {
+        "projects": "Projects",
+        "creators": "Creators",
+        "tags": "Tags"
+        }
     },
     "sidebar":{
       "logout": "Logout",
@@ -258,7 +263,7 @@
   },
 
   "projects": {
-    "1":"Explore, ",
+    "1":"Explore,",
     "2": "Create, Share!",
     "shareProject": "Share your work",
     "exploreIdeas": "Explore Ideas",
@@ -480,7 +485,16 @@
     },
     "errors": {
       "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?",
-      "noResult": "We could not find anything for your search term! Maybe try to search something else?"
+      "noResult": "We could not find anything for your search term! Maybe try to search something else?",
+      "noResult2": "Sorry, but we couldn't find any results for",
+      "noResultDescription": "Try searching for something else or browse our suggestions!"
+    },
+    "loginCard": {
+      "title": {
+        "projects": "Log in or sign up to search for projects",
+        "creators": "Log in or sign up to search for users",
+        "tags": "Log in or sign up to search for projects with specific tags"
+      }
     }
   },
 
@@ -567,7 +581,7 @@
     },
     "deleteProjectToastSuccess": "Your project was deleted successfully!",
     "socialShare": {
-      "fbwa": "Check out this project on ZubHub! ",
+      "fbwa": "Check out this project on ZubHub!",
       "copySuccess": "Link successfully copied to clipboard!",
       "copyFail": "Hmmm... something went wrong trying to copy that link :("
     },
@@ -649,7 +663,7 @@
     },
     "activityLog": {
       "activity": "Activity Log",
-      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!" 
+      "addActivityLog": "Seems like there isn't any activity on your account yet! Get involved to see activity logs!"
     },
     "team": "Team",
     "createteam": "Create Team",
@@ -1021,7 +1035,7 @@
         },
         "errors": {
           "max": "your creation step shouldn't be more than 1000 characters",
-          "required": "describe creation process in at least one step ",
+          "required": "describe creation process in at least one step",
           "emptyStep": "step can't be empty provide either a description or an image"
         }
       },
@@ -1075,6 +1089,12 @@
   },
 
  "activities": {
+  "title": "Activities",
+  "tabs": {
+    "published": "Published",
+    "unpublished": "Unpublished",
+    "ariaLabel": "Activity Tabs"
+  },
    "LinkedProjects": "Linked Projects",
    "errors": {
       "emptyList": "No activities created yet !",

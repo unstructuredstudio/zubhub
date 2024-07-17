@@ -5,19 +5,20 @@ import * as Yup from 'yup';
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
- */ export const getTeamProfile = (groupname, refs, props) => {
-  return props.getTeamProfile({
-    groupname,
-    token: props.auth.token
-  }).then(obj => {
-    if (refs.groupname_el.current && obj.groupname) {
-      props.setFieldValue('groupname', obj.groupname);
-    }
-    if (refs.description_el.current && obj.description) {
-      props.setFieldValue('description', obj.description);
-    }
-  })
-};
+ */ export const getTeamProfile = (groupname, refs, props) =>
+  props
+    .getTeamProfile({
+      groupname,
+      token: props.auth.token,
+    })
+    .then(obj => {
+      if (refs.groupname_el.current && obj.groupname) {
+        props.setFieldValue('groupname', obj.groupname);
+      }
+      if (refs.description_el.current && obj.description) {
+        props.setFieldValue('description', obj.description);
+      }
+    });
 
 /**
  * @function getLocations
@@ -25,9 +26,7 @@ import * as Yup from 'yup';
  *
  * @todo - describe function's signature
  */
-export const getLocations = props => {
-  return props.getLocations({ t: props.t });
-};
+export const getLocations = props => props.getLocations({ t: props.t });
 
 /**
  * @function handleClickShowPassword
@@ -50,14 +49,13 @@ export const handleMouseDownPassword = e => {
   e.preventDefault();
 };
 
-
 /**
  * @function handleToggleDeleteAccountModal
  * @author Raymond Ndibe <ndiberaymond1@gmail.com>
  *
  * @todo - describe function's signature
  */
- export const handleToggleDeleteAccountModal = state => {
+export const handleToggleDeleteAccountModal = state => {
   const open_delete_account_modal = !state.open_delete_account_modal;
   return { open_delete_account_modal, more_anchor_el: null };
 };
@@ -68,17 +66,14 @@ export const handleMouseDownPassword = e => {
  *
  * @todo - describe function's signature
  */
- export const deleteAccount = (groupname, props, state) => {
-    return props.deleteTeam({
-      token: props.auth.token,
-      navigate: props.navigate,
-      logout: props.logout,
-      t: props.t,
-      groupname: groupname,
-    });
-  }
-
-
+export const deleteAccount = (groupname, props) =>
+  props.deleteTeam({
+    token: props.auth.token,
+    navigate: props.navigate,
+    logout: props.logout,
+    t: props.t,
+    groupname,
+  });
 
 /**
  * @function editProfile
@@ -88,7 +83,7 @@ export const handleMouseDownPassword = e => {
  */
 export const editProfile = (e, groupname, props) => {
   e.preventDefault();
-  props.setFieldTouched('groupname', true)
+  props.setFieldTouched('groupname', true);
   if (props.values.groupname.length < 1) {
     props.validateField('groupname');
   } else {
@@ -96,11 +91,9 @@ export const editProfile = (e, groupname, props) => {
       groupname: props.values.groupname,
       description: props.values.description,
     };
-    return props
-      .editTeam({ groupname, data, token: props.auth.token })
-      .then(_ => {
-        props.navigate(`/teams/${props.values.groupname}`);
-      })
+    return props.editTeam({ groupname, data, token: props.auth.token }).then(() => {
+      props.navigate(`/teams/${props.values.groupname}`);
+    });
   }
 };
 
@@ -110,9 +103,7 @@ export const editProfile = (e, groupname, props) => {
  *
  * @todo - describe function's signature
  */
-export const handleTooltipOpen = () => {
-  return { tool_tip_open: true };
-};
+export const handleTooltipOpen = () => ({ tool_tip_open: true });
 
 /**
  * @function handleTooltipClose
@@ -120,9 +111,7 @@ export const handleTooltipOpen = () => {
  *
  * @todo - describe function's signature
  */
-export const handleTooltipClose = () => {
-  return { tool_tip_open: false };
-};
+export const handleTooltipClose = () => ({ tool_tip_open: false });
 
 /**
  * @object validationSchema

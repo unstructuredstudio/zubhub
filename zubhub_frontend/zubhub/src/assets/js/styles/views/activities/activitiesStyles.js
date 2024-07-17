@@ -1,14 +1,23 @@
 const styles = theme => ({
+  tabs: {
+    margin: '2em 0',
+    [theme.breakpoints.up('900')]: {
+      paddingRight: '1em',
+    },
+  },
+  tab: {
+    textTransform: 'none',
+    fontSize: '1.2em',
+    fontWeight: 600,
+  },
   activityListContainer: {
-    padding: '4em 0',
-    width: '70%',
-    margin: 'auto',
-    [theme.breakpoints.down('1000')]: {
-      width: '90%',
+    marginTop: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
     },
-    [theme.breakpoints.down('400')]: {
-      width: '95%',
-    },
+  },
+  activitiesContainer: {
+    marginTop: 0,
   },
   activityBoxContainer: {
     padding: '5vh 10px',
