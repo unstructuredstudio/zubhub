@@ -961,6 +961,7 @@
   "createActivity": {
     "welcomeMsg": {
       "primary": "Create Activity",
+      "secondary": "Tell us about your informative activity!",
       "edit": "Update Activity"
     },
     "inputs": {
@@ -1082,9 +1083,10 @@
     },
     "buttons": {
       "Next": "Next",
-      "Prev": "Prev",
+      "Prev": "Previous",
       "Submit": "Submit For Review",
-      "Edit": "Save Changes"
+      "Edit": "Save Changes",
+      "create": "Create"
     }
   },
 
@@ -1132,6 +1134,10 @@
           "proceed": "Proceed",
           "success": "activity Created successfully",
           "forbidden": "You must be staff monitor ao educator to be able to create a new activity "
+        },
+        "modal": {
+          "primary": "Congratulations your activity has been successfully created!",
+          "secondary": "Once your activity is published, you can share it with the world!"
         }
       },
       "edit": {
