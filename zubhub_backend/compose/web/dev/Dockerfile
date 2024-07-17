@@ -24,7 +24,9 @@ WORKDIR /zubhub_backend
 # copying neccessary files to work directory
 COPY ./compose/web/requirements.txt /zubhub_backend/
 
-RUN pip install --upgrade pip wheel \
+RUN pip install --upgrade wheel \
+  # pip versions greater than 24.0 fails to install celery 4.4.0. pin pip until we are ready to upgrade celery
+  && pip install pip==24.0 \
   # Requirements are installed here to ensure they will be cached.
   && pip install -r /zubhub_backend/requirements.txt
 
