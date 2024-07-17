@@ -16,6 +16,10 @@ const styles = theme => ({
   mainContainerStyle: {
     maxWidth: '1190px',
     width: '100%',
+    marginTop: '2em',
+    [theme.breakpoints.down('378')]: {
+      marginTop: '3em',
+    },
   },
   pageHeaderStyle: {
     marginTop: '1em',
