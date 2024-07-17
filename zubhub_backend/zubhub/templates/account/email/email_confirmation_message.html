@@ -1,0 +1,30 @@
+{% extends "email/email_base.html" %}
+{% load static %}
+{% load default_template_tags %}
+
+{% block title %}Activate Your Account{% endblock %}
+
+{% block content %}
+  <h1 style="margin: 2em 0; font-size:2em">Activate Your Account</h1>
+
+  <p style="margin: 2em 0;">Dear <b>{{ user.username }}</b></p>
+  <p style="margin: 2em 0;">Welcome to ZubHub! We're thrilled to have you on board. To get started, we just need to confirm your email address. Please click on the button below to activate your account.</p>
+
+  <a
+    href="{% default_frontend_protocol %}://{% default_frontend_domain %}/email-confirm?user={{ user_display }}&&key={{ key }}"
+    style="margin: 2em 0; background-color:#00B8C4; text-decoration: none; padding: .8em 1.2em; color: #FCFDFF; display:inline-block; border-radius:.2em; mso-padding-alt:0; text-underline-color:#00B8C4"
+    >
+    <!--[if mso]>
+      <i style="mso-font-width:200%;mso-text-raise:100%" hidden>&emsp;</i>
+        <span style="mso-text-raise:50%;">
+          <![endif]-->Activate your account<!--[if mso]>
+        </span>
+      <i style="mso-font-width:200%;" hidden>&emsp;&#8203;</i>
+    <![endif]-->
+  </a>
+
+  <div style="margin: 2em 0">
+    <p style="margin: 0.5 0;">Please note that this link will expire in 30 minutes.</p>
+    <p style="margin: 0.5 0; color: #757575">If you didn’t try to sign-in or create an account on ZubHub, you can safely ignore this email.</p>
+  </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "email/email_base.html" %}
+{% load static %}
+
+{% block title %}You got a new badge!{% endblock %}
+
+{% block content %}
+  <h1 style="margin: 2em 0; font-size:2em">You got a new badge!</h1>
+  <p style="margin: 2em 0;">Congratulations! You’ve unlocked a new achievement and earned the prestigious <b>{{ badge.name }}</b> badge. &#127775;</p>
+  <center style="margin: 4em 0;">
+    <img
+      src={{ badge.image }}
+      alt="Badge image"
+      style="width: 10em; background-color: #FFFF;">
+    <h3 style="margin: 0.5em 0; font-size:1.17em">{{ badge.name }}</h3>
+  </center>
+  <p style="margin: 2em 0;">{{ badge.message }} Click
+    <a href={{ badge.link }} style="color:#00B8C4; text-decoration: none;">
+      here
+    </a>
+    to view more.
+  </p>
+{% endblock %}

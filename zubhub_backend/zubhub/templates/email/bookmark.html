@@ -1,0 +1,27 @@
+{% extends "email/email_base.html" %}
+{% load static %}
+
+{% block title %}You've been bookmarked!{% endblock %}
+
+{% block content %}
+  <h1 style="margin: 2em 0; font-size: 2em">You've been bookmarked!</h1>
+
+  <p style="margin: 2em 0;">Your post just got bookmarked. Your content is worth saving!</p>
+
+  <img src={{ project.image }} alt="Project Image" style="width: 100%; max-height: 16em; object-fit: cover; background-color: #000; border-radius: 1em 1em 0 0;">
+  <h3 style="margin: 0.5em 0; font-size:1.17em">{{ project.title }}</h3>
+  <p style="margin: 0; color: #757575">{{ project.description|striptags }}</p>
+  <hr style="border-width: 0; background: #757575; color: #757575; height: .1px; margin: 1em 0;">
+  <center>
+    <p style="margin: 0.5 0; width: 90%"><b>{{ bookmarked_by }}</b> have bookmarked your project.</p>
+  </center>
+
+  <div style="margin: 3em 0 0 0">
+    <p style="margin: 0;">Join the conversation now and engage with your audience. Click
+      <a href="https://zubhub.unstructured.studio/projects/{{ project.pk }}" style="color: #00B8C4; text-decoration: none;">
+        here
+      </a>
+      to view more.
+    </p>
+  </div>
+{% endblock %}
