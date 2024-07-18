@@ -348,8 +348,8 @@
       "unexpected": "Uh oh! Seems like we hit a snag :( Maybe try again later?"
     }
   },
-
   "createProject": {
+    "activityProjectCreate": "Create this Project",
     "welcomeMsg": {
       "primary": "Create Project",
       "secondary": "Tell us about your project!"
