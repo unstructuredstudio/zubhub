@@ -10,36 +10,46 @@ import {
   Menu,
   MenuItem,
   Typography,
+  Chip,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
-import { CloseOutlined, MoreVert } from '@mui/icons-material';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import {
+  CloseOutlined,
+  MoreVert,
+  Visibility as VisibilityIcon,
+  EmojiObjects as EmojiObjectsIcon,
+  Share as ShareIcon,
+} from '@mui/icons-material';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactConfetti from 'react-confetti';
 import { useTranslation } from 'react-i18next';
-import { FiShare } from 'react-icons/fi';
+import { FiShare, FiDownload, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { MdPublish, MdFileDownloadOff } from 'react-icons/md';
 import ReactQuill from 'react-quill';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import Html2Pdf from 'html2pdf.js';
-
 import ZubHubAPI from '../../api';
 import { colors } from '../../assets/js/colors';
-import { ClapBorderIcon } from '../../assets/js/icons/ClapIcon';
 import styles from '../../assets/js/styles/index';
-import { Collapsible, CustomButton, Gallery, Modal, Pill } from '../../components';
+import { CustomButton, Gallery, Modal } from '../../components';
 import Activity from '../../components/activity/activity';
 import SocialButtons from '../../components/social_share_buttons/socialShareButtons';
 import { getUrlQueryObject } from '../../utils.js';
-import { activityDefailsStyles } from './ActivityDetails.styles';
+import { dFormatter } from '../../assets/js/utils/scripts';
+import { activityDetailsStyles, socialButtonsStyleOverrides } from './ActivityDetails.styles';
+import Categories from '../../components/categories/Categories.jsx';
+import { USER_TAGS } from '../../assets/js/utils/constants';
 
 const API = new ZubHubAPI(); // TODO: move api request to redux action
 const authenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 6 };
 const unauthenticatedUserActivitiesGrid = { xs: 12, sm: 6, md: 3 };
 
 export default function ActivityDetailsV2(props) {
-  const classes = makeStyles(activityDefailsStyles)();
+  const classes = makeStyles(activityDetailsStyles)();
   const commonClasses = makeStyles(styles)();
 
   const { t } = useTranslation();
@@ -84,7 +94,11 @@ export default function ActivityDetailsV2(props) {
   };
 
   const handleEdit = () => {
-    props.navigate(`${props.location.pathname}/edit`);
+    props.history.push(`${props.location.pathname}/edit`);
+  };
+
+  const handlePublish = () => {
+    API.activityTogglePublish({ token: auth.token, id: activity.id }).then(() => window.location.reload());
   };
 
   const handleDownload = useReactToPrint({
@@ -112,174 +126,151 @@ export default function ActivityDetailsV2(props) {
   });
 
   return (
-    <div ref={ref} className={classes.container}>
+    <div ref={ref} className={clsx(classes.mainContainer, !auth?.token && classes.signedOutMainContainer)}>
       {open ? <ReactConfetti width={width} height={height} /> : null}
-      <div className={clsx(classes.header, classes.card)}>
-        <Typography align="center" className={clsx(commonClasses.title1, commonClasses.textCapitalize)}>
-          {activity?.title}
-        </Typography>
-
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32 }}>
-          <div style={{ gap: 8 }} className={clsx(commonClasses.alignCenter, commonClasses.displayFlex)}>
-            <Avatar className={classes.creatorAvatarStyle} src={creator?.avatar} alt={'Faridah_ux'} />
-            <div>
-              <Typography
-                style={{ fontWeight: '500', fontSize: 16, textTransform: 'capitalize' }}
-                color={colors.black}
-                component="span"
-              >
-                {creator?.username}
-              </Typography>
-              <br />
-              <Typography color="textSecondary" component="span">
-                Educator
-              </Typography>
+      <div className={classes.card}>
+        <div className={classes.headerFlex}>
+          <Link
+            className={commonClasses.textDecorationNone}
+            to={{ pathname: `/creators/${creator?.username}`, state: { prevPath: window.location.pathname } }}
+          >
+            <div className={classes.creatorBox}>
+              <Avatar src={creator?.avatar} alt={creator?.username} className={classes.avatar} />
+              <div>
+                <Typography color={colors.black} component="span" className={classes.creatorUsername}>
+                  {creator?.username}
+                </Typography>
+                <br />
+                {creator?.tags.includes(USER_TAGS.educator) && (
+                  <Typography color="textSecondary" component="span" className={commonClasses.textCapitalize}>
+                    {USER_TAGS.educator}
+                  </Typography>
+                )}
+              </div>
             </div>
-          </div>
-          <AnchorElemt isLoading={isLoading.delete} onDelete={handleDelete} onEdit={handleEdit} />
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 32, gap: 10 }}>
-          <CustomButton primaryButtonOutlinedStyle style={{ borderRadius: 4 }}>
-            Create this Project
+          </Link>
+          <CustomButton primaryButtonStyle className={classes.headerButton}>
+            {t('activityDetails.activity.create.dialog.primary')}
           </CustomButton>
+        </div>
+        <Divider />
+        <div className={classes.headerFlex}>
+          <Typography variant="h5" component="h1" className={classes.headerTitle}>
+            {activity?.title}
+          </Typography>
+          {(activity.creators?.some(creator => creator.id === auth.id) || auth.tags.includes(USER_TAGS.staff)) && (
+            <AnchorElemt
+              isLoading={isLoading.delete}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              onPublish={handlePublish}
+              activity={activity}
+              auth={auth}
+            />
+          )}
+        </div>
+        <div className={classes.headerIconBox}>
+          <Typography className={classes.headerIconText} color="textSecondary" variant="caption" component="span">
+            <VisibilityIcon fontSize="small" />
+            {activity.views_count}
+          </Typography>
+          <Divider orientation="vertical" flexItem />
+          <Typography className={classes.headerIconText} color="textSecondary" variant="caption" component="span">
+            <EmojiObjectsIcon fontSize="small" />
+            {t('activityDetails.inspired.recreated')}
+            <strong>{activity.views_count}</strong>
+            {t('activityDetails.inspired.times')}
+          </Typography>
+          <Divider orientation="vertical" flexItem />
+          <Typography color="textSecondary" variant="caption" component="span" className={classes.headerIconText}>
+            {`
+              ${dFormatter(activity.created_on).value}
+              ${t(`date.${dFormatter(activity.created_on).key}`)}
+              ${t('date.ago')}
+            `}
+          </Typography>
+        </div>
+        {activity.images?.length > 0 && <Gallery images={[activity.images[0].image.file_url]} />}
+        <div className={classes.headerFlex}>
           <CustomButton
             onClick={handleDownload}
             loading={isDownloading}
             primaryButtonOutlinedStyle
-            style={{ borderRadius: 4 }}
+            className={classes.headerButton}
           >
-            {isDownloading ? 'Downloading...' : 'Download PDF'}
+            <FiDownload fontSize="medium" />
+            {isDownloading ? t('activityDetails.activity.pdf.downloading') : t('activityDetails.activity.pdf.download')}
           </CustomButton>
+          <ShareButton />
         </div>
       </div>
-      <div className={classes.socialButtons}>
-        <IconButton
-          className={classes.actionBoxButtonStyle}
-          aria-label={t('projectDetails.ariaLabels.likeButton.label')}
-          //   onClick={e => handleSetState(toggleLike(e, props, project.id))}
-        >
-          {/* {project.likes.includes(props.auth.id) ? (
-            <ClapIcon color={colors.white} arial-label={t('projectDetails.ariaLabels.likeButton.unlilke')} />
-          ) : ( */}
-          <ClapBorderIcon color={colors.white} arial-label={t('projectDetails.ariaLabels.likeButton.like')} />
-          {/* )} */}
-        </IconButton>
-        <IconButton
-          className={classes.actionBoxButtonStyle}
-          aria-label={t('projectDetails.ariaLabels.saveButton.label')}
-          //   onClick={e => handleSetState(toggleSave(e, props, project.id))}
-        >
-          {/* {project.saved_by.includes(props.auth.id) ? (
-            <BookmarkIcon aria-label={t('projectDetails.ariaLabels.saveButton.unsave')} />
-          ) : ( */}
-          <BookmarkBorderIcon aria-label={t('projectDetails.ariaLabels.saveButton.save')} />
-          {/* )} */}
-        </IconButton>
-
-        <IconButton className={classes.actionBoxButtonStyle}>
-          <VisibilityIcon />
-        </IconButton>
-
-        <SocialButtons />
-      </div>
-
-      <Collapsible title={'Introduction'}>
-        {activity.images?.length > 0 && <Gallery images={activity.images?.map(img => img.image?.file_url)} />}
+      <div className={classes.card}>
+        <Typography variant="h6" className={classes.cardTitle}>
+          {t('activityDetails.activity.introduction')}
+        </Typography>
         <ReactQuill
           className={classes.descriptionBodyStyle}
           theme={'bubble'}
           readOnly={true}
           value={activity.introduction || ''}
         />
-      </Collapsible>
-
-      {activity.category?.length > 0 && (
-        <Collapsible title={'Categories'}>
-          <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
-            {activity.category?.map((cat, index) => (
-              <Pill key={index} text={cat} />
-            ))}
-          </div>
-        </Collapsible>
-      )}
-
-      {activity.class_grade && (
-        <Collapsible title={'Class Grade'}>
-          <div className={clsx(commonClasses.displayFlex, commonClasses.gap, commonClasses.flexWrap)}>
-            <Pill text={activity.class_grade} />
-          </div>
-        </Collapsible>
-      )}
-
-      {activity.materials_used && (
-        <Collapsible title={'Materials Used'}>
-          {activity.materials_used_image && <Gallery images={[activity.materials_used_image?.file_url]} />}
+        {activity.images?.length > 0 && <Gallery images={activity.images?.map(img => img.image?.file_url)} />}
+        <Divider />
+        <Typography variant="h6" className={classes.cardTitle}>
+          {t('activityDetails.activity.categories')}
+        </Typography>
+        {activity.category?.length > 0 && <Categories categories={activity.category} />}
+        <Divider />
+        <Typography variant="h6" className={classes.cardTitle}>
+          {t('activityDetails.activity.classGrade')}
+        </Typography>
+        {activity.class_grade && <Chip className={classes.classGrade} label={activity.class_grade} size="small" />}
+        <Divider />
+        <Typography variant="h6" className={classes.cardTitle}>
+          {t('activityDetails.activity.materials')}
+        </Typography>
+        {activity.materials_used && (
           <ReactQuill
             className={classes.descriptionBodyStyle}
             theme={'bubble'}
             readOnly={true}
             value={activity.materials_used || ''}
           />
-        </Collapsible>
-      )}
-
-      {activity.making_steps?.map((step, index) => (
-        <Collapsible key={index} title={`Step ${step?.step_order}: ${step.title}`}>
-          {step.image?.length > 0 && <Gallery images={step.image?.map(img => img?.file_url)} />}
-          {step.description && (
+        )}
+        {activity.materials_used_image && <Gallery images={[activity.materials_used_image?.file_url]} />}
+        {activity.making_steps?.map(step => (
+          <>
+            <Divider />
+            <Typography variant="h6" className={classes.cardTitle}>
+              {`Step ${step?.step_order}: ${step.title}`}
+            </Typography>
             <ReactQuill
               className={classes.descriptionBodyStyle}
               theme={'bubble'}
               readOnly={true}
               value={step.description || ''}
             />
-          )}
-        </Collapsible>
-      ))}
-
-      <div style={{ marginTop: 40 }} className={clsx(classes.card, commonClasses.boxShadow)}>
-        <div
-          className={clsx(
-            commonClasses.displayFlex,
-            commonClasses.flexColumn,
-            commonClasses.justifyCenter,
-            commonClasses.gap,
-          )}
-        >
-          <Typography align="center" className={commonClasses.title1}>
-            Did you like this activity?
-          </Typography>
-          <Typography align="center">Be the first to create it</Typography>
-          <CustomButton style={{ alignSelf: 'center' }} primaryButtonStyle>
-            Create It!
-          </CustomButton>
-        </div>
-
-        <Typography className={classes.moreTextTitle} align="center">
-          More Activities
+            {step.image?.length > 0 && <Gallery images={step.image?.map(img => img?.file_url)} />}
+          </>
+        ))}
+      </div>
+      <div className={clsx(classes.card, classes.footer)}>
+        <Divider />
+        <Typography variant="h6" className={classes.footerTitle}>
+          {t('activityDetails.footer.moreActivitiesTitle')}
         </Typography>
-
-        <Grid container spacing={4} justifyContent="center">
-          {moreActivities.map((activity, index) => (
+        <Grid container spacing={4}>
+          {moreActivities.slice(0, 2).map((activity, index) => (
             <Grid
               key={index}
               item
               {...(auth.token ? authenticatedUserActivitiesGrid : unauthenticatedUserActivitiesGrid)}
               align="center"
             >
-              <Activity
-                activity={activity}
-                key={activity.id}
-                t={t}
-                // updateProjects={res => handleSetState(updateProjects(res, state, props, toast))}
-                {...props}
-              />
+              <Activity activity={activity} key={activity.id} t={t} {...props} />
             </Grid>
           ))}
         </Grid>
-
-        {/* <Comments context={{ name: 'activity', body: { ...activity, comments: [] } }} {...{ ...props, auth }} /> */}
       </div>
 
       <Modal.WithIcon icon={<FiShare size={30} />} maxWidth="xs" open={open} onClose={toggleDialog}>
@@ -290,14 +281,12 @@ export default function ActivityDetailsV2(props) {
         </div>
 
         <DialogTitle>
-          <Typography align="center" className={clsx(commonClasses.title2, classes.dialogTitle)}>
-            Congratulations your Activity has been successfully created!
+          <Typography align="center" className={commonClasses.title2}>
+            {t('activityDetails.activity.create.modal.success')}
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <Typography align="center">
-            Share your activity with the world. Post it on the following platforms:
-          </Typography>
+          <Typography align="center">{t('activityDetails.activity.create.modal.share')}</Typography>
           <div className={clsx(commonClasses.displayFlex, commonClasses.justifyCenter)} style={{ margin: '20px 0' }}>
             <SocialButtons containerStyle={{ gap: 50 }} withColor link facebook whatsapp />
           </div>
@@ -307,8 +296,10 @@ export default function ActivityDetailsV2(props) {
   );
 }
 
-const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
+const AnchorElemt = ({ onEdit, onDelete, onPublish, isLoading = false, activity, auth }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const classes = makeStyles(activityDetailsStyles)();
+  const { t } = useTranslation();
 
   const open = Boolean(anchorEl);
   const handleClick = event => {
@@ -327,6 +318,37 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
   const handleEdit = () => {
     onEdit();
     handleClose();
+  };
+
+  const handlePublish = () => {
+    onPublish();
+    handleClose();
+  };
+
+  const ActionButtons = () => {
+    if (activity.creators?.some(creator => creator.id === auth.id)) {
+      return (
+        <MenuItem onClick={handleEdit} className={classes.menuItem}>
+          <ListItemIcon className={classes.menuItemIcon}>
+            <FiEdit fontSize="medium" />
+          </ListItemIcon>
+          <ListItemText className={classes.menuItemText}>{t('activityDetails.activity.edit.label')}</ListItemText>
+        </MenuItem>
+      );
+    } else if (auth.tags.includes(USER_TAGS.staff)) {
+      return (
+        <MenuItem onClick={handlePublish} className={classes.menuItem}>
+          <ListItemIcon className={classes.menuItemIcon}>
+            {activity?.publish ? <MdFileDownloadOff fontSize="large" /> : <MdPublish fontSize="large" />}
+          </ListItemIcon>
+          <ListItemText className={classes.menuItemText}>
+            {activity?.publish
+              ? t('activityDetails.activity.unpublish.label')
+              : t('activityDetails.activity.publish.label')}
+          </ListItemText>
+        </MenuItem>
+      );
+    }
   };
 
   return (
@@ -349,9 +371,58 @@ const AnchorElemt = ({ onEdit, onDelete, isLoading = false }) => {
           'aria-labelledby': `basic-button`,
         }}
       >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <Divider />
-        <MenuItem onClick={handledelete}>Delete</MenuItem>
+        <ActionButtons />
+        <MenuItem onClick={handledelete} className={clsx(classes.menuItem, classes.dangerButton)}>
+          <ListItemIcon className={classes.menuItemIcon}>
+            <FiTrash2 fontSize="medium" className={classes.dangerButton} />
+          </ListItemIcon>
+          <ListItemText className={classes.menuItemText}>{t('activityDetails.activity.delete.label')}</ListItemText>
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
+
+const ShareButton = () => {
+  const socialClasses = makeStyles(socialButtonsStyleOverrides)();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <IconButton
+        id={`basic-button`}
+        aria-controls={open ? `social-buttons-menu` : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <ShareIcon />
+      </IconButton>
+      <Menu
+        id={`social-buttons-menu`}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': `basic-button`,
+        }}
+      >
+        <SocialButtons
+          withColor
+          styleOverrides={{
+            containerStyle: socialClasses.containerStyle,
+            outlined: socialClasses.outlined,
+          }}
+        />
       </Menu>
     </>
   );

@@ -13,7 +13,7 @@ import { colors } from '../../assets/js/colors';
 import styles from '../../assets/js/styles/components/social_share_buttons/socialShareButtonsStyles';
 
 const useStyles = makeStyles(styles);
-const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {} }) => {
+const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {}, styleOverrides }) => {
   const { t } = useTranslation();
   const classes = useStyles();
   const url = window.location.href;
@@ -21,10 +21,10 @@ const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {
 
   return (
     <>
-      <ButtonGroup className={classes.buttonGroup} style={containerStyle}>
+      <ButtonGroup className={clsx(classes.buttonGroup, styleOverrides?.containerStyle)} style={containerStyle}>
         {(showAll || facebook) && (
           <IconButton
-            className={clsx(classes.button, withColor && classes.outlined)}
+            className={clsx(classes.button, withColor && classes.outlined, styleOverrides?.outlined)}
             onClick={() =>
               window.open(
                 `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${t('projectDetails.socialShare.fbwa')}`,
@@ -38,7 +38,7 @@ const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {
 
         {(showAll || whatsapp) && (
           <IconButton
-            className={clsx(classes.button, withColor && classes.outlined)}
+            className={clsx(classes.button, withColor && classes.outlined, styleOverrides?.outlined)}
             onClick={() =>
               window.open(`https://api.whatsapp.com/send?text=${t('projectDetails.socialShare.fbwa')} ${url}`)
             }
@@ -50,7 +50,7 @@ const SocialButtons = ({ facebook, whatsapp, link, withColor, containerStyle = {
 
         {(showAll || link) && (
           <IconButton
-            className={clsx(classes.button, withColor && classes.outlined)}
+            className={clsx(classes.button, withColor && classes.outlined, styleOverrides?.outlined)}
             onClick={() => {
               navigator.clipboard
                 .writeText(url)

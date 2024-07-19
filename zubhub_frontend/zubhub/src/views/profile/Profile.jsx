@@ -53,6 +53,7 @@ import styles from '../../assets/js/styles/views/profile/profileStyles';
 import commonStyles from '../../assets/js/styles';
 import ProjectsDraftsGrid from '../../components/projects_drafts/ProjectsDraftsGrid';
 import UserActivitylog from '../../components/user_activitylog/UserActivitylog';
+import { USER_TAGS } from '../../assets/js/utils/constants.js';
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -129,7 +130,7 @@ function Profile(props) {
         setNextPage(nextPageExist);
       });
     } catch (error) {
-      console.log(error);
+      console.log(error); // eslint-disable-line no-console
     }
   }, [page]);
 
@@ -184,17 +185,28 @@ function Profile(props) {
                     {profile.username}
                   </Typography>
                   <Box className={classes.tagsContainerStyle}>
-                    {sortTags(profile.tags).map(tag => (
+                    {props.location.state?.prevPath.split('/')[1] === 'activities' ? (
                       <Typography
-                        key={tag}
                         className={clsx(common_classes.baseTagStyle, {
-                          [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                          [common_classes.extendedTagStyle]: !isBaseTag(USER_TAGS.educator),
                         })}
                         component="h2"
                       >
-                        {tag}
+                        {USER_TAGS.educator}
                       </Typography>
-                    ))}
+                    ) : (
+                      sortTags(profile.tags).map(tag => (
+                        <Typography
+                          key={tag}
+                          className={clsx(common_classes.baseTagStyle, {
+                            [common_classes.extendedTagStyle]: !isBaseTag(tag),
+                          })}
+                          component="h2"
+                        >
+                          {tag}
+                        </Typography>
+                      ))
+                    )}
                   </Box>
                   {props.auth.username === profile.username ? (
                     <>

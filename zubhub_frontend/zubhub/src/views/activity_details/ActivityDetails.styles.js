@@ -1,87 +1,135 @@
 import { colors } from '../../assets/js/colors';
 
-export const activityDefailsStyles = theme => ({
-  container: {
-    margin: '2em 24px',
-    [theme.breakpoints.down('378')]: {
-      marginTop: '3em 24px',
+export const activityDetailsStyles = theme => ({
+  mainContainer: {
+    [theme.breakpoints.down('sm')]: {
+      margin: '0 24px',
     },
-    // borderRadius: 8,
-    // backgroundColor: colors.white,
-    // padding: 24
-  },
-  descriptionBodyStyle: {
-    marginBottom: '0.7em',
-    color: 'rgba(0, 0, 0, 0.54)',
-    '& .ql-editor': {
-      fontSize: '1.01rem',
-      fontFamily: 'Raleway,Roboto,sans-serif',
-      padding: '4px 0',
-      lineHeight: 1.9,
+    [theme.breakpoints.down('xs')]: {
+      margin: '0 12px',
     },
   },
-  socialButtons: {
-    backgroundColor: colors.primary,
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '16px 0',
-    borderRadius: 8,
-  },
-  moreTextTitle: {
-    marginTop: 50,
-    marginBottom: 30,
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: colors.black,
+  signedOutMainContainer: {
+    padding: '2em 12em',
+    [theme.breakpoints.down('sm')]: {
+      padding: '2em 0',
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: '3em 0',
+    },
   },
   card: {
     borderRadius: 8,
     backgroundColor: colors.white,
     padding: 24,
-  },
-  creatorProfileStyle: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '1em',
-    '& a': {
-      display: 'flex',
-      alignItems: 'center',
+    marginBottom: 40,
+    [theme.breakpoints.down('xs')]: {
+      padding: '24px 16px',
     },
-    [theme.breakpoints.down('500')]: {
-      width: '100%',
-      // justifyContent: 'space-between',
-    },
-  },
-  actionBoxButtonStyle: {
-    color: 'white',
-    '& MuiFab-root:hover': {
-      color: '#F2F2F2',
-    },
-    '& svg': {
-      fill: 'white',
-    },
-    '& svg:hover': {
-      fill: '#F2F2F2',
-    },
-  },
-  closed: {
-    height: 0,
-    transition: '0.4s',
-    overflow: 'hidden',
-  },
-  expandableMargin: {
-    // marginBottom: 10,
-    marginTop: 30,
-  },
-  expanded: {
-    transition: '0.4s',
-    height: 'fit-content',
     display: 'flex',
     flexDirection: 'column',
-    gap: 32,
-    marginTop: 20,
+    gap: 16,
+  },
+  headerFlex: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontWeight: 700,
+  },
+  headerButton: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    padding: '0 1.5em',
+    height: '2.5em',
+    '& .MuiButton-label': {
+      gap: '0.5em',
+    },
+  },
+  headerIconBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1em',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    [theme.breakpoints.down('400')]: {
+      gap: '0.5em',
+      fontSize: '0.9em',
+    },
+  },
+  headerIconText: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5em',
+    fontSize: '1em',
+    [theme.breakpoints.down('400')]: {
+      '& .MuiSvgIcon-root': {
+        fontSize: '1.2em',
+      },
+    },
+  },
+  creatorBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+  },
+  avatar: {
+    boxShadow: `0 3px 5px 2px rgba(0, 0, 0, .12)`,
+  },
+  creatorUsername: {
+    fontWeight: 500,
+    fontSize: 16,
+    textTransform: 'capitalize',
+    color: colors.black,
+  },
+  cardTitle: {
+    fontSize: '1.2em',
+    fontWeight: 600,
+  },
+  descriptionBodyStyle: {
+    '& .ql-editor': {
+      fontSize: '1.1em',
+      fontFamily: 'Raleway,Roboto,sans-serif',
+      lineHeight: 1.9,
+      margin: 0,
+      padding: 0,
+      '& ol': {
+        padding: 0,
+      },
+    },
+  },
+  classGrade: {
+    width: 'fit-content',
+    border: `1px solid ${colors.primary}`,
+  },
+  footer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2em',
+    textAlign: 'center',
+  },
+  footerTitle: {
+    fontSize: 22,
+    fontWeight: 700,
+  },
+  menuItemIcon: {
+    minWidth: '2em',
+  },
+  dangerButton: {
+    color: colors.secondary,
+  },
+});
+
+export const socialButtonsStyleOverrides = () => ({
+  containerStyle: {
+    display: 'flex',
+  },
+  outlined: {
+    border: 'none',
   },
 });
