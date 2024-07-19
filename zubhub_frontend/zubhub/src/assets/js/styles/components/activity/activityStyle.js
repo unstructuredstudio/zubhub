@@ -1,15 +1,14 @@
-export const style = theme => ({
+export const style = () => ({
   activityCardContainer: {
     position: 'relative',
-    // maxWidth: '350px',
-    // minWidth: '300px',
-    height: '95%',
+    width: '100%',
+    textAlign: 'left',
   },
   activityCard: {
     maxWidth: '100%',
-    borderRadius: '15px',
+    height: '33em',
+    borderRadius: '20px',
     position: 'relative!important',
-    height: '100%',
   },
   opacity: {
     backgroundColor: 'black',
@@ -29,55 +28,21 @@ export const style = theme => ({
   },
   mediaBoxStyle: {
     width: '100%',
-    height: '17em',
+    height: '13em',
     position: 'relative',
     padding: '2%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  activityTagsBox: {
-    position: 'absolute',
-    top: '10px',
-    right: '10%',
-    display: 'flex',
-  },
-  activityTagPill: {
-    backgroundColor: 'white',
-    color: 'var(--text-color2)',
-    border: '1px solid var(--text-color2)',
-    '&:hover': {
-      backgroundColor: 'var(--text-color2)',
-      color: 'white',
-      border: '1px solid white',
-    },
-  },
-  activityTagsShowMore: {
-    '&:hover': {
-      backgroundColor: 'white',
-      color: 'var(--text-color2)',
-      border: '1px solid white',
-    },
-  },
-  tagsShowMoreIconContainer: {
-    //position: 'absolute',
-  },
-  tagsShowMoreList: {
-    position: 'absolute',
-    right: '0%',
-    backgroundColor: 'white',
-    maxHeight: '12em',
-    overflow: 'auto',
-    borderRadius: '10px',
-  },
-
   activityCardContent: {
     width: '100%',
-    position: 'relative',
-  },
-  activityCardInfoBox: {
-    height: '100%',
+    padding: '16px',
+    '&:last-child': {
+      paddingBottom: '12px',
+    },
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
   },
   projectsCount: {
@@ -92,10 +57,67 @@ export const style = theme => ({
     marginLeft: '5px',
   },
   activityTitle: {
-    fontSize: '1.1rem',
-    fontWeight: '900',
+    fontSize: '1.3rem',
+    fontWeight: 700,
     color: 'var(--text-color1)',
-    // width: '80%',
-    textAlign: '-webkit-auto',
+  },
+  activityDescription: {
+    height: '48px',
+    margin: '8px 0',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 2,
+    '-webkit-box-orient': 'vertical',
+  },
+  activityCategoryContainer: {
+    margin: '12px 0',
+    display: 'flex',
+    flexWrap: 'nowrap',
+    gap: '8px',
+  },
+  activityCategory: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontSize: '0.9em',
+    padding: '2px 10px',
+    border: '1px solid #7E5B4B',
+    borderRadius: '10em',
+    background: '#F1D27C',
+  },
+  footer: {
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    overflow: 'hidden',
+  },
+  captionStyle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  captionIconStyle: {
+    backgroundColor: '#eee',
+    padding: '2px 7px',
+    borderRadius: 25,
+    justifyContent: 'space-between',
+    fontWeight: '600',
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: '1em',
+    '& svg': {
+      fill: 'rgba(0,0,0,0.54)',
+      marginRight: '0.5em',
+      fontSize: '1.1rem',
+    },
+  },
+  date: {
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    marginLeft: 'auto',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 });

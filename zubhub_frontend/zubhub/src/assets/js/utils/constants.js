@@ -7,6 +7,12 @@
  */
 export const BASE_TAGS = ['staff', 'moderator', 'group', 'creator'];
 
+export const USER_TAGS = {
+  staff: 'staff',
+  creator: 'creator',
+  educator: 'educator',
+};
+
 export const site_mode = {
   PUBLIC: 1,
   PRIVATE: 2,
