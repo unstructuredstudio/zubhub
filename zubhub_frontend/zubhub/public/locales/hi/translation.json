@@ -32,7 +32,20 @@
       "unpublishedActivities": "अप्रकाशित गतिविधियाँ",
       "myActivities": "मेरी गतिविधियां"
     },
-
+    "sidebar": {
+      "logout": "लॉगआउट",
+      "exploreActivities": "गतिविधियाँ करें",
+      "teams": "टीमें",
+      "bookmarks": "बुकमार्क्स",
+      "myProjects": "मेरे परियोजनाएँ",
+      "myDrafts": "मेरे मसौदे",
+      "createActivity": "गतिविधि बनाएं",
+      "createProject": "परियोजना बनाएं",
+      "profile": "मेरी प्रोफ़ाइल",
+      "projects": "सभी परियोजनाएँ",
+      "settings": "सेटिंग्स",
+      "editProfile": "खाता सेटिंग्स"
+    },    
     "footer": {
       "privacy": "एकांत",
       "guidelines": "गोपनीयता नीति",
@@ -825,7 +838,7 @@
       }
     },
     "actions": {
-      "submit": "परिवर्तनों को सुरक्षित करें",
+      "submit": "परिवर्तनों को सुरक्षित करें"
     },
     "delete": {
       "label": "टीम हटाएं",
