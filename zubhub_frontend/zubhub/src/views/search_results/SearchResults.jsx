@@ -36,6 +36,7 @@ import LoadingPage from '../loading/LoadingPage';
 import Project from '../../components/project/Project';
 import styles from '../../assets/js/styles/views/search_results/searchResultsStyles';
 import commonStyles from '../../assets/js/styles';
+import NoProjects from '../../assets/images/no-projects.svg'
 
 const useStyles = makeStyles(styles);
 const useCommonStyles = makeStyles(commonStyles);
@@ -257,6 +258,10 @@ function SearchResults(props) {
         ) : (
           <ErrorPage
             error={t('searchResults.errors.noResult')}
+            imgSrc={NoProjects}
+            routeTitle='Create Project'
+            routeLink='/create-project'
+            errorTitle='No projects found'
           />
         )}
       </Box>
