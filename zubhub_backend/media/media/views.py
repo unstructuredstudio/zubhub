@@ -5,9 +5,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, throttle_classes
 from django.utils.text import slugify
+from django.http import HttpResponseBadRequest
+from django.core.files.base import ContentFile
+from tempfile import NamedTemporaryFile
 from cloudinary.utils import api_sign_request
 from math import floor
 import uuid
+import os
+import subprocess
 from time import time
 from cloudinary import config
 
@@ -134,12 +139,38 @@ def UploadFileAPIView(request):
     try:
         key = request.data.get("key")
         __, name = key.split("/")
-        file = request.data.get(name)
-        url = upload_file(file, key)
+        original_video_file = request.data.get(name)
+
+        if original_video_file.size > 20000000: 
+            return Response({"error": "File size is too large"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Saves the original video to a temporary file
+        temp_input_file = NamedTemporaryFile(delete=False, suffix=".mp4")
+        original_video_file.seek(0)
+        temp_input_file.write(original_video_file.read())
+        temp_input_file.close()
+
+        ffmpeg_command = [
+            'ffmpeg', '-i', temp_input_file.name,
+            '-vcodec', 'libx265', '-crf', '32',
+            '-f', 'mp4', '-movflags', 'faststart', 
+            '-y',  # Overwrites output file if it exists
+            '-strict', 'experimental', 'output.mp4'
+        ]
+
+        print("*************** COMPRESSING VIDEO *******************")
+        subprocess.run(ffmpeg_command, check=True)
+
+        with open('output.mp4', 'rb') as compressed_file:
+            compressed_video = ContentFile(compressed_file.read())
+
+        print("******************** UPLOADING COMPRESSED *****************")
+        url = upload_file(compressed_video, key)
+
         return Response({"url": url}, status=status.HTTP_200_OK)
 
-    except Exception:
-        return Response({'result': 'failed to delete file from media server'}, status=status.HTTP_502_BAD_GATEWAY)
+    except Exception as e:
+        return Response({"result": f"Error processing video: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @authentication_required
