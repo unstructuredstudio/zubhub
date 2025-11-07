@@ -36,13 +36,14 @@ jobs:
             We will notify you when the VM is ready.
 
       - name: Get checkout commit ref and repo
+        env:
+          merge_commit_sha: ${{ github.event.pull_request.merge_commit_sha }}
+          head_ref: ${{ github.event.pull_request.head.ref }}
+          target_repo: ${{ github.repository }}
+          pr_repo: ${{ github.event.pull_request.head.repo.full_name }}
         run: |
 
           # for context read this https://github.com/Arelle/Arelle/pull/938/files#r1377926250
-          merge_commit_sha=${{ github.event.pull_request.merge_commit_sha }}
-          head_ref=${{ github.event.pull_request.head.ref }}
-          target_repo=${{ github.repository }}
-          pr_repo=${{ github.event.pull_request.head.repo.full_name }}
 
           CHECKOUT_COMMIT_REF=$([ "$merge_commit_sha" != "" ] && \
           echo "$merge_commit_sha" || echo "$head_ref")
